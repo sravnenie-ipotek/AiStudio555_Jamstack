@@ -1,0 +1,254 @@
+{
+  "kind": "collectionType",
+  "collectionName": "page_sections",
+  "info": {
+    "singularName": "page-section",
+    "pluralName": "page-sections",
+    "displayName": "Page Section",
+    "description": "Sections of website pages with multi-language support"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    },
+    "versions": {
+      "versioned": true,
+      "maxVersions": 30
+    }
+  },
+  "attributes": {
+    "pageName": {
+      "type": "enumeration",
+      "enum": [
+        "home",
+        "how_it_works",
+        "who_we_are",
+        "for_whom",
+        "what_you_get",
+        "pricing",
+        "security",
+        "contact",
+        "404",
+        "faq",
+        "terms_and_conditions",
+        "privacy_policy",
+        "thank_you",
+        "disclaimer",
+        "accessibility",
+        "ai",
+        "blog",
+        "career",
+        "case_studies",
+        "certification",
+        "company",
+        "features",
+        "integrations",
+        "partners",
+        "resources",
+        "testimonials"
+      ],
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "sectionId": {
+      "type": "string",
+      "required": true,
+      "unique": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "sectionName": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "content": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "heading": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "subheading": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "buttonText": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "buttonUrl": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "imageUrl": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "screenshot": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"],
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "isVisible": {
+      "type": "boolean",
+      "default": true,
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "order": {
+      "type": "integer",
+      "default": 0,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "metadata": {
+      "type": "json",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "pendingApproval": {
+      "type": "boolean",
+      "default": false,
+      "private": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "requestedBy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "admin::user",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "requestedAt": {
+      "type": "datetime",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "approvedBy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "admin::user",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "approvedAt": {
+      "type": "datetime",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "versionHistory": {
+      "type": "json",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "lockedBy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "admin::user",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "lockedAt": {
+      "type": "datetime",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "seoTitle": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "seoDescription": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    }
+  }
+}
