@@ -15,9 +15,10 @@
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
   "dependencies": {
+    "@strapi/admin": "^5.23.2",
     "@strapi/plugin-cloud": "^5.0.6",
     "@strapi/plugin-users-permissions": "^5.0.6",
-    "@strapi/strapi": "^5.0.6",
+    "@strapi/strapi": "^5.23.2",
     "axios": "^1.11.0",
     "better-sqlite3": "11.3.0",
     "cheerio": "^1.1.2",

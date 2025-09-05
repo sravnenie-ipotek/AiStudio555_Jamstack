@@ -172,3 +172,4 @@ Remote: `git@github.com:sravnenie-ipotek/AiStudio555_Jamstack.git`
 - DO NOT push without explicit user permission
 - Current branch should track feature development
 - Production deployments planned for Railway ($5/month)
+- never delete db data unless i asked for it, if must to delete or reset tb, ask me first

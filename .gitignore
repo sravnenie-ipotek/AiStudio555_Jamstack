@@ -45,3 +45,7 @@ docker-compose-override.yml
 cypress/videos/
 cypress/screenshots/
 test-results/
+
+# Backup files
+*-backup-*.tar.gz
+*-backup-*.zip

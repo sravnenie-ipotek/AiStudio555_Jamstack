@@ -1,0 +1,66 @@
+{
+  "collectionName": "components_shared_testimonial_items",
+  "info": {
+    "displayName": "Testimonial Item",
+    "description": "Individual testimonial/review item"
+  },
+  "options": {},
+  "attributes": {
+    "authorName": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "authorInitial": {
+      "type": "string",
+      "required": true,
+      "maxLength": 2,
+      "description": "Initial(s) for avatar display"
+    },
+    "authorAvatar": {
+      "type": "media",
+      "allowedTypes": ["images"],
+      "multiple": false,
+      "description": "Optional avatar image - falls back to initial"
+    },
+    "reviewDate": {
+      "type": "string",
+      "required": true,
+      "description": "Display date (e.g., 'September 1 on Yandex')"
+    },
+    "rating": {
+      "type": "integer",
+      "required": true,
+      "default": 5,
+      "min": 1,
+      "max": 5
+    },
+    "reviewText": {
+      "type": "text",
+      "required": true,
+      "maxLength": 1000
+    },
+    "courseTaken": {
+      "type": "string",
+      "description": "Course name mentioned in review"
+    },
+    "reviewPlatform": {
+      "type": "enumeration",
+      "enum": ["Yandex", "Google", "Trustpilot", "Facebook", "Internal"],
+      "default": "Google"
+    },
+    "isVerified": {
+      "type": "boolean",
+      "default": true
+    },
+    "hasReadMore": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this review shows a 'Read more' link"
+    },
+    "readMoreLink": {
+      "type": "string",
+      "description": "URL for full review if hasReadMore is true"
+    }
+  }
+}
