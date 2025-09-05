@@ -1,0 +1,51 @@
+{
+  "collectionName": "components_sections_featured_courses",
+  "info": {
+    "displayName": "Featured Courses",
+    "description": "Section displaying featured course cards"
+  },
+  "options": {},
+  "attributes": {
+    "sectionTitle": {
+      "type": "string",
+      "required": true,
+      "default": "Most Popular IT Courses",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "sectionSubtitle": {
+      "type": "string",
+      "default": "Featured Courses",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "sectionDescription": {
+      "type": "text",
+      "default": "Dive into our expertly curated selection.",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "showAllCoursesButton": {
+      "type": "boolean",
+      "default": true
+    },
+    "allCoursesButtonText": {
+      "type": "string",
+      "default": "Uncover All Courses",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    }
+  }
+}

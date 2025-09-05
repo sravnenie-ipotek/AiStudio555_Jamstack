@@ -1,0 +1,116 @@
+{
+  "kind": "singleType",
+  "collectionName": "home_pages",
+  "info": {
+    "singularName": "home-page",
+    "pluralName": "home-pages",
+    "displayName": "Home Page",
+    "description": "Complete home page content with visibility toggles"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "heroSectionVisible": {
+      "type": "boolean",
+      "default": true,
+      "required": false,
+      "configurable": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "heroSection": {
+      "type": "component",
+      "component": "sections.hero-banner",
+      "required": false
+    },
+    "featuredCoursesVisible": {
+      "type": "boolean", 
+      "default": true,
+      "required": false,
+      "configurable": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "featuredCourses": {
+      "type": "component",
+      "component": "sections.featured-courses",
+      "required": false
+    },
+    "practiceFocusVisible": {
+      "type": "boolean",
+      "default": true,
+      "required": false,
+      "configurable": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "practiceFocus": {
+      "type": "component",
+      "component": "sections.practice-focus", 
+      "required": false
+    },
+    "onlineLearningVisible": {
+      "type": "boolean",
+      "default": true,
+      "required": false,
+      "configurable": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "onlineLearning": {
+      "type": "component",
+      "component": "sections.online-learning",
+      "required": false
+    },
+    "alumniReviewsVisible": {
+      "type": "boolean",
+      "default": true,
+      "required": false,
+      "configurable": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "alumniReviews": {
+      "type": "component",
+      "component": "sections.alumni-reviews",
+      "required": false
+    },
+    "faqSectionVisible": {
+      "type": "boolean",
+      "default": true,
+      "required": false,
+      "configurable": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "faqSection": {
+      "type": "component",
+      "component": "sections.faq-section",
+      "required": false
+    }
+  }
+}

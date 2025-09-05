@@ -1,0 +1,44 @@
+{
+  "collectionName": "components_shared_reviews",
+  "info": {
+    "displayName": "Review",
+    "description": "Alumni review component"
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "default": "Sarah Johnson"
+    },
+    "role": {
+      "type": "string",
+      "default": "Full Stack Developer"
+    },
+    "company": {
+      "type": "string",
+      "default": "Tech Solutions Inc"
+    },
+    "review": {
+      "type": "text",
+      "required": true,
+      "default": "The hands-on approach and real-world projects made all the difference in my career. I went from zero programming experience to landing my dream job as a full-stack developer in just 6 months. The instructors are incredibly knowledgeable and supportive."
+    },
+    "rating": {
+      "type": "integer",
+      "min": 1,
+      "max": 5,
+      "default": 5
+    },
+    "avatar": {
+      "type": "media",
+      "allowedTypes": ["images"]
+    },
+    "courseCompleted": {
+      "type": "string",
+      "default": "Full Stack Web Development"
+    },
+    "graduationDate": {
+      "type": "date"
+    }
+  }
+}
