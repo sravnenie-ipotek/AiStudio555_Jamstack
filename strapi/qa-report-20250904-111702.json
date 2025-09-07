@@ -1,0 +1,16 @@
+{
+  "timestamp": "2025-09-04T08:17:02Z",
+  "issues": 0,
+  "score": 100,
+  "grade": "A",
+  "status": "healthy",
+  "checks": {
+    "node_version": "v20.19.4",
+    "postgresql": true,
+    "database": true,
+    "strapi_server": true,
+    "admin_panel": "200",
+    "api": "404",
+    "memory_mb": 336
+  }
+}

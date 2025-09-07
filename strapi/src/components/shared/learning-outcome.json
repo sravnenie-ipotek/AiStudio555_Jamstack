@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_shared_learning_outcomes",
+  "info": {
+    "displayName": "Learning Outcome",
+    "description": "What students will learn"
+  },
+  "options": {},
+  "attributes": {
+    "outcome": {
+      "type": "string",
+      "required": true
+    },
+    "icon": {
+      "type": "media",
+      "allowedTypes": ["images"],
+      "multiple": false
+    }
+  }
+}
