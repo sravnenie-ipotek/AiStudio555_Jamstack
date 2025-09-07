@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_shared_learning_steps",
+  "info": {
+    "displayName": "Learning Step",
+    "description": "Individual step in learning path"
+  },
+  "options": {},
+  "attributes": {
+    "stepNumber": {
+      "type": "integer",
+      "required": true,
+      "default": 1
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "Step Title"
+    },
+    "description": {
+      "type": "text",
+      "required": false
+    },
+    "icon": {
+      "type": "string",
+      "default": "step"
+    }
+  }
+}

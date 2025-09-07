@@ -1,0 +1,26 @@
+{
+    "collectionName": "components_shared_lessons",
+    "info": {
+        "displayName": "Lesson",
+        "description": "Individual lesson in a module"
+    },
+    "options": {},
+    "attributes": {
+        "title": {
+            "type": "string",
+            "required": true
+        },
+        "duration": {
+            "type": "integer",
+            "min": 1
+        },
+        "videoUrl": {
+            "type": "string"
+        },
+        "materials": {
+            "type": "media",
+            "allowedTypes": ["files", "images", "videos"],
+            "multiple": true
+        }
+    }
+}

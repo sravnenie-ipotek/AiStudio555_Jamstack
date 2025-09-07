@@ -1,0 +1,56 @@
+{
+    "collectionName": "components_sections_online_learning",
+    "info": {
+        "displayName": "Online Learning",
+        "description": "Section about online learning platform features"
+    },
+    "options": {},
+    "attributes": {
+        "title": {
+            "type": "string",
+            "required": true,
+            "default": "Learn From Anywhere, Anytime With Our Platform."
+        },
+        "subtitle": {
+            "type": "string",
+            "default": "Online Learning"
+        },
+        "description": {
+            "type": "text",
+            "default": "Our online learning platform makes it easy to access world-class education from the comfort of your home. Learn at your own pace with expert instructors and interactive course materials."
+        },
+        "totalCourses": {
+            "type": "string",
+            "default": "20+"
+        },
+        "totalLearners": {
+            "type": "string",
+            "default": "14K+"
+        },
+        "yearsExperience": {
+            "type": "string",
+            "default": "8+"
+        },
+        "instructorName": {
+            "type": "string",
+            "default": "Mrs. Sarah Johnson"
+        },
+        "instructorTitle": {
+            "type": "string",
+            "default": "Expert Mentor In Technology"
+        },
+        "instructorBio": {
+            "type": "richtext",
+            "default": "Providing hands-on, real-world training and mentorship, i aim to bridge gap between theoretical knowledge & practical application, ensuring that every student can confidently apply their skills."
+        },
+        "instructorImage": {
+            "type": "media",
+            "allowedTypes": ["images"],
+            "multiple": false
+        },
+        "achievements": {
+            "type": "text",
+            "default": "She has received prestigious honors \"Top Educator\" award and the \"Teaching Excellence\" award."
+        }
+    }
+}

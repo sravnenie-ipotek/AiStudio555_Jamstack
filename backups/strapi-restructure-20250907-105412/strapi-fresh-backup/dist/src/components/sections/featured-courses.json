@@ -1,0 +1,36 @@
+{
+    "collectionName": "components_sections_featured_courses",
+    "info": {
+        "displayName": "Featured Courses",
+        "description": "Section displaying featured course cards"
+    },
+    "options": {},
+    "attributes": {
+        "sectionTitle": {
+            "type": "string",
+            "required": true,
+            "default": "Most Popular IT Courses To Advance Your Career."
+        },
+        "sectionSubtitle": {
+            "type": "string",
+            "default": "Most Popular IT Courses"
+        },
+        "sectionDescription": {
+            "type": "text",
+            "default": "Dive into our expertly curated selection of featured courses, designed to equip you with the skills and knowledge needed to excel."
+        },
+        "courses": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::course.course"
+        },
+        "showAllCoursesButton": {
+            "type": "boolean",
+            "default": true
+        },
+        "allCoursesButtonText": {
+            "type": "string",
+            "default": "Uncover All Courses"
+        }
+    }
+}

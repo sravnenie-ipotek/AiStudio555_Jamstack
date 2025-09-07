@@ -1,0 +1,177 @@
+import { test, expect } from '@playwright/test';
+import * as fs from 'fs';
+import * as path from 'path';
+
+test.describe('Self-QA Monitoring System', () => {
+  const qaReportPath = path.join(process.cwd(), 'qa-report.json');
+  let qaReport: any = {
+    timestamp: new Date().toISOString(),
+    checks: [],
+    status: 'healthy',
+    issues: []
+  };
+
+  test.afterAll(async () => {
+    fs.writeFileSync(qaReportPath, JSON.stringify(qaReport, null, 2));
+    console.log(`QA Report saved to: ${qaReportPath}`);
+  });
+
+  test('Core Services Health Check', async ({ request }) => {
+    const services = [
+      { name: 'Strapi Server', url: 'http://localhost:1337/_health' },
+      { name: 'Admin Panel', url: 'http://localhost:1337/admin' },
+      { name: 'API', url: 'http://localhost:1337/api' }
+    ];
+
+    for (const service of services) {
+      try {
+        const response = await request.get(service.url);
+        const isHealthy = response.status() < 500;
+        
+        qaReport.checks.push({
+          service: service.name,
+          status: isHealthy ? 'healthy' : 'unhealthy',
+          statusCode: response.status(),
+          timestamp: new Date().toISOString()
+        });
+
+        if (!isHealthy) {
+          qaReport.issues.push(`${service.name} returned ${response.status()}`);
+          qaReport.status = 'degraded';
+        }
+
+        expect(isHealthy).toBeTruthy();
+      } catch (error: any) {
+        qaReport.checks.push({
+          service: service.name,
+          status: 'error',
+          error: error.message,
+          timestamp: new Date().toISOString()
+        });
+        qaReport.issues.push(`${service.name} failed: ${error.message}`);
+        qaReport.status = 'critical';
+      }
+    }
+  });
+
+  test('Performance Metrics', async ({ page }) => {
+    await page.goto('http://localhost:1337/admin');
+    
+    const metrics = await page.evaluate(() => {
+      const perf = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+      return {
+        domContentLoaded: perf.domContentLoadedEventEnd - perf.domContentLoadedEventStart,
+        loadComplete: perf.loadEventEnd - perf.loadEventStart,
+        responseTime: perf.responseEnd - perf.requestStart,
+        renderTime: perf.domComplete - perf.domLoading
+      };
+    });
+
+    qaReport.performance = metrics;
+    
+    expect(metrics.responseTime).toBeLessThan(3000);
+    expect(metrics.renderTime).toBeLessThan(5000);
+  });
+
+  test('Memory Usage Check', async () => {
+    const { stdout } = await import('child_process').then(cp => 
+      new Promise<{ stdout: string }>((resolve, reject) => {
+        cp.exec('ps aux | grep "strapi develop" | grep -v grep | awk \'{print $6}\'', 
+          (error, stdout) => {
+            if (error) reject(error);
+            else resolve({ stdout });
+          }
+        );
+      })
+    );
+
+    const memoryKB = parseInt(stdout.trim()) || 0;
+    const memoryMB = memoryKB / 1024;
+    
+    qaReport.memory = {
+      usage: `${memoryMB.toFixed(2)} MB`,
+      timestamp: new Date().toISOString()
+    };
+
+    expect(memoryMB).toBeLessThan(1000);
+  });
+
+  test('Error Log Analysis', async ({ page }) => {
+    const errors: string[] = [];
+    
+    page.on('console', msg => {
+      if (msg.type() === 'error') {
+        errors.push(msg.text());
+      }
+    });
+
+    page.on('pageerror', error => {
+      errors.push(error.message);
+    });
+
+    await page.goto('http://localhost:1337/admin');
+    await page.waitForTimeout(2000);
+
+    qaReport.consoleErrors = errors;
+    
+    if (errors.length > 0) {
+      qaReport.issues.push(`Found ${errors.length} console errors`);
+      if (qaReport.status === 'healthy') {
+        qaReport.status = 'warning';
+      }
+    }
+
+    expect(errors.filter(e => !e.includes('favicon'))).toHaveLength(0);
+  });
+
+  test('Auto-Healing Recommendations', async () => {
+    const recommendations: string[] = [];
+    
+    if (qaReport.issues.length > 0) {
+      if (qaReport.issues.some((i: string) => i.includes('500') || i.includes('error'))) {
+        recommendations.push('Restart Strapi server: npm run develop');
+      }
+      
+      if (qaReport.issues.some((i: string) => i.includes('database'))) {
+        recommendations.push('Check PostgreSQL: pg_isready -h localhost -p 5432');
+        recommendations.push('Verify credentials in .env file');
+      }
+      
+      if (qaReport.consoleErrors?.some((e: string) => e.includes('vite'))) {
+        recommendations.push('Clear Vite cache: rm -rf node_modules/.vite');
+        recommendations.push('Rebuild admin: npm run build');
+      }
+    }
+    
+    qaReport.recommendations = recommendations;
+    
+    if (recommendations.length > 0) {
+      console.log('\n=== Auto-Healing Recommendations ===');
+      recommendations.forEach(r => console.log(`- ${r}`));
+    }
+  });
+
+  test('Generate Health Score', async () => {
+    let score = 100;
+    
+    if (qaReport.status === 'critical') score -= 50;
+    if (qaReport.status === 'degraded') score -= 30;
+    if (qaReport.status === 'warning') score -= 10;
+    
+    score -= qaReport.issues.length * 5;
+    score -= (qaReport.consoleErrors?.length || 0) * 2;
+    
+    score = Math.max(0, score);
+    
+    qaReport.healthScore = score;
+    qaReport.grade = 
+      score >= 90 ? 'A' :
+      score >= 80 ? 'B' :
+      score >= 70 ? 'C' :
+      score >= 60 ? 'D' : 'F';
+    
+    console.log(`\n=== System Health Score: ${score}/100 (Grade: ${qaReport.grade}) ===`);
+    
+    expect(score).toBeGreaterThan(50);
+  });
+});

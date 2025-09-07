@@ -1,0 +1,36 @@
+{
+  "collectionName": "components_sections_hero_banners",
+  "info": {
+    "displayName": "Hero Banner",
+    "description": "Main hero section with title, subtitle and CTA"
+  },
+  "attributes": {
+    "subtitle": {
+      "type": "string",
+      "default": "Expert-Led Learning"
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "Unlock Potential With Proven Courses."
+    },
+    "description": {
+      "type": "text",
+      "default": "Here you can elevate your tech career with expert-led courses. whether you're just starting out or aiming to advance your skills, our hands-on, practical training is designed."
+    },
+    "backgroundImage": {
+      "type": "media",
+      "allowedTypes": ["images"]
+    },
+    "ctaButton": {
+      "type": "component",
+      "component": "shared.button",
+      "repeatable": false
+    },
+    "secondaryButton": {
+      "type": "component",
+      "component": "shared.button",
+      "repeatable": false
+    }
+  }
+}

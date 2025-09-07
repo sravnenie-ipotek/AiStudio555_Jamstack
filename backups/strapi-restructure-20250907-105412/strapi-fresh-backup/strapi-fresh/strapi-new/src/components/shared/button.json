@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_shared_buttons",
+  "info": {
+    "displayName": "Button",
+    "description": "Reusable button component"
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true,
+      "default": "Get Started"
+    },
+    "url": {
+      "type": "string",
+      "required": true,
+      "default": "#"
+    },
+    "variant": {
+      "type": "enumeration",
+      "enum": ["primary", "secondary", "outline"],
+      "default": "primary"
+    },
+    "openInNewTab": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

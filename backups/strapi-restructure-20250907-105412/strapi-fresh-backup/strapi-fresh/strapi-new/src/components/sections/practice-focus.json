@@ -1,0 +1,35 @@
+{
+  "collectionName": "components_sections_practice_focuses",
+  "info": {
+    "displayName": "Practice Focus",
+    "description": "Practice focused learning section"
+  },
+  "attributes": {
+    "subtitle": {
+      "type": "string",
+      "default": "Focus on Practice"
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "85% Practice, 15% Theory - Real Skills That Matter"
+    },
+    "description": {
+      "type": "text",
+      "default": "We provide structured knowledge that's in demand in today's job market. No fluff in our teaching - only hands-on experience and real-world projects."
+    },
+    "skillsTitle": {
+      "type": "string",
+      "default": "Skills You'll Master Through Practice"
+    },
+    "practices": {
+      "type": "component",
+      "component": "shared.practice-item",
+      "repeatable": true
+    },
+    "practiceStatsTitle": {
+      "type": "string",
+      "default": "Practice Focus Statistics"
+    }
+  }
+}
