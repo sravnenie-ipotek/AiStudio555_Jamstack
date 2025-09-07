@@ -1,0 +1,1 @@
+import{bA as e}from"./strapi-CQJ1aB9a.js";const o=e(s=>s.admin_app.permissions);export{o as s};

@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_sections_alumni_reviews",
+  "info": {
+    "displayName": "Alumni Reviews",
+    "description": "Alumni testimonials section"
+  },
+  "attributes": {
+    "subtitle": {
+      "type": "string",
+      "default": "Student Success Stories"
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "Alumni Reviews"
+    },
+    "graduatesTitle": {
+      "type": "string",
+      "default": "Our Graduates Work At"
+    },
+    "graduatesDescription": {
+      "type": "text",
+      "default": "Join alumni at the world's leading technology companies"
+    },
+    "reviews": {
+      "type": "component",
+      "component": "shared.review",
+      "repeatable": true
+    }
+  }
+}

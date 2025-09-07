@@ -1,0 +1,64 @@
+{
+  "collectionName": "components_sections_hero_banners",
+  "info": {
+    "displayName": "Hero Banner",
+    "description": "Main banner section with title, subtitle, and call-to-action"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "Unlock Potential With Proven Courses.",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "subtitle": {
+      "type": "string",
+      "default": "Expert-Led Learning",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "description": {
+      "type": "text",
+      "default": "Transform your career with our comprehensive IT training programs.",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "primaryButtonText": {
+      "type": "string",
+      "default": "Start Learning Today",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "primaryButtonLink": {
+      "type": "string",
+      "default": "/courses"
+    },
+    "secondaryButtonText": {
+      "type": "string",
+      "default": "View Success Stories",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "secondaryButtonLink": {
+      "type": "string",
+      "default": "/testimonials"
+    }
+  }
+}

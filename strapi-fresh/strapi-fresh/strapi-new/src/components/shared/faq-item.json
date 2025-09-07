@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_shared_faq_items",
+  "info": {
+    "displayName": "FAQ Item",
+    "description": "Frequently asked question item"
+  },
+  "attributes": {
+    "question": {
+      "type": "string",
+      "required": true,
+      "default": "Q: What types of AI and IT courses are available?"
+    },
+    "answer": {
+      "type": "text",
+      "required": true,
+      "default": "We offer a comprehensive range of AI and IT courses including machine learning, web development, data science, cybersecurity, cloud computing, and more. All courses focus on practical, hands-on learning."
+    }
+  }
+}

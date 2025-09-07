@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_shared_practice_items",
+  "info": {
+    "displayName": "Practice Item",
+    "description": "Individual practice item"
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "icon": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "collectionName": "components_sections_alumni_reviews",
+  "info": {
+    "displayName": "Alumni Reviews",
+    "description": "Testimonials and reviews from course alumni"
+  },
+  "options": {},
+  "attributes": {
+    "sectionTitle": {
+      "type": "string",
+      "required": true,
+      "default": "Alumni Reviews",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "sectionSubtitle": {
+      "type": "string",
+      "default": "Student Success Stories",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "sectionDescription": {
+      "type": "text",
+      "default": "Real feedback from our graduates.",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "overallRating": {
+      "type": "decimal",
+      "default": 4.9,
+      "min": 0,
+      "max": 5
+    },
+    "trustpilotRating": {
+      "type": "decimal",
+      "default": 4.9,
+      "min": 0,
+      "max": 5
+    },
+    "googleRating": {
+      "type": "decimal",
+      "default": 4.8,
+      "min": 0,
+      "max": 5
+    },
+    "showMoreReviewsButton": {
+      "type": "boolean",
+      "default": true
+    },
+    "moreReviewsButtonText": {
+      "type": "string",
+      "default": "View All Reviews",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "moreReviewsButtonLink": {
+      "type": "string",
+      "default": "/reviews"
+    }
+  }
+}

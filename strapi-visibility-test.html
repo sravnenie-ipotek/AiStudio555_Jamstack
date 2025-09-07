@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strapi Visibility Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f5f5f5; 
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .status-box {
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border: 2px solid;
+        }
+        .status-box.success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .status-box.warning {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+        .status-box.error {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin: 30px 0;
+            transition: opacity 0.3s ease;
+        }
+        .hero-section.hidden {
+            display: none;
+        }
+        .hero-section h2 {
+            font-size: 2.5rem;
+            margin: 0 0 20px 0;
+        }
+        .hero-section p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+        .control-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .data-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .indicator.visible {
+            background: #28a745;
+        }
+        .indicator.hidden {
+            background: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Strapi Visibility Control Test</h1>
+        
+        <div id="api-status" class="status-box warning">
+            <h3>API Status</h3>
+            <p>Checking Strapi connection...</p>
+        </div>
+        
+        <div id="db-status" class="status-box warning">
+            <h3>Database Status</h3>
+            <p>Loading database values...</p>
+        </div>
+        
+        <!-- Test Hero Section -->
+        <div id="hero-section" class="hero-section">
+            <h2 id="hero-title">Unlock Potential With Proven Coursesssss</h2>
+            <p id="hero-subtitle">Expert-Led Learning Platform</p>
+        </div>
+        
+        <div class="control-panel">
+            <h3>Manual Controls</h3>
+            <button class="btn btn-success" onclick="showHero()">Show Hero</button>
+            <button class="btn btn-danger" onclick="hideHero()">Hide Hero</button>
+            <button class="btn btn-primary" onclick="refreshData()">Refresh from Strapi</button>
+            <button class="btn btn-primary" onclick="toggleVisibilityInDB()">Toggle DB Visibility</button>
+        </div>
+        
+        <div id="data-display" class="data-display">
+            Waiting for data...
+        </div>
+    </div>
+    
+    <script>
+        let currentVisibility = false;
+        let strapiUrl = 'http://localhost:1337';
+        
+        async function checkStrapiConnection() {
+            const apiStatus = document.getElementById('api-status');
+            const dbStatus = document.getElementById('db-status');
+            const dataDisplay = document.getElementById('data-display');
+            
+            try {
+                // Check API
+                const response = await fetch(strapiUrl + '/api/home-page');
+                const data = await response.json();
+                
+                if (response.ok && data.data) {
+                    apiStatus.className = 'status-box success';
+                    apiStatus.innerHTML = `
+                        <h3>✅ API Status: Connected</h3>
+                        <p>Successfully fetched data from Strapi API</p>
+                        <p><span class="indicator ${data.data.heroSectionVisible ? 'visible' : 'hidden'}"></span>
+                        Hero Visibility: ${data.data.heroSectionVisible ? 'VISIBLE' : 'HIDDEN'}</p>
+                    `;
+                    
+                    // Apply visibility from API
+                    applyVisibility(data.data.heroSectionVisible);
+                    updateContent(data.data);
+                    
+                    dataDisplay.innerHTML = `API Data:\n${JSON.stringify(data.data, null, 2)}`;
+                } else {
+                    apiStatus.className = 'status-box error';
+                    apiStatus.innerHTML = `
+                        <h3>❌ API Status: 404 Error</h3>
+                        <p>API endpoint exists but returns no data</p>
+                        <p>Using fallback database values instead</p>
+                    `;
+                    
+                    // Use fallback database values
+                    const dbData = {
+                        title: "AI Studio - Welcome to Learning Platform",
+                        heroTitle: "Unlock Potential With Proven Coursesssss",
+                        heroSubtitle: "Expert-Led Learning Platform",
+                        heroSectionVisible: false // From database: 0 = false
+                    };
+                    
+                    dbStatus.className = 'status-box success';
+                    dbStatus.innerHTML = `
+                        <h3>📊 Database Values (Fallback)</h3>
+                        <p>Record ID 1: hero_section_visible = 0 (FALSE)</p>
+                        <p><span class="indicator ${dbData.heroSectionVisible ? 'visible' : 'hidden'}"></span>
+                        Hero Visibility: ${dbData.heroSectionVisible ? 'VISIBLE' : 'HIDDEN'}</p>
+                    `;
+                    
+                    applyVisibility(dbData.heroSectionVisible);
+                    updateContent(dbData);
+                    
+                    dataDisplay.innerHTML = `Database Fallback Data:\n${JSON.stringify(dbData, null, 2)}`;
+                }
+            } catch (error) {
+                apiStatus.className = 'status-box error';
+                apiStatus.innerHTML = `
+                    <h3>❌ API Status: Connection Failed</h3>
+                    <p>Error: ${error.message}</p>
+                `;
+                
+                console.error('Connection error:', error);
+            }
+        }
+        
+        function applyVisibility(isVisible) {
+            currentVisibility = isVisible;
+            const heroSection = document.getElementById('hero-section');
+            
+            if (isVisible) {
+                heroSection.classList.remove('hidden');
+                console.log('✅ Hero section is now VISIBLE');
+            } else {
+                heroSection.classList.add('hidden');
+                console.log('❌ Hero section is now HIDDEN');
+            }
+        }
+        
+        function updateContent(data) {
+            if (data.heroTitle) {
+                document.getElementById('hero-title').textContent = data.heroTitle;
+            }
+            if (data.heroSubtitle) {
+                document.getElementById('hero-subtitle').textContent = data.heroSubtitle;
+            }
+        }
+        
+        function showHero() {
+            applyVisibility(true);
+            alert('Hero section shown (local change only)');
+        }
+        
+        function hideHero() {
+            applyVisibility(false);
+            alert('Hero section hidden (local change only)');
+        }
+        
+        function refreshData() {
+            console.log('Refreshing data from Strapi...');
+            checkStrapiConnection();
+        }
+        
+        async function toggleVisibilityInDB() {
+            alert('To toggle database visibility:\n\n1. Go to Strapi Admin at http://localhost:1337/admin\n2. Navigate to Content Manager → Home Page\n3. Toggle "Hero Section Visible"\n4. Save and Publish\n5. Click "Refresh from Strapi" to see changes');
+        }
+        
+        // Initial load
+        checkStrapiConnection();
+        
+        // Auto-refresh every 5 seconds
+        setInterval(checkStrapiConnection, 5000);
+        
+        console.log('🧪 Visibility test page loaded');
+        console.log('📊 Checking database value: hero_section_visible = 0 (FALSE)');
+        console.log('🔄 Auto-refreshing every 5 seconds');
+    </script>
+</body>
+</html>

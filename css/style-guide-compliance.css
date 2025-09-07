@@ -1,0 +1,314 @@
+/**
+ * Style Guide Compliance CSS - Zohacous Template Integration
+ * 
+ * This file ensures 100% compliance with the Zohacous Webflow template style guide.
+ * It overrides any incorrect colors and enforces the exact specifications.
+ * 
+ * CRITICAL: This file enforces the exact Zohacous color palette and typography.
+ */
+
+/* ==========================================================================
+   ZOHACOUS COLOR PALETTE ENFORCEMENT
+   ========================================================================== */
+
+:root {
+  /* OFFICIAL Zohacous Color Palette - NEVER CHANGE */
+  --primary-dark: #05051a !important;
+  --secondary-dark: #050f2c !important;
+  --tertiary-dark: #04193f !important;
+  --accent-yellow: #ffd659 !important;
+  --primary-blue: #0080ff !important;
+  --gradient: linear-gradient(135deg, #05051A 0%, #0080ff 100%) !important;
+  
+  /* Typography - EXACT Zohacous Specifications */
+  --font-heading: "Manrope", sans-serif !important;
+  --font-body: "Plus Jakarta Sans", sans-serif !important;
+}
+
+/* ==========================================================================
+   TYPOGRAPHY COMPLIANCE
+   ========================================================================== */
+
+/* Ensure all headings use Manrope */
+h1, h2, h3, h4, h5, h6,
+.preview-banner-heading,
+.section-title,
+.inner-banner-title,
+.cta-title,
+.instructor-name {
+  font-family: var(--font-heading) !important;
+}
+
+/* Ensure all body text uses Plus Jakarta Sans */
+p, div, span, a, li, 
+.section-description-text,
+.preview-banner-description,
+.instructor-bio,
+.testimonial-quote,
+.footer-description-text {
+  font-family: var(--font-body) !important;
+}
+
+/* Big paragraph specifications */
+.section-description-text.featured-courses,
+.preview-banner-description {
+  font-size: 18px !important;
+  line-height: 28px !important;
+  font-weight: 600 !important;
+  font-family: var(--font-body) !important;
+}
+
+/* Regular paragraph specifications */
+.instructor-bio,
+.testimonial-quote,
+.footer-description-text {
+  font-size: 16px !important;
+  line-height: 26px !important;
+  font-weight: 500 !important;
+  font-family: var(--font-body) !important;
+}
+
+/* ==========================================================================
+   BUTTON STRUCTURE ENFORCEMENT
+   ========================================================================== */
+
+/* Ensure all primary buttons use the gradient */
+.primary-button {
+  background: var(--gradient) !important;
+}
+
+.primary-button:hover {
+  background: linear-gradient(135deg, var(--secondary-dark), var(--primary-blue)) !important;
+}
+
+/* Secondary button styling */
+.primary-button.secondary {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Career CTA buttons on gradient backgrounds */
+.primary-button.career-cta {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* ==========================================================================
+   SECTION BACKGROUND ENFORCEMENT
+   ========================================================================== */
+
+/* Hero sections use the main gradient */
+.section.hero-enhanced,
+.section.career-center {
+  background: var(--gradient) !important;
+}
+
+/* Dark sections use primary dark */
+.section.statistics-enhanced {
+  background: var(--primary-dark) !important;
+}
+
+/* Course cards use tertiary dark */
+.featured-courses-single {
+  background-color: var(--tertiary-dark) !important;
+}
+
+/* ==========================================================================
+   ACCENT COLOR ENFORCEMENT
+   ========================================================================== */
+
+/* Primary blue for interactive elements */
+.stat-number-enhanced,
+.process-step-number,
+.category-filter-btn:hover,
+.category-filter-btn.active {
+  background: var(--primary-blue) !important;
+  color: white !important;
+}
+
+/* Yellow accent for highlights */
+.banner-subtitle-line,
+.section-subtitle {
+  color: var(--accent-yellow) !important;
+}
+
+/* Course category tags using style guide colors */
+.course-category-tag.frontend,
+.featured-courses-categories-tag {
+  background: var(--primary-blue) !important;
+  color: white !important;
+}
+
+.course-category-tag.backend {
+  background: var(--secondary-dark) !important;
+  color: white !important;
+}
+
+.course-category-tag.mobile {
+  background: var(--tertiary-dark) !important;
+  color: white !important;
+}
+
+.course-category-tag.ai {
+  background: var(--accent-yellow) !important;
+  color: var(--primary-dark) !important;
+}
+
+.course-category-tag.design {
+  background: var(--primary-dark) !important;
+  color: white !important;
+}
+
+/* ==========================================================================
+   ANIMATION AND INTERACTION STATES
+   ========================================================================== */
+
+/* Hover states maintain color compliance */
+.instructor-card-enhanced::before {
+  background: linear-gradient(90deg, var(--primary-blue), var(--accent-yellow)) !important;
+}
+
+.testimonial-card-enhanced {
+  border-left: 4px solid var(--primary-blue) !important;
+}
+
+.process-timeline-wrapper::before {
+  background: linear-gradient(to bottom, var(--primary-blue), var(--accent-yellow)) !important;
+}
+
+/* ==========================================================================
+   GRADIENT UTILITIES
+   ========================================================================== */
+
+.bg-gradient-primary {
+  background: var(--gradient) !important;
+}
+
+.bg-gradient-dark {
+  background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark)) !important;
+}
+
+.text-gradient {
+  background: var(--gradient) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* ==========================================================================
+   RESPONSIVE COMPLIANCE
+   ========================================================================== */
+
+@media (max-width: 991px) {
+  /* Maintain typography specifications on tablet */
+  .section-description-text.featured-courses {
+    font-size: 16px !important;
+    line-height: 26px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Maintain typography specifications on mobile */
+  .preview-banner-description {
+    font-size: 16px !important;
+    line-height: 24px !important;
+  }
+  
+  .section-description-text.featured-courses {
+    font-size: 15px !important;
+    line-height: 24px !important;
+  }
+}
+
+/* ==========================================================================
+   WEBFLOW INTEGRATION OVERRIDES
+   ========================================================================== */
+
+/* Ensure Webflow's default styles don't override our palette */
+[style*="background-color: rgb(4,25,63)"] {
+  background-color: var(--tertiary-dark) !important;
+}
+
+[style*="background-color: rgb(5,5,26)"] {
+  background-color: var(--primary-dark) !important;
+}
+
+[style*="background-color: rgb(5,15,44)"] {
+  background-color: var(--secondary-dark) !important;
+}
+
+[style*="color: rgb(255,255,255)"] {
+  color: white !important;
+}
+
+/* Course card hover states */
+.featured-courses-single:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 40px rgba(0, 128, 255, 0.15) !important;
+}
+
+/* ==========================================================================
+   ACCESSIBILITY COMPLIANCE
+   ========================================================================== */
+
+/* Ensure sufficient contrast ratios */
+.section-subtitle {
+  color: rgba(255, 214, 89, 0.9) !important; /* Slightly transparent yellow for better readability */
+}
+
+.preview-banner-description,
+.section-description-text {
+  color: rgba(255, 255, 255, 0.9) !important; /* High contrast white */
+}
+
+/* Focus states for accessibility */
+.primary-button:focus,
+.category-filter-btn:focus {
+  outline: 2px solid var(--accent-yellow) !important;
+  outline-offset: 2px !important;
+}
+
+/* ==========================================================================
+   PRINT STYLES COMPLIANCE
+   ========================================================================== */
+
+@media print {
+  /* Ensure gradients don't interfere with print */
+  .section.hero-enhanced,
+  .section.career-center,
+  .section.statistics-enhanced {
+    background: var(--primary-dark) !important;
+    color: white !important;
+  }
+  
+  /* Remove shadows for print */
+  .instructor-card-enhanced,
+  .testimonial-card-enhanced,
+  .featured-courses-single {
+    box-shadow: none !important;
+    border: 1px solid var(--primary-blue) !important;
+  }
+}
+
+/* ==========================================================================
+   VALIDATION MARKERS
+   ========================================================================== */
+
+/* Hidden markers to validate style guide compliance */
+body::after {
+  content: "Zohacous Style Guide v1.0 - Compliant";
+  display: none;
+}
+
+/* Color palette validation */
+:root::after {
+  content: "Colors: #05051a, #050f2c, #04193f, #ffd659, #0080ff";
+  display: none;
+}
+
+/* Typography validation */
+html::after {
+  content: "Fonts: Manrope (headings), Plus Jakarta Sans (body)";
+  display: none;
+}

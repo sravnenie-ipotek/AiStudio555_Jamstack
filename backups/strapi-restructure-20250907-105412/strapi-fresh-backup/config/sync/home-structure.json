@@ -1,0 +1,123 @@
+{
+  "page": "home",
+  "lastSync": "2025-09-04T11:56:31.170Z",
+  "htmlVersion": "88d1b0ce17d3747d9cffb28f8bcaad07ab698194",
+  "structure": {
+    "sections": [
+      {
+        "index": 0,
+        "id": "section-0",
+        "classes": [
+          "section",
+          "banner"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 1,
+          "paragraphs": 1,
+          "buttons": 2,
+          "images": 6,
+          "forms": 0
+        }
+      },
+      {
+        "index": 1,
+        "id": "section-1",
+        "classes": [
+          "section",
+          "featured-courses"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 1,
+          "paragraphs": 1,
+          "buttons": 7,
+          "images": 48,
+          "forms": 0
+        }
+      },
+      {
+        "index": 2,
+        "id": "section-2",
+        "classes": [
+          "section",
+          "why-choose-us"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 16,
+          "paragraphs": 11,
+          "buttons": 0,
+          "images": 10,
+          "forms": 0
+        }
+      },
+      {
+        "index": 3,
+        "id": "section-3",
+        "classes": [
+          "section",
+          "about-us"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 57,
+          "paragraphs": 3,
+          "buttons": 0,
+          "images": 4,
+          "forms": 0
+        }
+      },
+      {
+        "index": 4,
+        "id": "section-4",
+        "classes": [
+          "section",
+          "faq"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 6,
+          "paragraphs": 6,
+          "buttons": 1,
+          "images": 6,
+          "forms": 0
+        }
+      },
+      {
+        "index": 5,
+        "id": "section-5",
+        "classes": [
+          "section",
+          "testimonials"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 1,
+          "paragraphs": 5,
+          "buttons": 0,
+          "images": 25,
+          "forms": 0
+        }
+      },
+      {
+        "index": 6,
+        "id": "section-6",
+        "classes": [
+          "section",
+          "footer"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 4,
+          "paragraphs": 1,
+          "buttons": 0,
+          "images": 4,
+          "forms": 1
+        }
+      }
+    ],
+    "timestamp": "2025-09-04T11:56:31.148Z",
+    "htmlSize": 103563
+  }
+}

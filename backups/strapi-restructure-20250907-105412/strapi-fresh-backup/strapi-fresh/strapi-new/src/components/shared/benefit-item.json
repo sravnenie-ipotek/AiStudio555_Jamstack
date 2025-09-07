@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_shared_benefit_items",
+  "info": {
+    "displayName": "Benefit Item",
+    "description": "Individual benefit item"
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "icon": {
+      "type": "string"
+    }
+  }
+}

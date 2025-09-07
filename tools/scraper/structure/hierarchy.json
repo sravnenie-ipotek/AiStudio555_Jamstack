@@ -1,0 +1,13 @@
+{
+  "root": "https://teachmeskills.by",
+  "structure": {
+    "home": "/",
+    "courses": "/kursy",
+    "teachers": "/teachers",
+    "blog": "/blog",
+    "career": "/career-center",
+    "orientation": "/proforientation"
+  },
+  "navigation": [],
+  "timestamp": "2025-09-04T10:47:41.085Z"
+}
