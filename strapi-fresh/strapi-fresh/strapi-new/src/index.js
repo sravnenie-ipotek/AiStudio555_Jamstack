@@ -17,6 +17,8 @@ module.exports = {
    * run jobs, or perform some special logic.
    */
   async bootstrap({ strapi }) {
+    console.log('🚀 Bootstrapping application...');
+    
     // Ensure home-page permissions are created for public role
     try {
       const publicRole = await strapi.query('plugin::users-permissions.role').findOne({
@@ -57,6 +59,33 @@ module.exports = {
       }
     } catch (error) {
       console.error('Error setting up home-page permissions:', error);
+    }
+
+    // Create home page content if it doesn't exist
+    try {
+      const existing = await strapi.entityService.findMany('api::home-page.home-page');
+      
+      if (!existing || existing.length === 0) {
+        console.log('📝 Creating initial home page content...');
+        
+        const homePageData = {
+          title: "AI Studio - Welcome",
+          heroTitle: "Unlock Potential With Proven Courses",
+          heroSubtitle: "Expert-Led Learning",
+          heroSectionVisible: true,
+          publishedAt: new Date()
+        };
+
+        const created = await strapi.entityService.create('api::home-page.home-page', {
+          data: homePageData
+        });
+
+        console.log('✅ Home page content created with ID:', created.id);
+      } else {
+        console.log('✅ Home page content already exists');
+      }
+    } catch (error) {
+      console.error('❌ Content creation error:', error.message);
     }
   },
 };

@@ -376,7 +376,6 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
   collectionName: 'home_pages';
   info: {
-    description: 'Complete home page content with visibility toggles';
     displayName: 'Home Page';
     pluralName: 'home-pages';
     singularName: 'home-page';
@@ -384,75 +383,149 @@ export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
   options: {
     draftAndPublish: true;
   };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
-  };
   attributes: {
-    alumniReviews: Schema.Attribute.Component<'sections.alumni-reviews', false>;
-    alumniReviewsVisible: Schema.Attribute.Boolean &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }> &
+    aboutDescription: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'We are dedicated to providing exceptional education and training. Our instructors are industry experts with years of experience. We offer personalized support, career guidance, and job placement assistance to ensure your success.'>;
+    aboutScreenshot: Schema.Attribute.Media<'images'>;
+    aboutSubtitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Why Choose Us'>;
+    aboutTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'About Us'>;
+    aboutVisible: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    companiesDescription: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<"Join alumni at the world's leading technology companies. Our graduates have successfully landed positions at Google, Meta, Amazon, Microsoft, Apple, and many other Fortune 500 companies.">;
+    companiesScreenshot: Schema.Attribute.Media<'images'>;
+    companiesTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Our Graduates Work At'>;
+    companiesVisible: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<true>;
+    course1Category: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Web Dev'>;
+    course1Description: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'Master modern React development with hooks, state management, and best practices. Build production-ready applications.'>;
+    course1Duration: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'12 Weeks'>;
+    course1Image: Schema.Attribute.Media<'images'>;
+    course1Lessons: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'48 Lessons'>;
+    course1Rating: Schema.Attribute.String & Schema.Attribute.DefaultTo<'4.9'>;
+    course1Title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Complete React Development Course'>;
+    course1Visible: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    course2Category: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Data Science'>;
+    course2Duration: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'16 Weeks'>;
+    course2Lessons: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'60 Lessons'>;
+    course2Rating: Schema.Attribute.String & Schema.Attribute.DefaultTo<'5.0'>;
+    course2Title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Python for Data Science & AI'>;
+    course2Visible: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    course3Category: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Mobile'>;
+    course3Duration: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'14 Weeks'>;
+    course3Lessons: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'52 Lessons'>;
+    course3Rating: Schema.Attribute.String & Schema.Attribute.DefaultTo<'4.8'>;
+    course3Title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Mobile App Development'>;
+    course3Visible: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    course4Category: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Cloud'>;
+    course4Duration: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'10 Weeks'>;
+    course4Lessons: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'44 Lessons'>;
+    course4Rating: Schema.Attribute.String & Schema.Attribute.DefaultTo<'4.7'>;
+    course4Title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Cloud Computing & DevOps'>;
+    course4Visible: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    course5Category: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'AI/ML'>;
+    course5Duration: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'18 Weeks'>;
+    course5Lessons: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'56 Lessons'>;
+    course5Rating: Schema.Attribute.String & Schema.Attribute.DefaultTo<'4.9'>;
+    course5Title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Machine Learning Fundamentals'>;
+    course5Visible: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    course6Category: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'DevOps'>;
+    course6Duration: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'12 Weeks'>;
+    course6Lessons: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'50 Lessons'>;
+    course6Rating: Schema.Attribute.String & Schema.Attribute.DefaultTo<'4.8'>;
+    course6Title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'DevOps Engineering'>;
+    course6Visible: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    faqSection: Schema.Attribute.Component<'sections.faq-section', false>;
-    faqSectionVisible: Schema.Attribute.Boolean &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }> &
-      Schema.Attribute.DefaultTo<true>;
-    featuredCourses: Schema.Attribute.Component<
-      'sections.featured-courses',
-      false
-    >;
+    featuredCoursesDescription: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<"Dive into our expertly curated selection of featured courses designed to equip you with the skills and knowledge needed to excel in today's competitive tech landscape.">;
+    featuredCoursesScreenshot: Schema.Attribute.Media<'images'>;
+    featuredCoursesTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Most Popular IT Courses To Advance Your Career.'>;
     featuredCoursesVisible: Schema.Attribute.Boolean &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }> &
       Schema.Attribute.DefaultTo<true>;
-    heroSection: Schema.Attribute.Component<'sections.hero-banner', false>;
+    heroDescription: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'Transform your career with our expert-led courses. Join thousands of successful graduates who have landed their dream jobs at top tech companies.'>;
+    heroScreenshot: Schema.Attribute.Media<'images'>;
     heroSectionVisible: Schema.Attribute.Boolean &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }> &
       Schema.Attribute.DefaultTo<true>;
-    locale: Schema.Attribute.String;
+    heroSubtitle: Schema.Attribute.String;
+    heroTitle: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::home-page.home-page'
-    >;
-    onlineLearning: Schema.Attribute.Component<
-      'sections.online-learning',
-      false
-    >;
-    onlineLearningVisible: Schema.Attribute.Boolean &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }> &
-      Schema.Attribute.DefaultTo<true>;
-    practiceFocus: Schema.Attribute.Component<'sections.practice-focus', false>;
-    practiceFocusVisible: Schema.Attribute.Boolean &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }> &
-      Schema.Attribute.DefaultTo<true>;
+    > &
+      Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    testimonial1Author: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Vyacheslav'>;
+    testimonial1Rating: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'5.0'>;
+    testimonial1Text: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Completed the Android Development course. It was very convenient that it was held online. The material is presented clearly and structured. Practice-oriented approach helped me land a job immediately after graduation.'>;
+    testimonial1Visible: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    testimonial2Author: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Alexander'>;
+    testimonial2Rating: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'5.0'>;
+    testimonial2Text: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Finished Data Science training. Instructor Maxim Stepanovich is excellent. Great presentation of complex topics, always ready to help with questions. The course gave me practical skills I use daily at work.'>;
+    testimonial2Visible: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    testimonial3Author: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Igor Truhanovich'>;
+    testimonial3Rating: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'5.0'>;
+    testimonial3Text: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<"Completed JavaScript automation course and I'm very satisfied! The material is presented clearly and comprehensively. Real-world projects helped me build an impressive portfolio that helped me get hired.">;
+    testimonial3Visible: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    testimonial4Author: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Maria Petrova'>;
+    testimonial4Rating: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'5.0'>;
+    testimonial4Text: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'The UX/UI Design course exceeded my expectations! From zero knowledge to landing my dream job in just 5 months. The instructors are industry professionals who really care about your success.'>;
+    testimonial4Visible: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    testimonialsScreenshot: Schema.Attribute.Media<'images'>;
+    testimonialsSubtitle: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'Real feedback from our graduates who have successfully transformed their careers through our courses. Read their stories and see how our programs have helped them achieve their goals.'>;
+    testimonialsTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Alumni Reviews'>;
+    testimonialsVisible: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

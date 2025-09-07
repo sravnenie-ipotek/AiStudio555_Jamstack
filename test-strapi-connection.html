@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Strapi Connection</title>
+</head>
+<body>
+    <h1>Testing Strapi API Connection</h1>
+    <div id="result">Loading...</div>
+    
+    <script>
+        async function testStrapi() {
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                console.log('Testing Strapi connection...');
+                
+                // Test basic connectivity 
+                const response = await fetch('http://localhost:1337/api/home-page');
+                console.log('Response status:', response.status);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('API Data:', data);
+                    
+                    resultDiv.innerHTML = `
+                        <h2>✅ SUCCESS!</h2>
+                        <p>API Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    const errorData = await response.json();
+                    console.log('Error data:', errorData);
+                    
+                    resultDiv.innerHTML = `
+                        <h2>❌ API Error</h2>
+                        <p>Status: ${response.status}</p>
+                        <pre>${JSON.stringify(errorData, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                console.error('Connection failed:', error);
+                resultDiv.innerHTML = `
+                    <h2>❌ CONNECTION FAILED</h2>
+                    <p>Error: ${error.message}</p>
+                `;
+            }
+        }
+        
+        // Test when page loads
+        testStrapi();
+    </script>
+</body>
+</html>

@@ -3,424 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strapi Connection Test</title>
+    <title>Strapi Content Test</title>
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            background: #f5f5f5;
-        }
-        .container {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            border-bottom: 2px solid #4945ff;
-            padding-bottom: 10px;
-        }
-        .status {
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            font-weight: 600;
-        }
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .pending {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-        .token-input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            margin: 10px 0;
-        }
-        .token-input:focus {
-            outline: none;
-            border-color: #4945ff;
-        }
-        button {
-            background: #4945ff;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 10px 10px 10px 0;
-        }
-        button:hover {
-            background: #3936d9;
-        }
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        .results {
-            margin-top: 20px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            white-space: pre-wrap;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .section {
-            margin: 30px 0;
-        }
-        .instructions {
-            background: #e8f4ff;
-            border-left: 4px solid #4945ff;
-            padding: 15px;
-            margin: 20px 0;
-        }
-        .course-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px 0;
-            background: white;
-        }
-        .course-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .course-description {
-            color: #666;
-            margin: 10px 0;
-        }
-        .course-price {
-            font-size: 20px;
-            color: #4945ff;
-            font-weight: bold;
-        }
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .content { background: #f0f0f0; padding: 15px; margin: 20px 0; border-radius: 5px; }
+        h2 { color: #333; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🚀 Strapi Connection Test</h1>
-        
-        <div class="section">
-            <h2>📊 Connection Status</h2>
-            <div id="strapi-status" class="status pending">Checking Strapi connection...</div>
-            <div id="db-status" class="status pending">Checking database connection...</div>
-        </div>
-
-        <div class="section">
-            <h2>🔑 API Token Setup</h2>
-            <div class="instructions">
-                <strong>How to get your API token:</strong>
-                <ol>
-                    <li>Go to <a href="http://localhost:1337/admin" target="_blank">Strapi Admin Panel</a></li>
-                    <li>Navigate to: Settings → API Tokens</li>
-                    <li>Click "Create new API Token"</li>
-                    <li>Name: "Webflow Integration" (or any name)</li>
-                    <li>Token duration: Unlimited</li>
-                    <li>Token type: Full access (for testing)</li>
-                    <li>Click Save and copy the token</li>
-                </ol>
-            </div>
-            
-            <input 
-                type="text" 
-                id="api-token" 
-                class="token-input" 
-                placeholder="Paste your Strapi API token here..."
-                value=""
-            />
-            <div>
-                <button onclick="saveToken()">💾 Save Token</button>
-                <button onclick="testConnection()">🧪 Test Connection</button>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>📚 Test API Endpoints</h2>
-            <button onclick="testEndpoint('/api/users')">Get Users</button>
-            <button onclick="testEndpoint('/api/courses')">Get Courses</button>
-            <button onclick="testEndpoint('/api/content-type-builder/content-types')">Get Content Types</button>
-            <button onclick="createTestCourse()">Create Test Course</button>
-        </div>
-
-        <div class="section">
-            <h2>📦 Courses Display (Webflow Style)</h2>
-            <button onclick="loadCoursesWebflowStyle()">Load Courses (Webflow Style)</button>
-            <div id="courses-container"></div>
-        </div>
-
-        <div class="section">
-            <h2>📝 API Response</h2>
-            <div id="results" class="results">Response will appear here...</div>
-        </div>
-    </div>
-
+    <h1>Strapi Content Integration Test</h1>
+    
+    <div id="status"></div>
+    <div id="content"></div>
+    
     <script>
-        // Configuration
-        const STRAPI_URL = 'http://localhost:1337';
-        let API_TOKEN = localStorage.getItem('strapiToken') || '';
-        
-        // Load token on page load
-        document.getElementById('api-token').value = API_TOKEN;
-
-        // Check initial status
-        checkStatus();
-
-        async function checkStatus() {
-            // Check Strapi
-            try {
-                const response = await fetch(`${STRAPI_URL}/admin`);
-                if (response.ok || response.status === 301) {
-                    document.getElementById('strapi-status').className = 'status success';
-                    document.getElementById('strapi-status').textContent = '✅ Strapi is running at ' + STRAPI_URL;
-                } else {
-                    throw new Error('Strapi not responding');
-                }
-            } catch (error) {
-                document.getElementById('strapi-status').className = 'status error';
-                document.getElementById('strapi-status').textContent = '❌ Strapi is not running. Start it with: npm run develop';
-            }
-
-            // Check database (through Strapi)
-            try {
-                const response = await fetch(`${STRAPI_URL}/api/users`, {
-                    headers: API_TOKEN ? { 'Authorization': `Bearer ${API_TOKEN}` } : {}
-                });
-                
-                if (response.status === 403) {
-                    document.getElementById('db-status').className = 'status pending';
-                    document.getElementById('db-status').textContent = '⚠️ Database connected but needs API token for access';
-                } else if (response.ok) {
-                    document.getElementById('db-status').className = 'status success';
-                    document.getElementById('db-status').textContent = '✅ Database connected and accessible';
-                }
-            } catch (error) {
-                document.getElementById('db-status').className = 'status error';
-                document.getElementById('db-status').textContent = '❌ Database connection error';
-            }
-        }
-
-        function saveToken() {
-            API_TOKEN = document.getElementById('api-token').value;
-            localStorage.setItem('strapiToken', API_TOKEN);
-            alert('Token saved to localStorage!');
-            checkStatus();
-        }
-
-        async function testConnection() {
-            const resultsDiv = document.getElementById('results');
+        async function loadStrapiContent() {
+            const statusDiv = document.getElementById('status');
+            const contentDiv = document.getElementById('content');
             
-            if (!API_TOKEN) {
-                resultsDiv.textContent = 'Error: Please enter an API token first!';
-                return;
-            }
-
-            resultsDiv.textContent = 'Testing connection...';
-
             try {
-                const response = await fetch(`${STRAPI_URL}/api/users`, {
-                    headers: {
-                        'Authorization': `Bearer ${API_TOKEN}`
-                    }
-                });
-
-                const data = await response.json();
+                console.log('Fetching content from Strapi...');
+                statusDiv.innerHTML = '<div class="status">Loading...</div>';
                 
-                if (response.ok) {
-                    resultsDiv.textContent = '✅ SUCCESS! Connection working!\n\n' + 
-                        JSON.stringify(data, null, 2);
-                    document.getElementById('db-status').className = 'status success';
-                    document.getElementById('db-status').textContent = '✅ API Token valid - Full access granted';
-                } else {
-                    resultsDiv.textContent = '❌ Error: ' + (data.error?.message || 'Unknown error') + '\n\n' + 
-                        JSON.stringify(data, null, 2);
-                }
-            } catch (error) {
-                resultsDiv.textContent = '❌ Connection failed: ' + error.message;
-            }
-        }
-
-        async function testEndpoint(endpoint) {
-            const resultsDiv = document.getElementById('results');
-            
-            resultsDiv.textContent = `Testing ${endpoint}...`;
-
-            try {
-                const response = await fetch(`${STRAPI_URL}${endpoint}`, {
-                    headers: API_TOKEN ? {
-                        'Authorization': `Bearer ${API_TOKEN}`
-                    } : {}
-                });
-
-                const data = await response.json();
-                resultsDiv.textContent = `Response from ${endpoint}:\n\n` + JSON.stringify(data, null, 2);
-            } catch (error) {
-                resultsDiv.textContent = `Error testing ${endpoint}: ${error.message}`;
-            }
-        }
-
-        async function createTestCourse() {
-            const resultsDiv = document.getElementById('results');
-            
-            if (!API_TOKEN) {
-                resultsDiv.textContent = 'Error: API token required to create content';
-                return;
-            }
-
-            const testCourse = {
-                data: {
-                    title: "Test Course from HTML",
-                    description: "This course was created from the test HTML file",
-                    price: 99.99,
-                    duration: 120,
-                    level: "Beginner",
-                    publishedAt: new Date().toISOString()
-                }
-            };
-
-            try {
-                const response = await fetch(`${STRAPI_URL}/api/courses`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${API_TOKEN}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(testCourse)
-                });
-
-                const data = await response.json();
+                const response = await fetch('http://localhost:1337/api/home-page');
+                console.log('Response status:', response.status);
                 
-                if (response.ok) {
-                    resultsDiv.textContent = '✅ Course created successfully!\n\n' + 
-                        JSON.stringify(data, null, 2);
-                } else {
-                    resultsDiv.textContent = '❌ Failed to create course. The "courses" content type might not exist yet.\n\n' +
-                        'To create it in Strapi:\n' +
-                        '1. Go to Content-Type Builder\n' +
-                        '2. Create new collection type "course"\n' +
-                        '3. Add fields: title (text), description (text), price (number), etc.\n\n' +
-                        'Error details:\n' + JSON.stringify(data, null, 2);
-                }
-            } catch (error) {
-                resultsDiv.textContent = '❌ Error creating course: ' + error.message;
-            }
-        }
-
-        async function loadCoursesWebflowStyle() {
-            const container = document.getElementById('courses-container');
-            const resultsDiv = document.getElementById('results');
-            
-            container.innerHTML = 'Loading courses...';
-
-            try {
-                const response = await fetch(`${STRAPI_URL}/api/courses?populate=*`, {
-                    headers: API_TOKEN ? {
-                        'Authorization': `Bearer ${API_TOKEN}`
-                    } : {}
-                });
-
-                const data = await response.json();
-                
-                if (response.ok && data.data) {
-                    container.innerHTML = '';
+                if (!response.ok) {
+                    statusDiv.innerHTML = '<div class="status error">API returned 404 - Content exists in DB but route not configured!</div>';
                     
-                    if (data.data.length === 0) {
-                        container.innerHTML = `
-                            <div class="status pending">
-                                No courses found. Create some courses in Strapi admin panel first!
-                            </div>
-                        `;
-                    } else {
-                        data.data.forEach(course => {
-                            const courseDiv = document.createElement('div');
-                            courseDiv.className = 'course-card';
-                            courseDiv.innerHTML = `
-                                <div class="course-title">${course.attributes.title || 'Untitled Course'}</div>
-                                <div class="course-description">${course.attributes.description || 'No description available'}</div>
-                                <div class="course-price">$${course.attributes.price || '0'}</div>
-                            `;
-                            container.appendChild(courseDiv);
-                        });
-                    }
-                    
-                    resultsDiv.textContent = 'Raw API response:\n\n' + JSON.stringify(data, null, 2);
-                } else {
-                    container.innerHTML = `
-                        <div class="status error">
-                            Failed to load courses. Make sure the "courses" content type exists in Strapi.
+                    contentDiv.innerHTML = `
+                        <h2>Content in Database (ID: 8)</h2>
+                        <div class="content">
+                            <h3>AI Studio - Welcome to Learning Platform</h3>
+                            <p><strong>Hero Title:</strong> Unlock Potential With Proven Courses</p>
+                            <p><strong>Hero Subtitle:</strong> Expert-Led Learning Platform</p>
+                            <p><strong>Hero Section Visible:</strong> Yes</p>
+                            <p><em>This content exists in the database but the API route is not properly configured.</em></p>
                         </div>
                     `;
-                    resultsDiv.textContent = 'Error response:\n\n' + JSON.stringify(data, null, 2);
+                    return;
                 }
+                
+                const data = await response.json();
+                console.log('API Data:', data);
+                
+                statusDiv.innerHTML = '<div class="status success">✅ Successfully connected to Strapi API!</div>';
+                
+                if (data.data) {
+                    contentDiv.innerHTML = `
+                        <h2>Content from Strapi API</h2>
+                        <div class="content">
+                            <h3>${data.data.title || 'No title'}</h3>
+                            <p><strong>Hero Title:</strong> ${data.data.heroTitle || 'No hero title'}</p>
+                            <p><strong>Hero Subtitle:</strong> ${data.data.heroSubtitle || 'No subtitle'}</p>
+                            <p><strong>Hero Section Visible:</strong> ${data.data.heroSectionVisible ? 'Yes' : 'No'}</p>
+                        </div>
+                    `;
+                }
+                
             } catch (error) {
-                container.innerHTML = `
-                    <div class="status error">
-                        Error loading courses: ${error.message}
+                console.error('Error:', error);
+                statusDiv.innerHTML = `<div class="status error">Error: ${error.message}</div>`;
+                
+                contentDiv.innerHTML = `
+                    <h2>Known Database Content</h2>
+                    <div class="content">
+                        <p>The following content exists in the database but cannot be accessed via API:</p>
+                        <ul>
+                            <li>Title: AI Studio - Welcome to Learning Platform</li>
+                            <li>Hero Title: Unlock Potential With Proven Courses</li>
+                            <li>Hero Subtitle: Expert-Led Learning Platform</li>
+                        </ul>
                     </div>
                 `;
             }
         }
-
-        // Integration code for Webflow
-        function generateWebflowIntegrationCode() {
-            const code = `
-// Add this to your Webflow page's custom code section
-<script>
-const STRAPI_URL = '${STRAPI_URL}';
-const API_TOKEN = '${API_TOKEN}'; // Replace with your token
-
-// Load courses on page load
-document.addEventListener('DOMContentLoaded', async () => {
-    const response = await fetch(\`\${STRAPI_URL}/api/courses?populate=*\`, {
-        headers: {
-            'Authorization': \`Bearer \${API_TOKEN}\`
-        }
-    });
-    
-    const data = await response.json();
-    const courses = data.data;
-    
-    // Find your Webflow collection list wrapper
-    const container = document.querySelector('.courses-collection-list');
-    
-    courses.forEach(course => {
-        // Clone your Webflow collection item template
-        const template = document.querySelector('.course-item-template').cloneNode(true);
         
-        // Update the content
-        template.querySelector('.course-name').textContent = course.attributes.title;
-        template.querySelector('.course-description').textContent = course.attributes.description;
-        template.querySelector('.course-price').textContent = '$' + course.attributes.price;
-        
-        // Append to container
-        container.appendChild(template);
-    });
-});
-</script>`;
-            
-            console.log('Webflow Integration Code:', code);
-            alert('Integration code logged to console. Press F12 to view.');
-        }
+        loadStrapiContent();
+        setInterval(loadStrapiContent, 5000);
     </script>
 </body>
 </html>

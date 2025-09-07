@@ -4,113 +4,322 @@
   "info": {
     "singularName": "home-page",
     "pluralName": "home-pages",
-    "displayName": "Home Page",
-    "description": "Complete home page content with visibility toggles"
+    "displayName": "Home Page"
   },
   "options": {
     "draftAndPublish": true
   },
-  "pluginOptions": {
-    "i18n": {
-      "localized": true
-    }
-  },
   "attributes": {
+    "title": {
+      "type": "string"
+    },
     "heroSectionVisible": {
       "type": "boolean",
-      "default": true,
-      "required": false,
-      "configurable": false,
-      "pluginOptions": {
-        "i18n": {
-          "localized": false
-        }
-      }
+      "default": true
     },
-    "heroSection": {
-      "type": "component",
-      "component": "sections.hero-banner",
-      "required": false
+    "heroTitle": {
+      "type": "string"
+    },
+    "heroSubtitle": {
+      "type": "string"
+    },
+    "heroDescription": {
+      "type": "richtext",
+      "default": "Transform your career with our expert-led courses. Join thousands of successful graduates who have landed their dream jobs at top tech companies."
+    },
+    "heroScreenshot": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "featuredCoursesTitle": {
+      "type": "string",
+      "default": "Most Popular IT Courses To Advance Your Career."
+    },
+    "featuredCoursesDescription": {
+      "type": "richtext",
+      "default": "Dive into our expertly curated selection of featured courses designed to equip you with the skills and knowledge needed to excel in today's competitive tech landscape."
     },
     "featuredCoursesVisible": {
-      "type": "boolean", 
-      "default": true,
-      "required": false,
-      "configurable": false,
-      "pluginOptions": {
-        "i18n": {
-          "localized": false
-        }
-      }
-    },
-    "featuredCourses": {
-      "type": "component",
-      "component": "sections.featured-courses",
-      "required": false
-    },
-    "practiceFocusVisible": {
       "type": "boolean",
-      "default": true,
-      "required": false,
-      "configurable": false,
-      "pluginOptions": {
-        "i18n": {
-          "localized": false
-        }
-      }
+      "default": true
     },
-    "practiceFocus": {
-      "type": "component",
-      "component": "sections.practice-focus", 
-      "required": false
+    "featuredCoursesScreenshot": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
     },
-    "onlineLearningVisible": {
+    "aboutTitle": {
+      "type": "string",
+      "default": "About Us"
+    },
+    "aboutSubtitle": {
+      "type": "string",
+      "default": "Why Choose Us"
+    },
+    "aboutDescription": {
+      "type": "richtext",
+      "default": "We are dedicated to providing exceptional education and training. Our instructors are industry experts with years of experience. We offer personalized support, career guidance, and job placement assistance to ensure your success."
+    },
+    "aboutScreenshot": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "aboutVisible": {
       "type": "boolean",
-      "default": true,
-      "required": false,
-      "configurable": false,
-      "pluginOptions": {
-        "i18n": {
-          "localized": false
-        }
-      }
+      "default": true
     },
-    "onlineLearning": {
-      "type": "component",
-      "component": "sections.online-learning",
-      "required": false
+    "companiesTitle": {
+      "type": "string",
+      "default": "Our Graduates Work At"
     },
-    "alumniReviewsVisible": {
+    "companiesDescription": {
+      "type": "richtext",
+      "default": "Join alumni at the world's leading technology companies. Our graduates have successfully landed positions at Google, Meta, Amazon, Microsoft, Apple, and many other Fortune 500 companies."
+    },
+    "companiesVisible": {
       "type": "boolean",
-      "default": true,
-      "required": false,
-      "configurable": false,
-      "pluginOptions": {
-        "i18n": {
-          "localized": false
-        }
-      }
+      "default": true
     },
-    "alumniReviews": {
-      "type": "component",
-      "component": "sections.alumni-reviews",
-      "required": false
+    "companiesScreenshot": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
     },
-    "faqSectionVisible": {
+    "course1Title": {
+      "type": "string",
+      "default": "Complete React Development Course"
+    },
+    "course1Rating": {
+      "type": "string",
+      "default": "4.9"
+    },
+    "course1Lessons": {
+      "type": "string",
+      "default": "48 Lessons"
+    },
+    "course1Duration": {
+      "type": "string",
+      "default": "12 Weeks"
+    },
+    "course1Category": {
+      "type": "string",
+      "default": "Web Dev"
+    },
+    "course1Description": {
+      "type": "richtext",
+      "default": "Master modern React development with hooks, state management, and best practices. Build production-ready applications."
+    },
+    "course1Image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "course1Visible": {
       "type": "boolean",
-      "default": true,
-      "required": false,
-      "configurable": false,
-      "pluginOptions": {
-        "i18n": {
-          "localized": false
-        }
-      }
+      "default": true
     },
-    "faqSection": {
-      "type": "component",
-      "component": "sections.faq-section",
-      "required": false
+    "course2Title": {
+      "type": "string",
+      "default": "Python for Data Science & AI"
+    },
+    "course2Rating": {
+      "type": "string",
+      "default": "5.0"
+    },
+    "course2Lessons": {
+      "type": "string",
+      "default": "60 Lessons"
+    },
+    "course2Duration": {
+      "type": "string",
+      "default": "16 Weeks"
+    },
+    "course2Category": {
+      "type": "string",
+      "default": "Data Science"
+    },
+    "course2Visible": {
+      "type": "boolean",
+      "default": true
+    },
+    "course3Title": {
+      "type": "string",
+      "default": "Mobile App Development"
+    },
+    "course3Rating": {
+      "type": "string",
+      "default": "4.8"
+    },
+    "course3Lessons": {
+      "type": "string",
+      "default": "52 Lessons"
+    },
+    "course3Duration": {
+      "type": "string",
+      "default": "14 Weeks"
+    },
+    "course3Category": {
+      "type": "string",
+      "default": "Mobile"
+    },
+    "course3Visible": {
+      "type": "boolean",
+      "default": true
+    },
+    "course4Title": {
+      "type": "string",
+      "default": "Cloud Computing & DevOps"
+    },
+    "course4Rating": {
+      "type": "string",
+      "default": "4.7"
+    },
+    "course4Lessons": {
+      "type": "string",
+      "default": "44 Lessons"
+    },
+    "course4Duration": {
+      "type": "string",
+      "default": "10 Weeks"
+    },
+    "course4Category": {
+      "type": "string",
+      "default": "Cloud"
+    },
+    "course4Visible": {
+      "type": "boolean",
+      "default": true
+    },
+    "course5Title": {
+      "type": "string",
+      "default": "Machine Learning Fundamentals"
+    },
+    "course5Rating": {
+      "type": "string",
+      "default": "4.9"
+    },
+    "course5Lessons": {
+      "type": "string",
+      "default": "56 Lessons"
+    },
+    "course5Duration": {
+      "type": "string",
+      "default": "18 Weeks"
+    },
+    "course5Category": {
+      "type": "string",
+      "default": "AI/ML"
+    },
+    "course5Visible": {
+      "type": "boolean",
+      "default": true
+    },
+    "course6Title": {
+      "type": "string",
+      "default": "DevOps Engineering"
+    },
+    "course6Rating": {
+      "type": "string",
+      "default": "4.8"
+    },
+    "course6Lessons": {
+      "type": "string",
+      "default": "50 Lessons"
+    },
+    "course6Duration": {
+      "type": "string",
+      "default": "12 Weeks"
+    },
+    "course6Category": {
+      "type": "string",
+      "default": "DevOps"
+    },
+    "course6Visible": {
+      "type": "boolean",
+      "default": true
+    },
+    "testimonial1Text": {
+      "type": "text",
+      "default": "Completed the Android Development course. It was very convenient that it was held online. The material is presented clearly and structured. Practice-oriented approach helped me land a job immediately after graduation."
+    },
+    "testimonial1Author": {
+      "type": "string",
+      "default": "Vyacheslav"
+    },
+    "testimonial1Rating": {
+      "type": "string",
+      "default": "5.0"
+    },
+    "testimonial1Visible": {
+      "type": "boolean",
+      "default": true
+    },
+    "testimonial2Text": {
+      "type": "text",
+      "default": "Finished Data Science training. Instructor Maxim Stepanovich is excellent. Great presentation of complex topics, always ready to help with questions. The course gave me practical skills I use daily at work."
+    },
+    "testimonial2Author": {
+      "type": "string",
+      "default": "Alexander"
+    },
+    "testimonial2Rating": {
+      "type": "string",
+      "default": "5.0"
+    },
+    "testimonial2Visible": {
+      "type": "boolean",
+      "default": true
+    },
+    "testimonial3Text": {
+      "type": "text",
+      "default": "Completed JavaScript automation course and I'm very satisfied! The material is presented clearly and comprehensively. Real-world projects helped me build an impressive portfolio that helped me get hired."
+    },
+    "testimonial3Author": {
+      "type": "string",
+      "default": "Igor Truhanovich"
+    },
+    "testimonial3Rating": {
+      "type": "string",
+      "default": "5.0"
+    },
+    "testimonial3Visible": {
+      "type": "boolean",
+      "default": true
+    },
+    "testimonial4Text": {
+      "type": "text",
+      "default": "The UX/UI Design course exceeded my expectations! From zero knowledge to landing my dream job in just 5 months. The instructors are industry professionals who really care about your success."
+    },
+    "testimonial4Author": {
+      "type": "string",
+      "default": "Maria Petrova"
+    },
+    "testimonial4Rating": {
+      "type": "string",
+      "default": "5.0"
+    },
+    "testimonial4Visible": {
+      "type": "boolean",
+      "default": true
+    },
+    "testimonialsTitle": {
+      "type": "string",
+      "default": "Alumni Reviews"
+    },
+    "testimonialsSubtitle": {
+      "type": "richtext",
+      "default": "Real feedback from our graduates who have successfully transformed their careers through our courses. Read their stories and see how our programs have helped them achieve their goals."
+    },
+    "testimonialsVisible": {
+      "type": "boolean",
+      "default": true
+    },
+    "testimonialsScreenshot": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
     }
   }
 }
