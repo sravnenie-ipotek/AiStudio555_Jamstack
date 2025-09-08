@@ -1075,8 +1075,13 @@
     </div>
 
     <script>
-        const API_URL_READ = 'http://localhost:3334/api'; // Read API URL (All Content)
-        const API_URL_CRUD = 'http://localhost:3335/api'; // CRUD API URL
+        // Production API URLs - Update these to your Strapi Cloud URLs
+        const API_URL_READ = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3334/api' 
+            : 'https://your-project-name.strapi.app/api';
+        const API_URL_CRUD = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3335/api' 
+            : 'https://your-project-name.strapi.app/api';
         let currentEditingId = null;
         let currentEditingType = null;
 

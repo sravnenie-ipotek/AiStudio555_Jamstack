@@ -1,0 +1,37 @@
+{
+    "kind": "singleType",
+    "collectionName": "about_pages",
+    "info": {
+        "singularName": "about-page",
+        "pluralName": "about-pages",
+        "displayName": "About Page",
+        "description": "About Us page content"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "heroTitle": {
+            "type": "string"
+        },
+        "heroSubtitle": {
+            "type": "string"
+        },
+        "missionTitle": {
+            "type": "string"
+        },
+        "missionDescription": {
+            "type": "text"
+        },
+        "visionTitle": {
+            "type": "string"
+        },
+        "visionDescription": {
+            "type": "text"
+        },
+        "values": {
+            "type": "json"
+        }
+    }
+}

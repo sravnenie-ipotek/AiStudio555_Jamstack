@@ -1,0 +1,38 @@
+{
+  "name": "strapi-cms",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Strapi CMS for Webflow migration with multi-language support",
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi",
+    "test": "jest",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@strapi/strapi": "5.0.6",
+    "@strapi/plugin-users-permissions": "5.0.6",
+    "@strapi/plugin-cloud": "5.0.6",
+    "pg": "8.13.1",
+    "axios": "1.7.9"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.49.1",
+    "@types/node": "20.17.10",
+    "jest": "29.7.0",
+    "typescript": "5.7.3"
+  },
+  "author": {
+    "name": "A Strapi developer"
+  },
+  "strapi": {
+    "uuid": "8f8e5d2a-9b7c-1e4f-6d8a-2c5b9e1f4d7a"
+  },
+  "engines": {
+    "node": ">=18.0.0 <=22.x.x",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}

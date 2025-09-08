@@ -39,12 +39,12 @@ COPY database*.sql ./
 # Create directory for SQLite (development fallback)
 RUN mkdir -p strapi-fresh/.tmp
 
-# Expose port
-EXPOSE 3000
+# Expose port (Railway will override this with PORT env variable)
+EXPOSE 8080
 
-# Health check
+# Health check (uses PORT env variable, defaults to 8080 on Railway)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/status || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-8080}/api/status || exit 1
 
 # Start our custom server (NOT Strapi!)
 CMD ["node", "server.js"]

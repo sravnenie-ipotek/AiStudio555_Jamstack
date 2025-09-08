@@ -22,6 +22,12 @@ app.use(express.static('.'));
 // Database configuration
 let dbConfig;
 
+// Log environment for debugging
+console.log('Environment Variables Check:');
+console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('PORT:', process.env.PORT);
+
 if (process.env.DATABASE_URL) {
   // Railway PostgreSQL (production)
   dbConfig = {
@@ -29,10 +35,12 @@ if (process.env.DATABASE_URL) {
     ssl: { rejectUnauthorized: false }
   };
   console.log('🐘 Using Railway PostgreSQL database');
+  console.log('🔗 Database URL pattern:', process.env.DATABASE_URL.substring(0, 30) + '...');
 } else {
   // Local development fallback
   const sqlite3 = require('sqlite3').verbose();
   console.log('📦 Using local SQLite for development');
+  console.log('⚠️  No DATABASE_URL found - using SQLite fallback');
 }
 
 // PostgreSQL query helper
