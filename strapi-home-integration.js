@@ -74,28 +74,28 @@ class StrapiHomeIntegration {
   }
 
   updateHeroSection(content) {
-    // Update hero text content
+    // Update hero text content - ALWAYS update, even if empty
     const heroTitle = document.querySelector('.banner-heading');
-    if (heroTitle && content.heroTitle) {
-      heroTitle.textContent = content.heroTitle;
+    if (heroTitle) {
+      heroTitle.textContent = content.heroTitle || 'Welcome to AI Studio';
     }
 
     const heroSubtitle = document.querySelector('.banner-subtitle');
-    if (heroSubtitle && content.heroSubtitle) {
-      heroSubtitle.textContent = content.heroSubtitle;
+    if (heroSubtitle) {
+      heroSubtitle.textContent = content.heroSubtitle || 'Expert-Led Learning Platform';
     }
     
     const heroDescription = document.querySelector('.banner-description-text');
-    if (heroDescription && content.heroSubtitle) {
-      heroDescription.textContent = content.heroSubtitle;
+    if (heroDescription) {
+      heroDescription.textContent = content.heroSubtitle || 'Transform your career with our courses';
     }
 
-    // Handle hero visibility toggle
+    // Handle hero visibility toggle - FIX: Check for explicit false value
     const heroSection = document.querySelector('.section.banner');
     if (heroSection) {
-      const shouldShow = content.heroSectionVisible !== false;
+      const shouldShow = content.heroSectionVisible === true;
       heroSection.style.display = shouldShow ? 'block' : 'none';
-      console.log(`👁️ Hero section: ${shouldShow ? 'VISIBLE' : 'HIDDEN'}`);
+      console.log(`👁️ Hero section: ${shouldShow ? 'VISIBLE' : 'HIDDEN'} (value: ${content.heroSectionVisible})`);
     }
   }
 
@@ -112,14 +112,14 @@ class StrapiHomeIntegration {
       featuredDesc.textContent = content.featuredCoursesDescription;
     }
 
-    // Handle section visibility
+    // Handle section visibility - FIX: Check for explicit true value
     const featuredSection = document.querySelector('.featured-courses-collection');
     if (featuredSection) {
       const parentSection = featuredSection.closest('.section');
       if (parentSection) {
-        const shouldShow = content.featuredCoursesVisible !== false;
+        const shouldShow = content.featuredCoursesVisible === true;
         parentSection.style.display = shouldShow ? 'block' : 'none';
-        console.log(`👁️ Featured courses section: ${shouldShow ? 'VISIBLE' : 'HIDDEN'}`);
+        console.log(`👁️ Featured courses section: ${shouldShow ? 'VISIBLE' : 'HIDDEN'} (value: ${content.featuredCoursesVisible})`);
       }
     }
   }
@@ -136,34 +136,31 @@ class StrapiHomeIntegration {
         // Update course visibility
         courseEl.style.display = course.visible ? 'block' : 'none';
         
-        // Update course title
+        // Update course title - ALWAYS update
         const titleEl = courseEl.querySelector('.featured-courses-name');
-        if (titleEl && course.title) {
-          titleEl.textContent = course.title;
+        if (titleEl) {
+          titleEl.textContent = course.title || `Course ${index + 1}`;
         }
         
-        // Update course rating
+        // Update course rating - ALWAYS update
         const ratingEl = courseEl.querySelector('.featured-courses-rating-text');
-        if (ratingEl && course.rating) {
-          ratingEl.textContent = course.rating;
+        if (ratingEl) {
+          ratingEl.textContent = course.rating || '5.0';
         }
         
-        // Update course lessons
-        const lessonsEl = courseEl.querySelector('.courses-video-session-time-text');
-        if (lessonsEl && course.lessons) {
-          lessonsEl.textContent = course.lessons;
+        // Update course lessons and duration - ALWAYS update
+        const timeTexts = courseEl.querySelectorAll('.courses-video-session-time-text');
+        if (timeTexts[0]) {
+          timeTexts[0].textContent = course.lessons || '12 Lessons';
+        }
+        if (timeTexts[1]) {
+          timeTexts[1].textContent = course.duration || '4 Weeks';
         }
         
-        // Update course duration
-        const durationEls = courseEl.querySelectorAll('.courses-video-session-time-text');
-        if (durationEls[1] && course.duration) {
-          durationEls[1].textContent = course.duration;
-        }
-        
-        // Update course category
+        // Update course category - ALWAYS update
         const categoryEl = courseEl.querySelector('.featured-courses-categories-tag');
-        if (categoryEl && course.category) {
-          categoryEl.textContent = course.category;
+        if (categoryEl) {
+          categoryEl.textContent = course.category || 'Technology';
         }
         
         console.log(`📚 Course ${index + 1}: ${course.title} - ${course.visible ? '✅' : '❌'}`);
@@ -184,12 +181,12 @@ class StrapiHomeIntegration {
       testimonialsDesc.textContent = content.testimonialsSubtitle;
     }
 
-    // Handle section visibility
+    // Handle section visibility - FIX: Check for explicit true value
     const testimonialsSection = document.querySelector('.section.testimonials');
     if (testimonialsSection) {
-      const shouldShow = content.testimonialsVisible !== false;
+      const shouldShow = content.testimonialsVisible === true;
       testimonialsSection.style.display = shouldShow ? 'block' : 'none';
-      console.log(`👁️ Testimonials section: ${shouldShow ? 'VISIBLE' : 'HIDDEN'}`);
+      console.log(`👁️ Testimonials section: ${shouldShow ? 'VISIBLE' : 'HIDDEN'} (value: ${content.testimonialsVisible})`);
     }
   }
 
@@ -243,10 +240,40 @@ class StrapiHomeIntegration {
 
     // Handle section visibility
     const companiesSection = document.querySelector('.companies-section');
+    console.log('🔍 Companies section debug:', {
+      elementFound: !!companiesSection,
+      companiesVisible: content.companiesVisible,
+      typeOfValue: typeof content.companiesVisible,
+      shouldShow: content.companiesVisible === true
+    });
+    
     if (companiesSection) {
-      const shouldShow = content.companiesVisible !== false;
-      companiesSection.style.display = shouldShow ? 'block' : 'none';
-      console.log(`👁️ Companies section: ${shouldShow ? 'VISIBLE' : 'HIDDEN'}`);
+      const shouldShow = content.companiesVisible === true;
+      
+      // Store original styles if not already stored
+      if (!companiesSection.dataset.originalStyles) {
+        companiesSection.dataset.originalStyles = companiesSection.style.cssText || '';
+      }
+      
+      // Apply visibility while preserving other styles
+      if (shouldShow) {
+        // Restore original styles and ensure display is not none
+        companiesSection.style.cssText = companiesSection.dataset.originalStyles;
+        if (!companiesSection.style.display || companiesSection.style.display === 'none') {
+          companiesSection.style.display = 'block';
+        }
+      } else {
+        // Hide the section
+        companiesSection.style.display = 'none';
+      }
+      
+      console.log(`👁️ Companies section: ${shouldShow ? 'VISIBLE' : 'HIDDEN'} (value: ${content.companiesVisible})`);
+      
+      // Double-check the actual computed style
+      const computedStyle = window.getComputedStyle(companiesSection);
+      console.log(`   Actual display value: ${computedStyle.display}`);
+    } else {
+      console.error('❌ Companies section element not found!');
     }
   }
 
@@ -263,12 +290,12 @@ class StrapiHomeIntegration {
       aboutSubtitle.textContent = content.aboutSubtitle;
     }
 
-    // Handle section visibility
+    // Handle section visibility - FIX: Check for explicit true value
     const aboutSection = document.querySelector('.about-section');
     if (aboutSection) {
-      const shouldShow = content.aboutVisible !== false;
+      const shouldShow = content.aboutVisible === true;
       aboutSection.style.display = shouldShow ? 'block' : 'none';
-      console.log(`👁️ About section: ${shouldShow ? 'VISIBLE' : 'HIDDEN'}`);
+      console.log(`👁️ About section: ${shouldShow ? 'VISIBLE' : 'HIDDEN'} (value: ${content.aboutVisible})`);
     }
   }
 
@@ -302,16 +329,16 @@ class StrapiHomeIntegration {
       <strong style="font-size: 14px;">🎨 Strapi CMS - Complete Control</strong><br>
       <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.3);">
         <strong>Sections:</strong><br>
-        Hero: ${content.heroSectionVisible !== false ? '✅' : '❌'} 
-        ${content.heroSectionVisible !== false ? 'Visible' : 'Hidden'}<br>
-        Courses: ${content.featuredCoursesVisible !== false ? '✅' : '❌'} 
-        ${content.featuredCoursesVisible !== false ? 'Visible' : 'Hidden'}<br>
-        Testimonials: ${content.testimonialsVisible !== false ? '✅' : '❌'} 
-        ${content.testimonialsVisible !== false ? 'Visible' : 'Hidden'}<br>
-        Companies: ${content.companiesVisible !== false ? '✅' : '❌'}
-        ${content.companiesVisible !== false ? 'Visible' : 'Hidden'}<br>
-        About: ${content.aboutVisible !== false ? '✅' : '❌'}
-        ${content.aboutVisible !== false ? 'Visible' : 'Hidden'}<br>
+        Hero: ${content.heroSectionVisible === true ? '✅' : '❌'} 
+        ${content.heroSectionVisible === true ? 'Visible' : 'Hidden'}<br>
+        Courses: ${content.featuredCoursesVisible === true ? '✅' : '❌'} 
+        ${content.featuredCoursesVisible === true ? 'Visible' : 'Hidden'}<br>
+        Testimonials: ${content.testimonialsVisible === true ? '✅' : '❌'} 
+        ${content.testimonialsVisible === true ? 'Visible' : 'Hidden'}<br>
+        Companies: ${content.companiesVisible === true ? '✅' : '❌'}
+        ${content.companiesVisible === true ? 'Visible' : 'Hidden'}<br>
+        About: ${content.aboutVisible === true ? '✅' : '❌'}
+        ${content.aboutVisible === true ? 'Visible' : 'Hidden'}<br>
       </div>
       <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.3);">
         <strong>Content:</strong><br>

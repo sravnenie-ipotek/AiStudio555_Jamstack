@@ -8,7 +8,7 @@ const { exec } = require('child_process');
 const path = require('path');
 
 const PORT = 3333;
-const DB_PATH = path.join(__dirname, 'strapi-fresh/strapi-fresh/strapi-new/.tmp/data.db');
+const DB_PATH = path.join(__dirname, 'strapi-fresh/.tmp/data.db');
 
 // Create server
 const server = http.createServer((req, res) => {
@@ -37,17 +37,17 @@ const server = http.createServer((req, res) => {
       -- Companies Section
       companies_title, companies_description, companies_visible,
       -- Course 1
-      course1_title, course1_rating, course1_lessons, course1_duration, course1_category, course1_visible,
+      course_1_title, course_1_rating, course_1_lessons, course_1_duration, course_1_category, course_1_visible,
       -- Course 2
-      course2_title, course2_rating, course2_lessons, course2_duration, course2_category, course2_visible,
+      course_2_title, course_2_rating, course_2_lessons, course_2_duration, course_2_category, course_2_visible,
       -- Course 3
-      course3_title, course3_rating, course3_lessons, course3_duration, course3_category, course3_visible,
+      course_3_title, course_3_rating, course_3_lessons, course_3_duration, course_3_category, course_3_visible,
       -- Course 4
-      course4_title, course4_rating, course4_lessons, course4_duration, course4_category, course4_visible,
+      course_4_title, course_4_rating, course_4_lessons, course_4_duration, course_4_category, course_4_visible,
       -- Course 5
-      course5_title, course5_rating, course5_lessons, course5_duration, course5_category, course5_visible,
+      course_5_title, course_5_rating, course_5_lessons, course_5_duration, course_5_category, course_5_visible,
       -- Course 6
-      course6_title, course6_rating, course6_lessons, course6_duration, course6_category, course6_visible,
+      course_6_title, course_6_rating, course_6_lessons, course_6_duration, course_6_category, course_6_visible,
       -- Testimonial 1
       testimonial1_text, testimonial1_author, testimonial1_rating, testimonial1_visible,
       -- Testimonial 2
@@ -58,7 +58,7 @@ const server = http.createServer((req, res) => {
       testimonial4_text, testimonial4_author, testimonial4_rating, testimonial4_visible,
       -- Testimonials Section
       testimonials_title, testimonials_subtitle, testimonials_visible
-      FROM home_pages WHERE id = 1`;
+      FROM home_pages WHERE published_at IS NOT NULL ORDER BY id DESC LIMIT 1`;
     
     const command = `sqlite3 -json "${DB_PATH}" "${query}"`;
     
@@ -116,52 +116,52 @@ const server = http.createServer((req, res) => {
             // Individual Courses
             courses: [
               {
-                title: row.course1_title,
-                rating: row.course1_rating,
-                lessons: row.course1_lessons,
-                duration: row.course1_duration,
-                category: row.course1_category,
-                visible: Boolean(row.course1_visible)
+                title: row.course_1_title,
+                rating: row.course_1_rating,
+                lessons: row.course_1_lessons,
+                duration: row.course_1_duration,
+                category: row.course_1_category,
+                visible: Boolean(row.course_1_visible)
               },
               {
-                title: row.course2_title,
-                rating: row.course2_rating,
-                lessons: row.course2_lessons,
-                duration: row.course2_duration,
-                category: row.course2_category,
-                visible: Boolean(row.course2_visible)
+                title: row.course_2_title,
+                rating: row.course_2_rating,
+                lessons: row.course_2_lessons,
+                duration: row.course_2_duration,
+                category: row.course_2_category,
+                visible: Boolean(row.course_2_visible)
               },
               {
-                title: row.course3_title,
-                rating: row.course3_rating,
-                lessons: row.course3_lessons,
-                duration: row.course3_duration,
-                category: row.course3_category,
-                visible: Boolean(row.course3_visible)
+                title: row.course_3_title,
+                rating: row.course_3_rating,
+                lessons: row.course_3_lessons,
+                duration: row.course_3_duration,
+                category: row.course_3_category,
+                visible: Boolean(row.course_3_visible)
               },
               {
-                title: row.course4_title,
-                rating: row.course4_rating,
-                lessons: row.course4_lessons,
-                duration: row.course4_duration,
-                category: row.course4_category,
-                visible: Boolean(row.course4_visible)
+                title: row.course_4_title,
+                rating: row.course_4_rating,
+                lessons: row.course_4_lessons,
+                duration: row.course_4_duration,
+                category: row.course_4_category,
+                visible: Boolean(row.course_4_visible)
               },
               {
-                title: row.course5_title,
-                rating: row.course5_rating,
-                lessons: row.course5_lessons,
-                duration: row.course5_duration,
-                category: row.course5_category,
-                visible: Boolean(row.course5_visible)
+                title: row.course_5_title,
+                rating: row.course_5_rating,
+                lessons: row.course_5_lessons,
+                duration: row.course_5_duration,
+                category: row.course_5_category,
+                visible: Boolean(row.course_5_visible)
               },
               {
-                title: row.course6_title,
-                rating: row.course6_rating,
-                lessons: row.course6_lessons,
-                duration: row.course6_duration,
-                category: row.course6_category,
-                visible: Boolean(row.course6_visible)
+                title: row.course_6_title,
+                rating: row.course_6_rating,
+                lessons: row.course_6_lessons,
+                duration: row.course_6_duration,
+                category: row.course_6_category,
+                visible: Boolean(row.course_6_visible)
               }
             ],
             
