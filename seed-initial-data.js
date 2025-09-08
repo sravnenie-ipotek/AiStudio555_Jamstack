@@ -108,6 +108,15 @@ async function seedDatabase() {
       `, [name, role, bio, linkedin, twitter, order]);
     }
 
+    // 5. Insert contact page data
+    console.log('📞 Creating contact page...');
+    await client.query(`
+      INSERT INTO contact_pages (id, phone, email, address, office_hours, map_url, published_at, created_at, updated_at)
+      VALUES (1, '+1 (555) 123-4567', 'info@aistudio555.com', '123 Tech Street, Silicon Valley, CA 94025', 'Monday-Friday: 9:00 AM - 6:00 PM', 'https://maps.google.com/?q=Silicon+Valley', NOW(), NOW(), NOW())
+      ON CONFLICT (id) DO UPDATE SET
+        updated_at = NOW()
+    `);
+
     console.log('✅ Database seeded successfully!');
     
   } catch (error) {

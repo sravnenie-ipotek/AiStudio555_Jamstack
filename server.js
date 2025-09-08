@@ -330,6 +330,45 @@ app.get('/api/faqs', async (req, res) => {
   }
 });
 
+// GET CONTACT PAGE
+app.get('/api/contact-page', async (req, res) => {
+  try {
+    const result = await queryDatabase('SELECT * FROM contact_pages WHERE id = 1');
+    
+    if (!result || result.length === 0) {
+      return res.json({
+        data: {
+          id: 1,
+          attributes: {
+            phone: '',
+            email: '',
+            address: '',
+            officeHours: '',
+            mapUrl: ''
+          }
+        }
+      });
+    }
+    
+    const contact = result[0];
+    res.json({
+      data: {
+        id: contact.id,
+        attributes: {
+          phone: contact.phone || '',
+          email: contact.email || '',
+          address: contact.address || '',
+          officeHours: contact.office_hours || '',
+          mapUrl: contact.map_url || ''
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Contact page error:', error);
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
+});
+
 // ==================== CRUD OPERATIONS ====================
 
 // UPDATE HOME PAGE
