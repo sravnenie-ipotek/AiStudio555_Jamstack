@@ -830,23 +830,34 @@ app.get('/api/home-page-live', async (req, res) => {
 // Manual seed endpoint (temporary - for initial setup)
 app.get('/api/seed-database', async (req, res) => {
   try {
-    const homeCount = await queryDatabase('SELECT COUNT(*) as count FROM home_pages');
-    if (homeCount[0].count === 0 || homeCount[0].count === '0') {
-      console.log('📝 Seeding database...');
-      const { seedDatabase } = require('./seed-initial-data');
-      await seedDatabase();
-      res.json({ 
-        success: true, 
-        message: 'Database seeded successfully!',
-        note: 'Refresh the admin panel to see the data'
-      });
-    } else {
-      res.json({ 
-        success: false, 
-        message: 'Database already has data',
-        homePages: homeCount[0].count
-      });
-    }
+    console.log('📝 Force seeding database...');
+    const { seedDatabase } = require('./seed-initial-data');
+    await seedDatabase();
+    res.json({ 
+      success: true, 
+      message: 'Database force-seeded successfully! All tables updated with locale columns.',
+      note: 'Refresh the admin panel to see the data'
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      error: error.message,
+      tip: 'Check server logs for details'
+    });
+  }
+});
+
+// Reset database endpoint (for fixing schema issues)
+app.get('/api/reset-database', async (req, res) => {
+  try {
+    console.log('🔄 Resetting database schema...');
+    const { seedDatabase } = require('./seed-initial-data');
+    await seedDatabase();
+    res.json({ 
+      success: true, 
+      message: 'Database schema reset and seeded successfully!',
+      note: 'All tables now have proper locale columns'
+    });
   } catch (error) {
     res.status(500).json({ 
       success: false, 

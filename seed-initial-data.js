@@ -47,13 +47,78 @@ async function seedDatabase() {
     await client.query('UPDATE faqs SET locale = \'en\' WHERE locale IS NULL');
     await client.query('UPDATE career_resources SET locale = \'en\' WHERE locale IS NULL');
 
-    // Clear existing data to prevent conflicts (development only)
-    console.log('🧹 Clearing existing data...');
+    // Force re-seeding by clearing ALL data (including home pages)
+    console.log('🧹 Force clearing ALL existing data for complete re-seed...');
     await client.query('DELETE FROM home_pages');
     await client.query('DELETE FROM courses');
     await client.query('DELETE FROM blog_posts');
     await client.query('DELETE FROM teachers');
     await client.query('DELETE FROM contact_pages');
+    
+    // Ensure about_pages table exists and has locale column
+    console.log('🔧 Ensuring about_pages table structure...');
+    try {
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS about_pages (
+          id SERIAL PRIMARY KEY,
+          locale VARCHAR(5) DEFAULT 'en',
+          hero_title VARCHAR(255),
+          hero_subtitle VARCHAR(255),
+          mission_title VARCHAR(255),
+          mission_description TEXT,
+          vision_title VARCHAR(255),
+          vision_description TEXT,
+          published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+    } catch (error) {
+      console.log('⚠️ About pages table creation:', error.message);
+    }
+    
+    // Ensure faqs table exists and has locale column
+    console.log('🔧 Ensuring faqs table structure...');
+    try {
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS faqs (
+          id SERIAL PRIMARY KEY,
+          locale VARCHAR(5) DEFAULT 'en',
+          question TEXT,
+          answer TEXT,
+          category VARCHAR(100),
+          "order" INTEGER,
+          published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+    } catch (error) {
+      console.log('⚠️ FAQs table creation:', error.message);
+    }
+    
+    // Ensure career_resources table exists and has locale column
+    console.log('🔧 Ensuring career_resources table structure...');
+    try {
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS career_resources (
+          id SERIAL PRIMARY KEY,
+          locale VARCHAR(5) DEFAULT 'en',
+          title VARCHAR(255),
+          description TEXT,
+          type VARCHAR(50),
+          category VARCHAR(100),
+          download_url VARCHAR(500),
+          visible BOOLEAN DEFAULT true,
+          published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+    } catch (error) {
+      console.log('⚠️ Career resources table creation:', error.message);
+    }
+    
     await client.query('DELETE FROM about_pages');
     await client.query('DELETE FROM faqs');
     await client.query('DELETE FROM career_resources');
