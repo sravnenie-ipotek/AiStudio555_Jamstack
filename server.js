@@ -307,6 +307,18 @@ app.get('/api/teachers', async (req, res) => {
   }
 });
 
+// FAQs
+app.get('/api/faqs', async (req, res) => {
+  try {
+    // Return empty array for now as FAQs table doesn't exist yet
+    res.json({
+      data: []
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
+});
+
 // ==================== CRUD OPERATIONS ====================
 
 // UPDATE HOME PAGE

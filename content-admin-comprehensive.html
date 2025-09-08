@@ -1075,13 +1075,9 @@
     </div>
 
     <script>
-        // Production API URLs - Update these to your Strapi Cloud URLs
-        const API_URL_READ = window.location.hostname === 'localhost' 
-            ? 'http://localhost:3334/api' 
-            : 'https://your-project-name.strapi.app/api';
-        const API_URL_CRUD = window.location.hostname === 'localhost' 
-            ? 'http://localhost:3335/api' 
-            : 'https://your-project-name.strapi.app/api';
+        // Production API URLs - Using relative paths to work on any domain
+        const API_URL_READ = '/api';  // Will use the same domain as the admin panel
+        const API_URL_CRUD = '/api';  // Will use the same domain as the admin panel
         let currentEditingId = null;
         let currentEditingType = null;
 
