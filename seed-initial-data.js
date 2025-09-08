@@ -41,6 +41,24 @@ async function seedDatabase() {
     await client.query('UPDATE teachers SET locale = \'en\' WHERE locale IS NULL');
     await client.query('UPDATE contact_pages SET locale = \'en\' WHERE locale IS NULL');
 
+    // Create unique constraints for locale columns
+    console.log('🔒 Creating unique constraints for locale columns...');
+    const constraintQueries = [
+      'ALTER TABLE home_pages ADD CONSTRAINT IF NOT EXISTS unique_home_page_locale UNIQUE (locale)',
+      'ALTER TABLE courses ADD CONSTRAINT IF NOT EXISTS unique_course_locale UNIQUE (locale)',
+      'ALTER TABLE blog_posts ADD CONSTRAINT IF NOT EXISTS unique_blog_post_locale UNIQUE (locale)',
+      'ALTER TABLE teachers ADD CONSTRAINT IF NOT EXISTS unique_teacher_locale UNIQUE (locale)',
+      'ALTER TABLE contact_pages ADD CONSTRAINT IF NOT EXISTS unique_contact_page_locale UNIQUE (locale)'
+    ];
+
+    for (const query of constraintQueries) {
+      try {
+        await client.query(query);
+      } catch (error) {
+        console.log('⚠️ Constraint might already exist:', error.message);
+      }
+    }
+
     // 1. Insert English home page data
     console.log('🇬🇧 Creating English home page content...');
     await client.query(`
