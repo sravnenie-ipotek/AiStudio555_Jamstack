@@ -64,12 +64,16 @@ async function buildLanguageSite(langCode, langConfig) {
   copyDirectory('js', path.join(langDir, 'js'));
   copyDirectory('images', path.join(langDir, 'images'));
   
-  // Process HTML files
-  const htmlFiles = ['index.html', 'courses.html', 'detail_courses.html'];
+  // Process HTML files - map home.html to index.html
+  const htmlFiles = [
+    { source: 'home.html', target: 'index.html' },
+    { source: 'courses.html', target: 'courses.html' },
+    { source: 'detail_courses.html', target: 'detail_courses.html' }
+  ];
   
-  for (const file of htmlFiles) {
-    if (fs.existsSync(file)) {
-      await processHtmlFile(file, langCode, langConfig, langDir);
+  for (const fileMap of htmlFiles) {
+    if (fs.existsSync(fileMap.source)) {
+      await processHtmlFile(fileMap.source, langCode, langConfig, langDir, fileMap.target);
     }
   }
   
@@ -81,7 +85,7 @@ async function buildLanguageSite(langCode, langConfig) {
   console.log(`   ✅ ${langConfig.name} site built in /${langCode}/`);
 }
 
-async function processHtmlFile(filename, langCode, langConfig, outputDir) {
+async function processHtmlFile(filename, langCode, langConfig, outputDir, targetName = filename) {
   const html = fs.readFileSync(filename, 'utf8');
   const $ = cheerio.load(html);
   
@@ -115,8 +119,8 @@ async function processHtmlFile(filename, langCode, langConfig, outputDir) {
   // Update navigation links for multi-language
   updateNavigationLinks($, langCode);
   
-  // Save processed HTML
-  const outputPath = path.join(outputDir, filename);
+  // Save processed HTML with target filename
+  const outputPath = path.join(outputDir, targetName);
   fs.writeFileSync(outputPath, $.html());
 }
 

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strapi Content Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .content { background: #f0f0f0; padding: 15px; margin: 20px 0; border-radius: 5px; }
+        h2 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>Strapi Content Integration Test</h1>
+    
+    <div id="status"></div>
+    <div id="content"></div>
+    
+    <script>
+        async function loadStrapiContent() {
+            const statusDiv = document.getElementById('status');
+            const contentDiv = document.getElementById('content');
+            
+            try {
+                console.log('Fetching content from Strapi...');
+                statusDiv.innerHTML = '<div class="status">Loading...</div>';
+                
+                const response = await fetch('http://localhost:1337/api/home-page');
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    statusDiv.innerHTML = '<div class="status error">API returned 404 - Content exists in DB but route not configured!</div>';
+                    
+                    contentDiv.innerHTML = `
+                        <h2>Content in Database (ID: 8)</h2>
+                        <div class="content">
+                            <h3>AI Studio - Welcome to Learning Platform</h3>
+                            <p><strong>Hero Title:</strong> Unlock Potential With Proven Courses</p>
+                            <p><strong>Hero Subtitle:</strong> Expert-Led Learning Platform</p>
+                            <p><strong>Hero Section Visible:</strong> Yes</p>
+                            <p><em>This content exists in the database but the API route is not properly configured.</em></p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const data = await response.json();
+                console.log('API Data:', data);
+                
+                statusDiv.innerHTML = '<div class="status success">✅ Successfully connected to Strapi API!</div>';
+                
+                if (data.data) {
+                    contentDiv.innerHTML = `
+                        <h2>Content from Strapi API</h2>
+                        <div class="content">
+                            <h3>${data.data.title || 'No title'}</h3>
+                            <p><strong>Hero Title:</strong> ${data.data.heroTitle || 'No hero title'}</p>
+                            <p><strong>Hero Subtitle:</strong> ${data.data.heroSubtitle || 'No subtitle'}</p>
+                            <p><strong>Hero Section Visible:</strong> ${data.data.heroSectionVisible ? 'Yes' : 'No'}</p>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                statusDiv.innerHTML = `<div class="status error">Error: ${error.message}</div>`;
+                
+                contentDiv.innerHTML = `
+                    <h2>Known Database Content</h2>
+                    <div class="content">
+                        <p>The following content exists in the database but cannot be accessed via API:</p>
+                        <ul>
+                            <li>Title: AI Studio - Welcome to Learning Platform</li>
+                            <li>Hero Title: Unlock Potential With Proven Courses</li>
+                            <li>Hero Subtitle: Expert-Led Learning Platform</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+        
+        loadStrapiContent();
+        setInterval(loadStrapiContent, 5000);
+    </script>
+</body>
+</html>
