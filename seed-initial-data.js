@@ -41,23 +41,13 @@ async function seedDatabase() {
     await client.query('UPDATE teachers SET locale = \'en\' WHERE locale IS NULL');
     await client.query('UPDATE contact_pages SET locale = \'en\' WHERE locale IS NULL');
 
-    // Create unique constraints for locale columns
-    console.log('🔒 Creating unique constraints for locale columns...');
-    const constraintQueries = [
-      'ALTER TABLE home_pages ADD CONSTRAINT IF NOT EXISTS unique_home_page_locale UNIQUE (locale)',
-      'ALTER TABLE courses ADD CONSTRAINT IF NOT EXISTS unique_course_locale UNIQUE (locale)',
-      'ALTER TABLE blog_posts ADD CONSTRAINT IF NOT EXISTS unique_blog_post_locale UNIQUE (locale)',
-      'ALTER TABLE teachers ADD CONSTRAINT IF NOT EXISTS unique_teacher_locale UNIQUE (locale)',
-      'ALTER TABLE contact_pages ADD CONSTRAINT IF NOT EXISTS unique_contact_page_locale UNIQUE (locale)'
-    ];
-
-    for (const query of constraintQueries) {
-      try {
-        await client.query(query);
-      } catch (error) {
-        console.log('⚠️ Constraint might already exist:', error.message);
-      }
-    }
+    // Clear existing data to prevent conflicts (development only)
+    console.log('🧹 Clearing existing data...');
+    await client.query('DELETE FROM home_pages');
+    await client.query('DELETE FROM courses');
+    await client.query('DELETE FROM blog_posts');
+    await client.query('DELETE FROM teachers');
+    await client.query('DELETE FROM contact_pages');
 
     // 1. Insert English home page data
     console.log('🇬🇧 Creating English home page content...');
@@ -98,8 +88,7 @@ async function seedDatabase() {
         'Best investment I ever made in my career. The practical projects really prepared me for real work.', 'Emma Davis', '5.0', true,
         'The community support and mentorship made all the difference in my learning journey.', 'Alex Rodriguez', '5.0', true,
         NOW(), NOW(), NOW()
-      ) ON CONFLICT (locale) DO UPDATE SET
-        updated_at = NOW()
+      )
     `);
 
     // 2. Insert Russian home page data
@@ -141,8 +130,7 @@ async function seedDatabase() {
         'Лучшая инвестиция в мою карьеру. Практические проекты действительно подготовили меня.', 'Эмма Дэвис', '5.0', true,
         'Поддержка сообщества и менторство сделали всю разницу в моем обучении.', 'Алекс Родригес', '5.0', true,
         NOW(), NOW(), NOW()
-      ) ON CONFLICT (locale) DO UPDATE SET
-        updated_at = NOW()
+      )
     `);
 
     // 3. Insert Hebrew home page data
@@ -184,8 +172,7 @@ async function seedDatabase() {
         'ההשקעה הטובה ביותר שעשיתי בקריירה שלי. הפרויקטים המעשיים באמת הכינו אותי.', 'אמה דייוויס', '5.0', true,
         'התמיכה של הקהילה והחניכה עשו את כל ההבדל במסע הלמידה שלי.', 'אלכס רודריגז', '5.0', true,
         NOW(), NOW(), NOW()
-      ) ON CONFLICT (locale) DO UPDATE SET
-        updated_at = NOW()
+      )
     `);
 
     // 4. Insert courses for all languages
@@ -221,7 +208,6 @@ async function seedDatabase() {
       await client.query(`
         INSERT INTO courses (locale, title, description, price, duration, lessons, category, rating, visible, published_at, created_at, updated_at)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW(), NOW())
-        ON CONFLICT DO NOTHING
       `, [locale, title, description, price, duration, lessons, category, rating, visible]);
     }
 
@@ -237,7 +223,6 @@ async function seedDatabase() {
       await client.query(`
         INSERT INTO contact_pages (locale, phone, email, address, office_hours, map_url, published_at, created_at, updated_at)
         VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW(), NOW())
-        ON CONFLICT DO NOTHING
       `, [locale, phone, email, address, officeHours, mapUrl]);
     }
 
@@ -262,7 +247,6 @@ async function seedDatabase() {
       await client.query(`
         INSERT INTO teachers (locale, name, role, bio, linkedin, twitter, "order", published_at, created_at, updated_at)
         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW(), NOW())
-        ON CONFLICT DO NOTHING
       `, [locale, name, role, bio, linkedin, twitter, order]);
     }
 
@@ -287,7 +271,6 @@ async function seedDatabase() {
       await client.query(`
         INSERT INTO blog_posts (locale, title, slug, excerpt, content, author, category, published_at, created_at, updated_at)
         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW(), NOW())
-        ON CONFLICT DO NOTHING
       `, [locale, title, slug, excerpt, content, author, category]);
     }
 
