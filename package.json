@@ -4,9 +4,9 @@
   "description": "AI Studio E-Learning Platform with Strapi CMS",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "echo 'Starting Custom Live API Server (NOT Strapi)' && node server.js",
     "migrate": "node migrate-to-railway.js",
-    "postinstall": "node migrate-to-railway.js",
+    "postinstall": "echo 'Running database migration...' && node migrate-to-railway.js || echo 'Migration skipped (may already exist)'",
     "dev": "concurrently \"npm run watch-html\" \"npm run strapi:dev\" \"npm run frontend:dev\" \"npm run preview:server\"",
     "strapi:dev": "cd strapi-fresh && npm run develop",
     "frontend:dev": "python3 -m http.server 3005",

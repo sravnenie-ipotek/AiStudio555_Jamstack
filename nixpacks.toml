@@ -1,14 +1,17 @@
 # Nixpacks configuration for Railway
-# Ensures correct Node.js build
+# Forces use of our custom server, NOT Strapi
 
 [phases.setup]
 nixPkgs = ['nodejs_20', 'npm']
 
 [phases.install]
-cmds = ['npm install']
+cmds = ['npm install --production']
 
 [phases.build]
-cmds = ['ls -la', 'pwd']
+cmds = ['echo "Using custom Live API server, NOT Strapi"', 'ls -la server.js']
 
 [start]
 cmd = 'node server.js'
+
+[variables]
+NO_STRAPI = 'true'

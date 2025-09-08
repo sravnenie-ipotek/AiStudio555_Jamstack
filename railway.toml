@@ -1,20 +1,20 @@
 # Railway Configuration
-# All-in-one deployment: Web App + Custom APIs + PostgreSQL
+# IMPORTANT: Uses custom Live API server, NOT Strapi
+# Due to Strapi v5 bug (all APIs return 404)
 
 [build]
 builder = "nixpacks"
-buildCommand = "npm install"
+buildCommand = "npm install --production"
 
 [deploy]
-startCommand = "npm start"
+startCommand = "node server.js"
 healthcheckPath = "/api/status"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
 
-[services.web]
-name = "AI Studio Platform"
-port = 3000
+# Explicitly set the root directory
+rootDirectory = "/"
 
 # PostgreSQL will be automatically provisioned
 # Railway provides DATABASE_URL environment variable
