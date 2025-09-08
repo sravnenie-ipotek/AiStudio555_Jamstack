@@ -19,6 +19,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
+// Serve images from root for all language paths
+app.use('/en/images', express.static(path.join(__dirname, 'images')));
+app.use('/he/images', express.static(path.join(__dirname, 'images')));
+app.use('/ru/images', express.static(path.join(__dirname, 'images')));
+
 // Database configuration
 let dbConfig;
 
@@ -439,7 +444,7 @@ app.get('/ru/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
 });
 
-// Serve strapi integration files
+// Serve strapi integration files from root and language paths
 app.get('/strapi-home-integration.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'strapi-home-integration.js'));
 });
@@ -449,6 +454,43 @@ app.get('/strapi-visibility-integration.js', (req, res) => {
 });
 
 app.get('/strapi-content-loader.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
+});
+
+// Also serve from language paths
+app.get('/en/strapi-home-integration.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strapi-home-integration.js'));
+});
+
+app.get('/en/strapi-visibility-integration.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strapi-visibility-integration.js'));
+});
+
+app.get('/en/strapi-content-loader.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
+});
+
+app.get('/he/strapi-home-integration.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strapi-home-integration.js'));
+});
+
+app.get('/he/strapi-visibility-integration.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strapi-visibility-integration.js'));
+});
+
+app.get('/he/strapi-content-loader.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
+});
+
+app.get('/ru/strapi-home-integration.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strapi-home-integration.js'));
+});
+
+app.get('/ru/strapi-visibility-integration.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strapi-visibility-integration.js'));
+});
+
+app.get('/ru/strapi-content-loader.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
 });
 
