@@ -457,40 +457,49 @@ app.get('/strapi-content-loader.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
 });
 
-// Also serve from language paths
+// Also serve from language paths with correct content-type
 app.get('/en/strapi-home-integration.js', (req, res) => {
+  res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-home-integration.js'));
 });
 
 app.get('/en/strapi-visibility-integration.js', (req, res) => {
+  res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-visibility-integration.js'));
 });
 
 app.get('/en/strapi-content-loader.js', (req, res) => {
+  res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
 });
 
 app.get('/he/strapi-home-integration.js', (req, res) => {
+  res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-home-integration.js'));
 });
 
 app.get('/he/strapi-visibility-integration.js', (req, res) => {
+  res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-visibility-integration.js'));
 });
 
 app.get('/he/strapi-content-loader.js', (req, res) => {
+  res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
 });
 
 app.get('/ru/strapi-home-integration.js', (req, res) => {
+  res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-home-integration.js'));
 });
 
 app.get('/ru/strapi-visibility-integration.js', (req, res) => {
+  res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-visibility-integration.js'));
 });
 
 app.get('/ru/strapi-content-loader.js', (req, res) => {
+  res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
 });
 
