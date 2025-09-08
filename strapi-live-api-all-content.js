@@ -201,7 +201,154 @@ const server = http.createServer((req, res) => {
     });
   }
   
-  // API STATUS (new endpoint)
+  // HOME PAGE (new endpoint) - ALL 123 fields
+  else if (req.url === '/api/home-page' && req.method === 'GET') {
+    queryDatabase(`
+      SELECT * FROM home_pages WHERE published_at IS NOT NULL LIMIT 1
+    `, res, (data) => {
+      if (data.length === 0) {
+        return { error: 'No home page data found' };
+      }
+      
+      const homeData = data[0];
+      return {
+        data: {
+          id: homeData.id,
+          attributes: {
+            // Hero Section
+            title: homeData.title,
+            heroTitle: homeData.hero_title,
+            heroSubtitle: homeData.hero_subtitle,
+            heroDescription: homeData.hero_description,
+            heroSectionVisible: Boolean(homeData.hero_section_visible),
+            
+            // Featured Courses Section
+            featuredCoursesTitle: homeData.featured_courses_title,
+            featuredCoursesDescription: homeData.featured_courses_description,
+            featuredCoursesVisible: Boolean(homeData.featured_courses_visible),
+            
+            // About Section
+            aboutTitle: homeData.about_title,
+            aboutSubtitle: homeData.about_subtitle,
+            aboutDescription: homeData.about_description,
+            aboutVisible: Boolean(homeData.about_visible),
+            
+            // Companies Section
+            companiesTitle: homeData.companies_title,
+            companiesDescription: homeData.companies_description,
+            companiesVisible: Boolean(homeData.companies_visible),
+            
+            // Testimonials Section
+            testimonialsTitle: homeData.testimonials_title,
+            testimonialsSubtitle: homeData.testimonials_subtitle,
+            testimonialsVisible: Boolean(homeData.testimonials_visible),
+            
+            // Individual Courses (6 courses)
+            courses: [
+              {
+                title: homeData.course_1_title,
+                rating: homeData.course_1_rating,
+                lessons: homeData.course_1_lessons,
+                duration: homeData.course_1_duration,
+                category: homeData.course_1_category,
+                description: homeData.course_1_description,
+                visible: Boolean(homeData.course_1_visible)
+              },
+              {
+                title: homeData.course_2_title,
+                rating: homeData.course_2_rating,
+                lessons: homeData.course_2_lessons,
+                duration: homeData.course_2_duration,
+                category: homeData.course_2_category,
+                visible: Boolean(homeData.course_2_visible)
+              },
+              {
+                title: homeData.course_3_title,
+                rating: homeData.course_3_rating,
+                lessons: homeData.course_3_lessons,
+                duration: homeData.course_3_duration,
+                category: homeData.course_3_category,
+                visible: Boolean(homeData.course_3_visible)
+              },
+              {
+                title: homeData.course_4_title,
+                rating: homeData.course_4_rating,
+                lessons: homeData.course_4_lessons,
+                duration: homeData.course_4_duration,
+                category: homeData.course_4_category,
+                visible: Boolean(homeData.course_4_visible)
+              },
+              {
+                title: homeData.course_5_title,
+                rating: homeData.course_5_rating,
+                lessons: homeData.course_5_lessons,
+                duration: homeData.course_5_duration,
+                category: homeData.course_5_category,
+                visible: Boolean(homeData.course_5_visible)
+              },
+              {
+                title: homeData.course_6_title,
+                rating: homeData.course_6_rating,
+                lessons: homeData.course_6_lessons,
+                duration: homeData.course_6_duration,
+                category: homeData.course_6_category,
+                visible: Boolean(homeData.course_6_visible)
+              }
+            ],
+            
+            // Individual Testimonials (4 testimonials)
+            testimonials: [
+              {
+                text: homeData.testimonial_1_text,
+                author: homeData.testimonial_1_author,
+                rating: homeData.testimonial_1_rating,
+                visible: Boolean(homeData.testimonial_1_visible)
+              },
+              {
+                text: homeData.testimonial_2_text,
+                author: homeData.testimonial_2_author,
+                rating: homeData.testimonial_2_rating,
+                visible: Boolean(homeData.testimonial_2_visible)
+              },
+              {
+                text: homeData.testimonial_3_text,
+                author: homeData.testimonial_3_author,
+                rating: homeData.testimonial_3_rating,
+                visible: Boolean(homeData.testimonial_3_visible)
+              },
+              {
+                text: homeData.testimonial_4_text,
+                author: homeData.testimonial_4_author,
+                rating: homeData.testimonial_4_rating,
+                visible: Boolean(homeData.testimonial_4_visible)
+              }
+            ]
+          }
+        }
+      };
+    });
+  }
+  
+  // FAQs (new endpoint)
+  else if (req.url === '/api/faqs' && req.method === 'GET') {
+    queryDatabase(`
+      SELECT * FROM faqs WHERE published_at IS NOT NULL ORDER BY [order] ASC
+    `, res, (data) => {
+      return {
+        data: data.map(faq => ({
+          id: faq.id,
+          attributes: {
+            question: faq.question,
+            answer: faq.answer,
+            category: faq.category,
+            order: faq.order
+          }
+        }))
+      };
+    });
+  }
+  
+  // API STATUS (updated endpoint)
   else if (req.url === '/api/status' && req.method === 'GET') {
     Promise.all([
       queryDatabasePromise('SELECT COUNT(*) as count FROM courses WHERE published_at IS NOT NULL'),
@@ -284,6 +431,7 @@ function queryDatabasePromise(query) {
 server.listen(PORT, () => {
   console.log(`🚀 COMPLETE Live Database API running at http://localhost:${PORT}`);
   console.log(`📊 Available endpoints:`);
+  console.log(`   http://localhost:${PORT}/api/home-page`);
   console.log(`   http://localhost:${PORT}/api/courses`);
   console.log(`   http://localhost:${PORT}/api/blog-posts`);
   console.log(`   http://localhost:${PORT}/api/teachers`);
@@ -292,6 +440,7 @@ server.listen(PORT, () => {
   console.log(`   http://localhost:${PORT}/api/career-resources`);
   console.log(`   http://localhost:${PORT}/api/about-page`);
   console.log(`   http://localhost:${PORT}/api/contact-page`);
+  console.log(`   http://localhost:${PORT}/api/faqs`);
   console.log(`   http://localhost:${PORT}/api/status`);
   console.log(`💾 Reading LIVE from: ${DB_PATH}`);
   console.log(`🔄 Following your proven working architecture!`);
