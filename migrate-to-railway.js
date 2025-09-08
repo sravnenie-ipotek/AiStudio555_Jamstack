@@ -258,24 +258,28 @@ async function createTables(pgClient) {
     )
   `);
 
-  // Create career_resources table
+  // Create career_resources table (with locale support)
   await pgClient.query(`
     CREATE TABLE career_resources (
       id SERIAL PRIMARY KEY,
+      locale VARCHAR(5) DEFAULT 'en',
       title VARCHAR(255),
       description TEXT,
       type VARCHAR(50),
+      category VARCHAR(100),
       download_url VARCHAR(500),
+      visible BOOLEAN DEFAULT true,
       published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
 
-  // Create about_pages table
+  // Create about_pages table (with locale support)
   await pgClient.query(`
     CREATE TABLE about_pages (
       id SERIAL PRIMARY KEY,
+      locale VARCHAR(5) DEFAULT 'en',
       hero_title VARCHAR(255),
       hero_subtitle VARCHAR(255),
       mission_title VARCHAR(255),
@@ -303,10 +307,11 @@ async function createTables(pgClient) {
     )
   `);
 
-  // Create faqs table
+  // Create faqs table (with locale support)
   await pgClient.query(`
     CREATE TABLE faqs (
       id SERIAL PRIMARY KEY,
+      locale VARCHAR(5) DEFAULT 'en',
       question TEXT,
       answer TEXT,
       category VARCHAR(100),

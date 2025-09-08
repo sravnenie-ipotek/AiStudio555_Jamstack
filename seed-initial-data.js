@@ -23,7 +23,10 @@ async function seedDatabase() {
       'ALTER TABLE courses ADD COLUMN IF NOT EXISTS locale VARCHAR(5) DEFAULT \'en\'',
       'ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS locale VARCHAR(5) DEFAULT \'en\'',
       'ALTER TABLE teachers ADD COLUMN IF NOT EXISTS locale VARCHAR(5) DEFAULT \'en\'',
-      'ALTER TABLE contact_pages ADD COLUMN IF NOT EXISTS locale VARCHAR(5) DEFAULT \'en\''
+      'ALTER TABLE contact_pages ADD COLUMN IF NOT EXISTS locale VARCHAR(5) DEFAULT \'en\'',
+      'ALTER TABLE about_pages ADD COLUMN IF NOT EXISTS locale VARCHAR(5) DEFAULT \'en\'',
+      'ALTER TABLE faqs ADD COLUMN IF NOT EXISTS locale VARCHAR(5) DEFAULT \'en\'',
+      'ALTER TABLE career_resources ADD COLUMN IF NOT EXISTS locale VARCHAR(5) DEFAULT \'en\''
     ];
 
     for (const query of alterQueries) {
@@ -40,6 +43,9 @@ async function seedDatabase() {
     await client.query('UPDATE blog_posts SET locale = \'en\' WHERE locale IS NULL');
     await client.query('UPDATE teachers SET locale = \'en\' WHERE locale IS NULL');
     await client.query('UPDATE contact_pages SET locale = \'en\' WHERE locale IS NULL');
+    await client.query('UPDATE about_pages SET locale = \'en\' WHERE locale IS NULL');
+    await client.query('UPDATE faqs SET locale = \'en\' WHERE locale IS NULL');
+    await client.query('UPDATE career_resources SET locale = \'en\' WHERE locale IS NULL');
 
     // Clear existing data to prevent conflicts (development only)
     console.log('🧹 Clearing existing data...');
@@ -48,6 +54,9 @@ async function seedDatabase() {
     await client.query('DELETE FROM blog_posts');
     await client.query('DELETE FROM teachers');
     await client.query('DELETE FROM contact_pages');
+    await client.query('DELETE FROM about_pages');
+    await client.query('DELETE FROM faqs');
+    await client.query('DELETE FROM career_resources');
 
     // 1. Insert English home page data
     console.log('🇬🇧 Creating English home page content...');
@@ -274,14 +283,101 @@ async function seedDatabase() {
       `, [locale, title, slug, excerpt, content, author, category]);
     }
 
-    // 8. Create indexes for better performance
+    // 8. Insert About Pages for all languages
+    console.log('ℹ️ Creating about page content...');
+    const aboutPages = [
+      // English
+      ['en', 'About AI Studio', 'Your Journey to Excellence Starts Here', 
+       'Empowering Future Leaders', 'At AI Studio, we are dedicated to providing world-class education in artificial intelligence, machine learning, and cutting-edge technology. Our mission is to bridge the gap between academic learning and real-world application.',
+       'Innovation Through Education', 'We envision a world where technology education is accessible, practical, and transformative. Our goal is to create a community of skilled professionals who can drive innovation and solve complex challenges.'],
+      
+      // Russian
+      ['ru', 'О AI Studio', 'Ваш путь к совершенству начинается здесь', 
+       'Воспитание будущих лидеров', 'В AI Studio мы предоставляем образование мирового класса в области искусственного интеллекта, машинного обучения и передовых технологий. Наша миссия - соединить академическое обучение с реальным применением.',
+       'Инновации через образование', 'Мы видим мир, где технологическое образование доступно, практично и трансформационно. Наша цель - создать сообщество квалифицированных специалистов.'],
+      
+      // Hebrew
+      ['he', 'אודות AI Studio', 'המסע שלכם למצוינות מתחיל כאן', 
+       'מעצבים מנהיגי עתיד', 'ב-AI Studio אנו מספקים חינוך ברמה עולמית בבינה מלאכותית, למידת מכונה וטכנולוגיה מתקדמת. המשימה שלנו היא לגשר בין למידה אקדמית ליישום מעשי.',
+       'חדשנות דרך חינוך', 'אנו רואים עולם בו חינוך טכנולוגי נגיש, מעשי ומשנה. המטרה שלנו היא ליצור קהילה של מקצוענים מיומנים.']
+    ];
+    
+    for (const [locale, heroTitle, heroSubtitle, missionTitle, missionDescription, visionTitle, visionDescription] of aboutPages) {
+      await client.query(`
+        INSERT INTO about_pages (locale, hero_title, hero_subtitle, mission_title, mission_description, vision_title, vision_description, published_at, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW(), NOW())
+      `, [locale, heroTitle, heroSubtitle, missionTitle, missionDescription, visionTitle, visionDescription]);
+    }
+
+    // 9. Insert FAQs for all languages
+    console.log('❓ Creating FAQ content...');
+    const faqs = [
+      // English FAQs
+      ['en', 'How do I enroll in a course?', 'Simply browse our course catalog, select your desired course, and click "Enroll Now". You can pay securely with credit card or PayPal.', 'General', 1],
+      ['en', 'What is included in the course fee?', 'Your course fee includes lifetime access to all course materials, video lessons, assignments, and community support.', 'Courses', 2],
+      ['en', 'Do you offer certificates?', 'Yes! Upon successful completion of any course, you will receive an industry-recognized certificate that you can add to your LinkedIn profile.', 'Courses', 3],
+      ['en', 'What payment methods do you accept?', 'We accept all major credit cards, PayPal, and offer installment plans for courses over $200.', 'Payment', 4],
+      
+      // Russian FAQs
+      ['ru', 'Как записаться на курс?', 'Просто просмотрите каталог курсов, выберите желаемый курс и нажмите "Записаться сейчас". Вы можете безопасно оплатить картой или через PayPal.', 'Общее', 1],
+      ['ru', 'Что включено в стоимость курса?', 'Стоимость курса включает пожизненный доступ ко всем материалам, видео урокам, заданиям и поддержке сообщества.', 'Курсы', 2],
+      ['ru', 'Выдаете ли вы сертификаты?', 'Да! После успешного завершения любого курса вы получите признанный в индустрии сертификат.', 'Курсы', 3],
+      ['ru', 'Какие способы оплаты вы принимаете?', 'Мы принимаем все основные кредитные карты, PayPal и предлагаем планы рассрочки для курсов свыше $200.', 'Оплата', 4],
+      
+      // Hebrew FAQs
+      ['he', 'איך נרשמים לקורס?', 'פשוט עיינו בקטלוג הקורסים, בחרו את הקורס הרצוי ולחצו על "הרשמה כעת". תוכלו לשלם בבטחה בכרטיס אשראי או PayPal.', 'כללי', 1],
+      ['he', 'מה כלול בעלות הקורס?', 'עלות הקורס כוללת גישה לכל החיים לכל חומרי הקורס, שיעורי וידאו, מ과assignments ותמיכת קהילה.', 'קורסים', 2],
+      ['he', 'האם אתם נותנים תעודות?', 'כן! לאחר השלמת כל קורס בהצלחה, תקבלו תעודה מוכרת בתעשייה שניתן להוסיף לפרופיל LinkedIn.', 'קורסים', 3],
+      ['he', 'אילו אמצעי תשלום אתם מקבלים?', 'אנו מקבלים את כל כרטיסי האשראי הגדולים, PayPal ומציעים תוכניות תשלומים לקורסים מעל $200.', 'תשלום', 4]
+    ];
+    
+    for (const [locale, question, answer, category, order] of faqs) {
+      await client.query(`
+        INSERT INTO faqs (locale, question, answer, category, "order", published_at, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, NOW(), NOW(), NOW())
+      `, [locale, question, answer, category, order]);
+    }
+
+    // 10. Insert Career Resources for all languages
+    console.log('📄 Creating career resources...');
+    const careerResources = [
+      // English Resources
+      ['en', 'AI Resume Template', 'Professional resume template specifically designed for AI and ML positions', 'Template', 'Resume', '/downloads/ai-resume-template.pdf', true],
+      ['en', 'Interview Preparation Guide', 'Comprehensive guide with common AI/ML interview questions and detailed answers', 'Guide', 'Interview', '/downloads/ai-interview-guide.pdf', true],
+      ['en', 'Salary Negotiation Handbook', 'Learn how to negotiate competitive salaries in the tech industry', 'Handbook', 'Career', '/downloads/salary-negotiation-handbook.pdf', true],
+      ['en', 'Portfolio Project Ideas', 'List of 50+ project ideas to build an impressive AI/ML portfolio', 'List', 'Portfolio', '/downloads/portfolio-project-ideas.pdf', true],
+      
+      // Russian Resources
+      ['ru', 'Шаблон резюме для ИИ', 'Профессиональный шаблон резюме, специально разработанный для позиций в области ИИ и МО', 'Шаблон', 'Резюме', '/downloads/ai-resume-template-ru.pdf', true],
+      ['ru', 'Руководство по подготовке к интервью', 'Подробное руководство с распространенными вопросами для интервью по ИИ/МО', 'Руководство', 'Интервью', '/downloads/ai-interview-guide-ru.pdf', true],
+      ['ru', 'Справочник по переговорам о зарплате', 'Научитесь договариваться о конкурентоспособной зарплате в технологической индустрии', 'Справочник', 'Карьера', '/downloads/salary-negotiation-ru.pdf', true],
+      ['ru', 'Идеи портфолио проектов', 'Список из 50+ идей проектов для создания впечатляющего портфолио ИИ/МО', 'Список', 'Портфолио', '/downloads/portfolio-ideas-ru.pdf', true],
+      
+      // Hebrew Resources
+      ['he', 'תבנית קורות חיים לבינה מלאכותית', 'תבנית קורות חיים מקצועית המיועדת במיוחד לתפקידים בתחום הבינה המלאכותית ולמידת מכונה', 'תבנית', 'קורות חיים', '/downloads/ai-resume-template-he.pdf', true],
+      ['he', 'מדריך הכנה לראיון עבודה', 'מדריך מקיף עם שאלות נפוצות בראיונות עבודה בתחום הבינה המלאכותית', 'מדריך', 'ראיון', '/downloads/ai-interview-guide-he.pdf', true],
+      ['he', 'מדריך משא ומתן על שכר', 'למדו כיצד לנהל משא ומתן על שכר תחרותי בתעשיית הטכנולוגיה', 'מדריך', 'קריירה', '/downloads/salary-negotiation-he.pdf', true],
+      ['he', 'רעיונות לפרויקטים בפורטפוליו', 'רשימה של 50+ רעיונות לפרויקטים לבניית פורטפוליו מרשים בתחום הבינה המלאכותית', 'רשימה', 'פורטפוליו', '/downloads/portfolio-ideas-he.pdf', true]
+    ];
+    
+    for (const [locale, title, description, type, category, downloadUrl, visible] of careerResources) {
+      await client.query(`
+        INSERT INTO career_resources (locale, title, description, type, category, download_url, visible, published_at, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW(), NOW())
+      `, [locale, title, description, type, category, downloadUrl, visible]);
+    }
+
+    // 11. Create indexes for better performance
     console.log('🔍 Creating locale indexes...');
     const indexQueries = [
       'CREATE INDEX IF NOT EXISTS idx_home_pages_locale ON home_pages(locale)',
       'CREATE INDEX IF NOT EXISTS idx_courses_locale ON courses(locale)',
       'CREATE INDEX IF NOT EXISTS idx_blog_posts_locale ON blog_posts(locale)',
       'CREATE INDEX IF NOT EXISTS idx_teachers_locale ON teachers(locale)',
-      'CREATE INDEX IF NOT EXISTS idx_contact_pages_locale ON contact_pages(locale)'
+      'CREATE INDEX IF NOT EXISTS idx_contact_pages_locale ON contact_pages(locale)',
+      'CREATE INDEX IF NOT EXISTS idx_about_pages_locale ON about_pages(locale)',
+      'CREATE INDEX IF NOT EXISTS idx_faqs_locale ON faqs(locale)',
+      'CREATE INDEX IF NOT EXISTS idx_career_resources_locale ON career_resources(locale)'
     ];
 
     for (const query of indexQueries) {
@@ -295,7 +391,10 @@ async function seedDatabase() {
       'SELECT locale, COUNT(*) as count FROM courses GROUP BY locale ORDER BY locale',
       'SELECT locale, COUNT(*) as count FROM contact_pages GROUP BY locale ORDER BY locale',
       'SELECT locale, COUNT(*) as count FROM teachers GROUP BY locale ORDER BY locale',
-      'SELECT locale, COUNT(*) as count FROM blog_posts GROUP BY locale ORDER BY locale'
+      'SELECT locale, COUNT(*) as count FROM blog_posts GROUP BY locale ORDER BY locale',
+      'SELECT locale, COUNT(*) as count FROM about_pages GROUP BY locale ORDER BY locale',
+      'SELECT locale, COUNT(*) as count FROM faqs GROUP BY locale ORDER BY locale',
+      'SELECT locale, COUNT(*) as count FROM career_resources GROUP BY locale ORDER BY locale'
     ];
 
     for (const query of verifyQueries) {
