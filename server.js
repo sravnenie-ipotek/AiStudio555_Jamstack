@@ -1,14 +1,15 @@
 /**
  * UNIFIED RAILWAY SERVER
- * Combines all services into one deployable application
+ * All-in-one deployment: Frontend + Custom APIs + PostgreSQL
  * Works around Strapi v5 API bug by using custom Live APIs
+ * Database: Railway PostgreSQL (no external dependencies!)
  */
 
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { exec } = require('child_process');
-const fs = require('fs');
+const { Client } = require('pg');
+const { migrate } = require('./migrate-to-railway');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,53 +19,67 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
-// Database path - Railway will provide DATABASE_URL for PostgreSQL
-const DB_PATH = process.env.DATABASE_URL 
-  ? null // Will use PostgreSQL connection
-  : path.join(__dirname, 'strapi-fresh/.tmp/data.db');
+// Database configuration
+let dbConfig;
 
-// Helper function for SQLite queries (development)
-function querySQLite(query) {
-  return new Promise((resolve, reject) => {
-    const command = `sqlite3 -json "${DB_PATH}" "${query}"`;
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-      } else {
-        try {
-          resolve(JSON.parse(stdout || '[]'));
-        } catch (parseError) {
-          reject(parseError);
-        }
-      }
-    });
-  });
-}
-
-// Helper function for PostgreSQL queries (production)
-async function queryPostgreSQL(query) {
-  // This will be implemented with pg library in production
-  const { Client } = require('pg');
-  const client = new Client({
+if (process.env.DATABASE_URL) {
+  // Railway PostgreSQL (production)
+  dbConfig = {
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
-  });
-  
-  await client.connect();
-  const result = await client.query(query);
-  await client.end();
-  
-  return result.rows;
+  };
+  console.log('🐘 Using Railway PostgreSQL database');
+} else {
+  // Local development fallback
+  const sqlite3 = require('sqlite3').verbose();
+  console.log('📦 Using local SQLite for development');
 }
 
-// Database query wrapper
-async function queryDatabase(query) {
-  if (process.env.DATABASE_URL) {
-    return queryPostgreSQL(query);
-  } else {
-    return querySQLite(query);
+// PostgreSQL query helper
+async function queryDatabase(query, params = []) {
+  if (!process.env.DATABASE_URL) {
+    // SQLite fallback for local development
+    const sqlite3 = require('sqlite3').verbose();
+    const db = new sqlite3.Database(path.join(__dirname, 'strapi-fresh/.tmp/data.db'));
+    
+    return new Promise((resolve, reject) => {
+      db.all(query, params, (err, rows) => {
+        db.close();
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+  }
+  
+  // Railway PostgreSQL
+  const client = new Client(dbConfig);
+  try {
+    await client.connect();
+    const result = await client.query(query, params);
+    return result.rows;
+  } catch (error) {
+    console.error('Database error:', error);
+    throw error;
+  } finally {
+    await client.end();
   }
 }
+
+// Run migration on startup (if DATABASE_URL exists)
+async function initializeDatabase() {
+  if (process.env.DATABASE_URL) {
+    console.log('🔄 Checking database migration...');
+    try {
+      await migrate();
+      console.log('✅ Database ready');
+    } catch (error) {
+      console.error('⚠️  Migration error (may already be migrated):', error.message);
+    }
+  }
+}
+
+// Initialize database on startup
+initializeDatabase();
 
 // ==================== LIVE API ENDPOINTS ====================
 
@@ -380,27 +395,31 @@ app.get('/api/status', async (req, res) => {
     const courses = await queryDatabase('SELECT COUNT(*) as count FROM courses WHERE published_at IS NOT NULL');
     const blogs = await queryDatabase('SELECT COUNT(*) as count FROM blog_posts WHERE published_at IS NOT NULL');
     const teachers = await queryDatabase('SELECT COUNT(*) as count FROM teachers WHERE published_at IS NOT NULL');
+    const homePage = await queryDatabase('SELECT COUNT(*) as count FROM home_pages WHERE published_at IS NOT NULL');
     
     res.json({
-      status: 'Connected',
-      database: process.env.DATABASE_URL ? 'PostgreSQL (Strapi Cloud)' : 'SQLite (Local)',
+      status: '✅ Operational',
+      database: process.env.DATABASE_URL ? '🐘 Railway PostgreSQL' : '📦 SQLite (Local)',
       timestamp: new Date().toISOString(),
       content: {
+        homePages: homePage[0]?.count || 0,
         courses: courses[0]?.count || 0,
         blogPosts: blogs[0]?.count || 0,
         teachers: teachers[0]?.count || 0
       },
       deployment: {
-        platform: 'Railway',
+        platform: '🚂 Railway',
         environment: process.env.NODE_ENV || 'development',
-        port: PORT
-      }
+        port: PORT,
+        architecture: 'All-in-one (Frontend + APIs + Database)'
+      },
+      note: 'Custom Live API workaround for Strapi v5 bug (404 errors)'
     });
   } catch (error) {
     res.status(500).json({ 
-      status: 'Error', 
+      status: '❌ Error', 
       message: error.message,
-      note: 'This is the workaround for Strapi v5 API bug'
+      tip: 'If database error, PostgreSQL addon may need to be added in Railway dashboard'
     });
   }
 });
@@ -409,14 +428,20 @@ app.get('/api/status', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════════╗
-║   🚀 AI STUDIO - RAILWAY DEPLOYMENT        ║
+║   🚀 AI STUDIO - RAILWAY ALL-IN-ONE        ║
 ╠════════════════════════════════════════════╣
 ║   Server: http://localhost:${PORT}          ║
 ║   Admin:  http://localhost:${PORT}/admin    ║
 ║   API:    http://localhost:${PORT}/api      ║
 ╠════════════════════════════════════════════╣
-║   Database: ${process.env.DATABASE_URL ? 'PostgreSQL (Strapi Cloud)' : 'SQLite (Local)'}
+║   Database: ${process.env.DATABASE_URL ? '🐘 Railway PostgreSQL' : '📦 SQLite (Local)'}
 ║   Environment: ${process.env.NODE_ENV || 'development'}
+╠════════════════════════════════════════════╣
+║   ✅ Everything in Railway:                ║
+║   • Frontend (Static HTML)                 ║
+║   • Custom Live APIs                       ║
+║   • PostgreSQL Database                    ║
+║   • No external dependencies!              ║
 ╠════════════════════════════════════════════╣
 ║   Note: Using custom Live API due to       ║
 ║   Strapi v5 critical bug (404 errors)      ║

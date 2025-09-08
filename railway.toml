@@ -1,0 +1,20 @@
+# Railway Configuration
+# All-in-one deployment: Web App + Custom APIs + PostgreSQL
+
+[build]
+builder = "nixpacks"
+buildCommand = "npm install"
+
+[deploy]
+startCommand = "npm start"
+healthcheckPath = "/api/status"
+healthcheckTimeout = 100
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[services.web]
+name = "AI Studio Platform"
+port = 3000
+
+# PostgreSQL will be automatically provisioned
+# Railway provides DATABASE_URL environment variable

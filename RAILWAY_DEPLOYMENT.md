@@ -1,18 +1,18 @@
-# Railway Deployment Guide
+# Railway Deployment Guide - ALL-IN-ONE
 
-## 🚀 Quick Deploy
+## 🚀 EVERYTHING IN RAILWAY - NO EXTERNAL DEPENDENCIES!
 
-```bash
-chmod +x deploy-railway.sh
-./deploy-railway.sh
-```
+### What's Included:
+✅ **Frontend** - Static HTML/CSS/JS  
+✅ **Custom APIs** - Bypass Strapi v5 bug  
+✅ **PostgreSQL** - Railway's own database  
+✅ **Data Migration** - Automatic from SQLite  
 
 ## 📋 Prerequisites
 
 1. **Railway Account**: Create at https://railway.app
 2. **GitHub Repository**: Already connected
 3. **Railway Token**: Saved in `.env.railway`
-4. **Strapi Cloud Database**: Configure in Railway dashboard
 
 ## 🏗️ Architecture
 
@@ -27,20 +27,23 @@ Railway Server (server.js)
     └── CRUD Operations (PUT/POST/DELETE)
 ```
 
-## 🔧 Environment Variables (Set in Railway Dashboard)
+## 🔧 How to Deploy
 
-```env
-# Database (Strapi Cloud)
-DATABASE_URL=postgresql://user:pass@strapi-cloud-host:5432/dbname
-
-# Application
-NODE_ENV=production
-PORT=3000
-
-# API Configuration
-CORS_ORIGIN=*
-API_MODE=live
+### Step 1: Add PostgreSQL to Railway
+```bash
+# In Railway dashboard:
+1. Click "New" → "Database" → "Add PostgreSQL"
+2. Railway automatically provides DATABASE_URL
+3. No configuration needed!
 ```
+
+### Step 2: Environment Variables (Automatic!)
+Railway automatically sets:
+- `DATABASE_URL` - PostgreSQL connection string
+- `PORT` - Server port
+- `NODE_ENV=production` - Production mode
+
+You don't need to set anything!
 
 ## 📦 Deployment Steps
 
