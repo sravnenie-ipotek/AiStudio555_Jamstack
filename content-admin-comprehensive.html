@@ -8,6 +8,10 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f7; line-height: 1.6; }
         .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 0; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .language-switcher { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; }
+        .lang-btn { padding: 8px 16px; background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.3); border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; }
+        .lang-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .lang-btn.active { background: rgba(255,255,255,0.9); color: #667eea; border-color: white; }
         .container { max-width: 1600px; margin: 0 auto; padding: 20px; }
         .tabs { display: flex; gap: 8px; margin-bottom: 30px; flex-wrap: wrap; }
         .tab { padding: 10px 16px; background: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.2s; border: 2px solid transparent; }
@@ -65,9 +69,14 @@
 </head>
 <body>
     <div class="header">
+        <div class="language-switcher">
+            <button class="lang-btn active" onclick="switchLanguage('en')">🇬🇧 English</button>
+            <button class="lang-btn" onclick="switchLanguage('ru')">🇷🇺 Русский</button>
+            <button class="lang-btn" onclick="switchLanguage('he')">🇮🇱 עברית</button>
+        </div>
         <h1>🎓 AI Studio - COMPREHENSIVE Content Manager</h1>
         <p>Every single field editable - Complete control over ALL website content</p>
-        <small>ALL 123+ Home Page Fields • Complete CRUD • Live Database Integration</small>
+        <small>ALL 123+ Home Page Fields • Complete CRUD • Live Database Integration • <span id="current-language">English</span></small>
     </div>
 
     <button class="save-all-btn" onclick="saveAllHomePage()">💾 Save ALL Home Page</button>
@@ -1080,6 +1089,49 @@
         const API_URL_CRUD = '/api';  // Will use the same domain as the admin panel
         let currentEditingId = null;
         let currentEditingType = null;
+        let currentLocale = 'en';  // Default to English
+
+        // Language switching functionality
+        function switchLanguage(locale) {
+            // Update current locale
+            currentLocale = locale;
+            
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update display
+            const languageNames = { 'en': 'English', 'ru': 'Русский', 'he': 'עברית' };
+            document.getElementById('current-language').textContent = languageNames[locale];
+            
+            // Apply RTL for Hebrew
+            if (locale === 'he') {
+                document.body.style.direction = 'rtl';
+                document.body.style.textAlign = 'right';
+            } else {
+                document.body.style.direction = 'ltr';
+                document.body.style.textAlign = 'left';
+            }
+            
+            // Reload current section data for the new language
+            const activeTab = document.querySelector('.tab.active');
+            if (activeTab) {
+                const sectionName = activeTab.textContent.toLowerCase().replace(' ', '-');
+                if (sectionName.includes('home')) {
+                    loadHomePageData();
+                } else if (sectionName.includes('course')) {
+                    loadAllCourses();
+                } else if (sectionName.includes('blog')) {
+                    loadAllBlogPosts();
+                } else if (sectionName.includes('teacher')) {
+                    loadAllTeachers();
+                } else if (sectionName.includes('contact')) {
+                    loadContactPageData();
+                }
+            }
+            
+            showStatus(`Switched to ${languageNames[locale]} - Content will be loaded for this language`);
+        }
 
         // Tab switching functionality
         function showSection(sectionName) {
@@ -1145,7 +1197,7 @@
         // COMPLETE HOME PAGE FUNCTIONS - ALL 123 FIELDS
         async function loadCompleteHomePage() {
             try {
-                const response = await fetch(`${API_URL_READ}/home-page`);
+                const response = await fetch(`${API_URL_READ}/home-page?locale=${currentLocale}`);
                 if (!response.ok) throw new Error('Failed to fetch home page data');
                 
                 const data = await response.json();
