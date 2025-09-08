@@ -17,6 +17,7 @@ RUN npm install --production
 # Copy our custom server files
 COPY server.js ./
 COPY migrate-to-railway.js ./
+COPY seed-initial-data.js ./
 
 # Copy frontend files
 COPY *.html ./
