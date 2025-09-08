@@ -13,6 +13,8 @@ Desktop.ini
 .env
 .env.local
 .env.production
+.env.railway
+.railway/
 
 # Dependencies
 node_modules/
