@@ -7,7 +7,7 @@
 
 class StrapiHomeIntegration {
   constructor() {
-    this.liveApiUrl = 'http://localhost:3333';
+    this.liveApiUrl = 'https://aistudio555jamstack-production.up.railway.app';
     this.init();
   }
 

@@ -423,6 +423,19 @@ app.get('/ru/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
 });
 
+// Serve strapi integration files
+app.get('/strapi-home-integration.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strapi-home-integration.js'));
+});
+
+app.get('/strapi-visibility-integration.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strapi-visibility-integration.js'));
+});
+
+app.get('/strapi-content-loader.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
+});
+
 // API Status endpoint
 app.get('/api/status', async (req, res) => {
   try {

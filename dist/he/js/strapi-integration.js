@@ -5,7 +5,7 @@
 
 class StrapiIntegration {
   constructor() {
-    this.strapiUrl = 'http://localhost:1337';
+    this.strapiUrl = 'https://aistudio555jamstack-production.up.railway.app';
     this.apiToken = '6ba76f584778637fd308f48aac27461c1aca7f088c963d614ad2e73bb7f3f9a646ad9e38cf12e5bd8f7e6f8e0ad2f014ea90ee088bb8a3c3c84a40f9fb0c592e5c8b05e8d25c09f4a9c0b685b2c90bacd5e604fbe4e1b01e0a6e32c76e7e93b1f21e5e47dcad5e80a6b0cf967e2a38b74f5edd19e92f5c0e6d387e1c16e5ce59';
     this.currentLocale = this.getLocale();
     this.isPreviewMode = this.checkPreviewMode();
