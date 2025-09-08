@@ -361,14 +361,106 @@ app.get('/api/teachers', async (req, res) => {
   }
 });
 
-// FAQs
+// FAQs (with locale support)
 app.get('/api/faqs', async (req, res) => {
   try {
-    // Return empty array for now as FAQs table doesn't exist yet
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching FAQs for locale: ${locale}`);
+    
+    const data = await queryWithFallback(
+      'SELECT * FROM faqs WHERE locale = $1 AND published_at IS NOT NULL ORDER BY "order" ASC',
+      [locale]
+    );
+    
     res.json({
-      data: []
+      data: data.map(faq => ({
+        id: faq.id,
+        attributes: {
+          question: faq.question,
+          answer: faq.answer,
+          category: faq.category,
+          order: faq.order
+        }
+      }))
     });
   } catch (error) {
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
+});
+
+// ABOUT PAGE (with locale support)
+app.get('/api/about-page', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching about page for locale: ${locale}`);
+    
+    const data = await queryWithFallback(
+      'SELECT * FROM about_pages WHERE locale = $1 AND published_at IS NOT NULL LIMIT 1',
+      [locale]
+    );
+    
+    if (data.length === 0) {
+      return res.json({
+        data: {
+          id: 1,
+          attributes: {
+            heroTitle: '',
+            heroSubtitle: '',
+            missionTitle: '',
+            missionDescription: '',
+            visionTitle: '',
+            visionDescription: ''
+          }
+        }
+      });
+    }
+    
+    const about = data[0];
+    res.json({
+      data: {
+        id: about.id,
+        attributes: {
+          heroTitle: about.hero_title || '',
+          heroSubtitle: about.hero_subtitle || '',
+          missionTitle: about.mission_title || '',
+          missionDescription: about.mission_description || '',
+          visionTitle: about.vision_title || '',
+          visionDescription: about.vision_description || ''
+        }
+      }
+    });
+  } catch (error) {
+    console.error('About page error:', error);
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
+});
+
+// CAREER RESOURCES (with locale support)
+app.get('/api/career-resources', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching career resources for locale: ${locale}`);
+    
+    const data = await queryWithFallback(
+      'SELECT * FROM career_resources WHERE locale = $1 AND published_at IS NOT NULL ORDER BY created_at DESC',
+      [locale]
+    );
+    
+    res.json({
+      data: data.map(resource => ({
+        id: resource.id,
+        attributes: {
+          title: resource.title,
+          description: resource.description,
+          type: resource.type,
+          downloadUrl: resource.download_url,
+          category: resource.category,
+          visible: Boolean(resource.visible)
+        }
+      }))
+    });
+  } catch (error) {
+    console.error('Career resources error:', error);
     res.status(500).json({ error: 'Database error', details: error.message });
   }
 });
@@ -529,46 +621,23 @@ app.use('/ru/css', express.static(path.join(__dirname, 'dist/ru/css')));
 app.use('/ru/images', express.static(path.join(__dirname, 'dist/ru/images')));
 app.use('/ru/fonts', express.static(path.join(__dirname, 'dist/ru/fonts')));
 
-// Serve language-specific routes
-app.get('/en', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/en/index.html'));
-});
-
-app.get('/he', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/he/index.html'));
-});
-
-app.get('/ru', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
-});
-
-// Catch-all for language subpages
-app.get('/en/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/en/index.html'));
-});
-
-app.get('/he/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/he/index.html'));
-});
-
-app.get('/ru/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
-});
-
-// Serve strapi integration files from root and language paths
+// Serve strapi integration files from root and language paths (MUST BE BEFORE catch-all routes)
 app.get('/strapi-home-integration.js', (req, res) => {
+  res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-home-integration.js'));
 });
 
 app.get('/strapi-visibility-integration.js', (req, res) => {
+  res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-visibility-integration.js'));
 });
 
 app.get('/strapi-content-loader.js', (req, res) => {
+  res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
 });
 
-// Also serve from language paths with correct content-type
+// Language-specific JavaScript files (MUST BE BEFORE catch-all routes)
 app.get('/en/strapi-home-integration.js', (req, res) => {
   res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-home-integration.js'));
@@ -612,6 +681,32 @@ app.get('/ru/strapi-visibility-integration.js', (req, res) => {
 app.get('/ru/strapi-content-loader.js', (req, res) => {
   res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
+});
+
+// Serve language-specific routes
+app.get('/en', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/en/index.html'));
+});
+
+app.get('/he', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/he/index.html'));
+});
+
+app.get('/ru', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
+});
+
+// Catch-all for language subpages (MUST BE AFTER specific JavaScript routes)
+app.get('/en/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/en/index.html'));
+});
+
+app.get('/he/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/he/index.html'));
+});
+
+app.get('/ru/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
 });
 
 // Add /api/home-page-live endpoint (alias for /api/home-page)
