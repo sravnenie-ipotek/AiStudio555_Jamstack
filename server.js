@@ -105,13 +105,44 @@ async function initializeDatabase() {
 // Initialize database on startup
 initializeDatabase();
 
+// ==================== MULTI-LANGUAGE HELPERS ====================
+
+// Helper function to get locale from request
+function getLocale(req) {
+  // Priority: 1. Query param, 2. Path param, 3. Header, 4. Default
+  const locale = req.query.locale || 
+                 req.params.locale || 
+                 req.headers['accept-language']?.split('-')[0] || 
+                 'en';
+  
+  const validLocales = ['en', 'ru', 'he'];
+  return validLocales.includes(locale) ? locale : 'en';
+}
+
+// Helper function for locale fallback queries
+async function queryWithFallback(query, params) {
+  let result = await queryDatabase(query, params);
+  
+  // If no result and not English, fallback to English
+  if ((!result || result.length === 0) && params[0] !== 'en') {
+    const fallbackParams = ['en', ...params.slice(1)];
+    result = await queryDatabase(query, fallbackParams);
+  }
+  
+  return result;
+}
+
 // ==================== LIVE API ENDPOINTS ====================
 
-// HOME PAGE - ALL 123 fields
+// HOME PAGE - ALL 123 fields (with locale support)
 app.get('/api/home-page', async (req, res) => {
   try {
-    const data = await queryDatabase(
-      'SELECT * FROM home_pages WHERE published_at IS NOT NULL LIMIT 1'
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching home page for locale: ${locale}`);
+    
+    const data = await queryWithFallback(
+      'SELECT * FROM home_pages WHERE locale = $1 AND published_at IS NOT NULL LIMIT 1',
+      [locale]
     );
     
     if (data.length === 0) {
@@ -240,11 +271,15 @@ app.get('/api/home-page', async (req, res) => {
   }
 });
 
-// COURSES
+// COURSES (with locale support)
 app.get('/api/courses', async (req, res) => {
   try {
-    const data = await queryDatabase(
-      'SELECT * FROM courses WHERE published_at IS NOT NULL AND visible = 1 ORDER BY id DESC'
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching courses for locale: ${locale}`);
+    
+    const data = await queryWithFallback(
+      'SELECT * FROM courses WHERE locale = $1 AND published_at IS NOT NULL AND visible = true ORDER BY id DESC',
+      [locale]
     );
     
     res.json({
@@ -267,11 +302,15 @@ app.get('/api/courses', async (req, res) => {
   }
 });
 
-// BLOG POSTS
+// BLOG POSTS (with locale support)
 app.get('/api/blog-posts', async (req, res) => {
   try {
-    const data = await queryDatabase(
-      'SELECT * FROM blog_posts WHERE published_at IS NOT NULL ORDER BY created_at DESC'
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching blog posts for locale: ${locale}`);
+    
+    const data = await queryWithFallback(
+      'SELECT * FROM blog_posts WHERE locale = $1 AND published_at IS NOT NULL ORDER BY created_at DESC',
+      [locale]
     );
     
     res.json({
@@ -293,11 +332,15 @@ app.get('/api/blog-posts', async (req, res) => {
   }
 });
 
-// TEACHERS
+// TEACHERS (with locale support)
 app.get('/api/teachers', async (req, res) => {
   try {
-    const data = await queryDatabase(
-      'SELECT * FROM teachers WHERE published_at IS NOT NULL ORDER BY "order" ASC'
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching teachers for locale: ${locale}`);
+    
+    const data = await queryWithFallback(
+      'SELECT * FROM teachers WHERE locale = $1 AND published_at IS NOT NULL ORDER BY "order" ASC',
+      [locale]
     );
     
     res.json({
@@ -330,10 +373,16 @@ app.get('/api/faqs', async (req, res) => {
   }
 });
 
-// GET CONTACT PAGE
+// GET CONTACT PAGE (with locale support)
 app.get('/api/contact-page', async (req, res) => {
   try {
-    const result = await queryDatabase('SELECT * FROM contact_pages WHERE id = 1');
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching contact page for locale: ${locale}`);
+    
+    const result = await queryWithFallback(
+      'SELECT * FROM contact_pages WHERE locale = $1 LIMIT 1',
+      [locale]
+    );
     
     if (!result || result.length === 0) {
       return res.json({
