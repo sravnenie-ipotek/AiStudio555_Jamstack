@@ -397,6 +397,22 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Serve static assets for language routes
+app.use('/en/js', express.static(path.join(__dirname, 'dist/en/js')));
+app.use('/en/css', express.static(path.join(__dirname, 'dist/en/css')));
+app.use('/en/images', express.static(path.join(__dirname, 'dist/en/images')));
+app.use('/en/fonts', express.static(path.join(__dirname, 'dist/en/fonts')));
+
+app.use('/he/js', express.static(path.join(__dirname, 'dist/he/js')));
+app.use('/he/css', express.static(path.join(__dirname, 'dist/he/css')));
+app.use('/he/images', express.static(path.join(__dirname, 'dist/he/images')));
+app.use('/he/fonts', express.static(path.join(__dirname, 'dist/he/fonts')));
+
+app.use('/ru/js', express.static(path.join(__dirname, 'dist/ru/js')));
+app.use('/ru/css', express.static(path.join(__dirname, 'dist/ru/css')));
+app.use('/ru/images', express.static(path.join(__dirname, 'dist/ru/images')));
+app.use('/ru/fonts', express.static(path.join(__dirname, 'dist/ru/fonts')));
+
 // Serve language-specific routes
 app.get('/en', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/en/index.html'));
