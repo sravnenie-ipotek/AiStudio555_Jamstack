@@ -85,6 +85,17 @@ async function initializeDatabase() {
     try {
       await migrate();
       console.log('✅ Database ready');
+      
+      // Check if database has data
+      const homeCount = await queryDatabase('SELECT COUNT(*) as count FROM home_pages');
+      if (homeCount[0].count === 0 || homeCount[0].count === '0') {
+        console.log('📝 Database is empty, seeding initial data...');
+        const { seedDatabase } = require('./seed-initial-data');
+        await seedDatabase();
+        console.log('✅ Initial data seeded successfully!');
+      } else {
+        console.log('📊 Database already has data');
+      }
     } catch (error) {
       console.error('⚠️  Migration error (may already be migrated):', error.message);
     }
