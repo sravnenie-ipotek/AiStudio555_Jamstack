@@ -28,6 +28,9 @@ COPY scripts ./scripts/
 COPY authentication-pages ./authentication-pages/
 COPY template-pages ./template-pages/
 
+# Copy language-specific builds
+COPY dist ./dist/
+
 # Copy Live API files
 COPY strapi-home-integration.js ./
 COPY strapi-live-api*.js ./

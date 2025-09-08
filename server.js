@@ -397,6 +397,32 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Serve language-specific routes
+app.get('/en', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/en/index.html'));
+});
+
+app.get('/he', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/he/index.html'));
+});
+
+app.get('/ru', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
+});
+
+// Catch-all for language subpages
+app.get('/en/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/en/index.html'));
+});
+
+app.get('/he/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/he/index.html'));
+});
+
+app.get('/ru/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
+});
+
 // API Status endpoint
 app.get('/api/status', async (req, res) => {
   try {
