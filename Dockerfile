@@ -33,6 +33,8 @@ COPY dist ./dist/
 
 # Copy Live API files
 COPY strapi-home-integration.js ./
+COPY strapi-visibility-integration.js ./
+COPY strapi-content-loader.js ./
 COPY strapi-live-api*.js ./
 COPY content-admin*.html ./
 

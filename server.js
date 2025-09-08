@@ -436,6 +436,124 @@ app.get('/strapi-content-loader.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
 });
 
+// Add /api/home-page-live endpoint (alias for /api/home-page)
+app.get('/api/home-page-live', async (req, res) => {
+  // Use the same logic as /api/home-page
+  try {
+    const data = await queryDatabase(
+      'SELECT * FROM home_pages WHERE published_at IS NOT NULL LIMIT 1'
+    );
+    
+    if (data.length === 0) {
+      return res.json({ error: 'No home page data found' });
+    }
+    
+    const homeData = data[0];
+    res.json({
+      data: {
+        id: homeData.id,
+        heroTitle: homeData.hero_title,
+        heroSubtitle: homeData.hero_subtitle,
+        heroDescription: homeData.hero_description,
+        heroSectionVisible: Boolean(homeData.hero_section_visible),
+        featuredCoursesTitle: homeData.featured_courses_title,
+        featuredCoursesDescription: homeData.featured_courses_description,
+        featuredCoursesVisible: Boolean(homeData.featured_courses_visible),
+        aboutTitle: homeData.about_title,
+        aboutSubtitle: homeData.about_subtitle,
+        aboutDescription: homeData.about_description,
+        aboutVisible: Boolean(homeData.about_visible),
+        companiesTitle: homeData.companies_title,
+        companiesDescription: homeData.companies_description,
+        companiesVisible: Boolean(homeData.companies_visible),
+        testimonialsTitle: homeData.testimonials_title,
+        testimonialsSubtitle: homeData.testimonials_subtitle,
+        testimonialsVisible: Boolean(homeData.testimonials_visible),
+        courses: [
+          {
+            title: homeData.course_1_title,
+            rating: homeData.course_1_rating,
+            lessons: homeData.course_1_lessons,
+            duration: homeData.course_1_duration,
+            category: homeData.course_1_category,
+            description: homeData.course_1_description,
+            visible: Boolean(homeData.course_1_visible)
+          },
+          {
+            title: homeData.course_2_title,
+            rating: homeData.course_2_rating,
+            lessons: homeData.course_2_lessons,
+            duration: homeData.course_2_duration,
+            category: homeData.course_2_category,
+            visible: Boolean(homeData.course_2_visible)
+          },
+          {
+            title: homeData.course_3_title,
+            rating: homeData.course_3_rating,
+            lessons: homeData.course_3_lessons,
+            duration: homeData.course_3_duration,
+            category: homeData.course_3_category,
+            visible: Boolean(homeData.course_3_visible)
+          },
+          {
+            title: homeData.course_4_title,
+            rating: homeData.course_4_rating,
+            lessons: homeData.course_4_lessons,
+            duration: homeData.course_4_duration,
+            category: homeData.course_4_category,
+            visible: Boolean(homeData.course_4_visible)
+          },
+          {
+            title: homeData.course_5_title,
+            rating: homeData.course_5_rating,
+            lessons: homeData.course_5_lessons,
+            duration: homeData.course_5_duration,
+            category: homeData.course_5_category,
+            visible: Boolean(homeData.course_5_visible)
+          },
+          {
+            title: homeData.course_6_title,
+            rating: homeData.course_6_rating,
+            lessons: homeData.course_6_lessons,
+            duration: homeData.course_6_duration,
+            category: homeData.course_6_category,
+            visible: Boolean(homeData.course_6_visible)
+          }
+        ],
+        testimonials: [
+          {
+            text: homeData.testimonial_1_text,
+            author: homeData.testimonial_1_author,
+            rating: homeData.testimonial_1_rating,
+            visible: Boolean(homeData.testimonial_1_visible)
+          },
+          {
+            text: homeData.testimonial_2_text,
+            author: homeData.testimonial_2_author,
+            rating: homeData.testimonial_2_rating,
+            visible: Boolean(homeData.testimonial_2_visible)
+          },
+          {
+            text: homeData.testimonial_3_text,
+            author: homeData.testimonial_3_author,
+            rating: homeData.testimonial_3_rating,
+            visible: Boolean(homeData.testimonial_3_visible)
+          },
+          {
+            text: homeData.testimonial_4_text,
+            author: homeData.testimonial_4_author,
+            rating: homeData.testimonial_4_rating,
+            visible: Boolean(homeData.testimonial_4_visible)
+          }
+        ]
+      }
+    });
+  } catch (error) {
+    console.error('Database error:', error);
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
+});
+
 // API Status endpoint
 app.get('/api/status', async (req, res) => {
   try {
