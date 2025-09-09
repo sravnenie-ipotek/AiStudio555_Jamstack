@@ -82,6 +82,95 @@
     .primary-button-wrapper.mobile { display: none !important; }
     @media (max-width: 991px) { .primary-button-wrapper.desktop { display: none !important; } .primary-button-wrapper.mobile { display: block !important; } }
   </style>
+
+  <!-- Production Navigation Fix Script -->
+  <script>
+    // PRODUCTION NAVIGATION FIX - Removes "Pages" and fixes null errors
+    (function() {
+      'use strict';
+      
+      // Fix 1: Remove unwanted "Pages" and "Blog" menu items
+      function removeUnwantedMenuItems() {
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', removeUnwantedMenuItems);
+          return;
+        }
+        
+        const navMenu = document.querySelector('.nav-menu, .w-nav-menu');
+        if (!navMenu) return;
+        
+        // Remove Pages and Blog links
+        const navLinks = navMenu.querySelectorAll('.nav-link, .w-nav-link');
+        navLinks.forEach(link => {
+          const text = link.textContent.trim();
+          if (text === 'Pages' || text === 'Blog') {
+            const dropdownWrapper = link.closest('.menu-dropdown-wrapper, .w-dropdown');
+            if (dropdownWrapper) {
+              dropdownWrapper.remove();
+            } else {
+              link.remove();
+            }
+          }
+        });
+        
+        // Remove Pages and Blog dropdowns
+        const dropdownToggles = navMenu.querySelectorAll('.dropdown-toggle-text-block');
+        dropdownToggles.forEach(toggle => {
+          const text = toggle.textContent.trim();
+          if (text === 'Pages' || text === 'Blog') {
+            const wrapper = toggle.closest('.menu-dropdown-wrapper, .w-dropdown');
+            if (wrapper) wrapper.remove();
+          }
+        });
+      }
+      
+      // Fix 2: Prevent null reference errors
+      function preventNullErrors() {
+        // Patch potential null access issues
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'childList') {
+              mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === 1 && node.childElementCount === undefined) {
+                  try {
+                    Object.defineProperty(node, 'childElementCount', {
+                      get: function() { return this.children ? this.children.length : 0; }
+                    });
+                  } catch (e) {}
+                }
+              });
+            }
+          });
+        });
+        
+        if (document.body) {
+          observer.observe(document.body, { childList: true, subtree: true });
+        }
+      }
+      
+      // Initialize fixes
+      function initializeFixes() {
+        try {
+          preventNullErrors();
+          removeUnwantedMenuItems();
+          
+          // Reapply after delays to catch dynamic content
+          setTimeout(removeUnwantedMenuItems, 500);
+          setTimeout(removeUnwantedMenuItems, 1500);
+          setTimeout(removeUnwantedMenuItems, 3000);
+        } catch (error) {
+          console.error('Navigation fix error:', error);
+        }
+      }
+      
+      // Run immediately and on DOM ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeFixes);
+      } else {
+        initializeFixes();
+      }
+    })();
+  </script>
 </head>
 <body>
   <div class="page-wrapper">
