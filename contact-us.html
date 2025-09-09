@@ -534,5 +534,38 @@
   <script src="js/webflow.js" type="text/javascript"></script>
   <!-- Strapi Master Integration -->
   <script src="strapi-master-integration.js"></script>
+
+  <script>
+    // Fix Career Services dropdown
+    document.addEventListener('DOMContentLoaded', function() {
+      const dropdown = document.querySelector('.w-dropdown');
+      const dropdownToggle = document.querySelector('.w-dropdown-toggle');
+      const dropdownList = document.querySelector('.w-dropdown-list');
+      
+      if (dropdown && dropdownToggle && dropdownList) {
+        // Add hover functionality
+        dropdown.addEventListener('mouseenter', function() {
+          dropdownList.style.display = 'block';
+          dropdown.classList.add('w--open');
+          dropdownToggle.classList.add('w--open');
+        });
+        
+        dropdown.addEventListener('mouseleave', function() {
+          dropdownList.style.display = 'none';
+          dropdown.classList.remove('w--open');
+          dropdownToggle.classList.remove('w--open');
+        });
+        
+        // Add click functionality as backup
+        dropdownToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          const isOpen = dropdownList.style.display === 'block';
+          dropdownList.style.display = isOpen ? 'none' : 'block';
+          dropdown.classList.toggle('w--open');
+          dropdownToggle.classList.toggle('w--open');
+        });
+      }
+    });
+  </script>
 </body>
 </html>

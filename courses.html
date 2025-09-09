@@ -632,6 +632,58 @@
       background: transparent !important;
       display: block !important;
     }
+  
+    /* Hide unwanted elements */
+    .w-commerce-commercecartwrapper,
+    .navbar-cart,
+    .pages-dropdown,
+    .navbar-menu-button-cart-quantity,
+    .navbar-menu-button-cart-wrapper {
+      display: none !important;
+    }
+    
+    /* Fix dropdown styling */
+    .w-dropdown {
+      position: relative;
+    }
+    
+    .w-dropdown-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: rgba(5, 5, 26, 0.98);
+      border: 1px solid rgba(0, 128, 255, 0.2);
+      border-radius: 12px;
+      padding: 10px 0;
+      min-width: 200px;
+      z-index: 1000;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      margin-top: 10px;
+    }
+    
+    .w-dropdown-list a {
+      display: block;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .w-dropdown-list a:hover,
+    .w-dropdown-list a.w--current {
+      background: rgba(0, 128, 255, 0.1);
+      color: #ffd659;
+    }
+    
+    .dropdown-toggle-arrow-2 {
+      margin-left: 5px;
+      transition: transform 0.3s ease;
+      font-size: 12px;
+    }
+    
+    .w-dropdown.w--open .dropdown-toggle-arrow-2 {
+      transform: rotate(180deg);
+    }
   </style>
 </head>
 <body>
@@ -647,7 +699,7 @@
                         <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
               <div class="dropdown-toggle w-dropdown-toggle">
                 <div class="dropdown-toggle-text-block">Career Services</div>
-                <div class="dropdown-toggle-arrow-2"></div>
+                <div class="dropdown-toggle-arrow-2">▼</div>
               </div>
               <nav class="dropdown-column-wrapper-3 w-dropdown-list">
                 <div class="dropdown-pd pd-60px">
@@ -1769,5 +1821,38 @@
   </script>
   <!-- Strapi Master Integration -->
   <script src="strapi-master-integration.js"></script>
+
+  <script>
+    // Fix Career Services dropdown
+    document.addEventListener('DOMContentLoaded', function() {
+      const dropdown = document.querySelector('.w-dropdown');
+      const dropdownToggle = document.querySelector('.w-dropdown-toggle');
+      const dropdownList = document.querySelector('.w-dropdown-list');
+      
+      if (dropdown && dropdownToggle && dropdownList) {
+        // Add hover functionality
+        dropdown.addEventListener('mouseenter', function() {
+          dropdownList.style.display = 'block';
+          dropdown.classList.add('w--open');
+          dropdownToggle.classList.add('w--open');
+        });
+        
+        dropdown.addEventListener('mouseleave', function() {
+          dropdownList.style.display = 'none';
+          dropdown.classList.remove('w--open');
+          dropdownToggle.classList.remove('w--open');
+        });
+        
+        // Add click functionality as backup
+        dropdownToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          const isOpen = dropdownList.style.display === 'block';
+          dropdownList.style.display = isOpen ? 'none' : 'block';
+          dropdown.classList.toggle('w--open');
+          dropdownToggle.classList.toggle('w--open');
+        });
+      }
+    });
+  </script>
 </body>
 </html>
