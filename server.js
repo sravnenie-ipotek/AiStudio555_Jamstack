@@ -730,7 +730,60 @@ app.get('/ru', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
 });
 
-// Catch-all for language subpages (MUST BE AFTER specific JavaScript routes)
+// Serve specific HTML pages for each language (MUST BE BEFORE catch-all routes)
+app.get('/en/courses.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/en/courses.html'));
+});
+
+app.get('/en/teachers.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/en/teachers.html'));
+});
+
+app.get('/he/courses.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/he/courses.html'));
+});
+
+app.get('/he/teachers.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/he/teachers.html'));
+});
+
+app.get('/ru/courses.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/ru/courses.html'));
+});
+
+app.get('/ru/teachers.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/ru/teachers.html'));
+});
+
+// Also handle other common pages
+app.get('/en/about.html', (req, res) => {
+  const filePath = path.join(__dirname, 'dist/en/about.html');
+  if (require('fs').existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.sendFile(path.join(__dirname, 'dist/en/index.html'));
+  }
+});
+
+app.get('/he/about.html', (req, res) => {
+  const filePath = path.join(__dirname, 'dist/he/about.html');
+  if (require('fs').existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.sendFile(path.join(__dirname, 'dist/he/index.html'));
+  }
+});
+
+app.get('/ru/about.html', (req, res) => {
+  const filePath = path.join(__dirname, 'dist/ru/about.html');
+  if (require('fs').existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
+  }
+});
+
+// Catch-all for language subpages (MUST BE AFTER specific routes)
 app.get('/en/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/en/index.html'));
 });
