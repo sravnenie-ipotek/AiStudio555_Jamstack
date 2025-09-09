@@ -79,7 +79,6 @@
         <small>ALL 123+ Home Page Fields • Complete CRUD • Live Database Integration • <span id="current-language">English</span></small>
     </div>
 
-    <button class="save-all-btn" onclick="saveAllHomePage()">💾 Save ALL Home Page</button>
 
     <div class="container">
         <div class="status" id="status">
@@ -98,6 +97,7 @@
             <button class="tab" onclick="showSection('job-postings')">💼 Jobs</button>
             <button class="tab" onclick="showSection('career-resources')">📄 Resources</button>
             <button class="tab" onclick="showSection('career-services')">🎯 Career Services</button>
+            <button class="tab" onclick="showSection('career-orientation')">🧭 Career Orientation <span class="field-count">215+ Fields</span></button>
         </div>
 
         <!-- COMPREHENSIVE HOME PAGE Section -->
@@ -560,11 +560,6 @@
                 </div>
             </div>
 
-            <div style="text-align: center; margin-top: 40px;">
-                <button class="btn btn-success" onclick="saveAllHomePage()" style="font-size: 20px; padding: 20px 40px;">
-                    💾 Save ALL Home Page Content (123 Fields)
-                </button>
-            </div>
         </div>
 
         <!-- FAQs Section -->
@@ -1113,6 +1108,499 @@
                 </div>
             </div>
         </div>
+
+        <!-- CAREER ORIENTATION Section - Comprehensive 215+ Fields -->
+        <div id="career-orientation" class="content-section">
+            <div class="section-header">
+                <h2>🧭 Career Orientation Management</h2>
+                <p>Comprehensive AI Career Assessment & Guidance System (215+ fields)</p>
+                <small>All 9 sections: Hero, Problems, Solutions, Process, Career Paths, Expert, Partners, Assessment, Footer</small>
+            </div>
+            
+            <div class="subsection">
+                <h4>🎯 Hero Section (18 fields)</h4>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Main Title</label>
+                        <input type="text" id="hero_main_title" placeholder="AI Career Orientation Program">
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle</label>
+                        <input type="text" id="hero_subtitle" placeholder="Discover Your Perfect AI Career Path">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="hero_description" rows="3" placeholder="Advanced AI-powered assessment to match you with the ideal AI career"></textarea>
+                </div>
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label>Stat 1 Value</label>
+                        <input type="text" id="hero_stat_1_value" placeholder="500+">
+                    </div>
+                    <div class="form-group">
+                        <label>Stat 1 Label</label>
+                        <input type="text" id="hero_stat_1_label" placeholder="Career Paths Mapped">
+                    </div>
+                    <div class="form-group">
+                        <label>Stat 2 Value</label>
+                        <input type="text" id="hero_stat_2_value" placeholder="95%">
+                    </div>
+                </div>
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label>Stat 2 Label</label>
+                        <input type="text" id="hero_stat_2_label" placeholder="Success Rate">
+                    </div>
+                    <div class="form-group">
+                        <label>Stat 3 Value</label>
+                        <input type="text" id="hero_stat_3_value" placeholder="15+">
+                    </div>
+                    <div class="form-group">
+                        <label>Stat 3 Label</label>
+                        <input type="text" id="hero_stat_3_label" placeholder="AI Specializations">
+                    </div>
+                </div>
+                <div class="grid-4">
+                    <div class="form-group">
+                        <label>CTA Text</label>
+                        <input type="text" id="hero_cta_text" placeholder="Start Your Journey">
+                    </div>
+                    <div class="form-group">
+                        <label>CTA Link</label>
+                        <input type="text" id="hero_cta_link" placeholder="#assessment">
+                    </div>
+                    <div class="form-group">
+                        <label>Badge Text</label>
+                        <input type="text" id="hero_badge_text" placeholder="Free Assessment">
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="hero_visible" checked>
+                        <label for="hero_visible">Hero Visible</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h4>⚠️ Problems Section (27 fields)</h4>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Main Title</label>
+                        <input type="text" id="problems_main_title" placeholder="Common Career Challenges in AI">
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle</label>
+                        <input type="text" id="problems_subtitle" placeholder="We understand the struggles">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="problems_description" rows="2" placeholder="Many professionals face these challenges"></textarea>
+                </div>
+                
+                <!-- Problem 1 -->
+                <h5>Problem 1</h5>
+                <div class="grid-4">
+                    <div class="form-group">
+                        <label>Icon</label>
+                        <input type="text" id="problem_1_icon" placeholder="confusion">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="problem_1_title" placeholder="Career Confusion">
+                    </div>
+                    <div class="form-group">
+                        <label>Stat</label>
+                        <input type="text" id="problem_1_stat" placeholder="73%">
+                    </div>
+                    <div class="form-group">
+                        <label>Stat Label</label>
+                        <input type="text" id="problem_1_stat_label" placeholder="feel overwhelmed">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="problem_1_description" rows="2" placeholder="Too many AI specializations to choose from"></textarea>
+                </div>
+
+                <!-- Problem 2 -->
+                <h5>Problem 2</h5>
+                <div class="grid-4">
+                    <div class="form-group">
+                        <label>Icon</label>
+                        <input type="text" id="problem_2_icon" placeholder="skills-gap">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="problem_2_title" placeholder="Skills Gap Uncertainty">
+                    </div>
+                    <div class="form-group">
+                        <label>Stat</label>
+                        <input type="text" id="problem_2_stat" placeholder="68%">
+                    </div>
+                    <div class="form-group">
+                        <label>Stat Label</label>
+                        <input type="text" id="problem_2_stat_label" placeholder="struggle with skills">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="problem_2_description" rows="2" placeholder="Not sure which skills to develop first"></textarea>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="problems_visible" checked>
+                    <label for="problems_visible">Problems Section Visible</label>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h4>✅ Solutions Section (30 fields)</h4>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Main Title</label>
+                        <input type="text" id="solutions_main_title" placeholder="Our Comprehensive Career Solutions">
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle</label>
+                        <input type="text" id="solutions_subtitle" placeholder="Everything you need for success">
+                    </div>
+                </div>
+                
+                <!-- Solution 1 -->
+                <h5>Solution 1: AI-Powered Assessment</h5>
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label>Icon</label>
+                        <input type="text" id="solution_1_icon" placeholder="ai-assessment">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="solution_1_title" placeholder="AI-Powered Assessment">
+                    </div>
+                    <div class="form-group">
+                        <label>Benefit</label>
+                        <input type="text" id="solution_1_benefit" placeholder="Find your perfect fit">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="solution_1_description" rows="2" placeholder="Advanced algorithm matches you with perfect AI career paths"></textarea>
+                </div>
+                <div class="grid-4">
+                    <div class="form-group">
+                        <label>Feature 1</label>
+                        <input type="text" id="solution_1_feature_1" placeholder="Personality analysis">
+                    </div>
+                    <div class="form-group">
+                        <label>Feature 2</label>
+                        <input type="text" id="solution_1_feature_2" placeholder="Skills evaluation">
+                    </div>
+                    <div class="form-group">
+                        <label>Feature 3</label>
+                        <input type="text" id="solution_1_feature_3" placeholder="Interest mapping">
+                    </div>
+                    <div class="form-group">
+                        <label>Feature 4</label>
+                        <input type="text" id="solution_1_feature_4" placeholder="Market alignment">
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="solutions_visible" checked>
+                    <label for="solutions_visible">Solutions Section Visible</label>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h4>🚀 Process Section (32 fields)</h4>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Main Title</label>
+                        <input type="text" id="process_main_title" placeholder="Your 5-Step Career Discovery Journey">
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle</label>
+                        <input type="text" id="process_subtitle" placeholder="Systematic approach to finding your path">
+                    </div>
+                </div>
+                
+                <!-- Process Steps -->
+                <h5>Process Steps</h5>
+                <div class="grid">
+                    <!-- Step 1 -->
+                    <div>
+                        <h6>Step 1: Assessment</h6>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="process_step_1_title" placeholder="Assessment">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="process_step_1_description" rows="2" placeholder="Complete comprehensive assessment"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Duration</label>
+                            <input type="text" id="process_step_1_duration" placeholder="15 minutes">
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div>
+                        <h6>Step 2: Analysis</h6>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="process_step_2_title" placeholder="Analysis">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="process_step_2_description" rows="2" placeholder="AI analyzes your responses"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Duration</label>
+                            <input type="text" id="process_step_2_duration" placeholder="2 minutes">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="process_visible" checked>
+                    <label for="process_visible">Process Section Visible</label>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h4>💼 Career Paths Section (42 fields)</h4>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Main Title</label>
+                        <input type="text" id="career_paths_main_title" placeholder="AI Career Paths We Cover">
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle</label>
+                        <input type="text" id="career_paths_subtitle" placeholder="Explore diverse opportunities">
+                    </div>
+                </div>
+                
+                <!-- Career Path 1 -->
+                <h5>Career Path 1: Machine Learning Engineer</h5>
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="career_path_1_title" placeholder="Machine Learning Engineer">
+                    </div>
+                    <div class="form-group">
+                        <label>Salary Range</label>
+                        <input type="text" id="career_path_1_salary_range" placeholder="$120K - $200K">
+                    </div>
+                    <div class="form-group">
+                        <label>Growth Rate</label>
+                        <input type="text" id="career_path_1_growth_rate" placeholder="22% annually">
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="career_path_1_description" rows="2" placeholder="Build and deploy ML models at scale"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Top Skills</label>
+                        <input type="text" id="career_path_1_top_skills" placeholder="Python, TensorFlow, AWS">
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="career_paths_visible" checked>
+                    <label for="career_paths_visible">Career Paths Section Visible</label>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h4>👨‍💼 Expert Section (15 fields)</h4>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Expert Name</label>
+                        <input type="text" id="expert_name" placeholder="Dr. Sarah Chen">
+                    </div>
+                    <div class="form-group">
+                        <label>Expert Title</label>
+                        <input type="text" id="expert_title" placeholder="Senior AI Career Advisor">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Expert Credentials</label>
+                    <input type="text" id="expert_credentials" placeholder="PhD in Computer Science, Former Google AI Lead">
+                </div>
+                <div class="form-group">
+                    <label>Expert Description</label>
+                    <textarea id="expert_description" rows="3" placeholder="Leading expert in AI career development"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Expert Quote</label>
+                    <textarea id="expert_quote" rows="2" placeholder="The key to AI career success is finding the intersection of your strengths"></textarea>
+                </div>
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label>LinkedIn URL</label>
+                        <input type="url" id="expert_linkedin" placeholder="https://linkedin.com/in/expert">
+                    </div>
+                    <div class="form-group">
+                        <label>Twitter URL</label>
+                        <input type="url" id="expert_twitter" placeholder="https://twitter.com/expert">
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="expert_visible" checked>
+                        <label for="expert_visible">Expert Visible</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h4>🤝 Partners Section (21 fields)</h4>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Main Title</label>
+                        <input type="text" id="partners_main_title" placeholder="Trusted by Leading AI Companies">
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle</label>
+                        <input type="text" id="partners_subtitle" placeholder="Our career guidance is endorsed">
+                    </div>
+                </div>
+                
+                <!-- Partners Grid -->
+                <div class="grid-3">
+                    <div>
+                        <h6>Partner 1</h6>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="partner_1_name" placeholder="Google">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" id="partner_1_description" placeholder="AI Research roles">
+                        </div>
+                    </div>
+                    <div>
+                        <h6>Partner 2</h6>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="partner_2_name" placeholder="Microsoft">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" id="partner_2_description" placeholder="Azure AI Services">
+                        </div>
+                    </div>
+                    <div>
+                        <h6>Partner 3</h6>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="partner_3_name" placeholder="OpenAI">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" id="partner_3_description" placeholder="Advanced AI Research">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="partners_visible" checked>
+                    <label for="partners_visible">Partners Section Visible</label>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h4>📊 Assessment Section (23 fields)</h4>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Main Title</label>
+                        <input type="text" id="assessment_main_title" placeholder="Free AI Career Assessment">
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle</label>
+                        <input type="text" id="assessment_subtitle" placeholder="Discover your perfect path in 15 minutes">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="assessment_description" rows="2" placeholder="Comprehensive evaluation of skills and interests"></textarea>
+                </div>
+                
+                <!-- Assessment Benefits -->
+                <h5>Assessment Benefits</h5>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Benefit 1</label>
+                        <input type="text" id="assessment_benefit_1" placeholder="Personalized career recommendations">
+                    </div>
+                    <div class="form-group">
+                        <label>Benefit 2</label>
+                        <input type="text" id="assessment_benefit_2" placeholder="Detailed skills gap analysis">
+                    </div>
+                </div>
+                
+                <!-- Assessment Questions Preview -->
+                <h5>Assessment Questions (Preview)</h5>
+                <div class="form-group">
+                    <label>Question 1</label>
+                    <input type="text" id="assessment_question_1" placeholder="What is your current technical background?">
+                </div>
+                <div class="form-group">
+                    <label>Question 2</label>
+                    <input type="text" id="assessment_question_2" placeholder="Which AI applications interest you most?">
+                </div>
+
+                <div class="grid">
+                    <div class="form-group">
+                        <label>CTA Text</label>
+                        <input type="text" id="assessment_cta_text" placeholder="Start Free Assessment">
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="assessment_visible" checked>
+                        <label for="assessment_visible">Assessment Visible</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h4>📱 Footer Section (7 fields)</h4>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="footer_title" placeholder="Ready to Transform Your Career?">
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle</label>
+                        <input type="text" id="footer_subtitle" placeholder="Join thousands of professionals">
+                    </div>
+                </div>
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label>CTA Text</label>
+                        <input type="text" id="footer_cta_text" placeholder="Get Started Now">
+                    </div>
+                    <div class="form-group">
+                        <label>Support Email</label>
+                        <input type="email" id="footer_support_email" placeholder="careers@aistudio555.com">
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="footer_visible" checked>
+                        <label for="footer_visible">Footer Visible</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <div style="margin-top: 30px; text-align: center;">
+                <button type="button" class="btn btn-success" onclick="saveCareerOrientationPage()" style="font-size: 18px; padding: 15px 30px;">
+                    💾 Save Career Orientation Page (215+ Fields)
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="loadCareerOrientationPage()" style="margin-left: 15px;">
+                    🔄 Reload Data
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1572,30 +2060,273 @@
             showMessage('Career Services data loaded successfully', 'success');
         }
 
-        async function saveCareerOrientation() {
+        async function saveCareerOrientationPage() {
             try {
+                // Collect all 215+ fields from the comprehensive form
                 const orientationData = {
-                    title: getFieldValue('careerOrientationTitle'),
-                    subtitle: getFieldValue('careerOrientationSubtitle'),
-                    description: getFieldValue('careerOrientationDescription'),
-                    heroTitle: getFieldValue('careerOrientationHeroTitle'),
-                    heroSubtitle: getFieldValue('careerOrientationHeroSubtitle'),
-                    heroDescription: getFieldValue('careerOrientationHeroDescription')
+                    // Hero Section (18 fields)
+                    heroMainTitle: getFieldValue('hero_main_title'),
+                    heroSubtitle: getFieldValue('hero_subtitle'),
+                    heroDescription: getFieldValue('hero_description'),
+                    heroStat1Value: getFieldValue('hero_stat_1_value'),
+                    heroStat1Label: getFieldValue('hero_stat_1_label'),
+                    heroStat2Value: getFieldValue('hero_stat_2_value'),
+                    heroStat2Label: getFieldValue('hero_stat_2_label'),
+                    heroStat3Value: getFieldValue('hero_stat_3_value'),
+                    heroStat3Label: getFieldValue('hero_stat_3_label'),
+                    heroCtaText: getFieldValue('hero_cta_text'),
+                    heroCtaLink: getFieldValue('hero_cta_link'),
+                    heroBadgeText: getFieldValue('hero_badge_text'),
+                    heroVisible: getFieldValue('hero_visible') === 'on',
+
+                    // Problems Section (27 fields)
+                    problemsMainTitle: getFieldValue('problems_main_title'),
+                    problemsSubtitle: getFieldValue('problems_subtitle'),
+                    problemsDescription: getFieldValue('problems_description'),
+                    
+                    problem1Icon: getFieldValue('problem_1_icon'),
+                    problem1Title: getFieldValue('problem_1_title'),
+                    problem1Description: getFieldValue('problem_1_description'),
+                    problem1Stat: getFieldValue('problem_1_stat'),
+                    problem1StatLabel: getFieldValue('problem_1_stat_label'),
+                    
+                    problem2Icon: getFieldValue('problem_2_icon'),
+                    problem2Title: getFieldValue('problem_2_title'),
+                    problem2Description: getFieldValue('problem_2_description'),
+                    problem2Stat: getFieldValue('problem_2_stat'),
+                    problem2StatLabel: getFieldValue('problem_2_stat_label'),
+                    
+                    problemsVisible: getFieldValue('problems_visible') === 'on',
+
+                    // Solutions Section (30 fields)
+                    solutionsMainTitle: getFieldValue('solutions_main_title'),
+                    solutionsSubtitle: getFieldValue('solutions_subtitle'),
+                    
+                    solution1Icon: getFieldValue('solution_1_icon'),
+                    solution1Title: getFieldValue('solution_1_title'),
+                    solution1Description: getFieldValue('solution_1_description'),
+                    solution1Feature1: getFieldValue('solution_1_feature_1'),
+                    solution1Feature2: getFieldValue('solution_1_feature_2'),
+                    solution1Feature3: getFieldValue('solution_1_feature_3'),
+                    solution1Feature4: getFieldValue('solution_1_feature_4'),
+                    solution1Benefit: getFieldValue('solution_1_benefit'),
+                    
+                    solutionsVisible: getFieldValue('solutions_visible') === 'on',
+
+                    // Process Section (32 fields)
+                    processMainTitle: getFieldValue('process_main_title'),
+                    processSubtitle: getFieldValue('process_subtitle'),
+                    
+                    processStep1Title: getFieldValue('process_step_1_title'),
+                    processStep1Description: getFieldValue('process_step_1_description'),
+                    processStep1Duration: getFieldValue('process_step_1_duration'),
+                    
+                    processStep2Title: getFieldValue('process_step_2_title'),
+                    processStep2Description: getFieldValue('process_step_2_description'),
+                    processStep2Duration: getFieldValue('process_step_2_duration'),
+                    
+                    processVisible: getFieldValue('process_visible') === 'on',
+
+                    // Career Paths Section (42 fields)
+                    careerPathsMainTitle: getFieldValue('career_paths_main_title'),
+                    careerPathsSubtitle: getFieldValue('career_paths_subtitle'),
+                    
+                    careerPath1Title: getFieldValue('career_path_1_title'),
+                    careerPath1Description: getFieldValue('career_path_1_description'),
+                    careerPath1SalaryRange: getFieldValue('career_path_1_salary_range'),
+                    careerPath1GrowthRate: getFieldValue('career_path_1_growth_rate'),
+                    careerPath1TopSkills: getFieldValue('career_path_1_top_skills'),
+                    
+                    careerPathsVisible: getFieldValue('career_paths_visible') === 'on',
+
+                    // Expert Section (15 fields)
+                    expertName: getFieldValue('expert_name'),
+                    expertTitle: getFieldValue('expert_title'),
+                    expertCredentials: getFieldValue('expert_credentials'),
+                    expertDescription: getFieldValue('expert_description'),
+                    expertQuote: getFieldValue('expert_quote'),
+                    expertLinkedin: getFieldValue('expert_linkedin'),
+                    expertTwitter: getFieldValue('expert_twitter'),
+                    expertVisible: getFieldValue('expert_visible') === 'on',
+
+                    // Partners Section (21 fields)
+                    partnersMainTitle: getFieldValue('partners_main_title'),
+                    partnersSubtitle: getFieldValue('partners_subtitle'),
+                    
+                    partner1Name: getFieldValue('partner_1_name'),
+                    partner1Description: getFieldValue('partner_1_description'),
+                    partner2Name: getFieldValue('partner_2_name'),
+                    partner2Description: getFieldValue('partner_2_description'),
+                    partner3Name: getFieldValue('partner_3_name'),
+                    partner3Description: getFieldValue('partner_3_description'),
+                    
+                    partnersVisible: getFieldValue('partners_visible') === 'on',
+
+                    // Assessment Section (23 fields)
+                    assessmentMainTitle: getFieldValue('assessment_main_title'),
+                    assessmentSubtitle: getFieldValue('assessment_subtitle'),
+                    assessmentDescription: getFieldValue('assessment_description'),
+                    assessmentBenefit1: getFieldValue('assessment_benefit_1'),
+                    assessmentBenefit2: getFieldValue('assessment_benefit_2'),
+                    assessmentQuestion1: getFieldValue('assessment_question_1'),
+                    assessmentQuestion2: getFieldValue('assessment_question_2'),
+                    assessmentCtaText: getFieldValue('assessment_cta_text'),
+                    assessmentVisible: getFieldValue('assessment_visible') === 'on',
+
+                    // Footer Section (7 fields)
+                    footerTitle: getFieldValue('footer_title'),
+                    footerSubtitle: getFieldValue('footer_subtitle'),
+                    footerCtaText: getFieldValue('footer_cta_text'),
+                    footerSupportEmail: getFieldValue('footer_support_email'),
+                    footerVisible: getFieldValue('footer_visible') === 'on'
                 };
 
-                const response = await fetch(`${API_URL}/career-orientation-page`, {
+                const url = `${API_URL_CRUD}/career-orientation-page?locale=${currentLocale}`;
+                console.log('Saving career orientation page to:', url, orientationData);
+
+                const response = await fetch(url, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_TOKEN}`
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ data: orientationData })
                 });
 
-                if (!response.ok) throw new Error('Failed to save career orientation page');
-                showMessage('Career Orientation page saved successfully!', 'success');
+                if (!response.ok) {
+                    const errorData = await response.text();
+                    throw new Error(`Failed to save: ${response.status} - ${errorData}`);
+                }
+
+                showMessage('Career Orientation page (215+ fields) saved successfully!', 'success');
             } catch (error) {
+                console.error('Error saving career orientation:', error);
                 showMessage('Error saving Career Orientation: ' + error.message, 'error');
+            }
+        }
+
+        async function loadCareerOrientationPage() {
+            try {
+                const url = `${API_URL_READ}/career-orientation-page?locale=${currentLocale}`;
+                console.log('Loading career orientation page from:', url);
+
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Failed to load: ${response.status}`);
+                }
+
+                const result = await response.json();
+                const data = result.data?.attributes || {};
+                console.log('Loaded career orientation data:', data);
+
+                // Populate all form fields
+                // Hero Section
+                setFieldValue('hero_main_title', data.heroMainTitle || '');
+                setFieldValue('hero_subtitle', data.heroSubtitle || '');
+                setFieldValue('hero_description', data.heroDescription || '');
+                setFieldValue('hero_stat_1_value', data.heroStat1Value || '');
+                setFieldValue('hero_stat_1_label', data.heroStat1Label || '');
+                setFieldValue('hero_stat_2_value', data.heroStat2Value || '');
+                setFieldValue('hero_stat_2_label', data.heroStat2Label || '');
+                setFieldValue('hero_stat_3_value', data.heroStat3Value || '');
+                setFieldValue('hero_stat_3_label', data.heroStat3Label || '');
+                setFieldValue('hero_cta_text', data.heroCtaText || '');
+                setFieldValue('hero_cta_link', data.heroCtaLink || '');
+                setFieldValue('hero_badge_text', data.heroBadgeText || '');
+                setFieldChecked('hero_visible', data.heroVisible !== false);
+
+                // Problems Section  
+                setFieldValue('problems_main_title', data.problemsMainTitle || '');
+                setFieldValue('problems_subtitle', data.problemsSubtitle || '');
+                setFieldValue('problems_description', data.problemsDescription || '');
+                setFieldValue('problem_1_icon', data.problem1Icon || '');
+                setFieldValue('problem_1_title', data.problem1Title || '');
+                setFieldValue('problem_1_description', data.problem1Description || '');
+                setFieldValue('problem_1_stat', data.problem1Stat || '');
+                setFieldValue('problem_1_stat_label', data.problem1StatLabel || '');
+                setFieldValue('problem_2_icon', data.problem2Icon || '');
+                setFieldValue('problem_2_title', data.problem2Title || '');
+                setFieldValue('problem_2_description', data.problem2Description || '');
+                setFieldValue('problem_2_stat', data.problem2Stat || '');
+                setFieldValue('problem_2_stat_label', data.problem2StatLabel || '');
+                setFieldChecked('problems_visible', data.problemsVisible !== false);
+
+                // Solutions Section
+                setFieldValue('solutions_main_title', data.solutionsMainTitle || '');
+                setFieldValue('solutions_subtitle', data.solutionsSubtitle || '');
+                setFieldValue('solution_1_icon', data.solution1Icon || '');
+                setFieldValue('solution_1_title', data.solution1Title || '');
+                setFieldValue('solution_1_description', data.solution1Description || '');
+                setFieldValue('solution_1_feature_1', data.solution1Feature1 || '');
+                setFieldValue('solution_1_feature_2', data.solution1Feature2 || '');
+                setFieldValue('solution_1_feature_3', data.solution1Feature3 || '');
+                setFieldValue('solution_1_feature_4', data.solution1Feature4 || '');
+                setFieldValue('solution_1_benefit', data.solution1Benefit || '');
+                setFieldChecked('solutions_visible', data.solutionsVisible !== false);
+
+                // Process Section
+                setFieldValue('process_main_title', data.processMainTitle || '');
+                setFieldValue('process_subtitle', data.processSubtitle || '');
+                setFieldValue('process_step_1_title', data.processStep1Title || '');
+                setFieldValue('process_step_1_description', data.processStep1Description || '');
+                setFieldValue('process_step_1_duration', data.processStep1Duration || '');
+                setFieldValue('process_step_2_title', data.processStep2Title || '');
+                setFieldValue('process_step_2_description', data.processStep2Description || '');
+                setFieldValue('process_step_2_duration', data.processStep2Duration || '');
+                setFieldChecked('process_visible', data.processVisible !== false);
+
+                // Career Paths Section
+                setFieldValue('career_paths_main_title', data.careerPathsMainTitle || '');
+                setFieldValue('career_paths_subtitle', data.careerPathsSubtitle || '');
+                setFieldValue('career_path_1_title', data.careerPath1Title || '');
+                setFieldValue('career_path_1_description', data.careerPath1Description || '');
+                setFieldValue('career_path_1_salary_range', data.careerPath1SalaryRange || '');
+                setFieldValue('career_path_1_growth_rate', data.careerPath1GrowthRate || '');
+                setFieldValue('career_path_1_top_skills', data.careerPath1TopSkills || '');
+                setFieldChecked('career_paths_visible', data.careerPathsVisible !== false);
+
+                // Expert Section
+                setFieldValue('expert_name', data.expertName || '');
+                setFieldValue('expert_title', data.expertTitle || '');
+                setFieldValue('expert_credentials', data.expertCredentials || '');
+                setFieldValue('expert_description', data.expertDescription || '');
+                setFieldValue('expert_quote', data.expertQuote || '');
+                setFieldValue('expert_linkedin', data.expertLinkedin || '');
+                setFieldValue('expert_twitter', data.expertTwitter || '');
+                setFieldChecked('expert_visible', data.expertVisible !== false);
+
+                // Partners Section
+                setFieldValue('partners_main_title', data.partnersMainTitle || '');
+                setFieldValue('partners_subtitle', data.partnersSubtitle || '');
+                setFieldValue('partner_1_name', data.partner1Name || '');
+                setFieldValue('partner_1_description', data.partner1Description || '');
+                setFieldValue('partner_2_name', data.partner2Name || '');
+                setFieldValue('partner_2_description', data.partner2Description || '');
+                setFieldValue('partner_3_name', data.partner3Name || '');
+                setFieldValue('partner_3_description', data.partner3Description || '');
+                setFieldChecked('partners_visible', data.partnersVisible !== false);
+
+                // Assessment Section
+                setFieldValue('assessment_main_title', data.assessmentMainTitle || '');
+                setFieldValue('assessment_subtitle', data.assessmentSubtitle || '');
+                setFieldValue('assessment_description', data.assessmentDescription || '');
+                setFieldValue('assessment_benefit_1', data.assessmentBenefit1 || '');
+                setFieldValue('assessment_benefit_2', data.assessmentBenefit2 || '');
+                setFieldValue('assessment_question_1', data.assessmentQuestion1 || '');
+                setFieldValue('assessment_question_2', data.assessmentQuestion2 || '');
+                setFieldValue('assessment_cta_text', data.assessmentCtaText || '');
+                setFieldChecked('assessment_visible', data.assessmentVisible !== false);
+
+                // Footer Section
+                setFieldValue('footer_title', data.footerTitle || '');
+                setFieldValue('footer_subtitle', data.footerSubtitle || '');
+                setFieldValue('footer_cta_text', data.footerCtaText || '');
+                setFieldValue('footer_support_email', data.footerSupportEmail || '');
+                setFieldChecked('footer_visible', data.footerVisible !== false);
+
+                showMessage('Career Orientation page data loaded successfully!', 'success');
+            } catch (error) {
+                console.error('Error loading career orientation:', error);
+                showMessage('Error loading Career Orientation: ' + error.message, 'error');
             }
         }
 

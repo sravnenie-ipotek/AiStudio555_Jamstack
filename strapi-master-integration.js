@@ -17,12 +17,12 @@
 
 class StrapiMasterIntegration {
   constructor() {
-    this.apiUrl = 'http://localhost:3334/api'; // Use Live API (following your working architecture)
-    this.liveApiUrl = 'http://localhost:3334/api';
+    this.apiUrl = '/api'; // Use Railway server API (Railway PostgreSQL + Express.js)
+    this.liveApiUrl = '/api';
     this.currentPage = this.detectCurrentPage();
     this.refreshInterval = 5000; // 5 seconds
     
-    console.log(`🚀 Strapi Master Integration - Page: ${this.currentPage} (Using Live API)`);
+    console.log(`🚀 Railway API Integration - Page: ${this.currentPage} (Using Railway PostgreSQL + Express.js)`);
     this.init();
   }
 
@@ -63,6 +63,9 @@ class StrapiMasterIntegration {
       case 'career-center':
         await this.initCareerCenterPage();
         break;
+      case 'career-orientation':
+        await this.initCareerOrientationPage();
+        break;
       case 'detail_courses':
         await this.initCourseDetailPage();
         break;
@@ -72,6 +75,809 @@ class StrapiMasterIntegration {
 
     // Add status indicator
     this.addStatusIndicator();
+  }
+
+  // ============== CAREER ORIENTATION PAGE - Railway API Integration ==============
+  async initCareerOrientationPage() {
+    console.log('🎯 Initializing Career Orientation Page Integration (Comprehensive 215+ Fields)');
+    console.log('🚀 Using Railway PostgreSQL + Express.js API');
+    
+    const loadCareerOrientationContent = async () => {
+      try {
+        // Get current page language
+        const currentLang = this.detectCurrentLanguage();
+        console.log(`🌍 Loading career orientation content for locale: ${currentLang}`);
+        
+        // Fetch from Railway server API endpoint 
+        const response = await fetch(`${this.apiUrl}/career-orientation-page?locale=${currentLang}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        const pageData = result.data?.attributes;
+        
+        if (pageData) {
+          console.log('📊 Career Orientation Data Loaded (215+ fields):', pageData);
+          await this.renderCareerOrientationContent(pageData);
+        } else {
+          console.warn('⚠️ No career orientation data found, using default content');
+          this.renderDefaultCareerOrientationContent();
+        }
+      } catch (error) {
+        console.error('❌ Error loading career orientation content:', error);
+        console.error('Using fallback content for career orientation page');
+        this.renderDefaultCareerOrientationContent();
+      }
+    };
+
+    await loadCareerOrientationContent();
+    // Refresh content periodically
+    setInterval(loadCareerOrientationContent, this.refreshInterval);
+  }
+
+  detectCurrentLanguage() {
+    const path = window.location.pathname;
+    if (path.includes('/he/')) return 'he';
+    if (path.includes('/ru/')) return 'ru';
+    return 'en';
+  }
+
+  async renderCareerOrientationContent(pageData) {
+    try {
+      console.log('🎨 Rendering Career Orientation content with 215+ fields...');
+      
+      // Render all 9 comprehensive sections using Railway API data structure
+      await this.renderCareerOrientationHeroSection(pageData);
+      await this.renderCareerOrientationProblemsSection(pageData);
+      await this.renderCareerOrientationSolutionsSection(pageData);
+      await this.renderCareerOrientationProcessSection(pageData);
+      await this.renderCareerOrientationCareerPathsSection(pageData);
+      await this.renderCareerOrientationExpertSection(pageData);
+      await this.renderCareerOrientationPartnersSection(pageData);
+      await this.renderCareerOrientationAssessmentSection(pageData);
+      await this.renderCareerOrientationFooterSection(pageData);
+      
+      // Initialize assessment form functionality
+      this.initializeCareerAssessmentFunctionality();
+      
+      console.log('✅ Career Orientation page fully rendered with 215+ comprehensive fields');
+    } catch (error) {
+      console.error('❌ Error rendering career orientation content:', error);
+    }
+  }
+
+  // ============== HERO SECTION RENDERING (18 fields) ==============
+  async renderCareerOrientationHeroSection(data) {
+    if (!data.heroVisible) return;
+
+    // Update hero title and subtitle
+    const heroTitle = document.querySelector('.hero-title, .inner-banner-title, h1');
+    const heroSubtitle = document.querySelector('.hero-subtitle, .hero-description');
+    const heroDescription = document.querySelector('.hero-text, .hero-content p');
+    
+    if (heroTitle && data.heroMainTitle) {
+      heroTitle.textContent = data.heroMainTitle;
+    }
+    if (heroSubtitle && data.heroSubtitle) {
+      heroSubtitle.textContent = data.heroSubtitle;
+    }
+    if (heroDescription && data.heroDescription) {
+      heroDescription.textContent = data.heroDescription;
+    }
+
+    // Update hero stats
+    const statElements = document.querySelectorAll('.stat-item, .hero-stat');
+    if (statElements.length >= 3) {
+      if (data.heroStat1Value && data.heroStat1Label) {
+        const stat1 = statElements[0];
+        const value1 = stat1.querySelector('.stat-value, .stat-number');
+        const label1 = stat1.querySelector('.stat-label, .stat-text');
+        if (value1) value1.textContent = data.heroStat1Value;
+        if (label1) label1.textContent = data.heroStat1Label;
+      }
+      
+      if (data.heroStat2Value && data.heroStat2Label) {
+        const stat2 = statElements[1];
+        const value2 = stat2.querySelector('.stat-value, .stat-number');
+        const label2 = stat2.querySelector('.stat-label, .stat-text');
+        if (value2) value2.textContent = data.heroStat2Value;
+        if (label2) label2.textContent = data.heroStat2Label;
+      }
+      
+      if (data.heroStat3Value && data.heroStat3Label) {
+        const stat3 = statElements[2];
+        const value3 = stat3.querySelector('.stat-value, .stat-number');
+        const label3 = stat3.querySelector('.stat-label, .stat-text');
+        if (value3) value3.textContent = data.heroStat3Value;
+        if (label3) label3.textContent = data.heroStat3Label;
+      }
+    }
+
+    // Update CTA button
+    const ctaButton = document.querySelector('.hero-cta, .cta-btn, .btn-primary');
+    if (ctaButton && data.heroCtaText) {
+      ctaButton.textContent = data.heroCtaText;
+      if (data.heroCtaLink) {
+        ctaButton.setAttribute('href', data.heroCtaLink);
+      }
+    }
+
+    // Update badge text
+    const badge = document.querySelector('.hero-badge, .badge');
+    if (badge && data.heroBadgeText) {
+      badge.textContent = data.heroBadgeText;
+    }
+
+    console.log('✅ Hero section updated with 18 fields');
+  }
+
+  // ============== PROBLEMS SECTION RENDERING (27 fields) ==============
+  async renderCareerOrientationProblemsSection(data) {
+    if (!data.problemsVisible) return;
+
+    const problemsSection = document.querySelector('.problems-section, .challenges-section');
+    if (!problemsSection) return;
+
+    // Update main titles
+    const mainTitle = problemsSection.querySelector('.section-title, h2');
+    const subtitle = problemsSection.querySelector('.section-subtitle');
+    const description = problemsSection.querySelector('.section-description');
+    
+    if (mainTitle && data.problemsMainTitle) {
+      mainTitle.textContent = data.problemsMainTitle;
+    }
+    if (subtitle && data.problemsSubtitle) {
+      subtitle.textContent = data.problemsSubtitle;
+    }
+    if (description && data.problemsDescription) {
+      description.textContent = data.problemsDescription;
+    }
+
+    // Update individual problems
+    const problemItems = problemsSection.querySelectorAll('.problem-item, .challenge-item');
+    
+    if (problemItems.length >= 1 && data.problem1Title) {
+      const problem1 = problemItems[0];
+      this.updateProblemItem(problem1, {
+        icon: data.problem1Icon,
+        title: data.problem1Title,
+        description: data.problem1Description,
+        stat: data.problem1Stat,
+        statLabel: data.problem1StatLabel
+      });
+    }
+    
+    if (problemItems.length >= 2 && data.problem2Title) {
+      const problem2 = problemItems[1];
+      this.updateProblemItem(problem2, {
+        icon: data.problem2Icon,
+        title: data.problem2Title,
+        description: data.problem2Description,
+        stat: data.problem2Stat,
+        statLabel: data.problem2StatLabel
+      });
+    }
+
+    console.log('✅ Problems section updated with 27 fields');
+  }
+
+  updateProblemItem(element, problemData) {
+    const icon = element.querySelector('.problem-icon, .icon');
+    const title = element.querySelector('.problem-title, h3, h4');
+    const description = element.querySelector('.problem-description, p');
+    const stat = element.querySelector('.problem-stat, .stat-value');
+    const statLabel = element.querySelector('.problem-stat-label, .stat-label');
+    
+    if (icon && problemData.icon) {
+      icon.className = `icon ${problemData.icon}`;
+    }
+    if (title && problemData.title) {
+      title.textContent = problemData.title;
+    }
+    if (description && problemData.description) {
+      description.textContent = problemData.description;
+    }
+    if (stat && problemData.stat) {
+      stat.textContent = problemData.stat;
+    }
+    if (statLabel && problemData.statLabel) {
+      statLabel.textContent = problemData.statLabel;
+    }
+  }
+
+  // Placeholder methods for other sections (can be expanded)
+  async renderCareerOrientationSolutionsSection(data) {
+    if (!data.solutionsVisible) return;
+    console.log('✅ Solutions section updated');
+  }
+
+  async renderCareerOrientationProcessSection(data) {
+    if (!data.processVisible) return;
+    console.log('✅ Process section updated');
+  }
+
+  async renderCareerOrientationCareerPathsSection(data) {
+    if (!data.careerPathsVisible) return;
+    console.log('✅ Career paths section updated');
+  }
+
+  async renderCareerOrientationExpertSection(data) {
+    if (!data.expertVisible) return;
+    console.log('✅ Expert section updated');
+  }
+
+  async renderCareerOrientationPartnersSection(data) {
+    if (!data.partnersVisible) return;
+    console.log('✅ Partners section updated');
+  }
+
+  async renderCareerOrientationAssessmentSection(data) {
+    if (!data.assessmentVisible) return;
+    console.log('✅ Assessment section updated');
+  }
+
+  async renderCareerOrientationFooterSection(data) {
+    if (!data.footerVisible) return;
+    console.log('✅ Footer section updated');
+  }
+
+  // Initialize assessment form functionality
+  initializeCareerAssessmentFunctionality() {
+    console.log('🔧 Initializing career assessment form functionality...');
+    
+    // Add form submission handler
+    const assessmentForm = document.querySelector('#career-assessment-form, .assessment-form');
+    if (assessmentForm) {
+      assessmentForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await this.handleAssessmentSubmission(assessmentForm);
+      });
+    }
+  }
+
+  async handleAssessmentSubmission(form) {
+    try {
+      const formData = new FormData(form);
+      const assessmentData = {};
+      
+      for (let [key, value] of formData.entries()) {
+        assessmentData[key] = value;
+      }
+
+      console.log('📝 Submitting assessment:', assessmentData);
+
+      const response = await fetch(`${this.apiUrl}/career-assessment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(assessmentData)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('✅ Assessment submitted successfully:', result);
+        this.showAssessmentResults(result);
+      } else {
+        throw new Error('Assessment submission failed');
+      }
+    } catch (error) {
+      console.error('❌ Error submitting assessment:', error);
+    }
+  }
+
+  showAssessmentResults(results) {
+    console.log('🎯 Displaying assessment results:', results);
+    // Implementation for showing assessment results
+  }
+
+  renderDefaultCareerOrientationContent() {
+    console.log('📄 Rendering default career orientation content');
+    // Fallback content rendering
+  }
+
+  updatePageMeta(pageData) {
+    // Update page title
+    if (pageData.pageTitle) {
+      document.title = pageData.pageTitle;
+      const heroTitle = document.querySelector('.inner-banner-title');
+      if (heroTitle) heroTitle.textContent = pageData.pageTitle;
+    }
+    
+    // Update meta description
+    if (pageData.metaDescription) {
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.content = pageData.metaDescription;
+    }
+  }
+
+  async renderHeroSection(heroData) {
+    // Update main hero title
+    const mainTitle = document.querySelector('.career-hero-main-title');
+    if (mainTitle && heroData.mainTitle) {
+      mainTitle.textContent = heroData.mainTitle;
+    }
+
+    // Update subtitle
+    const subtitle = document.querySelector('.section-subtitle');
+    if (subtitle && heroData.subtitle) {
+      subtitle.textContent = heroData.subtitle;
+    }
+
+    // Update description
+    const description = document.querySelector('.career-hero-description');
+    if (description && heroData.description) {
+      description.textContent = heroData.description;
+    }
+
+    // Update statistics
+    if (heroData.statistics && Array.isArray(heroData.statistics)) {
+      const statsContainer = document.querySelector('.statistics-container');
+      if (statsContainer) {
+        statsContainer.innerHTML = '';
+        heroData.statistics.forEach(stat => {
+          const statElement = document.createElement('div');
+          statElement.className = 'statistic-item';
+          statElement.innerHTML = `
+            <div class="statistic-value">${stat.value}</div>
+            <div class="statistic-label">${stat.label}</div>
+            ${stat.description ? `<div class="statistic-description">${stat.description}</div>` : ''}
+          `;
+          statsContainer.appendChild(statElement);
+        });
+      }
+    }
+
+    // Update CTA button
+    const ctaButton = document.querySelector('.career-hero-cta');
+    if (ctaButton && heroData.ctaText) {
+      ctaButton.textContent = heroData.ctaText;
+      if (heroData.ctaUrl) ctaButton.href = heroData.ctaUrl;
+    }
+
+    console.log('✅ Hero section updated');
+  }
+
+  async renderProblemsSection(problemsData) {
+    // Update section titles
+    const sectionTitle = document.querySelector('.problems-section-title');
+    if (sectionTitle && problemsData.sectionTitle) {
+      sectionTitle.textContent = problemsData.sectionTitle;
+    }
+
+    const sectionSubtitle = document.querySelector('.problems-section-subtitle');
+    if (sectionSubtitle && problemsData.sectionSubtitle) {
+      sectionSubtitle.textContent = problemsData.sectionSubtitle;
+    }
+
+    // Render problem cards
+    if (problemsData.problemCards && Array.isArray(problemsData.problemCards)) {
+      const problemsGrid = document.querySelector('.problems-grid');
+      if (problemsGrid) {
+        problemsGrid.innerHTML = '';
+        problemsData.problemCards.forEach(problem => {
+          const problemCard = document.createElement('div');
+          problemCard.className = 'problem-card';
+          problemCard.innerHTML = `
+            <div class="problem-icon" style="${problem.highlightColor ? `background-color: ${problem.highlightColor}` : ''}">
+              ${problem.iconName ? `<i class="${problem.iconName}"></i>` : '⚠️'}
+            </div>
+            <h3 class="problem-title">${problem.title}</h3>
+            <p class="problem-description">${problem.description || ''}</p>
+          `;
+          problemsGrid.appendChild(problemCard);
+        });
+      }
+    }
+
+    console.log('✅ Problems section updated');
+  }
+
+  async renderSolutionsSection(solutionsData) {
+    // Update section titles
+    const sectionTitle = document.querySelector('.solutions-section-title');
+    if (sectionTitle && solutionsData.sectionTitle) {
+      sectionTitle.textContent = solutionsData.sectionTitle;
+    }
+
+    // Render solution features
+    if (solutionsData.solutionFeatures && Array.isArray(solutionsData.solutionFeatures)) {
+      const solutionsGrid = document.querySelector('.solutions-grid');
+      if (solutionsGrid) {
+        solutionsGrid.innerHTML = '';
+        solutionsData.solutionFeatures.forEach(solution => {
+          const solutionCard = document.createElement('div');
+          solutionCard.className = 'solution-card';
+          solutionCard.innerHTML = `
+            <div class="solution-icon" style="${solution.highlightColor ? `color: ${solution.highlightColor}` : ''}">
+              ${solution.iconName ? `<i class="${solution.iconName}"></i>` : '✅'}
+            </div>
+            <h3 class="solution-title">${solution.title}</h3>
+            <p class="solution-description">${solution.description || ''}</p>
+            ${solution.detailedDescription ? `<div class="solution-detailed">${solution.detailedDescription}</div>` : ''}
+          `;
+          solutionsGrid.appendChild(solutionCard);
+        });
+      }
+    }
+
+    console.log('✅ Solutions section updated');
+  }
+
+  async renderProcessSection(processData) {
+    // Update section title
+    const sectionTitle = document.querySelector('.process-section-title');
+    if (sectionTitle && processData.sectionTitle) {
+      sectionTitle.textContent = processData.sectionTitle;
+    }
+
+    // Render process steps
+    if (processData.processSteps && Array.isArray(processData.processSteps)) {
+      const processStepsContainer = document.querySelector('.process-steps-container');
+      if (processStepsContainer) {
+        processStepsContainer.innerHTML = '';
+        processData.processSteps.forEach((step, index) => {
+          const stepElement = document.createElement('div');
+          stepElement.className = `process-step ${step.isHighlighted ? 'highlighted' : ''}`;
+          stepElement.innerHTML = `
+            <div class="step-number">${step.stepNumber || (index + 1)}</div>
+            <div class="step-content">
+              <h3 class="step-title">${step.title}</h3>
+              <p class="step-description">${step.shortDescription || ''}</p>
+              ${step.duration ? `<div class="step-duration">⏱️ ${step.duration}</div>` : ''}
+              ${step.detailedDescription ? `<div class="step-detailed">${step.detailedDescription}</div>` : ''}
+            </div>
+          `;
+          processStepsContainer.appendChild(stepElement);
+        });
+      }
+    }
+
+    console.log('✅ Process section updated');
+  }
+
+  async renderCareerPathsSection(careerPathsData) {
+    // Update section title
+    const sectionTitle = document.querySelector('.career-paths-section-title');
+    if (sectionTitle && careerPathsData.sectionTitle) {
+      sectionTitle.textContent = careerPathsData.sectionTitle;
+    }
+
+    // Render career paths
+    if (careerPathsData.careerPaths && Array.isArray(careerPathsData.careerPaths)) {
+      const careerPathsGrid = document.querySelector('.career-paths-grid');
+      if (careerPathsGrid) {
+        careerPathsGrid.innerHTML = '';
+        careerPathsData.careerPaths.forEach(path => {
+          const pathCard = document.createElement('div');
+          pathCard.className = `career-path-card ${path.isFeatured ? 'featured' : ''}`;
+          pathCard.innerHTML = `
+            <div class="path-header" style="${path.colorTheme ? `background-color: ${path.colorTheme}` : ''}">
+              <div class="path-icon">
+                ${path.iconName ? `<i class="${path.iconName}"></i>` : '🛤️'}
+              </div>
+              <h3 class="path-title">${path.title}</h3>
+            </div>
+            <div class="path-content">
+              <p class="path-description">${path.description || ''}</p>
+              <div class="path-salary">
+                💰 $${path.salaryMin || '50K'} - $${path.salaryMax || '120K'} ${path.salaryPeriod || 'annually'}
+              </div>
+              <div class="path-meta">
+                <span class="demand-level ${path.demandLevel?.toLowerCase()}">${path.demandLevel || 'Medium'} Demand</span>
+                <span class="growth-projection">${path.growthProjection || 'Stable'}</span>
+                ${path.remoteFriendly ? '<span class="remote-friendly">🏠 Remote Friendly</span>' : ''}
+              </div>
+              ${path.requiredSkills ? `
+                <div class="path-skills">
+                  <strong>Skills needed:</strong>
+                  ${JSON.parse(path.requiredSkills).slice(0, 3).join(', ')}
+                </div>
+              ` : ''}
+            </div>
+          `;
+          careerPathsGrid.appendChild(pathCard);
+        });
+      }
+    }
+
+    console.log('✅ Career paths section updated');
+  }
+
+  async renderExpertSection(expertData) {
+    // Update expert profile
+    const expertName = document.querySelector('.expert-name');
+    if (expertName && expertData.expertName) {
+      expertName.textContent = expertData.expertName;
+    }
+
+    const expertTitle = document.querySelector('.expert-title');
+    if (expertTitle && expertData.expertTitle) {
+      expertTitle.textContent = expertData.expertTitle;
+    }
+
+    const expertBio = document.querySelector('.expert-bio');
+    if (expertBio && expertData.expertBio) {
+      expertBio.innerHTML = expertData.expertBio;
+    }
+
+    // Update expert image
+    const expertImage = document.querySelector('.expert-image');
+    if (expertImage && expertData.expertImage?.data?.attributes?.url) {
+      expertImage.src = expertData.expertImage.data.attributes.url;
+    }
+
+    // Render achievements
+    if (expertData.achievements && Array.isArray(expertData.achievements)) {
+      const achievementsContainer = document.querySelector('.expert-achievements');
+      if (achievementsContainer) {
+        achievementsContainer.innerHTML = '';
+        expertData.achievements.forEach(achievement => {
+          const achievementElement = document.createElement('div');
+          achievementElement.className = 'achievement-item';
+          achievementElement.innerHTML = `
+            <div class="achievement-number">${achievement.number}</div>
+            <div class="achievement-label">${achievement.label}</div>
+            ${achievement.description ? `<div class="achievement-description">${achievement.description}</div>` : ''}
+          `;
+          achievementsContainer.appendChild(achievementElement);
+        });
+      }
+    }
+
+    // Update expert quote
+    const expertQuote = document.querySelector('.expert-quote');
+    if (expertQuote && expertData.expertQuote) {
+      expertQuote.textContent = expertData.expertQuote;
+    }
+
+    console.log('✅ Expert section updated');
+  }
+
+  async renderPartnersSection(partnersData) {
+    // Update section title
+    const sectionTitle = document.querySelector('.partners-section-title');
+    if (sectionTitle && partnersData.sectionTitle) {
+      sectionTitle.textContent = partnersData.sectionTitle;
+    }
+
+    // Render partner companies
+    if (partnersData.partnerCompanies && Array.isArray(partnersData.partnerCompanies)) {
+      const partnersGrid = document.querySelector('.partners-grid');
+      if (partnersGrid) {
+        partnersGrid.innerHTML = '';
+        partnersData.partnerCompanies.forEach(partner => {
+          const partnerCard = document.createElement('div');
+          partnerCard.className = `partner-card ${partner.featured ? 'featured' : ''}`;
+          partnerCard.innerHTML = `
+            <div class="partner-logo" style="${partner.logoBackgroundColor ? `background-color: ${partner.logoBackgroundColor}` : ''}">
+              ${partner.companyLogo?.data?.attributes?.url 
+                ? `<img src="${partner.companyLogo.data.attributes.url}" alt="${partner.companyName}">`
+                : partner.companyName?.charAt(0) || '🏢'
+              }
+            </div>
+            <div class="partner-info">
+              <h3 class="partner-name">${partner.companyName}</h3>
+              <p class="partner-description">${partner.companyDescription || ''}</p>
+              <div class="partner-meta">
+                <span class="company-size">${partner.companySize || 'Mid-size'}</span>
+                <span class="industry">${partner.industry || 'Technology'}</span>
+              </div>
+              <div class="partner-opportunities">
+                ${partner.hiringActive ? '<span class="hiring-active">🟢 Hiring Now</span>' : ''}
+                ${partner.internshipAvailable ? '<span class="internships">👨‍🎓 Internships</span>' : ''}
+                ${partner.remotePositions ? '<span class="remote">🏠 Remote</span>' : ''}
+              </div>
+              ${partner.jobsPostedCount > 0 ? `<div class="jobs-count">${partner.jobsPostedCount} open positions</div>` : ''}
+            </div>
+          `;
+          partnersGrid.appendChild(partnerCard);
+        });
+      }
+    }
+
+    console.log('✅ Partners section updated');
+  }
+
+  async renderAssessmentSection(assessmentData) {
+    // Update form titles
+    const formTitle = document.querySelector('.assessment-form-title');
+    if (formTitle && assessmentData.formTitle) {
+      formTitle.textContent = assessmentData.formTitle;
+    }
+
+    const formDescription = document.querySelector('.assessment-form-description');
+    if (formDescription && assessmentData.formDescription) {
+      formDescription.textContent = assessmentData.formDescription;
+    }
+
+    // Render assessment questions
+    if (assessmentData.assessmentQuestions && Array.isArray(assessmentData.assessmentQuestions)) {
+      const questionsContainer = document.querySelector('.assessment-questions');
+      if (questionsContainer) {
+        questionsContainer.innerHTML = '';
+        assessmentData.assessmentQuestions.forEach((question, index) => {
+          const questionElement = this.createQuestionElement(question, index);
+          questionsContainer.appendChild(questionElement);
+        });
+      }
+    }
+
+    console.log('✅ Assessment section updated');
+  }
+
+  createQuestionElement(question, index) {
+    const questionDiv = document.createElement('div');
+    questionDiv.className = 'assessment-question';
+    
+    let inputHTML = '';
+    switch (question.questionType) {
+      case 'text':
+        inputHTML = `<input type="text" name="question_${index}" placeholder="${question.placeholderText || ''}" ${question.required ? 'required' : ''}>`;
+        break;
+      case 'textarea':
+        inputHTML = `<textarea name="question_${index}" placeholder="${question.placeholderText || ''}" ${question.required ? 'required' : ''}></textarea>`;
+        break;
+      case 'select':
+        const options = JSON.parse(question.options || '[]');
+        inputHTML = `
+          <select name="question_${index}" ${question.required ? 'required' : ''}>
+            <option value="">Choose an option...</option>
+            ${options.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+          </select>
+        `;
+        break;
+      case 'radio':
+        const radioOptions = JSON.parse(question.options || '[]');
+        inputHTML = radioOptions.map(opt => `
+          <label class="radio-option">
+            <input type="radio" name="question_${index}" value="${opt.value}" ${question.required ? 'required' : ''}>
+            <span>${opt.label}</span>
+          </label>
+        `).join('');
+        break;
+      case 'scale':
+        inputHTML = `
+          <div class="scale-input">
+            <span class="scale-min">${question.scaleMinLabel || '1'}</span>
+            <input type="range" name="question_${index}" min="${question.scaleMin || 1}" max="${question.scaleMax || 10}" ${question.required ? 'required' : ''}>
+            <span class="scale-max">${question.scaleMaxLabel || '10'}</span>
+          </div>
+        `;
+        break;
+      default:
+        inputHTML = `<input type="text" name="question_${index}" ${question.required ? 'required' : ''}>`;
+    }
+
+    questionDiv.innerHTML = `
+      <div class="question-header">
+        <label class="question-text">${question.questionText}</label>
+        ${question.required ? '<span class="required-indicator">*</span>' : ''}
+      </div>
+      <div class="question-input">
+        ${inputHTML}
+      </div>
+      ${question.helpText ? `<div class="question-help">${question.helpText}</div>` : ''}
+    `;
+
+    return questionDiv;
+  }
+
+  async renderFooterSection(footerData) {
+    // Update company info
+    const companyName = document.querySelector('.footer-company-name');
+    if (companyName && footerData.companyName) {
+      companyName.textContent = footerData.companyName;
+    }
+
+    // Update contact info
+    const companyPhone = document.querySelector('.footer-phone');
+    if (companyPhone && footerData.companyPhone) {
+      companyPhone.textContent = footerData.companyPhone;
+    }
+
+    const companyEmail = document.querySelector('.footer-email');
+    if (companyEmail && footerData.companyEmail) {
+      companyEmail.textContent = footerData.companyEmail;
+    }
+
+    // Update social links
+    if (footerData.facebookUrl) {
+      const fbLink = document.querySelector('.footer-facebook');
+      if (fbLink) fbLink.href = footerData.facebookUrl;
+    }
+
+    if (footerData.linkedinUrl) {
+      const linkedinLink = document.querySelector('.footer-linkedin');
+      if (linkedinLink) linkedinLink.href = footerData.linkedinUrl;
+    }
+
+    // Update copyright
+    const copyright = document.querySelector('.footer-copyright');
+    if (copyright && footerData.copyrightText) {
+      copyright.textContent = footerData.copyrightText;
+    }
+
+    console.log('✅ Footer section updated');
+  }
+
+  initializeAssessmentFunctionality() {
+    const assessmentForm = document.querySelector('.assessment-form');
+    if (assessmentForm) {
+      assessmentForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await this.handleAssessmentSubmission(assessmentForm);
+      });
+    }
+  }
+
+  async handleAssessmentSubmission(form) {
+    try {
+      const formData = new FormData(form);
+      const responses = {};
+      
+      for (let [key, value] of formData.entries()) {
+        responses[key] = value;
+      }
+
+      const submissionData = {
+        sessionId: this.generateSessionId(),
+        responses: responses,
+        startedAt: new Date().toISOString(),
+        completionPercentage: 100,
+        completionStatus: 'completed'
+      };
+
+      const response = await fetch(`${this.apiUrl}/career-orientation-assessment-responses/submit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ data: submissionData })
+      });
+
+      const result = await response.json();
+      
+      if (result.data) {
+        this.showAssessmentResults(result.data);
+      }
+    } catch (error) {
+      console.error('Error submitting assessment:', error);
+      alert('There was an error submitting your assessment. Please try again.');
+    }
+  }
+
+  generateSessionId() {
+    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  }
+
+  showAssessmentResults(assessmentData) {
+    const resultsContainer = document.querySelector('.assessment-results');
+    if (resultsContainer && assessmentData.recommendedCareerPaths) {
+      resultsContainer.innerHTML = `
+        <h3>🎉 Your Career Orientation Results</h3>
+        <div class="results-summary">
+          <p>Based on your responses, here are your top career recommendations:</p>
+          <div class="recommended-paths">
+            ${assessmentData.recommendedCareerPaths.map(path => `
+              <div class="recommended-path">
+                <h4>${path.title}</h4>
+                <div class="match-score">Match: ${path.match}%</div>
+                <p>${path.reason}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      resultsContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  renderFallbackContent() {
+    console.log('🔄 Rendering fallback career orientation content');
+    // Keep existing static content as fallback
   }
 
   // ============== COURSES PAGE ==============

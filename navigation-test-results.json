@@ -1,0 +1,277 @@
+{
+  "pages": {
+    "Home": {
+      "loaded": true,
+      "title": "Home - Zohacous - Webflow Ecommerce Website Template",
+      "navigation": {
+        "hasMenu": true,
+        "linkCount": 4,
+        "links": [
+          "Home",
+          "Courses",
+          "Teachers",
+          "Pricing"
+        ]
+      },
+      "styling": {
+        "menuCentered": true,
+        "menuFlex": true,
+        "menuGap": "30px",
+        "signUpButton": {
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(255, 255, 255)",
+          "borderRadius": "50px",
+          "padding": "12px 32px",
+          "display": "inline-flex"
+        },
+        "signUpIsBlue": false
+      },
+      "dropdown": {
+        "hasDropdown": true,
+        "text": "Career Services",
+        "showsOnHover": true,
+        "styling": {
+          "background": "rgba(0, 0, 0, 0)",
+          "borderRadius": "0px",
+          "boxShadow": "none",
+          "zIndex": "9999"
+        },
+        "links": [
+          "Career Orientation",
+          "Career Center"
+        ]
+      },
+      "content": {
+        "visible": true
+      },
+      "errors": []
+    },
+    "Courses": {
+      "loaded": true,
+      "title": "Online Course Catalog - AI Studio Learning Platform",
+      "navigation": {
+        "hasMenu": true,
+        "linkCount": 4,
+        "links": [
+          "Home",
+          "Courses",
+          "Teachers",
+          "Pricing"
+        ]
+      },
+      "styling": {
+        "menuCentered": true,
+        "menuFlex": true,
+        "menuGap": "30px",
+        "signUpButton": {
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(255, 255, 255)",
+          "borderRadius": "50px",
+          "padding": "12px 32px",
+          "display": "inline-flex"
+        },
+        "signUpIsBlue": false
+      },
+      "dropdown": {
+        "hasDropdown": true,
+        "text": "Career Services",
+        "showsOnHover": true,
+        "styling": {
+          "background": "rgba(0, 0, 0, 0)",
+          "borderRadius": "0px",
+          "boxShadow": "none",
+          "zIndex": "9999"
+        },
+        "links": [
+          "Career Orientation",
+          "Career Center"
+        ]
+      },
+      "content": {
+        "visible": true
+      },
+      "errors": []
+    },
+    "Teachers": {
+      "loaded": true,
+      "title": "Our Teachers - AI Studio E-Learning Platform",
+      "navigation": {
+        "hasMenu": true,
+        "linkCount": 4,
+        "links": [
+          "Home",
+          "Courses",
+          "Teachers",
+          "Pricing"
+        ]
+      },
+      "styling": {
+        "menuCentered": true,
+        "menuFlex": true,
+        "menuGap": "30px",
+        "signUpButton": {
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(255, 255, 255)",
+          "borderRadius": "50px",
+          "padding": "12px 32px",
+          "display": "inline-flex"
+        },
+        "signUpIsBlue": false
+      },
+      "dropdown": {
+        "hasDropdown": true,
+        "text": "Career Services",
+        "showsOnHover": true,
+        "styling": {
+          "background": "rgba(5, 5, 26, 0.95)",
+          "borderRadius": "12px",
+          "boxShadow": "rgba(0, 0, 0, 0.4) 0px 10px 40px 0px",
+          "zIndex": "9999"
+        },
+        "links": [
+          "Career Orientation",
+          "Career Center"
+        ]
+      },
+      "content": {
+        "visible": true
+      },
+      "errors": []
+    },
+    "Career Orientation": {
+      "loaded": true,
+      "title": "Career Orientation - AI Studio E-Learning Platform",
+      "navigation": {
+        "hasMenu": true,
+        "linkCount": 4,
+        "links": [
+          "Home",
+          "Courses",
+          "Teachers",
+          "Pricing"
+        ]
+      },
+      "styling": {
+        "menuCentered": true,
+        "menuFlex": true,
+        "menuGap": "20px",
+        "signUpButton": {
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(255, 255, 255)",
+          "borderRadius": "50px",
+          "padding": "12px 32px",
+          "display": "inline-flex"
+        },
+        "signUpIsBlue": false
+      },
+      "dropdown": {
+        "hasDropdown": true,
+        "text": "Career Services",
+        "showsOnHover": true,
+        "styling": {
+          "background": "rgba(0, 0, 0, 0)",
+          "borderRadius": "0px",
+          "boxShadow": "none",
+          "zIndex": "9999"
+        },
+        "links": [
+          "Career Orientation",
+          "Career Center"
+        ]
+      },
+      "content": {
+        "visible": false
+      },
+      "errors": []
+    },
+    "Career Center": {
+      "loaded": true,
+      "title": "Career Center - AI Studio Learning Platform",
+      "navigation": {
+        "hasMenu": true,
+        "linkCount": 4,
+        "links": [
+          "Home",
+          "Courses",
+          "Teachers",
+          "Pricing"
+        ]
+      },
+      "styling": {
+        "menuCentered": true,
+        "menuFlex": true,
+        "menuGap": "30px",
+        "signUpButton": {
+          "backgroundColor": "rgb(0, 123, 255)",
+          "color": "rgb(255, 255, 255)",
+          "borderRadius": "25px",
+          "padding": "12px 32px",
+          "display": "flex"
+        },
+        "signUpIsBlue": true
+      },
+      "dropdown": {
+        "hasDropdown": true,
+        "text": "Career Services"
+      },
+      "content": {
+        "visible": false
+      },
+      "errors": []
+    },
+    "Pricing": {
+      "loaded": true,
+      "title": "Pricing - Zohacous - Webflow Ecommerce Website Template",
+      "navigation": {
+        "hasMenu": true,
+        "linkCount": 4,
+        "links": [
+          "Home",
+          "Courses",
+          "Teachers",
+          "Pricing"
+        ]
+      },
+      "styling": {
+        "menuCentered": true,
+        "menuFlex": true,
+        "menuGap": "30px",
+        "signUpButton": {
+          "backgroundColor": "rgb(0, 123, 255)",
+          "color": "rgb(255, 255, 255)",
+          "borderRadius": "25px",
+          "padding": "12px 32px",
+          "display": "flex"
+        },
+        "signUpIsBlue": true
+      },
+      "dropdown": {
+        "hasDropdown": true,
+        "text": "Career Services",
+        "showsOnHover": true,
+        "styling": {
+          "background": "rgba(5, 5, 26, 0.95)",
+          "borderRadius": "12px",
+          "boxShadow": "rgba(0, 0, 0, 0.4) 0px 10px 40px 0px",
+          "zIndex": "9999"
+        },
+        "links": [
+          "Career Orientation",
+          "Career Center"
+        ]
+      },
+      "content": {
+        "visible": true
+      },
+      "errors": []
+    }
+  },
+  "navigation": {
+    "careerOrientationWorks": true,
+    "menuPersistsAfterNav": true,
+    "dropdownPersistsAfterNav": true,
+    "careerCenterWorks": true
+  },
+  "styling": {},
+  "errors": []
+}

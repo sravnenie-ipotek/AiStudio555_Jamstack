@@ -1,0 +1,118 @@
+{
+  "collectionName": "components_career_orientation_career_paths",
+  "info": {
+    "displayName": "Career Path",
+    "description": "Individual career path specialization"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "description": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "detailedDescription": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "salaryMin": {
+      "type": "integer",
+      "min": 0
+    },
+    "salaryMax": {
+      "type": "integer",
+      "min": 0
+    },
+    "salaryCurrency": {
+      "type": "enumeration",
+      "enum": ["USD", "EUR", "ILS", "RUB"],
+      "default": "USD"
+    },
+    "salaryPeriod": {
+      "type": "enumeration",
+      "enum": ["annually", "monthly", "hourly"],
+      "default": "annually"
+    },
+    "salaryNote": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "requiredSkills": {
+      "type": "json"
+    },
+    "preferredSkills": {
+      "type": "json"
+    },
+    "educationLevel": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "experienceYearsMin": {
+      "type": "integer",
+      "min": 0
+    },
+    "experienceYearsMax": {
+      "type": "integer",
+      "min": 0
+    },
+    "iconName": {
+      "type": "string"
+    },
+    "iconUrl": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "careerImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "colorTheme": {
+      "type": "string",
+      "regex": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+    },
+    "demandLevel": {
+      "type": "enumeration",
+      "enum": ["High", "Medium", "Low"],
+      "default": "Medium"
+    },
+    "growthProjection": {
+      "type": "enumeration",
+      "enum": ["Growing", "Stable", "Declining"],
+      "default": "Stable"
+    },
+    "remoteFriendly": {
+      "type": "boolean",
+      "default": false
+    },
+    "isFeatured": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

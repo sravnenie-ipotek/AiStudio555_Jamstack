@@ -1,0 +1,96 @@
+{
+  "careerCenter": {
+    "loaded": true,
+    "dropdownExists": true,
+    "showsOnHover": true,
+    "styling": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "minWidth": "0px",
+      "zIndex": "auto",
+      "position": "static",
+      "boxShadow": "none",
+      "backdropFilter": "none",
+      "border": "0px none rgb(255, 255, 255)",
+      "opacity": "1",
+      "visibility": "visible",
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "width": 171.71875,
+      "height": 108,
+      "left": 1041.8203125,
+      "top": -6
+    },
+    "links": [
+      {
+        "text": "Career Orientation",
+        "backgroundColor": "rgba(0, 128, 255, 0.01)",
+        "color": "rgba(255, 252, 243, 0.91)",
+        "hasCurrentClass": false,
+        "hasArrow": false,
+        "pseudoContent": "none",
+        "pseudoColor": "rgba(255, 252, 243, 0.91)"
+      },
+      {
+        "text": "Career Center",
+        "backgroundColor": "rgba(0, 128, 255, 0.1)",
+        "color": "rgba(255, 226, 137, 0.97)",
+        "hasCurrentClass": false,
+        "hasArrow": false,
+        "pseudoContent": "none",
+        "pseudoColor": "rgba(255, 226, 137, 0.97)"
+      }
+    ],
+    "hasCurrentClass": false,
+    "hasArrow": false
+  },
+  "careerOrientation": {
+    "loaded": true,
+    "dropdownExists": true,
+    "showsOnHover": true,
+    "styling": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "minWidth": "0px",
+      "zIndex": "auto",
+      "position": "static",
+      "boxShadow": "none",
+      "backdropFilter": "none",
+      "border": "0px none rgba(255, 255, 255, 0.8)",
+      "opacity": "1",
+      "visibility": "visible",
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "width": 171.6796875,
+      "height": 90,
+      "left": 1227.796875,
+      "top": 62
+    },
+    "links": [
+      {
+        "text": "Career Orientation",
+        "backgroundColor": "rgba(0, 128, 255, 0)",
+        "color": "rgba(255, 255, 253, 0.9)",
+        "hasCurrentClass": false,
+        "hasArrow": false,
+        "pseudoContent": "none",
+        "pseudoColor": "rgba(255, 255, 253, 0.9)"
+      },
+      {
+        "text": "Career Center",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgba(255, 255, 255, 0.9)",
+        "hasCurrentClass": false,
+        "hasArrow": false,
+        "pseudoContent": "none",
+        "pseudoColor": "rgba(255, 255, 255, 0.9)"
+      }
+    ],
+    "hasCurrentClass": false,
+    "hasArrow": false
+  },
+  "identical": true,
+  "errors": []
+}

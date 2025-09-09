@@ -1,0 +1,101 @@
+{
+  "collectionName": "components_career_orientation_assessment_sections",
+  "info": {
+    "displayName": "Assessment Section",
+    "description": "Career assessment form section with dynamic questions"
+  },
+  "options": {},
+  "attributes": {
+    "sectionTitle": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "sectionSubtitle": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "sectionDescription": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "formTitle": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "formSubtitle": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "formDescription": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "completionMessage": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "completionRedirectUrl": {
+      "type": "string"
+    },
+    "webhookUrl": {
+      "type": "string"
+    },
+    "emailNotification": {
+      "type": "boolean",
+      "default": false
+    },
+    "notificationEmail": {
+      "type": "email"
+    },
+    "saveResponses": {
+      "type": "boolean",
+      "default": true
+    },
+    "showProgressBar": {
+      "type": "boolean",
+      "default": true
+    },
+    "allowSaveResume": {
+      "type": "boolean",
+      "default": false
+    },
+    "requireAuthentication": {
+      "type": "boolean",
+      "default": false
+    },
+    "assessmentQuestions": {
+      "type": "component",
+      "repeatable": true,
+      "component": "career-orientation.assessment-question",
+      "required": true
+    }
+  }
+}

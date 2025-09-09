@@ -1,0 +1,113 @@
+{
+  "Career Center": {
+    "url": "http://localhost:9090/dist/en/career-center.html",
+    "pageId": "career-center-page",
+    "styling": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "color": "rgba(255, 255, 255, 0.9)",
+      "border": "0px none rgba(255, 255, 255, 0.9)",
+      "borderColor": "rgba(255, 255, 255, 0.9)",
+      "borderRadius": "0px",
+      "padding": "8px 0px",
+      "margin": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "transform": "none",
+      "filter": "none",
+      "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "lineHeight": "normal",
+      "display": "flex",
+      "alignItems": "center",
+      "gap": "8px",
+      "position": "relative",
+      "hasCurrentClass": false,
+      "classList": [
+        "dropdown-toggle",
+        "w-dropdown-toggle"
+      ],
+      "pseudoBefore": {
+        "display": "block",
+        "content": "none",
+        "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "0px none rgba(255, 255, 255, 0.9)",
+        "boxShadow": "none"
+      },
+      "pseudoAfter": {
+        "display": "block",
+        "content": "none",
+        "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "0px none rgba(255, 255, 255, 0.9)",
+        "boxShadow": "none"
+      }
+    },
+    "cssFiles": [
+      "normalize.css",
+      "webflow.css",
+      "aizeks-marvelous-site.webflow.css",
+      "card-height-fix.css",
+      "css?family=Manrope:200,300,regular,500,600,700,800%7CPlus+Jakarta+Sans:200,300,regular,500,600,700,800"
+    ],
+    "pageAttributes": {
+      "data-wf-page": "career-center-page",
+      "data-wf-site": "68b7601d918996218465c4a6"
+    }
+  },
+  "Career Orientation": {
+    "url": "http://localhost:9090/dist/en/career-orientation.html",
+    "pageId": "career-orientation-page",
+    "styling": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "color": "rgba(255, 255, 255, 0.9)",
+      "border": "0px none rgba(255, 255, 255, 0.9)",
+      "borderColor": "rgba(255, 255, 255, 0.9)",
+      "borderRadius": "0px",
+      "padding": "8px 0px",
+      "margin": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "transform": "none",
+      "filter": "none",
+      "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "lineHeight": "normal",
+      "display": "flex",
+      "alignItems": "center",
+      "gap": "8px",
+      "position": "relative",
+      "hasCurrentClass": false,
+      "classList": [
+        "dropdown-toggle",
+        "w-dropdown-toggle"
+      ],
+      "pseudoBefore": {
+        "display": "block",
+        "content": "none",
+        "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "0px none rgba(255, 255, 255, 0.9)",
+        "boxShadow": "none"
+      },
+      "pseudoAfter": {
+        "display": "block",
+        "content": "none",
+        "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "0px none rgba(255, 255, 255, 0.9)",
+        "boxShadow": "none"
+      }
+    },
+    "cssFiles": [
+      "normalize.css",
+      "webflow.css",
+      "aizeks-marvelous-site.webflow.css",
+      "enhanced-sections.css",
+      "style-guide-compliance.css",
+      "css?family=Manrope:200,300,regular,500,600,700,800%7CPlus+Jakarta+Sans:200,300,regular,500,600,700,800"
+    ],
+    "pageAttributes": {
+      "data-wf-page": "career-orientation-page",
+      "data-wf-site": "68b7601d918996218465c4a6"
+    }
+  }
+}

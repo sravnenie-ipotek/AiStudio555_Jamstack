@@ -16,17 +16,104 @@
   <link href="images/favicon.svg" rel="shortcut icon" type="image/x-icon">
   <link href="images/webclip.svg" rel="apple-touch-icon">
   <style>
-    /* CRITICAL NAVIGATION FIX - Force visibility */
-    .nav-menu { display: flex !important; align-items: center !important; gap: 20px !important; }
-    .nav-link, .menu-dropdown-wrapper { display: inline-block !important; visibility: visible !important; opacity: 1 !important; }
-    .dropdown-toggle { display: flex !important; align-items: center !important; gap: 5px !important; cursor: pointer !important; color: rgba(255,255,255,0.9) !important; padding: 8px 0 !important; }
-    .dropdown-list { position: absolute !important; top: 100% !important; left: 0 !important; background: #05051a !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 8px !important; padding: 10px 0 !important; min-width: 200px !important; z-index: 1000 !important; opacity: 0 !important; visibility: hidden !important; transform: translateY(-10px) !important; transition: all 0.2s ease !important; }
-    .menu-dropdown-wrapper:hover .dropdown-list, .dropdown-list.w--open { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; }
-    .dropdown-menu-text-link-block { display: block !important; padding: 10px 20px !important; color: rgba(255,255,255,0.9) !important; text-decoration: none !important; }
-    .dropdown-menu-text-link-block:hover { background: rgba(255,255,255,0.05) !important; color: #ffd659 !important; }
-    .navbar-button-wrapper { margin-left: auto !important; display: flex !important; align-items: center !important; gap: 20px !important; }
+    /* CRITICAL NAVIGATION FIX - Menu Centering and Styling */
+    .nav-menu { 
+      display: flex !important; 
+      align-items: center !important; 
+      gap: 30px !important; 
+      justify-content: center !important; 
+      flex: 1 !important;
+    }
+    .navbar-content { 
+      display: flex !important; 
+      align-items: center !important; 
+      justify-content: space-between !important; 
+      width: 100% !important; 
+    }
+    .navbar-logo-wrapper { flex-shrink: 0 !important; }
+    .navbar-button-wrapper { 
+      margin-left: auto !important; 
+      display: flex !important; 
+      align-items: center !important; 
+      gap: 20px !important; 
+      flex-shrink: 0 !important;
+    }
+    
+    /* Career Services Dropdown - Dark Theme */
+    .dropdown-list { 
+      position: absolute !important; 
+      top: 100% !important; 
+      left: 0 !important; 
+      background: rgba(5, 5, 26, 0.95) !important; 
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255,255,255,0.1) !important; 
+      border-radius: 12px !important; 
+      padding: 15px 0 !important; 
+      min-width: 220px !important; 
+      z-index: 9999 !important; 
+      opacity: 0 !important; 
+      visibility: hidden !important; 
+      transform: translateY(-10px) !important; 
+      transition: all 0.3s ease !important;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4) !important;
+    }
+    .menu-dropdown-wrapper:hover .dropdown-list, .dropdown-list.w--open { 
+      opacity: 1 !important; 
+      visibility: visible !important; 
+      transform: translateY(0) !important; 
+    }
+    .dropdown-menu-text-link-block { 
+      display: block !important; 
+      padding: 12px 24px !important; 
+      color: rgba(255,255,255,0.9) !important; 
+      text-decoration: none !important; 
+      transition: all 0.2s ease !important;
+    }
+    .dropdown-menu-text-link-block:hover { 
+      background: rgba(0, 128, 255, 0.15) !important; 
+      color: #ffd659 !important; 
+      transform: translateX(4px) !important;
+    }
+    .dropdown-toggle { 
+      display: flex !important; 
+      align-items: center !important; 
+      gap: 8px !important; 
+      cursor: pointer !important; 
+      color: rgba(255,255,255,0.9) !important; 
+      padding: 8px 0 !important; 
+      transition: color 0.2s ease !important;
+    }
+    .dropdown-toggle:hover { color: #ffd659 !important; }
+    
+    /* Sign Up Button - Blue Theme */
+    .primary-button { 
+      background: #007bff !important; 
+      border-radius: 25px !important; 
+      border: none !important;
+      color: white !important;
+      padding: 12px 32px !important;
+      font-weight: 600 !important;
+      transition: all 0.3s ease !important;
+    }
+    .primary-button:hover { 
+      background: #0056b3 !important; 
+      transform: translateY(-2px) !important;
+      box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3) !important;
+    }
+    
+    /* Force visibility for all navigation elements */
+    .nav-link, .menu-dropdown-wrapper { 
+      display: inline-block !important; 
+      visibility: visible !important; 
+      opacity: 1 !important; 
+    }
     .primary-button-wrapper.mobile { display: none !important; }
-    @media (max-width: 991px) { .primary-button-wrapper.desktop { display: none !important; } .primary-button-wrapper.mobile { display: block !important; } }
+    @media (max-width: 991px) { 
+      .primary-button-wrapper.desktop { display: none !important; } 
+      .primary-button-wrapper.mobile { display: block !important; }
+      .nav-menu { gap: 20px !important; }
+    }
 
     /* Custom styles for TeachMeSkills sections */
     .category-cards-section {
@@ -642,7 +729,138 @@
       background: transparent !important;
       display: block !important;
     }
-  </style>
+  
+    /* ==========================================================================
+       NUCLEAR DROPDOWN FIX - ULTRA HIGH SPECIFICITY OVERRIDES
+       ========================================================================== */
+
+    /* Target ALL possible page identifier combinations with ultra-high specificity */
+    html[data-wf-page] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current,
+    html[data-wf-page="career-center-page"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current,
+    html[data-wf-page="career-orientation-page"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current,
+    html[data-wf-page="68b7601f918996218465c555"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current,
+    html[data-wf-page="home-page"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current,
+    html[data-wf-page="courses-page"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current,
+    html[data-wf-page="teachers-page"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current,
+    html[data-wf-page="pricing-page"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current,
+    html[data-wf-page*="page"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current,
+    html[data-wf-page*="68b"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current,
+    body[class*="w-"] .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current,
+    body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current {
+      background-color: transparent !important;
+      color: rgba(255,255,255,0.9) !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+      text-decoration: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+
+    /* Nuclear override for pseudo-elements */
+    html[data-wf-page] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current::before,
+    html[data-wf-page] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current::after,
+    html[data-wf-page*="page"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current::before,
+    html[data-wf-page*="page"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current::after,
+    body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current::before,
+    body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle.w--current::after {
+      display: none !important;
+      content: none !important;
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Maximum specificity dropdown toggle styling - OVERRIDE ALL WEBFLOW PAGE RULES */
+    html[data-wf-page] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle,
+    html[data-wf-page*="page"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle,
+    html[data-wf-page*="68b"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle,
+    body[class*="w-"] .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle,
+    body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle {
+      background-color: transparent !important;
+      border: none !important;
+      border-radius: 0 !important;
+      color: rgba(255,255,255,0.9) !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      font-family: "Plus Jakarta Sans", sans-serif !important;
+      font-size: 16px !important;
+      font-weight: 500 !important;
+      line-height: normal !important;
+      padding: 8px 0 !important;
+      text-align: left !important;
+      text-decoration: none !important;
+      transition: color 0.2s ease !important;
+      white-space: nowrap !important;
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+      position: relative !important;
+      gap: 8px !important;
+    }
+
+    /* Maximum specificity hover styling - OVERRIDE ALL WEBFLOW PAGE RULES */
+    html[data-wf-page] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle:hover,
+    html[data-wf-page*="page"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle:hover,
+    html[data-wf-page*="68b"] body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle:hover,
+    body[class*="w-"] .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle:hover,
+    body .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle:hover {
+      background-color: transparent !important;
+      border-color: transparent !important;
+      color: #ffd659 !important;
+      transform: none !important;
+      opacity: 1 !important;
+      filter: none !important;
+      box-shadow: none !important;
+      text-decoration: none !important;
+    }
+
+    /* Reset all possible Webflow current state classes - NUCLEAR OVERRIDE */
+    html[data-wf-page] body .w--current,
+    html[data-wf-page*="page"] body .w--current,
+    html[data-wf-page*="68b"] body .w--current,
+    body[class*="w-"] .w--current,
+    body .w--current {
+      background: inherit !important;
+      color: inherit !important;
+      border-color: inherit !important;
+      box-shadow: inherit !important;
+      text-decoration: inherit !important;
+      opacity: inherit !important;
+      transform: inherit !important;
+      filter: inherit !important;
+    }
+
+    /* FINAL NUCLEAR OPTION - RESET EVERYTHING AND START FRESH */
+    .navbar .nav-menu .menu-dropdown-wrapper {
+      all: revert !important;
+      position: relative !important;
+      display: inline-block !important;
+    }
+
+    .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle {
+      all: revert !important;
+      background-color: transparent !important;
+      border: none !important;
+      color: rgba(255,255,255,0.9) !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      font-family: "Plus Jakarta Sans", sans-serif !important;
+      font-size: 16px !important;
+      font-weight: 500 !important;
+      padding: 8px 0 !important;
+      text-decoration: none !important;
+      transition: color 0.2s ease !important;
+    }
+
+    .navbar .nav-menu .menu-dropdown-wrapper .dropdown-toggle:hover {
+      color: #ffd659 !important;
+    }</style>
 </head>
 <body>
     <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
@@ -672,7 +890,7 @@
         <div class="navbar-content">
           <a href="index.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
           <nav role="navigation" class="nav-menu w-nav-menu">
-            <a href="home.html" class="nav-link w-nav-link">Home</a>
+            <a href="index.html" class="nav-link w-nav-link">Home</a>
             <a href="courses.html" aria-current="page" class="nav-link w-nav-link w--current">Courses</a>
             <a href="teachers.html" class="nav-link w-nav-link">Teachers</a>
             <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
@@ -689,7 +907,7 @@
                 </a>
               </nav>
             </div>
-            <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
+            <a href="../../pricing.html" class="nav-link w-nav-link">Pricing</a>
             <div class="primary-button-wrapper mobile">
               <a href="#" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
@@ -721,7 +939,7 @@
             <h1 class="inner-banner-title">Courses</h1>
           </div>
           <div class="inner-banner-text-link-wrapper">
-            <a href="home.html" class="inner-banner-text-link">Home</a>
+            <a href="index.html" class="inner-banner-text-link">Home</a>
             <div class="inner-banner-text-link-arrow">|</div>
             <a href="courses.html" aria-current="page" class="inner-banner-text-link w--current">Courses</a>
           </div>
@@ -1477,7 +1695,7 @@
                   <div class="footer-menu-list-wrapper">
                     <ul role="list" class="footer-menu-list">
                       <li class="footer-menu-list-item">
-                        <a href="home.html" class="footer-menu-text-link">Home</a>
+                        <a href="index.html" class="footer-menu-text-link">Home</a>
                       </li>
                       <li class="footer-menu-list-item">
                         <a href="about-us.html" class="footer-menu-text-link">About Us</a>
@@ -1492,7 +1710,7 @@
                         <a href="https://zohacous.webflow.io/courses/html-css-bootstrap-build-responsive-websites" class="footer-menu-text-link">Course Single</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="pricing.html" class="footer-menu-text-link">Pricing</a>
+                        <a href="../../pricing.html" class="footer-menu-text-link">Pricing</a>
                       </li>
                       <li class="footer-menu-list-item">
                         <a href="https://zohacous.webflow.io/product/premium-plan" class="footer-menu-text-link">Pricing Single</a>

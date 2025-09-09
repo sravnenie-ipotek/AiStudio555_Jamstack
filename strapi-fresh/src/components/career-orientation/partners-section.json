@@ -1,0 +1,40 @@
+{
+  "collectionName": "components_career_orientation_partners_sections",
+  "info": {
+    "displayName": "Partners Section",
+    "description": "Section showcasing partner companies and hiring opportunities"
+  },
+  "options": {},
+  "attributes": {
+    "sectionTitle": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "sectionSubtitle": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "sectionDescription": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "partnerCompanies": {
+      "type": "component",
+      "repeatable": true,
+      "component": "career-orientation.partner-company",
+      "required": true
+    }
+  }
+}

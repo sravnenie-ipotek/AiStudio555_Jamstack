@@ -19,14 +19,63 @@
   
   <!-- Strapi Integration Styles -->
   <style>
-    /* CRITICAL NAVIGATION FIX - Force visibility */
-    .nav-menu { display: flex !important; align-items: center !important; gap: 20px !important; }
+    /* CRITICAL NAVIGATION FIX - Force visibility and CENTER ALIGNMENT */
+    .nav-menu { display: flex !important; align-items: center !important; gap: 30px !important; justify-content: center !important; flex: 1 !important; }
+    .navbar-content { display: flex !important; align-items: center !important; justify-content: space-between !important; width: 100% !important; }
     .nav-link, .menu-dropdown-wrapper { display: inline-block !important; visibility: visible !important; opacity: 1 !important; }
-    .dropdown-toggle { display: flex !important; align-items: center !important; gap: 5px !important; cursor: pointer !important; color: rgba(255,255,255,0.9) !important; padding: 8px 0 !important; }
-    .dropdown-list { position: absolute !important; top: 100% !important; left: 0 !important; background: #05051a !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 8px !important; padding: 10px 0 !important; min-width: 200px !important; z-index: 1000 !important; opacity: 0 !important; visibility: hidden !important; transform: translateY(-10px) !important; transition: all 0.2s ease !important; }
+    .dropdown-toggle { display: flex !important; align-items: center !important; gap: 5px !important; cursor: pointer !important; color: rgba(255,255,255,0.9) !important; padding: 8px 12px !important; font-weight: 500 !important; }
+    
+    /* ENHANCED DROPDOWN STYLING - Dark Theme */
+    .dropdown-list { 
+      position: absolute !important; 
+      top: 100% !important; 
+      left: 0 !important; 
+      background: rgba(5, 5, 26, 0.95) !important; 
+      border: 1px solid rgba(255,255,255,0.15) !important; 
+      border-radius: 12px !important; 
+      padding: 8px 0 !important; 
+      min-width: 220px !important; 
+      z-index: 9999 !important; 
+      opacity: 0 !important; 
+      visibility: hidden !important; 
+      transform: translateY(-10px) !important; 
+      transition: all 0.3s ease !important;
+      backdrop-filter: blur(20px) !important;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4) !important;
+    }
     .menu-dropdown-wrapper:hover .dropdown-list, .dropdown-list.w--open { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; }
-    .dropdown-menu-text-link-block { display: block !important; padding: 10px 20px !important; color: rgba(255,255,255,0.9) !important; text-decoration: none !important; }
-    .dropdown-menu-text-link-block:hover { background: rgba(255,255,255,0.05) !important; color: #ffd659 !important; }
+    .dropdown-menu-text-link-block { 
+      display: block !important; 
+      padding: 12px 20px !important; 
+      color: rgba(255,255,255,0.9) !important; 
+      text-decoration: none !important; 
+      font-weight: 400 !important;
+      transition: all 0.2s ease !important;
+      margin: 2px 8px !important;
+      border-radius: 8px !important;
+    }
+    .dropdown-menu-text-link-block:hover { 
+      background: rgba(255,255,255,0.1) !important; 
+      color: #ffd659 !important; 
+      transform: translateX(4px) !important;
+    }
+    
+    /* CONSISTENT BLUE SIGN UP BUTTON */
+    .primary-button { 
+      background: #007bff !important; 
+      color: white !important; 
+      border: none !important; 
+      border-radius: 25px !important; 
+      padding: 12px 24px !important; 
+      font-weight: 600 !important; 
+      transition: all 0.3s ease !important;
+    }
+    .primary-button:hover { 
+      background: #0056b3 !important; 
+      transform: translateY(-2px) !important;
+      box-shadow: 0 8px 20px rgba(0,123,255,0.3) !important;
+    }
+    
     .navbar-button-wrapper { margin-left: auto !important; display: flex !important; align-items: center !important; gap: 20px !important; }
     .primary-button-wrapper.mobile { display: none !important; }
     @media (max-width: 991px) { .primary-button-wrapper.desktop { display: none !important; } .primary-button-wrapper.mobile { display: block !important; } }
