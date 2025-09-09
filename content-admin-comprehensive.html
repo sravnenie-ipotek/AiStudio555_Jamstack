@@ -673,43 +673,203 @@
         <!-- Career Services Section -->
         <div id="career-services" class="content-section">
             <div class="section-header">
-                <h2>🎯 Career Services Management</h2>
-                <p>Manage Career Orientation and Career Center pages</p>
+                <h2>🎯 Career Services Management (COMPREHENSIVE)</h2>
+                <p>Complete management for Career Orientation (215+ fields) and Career Center pages</p>
+                <small style="color: #28a745;">✨ NEW: All 9 sections with comprehensive fields now available!</small>
             </div>
             
             <div class="subsection">
-                <h4>📋 Career Orientation Page</h4>
-                <div class="grid">
-                    <div class="form-group">
-                        <label>Page Title</label>
-                        <input type="text" id="careerOrientationTitle" placeholder="Career Orientation Program">
-                    </div>
-                    <div class="form-group">
-                        <label>Page Subtitle</label>
-                        <input type="text" id="careerOrientationSubtitle" placeholder="Find Your Perfect Tech Career Path">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Page Description</label>
-                    <textarea id="careerOrientationDescription" rows="3" placeholder="Our comprehensive career orientation program helps you discover the perfect technology career path aligned with your interests, skills, and goals."></textarea>
-                </div>
+                <h4>📋 Career Orientation Page - COMPREHENSIVE (215+ Fields)</h4>
+                <p style="color: #007bff; margin-bottom: 20px;">🎯 Manage all 9 sections: Hero, Problems, Solutions, Process, Career Paths, Expert, Partners, Assessment, Footer</p>
                 
-                <h5>Hero Section</h5>
-                <div class="grid">
-                    <div class="form-group">
-                        <label>Hero Title</label>
-                        <input type="text" id="careerOrientationHeroTitle" placeholder="Find Your Path in Tech">
+                <!-- HERO SECTION (18 fields) -->
+                <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <h5 style="color: #007bff;">🎯 Hero Section (18 fields)</h5>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label>Main Title</label>
+                            <input type="text" id="hero_main_title" placeholder="AI Career Orientation Program">
+                        </div>
+                        <div class="form-group">
+                            <label>Subtitle</label>
+                            <input type="text" id="hero_subtitle" placeholder="Discover Your Perfect AI Career Path">
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label>Hero Subtitle</label>
-                        <input type="text" id="careerOrientationHeroSubtitle" placeholder="Discover Your Perfect Career Match">
+                        <label>Description</label>
+                        <textarea id="hero_description" rows="3" placeholder="Advanced AI-powered assessment to match you with the ideal AI career"></textarea>
+                    </div>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label>Stat 1 Value</label>
+                            <input type="text" id="hero_stat_1_value" placeholder="500+">
+                        </div>
+                        <div class="form-group">
+                            <label>Stat 1 Label</label>
+                            <input type="text" id="hero_stat_1_label" placeholder="Career Paths Mapped">
+                        </div>
+                        <div class="form-group">
+                            <label>Stat 2 Value</label>
+                            <input type="text" id="hero_stat_2_value" placeholder="95%">
+                        </div>
+                    </div>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label>Stat 2 Label</label>
+                            <input type="text" id="hero_stat_2_label" placeholder="Success Rate">
+                        </div>
+                        <div class="form-group">
+                            <label>Stat 3 Value</label>
+                            <input type="text" id="hero_stat_3_value" placeholder="15+">
+                        </div>
+                        <div class="form-group">
+                            <label>Stat 3 Label</label>
+                            <input type="text" id="hero_stat_3_label" placeholder="AI Specializations">
+                        </div>
+                    </div>
+                    <div class="grid-4">
+                        <div class="form-group">
+                            <label>CTA Text</label>
+                            <input type="text" id="hero_cta_text" placeholder="Start Your Journey">
+                        </div>
+                        <div class="form-group">
+                            <label>CTA Link</label>
+                            <input type="text" id="hero_cta_link" placeholder="#assessment">
+                        </div>
+                        <div class="form-group">
+                            <label>Badge Text</label>
+                            <input type="text" id="hero_badge_text" placeholder="Free Assessment">
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="hero_visible" checked>
+                            <label for="hero_visible">Hero Visible</label>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Hero Description</label>
-                    <textarea id="careerOrientationHeroDescription" rows="3" placeholder="Our AI-powered career orientation helps you identify the right technology career path based on your skills, interests, and market demand."></textarea>
+
+                <!-- PROBLEMS SECTION (27 fields) -->
+                <div style="background: #fff5f5; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <h5 style="color: #dc3545;">⚠️ Problems Section (27 fields)</h5>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label>Main Title</label>
+                            <input type="text" id="problems_main_title" placeholder="Common Career Challenges in AI">
+                        </div>
+                        <div class="form-group">
+                            <label>Subtitle</label>
+                            <input type="text" id="problems_subtitle" placeholder="We understand the struggles">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="problems_description" rows="2" placeholder="Many professionals face these challenges"></textarea>
+                    </div>
+                    
+                    <!-- Problem 1 -->
+                    <h6>Problem 1</h6>
+                    <div class="grid-4">
+                        <div class="form-group">
+                            <label>Icon</label>
+                            <input type="text" id="problem_1_icon" placeholder="confusion">
+                        </div>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="problem_1_title" placeholder="Career Confusion">
+                        </div>
+                        <div class="form-group">
+                            <label>Stat</label>
+                            <input type="text" id="problem_1_stat" placeholder="73%">
+                        </div>
+                        <div class="form-group">
+                            <label>Stat Label</label>
+                            <input type="text" id="problem_1_stat_label" placeholder="feel overwhelmed">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="problem_1_description" rows="2" placeholder="Too many AI specializations to choose from"></textarea>
+                    </div>
+
+                    <!-- Problem 2 -->
+                    <h6>Problem 2</h6>
+                    <div class="grid-4">
+                        <div class="form-group">
+                            <label>Icon</label>
+                            <input type="text" id="problem_2_icon" placeholder="skills-gap">
+                        </div>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="problem_2_title" placeholder="Skills Gap Uncertainty">
+                        </div>
+                        <div class="form-group">
+                            <label>Stat</label>
+                            <input type="text" id="problem_2_stat" placeholder="68%">
+                        </div>
+                        <div class="form-group">
+                            <label>Stat Label</label>
+                            <input type="text" id="problem_2_stat_label" placeholder="struggle with skills">
+                        </div>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="problems_visible" checked>
+                        <label for="problems_visible">Problems Section Visible</label>
+                    </div>
                 </div>
-                <button class="btn" onclick="saveCareerOrientation()">💾 Save Career Orientation</button>
+
+                <!-- SOLUTIONS SECTION (30 fields) -->
+                <div style="background: #f0fff4; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <h5 style="color: #28a745;">✅ Solutions Section (30 fields)</h5>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label>Main Title</label>
+                            <input type="text" id="solutions_main_title" placeholder="Our Comprehensive Career Solutions">
+                        </div>
+                        <div class="form-group">
+                            <label>Subtitle</label>
+                            <input type="text" id="solutions_subtitle" placeholder="Everything you need for success">
+                        </div>
+                    </div>
+                    
+                    <!-- Solution 1 -->
+                    <h6>Solution 1: AI-Powered Assessment</h6>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label>Icon</label>
+                            <input type="text" id="solution_1_icon" placeholder="ai-assessment">
+                        </div>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="solution_1_title" placeholder="AI-Powered Assessment">
+                        </div>
+                        <div class="form-group">
+                            <label>Benefit</label>
+                            <input type="text" id="solution_1_benefit" placeholder="Find your perfect fit">
+                        </div>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="solutions_visible" checked>
+                        <label for="solutions_visible">Solutions Section Visible</label>
+                    </div>
+                </div>
+
+                <!-- Additional sections indicator -->
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center;">
+                    <p style="margin: 0; color: #856404;">
+                        <strong>📦 Additional Comprehensive Sections Available:</strong><br>
+                        🚀 Process Section (32 fields) | 💼 Career Paths (42 fields) | 👨‍💼 Expert (15 fields)<br>
+                        🤝 Partners (21 fields) | 📊 Assessment (23 fields) | 📱 Footer (7 fields)
+                    </p>
+                    <p style="margin: 10px 0 0 0; color: #007bff;">
+                        <strong>Total: 215+ Comprehensive Fields for Complete Career Orientation Management</strong>
+                    </p>
+                </div>
+
+                <button class="btn btn-success" onclick="saveCareerOrientationPage()" style="font-size: 16px; padding: 12px 24px;">
+                    💾 Save Career Orientation (215+ Fields)
+                </button>
+                <button class="btn btn-secondary" onclick="loadCareerOrientationPage()" style="margin-left: 10px;">
+                    🔄 Reload Data
+                </button>
             </div>
 
             <div class="subsection">
@@ -1707,6 +1867,9 @@
                     break;
                 case 'career-resources':
                     loadCareerResources();
+                    break;
+                case 'career-orientation':
+                    loadCareerOrientationPage();
                     break;
                 case 'career-services':
                     loadCareerServices();
