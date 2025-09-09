@@ -2264,6 +2264,7 @@
             showMessage('Career Center save not implemented yet', 'info');
         }
 
+        async function loadCareerCenterData() {
             // Load career center page data
             try {
                 const centerResponse = await fetch(`${API_URL_READ}/career-center-page`);
@@ -3043,6 +3044,7 @@
             
             // Load initial data
             loadSectionData('home-page');
+            loadCareerCenterData();
             
             // Check API status
             fetch(`${API_URL_READ}/status`)
