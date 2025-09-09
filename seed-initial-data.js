@@ -432,7 +432,121 @@ async function seedDatabase() {
       `, [locale, title, description, type, category, downloadUrl, visible]);
     }
 
-    // 11. Create indexes for better performance
+    // 11. Insert Career Orientation Pages for all languages
+    console.log('📋 Seeding Career Orientation Pages...');
+    const careerOrientationPages = [
+      {
+        locale: 'en',
+        title: 'Career Orientation Program',
+        subtitle: 'Find Your Perfect Tech Career Path',
+        description: 'Our comprehensive career orientation program helps you discover the perfect technology career path aligned with your interests, skills, and goals.',
+        heroTitle: 'Find Your Path in Tech',
+        heroSubtitle: 'Discover Your Perfect Career Match',
+        heroDescription: 'Our AI-powered career orientation helps you identify the right technology career path based on your skills, interests, and market demand.'
+      },
+      {
+        locale: 'ru',
+        title: 'Программа карьерной ориентации',
+        subtitle: 'Найдите свой идеальный путь в технологиях',
+        description: 'Наша комплексная программа карьерной ориентации поможет вам найти идеальный карьерный путь в технологиях, соответствующий вашим интересам, навыкам и целям.',
+        heroTitle: 'Найдите свой путь в IT',
+        heroSubtitle: 'Откройте идеальное карьерное соответствие',
+        heroDescription: 'Наша карьерная ориентация на основе ИИ помогает определить правильный технологический карьерный путь на основе ваших навыков, интересов и рыночного спроса.'
+      },
+      {
+        locale: 'he',
+        title: 'תוכנית הכוונה מקצועית',
+        subtitle: 'מצא את מסלול הקריירה המושלם שלך בטכנולוגיה',
+        description: 'תוכנית ההכוונה המקצועית המקיפה שלנו עוזרת לך לגלות את מסלול הקריירה הטכנולוגי המושלם המתאים לתחומי העניין, הכישורים והמטרות שלך.',
+        heroTitle: 'מצא את הדרך שלך בהייטק',
+        heroSubtitle: 'גלה את ההתאמה הקריירה המושלמת שלך',
+        heroDescription: 'ההכוונה המקצועית המבוססת על AI שלנו עוזרת לך לזהות את מסלול הקריירה הטכנולוגי הנכון על בסיס הכישורים, תחומי העניין והביקוש בשוק.'
+      }
+    ];
+
+    for (const page of careerOrientationPages) {
+      // Check if page exists for this locale
+      const existing = await client.query(
+        'SELECT id FROM career_orientation_pages WHERE locale = $1 LIMIT 1',
+        [page.locale]
+      );
+      
+      if (existing.rows.length > 0) {
+        // Update existing
+        await client.query(`
+          UPDATE career_orientation_pages 
+          SET title = $2, subtitle = $3, description = $4, 
+              hero_title = $5, hero_subtitle = $6, hero_description = $7,
+              updated_at = NOW()
+          WHERE locale = $1
+        `, [page.locale, page.title, page.subtitle, page.description, page.heroTitle, page.heroSubtitle, page.heroDescription]);
+      } else {
+        // Insert new
+        await client.query(`
+          INSERT INTO career_orientation_pages (locale, title, subtitle, description, hero_title, hero_subtitle, hero_description, published_at, created_at, updated_at)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW(), NOW())
+        `, [page.locale, page.title, page.subtitle, page.description, page.heroTitle, page.heroSubtitle, page.heroDescription]);
+      }
+    }
+
+    // 12. Insert Career Center Pages for all languages
+    console.log('🏢 Seeding Career Center Pages...');
+    const careerCenterPages = [
+      {
+        locale: 'en',
+        title: 'Career Center',
+        subtitle: 'Your Gateway to Tech Careers',
+        description: 'Access exclusive job opportunities, career resources, and professional development tools to accelerate your tech career.',
+        heroTitle: 'Your Tech Career Hub',
+        heroSubtitle: 'Connect with Top Tech Opportunities',
+        heroDescription: 'Browse curated job opportunities, access exclusive career resources, and connect with industry mentors to accelerate your tech career.'
+      },
+      {
+        locale: 'ru',
+        title: 'Центр карьеры',
+        subtitle: 'Ваш путь к карьере в технологиях',
+        description: 'Получите доступ к эксклюзивным вакансиям, карьерным ресурсам и инструментам профессионального развития для ускорения вашей карьеры в технологиях.',
+        heroTitle: 'Ваш центр технологической карьеры',
+        heroSubtitle: 'Связь с лучшими возможностями в IT',
+        heroDescription: 'Просматривайте отобранные вакансии, получайте доступ к эксклюзивным карьерным ресурсам и общайтесь с наставниками из индустрии.'
+      },
+      {
+        locale: 'he',
+        title: 'מרכז קריירה',
+        subtitle: 'השער שלך לקריירה בטכנולוגיה',
+        description: 'קבל גישה להזדמנויות עבודה בלעדיות, משאבי קריירה וכלי פיתוח מקצועי כדי להאיץ את הקריירה שלך בטכנולוגיה.',
+        heroTitle: 'מרכז הקריירה הטכנולוגי שלך',
+        heroSubtitle: 'התחבר להזדמנויות המובילות בהייטק',
+        heroDescription: 'עיין בהזדמנויות עבודה מובחרות, קבל גישה למשאבי קריירה בלעדיים והתחבר עם מנטורים מהתעשייה.'
+      }
+    ];
+
+    for (const page of careerCenterPages) {
+      // Check if page exists for this locale
+      const existing = await client.query(
+        'SELECT id FROM career_center_pages WHERE locale = $1 LIMIT 1',
+        [page.locale]
+      );
+      
+      if (existing.rows.length > 0) {
+        // Update existing
+        await client.query(`
+          UPDATE career_center_pages 
+          SET title = $2, subtitle = $3, description = $4, 
+              hero_title = $5, hero_subtitle = $6, hero_description = $7,
+              updated_at = NOW()
+          WHERE locale = $1
+        `, [page.locale, page.title, page.subtitle, page.description, page.heroTitle, page.heroSubtitle, page.heroDescription]);
+      } else {
+        // Insert new
+        await client.query(`
+          INSERT INTO career_center_pages (locale, title, subtitle, description, hero_title, hero_subtitle, hero_description, published_at, created_at, updated_at)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW(), NOW())
+        `, [page.locale, page.title, page.subtitle, page.description, page.heroTitle, page.heroSubtitle, page.heroDescription]);
+      }
+    }
+
+    // 13. Create indexes for better performance
     console.log('🔍 Creating locale indexes...');
     const indexQueries = [
       'CREATE INDEX IF NOT EXISTS idx_home_pages_locale ON home_pages(locale)',
@@ -442,7 +556,9 @@ async function seedDatabase() {
       'CREATE INDEX IF NOT EXISTS idx_contact_pages_locale ON contact_pages(locale)',
       'CREATE INDEX IF NOT EXISTS idx_about_pages_locale ON about_pages(locale)',
       'CREATE INDEX IF NOT EXISTS idx_faqs_locale ON faqs(locale)',
-      'CREATE INDEX IF NOT EXISTS idx_career_resources_locale ON career_resources(locale)'
+      'CREATE INDEX IF NOT EXISTS idx_career_resources_locale ON career_resources(locale)',
+      'CREATE INDEX IF NOT EXISTS idx_career_orientation_pages_locale ON career_orientation_pages(locale)',
+      'CREATE INDEX IF NOT EXISTS idx_career_center_pages_locale ON career_center_pages(locale)'
     ];
 
     for (const query of indexQueries) {

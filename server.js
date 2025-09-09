@@ -499,6 +499,182 @@ app.get('/api/career-resources', async (req, res) => {
   }
 });
 
+// CAREER ORIENTATION PAGE (with locale support)
+app.get('/api/career-orientation-page', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching career orientation page for locale: ${locale}`);
+    
+    const data = await queryWithFallback(
+      'SELECT * FROM career_orientation_pages WHERE locale = $1 AND published_at IS NOT NULL LIMIT 1',
+      [locale]
+    );
+    
+    if (data.length === 0) {
+      return res.json({
+        data: {
+          id: 1,
+          attributes: {
+            title: '',
+            subtitle: '',
+            description: '',
+            heroTitle: '',
+            heroSubtitle: '',
+            heroDescription: ''
+          }
+        }
+      });
+    }
+    
+    const page = data[0];
+    res.json({
+      data: {
+        id: page.id,
+        attributes: {
+          title: page.title || '',
+          subtitle: page.subtitle || '',
+          description: page.description || '',
+          heroTitle: page.hero_title || '',
+          heroSubtitle: page.hero_subtitle || '',
+          heroDescription: page.hero_description || ''
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Career orientation page error:', error);
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
+});
+
+// CAREER CENTER PAGE (with locale support)
+app.get('/api/career-center-page', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching career center page for locale: ${locale}`);
+    
+    const data = await queryWithFallback(
+      'SELECT * FROM career_center_pages WHERE locale = $1 AND published_at IS NOT NULL LIMIT 1',
+      [locale]
+    );
+    
+    if (data.length === 0) {
+      return res.json({
+        data: {
+          id: 1,
+          attributes: {
+            title: '',
+            subtitle: '',
+            description: '',
+            heroTitle: '',
+            heroSubtitle: '',
+            heroDescription: ''
+          }
+        }
+      });
+    }
+    
+    const page = data[0];
+    res.json({
+      data: {
+        id: page.id,
+        attributes: {
+          title: page.title || '',
+          subtitle: page.subtitle || '',
+          description: page.description || '',
+          heroTitle: page.hero_title || '',
+          heroSubtitle: page.hero_subtitle || '',
+          heroDescription: page.hero_description || ''
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Career center page error:', error);
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
+});
+
+// UPDATE CAREER ORIENTATION PAGE
+app.put('/api/career-orientation-page', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const { data } = req.body;
+    
+    // Check if record exists
+    const existing = await queryWithFallback(
+      'SELECT id FROM career_orientation_pages WHERE locale = $1 LIMIT 1',
+      [locale]
+    );
+    
+    if (existing.length > 0) {
+      // Update existing
+      await queryWithFallback(
+        `UPDATE career_orientation_pages 
+         SET title = $1, subtitle = $2, description = $3, 
+             hero_title = $4, hero_subtitle = $5, hero_description = $6,
+             updated_at = CURRENT_TIMESTAMP
+         WHERE locale = $7`,
+        [data.title, data.subtitle, data.description, 
+         data.heroTitle, data.heroSubtitle, data.heroDescription, locale]
+      );
+    } else {
+      // Insert new
+      await queryWithFallback(
+        `INSERT INTO career_orientation_pages 
+         (locale, title, subtitle, description, hero_title, hero_subtitle, hero_description, published_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP)`,
+        [locale, data.title, data.subtitle, data.description,
+         data.heroTitle, data.heroSubtitle, data.heroDescription]
+      );
+    }
+    
+    res.json({ success: true, message: 'Career orientation page updated successfully' });
+  } catch (error) {
+    console.error('Error updating career orientation page:', error);
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
+});
+
+// UPDATE CAREER CENTER PAGE
+app.put('/api/career-center-page', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const { data } = req.body;
+    
+    // Check if record exists
+    const existing = await queryWithFallback(
+      'SELECT id FROM career_center_pages WHERE locale = $1 LIMIT 1',
+      [locale]
+    );
+    
+    if (existing.length > 0) {
+      // Update existing
+      await queryWithFallback(
+        `UPDATE career_center_pages 
+         SET title = $1, subtitle = $2, description = $3, 
+             hero_title = $4, hero_subtitle = $5, hero_description = $6,
+             updated_at = CURRENT_TIMESTAMP
+         WHERE locale = $7`,
+        [data.title, data.subtitle, data.description, 
+         data.heroTitle, data.heroSubtitle, data.heroDescription, locale]
+      );
+    } else {
+      // Insert new
+      await queryWithFallback(
+        `INSERT INTO career_center_pages 
+         (locale, title, subtitle, description, hero_title, hero_subtitle, hero_description, published_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP)`,
+        [locale, data.title, data.subtitle, data.description,
+         data.heroTitle, data.heroSubtitle, data.heroDescription]
+      );
+    }
+    
+    res.json({ success: true, message: 'Career center page updated successfully' });
+  } catch (error) {
+    console.error('Error updating career center page:', error);
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
+});
+
 // GET CONTACT PAGE (with locale support)
 app.get('/api/contact-page', async (req, res) => {
   try {

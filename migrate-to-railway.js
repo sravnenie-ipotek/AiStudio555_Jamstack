@@ -322,6 +322,40 @@ async function createTables(pgClient) {
     )
   `);
 
+  // Create career_orientation_pages table
+  await pgClient.query(`
+    CREATE TABLE career_orientation_pages (
+      id SERIAL PRIMARY KEY,
+      locale VARCHAR(5) DEFAULT 'en',
+      title VARCHAR(255),
+      subtitle VARCHAR(500),
+      description TEXT,
+      hero_title VARCHAR(255),
+      hero_subtitle VARCHAR(500),
+      hero_description TEXT,
+      published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Create career_center_pages table
+  await pgClient.query(`
+    CREATE TABLE career_center_pages (
+      id SERIAL PRIMARY KEY,
+      locale VARCHAR(5) DEFAULT 'en',
+      title VARCHAR(255),
+      subtitle VARCHAR(500),
+      description TEXT,
+      hero_title VARCHAR(255),
+      hero_subtitle VARCHAR(500),
+      hero_description TEXT,
+      published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   console.log('✅ Tables created successfully');
 }
 

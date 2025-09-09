@@ -690,13 +690,29 @@
                         <input type="text" id="careerOrientationTitle" placeholder="Career Orientation Program">
                     </div>
                     <div class="form-group">
-                        <label>Hero Subtitle</label>
+                        <label>Page Subtitle</label>
                         <input type="text" id="careerOrientationSubtitle" placeholder="Find Your Perfect Tech Career Path">
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Page Description</label>
-                    <textarea id="careerOrientationDescription" rows="4" placeholder="Our comprehensive career orientation program helps you discover the perfect technology career path aligned with your interests, skills, and goals."></textarea>
+                    <textarea id="careerOrientationDescription" rows="3" placeholder="Our comprehensive career orientation program helps you discover the perfect technology career path aligned with your interests, skills, and goals."></textarea>
+                </div>
+                
+                <h5>Hero Section</h5>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Hero Title</label>
+                        <input type="text" id="careerOrientationHeroTitle" placeholder="Find Your Path in Tech">
+                    </div>
+                    <div class="form-group">
+                        <label>Hero Subtitle</label>
+                        <input type="text" id="careerOrientationHeroSubtitle" placeholder="Discover Your Perfect Career Match">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Hero Description</label>
+                    <textarea id="careerOrientationHeroDescription" rows="3" placeholder="Our AI-powered career orientation helps you identify the right technology career path based on your skills, interests, and market demand."></textarea>
                 </div>
                 <button class="btn" onclick="saveCareerOrientation()">💾 Save Career Orientation</button>
             </div>
@@ -709,13 +725,29 @@
                         <input type="text" id="careerCenterTitle" placeholder="Career Center">
                     </div>
                     <div class="form-group">
-                        <label>Hero Subtitle</label>
+                        <label>Page Subtitle</label>
                         <input type="text" id="careerCenterSubtitle" placeholder="Your Gateway to Tech Careers">
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Page Description</label>
-                    <textarea id="careerCenterDescription" rows="4" placeholder="Access exclusive job opportunities, career resources, and professional development tools to accelerate your tech career."></textarea>
+                    <textarea id="careerCenterDescription" rows="3" placeholder="Access exclusive job opportunities, career resources, and professional development tools to accelerate your tech career."></textarea>
+                </div>
+                
+                <h5>Hero Section</h5>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Hero Title</label>
+                        <input type="text" id="careerCenterHeroTitle" placeholder="Your Tech Career Hub">
+                    </div>
+                    <div class="form-group">
+                        <label>Hero Subtitle</label>
+                        <input type="text" id="careerCenterHeroSubtitle" placeholder="Connect with Top Tech Opportunities">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Hero Description</label>
+                    <textarea id="careerCenterHeroDescription" rows="3" placeholder="Browse curated job opportunities, access exclusive career resources, and connect with industry mentors to accelerate your tech career."></textarea>
                 </div>
                 <button class="btn" onclick="saveCareerCenter()">💾 Save Career Center</button>
             </div>
@@ -1499,8 +1531,45 @@
 
         // CAREER SERVICES FUNCTIONS
         async function loadCareerServices() {
-            // Load career orientation and career center data
-            showMessage('Career Services loaded for editing', 'success');
+            // Load career orientation page data
+            try {
+                const orientationResponse = await fetch(`${API_URL_READ}/career-orientation-page`);
+                if (orientationResponse.ok) {
+                    const orientationData = await orientationResponse.json();
+                    if (orientationData.data && orientationData.data.attributes) {
+                        const attrs = orientationData.data.attributes;
+                        setFieldValue('careerOrientationTitle', attrs.title);
+                        setFieldValue('careerOrientationSubtitle', attrs.subtitle);
+                        setFieldValue('careerOrientationDescription', attrs.description);
+                        setFieldValue('careerOrientationHeroTitle', attrs.heroTitle);
+                        setFieldValue('careerOrientationHeroSubtitle', attrs.heroSubtitle);
+                        setFieldValue('careerOrientationHeroDescription', attrs.heroDescription);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading career orientation page:', error);
+            }
+
+            // Load career center page data
+            try {
+                const centerResponse = await fetch(`${API_URL_READ}/career-center-page`);
+                if (centerResponse.ok) {
+                    const centerData = await centerResponse.json();
+                    if (centerData.data && centerData.data.attributes) {
+                        const attrs = centerData.data.attributes;
+                        setFieldValue('careerCenterTitle', attrs.title);
+                        setFieldValue('careerCenterSubtitle', attrs.subtitle);
+                        setFieldValue('careerCenterDescription', attrs.description);
+                        setFieldValue('careerCenterHeroTitle', attrs.heroTitle);
+                        setFieldValue('careerCenterHeroSubtitle', attrs.heroSubtitle);
+                        setFieldValue('careerCenterHeroDescription', attrs.heroDescription);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading career center page:', error);
+            }
+
+            showMessage('Career Services data loaded successfully', 'success');
         }
 
         async function saveCareerOrientation() {
@@ -1508,10 +1577,23 @@
                 const orientationData = {
                     title: getFieldValue('careerOrientationTitle'),
                     subtitle: getFieldValue('careerOrientationSubtitle'),
-                    description: getFieldValue('careerOrientationDescription')
+                    description: getFieldValue('careerOrientationDescription'),
+                    heroTitle: getFieldValue('careerOrientationHeroTitle'),
+                    heroSubtitle: getFieldValue('careerOrientationHeroSubtitle'),
+                    heroDescription: getFieldValue('careerOrientationHeroDescription')
                 };
 
-                showMessage('Career Orientation page saved successfully! (Database save pending)', 'success');
+                const response = await fetch(`${API_URL}/career-orientation-page`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_TOKEN}`
+                    },
+                    body: JSON.stringify({ data: orientationData })
+                });
+
+                if (!response.ok) throw new Error('Failed to save career orientation page');
+                showMessage('Career Orientation page saved successfully!', 'success');
             } catch (error) {
                 showMessage('Error saving Career Orientation: ' + error.message, 'error');
             }
@@ -1522,10 +1604,23 @@
                 const centerData = {
                     title: getFieldValue('careerCenterTitle'),
                     subtitle: getFieldValue('careerCenterSubtitle'),
-                    description: getFieldValue('careerCenterDescription')
+                    description: getFieldValue('careerCenterDescription'),
+                    heroTitle: getFieldValue('careerCenterHeroTitle'),
+                    heroSubtitle: getFieldValue('careerCenterHeroSubtitle'),
+                    heroDescription: getFieldValue('careerCenterHeroDescription')
                 };
 
-                showMessage('Career Center page saved successfully! (Database save pending)', 'success');
+                const response = await fetch(`${API_URL}/career-center-page`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_TOKEN}`
+                    },
+                    body: JSON.stringify({ data: centerData })
+                });
+
+                if (!response.ok) throw new Error('Failed to save career center page');
+                showMessage('Career Center page saved successfully!', 'success');
             } catch (error) {
                 showMessage('Error saving Career Center: ' + error.message, 'error');
             }
