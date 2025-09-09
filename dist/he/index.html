@@ -31,6 +31,26 @@
     .primary-button-wrapper.mobile { display: none !important; }
     @media (max-width: 991px) { .primary-button-wrapper.desktop { display: none !important; } .primary-button-wrapper.mobile { display: block !important; } }
 
+    /* CRITICAL CONTENT VISIBILITY FIX - Force opacity:1 on all content sections */
+    .banner-content, 
+    .banner-subtitle-wrapper, 
+    .banner-title-description,
+    .section-title-wrapper,
+    .featured-courses-content,
+    .about-us-content,
+    .about-us-image,
+    .faq-section-title-wrapper,
+    .faq-content,
+    [data-w-id] { 
+      opacity: 1 !important; 
+      visibility: visible !important;
+      transform: translateY(0) !important;
+    }
+
+    /* Prevent JavaScript animation conflicts */
+    [style*="opacity:0"] { opacity: 1 !important; }
+    [style*="opacity: 0"] { opacity: 1 !important; }
+
     /* Live preview mode styles */
     .editable-highlight {
       position: relative;
