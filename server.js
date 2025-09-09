@@ -302,6 +302,40 @@ app.get('/api/courses', async (req, res) => {
   }
 });
 
+// COURSES PAGE (alias for /api/courses with page-specific format)
+app.get('/api/courses-page', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching courses page for locale: ${locale}`);
+    
+    const data = await queryWithFallback(
+      'SELECT * FROM courses WHERE locale = $1 AND published_at IS NOT NULL AND visible = true ORDER BY id DESC',
+      [locale]
+    );
+    
+    res.json({
+      data: {
+        id: 1,
+        attributes: {
+          courses: data.map(course => ({
+            id: course.id,
+            title: course.title,
+            description: course.description,
+            price: course.price,
+            duration: course.duration,
+            lessons: course.lessons,
+            category: course.category,
+            rating: course.rating,
+            visible: Boolean(course.visible)
+          }))
+        }
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
+});
+
 // BLOG POSTS (with locale support)
 app.get('/api/blog-posts', async (req, res) => {
   try {

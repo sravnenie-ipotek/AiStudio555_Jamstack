@@ -7,8 +7,8 @@
 
 class StrapiVisibilityIntegration {
   constructor() {
-    this.strapiUrl = 'http://localhost:1337';
-    this.homePageEndpoint = '/api/home-page?populate=*';
+    this.strapiUrl = 'https://aistudio555jamstack-production.up.railway.app';
+    this.homePageEndpoint = '/api/home-page';
     this.sections = {
       hero: '.section.banner',
       featuredCourses: '.section.featured-courses', 

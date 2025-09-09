@@ -5,8 +5,8 @@
 
 class StrapiContentLoader {
   constructor() {
-    this.strapiUrl = 'http://localhost:1337';
-    this.homePageEndpoint = '/api/home-page?populate=deep';
+    this.strapiUrl = 'https://aistudio555jamstack-production.up.railway.app';
+    this.homePageEndpoint = '/api/home-page';
     this.init();
   }
 
