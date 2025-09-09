@@ -1,462 +1,516 @@
 /**
- * Webflow + Strapi Integration Script
- * 
- * Add this script to your Webflow pages to connect with Strapi backend
- * Place in: Project Settings → Custom Code → Footer Code
+ * AI Studio Webflow-Strapi Integration
+ * Connects static frontend to Strapi CMS API
+ * Architecture: JAMstack - Static HTML + Dynamic API
  */
 
-// ============================================
-// CONFIGURATION
-// ============================================
-
-const STRAPI_CONFIG = {
-    // Change this to your production Strapi URL when deploying
-    url: window.location.hostname === 'localhost' 
-        ? 'http://localhost:1337' 
-        : 'https://your-strapi-app.herokuapp.com',
-    
-    // Get this from Strapi Admin → Settings → API Tokens
-    apiToken: '6ba76f584778637fd308f48aac27461c08af957ef205a3281c444c32859f229d923a1984ec93b9564b26db3c10e68f2ccca8983e27ec9b42483e3b8f6faca7a2a52f9b586357c4f94ad37792a7b0f271c164f661e03e4af725cf24708fd5967db6d2431c7afb9be47082538f62ab7b49cad7c68cd290f0c429b3706fbb8df2dc'
-};
-
-// ============================================
-// HELPER FUNCTIONS
-// ============================================
-
-/**
- * Make authenticated API request to Strapi
- */
-async function strapiRequest(endpoint, options = {}) {
-    const url = `${STRAPI_CONFIG.url}/api${endpoint}`;
-    
-    const defaultOptions = {
-        headers: {
-            'Authorization': `Bearer ${STRAPI_CONFIG.apiToken}`,
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    };
-
-    try {
-        const response = await fetch(url, { ...defaultOptions, ...options });
-        const data = await response.json();
+class StrapiIntegration {
+    constructor() {
+        // Production API URL
+        this.API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+        this.isInitialized = false;
+        this.currentLanguage = 'en';
+        this.cache = {};
         
-        if (!response.ok) {
-            throw new Error(data.error?.message || 'API request failed');
-        }
-        
-        return data;
-    } catch (error) {
-        console.error('Strapi API Error:', error);
-        throw error;
+        console.log('🚀 StrapiIntegration initialized for:', this.API_BASE);
     }
-}
 
-/**
- * Display loading state in container
- */
-function showLoading(container) {
-    container.innerHTML = `
-        <div style="text-align: center; padding: 40px;">
-            <div class="spinner"></div>
-            <p>Loading...</p>
-        </div>
-    `;
-}
-
-/**
- * Display error message in container
- */
-function showError(container, message) {
-    container.innerHTML = `
-        <div style="background: #f8d7da; color: #721c24; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <strong>Error:</strong> ${message}
-        </div>
-    `;
-}
-
-/**
- * Reinitialize Webflow interactions after DOM update
- */
-function refreshWebflow() {
-    if (window.Webflow) {
-        window.Webflow.destroy();
-        window.Webflow.ready();
-        window.Webflow.require('ix2').init();
-    }
-}
-
-// ============================================
-// PAGE-SPECIFIC INTEGRATIONS
-// ============================================
-
-/**
- * Load and display courses on courses.html
- */
-async function loadCourses() {
-    const container = document.querySelector('.courses-collection-list, .courses-grid, #courses-container');
-    if (!container) return;
-    
-    showLoading(container);
-    
-    try {
-        // Fetch courses with all relations
-        const response = await strapiRequest('/courses?populate=*&sort=createdAt:desc');
-        const courses = response.data;
-        
-        // Clear container
-        container.innerHTML = '';
-        
-        // Get template from existing Webflow collection item (if exists)
-        const template = document.querySelector('.w-dyn-item, .course-item');
-        
-        courses.forEach(course => {
-            const courseElement = document.createElement('div');
-            courseElement.className = 'course-card w-dyn-item';
+    async initialize() {
+        try {
+            console.log('🔄 Initializing Strapi integration...');
             
-            // Construct course HTML matching Webflow structure
-            courseElement.innerHTML = `
-                <a href="/detail_courses.html?id=${course.id}" class="course-link-wrapper w-inline-block">
-                    <div class="course-image-wrapper">
-                        ${course.attributes.image?.data ? `
-                            <img src="${STRAPI_CONFIG.url}${course.attributes.image.data.attributes.url}" 
-                                 alt="${course.attributes.title}"
-                                 class="course-image">
-                        ` : `
-                            <div class="course-image-placeholder"></div>
-                        `}
-                        ${course.attributes.badge ? `
-                            <div class="course-badge">${course.attributes.badge}</div>
-                        ` : ''}
-                    </div>
-                    <div class="course-content">
-                        <h3 class="course-title">${course.attributes.title}</h3>
-                        <p class="course-description">${course.attributes.description || ''}</p>
-                        <div class="course-meta">
-                            <div class="course-price">$${course.attributes.price || '0'}</div>
-                            <div class="course-duration">${course.attributes.duration || '0'} hours</div>
-                        </div>
-                        <div class="course-instructor">${course.attributes.instructor || 'Staff'}</div>
-                    </div>
-                </a>
-            `;
-            
-            container.appendChild(courseElement);
-        });
-        
-        // Reinitialize Webflow interactions
-        refreshWebflow();
-        
-    } catch (error) {
-        showError(container, 'Failed to load courses. Please try again later.');
-    }
-}
-
-/**
- * Load single course details on detail_courses.html
- */
-async function loadCourseDetails() {
-    // Get course ID from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const courseId = urlParams.get('id');
-    
-    if (!courseId) return;
-    
-    try {
-        // Fetch course with all relations
-        const response = await strapiRequest(`/courses/${courseId}?populate=*`);
-        const course = response.data;
-        
-        // Update page elements
-        document.querySelector('.course-title, h1').textContent = course.attributes.title;
-        document.querySelector('.course-description').textContent = course.attributes.description;
-        document.querySelector('.course-price').textContent = `$${course.attributes.price}`;
-        document.querySelector('.course-duration').textContent = `${course.attributes.duration} hours`;
-        
-        // Update image if exists
-        const imageElement = document.querySelector('.course-hero-image, .course-image');
-        if (imageElement && course.attributes.image?.data) {
-            imageElement.src = `${STRAPI_CONFIG.url}${course.attributes.image.data.attributes.url}`;
-        }
-        
-        // Load course content/lessons if available
-        if (course.attributes.lessons?.data) {
-            const lessonsContainer = document.querySelector('.lessons-container');
-            if (lessonsContainer) {
-                lessonsContainer.innerHTML = course.attributes.lessons.data.map(lesson => `
-                    <div class="lesson-item">
-                        <h4>${lesson.attributes.title}</h4>
-                        <p>${lesson.attributes.duration} min</p>
-                    </div>
-                `).join('');
+            // Check API status
+            const status = await this.checkAPIStatus();
+            if (!status) {
+                console.error('❌ API not available, falling back to static content');
+                return false;
             }
-        }
-        
-        refreshWebflow();
-        
-    } catch (error) {
-        console.error('Failed to load course details:', error);
-    }
-}
 
-/**
- * Handle user authentication
- */
-async function handleLogin(email, password) {
-    try {
-        const response = await fetch(`${STRAPI_CONFIG.url}/api/auth/local`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                identifier: email,
-                password: password
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            // Store JWT token and user info
-            localStorage.setItem('jwt', data.jwt);
-            localStorage.setItem('user', JSON.stringify(data.user));
+            // Load dynamic content based on current page
+            await this.loadPageContent();
+            this.isInitialized = true;
             
-            // Redirect to dashboard or reload page
-            window.location.href = '/dashboard.html';
-        } else {
-            throw new Error(data.error?.message || 'Login failed');
+            console.log('✅ Strapi integration loaded successfully');
+            return true;
+        } catch (error) {
+            console.error('❌ Integration initialization failed:', error);
+            return false;
         }
-        
-    } catch (error) {
-        alert('Login failed: ' + error.message);
     }
-}
 
-/**
- * Handle user registration
- */
-async function handleSignup(email, password, username) {
-    try {
-        const response = await fetch(`${STRAPI_CONFIG.url}/api/auth/local/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: username || email,
-                email: email,
-                password: password
-            })
-        });
+    async checkAPIStatus() {
+        try {
+            const response = await fetch(`${this.API_BASE}/status`);
+            const data = await response.json();
+            console.log('📊 API Status:', data.status);
+            return response.ok;
+        } catch (error) {
+            console.error('❌ API status check failed:', error);
+            return false;
+        }
+    }
+
+    async loadPageContent() {
+        const currentPath = window.location.pathname;
+        const pageName = currentPath.split('/').pop()?.replace('.html', '') || 'home';
         
-        const data = await response.json();
-        
-        if (response.ok) {
-            // Store JWT token and user info
-            localStorage.setItem('jwt', data.jwt);
-            localStorage.setItem('user', JSON.stringify(data.user));
+        console.log(`🔄 Loading content for page: ${pageName}`);
+
+        switch (pageName) {
+            case 'home':
+            case 'index':
+                await this.loadHomeContent();
+                break;
+            case 'courses':
+                await this.loadCoursesContent();
+                break;
+            case 'teachers':
+                await this.loadTeachersContent();
+                break;
+            case 'blog':
+                await this.loadBlogContent();
+                break;
+            case 'career-center':
+            case 'career-orientation':
+                await this.loadCareerContent(pageName);
+                break;
+            default:
+                console.log(`ℹ️ No dynamic content loader for: ${pageName}`);
+        }
+    }
+
+    async loadHomeContent() {
+        try {
+            console.log('🏠 Loading home page content...');
             
-            // Redirect to dashboard
-            window.location.href = '/dashboard.html';
-        } else {
-            throw new Error(data.error?.message || 'Registration failed');
+            // Load home page data
+            const homeData = await this.fetchAPI('/home-page');
+            if (homeData) {
+                this.updateHomeHero(homeData.hero);
+                this.updateFeaturedCourses(homeData.featuredCourses);
+                this.updateTestimonials(homeData.testimonials);
+            }
+
+            // Load latest courses for featured section
+            const courses = await this.fetchAPI('/courses?populate=*&pagination[limit]=6');
+            if (courses?.data) {
+                this.updateFeaturedCoursesFromAPI(courses.data);
+            }
+
+        } catch (error) {
+            console.error('❌ Failed to load home content:', error);
         }
+    }
+
+    async loadCoursesContent() {
+        try {
+            console.log('📚 Loading courses content...');
+            
+            const courses = await this.fetchAPI('/courses?populate=*');
+            if (courses?.data) {
+                this.updateCoursesGrid(courses.data);
+                console.log(`✅ Loaded ${courses.data.length} courses`);
+            }
+        } catch (error) {
+            console.error('❌ Failed to load courses:', error);
+        }
+    }
+
+    async loadTeachersContent() {
+        try {
+            console.log('👨‍🏫 Loading teachers content...');
+            
+            const teachers = await this.fetchAPI('/teachers?populate=*');
+            if (teachers?.data) {
+                this.updateTeachersGrid(teachers.data);
+                console.log(`✅ Loaded ${teachers.data.length} teachers`);
+            }
+        } catch (error) {
+            console.error('❌ Failed to load teachers:', error);
+        }
+    }
+
+    async loadBlogContent() {
+        try {
+            console.log('📝 Loading blog content...');
+            
+            const blogs = await this.fetchAPI('/blogs?populate=*');
+            if (blogs?.data) {
+                this.updateBlogGrid(blogs.data);
+                console.log(`✅ Loaded ${blogs.data.length} blog posts`);
+            }
+        } catch (error) {
+            console.error('❌ Failed to load blog content:', error);
+        }
+    }
+
+    async loadCareerContent(pageType) {
+        try {
+            console.log(`💼 Loading ${pageType} content...`);
+            
+            const endpoint = pageType === 'career-center' ? '/career-center' : '/career-orientation';
+            const careerData = await this.fetchAPI(endpoint);
+            
+            if (careerData) {
+                this.updateCareerPage(careerData, pageType);
+                console.log(`✅ Loaded ${pageType} content`);
+            }
+        } catch (error) {
+            console.error(`❌ Failed to load ${pageType} content:`, error);
+        }
+    }
+
+    async fetchAPI(endpoint) {
+        const cacheKey = `${endpoint}_${this.currentLanguage}`;
         
-    } catch (error) {
-        alert('Registration failed: ' + error.message);
+        // Return cached data if available
+        if (this.cache[cacheKey]) {
+            console.log(`📦 Using cached data for: ${endpoint}`);
+            return this.cache[cacheKey];
+        }
+
+        try {
+            const url = `${this.API_BASE}${endpoint}`;
+            console.log(`🔄 Fetching: ${url}`);
+            
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            
+            // Cache the data
+            this.cache[cacheKey] = data;
+            
+            console.log(`✅ Fetched data from: ${endpoint}`);
+            return data;
+        } catch (error) {
+            console.error(`❌ API fetch failed for ${endpoint}:`, error);
+            return null;
+        }
     }
-}
 
-/**
- * Check if user is authenticated
- */
-function isAuthenticated() {
-    return !!localStorage.getItem('jwt');
-}
+    updateHomeHero(heroData) {
+        if (!heroData) return;
 
-/**
- * Get current user
- */
-function getCurrentUser() {
-    const userStr = localStorage.getItem('user');
-    return userStr ? JSON.parse(userStr) : null;
-}
+        console.log('🎯 Updating hero section...');
+        
+        // Update hero title
+        const heroTitle = document.querySelector('.hero-title, h1.hero, [data-hero-title]');
+        if (heroTitle && heroData.title) {
+            heroTitle.textContent = heroData.title;
+        }
 
-/**
- * Logout user
- */
-function logout() {
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('user');
-    window.location.href = '/';
-}
+        // Update hero subtitle
+        const heroSubtitle = document.querySelector('.hero-subtitle, .hero-description, [data-hero-subtitle]');
+        if (heroSubtitle && heroData.subtitle) {
+            heroSubtitle.textContent = heroData.subtitle;
+        }
 
-/**
- * Load user profile data
- */
-async function loadUserProfile() {
-    if (!isAuthenticated()) {
-        window.location.href = '/authentication-pages/sign-in.html';
-        return;
+        // Update hero description
+        const heroDesc = document.querySelector('.hero-text, .hero-description-text, [data-hero-description]');
+        if (heroDesc && heroData.description) {
+            heroDesc.textContent = heroData.description;
+        }
     }
-    
-    const user = getCurrentUser();
-    if (user) {
-        // Update profile elements
-        document.querySelector('.user-name').textContent = user.username || user.email;
-        document.querySelector('.user-email').textContent = user.email;
-    }
-}
 
-/**
- * Handle course enrollment
- */
-async function enrollInCourse(courseId) {
-    if (!isAuthenticated()) {
-        window.location.href = '/authentication-pages/sign-in.html';
-        return;
-    }
-    
-    try {
-        const response = await strapiRequest('/enrollments', {
-            method: 'POST',
-            body: JSON.stringify({
-                data: {
-                    course: courseId,
-                    user: getCurrentUser().id,
-                    status: 'pending_payment'
-                }
-            })
+    updateFeaturedCoursesFromAPI(coursesData) {
+        console.log('🎓 Updating featured courses from API...');
+        
+        // Find courses container
+        const coursesContainer = document.querySelector('.featured-courses-grid, .courses-grid, [data-courses-container]');
+        
+        if (!coursesContainer) {
+            console.warn('⚠️ Courses container not found');
+            return;
+        }
+
+        // Clear existing courses
+        coursesContainer.innerHTML = '';
+
+        // Create course cards
+        coursesData.forEach(course => {
+            const courseElement = this.createCourseCard(course);
+            coursesContainer.appendChild(courseElement);
         });
-        
-        // Redirect to checkout
-        window.location.href = `/checkout.html?enrollment=${response.data.id}`;
-        
-    } catch (error) {
-        alert('Enrollment failed: ' + error.message);
-    }
-}
 
-/**
- * Load shopping cart
- */
-async function loadCart() {
-    const cartData = JSON.parse(localStorage.getItem('cart') || '[]');
-    const cartContainer = document.querySelector('.cart-items-container');
-    
-    if (!cartContainer) return;
-    
-    if (cartData.length === 0) {
-        cartContainer.innerHTML = '<p>Your cart is empty</p>';
-        return;
+        console.log(`✅ Updated featured courses with ${coursesData.length} items`);
     }
-    
-    // Fetch course details for cart items
-    const courseIds = cartData.map(item => item.courseId);
-    const courses = await Promise.all(
-        courseIds.map(id => strapiRequest(`/courses/${id}`))
-    );
-    
-    let total = 0;
-    cartContainer.innerHTML = courses.map(response => {
-        const course = response.data;
-        total += parseFloat(course.attributes.price || 0);
+
+    updateCoursesGrid(coursesData) {
+        console.log('🎓 Updating courses grid...');
         
-        return `
-            <div class="cart-item">
-                <div class="cart-item-title">${course.attributes.title}</div>
-                <div class="cart-item-price">$${course.attributes.price}</div>
-                <button onclick="removeFromCart(${course.id})">Remove</button>
+        // Find main courses container
+        const coursesContainer = document.querySelector('.courses-list, .courses-grid, .w-dyn-list, [data-courses-grid]');
+        
+        if (!coursesContainer) {
+            console.warn('⚠️ Courses grid container not found');
+            return;
+        }
+
+        // Remove "No items found" message
+        const noItemsMsg = coursesContainer.querySelector('.w-dyn-empty');
+        if (noItemsMsg) {
+            noItemsMsg.remove();
+        }
+
+        // Clear existing content
+        coursesContainer.innerHTML = '';
+
+        // Add course cards
+        coursesData.forEach(course => {
+            const courseElement = this.createCourseCard(course);
+            coursesContainer.appendChild(courseElement);
+        });
+
+        console.log(`✅ Updated courses grid with ${coursesData.length} courses`);
+    }
+
+    createCourseCard(courseData) {
+        const course = courseData.attributes || courseData;
+        
+        const courseCard = document.createElement('div');
+        courseCard.className = 'course-item w-dyn-item';
+        
+        courseCard.innerHTML = `
+            <div class="course-card">
+                <div class="course-image">
+                    <img src="${course.image || '/images/course-placeholder.jpg'}" 
+                         alt="${course.title}" 
+                         class="course-img" />
+                </div>
+                <div class="course-content">
+                    <h3 class="course-title">${course.title}</h3>
+                    <p class="course-description">${course.description || ''}</p>
+                    <div class="course-meta">
+                        <span class="course-duration">${course.duration || '8 weeks'}</span>
+                        <span class="course-lessons">${course.lessons || 24} lessons</span>
+                    </div>
+                    <div class="course-footer">
+                        <div class="course-price">$${course.price || 299}</div>
+                        <div class="course-rating">
+                            <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+                            <span class="rating-value">${course.rating || 4.9}/5</span>
+                        </div>
+                    </div>
+                    <a href="/detail_courses.html?id=${courseData.id}" class="course-link">
+                        View Course
+                    </a>
+                </div>
             </div>
         `;
-    }).join('');
-    
-    // Update total
-    document.querySelector('.cart-total').textContent = `$${total.toFixed(2)}`;
+        
+        return courseCard;
+    }
+
+    updateTestimonials(testimonialsData) {
+        if (!testimonialsData) return;
+
+        console.log('💬 Updating testimonials...');
+        
+        const testimonialsContainer = document.querySelector('.testimonials-grid, [data-testimonials]');
+        if (testimonialsContainer && Array.isArray(testimonialsData)) {
+            // Update testimonials logic here
+            console.log(`✅ Updated ${testimonialsData.length} testimonials`);
+        }
+    }
+
+    updateTeachersGrid(teachersData) {
+        console.log('👨‍🏫 Updating teachers grid...');
+        
+        const teachersContainer = document.querySelector('.teachers-grid, [data-teachers-grid]');
+        if (!teachersContainer) return;
+
+        teachersContainer.innerHTML = '';
+        
+        teachersData.forEach(teacher => {
+            const teacherCard = this.createTeacherCard(teacher);
+            teachersContainer.appendChild(teacherCard);
+        });
+
+        console.log(`✅ Updated teachers grid with ${teachersData.length} teachers`);
+    }
+
+    createTeacherCard(teacherData) {
+        const teacher = teacherData.attributes || teacherData;
+        
+        const teacherCard = document.createElement('div');
+        teacherCard.className = 'teacher-item w-dyn-item';
+        
+        teacherCard.innerHTML = `
+            <div class="teacher-card">
+                <div class="teacher-image">
+                    <img src="${teacher.image || '/images/teacher-placeholder.jpg'}" 
+                         alt="${teacher.name}" 
+                         class="teacher-img" />
+                </div>
+                <div class="teacher-info">
+                    <h3 class="teacher-name">${teacher.name}</h3>
+                    <p class="teacher-title">${teacher.title || ''}</p>
+                    <p class="teacher-bio">${teacher.bio || ''}</p>
+                    <div class="teacher-expertise">
+                        ${teacher.expertise ? teacher.expertise.split(',').map(skill => 
+                            `<span class="skill-tag">${skill.trim()}</span>`
+                        ).join('') : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        return teacherCard;
+    }
+
+    updateBlogGrid(blogsData) {
+        console.log('📝 Updating blog grid...');
+        
+        const blogsContainer = document.querySelector('.blogs-grid, [data-blogs-grid]');
+        if (!blogsContainer) return;
+
+        blogsContainer.innerHTML = '';
+        
+        blogsData.forEach(blog => {
+            const blogCard = this.createBlogCard(blog);
+            blogsContainer.appendChild(blogCard);
+        });
+
+        console.log(`✅ Updated blog grid with ${blogsData.length} posts`);
+    }
+
+    createBlogCard(blogData) {
+        const blog = blogData.attributes || blogData;
+        
+        const blogCard = document.createElement('div');
+        blogCard.className = 'blog-item w-dyn-item';
+        
+        blogCard.innerHTML = `
+            <div class="blog-card">
+                <div class="blog-image">
+                    <img src="${blog.image || '/images/blog-placeholder.jpg'}" 
+                         alt="${blog.title}" 
+                         class="blog-img" />
+                </div>
+                <div class="blog-content">
+                    <h3 class="blog-title">${blog.title}</h3>
+                    <p class="blog-excerpt">${blog.excerpt || ''}</p>
+                    <div class="blog-meta">
+                        <span class="blog-date">${new Date(blog.publishedAt || blog.createdAt).toLocaleDateString()}</span>
+                        <span class="blog-author">${blog.author || 'AI Studio'}</span>
+                    </div>
+                    <a href="/detail_blog.html?id=${blogData.id}" class="blog-link">
+                        Read More
+                    </a>
+                </div>
+            </div>
+        `;
+        
+        return blogCard;
+    }
+
+    updateCareerPage(careerData, pageType) {
+        console.log(`💼 Updating ${pageType} page...`);
+        
+        if (!careerData) return;
+
+        // Update page content based on API data
+        const career = careerData.attributes || careerData;
+        
+        // Update hero section
+        if (career.hero) {
+            this.updatePageSection('.career-hero', career.hero);
+        }
+        
+        // Update problems section
+        if (career.problems) {
+            this.updatePageSection('.career-problems', career.problems);
+        }
+        
+        // Update solutions section
+        if (career.solutions) {
+            this.updatePageSection('.career-solutions', career.solutions);
+        }
+
+        console.log(`✅ Updated ${pageType} page content`);
+    }
+
+    updatePageSection(selector, data) {
+        const section = document.querySelector(selector);
+        if (!section || !data) return;
+
+        // Update title
+        const title = section.querySelector('h1, h2, .section-title');
+        if (title && data.title) {
+            title.textContent = data.title;
+        }
+
+        // Update description
+        const description = section.querySelector('p, .section-description');
+        if (description && data.description) {
+            description.textContent = data.description;
+        }
+    }
+
+    // Language switching support
+    switchLanguage(lang) {
+        this.currentLanguage = lang;
+        this.cache = {}; // Clear cache
+        this.loadPageContent(); // Reload content in new language
+        console.log(`🌍 Switched to language: ${lang}`);
+    }
+
+    // Preview mode support
+    enablePreviewMode() {
+        document.body.classList.add('preview-mode');
+        
+        // Add preview banner
+        const banner = document.createElement('div');
+        banner.className = 'preview-banner';
+        banner.innerHTML = '👁️ Preview Mode - Content loaded from API';
+        banner.style.cssText = `
+            position: fixed; top: 0; left: 0; right: 0; 
+            background: #007aff; color: white; 
+            text-align: center; padding: 10px; 
+            z-index: 10000; font-weight: bold;
+        `;
+        document.body.prepend(banner);
+        
+        console.log('👁️ Preview mode enabled');
+    }
 }
 
-// ============================================
-// INITIALIZATION
-// ============================================
+// Auto-initialize based on conditions
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const previewMode = urlParams.get('preview') === 'true';
+    const isLocalhost = window.location.hostname === 'localhost';
+    const isProduction = window.location.hostname.includes('aistudio555.com');
 
-/**
- * Initialize Strapi integration when DOM is ready
- */
-document.addEventListener('DOMContentLoaded', async () => {
-    // Detect current page and load appropriate data
-    const currentPath = window.location.pathname;
-    
-    // Route-based initialization
-    if (currentPath.includes('courses.html')) {
-        await loadCourses();
-    } else if (currentPath.includes('detail_courses.html')) {
-        await loadCourseDetails();
-    } else if (currentPath.includes('checkout.html')) {
-        await loadCart();
-    } else if (currentPath.includes('dashboard.html') || currentPath.includes('profile.html')) {
-        await loadUserProfile();
-    }
-    
-    // Setup authentication forms
-    const loginForm = document.querySelector('#login-form, .login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = e.target.querySelector('[name="email"]').value;
-            const password = e.target.querySelector('[name="password"]').value;
-            await handleLogin(email, password);
+    // Initialize integration if conditions are met
+    if (previewMode || isLocalhost || isProduction) {
+        console.log('🔄 Conditions met, initializing StrapiIntegration...');
+        
+        const integration = new StrapiIntegration();
+        
+        if (previewMode) {
+            integration.enablePreviewMode();
+        }
+        
+        integration.initialize().then(success => {
+            if (success) {
+                console.log('✅ StrapiIntegration ready!');
+                
+                // Make integration available globally
+                window.StrapiIntegration = integration;
+            } else {
+                console.log('⚠️ StrapiIntegration failed, using static content');
+            }
         });
-    }
-    
-    const signupForm = document.querySelector('#signup-form, .signup-form');
-    if (signupForm) {
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = e.target.querySelector('[name="email"]').value;
-            const password = e.target.querySelector('[name="password"]').value;
-            const username = e.target.querySelector('[name="username"]')?.value;
-            await handleSignup(email, password, username);
-        });
-    }
-    
-    // Setup logout button
-    const logoutBtn = document.querySelector('.logout-btn, #logout');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', logout);
-    }
-    
-    // Show/hide auth elements based on login status
-    if (isAuthenticated()) {
-        document.querySelectorAll('.logged-in-only').forEach(el => el.style.display = 'block');
-        document.querySelectorAll('.logged-out-only').forEach(el => el.style.display = 'none');
     } else {
-        document.querySelectorAll('.logged-in-only').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('.logged-out-only').forEach(el => el.style.display = 'block');
+        console.log('ℹ️ StrapiIntegration not initialized - conditions not met');
     }
 });
 
-// ============================================
-// EXPORT FOR GLOBAL USE
-// ============================================
-
-// Make functions available globally for onclick handlers
-window.enrollInCourse = enrollInCourse;
-window.logout = logout;
-window.removeFromCart = (courseId) => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const newCart = cart.filter(item => item.courseId !== courseId);
-    localStorage.setItem('cart', JSON.stringify(newCart));
-    loadCart();
-};
-
-window.addToCart = (courseId) => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    if (!cart.find(item => item.courseId === courseId)) {
-        cart.push({ courseId, addedAt: new Date().toISOString() });
-        localStorage.setItem('cart', JSON.stringify(cart));
-        alert('Added to cart!');
-    } else {
-        alert('Already in cart');
-    }
-};
+// Export for use in other scripts
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = StrapiIntegration;
+}
