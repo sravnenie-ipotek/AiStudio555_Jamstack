@@ -748,6 +748,18 @@
 
   <!-- Enhanced CSS for Career Orientation Page -->
   <style>
+    /* CRITICAL NAVIGATION FIX - Force visibility */
+    .nav-menu { display: flex !important; align-items: center !important; gap: 20px !important; }
+    .nav-link, .menu-dropdown-wrapper { display: inline-block !important; visibility: visible !important; opacity: 1 !important; }
+    .dropdown-toggle { display: flex !important; align-items: center !important; gap: 5px !important; cursor: pointer !important; color: rgba(255,255,255,0.9) !important; padding: 8px 0 !important; }
+    .dropdown-list { position: absolute !important; top: 100% !important; left: 0 !important; background: #05051a !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 8px !important; padding: 10px 0 !important; min-width: 200px !important; z-index: 1000 !important; opacity: 0 !important; visibility: hidden !important; transform: translateY(-10px) !important; transition: all 0.2s ease !important; }
+    .menu-dropdown-wrapper:hover .dropdown-list, .dropdown-list.w--open { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; }
+    .dropdown-menu-text-link-block { display: block !important; padding: 10px 20px !important; color: rgba(255,255,255,0.9) !important; text-decoration: none !important; }
+    .dropdown-menu-text-link-block:hover { background: rgba(255,255,255,0.05) !important; color: #ffd659 !important; }
+    .navbar-button-wrapper { margin-left: auto !important; display: flex !important; align-items: center !important; gap: 20px !important; }
+    .primary-button-wrapper.mobile { display: none !important; }
+    @media (max-width: 991px) { .primary-button-wrapper.desktop { display: none !important; } .primary-button-wrapper.mobile { display: block !important; } }
+
     /* Career Services Dropdown Styling - Dark Theme */
     .menu-dropdown-wrapper {
       position: relative !important;
@@ -1988,6 +2000,42 @@
           dropdownToggle.classList.toggle('w--open');
         });
       }
+    });
+  </script>
+  <!-- Navigation Fix Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Navigation fix initializing...');
+      
+      // Fix dropdowns
+      const dropdowns = document.querySelectorAll('.menu-dropdown-wrapper');
+      dropdowns.forEach(dropdown => {
+        const toggle = dropdown.querySelector('.dropdown-toggle');
+        const list = dropdown.querySelector('.dropdown-list');
+        if (toggle && list) {
+          toggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            list.classList.toggle('w--open');
+          });
+        }
+      });
+      
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', function() {
+        document.querySelectorAll('.dropdown-list').forEach(list => {
+          list.classList.remove('w--open');
+        });
+      });
+      
+      // Prevent browser extension errors
+      window.addEventListener('error', function(e) {
+        if (e.filename && e.filename.includes('content.js')) {
+          e.preventDefault();
+          return true;
+        }
+      });
+      
+      console.log('Navigation fix complete');
     });
   </script>
 </body>
