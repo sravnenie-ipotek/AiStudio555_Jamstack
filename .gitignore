@@ -51,3 +51,6 @@ test-results/
 # Backup files
 *-backup-*.tar.gz
 *-backup-*.zip
+
+# Backup directories
+backups/
