@@ -783,120 +783,35 @@ app.get('/ru/about.html', (req, res) => {
   }
 });
 
-// Career Center pages
-app.get('/en/career-center.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'career-center.html'));
-});
+// Handle pages that exist only in root directory (not in dist folders)
+// These pages are the same for all languages
+const rootPages = [
+  'career-center.html',
+  'career-orientation.html', 
+  'blog.html',
+  'about-us.html',
+  'contact-us.html',
+  'pricing.html',
+  'checkout.html',
+  'detail_blog.html',
+  'detail_courses.html',
+  'detail_course-categories.html',
+  'order-confirmation.html'
+];
 
-app.get('/he/career-center.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'career-center.html'));
-});
-
-app.get('/ru/career-center.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'career-center.html'));
-});
-
-// Career Orientation pages
-app.get('/en/career-orientation.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'career-orientation.html'));
-});
-
-app.get('/he/career-orientation.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'career-orientation.html'));
-});
-
-app.get('/ru/career-orientation.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'career-orientation.html'));
-});
-
-// Blog pages
-app.get('/en/blog.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'blog.html'));
-});
-
-app.get('/he/blog.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'blog.html'));
-});
-
-app.get('/ru/blog.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'blog.html'));
-});
-
-// About Us pages
-app.get('/en/about-us.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'about-us.html'));
-});
-
-app.get('/he/about-us.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'about-us.html'));
-});
-
-app.get('/ru/about-us.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'about-us.html'));
-});
-
-// Contact pages
-app.get('/en/contact-us.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'contact-us.html'));
-});
-
-app.get('/he/contact-us.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'contact-us.html'));
-});
-
-app.get('/ru/contact-us.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'contact-us.html'));
-});
-
-// Pricing pages
-app.get('/en/pricing.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'pricing.html'));
-});
-
-app.get('/he/pricing.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'pricing.html'));
-});
-
-app.get('/ru/pricing.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'pricing.html'));
-});
-
-// Checkout pages
-app.get('/en/checkout.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'checkout.html'));
-});
-
-app.get('/he/checkout.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'checkout.html'));
-});
-
-app.get('/ru/checkout.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'checkout.html'));
-});
-
-// Detail pages
-app.get('/en/detail_blog.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'detail_blog.html'));
-});
-
-app.get('/he/detail_blog.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'detail_blog.html'));
-});
-
-app.get('/ru/detail_blog.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'detail_blog.html'));
-});
-
-app.get('/en/detail_courses.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'detail_courses.html'));
-});
-
-app.get('/he/detail_courses.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'detail_courses.html'));
-});
-
-app.get('/ru/detail_courses.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'detail_courses.html'));
+// Create routes for each root page in each language
+rootPages.forEach(page => {
+  ['en', 'ru', 'he'].forEach(lang => {
+    app.get(`/${lang}/${page}`, (req, res) => {
+      const filePath = path.join(__dirname, page);
+      if (require('fs').existsSync(filePath)) {
+        res.sendFile(filePath);
+      } else {
+        // Fallback to language index if page doesn't exist
+        res.sendFile(path.join(__dirname, `dist/${lang}/index.html`));
+      }
+    });
+  });
 });
 
 // Catch-all for language subpages (MUST BE AFTER specific routes)
