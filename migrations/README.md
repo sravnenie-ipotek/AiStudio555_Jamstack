@@ -6,6 +6,7 @@ This folder contains SQL migration scripts for the AI Studio platform.
 
 - `001-add-multilang-support.sql` - Adds multi-language support (locale columns) to all content tables and inserts Russian and Hebrew translations
 - `002-seed-contact-data.sql` - Seeds contact page data
+- `003-add-career-pages.sql` - Creates career_orientation_pages and career_center_pages tables with multi-language support
 
 ## How to Run Migrations
 
