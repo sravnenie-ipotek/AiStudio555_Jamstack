@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin Loading</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .field { margin: 10px 0; }
+        label { display: inline-block; width: 200px; font-weight: bold; }
+        input, textarea { width: 400px; padding: 5px; }
+        button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Career Orientation Admin Loading</h1>
+    
+    <div id="status">Loading...</div>
+    
+    <div id="fields">
+        <h2>Career Orientation Fields (Sample)</h2>
+        <div class="field">
+            <label>Hero Main Title:</label>
+            <input type="text" id="hero_main_title" placeholder="Loading...">
+        </div>
+        <div class="field">
+            <label>Hero Subtitle:</label>
+            <input type="text" id="hero_subtitle" placeholder="Loading...">
+        </div>
+        <div class="field">
+            <label>Hero Description:</label>
+            <textarea id="hero_description" rows="3" placeholder="Loading..."></textarea>
+        </div>
+        <div class="field">
+            <label>Stat 1 Value:</label>
+            <input type="text" id="hero_stat_1_value" placeholder="Loading...">
+        </div>
+        <div class="field">
+            <label>Stat 1 Label:</label>
+            <input type="text" id="hero_stat_1_label" placeholder="Loading...">
+        </div>
+        <div class="field">
+            <label>Problems Main Title:</label>
+            <input type="text" id="problems_main_title" placeholder="Loading...">
+        </div>
+        <div class="field">
+            <label>Solutions Main Title:</label>
+            <input type="text" id="solutions_main_title" placeholder="Loading...">
+        </div>
+    </div>
+    
+    <button onclick="loadData()">🔄 Reload Data</button>
+    <button onclick="saveData()">💾 Save Data</button>
+    
+    <script>
+        // Use production Railway API
+        const API_URL = 'https://aistudio555jamstack-production.up.railway.app/api';
+        
+        function setFieldValue(fieldId, value) {
+            const element = document.getElementById(fieldId);
+            if (element) {
+                element.value = value || '';
+            } else {
+                console.warn(`Field not found: ${fieldId}`);
+            }
+        }
+        
+        function getFieldValue(fieldId) {
+            const element = document.getElementById(fieldId);
+            return element ? element.value : '';
+        }
+        
+        async function loadData() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = 'Loading data from Railway API...';
+            
+            try {
+                const url = `${API_URL}/career-orientation-page?locale=en`;
+                console.log('Fetching from:', url);
+                
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                console.log('Response:', result);
+                
+                if (result.data && result.data.attributes) {
+                    const data = result.data.attributes;
+                    
+                    // Populate fields
+                    setFieldValue('hero_main_title', data.heroMainTitle);
+                    setFieldValue('hero_subtitle', data.heroSubtitle);
+                    setFieldValue('hero_description', data.heroDescription);
+                    setFieldValue('hero_stat_1_value', data.heroStat1Value);
+                    setFieldValue('hero_stat_1_label', data.heroStat1Label);
+                    setFieldValue('problems_main_title', data.problemsMainTitle);
+                    setFieldValue('solutions_main_title', data.solutionsMainTitle);
+                    
+                    statusDiv.innerHTML = `<span class="success">✅ Data loaded successfully! Found ${Object.keys(data).length} fields.</span>`;
+                } else {
+                    statusDiv.innerHTML = '<span class="error">❌ No data found in response</span>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                statusDiv.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+            }
+        }
+        
+        async function saveData() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = 'Saving data...';
+            
+            const data = {
+                heroMainTitle: getFieldValue('hero_main_title'),
+                heroSubtitle: getFieldValue('hero_subtitle'),
+                heroDescription: getFieldValue('hero_description'),
+                heroStat1Value: getFieldValue('hero_stat_1_value'),
+                heroStat1Label: getFieldValue('hero_stat_1_label'),
+                problemsMainTitle: getFieldValue('problems_main_title'),
+                solutionsMainTitle: getFieldValue('solutions_main_title')
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/career-orientation-page?locale=en`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ data })
+                });
+                
+                if (response.ok) {
+                    statusDiv.innerHTML = '<span class="success">✅ Data saved successfully!</span>';
+                } else {
+                    statusDiv.innerHTML = `<span class="error">❌ Save failed: ${response.status}</span>`;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+            }
+        }
+        
+        // Load data on page load
+        window.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>

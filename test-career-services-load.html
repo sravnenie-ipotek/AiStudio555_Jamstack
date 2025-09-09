@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Career Services Loading</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .field {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .field label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .field input, .field textarea {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .success { color: green; }
+        .error { color: red; }
+        .warning { color: orange; }
+        
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Career Services Loading</h1>
+    
+    <div id="status">Ready to test...</div>
+    
+    <button onclick="testLoadFunction()">🔄 Test loadCareerServices Function</button>
+    <button onclick="testDirectAPI()">🌐 Test Direct API Call</button>
+    
+    <div class="section">
+        <h3>🎯 Hero Section Fields</h3>
+        <div class="field">
+            <label>Main Title</label>
+            <input type="text" id="hero_main_title" readonly>
+        </div>
+        <div class="field">
+            <label>Subtitle</label>
+            <input type="text" id="hero_subtitle" readonly>
+        </div>
+        <div class="field">
+            <label>Description</label>
+            <textarea id="hero_description" rows="3" readonly></textarea>
+        </div>
+        <div class="field">
+            <label>Stat 1 Value</label>
+            <input type="text" id="hero_stat_1_value" readonly>
+        </div>
+        <div class="field">
+            <label>Stat 1 Label</label>
+            <input type="text" id="hero_stat_1_label" readonly>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>⚠️ Problems Section Fields</h3>
+        <div class="field">
+            <label>Main Title</label>
+            <input type="text" id="problems_main_title" readonly>
+        </div>
+        <div class="field">
+            <label>Subtitle</label>
+            <input type="text" id="problems_subtitle" readonly>
+        </div>
+        <div class="field">
+            <label>Problem 1 Title</label>
+            <input type="text" id="problem_1_title" readonly>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>✅ Solutions Section Fields</h3>
+        <div class="field">
+            <label>Main Title</label>
+            <input type="text" id="solutions_main_title" readonly>
+        </div>
+        <div class="field">
+            <label>Solution 1 Title</label>
+            <input type="text" id="solution_1_title" readonly>
+        </div>
+    </div>
+
+    <script>
+        const API_URL_READ = '/api';
+        let currentLocale = 'en';
+
+        function showMessage(message, type) {
+            const statusDiv = document.getElementById('status');
+            const className = type === 'success' ? 'success' : (type === 'error' ? 'error' : 'warning');
+            statusDiv.innerHTML = `<span class="${className}">${message}</span>`;
+            console.log(`${type.toUpperCase()}: ${message}`);
+        }
+
+        function setFieldValue(fieldId, value) {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.value = value || '';
+                console.log(`Set ${fieldId} = "${value}"`);
+            } else {
+                console.warn(`Field not found: ${fieldId}`);
+            }
+        }
+
+        function setFieldChecked(fieldId, checked) {
+            const field = document.getElementById(fieldId);
+            if (field && field.type === 'checkbox') {
+                field.checked = Boolean(checked);
+                console.log(`Set ${fieldId} checkbox = ${checked}`);
+            }
+        }
+
+        async function testLoadFunction() {
+            showMessage('Testing loadCareerServices function...', 'info');
+            
+            try {
+                await loadCareerServices();
+            } catch (error) {
+                showMessage(`Function test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testDirectAPI() {
+            showMessage('Testing direct API call...', 'info');
+            
+            try {
+                const response = await fetch(`${API_URL_READ}/career-orientation-page?locale=${currentLocale}`);
+                const data = await response.json();
+                
+                if (data.data && data.data.attributes) {
+                    const attrs = data.data.attributes;
+                    showMessage(`✅ API success! Found ${Object.keys(attrs).length} fields`, 'success');
+                    
+                    // Manually populate fields
+                    setFieldValue('hero_main_title', attrs.heroMainTitle);
+                    setFieldValue('hero_subtitle', attrs.heroSubtitle);
+                    setFieldValue('hero_description', attrs.heroDescription);
+                    setFieldValue('hero_stat_1_value', attrs.heroStat1Value);
+                    setFieldValue('hero_stat_1_label', attrs.heroStat1Label);
+                    setFieldValue('problems_main_title', attrs.problemsMainTitle);
+                    setFieldValue('problems_subtitle', attrs.problemsSubtitle);
+                    setFieldValue('problem_1_title', attrs.problem1Title);
+                    setFieldValue('solutions_main_title', attrs.solutionsMainTitle);
+                    setFieldValue('solution_1_title', attrs.solution1Title);
+                } else {
+                    showMessage('❌ No data in API response', 'error');
+                }
+            } catch (error) {
+                showMessage(`API test failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Mimic the loadCareerServices function from the admin
+        async function loadCareerServices() {
+            console.log('🎯 Loading Career Services - Comprehensive Career Orientation Data');
+            
+            try {
+                const orientationResponse = await fetch(`${API_URL_READ}/career-orientation-page?locale=${currentLocale}`);
+                if (orientationResponse.ok) {
+                    const orientationData = await orientationResponse.json();
+                    console.log('📊 Career Orientation API Response:', orientationData);
+                    
+                    if (orientationData.data && orientationData.data.attributes) {
+                        const attrs = orientationData.data.attributes;
+                        console.log(`✅ Found ${Object.keys(attrs).length} comprehensive fields`);
+                        
+                        // Populate comprehensive Hero Section (18 fields)
+                        setFieldValue('hero_main_title', attrs.heroMainTitle || '');
+                        setFieldValue('hero_subtitle', attrs.heroSubtitle || '');
+                        setFieldValue('hero_description', attrs.heroDescription || '');
+                        setFieldValue('hero_stat_1_value', attrs.heroStat1Value || '');
+                        setFieldValue('hero_stat_1_label', attrs.heroStat1Label || '');
+
+                        // Populate Problems Section (27 fields)
+                        setFieldValue('problems_main_title', attrs.problemsMainTitle || '');
+                        setFieldValue('problems_subtitle', attrs.problemsSubtitle || '');
+                        setFieldValue('problem_1_title', attrs.problem1Title || '');
+
+                        // Populate Solutions Section (30 fields)
+                        setFieldValue('solutions_main_title', attrs.solutionsMainTitle || '');
+                        setFieldValue('solution_1_title', attrs.solution1Title || '');
+
+                        console.log('✅ Career Services comprehensive data loaded successfully!');
+                        showMessage('Career Services data loaded successfully with 215+ fields!', 'success');
+                    } else {
+                        console.log('⚠️ No career orientation data found');
+                        showMessage('No career orientation data found', 'warning');
+                    }
+                } else {
+                    console.error('Failed to load career orientation:', orientationResponse.status);
+                    showMessage('Failed to load career orientation data', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading career orientation page:', error);
+                showMessage('Error loading career services: ' + error.message, 'error');
+            }
+        }
+
+        // Auto-test on load
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('Test page loaded');
+            showMessage('Test page ready. Click buttons to test loading.', 'info');
+        });
+    </script>
+</body>
+</html>
