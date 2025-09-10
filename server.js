@@ -1082,11 +1082,17 @@ app.get('/api/career-center-page', async (req, res) => {
       [locale]
     );
     
-    // Get testimonials
-    const testimonials = await queryWithFallback(
-      'SELECT * FROM career_testimonials WHERE locale = $1 ORDER BY sort_order, id',
-      [locale]
-    );
+    // Get testimonials (handle missing table gracefully)
+    let testimonials = [];
+    try {
+      testimonials = await queryWithFallback(
+        'SELECT * FROM career_testimonials WHERE locale = $1 ORDER BY sort_order, id',
+        [locale]
+      );
+    } catch (testimonialError) {
+      console.warn('Career testimonials table not found, using empty array:', testimonialError.message);
+      testimonials = [];
+    }
     
     if (pageData.length === 0) {
       return res.json({

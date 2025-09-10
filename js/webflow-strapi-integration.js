@@ -1,10 +1,10 @@
 /**
- * AI Studio Webflow-Strapi Integration
- * Connects static frontend to Strapi CMS API
- * Architecture: JAMstack - Static HTML + Dynamic API
+ * AI Studio Frontend-Backend Integration
+ * Connects static frontend to Custom API
+ * Architecture: JAMstack - Static HTML + Custom Express API
  */
 
-class StrapiIntegration {
+class CustomAPIIntegration {
     constructor() {
         // Production API URL
         this.API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
@@ -12,12 +12,12 @@ class StrapiIntegration {
         this.currentLanguage = 'en';
         this.cache = {};
         
-        console.log('🚀 StrapiIntegration initialized for:', this.API_BASE);
+        console.log('🚀 CustomAPIIntegration initialized for:', this.API_BASE);
     }
 
     async initialize() {
         try {
-            console.log('🔄 Initializing Strapi integration...');
+            console.log('🔄 Initializing Custom API integration...');
             
             // Check API status
             const status = await this.checkAPIStatus();
@@ -30,7 +30,7 @@ class StrapiIntegration {
             await this.loadPageContent();
             this.isInitialized = true;
             
-            console.log('✅ Strapi integration loaded successfully');
+            console.log('✅ Custom API integration loaded successfully');
             return true;
         } catch (error) {
             console.error('❌ Integration initialization failed:', error);
@@ -487,9 +487,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize integration if conditions are met
     if (previewMode || isLocalhost || isProduction) {
-        console.log('🔄 Conditions met, initializing StrapiIntegration...');
+        console.log('🔄 Conditions met, initializing CustomAPIIntegration...');
         
-        const integration = new StrapiIntegration();
+        const integration = new CustomAPIIntegration();
         
         if (previewMode) {
             integration.enablePreviewMode();
@@ -497,20 +497,20 @@ document.addEventListener('DOMContentLoaded', function() {
         
         integration.initialize().then(success => {
             if (success) {
-                console.log('✅ StrapiIntegration ready!');
+                console.log('✅ CustomAPIIntegration ready!');
                 
                 // Make integration available globally
-                window.StrapiIntegration = integration;
+                window.CustomAPIIntegration = integration;
             } else {
-                console.log('⚠️ StrapiIntegration failed, using static content');
+                console.log('⚠️ CustomAPIIntegration failed, using static content');
             }
         });
     } else {
-        console.log('ℹ️ StrapiIntegration not initialized - conditions not met');
+        console.log('ℹ️ CustomAPIIntegration not initialized - conditions not met');
     }
 });
 
 // Export for use in other scripts
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = StrapiIntegration;
+    module.exports = CustomAPIIntegration;
 }

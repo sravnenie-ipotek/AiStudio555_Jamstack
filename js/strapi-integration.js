@@ -1,11 +1,11 @@
 /**
- * Strapi Frontend Integration
+ * Custom API Frontend Integration
  * Handles dynamic content loading and live preview
  */
 
-class StrapiIntegration {
+class CustomAPIIntegration {
   constructor() {
-    this.strapiUrl = 'https://aistudio555jamstack-production.up.railway.app';
+    this.apiUrl = 'https://aistudio555jamstack-production.up.railway.app';
     this.apiToken = '6ba76f584778637fd308f48aac27461c1aca7f088c963d614ad2e73bb7f3f9a646ad9e38cf12e5bd8f7e6f8e0ad2f014ea90ee088bb8a3c3c84a40f9fb0c592e5c8b05e8d25c09f4a9c0b685b2c90bacd5e604fbe4e1b01e0a6e32c76e7e93b1f21e5e47dcad5e80a6b0cf967e2a38b74f5edd19e92f5c0e6d387e1c16e5ce59';
     this.currentLocale = this.getLocale();
     this.isPreviewMode = this.checkPreviewMode();
@@ -19,7 +19,7 @@ class StrapiIntegration {
   }
 
   init() {
-    console.log('🚀 Initializing Strapi Integration');
+    console.log('🚀 Initializing Custom API Integration');
     
     // Load dynamic content
     this.loadPageContent();
@@ -81,7 +81,7 @@ class StrapiIntegration {
   async fetchPageContent(pageName) {
     try {
       const response = await fetch(
-        `${this.strapiUrl}/api/${pageName}?locale=${this.currentLocale}`
+        `${this.apiUrl}/api/${pageName}?locale=${this.currentLocale}`
       );
       
       if (!response.ok) {
@@ -91,7 +91,7 @@ class StrapiIntegration {
       const data = await response.json();
       return data.data?.attributes;
     } catch (error) {
-      console.warn('Could not fetch content from Strapi:', error.message);
+      console.warn('Could not fetch content from Custom API:', error.message);
       return null;
     }
   }
@@ -316,7 +316,7 @@ class StrapiIntegration {
       // Update thumbnail if available
       const imageElement = card.querySelector('.featured-courses-image');
       if (imageElement && attributes.thumbnail?.data?.attributes?.url) {
-        imageElement.src = `${this.strapiUrl}${attributes.thumbnail.data.attributes.url}`;
+        imageElement.src = `${this.apiUrl}${attributes.thumbnail.data.attributes.url}`;
       }
     });
   }
@@ -370,7 +370,7 @@ class StrapiIntegration {
   connectWebSocket() {
     // Import Socket.IO client if available
     if (typeof io !== 'undefined') {
-      this.socket = io(this.strapiUrl);
+      this.socket = io(this.apiUrl);
       
       this.socket.on('content-update', (data) => {
         console.log('📝 Content update received:', data);
@@ -439,7 +439,7 @@ class StrapiIntegration {
             type: 'edit-field',
             selector: selector,
             currentValue: currentValue
-          }, this.strapiUrl);
+          }, this.apiUrl);
         }
         
         console.log('Edit field:', selector, currentValue);
@@ -518,5 +518,5 @@ class StrapiIntegration {
   }
 }
 
-// Initialize Strapi Integration
-window.strapiIntegration = new StrapiIntegration();
+// Initialize Custom API Integration
+window.customAPIIntegration = new CustomAPIIntegration();

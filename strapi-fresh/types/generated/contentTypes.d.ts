@@ -443,6 +443,160 @@ export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCareerOrientationAssessmentResponseCareerOrientationAssessmentResponse
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'career_orientation_assessment_responses';
+  info: {
+    description: 'User responses to career orientation assessments';
+    displayName: 'Career Orientation Assessment Response';
+    pluralName: 'career-orientation-assessment-responses';
+    singularName: 'career-orientation-assessment-response';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    assessmentPage: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::career-orientation-page.career-orientation-page'
+    >;
+    assessmentResults: Schema.Attribute.JSON;
+    completedAt: Schema.Attribute.DateTime;
+    completionPercentage: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 100;
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    completionStatus: Schema.Attribute.Enumeration<
+      ['in_progress', 'completed', 'abandoned']
+    > &
+      Schema.Attribute.DefaultTo<'in_progress'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    ipAddress: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::career-orientation-assessment-response.career-orientation-assessment-response'
+    > &
+      Schema.Attribute.Private;
+    pageReferrer: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    recommendedCareerPaths: Schema.Attribute.JSON;
+    responses: Schema.Attribute.JSON & Schema.Attribute.Required;
+    sessionId: Schema.Attribute.String & Schema.Attribute.Required;
+    startedAt: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    timeSpentSeconds: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    userAgent: Schema.Attribute.Text;
+  };
+}
+
+export interface ApiCareerOrientationPageCareerOrientationPage
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'career_orientation_pages';
+  info: {
+    description: 'Complete career orientation page management with multi-language support';
+    displayName: 'Career Orientation Page';
+    pluralName: 'career-orientation-pages';
+    singularName: 'career-orientation-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    assessmentSection: Schema.Attribute.Component<
+      'career-orientation.assessment-section',
+      false
+    >;
+    canonicalUrl: Schema.Attribute.String;
+    careerPathsSection: Schema.Attribute.Component<
+      'career-orientation.career-paths-section',
+      false
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    expertSection: Schema.Attribute.Component<
+      'career-orientation.expert-section',
+      false
+    >;
+    footerSection: Schema.Attribute.Component<
+      'career-orientation.footer-section',
+      false
+    >;
+    hero: Schema.Attribute.Component<'career-orientation.hero', false> &
+      Schema.Attribute.Required;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::career-orientation-page.career-orientation-page'
+    >;
+    metaDescription: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    metaKeywords: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    pageTitle: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    partnersSection: Schema.Attribute.Component<
+      'career-orientation.partners-section',
+      false
+    >;
+    problemsSection: Schema.Attribute.Component<
+      'career-orientation.problems-section',
+      false
+    >;
+    processSection: Schema.Attribute.Component<
+      'career-orientation.process-section',
+      false
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'pageTitle'> & Schema.Attribute.Required;
+    solutionsSection: Schema.Attribute.Component<
+      'career-orientation.solutions-section',
+      false
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCareerResourceCareerResource
   extends Struct.CollectionTypeSchema {
   collectionName: 'career_resources';
@@ -1617,6 +1771,8 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::about-page.about-page': ApiAboutPageAboutPage;
       'api::blog-post.blog-post': ApiBlogPostBlogPost;
+      'api::career-orientation-assessment-response.career-orientation-assessment-response': ApiCareerOrientationAssessmentResponseCareerOrientationAssessmentResponse;
+      'api::career-orientation-page.career-orientation-page': ApiCareerOrientationPageCareerOrientationPage;
       'api::career-resource.career-resource': ApiCareerResourceCareerResource;
       'api::contact-page.contact-page': ApiContactPageContactPage;
       'api::course.course': ApiCourseCourse;

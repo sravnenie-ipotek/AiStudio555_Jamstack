@@ -1,0 +1,74 @@
+{
+    "kind": "collectionType",
+    "collectionName": "career_orientation_assessment_responses",
+    "info": {
+        "singularName": "career-orientation-assessment-response",
+        "pluralName": "career-orientation-assessment-responses",
+        "displayName": "Career Orientation Assessment Response",
+        "description": "User responses to career orientation assessments"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "assessmentPage": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "api::career-orientation-page.career-orientation-page"
+        },
+        "user": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "plugin::users-permissions.user"
+        },
+        "sessionId": {
+            "type": "string",
+            "required": true
+        },
+        "responses": {
+            "type": "json",
+            "required": true,
+            "description": "All question responses as key-value pairs"
+        },
+        "completionStatus": {
+            "type": "enumeration",
+            "enum": ["in_progress", "completed", "abandoned"],
+            "default": "in_progress"
+        },
+        "completionPercentage": {
+            "type": "integer",
+            "default": 0,
+            "min": 0,
+            "max": 100
+        },
+        "startedAt": {
+            "type": "datetime",
+            "required": true
+        },
+        "completedAt": {
+            "type": "datetime"
+        },
+        "timeSpentSeconds": {
+            "type": "integer",
+            "min": 0
+        },
+        "pageReferrer": {
+            "type": "string"
+        },
+        "userAgent": {
+            "type": "text"
+        },
+        "ipAddress": {
+            "type": "string"
+        },
+        "assessmentResults": {
+            "type": "json",
+            "description": "Calculated results and recommendations"
+        },
+        "recommendedCareerPaths": {
+            "type": "json",
+            "description": "Array of recommended career paths"
+        }
+    }
+}
