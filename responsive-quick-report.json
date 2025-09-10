@@ -1,0 +1,28 @@
+{
+  "timestamp": "2025-09-10T12:48:59.486Z",
+  "url": "http://localhost:9090/dist/en/index.html",
+  "tests": [
+    {
+      "name": "Overflow Handling",
+      "hidden": 1,
+      "scroll": 0,
+      "auto": 0,
+      "status": "CHECK"
+    }
+  ],
+  "score": 82,
+  "issues": [
+    {
+      "severity": "MEDIUM",
+      "issue": "41 fixed pixel widths found",
+      "fix": "Use relative units (%, rem, vw) instead of px for widths"
+    },
+    {
+      "severity": "MEDIUM",
+      "issue": "4 instances of small font sizes (<14px)",
+      "fix": "Minimum font size should be 14px on mobile, 16px preferred"
+    }
+  ],
+  "recommendation": "PASS",
+  "grade": "B"
+}

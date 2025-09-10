@@ -21,6 +21,9 @@
     "backup-content": "node scripts/backup-content.js",
     "restore-content": "node scripts/restore-content.js",
     "test:sync": "jest tests/content-sync.test.js",
+    "test:responsive": "node responsive-qa-subagent.js http://localhost:9090",
+    "test:responsive:prod": "node responsive-qa-subagent.js https://www.aistudio555.com",
+    "test:responsive:quick": "node responsive-qa-quick.js",
     "setup": "npm install && cd strapi-fresh && npm install",
     "clean": "rm -rf node_modules strapi-fresh/node_modules",
     "rebuild": "npm run clean && npm run setup"
