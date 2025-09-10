@@ -2315,12 +2315,21 @@ app.get('/api/run-migration', async (req, res) => {
     }
     
     // Check if we need to insert default data
-    const existing = await query(
-      'SELECT COUNT(*) as count FROM career_orientation_pages WHERE locale = $1',
-      ['en']
-    );
+    let needsDefaultData = true;
+    try {
+      const existing = await query(
+        'SELECT COUNT(*) as count FROM career_orientation_pages WHERE locale = $1',
+        ['en']
+      );
+      
+      if (existing && existing.length > 0 && (existing[0].count > 0 || existing[0].count === '1')) {
+        needsDefaultData = false;
+      }
+    } catch (err) {
+      console.log('Count query error:', err.message);
+    }
     
-    if (!existing || !existing[0] || existing[0].count === '0' || existing[0].count === 0) {
+    if (needsDefaultData) {
       await query(
         `INSERT INTO career_orientation_pages (locale, title, hero_main_title)
          VALUES ($1, $2, $3)`,
