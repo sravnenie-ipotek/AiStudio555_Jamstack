@@ -2254,8 +2254,14 @@
         // Save function for Career Services section
         async function saveCareerOrientation() {
             console.log('💾 Saving Career Orientation via saveCareerOrientationPage...');
-            // Use the comprehensive save function
-            await saveCareerOrientationPage();
+            try {
+                // Use the comprehensive save function
+                await saveCareerOrientationPage();
+                showMessage('Career Orientation saved successfully!', 'success');
+            } catch (error) {
+                console.error('Error saving career orientation:', error);
+                showMessage('Error saving Career Orientation: ' + error.message, 'error');
+            }
         }
 
         async function saveCareerCenter() {

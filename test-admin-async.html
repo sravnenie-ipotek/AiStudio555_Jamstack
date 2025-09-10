@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Admin Async Fix</title>
+</head>
+<body>
+    <h1>Testing Async Function Fix</h1>
+    <button onclick="testAsyncFunction()">Test Async Call</button>
+    <div id="result"></div>
+
+    <script>
+        // Simulate the fixed function
+        async function saveCareerOrientationPage() {
+            return new Promise(resolve => {
+                setTimeout(() => resolve({ success: true }), 100);
+            });
+        }
+
+        // The fixed function
+        async function saveCareerOrientation() {
+            console.log('💾 Saving Career Orientation via saveCareerOrientationPage...');
+            try {
+                // Use the comprehensive save function
+                await saveCareerOrientationPage();
+                document.getElementById('result').innerHTML = '<div style="color: green;">Career Orientation saved successfully!</div>';
+            } catch (error) {
+                console.error('Error saving career orientation:', error);
+                document.getElementById('result').innerHTML = '<div style="color: red;">Error saving Career Orientation: ' + error.message + '</div>';
+            }
+        }
+
+        function testAsyncFunction() {
+            saveCareerOrientation();
+        }
+    </script>
+</body>
+</html>
