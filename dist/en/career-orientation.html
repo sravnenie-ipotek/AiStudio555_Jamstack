@@ -2442,10 +2442,9 @@
   
   <script>
     // Initialize API integration for dynamic content
-    window.addEventListener('load', function() {
-      console.log('🚀 Initializing career-orientation page integration...');
+    function updateCareerStats() {
+      console.log('🚀 Updating career stats...');
       
-      // Direct API call to update stats
       fetch('https://aistudio555jamstack-production.up.railway.app/api/career-orientation')
         .then(response => response.json())
         .then(data => {
@@ -2472,10 +2471,28 @@
                 }
               }
             });
+            
+            // Also try updating by explicit traversal
+            const heroStats = document.querySelector('.hero-stats-wrapper');
+            if (heroStats) {
+              const firstStat = heroStats.children[0];
+              if (firstStat) {
+                const num = firstStat.querySelector('.hero-stat-number');
+                const lbl = firstStat.querySelector('.hero-stat-label');
+                if (num) num.textContent = data.hero.stats[0].number;
+                if (lbl) lbl.textContent = data.hero.stats[0].label;
+              }
+            }
           }
         })
         .catch(error => console.error('❌ Failed to load career data:', error));
-    });
+    }
+    
+    // Try multiple times to ensure DOM is ready
+    window.addEventListener('load', updateCareerStats);
+    window.addEventListener('DOMContentLoaded', updateCareerStats);
+    setTimeout(updateCareerStats, 1000);
+    setTimeout(updateCareerStats, 2000);
   </script>
 
   <script>
