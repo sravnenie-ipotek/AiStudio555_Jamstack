@@ -2475,6 +2475,9 @@
             // Also try updating by explicit traversal
             const heroStats = document.querySelector('.hero-stats-wrapper');
             if (heroStats) {
+              // Force visibility in case of Webflow animations
+              heroStats.style.opacity = '1';
+              
               const firstStat = heroStats.children[0];
               if (firstStat) {
                 const num = firstStat.querySelector('.hero-stat-number');
@@ -2483,16 +2486,30 @@
                 if (lbl) lbl.textContent = data.hero.stats[0].label;
               }
             }
+            
+            // Force update all elements with the class directly
+            document.querySelectorAll('.hero-stat-number').forEach((el, i) => {
+              if (data.hero.stats[i]) {
+                el.textContent = data.hero.stats[i].number;
+              }
+            });
+            document.querySelectorAll('.hero-stat-label').forEach((el, i) => {
+              if (data.hero.stats[i]) {
+                el.textContent = data.hero.stats[i].label;
+              }
+            });
           }
         })
         .catch(error => console.error('❌ Failed to load career data:', error));
     }
     
-    // Try multiple times to ensure DOM is ready
+    // Try multiple times to ensure DOM is ready and Webflow animations complete
     window.addEventListener('load', updateCareerStats);
     window.addEventListener('DOMContentLoaded', updateCareerStats);
     setTimeout(updateCareerStats, 1000);
     setTimeout(updateCareerStats, 2000);
+    setTimeout(updateCareerStats, 3000);
+    setTimeout(updateCareerStats, 5000);
   </script>
 
   <script>
