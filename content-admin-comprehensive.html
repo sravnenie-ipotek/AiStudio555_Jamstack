@@ -2438,18 +2438,24 @@
         }
 
         async function loadCareerOrientationPage() {
+            console.log('🚀 Starting loadCareerOrientationPage function...');
+            showMessage('Loading Career Orientation data...', 'info');
+            
             try {
                 const url = `${API_URL_READ}/career-orientation-page?locale=${currentLocale}`;
-                console.log('Loading career orientation page from:', url);
+                console.log('📡 Loading career orientation page from:', url);
 
                 const response = await fetch(url);
+                console.log('📊 Response status:', response.status);
+                
                 if (!response.ok) {
-                    throw new Error(`Failed to load: ${response.status}`);
+                    throw new Error(`Failed to load: ${response.status} ${response.statusText}`);
                 }
 
                 const result = await response.json();
                 const data = result.data?.attributes || {};
-                console.log('Loaded career orientation data:', data);
+                console.log('✅ Loaded career orientation data:', data);
+                console.log('📋 Total fields received:', Object.keys(data).length);
 
                 // Populate all form fields
                 // Hero Section
@@ -2556,9 +2562,17 @@
                 setFieldValue('footer_support_email', data.footerSupportEmail || '');
                 setFieldChecked('footer_visible', data.footerVisible !== false);
 
-                showMessage('Career Orientation page data loaded successfully!', 'success');
+                // Log population success
+                const testField = document.getElementById('hero_main_title');
+                if (testField && testField.value) {
+                    console.log('✅ Fields populated successfully! Sample: hero_main_title =', testField.value);
+                    showMessage(`Career Orientation data loaded! ${Object.keys(data).length} fields populated.`, 'success');
+                } else {
+                    console.warn('⚠️ Fields may not have been populated properly');
+                    showMessage('Career Orientation data loaded but check console for issues', 'warning');
+                }
             } catch (error) {
-                console.error('Error loading career orientation:', error);
+                console.error('❌ Error loading career orientation:', error);
                 showMessage('Error loading Career Orientation: ' + error.message, 'error');
             }
         }

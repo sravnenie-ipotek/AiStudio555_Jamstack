@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Career Orientation Loading</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        pre { background: #f4f4f4; padding: 10px; overflow-x: auto; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Debug Career Orientation Content Loading</h1>
+    
+    <button onclick="testAPI()">Test API Directly</button>
+    <button onclick="checkFormFields()">Check Form Fields</button>
+    <button onclick="loadAndPopulate()">Load & Populate</button>
+    
+    <div id="results"></div>
+    
+    <script>
+        const API_URL = 'https://aistudio555jamstack-production.up.railway.app/api';
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = message;
+            document.getElementById('results').appendChild(div);
+        }
+        
+        async function testAPI() {
+            log('Testing API endpoint...', 'info');
+            try {
+                const response = await fetch(`${API_URL}/career-orientation-page?locale=en`);
+                const data = await response.json();
+                
+                if (data.data && data.data.attributes) {
+                    const attrs = data.data.attributes;
+                    log(`✅ API Working! Found ${Object.keys(attrs).length} fields`, 'success');
+                    log(`Sample data: heroMainTitle = "${attrs.heroMainTitle}"`, 'info');
+                    log(`<pre>${JSON.stringify(attrs, null, 2).substring(0, 500)}...</pre>`, 'info');
+                } else {
+                    log('❌ No data found', 'error');
+                }
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+        
+        function checkFormFields() {
+            log('Checking if form fields exist...', 'info');
+            const fieldsToCheck = [
+                'hero_main_title',
+                'hero_subtitle', 
+                'hero_description',
+                'problems_main_title',
+                'solutions_main_title'
+            ];
+            
+            let found = 0;
+            let missing = [];
+            
+            fieldsToCheck.forEach(fieldId => {
+                const element = document.getElementById(fieldId);
+                if (element) {
+                    found++;
+                    log(`✅ Found: ${fieldId} = "${element.value || 'EMPTY'}"`, 'success');
+                } else {
+                    missing.push(fieldId);
+                }
+            });
+            
+            if (missing.length > 0) {
+                log(`⚠️ Missing fields: ${missing.join(', ')}`, 'error');
+                log('This page needs to be opened in the admin panel for fields to exist', 'info');
+            }
+        }
+        
+        function setFieldValue(fieldId, value) {
+            const element = document.getElementById(fieldId);
+            if (element) {
+                element.value = value || '';
+                return true;
+            }
+            return false;
+        }
+        
+        async function loadAndPopulate() {
+            log('Loading and populating Career Orientation data...', 'info');
+            
+            try {
+                const response = await fetch(`${API_URL}/career-orientation-page?locale=en`);
+                const result = await response.json();
+                const data = result.data?.attributes || {};
+                
+                log(`Loaded ${Object.keys(data).length} fields from API`, 'success');
+                
+                // Try to populate some key fields
+                const populated = [];
+                const failed = [];
+                
+                const fieldsMap = {
+                    'hero_main_title': data.heroMainTitle,
+                    'hero_subtitle': data.heroSubtitle,
+                    'hero_description': data.heroDescription,
+                    'problems_main_title': data.problemsMainTitle,
+                    'solutions_main_title': data.solutionsMainTitle
+                };
+                
+                for (const [fieldId, value] of Object.entries(fieldsMap)) {
+                    if (setFieldValue(fieldId, value)) {
+                        populated.push(`${fieldId} = "${value}"`);
+                    } else {
+                        failed.push(fieldId);
+                    }
+                }
+                
+                if (populated.length > 0) {
+                    log(`✅ Populated ${populated.length} fields:`, 'success');
+                    populated.forEach(p => log(`  • ${p}`, 'info'));
+                }
+                
+                if (failed.length > 0) {
+                    log(`⚠️ Could not populate ${failed.length} fields (not in DOM):`, 'error');
+                    log(`  ${failed.join(', ')}`, 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
