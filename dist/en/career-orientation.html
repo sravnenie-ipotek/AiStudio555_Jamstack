@@ -2444,29 +2444,48 @@
   <script src="js/webflow-strapi-integration.js?v=2.0" type="text/javascript"></script>
   
   <script>
+    // Create status indicator
+    window.careerUpdateStatus = { attempts: 0, errors: [] };
+    
     // Initialize API integration for dynamic content
     function updateCareerStats() {
-      console.log('🚀 Updating career stats...');
+      window.careerUpdateStatus.attempts++;
+      console.log(`🚀 Updating career stats... (attempt ${window.careerUpdateStatus.attempts})`);
       
-      // Direct update by ID first (immediate)
-      const stat1Num = document.getElementById('stat1-number');
-      const stat1Lbl = document.getElementById('stat1-label');
-      if (stat1Num) {
+      try {
+        // Direct update by ID first (immediate)
+        const stat1Num = document.getElementById('stat1-number');
+        const stat1Lbl = document.getElementById('stat1-label');
+        
+        if (!stat1Num) {
+          console.error('❌ Could not find stat1-number element');
+          window.careerUpdateStatus.errors.push('Element not found');
+          return;
+        }
+        
+        // Show loading state
         stat1Num.textContent = 'Loading...';
-      }
-      
-      fetch('https://aistudio555jamstack-production.up.railway.app/api/career-orientation')
-        .then(response => response.json())
-        .then(data => {
-          console.log('📊 Received data:', data);
-          
-          // Update by ID (most direct)
-          if (stat1Num && data.hero && data.hero.stats && data.hero.stats[0]) {
-            stat1Num.textContent = data.hero.stats[0].number;
-          }
-          if (stat1Lbl && data.hero && data.hero.stats && data.hero.stats[0]) {
-            stat1Lbl.textContent = data.hero.stats[0].label;
-          }
+        
+        fetch('https://aistudio555jamstack-production.up.railway.app/api/career-orientation')
+          .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+          })
+          .then(data => {
+            console.log('📊 Received data:', data);
+            
+            // Update by ID (most direct)
+            if (data && data.hero && data.hero.stats && data.hero.stats[0]) {
+              stat1Num.textContent = data.hero.stats[0].number;
+              console.log('✅ Successfully updated to:', data.hero.stats[0].number);
+              
+              if (stat1Lbl) {
+                stat1Lbl.textContent = data.hero.stats[0].label;
+              }
+            } else {
+              console.error('❌ Invalid data structure:', data);
+              window.careerUpdateStatus.errors.push('Invalid data structure');
+            }
           
           if (data.hero && data.hero.stats) {
             // Get all stat items
@@ -2517,8 +2536,19 @@
               }
             });
           }
-        })
-        .catch(error => console.error('❌ Failed to load career data:', error));
+          })
+          .catch(error => {
+            console.error('❌ Failed to load career data:', error);
+            window.careerUpdateStatus.errors.push(error.toString());
+            // Try to show error in UI
+            if (stat1Num) {
+              stat1Num.textContent = 'Error loading';
+            }
+          });
+      } catch (error) {
+        console.error('❌ Error in updateCareerStats:', error);
+        window.careerUpdateStatus.errors.push(error.toString());
+      }
     }
     
     // Try multiple times to ensure DOM is ready and Webflow animations complete
