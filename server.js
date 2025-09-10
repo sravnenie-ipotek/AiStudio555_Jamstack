@@ -2123,6 +2123,32 @@ app.get('/ru', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
 });
 
+// Redirect home.html to index.html for all languages and dist paths
+app.get(['/dist/en/home.html', '/en/home.html'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/en/index.html'));
+});
+
+app.get(['/dist/ru/home.html', '/ru/home.html'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
+});
+
+app.get(['/dist/he/home.html', '/he/home.html'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/he/index.html'));
+});
+
+// Also handle index.html requests with dist prefix
+app.get('/dist/en/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/en/index.html'));
+});
+
+app.get('/dist/ru/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
+});
+
+app.get('/dist/he/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/he/index.html'));
+});
+
 // Serve specific HTML pages for each language (MUST BE BEFORE catch-all routes)
 app.get('/en/courses.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/en/courses.html'));
@@ -2146,6 +2172,55 @@ app.get('/ru/courses.html', (req, res) => {
 
 app.get('/ru/teachers.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/ru/teachers.html'));
+});
+
+// Serve all pages with /dist prefix (for compatibility)
+app.get('/dist/en/courses.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/en/courses.html'));
+});
+
+app.get('/dist/en/teachers.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/en/teachers.html'));
+});
+
+app.get('/dist/en/career-center.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/en/career-center.html'));
+});
+
+app.get('/dist/en/career-orientation.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/en/career-orientation.html'));
+});
+
+app.get('/dist/ru/courses.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/ru/courses.html'));
+});
+
+app.get('/dist/ru/teachers.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/ru/teachers.html'));
+});
+
+app.get('/dist/ru/career-center.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/ru/career-center.html'));
+});
+
+app.get('/dist/ru/career-orientation.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/ru/career-orientation.html'));
+});
+
+app.get('/dist/he/courses.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/he/courses.html'));
+});
+
+app.get('/dist/he/teachers.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/he/teachers.html'));
+});
+
+app.get('/dist/he/career-center.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/he/career-center.html'));
+});
+
+app.get('/dist/he/career-orientation.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/he/career-orientation.html'));
 });
 
 // Also handle other common pages
