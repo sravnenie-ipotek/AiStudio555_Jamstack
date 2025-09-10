@@ -2141,6 +2141,208 @@ app.get('/api/status', async (req, res) => {
   }
 });
 
+// MANUAL MIGRATION ENDPOINT
+app.get('/api/run-migration', async (req, res) => {
+  try {
+    console.log('🔧 Running manual migration for career_orientation_pages...');
+    
+    // Create table if not exists
+    await queryWithFallback(`
+      CREATE TABLE IF NOT EXISTS career_orientation_pages (
+        id SERIAL PRIMARY KEY,
+        locale VARCHAR(10) NOT NULL DEFAULT 'en',
+        title TEXT,
+        subtitle TEXT,
+        description TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )`);
+    
+    // List of all columns needed
+    const columns = [
+      'hero_title TEXT',
+      'hero_subtitle TEXT',
+      'hero_description TEXT',
+      'hero_main_title TEXT',
+      'hero_stat1_number TEXT',
+      'hero_stat1_label TEXT',
+      'hero_stat1_value TEXT',
+      'hero_stat2_number TEXT',
+      'hero_stat2_label TEXT',
+      'hero_stat2_value TEXT',
+      'hero_stat3_number TEXT',
+      'hero_stat3_label TEXT',
+      'hero_stat3_value TEXT',
+      'hero_cta_text TEXT',
+      'hero_cta_link TEXT',
+      'hero_badge_text TEXT',
+      'hero_visible BOOLEAN DEFAULT true',
+      'problems_main_title TEXT',
+      'problems_subtitle TEXT',
+      'problems_description TEXT',
+      'problem1_icon TEXT',
+      'problem1_title TEXT',
+      'problem1_description TEXT',
+      'problem1_stat TEXT',
+      'problem1_stat_label TEXT',
+      'problem2_icon TEXT',
+      'problem2_title TEXT',
+      'problem2_description TEXT',
+      'problem2_stat TEXT',
+      'problem2_stat_label TEXT',
+      'problems_visible BOOLEAN DEFAULT true',
+      'challenges_title TEXT',
+      'challenge1_title TEXT',
+      'challenge1_description TEXT',
+      'challenge2_title TEXT',
+      'challenge2_description TEXT',
+      'challenge3_title TEXT',
+      'challenge3_description TEXT',
+      'challenge4_title TEXT',
+      'challenge4_description TEXT',
+      'solutions_main_title TEXT',
+      'solutions_subtitle TEXT',
+      'solution1_icon TEXT',
+      'solution1_title TEXT',
+      'solution1_description TEXT',
+      'solution1_feature1 TEXT',
+      'solution1_feature2 TEXT',
+      'solution1_feature3 TEXT',
+      'solution1_feature4 TEXT',
+      'solution1_benefit TEXT',
+      'solution2_icon TEXT',
+      'solution2_title TEXT',
+      'solution2_description TEXT',
+      'solutions_visible BOOLEAN DEFAULT true',
+      'process_main_title TEXT',
+      'process_subtitle TEXT',
+      'process_title TEXT',
+      'process_step1_title TEXT',
+      'process_step1_description TEXT',
+      'process_step1_duration TEXT',
+      'process_step2_title TEXT',
+      'process_step2_description TEXT',
+      'process_step2_duration TEXT',
+      'process_step3_title TEXT',
+      'process_step3_description TEXT',
+      'process_step3_duration TEXT',
+      'process_step4_title TEXT',
+      'process_step4_description TEXT',
+      'process_step4_duration TEXT',
+      'process_step5_title TEXT',
+      'process_step5_description TEXT',
+      'process_step5_duration TEXT',
+      'process_visible BOOLEAN DEFAULT true',
+      'career_paths_main_title TEXT',
+      'career_paths_subtitle TEXT',
+      'career_path1_title TEXT',
+      'career_path1_description TEXT',
+      'career_path1_salary_range TEXT',
+      'career_path1_growth_rate TEXT',
+      'career_path1_top_skills TEXT',
+      'career_path2_title TEXT',
+      'career_path2_description TEXT',
+      'career_path2_salary_range TEXT',
+      'career_path2_growth_rate TEXT',
+      'career_path3_title TEXT',
+      'career_path3_description TEXT',
+      'career_paths_visible BOOLEAN DEFAULT true',
+      'expert_name TEXT',
+      'expert_title TEXT',
+      'expert_credentials TEXT',
+      'expert_background TEXT',
+      'expert_description TEXT',
+      'expert_quote TEXT',
+      'expert_linkedin TEXT',
+      'expert_twitter TEXT',
+      'expert_achievements TEXT',
+      'expert_visible BOOLEAN DEFAULT true',
+      'partners_main_title TEXT',
+      'partners_subtitle TEXT',
+      'partners_title TEXT',
+      'partner1_name TEXT',
+      'partner1_description TEXT',
+      'partner2_name TEXT',
+      'partner2_description TEXT',
+      'partner3_name TEXT',
+      'partner3_description TEXT',
+      'partners_visible BOOLEAN DEFAULT true',
+      'assessment_main_title TEXT',
+      'assessment_subtitle TEXT',
+      'assessment_description TEXT',
+      'assessment_questions JSON',
+      'assessment_visible BOOLEAN DEFAULT true',
+      'resources_main_title TEXT',
+      'resources_subtitle TEXT',
+      'resources JSON',
+      'resources_visible BOOLEAN DEFAULT true',
+      'success_stories_main_title TEXT',
+      'success_stories_subtitle TEXT',
+      'success_stories JSON',
+      'success_stories_visible BOOLEAN DEFAULT true',
+      'cta_main_title TEXT',
+      'cta_subtitle TEXT',
+      'cta_description TEXT',
+      'cta_button_text TEXT',
+      'cta_button_link TEXT',
+      'cta_visible BOOLEAN DEFAULT true',
+      'meta_title TEXT',
+      'meta_description TEXT',
+      'meta_keywords TEXT',
+      'og_title TEXT',
+      'og_description TEXT',
+      'og_image TEXT'
+    ];
+    
+    let addedColumns = 0;
+    let existingColumns = 0;
+    
+    for (const columnDef of columns) {
+      const [columnName] = columnDef.split(' ');
+      try {
+        await queryWithFallback(`ALTER TABLE career_orientation_pages ADD COLUMN IF NOT EXISTS ${columnDef}`);
+        addedColumns++;
+      } catch (err) {
+        if (err.message.includes('already exists')) {
+          existingColumns++;
+        } else {
+          console.error(`Error adding column ${columnName}:`, err.message);
+        }
+      }
+    }
+    
+    // Check if we need to insert default data
+    const existing = await queryWithFallback(
+      'SELECT COUNT(*) as count FROM career_orientation_pages WHERE locale = $1',
+      ['en']
+    );
+    
+    if (!existing[0] || existing[0].count === '0') {
+      await queryWithFallback(
+        `INSERT INTO career_orientation_pages (locale, title, hero_main_title)
+         VALUES ($1, $2, $3)`,
+        ['en', 'Career Orientation', 'Discover Your Tech Career Path']
+      );
+      console.log('✅ Added default content');
+    }
+    
+    res.json({
+      success: true,
+      message: 'Migration completed successfully',
+      addedColumns,
+      existingColumns,
+      totalColumns: columns.length
+    });
+    
+  } catch (error) {
+    console.error('Migration failed:', error);
+    res.status(500).json({
+      error: 'Migration failed',
+      details: error.message
+    });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`
