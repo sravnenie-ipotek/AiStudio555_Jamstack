@@ -2441,6 +2441,14 @@
   <script src="js/webflow-strapi-integration.js?v=2.0" type="text/javascript"></script>
   
   <script>
+    // Debug: Add visible test element
+    document.addEventListener('DOMContentLoaded', function() {
+      const testDiv = document.createElement('div');
+      testDiv.style.cssText = 'position:fixed;top:10px;right:10px;background:red;color:white;padding:10px;z-index:9999';
+      testDiv.textContent = 'JS RUNNING';
+      document.body.appendChild(testDiv);
+    });
+    
     // Initialize API integration for dynamic content
     function updateCareerStats() {
       console.log('🚀 Updating career stats...');
@@ -2448,7 +2456,10 @@
       // Direct update by ID first (immediate)
       const stat1Num = document.getElementById('stat1-number');
       const stat1Lbl = document.getElementById('stat1-label');
-      if (stat1Num) stat1Num.textContent = 'Loading...';
+      if (stat1Num) {
+        stat1Num.textContent = 'Loading...';
+        stat1Num.style.color = 'red';
+      }
       
       fetch('https://aistudio555jamstack-production.up.railway.app/api/career-orientation')
         .then(response => response.json())
