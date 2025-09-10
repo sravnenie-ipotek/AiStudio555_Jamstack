@@ -513,6 +513,278 @@ app.get('/api/career-resources', async (req, res) => {
   }
 });
 
+// CAREER ORIENTATION - Frontend endpoint (what the website expects)
+app.get('/api/career-orientation', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching career orientation for website, locale: ${locale}`);
+    
+    // Get data from the database
+    const result = await queryWithFallback(
+      'SELECT * FROM career_orientation_pages WHERE locale = $1 LIMIT 1',
+      [locale]
+    );
+    
+    if (result && result.length > 0) {
+      const data = result[0];
+      
+      // Return in the format the frontend expects
+      res.json({
+        hero: {
+          title: data.hero_main_title || data.hero_title || 'Career Path',
+          subtitle: data.hero_subtitle || 'Find Your Path',
+          description: data.hero_description || '',
+          stats: [
+            {
+              number: data.hero_stat1_value || data.hero_stat1_number || '500+',
+              label: data.hero_stat1_label || 'Career Paths Mapped'
+            },
+            {
+              number: data.hero_stat2_value || data.hero_stat2_number || '15+',
+              label: data.hero_stat2_label || 'AI Specializations'
+            },
+            {
+              number: data.hero_stat3_value || data.hero_stat3_number || '95%',
+              label: data.hero_stat3_label || 'Success Rate'
+            }
+          ]
+        },
+        problems: {
+          title: data.problems_main_title || 'Common Career Challenges',
+          subtitle: data.problems_subtitle || '',
+          items: [
+            {
+              icon: data.problem1_icon || '',
+              title: data.problem1_title || '',
+              description: data.problem1_description || '',
+              stat: data.problem1_stat || '',
+              statLabel: data.problem1_stat_label || ''
+            },
+            {
+              icon: data.problem2_icon || '',
+              title: data.problem2_title || '',
+              description: data.problem2_description || '',
+              stat: data.problem2_stat || '',
+              statLabel: data.problem2_stat_label || ''
+            }
+          ]
+        },
+        solutions: {
+          title: data.solutions_main_title || 'Our Solutions',
+          subtitle: data.solutions_subtitle || '',
+          items: [
+            {
+              icon: data.solution1_icon || '',
+              title: data.solution1_title || '',
+              description: data.solution1_description || '',
+              features: [
+                data.solution1_feature1 || '',
+                data.solution1_feature2 || '',
+                data.solution1_feature3 || '',
+                data.solution1_feature4 || ''
+              ].filter(f => f),
+              benefit: data.solution1_benefit || ''
+            }
+          ]
+        },
+        process: {
+          title: data.process_main_title || data.process_title || 'Our Process',
+          subtitle: data.process_subtitle || '',
+          steps: [
+            {
+              title: data.process_step1_title || '',
+              description: data.process_step1_description || '',
+              duration: data.process_step1_duration || ''
+            },
+            {
+              title: data.process_step2_title || '',
+              description: data.process_step2_description || '',
+              duration: data.process_step2_duration || ''
+            },
+            {
+              title: data.process_step3_title || '',
+              description: data.process_step3_description || '',
+              duration: data.process_step3_duration || ''
+            }
+          ].filter(s => s.title)
+        },
+        careerPaths: {
+          title: data.career_paths_main_title || 'Career Paths',
+          subtitle: data.career_paths_subtitle || '',
+          paths: [
+            {
+              title: data.career_path1_title || '',
+              description: data.career_path1_description || '',
+              salaryRange: data.career_path1_salary_range || '',
+              growthRate: data.career_path1_growth_rate || '',
+              topSkills: data.career_path1_top_skills || ''
+            }
+          ].filter(p => p.title)
+        },
+        expert: {
+          name: data.expert_name || '',
+          title: data.expert_title || '',
+          credentials: data.expert_credentials || '',
+          description: data.expert_description || '',
+          quote: data.expert_quote || ''
+        },
+        partners: {
+          title: data.partners_main_title || data.partners_title || 'Our Partners',
+          subtitle: data.partners_subtitle || '',
+          items: [
+            {
+              name: data.partner1_name || '',
+              description: data.partner1_description || ''
+            },
+            {
+              name: data.partner2_name || '',
+              description: data.partner2_description || ''
+            },
+            {
+              name: data.partner3_name || '',
+              description: data.partner3_description || ''
+            }
+          ].filter(p => p.name)
+        }
+      });
+    } else {
+      // Return default data if no database entry
+      res.json({
+        hero: {
+          title: 'Career Path',
+          subtitle: 'Find Your Path in AI',
+          description: 'Discover your ideal career in artificial intelligence',
+          stats: [
+            { number: '500+', label: 'Career Paths' },
+            { number: '15+', label: 'Specializations' },
+            { number: '95%', label: 'Success Rate' }
+          ]
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching career orientation:', error);
+    res.status(500).json({ error: 'Failed to fetch career orientation data' });
+  }
+});
+
+// CAREER CENTER - Frontend endpoint (what the website expects)
+app.get('/api/career-center', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching career center for website, locale: ${locale}`);
+    
+    // Get data from the database
+    const result = await queryWithFallback(
+      'SELECT * FROM career_center_pages WHERE locale = $1 LIMIT 1',
+      [locale]
+    );
+    
+    if (result && result.length > 0) {
+      const data = result[0];
+      
+      // Return in the format the frontend expects
+      res.json({
+        hero: {
+          title: data.hero_main_title || data.hero_title || 'Career Center',
+          subtitle: data.hero_subtitle || 'Your Career Success Hub',
+          description: data.hero_description || '',
+          stats: [
+            {
+              number: data.hero_stat1_value || data.hero_stat1_number || '92%',
+              label: data.hero_stat1_label || 'Job Placement Rate'
+            },
+            {
+              number: data.hero_stat2_value || data.hero_stat2_number || '$85K',
+              label: data.hero_stat2_label || 'Average Starting Salary'
+            },
+            {
+              number: data.hero_stat3_value || data.hero_stat3_number || '200+',
+              label: data.hero_stat3_label || 'Partner Companies'
+            }
+          ]
+        },
+        services: {
+          title: data.services_main_title || data.services_title || 'Career Services',
+          subtitle: data.services_subtitle || '',
+          items: [
+            {
+              icon: data.service1_icon || '',
+              title: data.service1_title || '',
+              description: data.service1_description || ''
+            },
+            {
+              icon: data.service2_icon || '',
+              title: data.service2_title || '',
+              description: data.service2_description || ''
+            },
+            {
+              icon: data.service3_icon || '',
+              title: data.service3_title || '',
+              description: data.service3_description || ''
+            }
+          ].filter(s => s.title)
+        },
+        advantages: {
+          title: data.advantages_main_title || data.advantages_title || 'Why Choose Us',
+          items: [
+            {
+              title: data.advantage1_title || '',
+              description: data.advantage1_description || ''
+            },
+            {
+              title: data.advantage2_title || '',
+              description: data.advantage2_description || ''
+            },
+            {
+              title: data.advantage3_title || '',
+              description: data.advantage3_description || ''
+            }
+          ].filter(a => a.title)
+        },
+        metrics: {
+          title: data.metrics_title || 'Our Impact',
+          items: [
+            {
+              number: data.metric1_number || '',
+              label: data.metric1_label || ''
+            },
+            {
+              number: data.metric2_number || '',
+              label: data.metric2_label || ''
+            },
+            {
+              number: data.metric3_number || '',
+              label: data.metric3_label || ''
+            },
+            {
+              number: data.metric4_number || '',
+              label: data.metric4_label || ''
+            }
+          ].filter(m => m.number)
+        }
+      });
+    } else {
+      // Return default data if no database entry
+      res.json({
+        hero: {
+          title: 'Career Center',
+          subtitle: 'Your Career Success Hub',
+          description: 'Professional career services for tech professionals',
+          stats: [
+            { number: '92%', label: 'Job Placement' },
+            { number: '$85K', label: 'Avg Salary' },
+            { number: '200+', label: 'Companies' }
+          ]
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching career center:', error);
+    res.status(500).json({ error: 'Failed to fetch career center data' });
+  }
+});
+
 // CAREER ORIENTATION PAGE (comprehensive 215+ fields with locale support)
 app.get('/api/career-orientation-page', async (req, res) => {
   try {
