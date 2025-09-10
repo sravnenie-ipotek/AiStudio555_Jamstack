@@ -113,16 +113,16 @@
     </style>
 </head>
 <body>
-    <h1>🔧 Manual Content Sync Tool for Strapi</h1>
+    <h1>🔧 Manual Content Sync Tool for Custom API</h1>
     
     <div class="instructions">
         <h3>📋 How to Use This Tool:</h3>
         <ol>
             <li>Fill in the content fields below</li>
             <li>Click "Copy to Clipboard"</li>
-            <li>Go to Strapi Admin → Content Manager → Home Page</li>
+            <li>Go to Custom Admin Panel → Content Manager → Home Page</li>
             <li>Paste the content into the corresponding fields</li>
-            <li>Save and Publish in Strapi</li>
+            <li>Save and Publish in Admin Panel</li>
         </ol>
     </div>
 
@@ -269,7 +269,7 @@
                     showStatus(`⚠️ API returned status ${response.status}`, 'error');
                 }
             } catch (error) {
-                showStatus('❌ Cannot connect to Strapi. Make sure it\'s running on localhost:1337', 'error');
+                showStatus('❌ Cannot connect to Custom API. Make sure it\'s running on localhost:1337', 'error');
             }
         }
         

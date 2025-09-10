@@ -4,172 +4,235 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an **AI Studio E-Learning Platform** using JAMstack architecture with Headless CMS (Strapi). The project consists of a static frontend (Webflow HTML/CSS/JS) that connects directly to a Strapi backend API for dynamic content management, user authentication, and course delivery.
+This is an **AI Studio E-Learning Platform** using JAMstack architecture with a **100% Custom Backend**. The project consists of a static frontend (HTML/CSS/JS) that connects directly to a custom Express.js API for dynamic content management, user authentication, and course delivery.
+
+**⚠️ IMPORTANT: This system uses NO third-party CMS. It's completely custom-built.**
 
 ## Architecture
 
 ### Three-Layer Architecture
 ```
-Frontend (Static HTML) → Strapi API → PostgreSQL Docker Container
-Port 3005/8000        → Port 1337   → Port 5432
+Frontend (Static HTML) → Custom Express API → Railway PostgreSQL
+Port 3005/8000        → Port 3000 (local)   → Railway Cloud
+                         Railway auto-assigns port in production
 ```
 
 ### Key Components
-- **Frontend**: Static Webflow templates served via Python HTTP server
-- **Strapi CMS**: Headless CMS running locally or in Docker at localhost:1337
-- **PostgreSQL**: Docker container `projectdes-postgres` for data persistence
-- **Integration Layer**: `webflow-strapi-integration.js` handles API communication
+- **Frontend**: Static HTML templates served via Python HTTP server
+- **Custom API**: Express.js server with RESTful endpoints (port 3000 local, Railway-assigned in production)
+- **Database**: Railway PostgreSQL cloud database (production)
+- **Admin Panel**: Custom HTML-based content management interface
+- **Integration Layer**: `js/webflow-strapi-integration.js` handles API communication
+
+⚠️ **Note About File Naming**: Files with "strapi" in their names are misleadingly named legacy files. They actually connect to our custom API, not Strapi.
 
 ## Development Commands
 
-### Start Services
+### Start the System
 
 ```bash
-# 1. Start PostgreSQL Docker (if not running)
-docker-compose up -d postgres
+# 1. Start Custom API Server
+npm start  # Runs server.js on port 1337
 
-# 2. Start Strapi CMS (choose one)
-cd strapi-fresh && npm run develop  # Development mode
-cd strapi-cms && docker-compose up   # Docker mode
-
-# 3. Start Frontend Server
-python3 -m http.server 3005  # Serves static files
+# 2. Start Frontend Server (choose one)
+python3 -m http.server 3005  # Development server
+python3 -m http.server 8000 --directory dist  # Production preview
 ```
 
-### Strapi Management
+### Development Workflow
 
 ```bash
-# In strapi-fresh/ directory
-npm run develop    # Start development server with hot-reload
-npm run build      # Build for production
-npm run start      # Start production server
-npm run strapi console  # Interactive Strapi console
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev  # Concurrent frontend + API development
+
+# Build for production
+npm run build  # Generates dist/ directory
+
+# Preview production build
+npm run preview  # Serves from dist/
 ```
 
-### Docker Operations
+### Database Operations
 
 ```bash
-docker-compose up -d        # Start all services
-docker-compose down         # Stop all services
-docker logs strapi-cms -f   # View Strapi logs
-docker logs projectdes-postgres -f  # View PostgreSQL logs
-```
+# Migration (automatic on Railway)
+npm run migrate
 
-### Testing
-
-```bash
-# Cypress E2E tests
-npx cypress open           # Open Cypress UI
-npx cypress run            # Run tests headlessly
-
-# API Testing
-curl -H "Authorization: Bearer [TOKEN]" http://localhost:1337/api/users
+# View server logs
+node server.js  # Direct server start with logs
 ```
 
 ## API Configuration
 
-### Strapi API Token
-Located in `webflow-strapi-integration.js:19`
-```javascript
-apiToken: '6ba76f584778637fd308f48aac27461c...'
-```
+### Production API URL
+The custom API runs at: `https://aistudio555jamstack-production.up.railway.app`
 
-To generate new token:
-1. Go to http://localhost:1337/admin
-2. Navigate to Settings → API Tokens
-3. Create new token with Full Access
+### Local Development
+- API Server: `http://localhost:3000` (unless PORT env var is set)
+- Frontend Dev Server: `http://localhost:3005`
 
-### Environment Variables
-Key configurations in `.env`:
-- `DATABASE_HOST=postgres` (Docker) or `localhost` (local)
-- `DATABASE_PORT=5432`
-- `DATABASE_NAME=strapi`
-- `JWT_SECRET` and `ADMIN_JWT_SECRET` for authentication
-- `FRONTEND_URL=http://localhost:3000` for CORS
+### Environment Configuration
+The system automatically detects Railway environment variables:
+- `DATABASE_URL`: Provided by Railway PostgreSQL
+- `PORT`: Set by Railway (defaults to 1337)
+- Auto-migration from SQLite to PostgreSQL on Railway
 
 ## Content Structure
 
 ### Page Templates
-- `index.html` - Landing page
-- `courses.html` - Course catalog
-- `detail_courses.html` - Individual course view
-- `authentication-pages/` - Login/signup flows
-- `checkout.html` & `paypal-checkout.html` - Payment processing
+- `home.html` / `index.html` - Landing page with dynamic hero, courses, testimonials
+- `courses.html` - Course catalog with dynamic course grid
+- `teachers.html` - Instructor profiles
+- `career-center.html` - Career services page
+- `career-orientation.html` - Career guidance page
+- Multi-language versions in `dist/en/`, `dist/ru/`, `dist/he/`
+
+### Admin Panel
+- `content-admin-comprehensive.html` - Custom content management interface
+- 215+ editable content fields
+- Live preview functionality with `?preview=true`
+- Multi-language content editing
 
 ### Dynamic Content Integration Points
-Pages that connect to Strapi API:
-- Course listings: `courses.html` fetches from `/api/courses`
-- User auth: `sign-in.html` posts to `/api/auth/local`
-- Course details: `detail_courses.html?id=X` fetches from `/api/courses/X`
-- User profile: Fetches from `/api/users/me`
+Pages that connect to Custom API:
+- Course listings: `GET /api/courses`
+- Teachers: `GET /api/teachers` 
+- Blog posts: `GET /api/blog-posts`
+- Career content: `GET /api/career-center-page`, `GET /api/career-orientation-page`  
+- Home page: `GET /api/home-page`
 
 ## Database Schema
 
-Key content types expected in Strapi:
-- **Users**: Built-in with roles (Student, Instructor, Admin)
-- **Courses**: Title, description, price, duration, instructor
-- **Enrollments**: Links users to courses with progress tracking
-- **Lessons**: Course content with video URLs and materials
+### Core Tables
+- **courses**: Course catalog with multi-language support
+- **teachers**: Instructor profiles
+- **blogs**: Blog posts and articles
+- **pages**: Dynamic page content (home, career pages)
+- **content_en/ru/he**: Localized content tables
+
+### Key Features
+- Multi-language support (English, Russian, Hebrew)
+- Automatic locale fallback (ru/he → en if not available)
+- JSON-based flexible content structure
+- Image URL storage (not file uploads)
 
 ## Frontend-Backend Communication
 
-The frontend uses client-side JavaScript to communicate with Strapi:
+The frontend uses client-side JavaScript to communicate with the Custom API:
 
 ```javascript
-// Authentication
-fetch('http://localhost:1337/api/auth/local', {
-    method: 'POST',
-    body: JSON.stringify({ identifier: email, password })
-})
+// Get all courses
+fetch('https://aistudio555jamstack-production.up.railway.app/api/courses')
 
-// Get courses with populate
-fetch('http://localhost:1337/api/courses?populate=*')
+// Get home page content
+fetch('https://aistudio555jamstack-production.up.railway.app/api/home-page')
 
-// Protected endpoints require JWT
-fetch('http://localhost:1337/api/users/me', {
-    headers: { 'Authorization': `Bearer ${jwt}` }
-})
+// Multi-language content (automatic fallback)
+fetch('https://aistudio555jamstack-production.up.railway.app/api/home-page?locale=ru')
+
+// Preview mode
+fetch('https://aistudio555jamstack-production.up.railway.app/api/home-page?preview=true')
 ```
 
 ## File Organization
 
 ```
 /
-├── strapi-fresh/       # Latest Strapi v5 instance
-├── strapi-cms/         # Docker-based Strapi (alternative)
-├── authentication-pages/  # Auth UI templates
-├── css/                # Webflow styles
-├── js/                 # Client-side scripts
-├── images/             # Static assets
-├── Docs/               # Project documentation
-│   ├── backend.md      # Backend requirements
-│   └── todo/           # Implementation strategies
-├── cypress/e2e/        # E2E test files
-├── docker-compose.yml  # Full stack Docker config
-└── webflow-strapi-integration.js  # Main API integration
+├── server.js              # Custom Express.js API server
+├── migrate-to-railway.js  # Database migration script
+├── content-admin-comprehensive.html  # Custom admin interface
+├── home.html             # Main landing page
+├── courses.html          # Course catalog page
+├── teachers.html         # Teachers/instructors page
+├── career-center.html    # Career services page
+├── career-orientation.html # Career guidance page
+├── dist/                 # Built static files for production
+│   ├── en/              # English versions
+│   ├── ru/              # Russian versions
+│   └── he/              # Hebrew versions (RTL)
+├── css/                  # Webflow styles
+├── js/                   # Client-side scripts
+│   ├── webflow-strapi-integration.js  # Main API integration (misleading name)
+│   └── strapi-integration.js          # Secondary integration (misleading name)
+├── images/               # Static assets
+├── Docs/                 # Project documentation
+│   └── architecture/     # System architecture docs
+├── migrations/           # Database migration files
+├── scripts/              # Build and utility scripts
+└── package.json          # Node.js dependencies and scripts
 ```
 
 ## Important Implementation Notes
 
 ### Multi-language Support
-Project requires English, Russian, Hebrew (RTL) support. Strapi i18n plugin should be configured for these locales.
+- **Supported Languages**: English (en), Russian (ru), Hebrew (he)
+- **RTL Support**: Hebrew pages automatically apply RTL styling
+- **Fallback System**: Missing translations automatically fall back to English
+- **URL Structure**: `/dist/en/`, `/dist/ru/`, `/dist/he/` for language versions
 
-### Payment Integration
-Planned gateways: Stripe, PayPal, Razorpay. Payment endpoints need to be implemented in Strapi custom controllers.
+### Custom Admin Panel Features
+- **215+ Content Fields**: Comprehensive content management
+- **Live Preview**: `?preview=true` shows unsaved changes
+- **Multi-language Editing**: Switch between language versions
+- **Image Management**: URL-based image references
+- **JSON Export/Import**: Content backup and restoration
 
 ### Content Delivery
-Video content planned to use CDN (Cloudflare/CloudFront). Large files should not be stored in Strapi media library.
+- **Static Files**: Served via Python HTTP server or Railway
+- **Dynamic Content**: Fetched via JavaScript API calls
+- **Caching**: API responses cached client-side for performance
+- **Preview Mode**: Live editing with immediate preview
 
 ### Security Considerations
-- API tokens are currently exposed in frontend code (development only)
-- Production requires environment-specific token management
-- CORS configuration needed for production domains
-- Rate limiting should be implemented via koa-ratelimit
+- **No Authentication System**: Open API endpoints (development phase)
+- **CORS Configuration**: Enabled for all origins in development
+- **Railway Deployment**: Production environment with PostgreSQL
+- **No File Uploads**: URL-based image/media references only
+
+### Deployment Architecture
+- **Railway Platform**: $5/month hosting with PostgreSQL
+- **Environment Detection**: Automatic Railway vs local configuration
+- **Database Migration**: Automatic SQLite → PostgreSQL on Railway
+- **Static File Serving**: Built-in Express.js static file serving
+
+## Testing and Validation
+
+### Manual Testing URLs
+- **Production Website**: https://www.aistudio555.com/home.html
+- **Production Admin**: https://aistudio555jamstack-production.up.railway.app/content-admin-comprehensive.html
+- **API Health Check**: https://aistudio555jamstack-production.up.railway.app/api/courses
+
+### Development Testing
+```bash
+# Test API locally
+curl http://localhost:3000/api/courses
+curl http://localhost:3000/api/home-page
+
+# Test with language parameters
+curl "http://localhost:3000/api/home-page?locale=ru"
+curl "http://localhost:3000/api/home-page?preview=true"
+```
 
 ## Git Repository
 
 Remote: `git@github.com:sravnenie-ipotek/AiStudio555_Jamstack.git`
-- DO NOT push without explicit user permission
-- Current branch should track feature development
-- Production deployments planned for Railway ($5/month)
-- never delete db data unless i asked for it, if must to delete or reset tb, ask me first
+- **DO NOT push** without explicit user permission
+- **Current branch**: Track feature development carefully
+- **Production**: Auto-deploys from main branch to Railway
+- **Database**: NEVER delete or reset without user approval
+
+## Key Differences from Standard JAMstack
+
+1. **No Third-Party CMS**: Completely custom Express.js API
+2. **No Build Process Required**: Direct HTML serving with API integration
+3. **Custom Admin Interface**: HTML-based content management
+4. **Railway Database**: Cloud PostgreSQL, not local containers
+5. **Multi-language Static Files**: Pre-built language versions
+6. **API-First Design**: All content dynamically loaded via JavaScript
+
+---
+
+**Remember**: This is a 100% custom system. All references to "Strapi" in file names are historical/misleading - the system uses a completely custom Express.js API.
