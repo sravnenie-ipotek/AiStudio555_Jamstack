@@ -7,6 +7,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
 const path = require('path');
 const { Client } = require('pg');
 const { migrate } = require('./migrate-to-railway');
@@ -85,6 +86,32 @@ async function initializeDatabase() {
     try {
       await migrate();
       console.log('✅ Database ready');
+      
+      // Run career orientation migration
+      try {
+        const careerMigrationPath = path.join(__dirname, 'migrations', '006-fix-career-orientation-columns.sql');
+        if (fs.existsSync(careerMigrationPath)) {
+          console.log('🔄 Running career orientation migration...');
+          const migrationSQL = fs.readFileSync(careerMigrationPath, 'utf8');
+          // Split by semicolons and run each statement
+          const statements = migrationSQL.split(';').filter(s => s.trim());
+          for (const statement of statements) {
+            if (statement.trim() && !statement.trim().startsWith('--')) {
+              try {
+                await queryDatabase(statement);
+              } catch (err) {
+                // Ignore errors for already existing columns
+                if (!err.message.includes('already exists') && !err.message.includes('duplicate key')) {
+                  console.log('Migration statement warning:', err.message.substring(0, 100));
+                }
+              }
+            }
+          }
+          console.log('✅ Career orientation migration complete');
+        }
+      } catch (migrationError) {
+        console.log('⚠️  Career orientation migration warning:', migrationError.message);
+      }
       
       // Check if database has data
       const homeCount = await queryDatabase('SELECT COUNT(*) as count FROM home_pages');
@@ -1334,83 +1361,165 @@ app.put('/api/career-orientation-page', async (req, res) => {
     const locale = getLocale(req);
     const { data } = req.body;
     
+    // First, ensure all columns exist (migration handles this gracefully)
+    // Migration runs on server startup, but we'll ensure the table exists
+    try {
+      await queryWithFallback(`
+        CREATE TABLE IF NOT EXISTS career_orientation_pages (
+          id SERIAL PRIMARY KEY,
+          locale VARCHAR(10) NOT NULL DEFAULT 'en',
+          title TEXT,
+          subtitle TEXT,
+          description TEXT,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )`);
+    } catch (tableError) {
+      // Table likely already exists
+    }
+    
     // Check if record exists
     const existing = await queryWithFallback(
       'SELECT id FROM career_orientation_pages WHERE locale = $1 LIMIT 1',
       [locale]
     );
     
+    // Build the update/insert data from admin panel fields
+    const updateData = {
+      title: data.title || 'Career Orientation',
+      subtitle: data.subtitle || 'Find Your Path',
+      description: data.description || '',
+      
+      // Hero Section - Map from admin panel field names
+      hero_main_title: data.heroMainTitle || data.heroTitle || '',
+      hero_subtitle: data.heroSubtitle || '',
+      hero_description: data.heroDescription || '',
+      hero_stat1_number: data.heroStat1Value || '500+',
+      hero_stat1_label: data.heroStat1Label || 'Career Paths',
+      hero_stat1_value: data.heroStat1Value || '500+',
+      hero_stat2_number: data.heroStat2Value || '15+',
+      hero_stat2_label: data.heroStat2Label || 'AI Specializations',
+      hero_stat2_value: data.heroStat2Value || '15+',
+      hero_stat3_number: data.heroStat3Value || '95%',
+      hero_stat3_label: data.heroStat3Label || 'Success Rate',
+      hero_stat3_value: data.heroStat3Value || '95%',
+      hero_cta_text: data.heroCtaText || 'Get Started',
+      hero_cta_link: data.heroCtaLink || '#',
+      hero_badge_text: data.heroBadgeText || '',
+      hero_visible: data.heroVisible === true || data.heroVisible === 'on',
+      
+      // Problems Section
+      problems_main_title: data.problemsMainTitle || 'Common Career Challenges',
+      problems_subtitle: data.problemsSubtitle || '',
+      problems_description: data.problemsDescription || '',
+      problem1_icon: data.problem1Icon || '',
+      problem1_title: data.problem1Title || '',
+      problem1_description: data.problem1Description || '',
+      problem1_stat: data.problem1Stat || '',
+      problem1_stat_label: data.problem1StatLabel || '',
+      problem2_icon: data.problem2Icon || '',
+      problem2_title: data.problem2Title || '',
+      problem2_description: data.problem2Description || '',
+      problem2_stat: data.problem2Stat || '',
+      problem2_stat_label: data.problem2StatLabel || '',
+      problems_visible: data.problemsVisible === true || data.problemsVisible === 'on',
+      
+      // Solutions Section
+      solutions_main_title: data.solutionsMainTitle || 'Our Solutions',
+      solutions_subtitle: data.solutionsSubtitle || '',
+      solution1_icon: data.solution1Icon || '',
+      solution1_title: data.solution1Title || '',
+      solution1_description: data.solution1Description || '',
+      solution1_feature1: data.solution1Feature1 || '',
+      solution1_feature2: data.solution1Feature2 || '',
+      solution1_feature3: data.solution1Feature3 || '',
+      solution1_feature4: data.solution1Feature4 || '',
+      solution1_benefit: data.solution1Benefit || '',
+      solutions_visible: data.solutionsVisible === true || data.solutionsVisible === 'on',
+      
+      // Process Section
+      process_main_title: data.processMainTitle || 'Our Process',
+      process_subtitle: data.processSubtitle || '',
+      process_step1_title: data.processStep1Title || '',
+      process_step1_description: data.processStep1Description || '',
+      process_step1_duration: data.processStep1Duration || '',
+      process_step2_title: data.processStep2Title || '',
+      process_step2_description: data.processStep2Description || '',
+      process_step2_duration: data.processStep2Duration || '',
+      process_step3_title: data.processStep3Title || '',
+      process_step3_description: data.processStep3Description || '',
+      process_step3_duration: data.processStep3Duration || '',
+      process_visible: data.processVisible === true || data.processVisible === 'on',
+      
+      // Career Paths Section
+      career_paths_main_title: data.careerPathsMainTitle || 'Career Paths',
+      career_paths_subtitle: data.careerPathsSubtitle || '',
+      career_path1_title: data.careerPath1Title || '',
+      career_path1_description: data.careerPath1Description || '',
+      career_path1_salary_range: data.careerPath1SalaryRange || '',
+      career_path1_growth_rate: data.careerPath1GrowthRate || '',
+      career_path1_top_skills: data.careerPath1TopSkills || '',
+      career_paths_visible: data.careerPathsVisible === true || data.careerPathsVisible === 'on',
+      
+      // Expert Section
+      expert_name: data.expertName || 'Sarah Chen',
+      expert_title: data.expertTitle || 'Career Specialist',
+      expert_credentials: data.expertCredentials || '',
+      expert_description: data.expertDescription || '',
+      expert_quote: data.expertQuote || '',
+      expert_linkedin: data.expertLinkedin || '',
+      expert_twitter: data.expertTwitter || '',
+      expert_visible: data.expertVisible === true || data.expertVisible === 'on',
+      
+      // Partners Section
+      partners_main_title: data.partnersMainTitle || 'Our Partners',
+      partners_subtitle: data.partnersSubtitle || '',
+      partner1_name: data.partner1Name || '',
+      partner1_description: data.partner1Description || '',
+      partner2_name: data.partner2Name || '',
+      partner2_description: data.partner2Description || '',
+      partner3_name: data.partner3Name || '',
+      partner3_description: data.partner3Description || '',
+      partners_visible: data.partnersVisible === true || data.partnersVisible === 'on',
+      
+      // Assessment Section
+      assessment_main_title: data.assessmentMainTitle || '',
+      assessment_subtitle: data.assessmentSubtitle || '',
+      assessment_description: data.assessmentDescription || '',
+      assessment_visible: data.assessmentVisible === true || data.assessmentVisible === 'on',
+      
+      // CTA Section
+      cta_main_title: data.ctaMainTitle || '',
+      cta_subtitle: data.ctaSubtitle || '',
+      cta_description: data.ctaDescription || '',
+      cta_button_text: data.ctaButtonText || '',
+      cta_button_link: data.ctaButtonLink || '',
+      cta_visible: data.ctaVisible === true || data.ctaVisible === 'on'
+    };
+    
     if (existing.length > 0) {
-      // Update existing - comprehensive fields
+      // Update existing - use JSON to store all data flexibly
+      const columns = Object.keys(updateData).map((key, index) => `${key} = $${index + 1}`).join(', ');
+      const values = Object.values(updateData);
+      values.push(locale); // Add locale as last parameter
+      
       await queryWithFallback(
         `UPDATE career_orientation_pages 
-         SET title = $1, subtitle = $2, description = $3, 
-             hero_title = $4, hero_subtitle = $5, hero_description = $6,
-             hero_stat1_number = $7, hero_stat1_label = $8,
-             hero_stat2_number = $9, hero_stat2_label = $10,
-             hero_stat3_number = $11, hero_stat3_label = $12,
-             challenges_title = $13,
-             challenge1_title = $14, challenge1_description = $15,
-             challenge2_title = $16, challenge2_description = $17,
-             challenge3_title = $18, challenge3_description = $19,
-             challenge4_title = $20, challenge4_description = $21,
-             process_title = $22,
-             process_step1_title = $23, process_step1_description = $24,
-             process_step2_title = $25, process_step2_description = $26,
-             process_step3_title = $27, process_step3_description = $28,
-             process_step4_title = $29, process_step4_description = $30,
-             process_step5_title = $31, process_step5_description = $32,
-             expert_name = $33, expert_title = $34, expert_background = $35,
-             expert_description = $36, expert_achievements = $37,
-             partners_title = $38,
-             updated_at = CURRENT_TIMESTAMP
-         WHERE locale = $39`,
-        [
-          data.title || '', data.subtitle || '', data.description || '',
-          data.heroTitle || '', data.heroSubtitle || '', data.heroDescription || '',
-          (data.heroStats && data.heroStats[0]) ? data.heroStats[0].number : '500+',
-          (data.heroStats && data.heroStats[0]) ? data.heroStats[0].label : 'Career Paths Mapped',
-          (data.heroStats && data.heroStats[1]) ? data.heroStats[1].number : '15+',
-          (data.heroStats && data.heroStats[1]) ? data.heroStats[1].label : 'AI Specializations',
-          (data.heroStats && data.heroStats[2]) ? data.heroStats[2].number : '95%',
-          (data.heroStats && data.heroStats[2]) ? data.heroStats[2].label : 'Success Rate',
-          data.challengesTitle || 'Common Career Challenges',
-          (data.challenges && data.challenges[0]) ? data.challenges[0].title : '',
-          (data.challenges && data.challenges[0]) ? data.challenges[0].description : '',
-          (data.challenges && data.challenges[1]) ? data.challenges[1].title : '',
-          (data.challenges && data.challenges[1]) ? data.challenges[1].description : '',
-          (data.challenges && data.challenges[2]) ? data.challenges[2].title : '',
-          (data.challenges && data.challenges[2]) ? data.challenges[2].description : '',
-          (data.challenges && data.challenges[3]) ? data.challenges[3].title : '',
-          (data.challenges && data.challenges[3]) ? data.challenges[3].description : '',
-          data.processTitle || 'Our 5-Step Career Orientation Process',
-          (data.processSteps && data.processSteps[0]) ? data.processSteps[0].title : '',
-          (data.processSteps && data.processSteps[0]) ? data.processSteps[0].description : '',
-          (data.processSteps && data.processSteps[1]) ? data.processSteps[1].title : '',
-          (data.processSteps && data.processSteps[1]) ? data.processSteps[1].description : '',
-          (data.processSteps && data.processSteps[2]) ? data.processSteps[2].title : '',
-          (data.processSteps && data.processSteps[2]) ? data.processSteps[2].description : '',
-          (data.processSteps && data.processSteps[3]) ? data.processSteps[3].title : '',
-          (data.processSteps && data.processSteps[3]) ? data.processSteps[3].description : '',
-          (data.processSteps && data.processSteps[4]) ? data.processSteps[4].title : '',
-          (data.processSteps && data.processSteps[4]) ? data.processSteps[4].description : '',
-          (data.expert && data.expert.name) || 'Sarah Chen',
-          (data.expert && data.expert.title) || 'AI Career Guidance Specialist',
-          (data.expert && data.expert.background) || 'Former Google ML Engineer',
-          (data.expert && data.expert.description) || '',
-          (data.expert && data.expert.achievements) || '',
-          data.partnersTitle || 'Our Partner Companies',
-          locale
-        ]
+         SET ${columns}, updated_at = CURRENT_TIMESTAMP
+         WHERE locale = $${values.length}`,
+        values
       );
     } else {
-      // Insert new record with all fields
+      // Insert new record
+      const columns = Object.keys(updateData).join(', ');
+      const placeholders = Object.keys(updateData).map((_, index) => `$${index + 2}`).join(', ');
+      const values = [locale, ...Object.values(updateData)];
+      
       await queryWithFallback(
         `INSERT INTO career_orientation_pages 
-         (locale, title, subtitle, description, hero_title, hero_subtitle, hero_description, published_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP)`,
-        [locale, data.title || '', data.subtitle || '', data.description || '',
-         data.heroTitle || '', data.heroSubtitle || '', data.heroDescription || '']
+         (locale, ${columns}, created_at, updated_at)
+         VALUES ($1, ${placeholders}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+        values
       );
     }
     
