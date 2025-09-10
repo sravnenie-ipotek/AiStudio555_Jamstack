@@ -2439,6 +2439,55 @@
   
   <!-- Custom API Integration for Dynamic Content Updates -->
   <script src="js/webflow-strapi-integration.js?v=2.0" type="text/javascript"></script>
+  
+  <script>
+    // Initialize API integration for dynamic content
+    window.addEventListener('load', function() {
+      console.log('🚀 Initializing career-orientation page integration...');
+      
+      // Direct API call to update stats
+      fetch('https://aistudio555jamstack-production.up.railway.app/api/career-orientation')
+        .then(response => response.json())
+        .then(data => {
+          console.log('📊 Received data:', data);
+          
+          if (data.hero && data.hero.stats) {
+            // Update stat 1
+            const stat1Number = document.querySelector('.hero-stat-item:nth-child(1) .hero-stat-number');
+            const stat1Label = document.querySelector('.hero-stat-item:nth-child(1) .hero-stat-label');
+            if (stat1Number && data.hero.stats[0]) {
+              stat1Number.textContent = data.hero.stats[0].number;
+              console.log('✅ Updated stat 1 number:', data.hero.stats[0].number);
+            }
+            if (stat1Label && data.hero.stats[0]) {
+              stat1Label.textContent = data.hero.stats[0].label;
+              console.log('✅ Updated stat 1 label:', data.hero.stats[0].label);
+            }
+            
+            // Update stat 2
+            const stat2Number = document.querySelector('.hero-stat-item:nth-child(2) .hero-stat-number');
+            const stat2Label = document.querySelector('.hero-stat-item:nth-child(2) .hero-stat-label');
+            if (stat2Number && data.hero.stats[1]) {
+              stat2Number.textContent = data.hero.stats[1].number;
+            }
+            if (stat2Label && data.hero.stats[1]) {
+              stat2Label.textContent = data.hero.stats[1].label;
+            }
+            
+            // Update stat 3
+            const stat3Number = document.querySelector('.hero-stat-item:nth-child(3) .hero-stat-number');
+            const stat3Label = document.querySelector('.hero-stat-item:nth-child(3) .hero-stat-label');
+            if (stat3Number && data.hero.stats[2]) {
+              stat3Number.textContent = data.hero.stats[2].number;
+            }
+            if (stat3Label && data.hero.stats[2]) {
+              stat3Label.textContent = data.hero.stats[2].label;
+            }
+          }
+        })
+        .catch(error => console.error('❌ Failed to load career data:', error));
+    });
+  </script>
 
   <script>
     // Fix Career Services dropdown
