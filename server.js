@@ -87,26 +87,13 @@ async function initializeDatabase() {
       await migrate();
       console.log('✅ Database ready');
       
-      // Run career orientation migration
+      // Run career orientation migration using simpler approach
       try {
-        const careerMigrationPath = path.join(__dirname, 'migrations', '006-fix-career-orientation-columns.sql');
-        if (fs.existsSync(careerMigrationPath)) {
+        const migrationPath = path.join(__dirname, 'run-migration-manually.js');
+        if (fs.existsSync(migrationPath)) {
           console.log('🔄 Running career orientation migration...');
-          const migrationSQL = fs.readFileSync(careerMigrationPath, 'utf8');
-          // Split by semicolons and run each statement
-          const statements = migrationSQL.split(';').filter(s => s.trim());
-          for (const statement of statements) {
-            if (statement.trim() && !statement.trim().startsWith('--')) {
-              try {
-                await queryDatabase(statement);
-              } catch (err) {
-                // Ignore errors for already existing columns
-                if (!err.message.includes('already exists') && !err.message.includes('duplicate key')) {
-                  console.log('Migration statement warning:', err.message.substring(0, 100));
-                }
-              }
-            }
-          }
+          const { runMigration } = require('./run-migration-manually');
+          await runMigration();
           console.log('✅ Career orientation migration complete');
         }
       } catch (migrationError) {
