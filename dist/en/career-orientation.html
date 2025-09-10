@@ -2452,37 +2452,26 @@
           console.log('📊 Received data:', data);
           
           if (data.hero && data.hero.stats) {
-            // Update stat 1
-            const stat1Number = document.querySelector('.hero-stat-item:nth-child(1) .hero-stat-number');
-            const stat1Label = document.querySelector('.hero-stat-item:nth-child(1) .hero-stat-label');
-            if (stat1Number && data.hero.stats[0]) {
-              stat1Number.textContent = data.hero.stats[0].number;
-              console.log('✅ Updated stat 1 number:', data.hero.stats[0].number);
-            }
-            if (stat1Label && data.hero.stats[0]) {
-              stat1Label.textContent = data.hero.stats[0].label;
-              console.log('✅ Updated stat 1 label:', data.hero.stats[0].label);
-            }
+            // Get all stat items
+            const statItems = document.querySelectorAll('.hero-stat-item');
+            console.log('Found stat items:', statItems.length);
             
-            // Update stat 2
-            const stat2Number = document.querySelector('.hero-stat-item:nth-child(2) .hero-stat-number');
-            const stat2Label = document.querySelector('.hero-stat-item:nth-child(2) .hero-stat-label');
-            if (stat2Number && data.hero.stats[1]) {
-              stat2Number.textContent = data.hero.stats[1].number;
-            }
-            if (stat2Label && data.hero.stats[1]) {
-              stat2Label.textContent = data.hero.stats[1].label;
-            }
-            
-            // Update stat 3
-            const stat3Number = document.querySelector('.hero-stat-item:nth-child(3) .hero-stat-number');
-            const stat3Label = document.querySelector('.hero-stat-item:nth-child(3) .hero-stat-label');
-            if (stat3Number && data.hero.stats[2]) {
-              stat3Number.textContent = data.hero.stats[2].number;
-            }
-            if (stat3Label && data.hero.stats[2]) {
-              stat3Label.textContent = data.hero.stats[2].label;
-            }
+            // Update each stat
+            statItems.forEach((item, index) => {
+              if (data.hero.stats[index]) {
+                const number = item.querySelector('.hero-stat-number');
+                const label = item.querySelector('.hero-stat-label');
+                
+                if (number) {
+                  number.textContent = data.hero.stats[index].number;
+                  console.log(`✅ Updated stat ${index + 1} number:`, data.hero.stats[index].number);
+                }
+                if (label) {
+                  label.textContent = data.hero.stats[index].label;
+                  console.log(`✅ Updated stat ${index + 1} label:`, data.hero.stats[index].label);
+                }
+              }
+            });
           }
         })
         .catch(error => console.error('❌ Failed to load career data:', error));

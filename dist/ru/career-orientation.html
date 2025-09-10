@@ -2039,6 +2039,44 @@
   <script src="js/webflow-strapi-integration.js?v=2.0" type="text/javascript"></script>
 
   <script>
+    // Initialize API integration for dynamic content
+    window.addEventListener('load', function() {
+      console.log('🚀 Initializing career-orientation page integration...');
+      
+      // Direct API call to update stats
+      fetch('https://aistudio555jamstack-production.up.railway.app/api/career-orientation')
+        .then(response => response.json())
+        .then(data => {
+          console.log('📊 Received data:', data);
+          
+          if (data.hero && data.hero.stats) {
+            // Get all stat items
+            const statItems = document.querySelectorAll('.hero-stat-item');
+            console.log('Found stat items:', statItems.length);
+            
+            // Update each stat
+            statItems.forEach((item, index) => {
+              if (data.hero.stats[index]) {
+                const number = item.querySelector('.hero-stat-number');
+                const label = item.querySelector('.hero-stat-label');
+                
+                if (number) {
+                  number.textContent = data.hero.stats[index].number;
+                  console.log(`✅ Updated stat ${index + 1} number:`, data.hero.stats[index].number);
+                }
+                if (label) {
+                  label.textContent = data.hero.stats[index].label;
+                  console.log(`✅ Updated stat ${index + 1} label:`, data.hero.stats[index].label);
+                }
+              }
+            });
+          }
+        })
+        .catch(error => console.error('❌ Failed to load career data:', error));
+    });
+  </script>
+
+  <script>
     // Fix Career Services dropdown
     document.addEventListener('DOMContentLoaded', function() {
       const dropdown = document.querySelector('.w-dropdown');
