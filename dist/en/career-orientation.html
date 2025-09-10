@@ -272,8 +272,8 @@
         
         <div data-w-id="orientation-stats" style="opacity:0" class="hero-stats-wrapper orientation">
           <div class="hero-stat-item">
-            <div class="hero-stat-number">500+</div>
-            <div class="hero-stat-label">Career Paths Mapped</div>
+            <div class="hero-stat-number" id="stat1-number">500+</div>
+            <div class="hero-stat-label" id="stat1-label">Career Paths Mapped</div>
           </div>
           <div class="hero-stat-item">
             <div class="hero-stat-number">15+</div>
@@ -2445,10 +2445,23 @@
     function updateCareerStats() {
       console.log('🚀 Updating career stats...');
       
+      // Direct update by ID first (immediate)
+      const stat1Num = document.getElementById('stat1-number');
+      const stat1Lbl = document.getElementById('stat1-label');
+      if (stat1Num) stat1Num.textContent = 'Loading...';
+      
       fetch('https://aistudio555jamstack-production.up.railway.app/api/career-orientation')
         .then(response => response.json())
         .then(data => {
           console.log('📊 Received data:', data);
+          
+          // Update by ID (most direct)
+          if (stat1Num && data.hero && data.hero.stats && data.hero.stats[0]) {
+            stat1Num.textContent = data.hero.stats[0].number;
+          }
+          if (stat1Lbl && data.hero && data.hero.stats && data.hero.stats[0]) {
+            stat1Lbl.textContent = data.hero.stats[0].label;
+          }
           
           if (data.hero && data.hero.stats) {
             // Get all stat items
