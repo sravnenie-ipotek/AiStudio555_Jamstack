@@ -2146,8 +2146,11 @@ app.get('/api/run-migration', async (req, res) => {
   try {
     console.log('🔧 Running manual migration for career_orientation_pages...');
     
+    // Use queryDatabase instead of queryWithFallback for Railway
+    const query = process.env.DATABASE_URL ? queryDatabase : queryWithFallback;
+    
     // Create table if not exists
-    await queryWithFallback(`
+    await query(`
       CREATE TABLE IF NOT EXISTS career_orientation_pages (
         id SERIAL PRIMARY KEY,
         locale VARCHAR(10) NOT NULL DEFAULT 'en',
@@ -2300,7 +2303,7 @@ app.get('/api/run-migration', async (req, res) => {
     for (const columnDef of columns) {
       const [columnName] = columnDef.split(' ');
       try {
-        await queryWithFallback(`ALTER TABLE career_orientation_pages ADD COLUMN IF NOT EXISTS ${columnDef}`);
+        await query(`ALTER TABLE career_orientation_pages ADD COLUMN IF NOT EXISTS ${columnDef}`);
         addedColumns++;
       } catch (err) {
         if (err.message.includes('already exists')) {
@@ -2312,13 +2315,13 @@ app.get('/api/run-migration', async (req, res) => {
     }
     
     // Check if we need to insert default data
-    const existing = await queryWithFallback(
+    const existing = await query(
       'SELECT COUNT(*) as count FROM career_orientation_pages WHERE locale = $1',
       ['en']
     );
     
-    if (!existing[0] || existing[0].count === '0') {
-      await queryWithFallback(
+    if (!existing || !existing[0] || existing[0].count === '0' || existing[0].count === 0) {
+      await query(
         `INSERT INTO career_orientation_pages (locale, title, hero_main_title)
          VALUES ($1, $2, $3)`,
         ['en', 'Career Orientation', 'Discover Your Tech Career Path']
