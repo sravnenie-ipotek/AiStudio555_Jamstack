@@ -32,12 +32,10 @@ COPY template-pages ./template-pages/
 # Copy language-specific builds
 COPY dist ./dist/
 
-# Copy Live API files
-COPY strapi-home-integration.js ./
-COPY strapi-visibility-integration.js ./
-COPY strapi-content-loader.js ./
-COPY strapi-live-api*.js ./
+# Copy admin interface files
 COPY content-admin*.html ./
+COPY browser-admin-test.js ./
+COPY FINAL-admin-test-fix.js ./
 
 # Copy database files for export
 COPY database*.sql ./
