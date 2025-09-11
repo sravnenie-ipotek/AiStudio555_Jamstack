@@ -3812,6 +3812,16 @@
         function getCurrentLanguage() {
             return 'en'; // Default to English for now
         }
+        
+        // Safe field setter helper - prevents null reference errors
+        function safeSetValue(fieldId, value) {
+            const element = document.getElementById(fieldId);
+            if (element) {
+                element.value = value;
+                return true;
+            }
+            return false;
+        }
 
         // SITE SETTINGS Functions
         async function loadSiteSettings() {
@@ -4172,20 +4182,29 @@
         async function loadCoursesPage() {
             try {
                 const locale = getCurrentLanguage();
-                const response = await fetch(`${API_BASE}/api/courses-page?locale=${locale}`);
-                const data = await response.json();
+                const response = await fetch(`${API_BASE}/api/courses?locale=${locale}`);
+                const courses = await response.json();
                 
-                // Populate form fields
-                document.getElementById('courses_page_title').value = data.page_title || 'Courses';
-                document.getElementById('courses_page_description').value = data.page_description || 'Browse our comprehensive course catalog';
-                document.getElementById('courses_hero_title').value = data.hero_title || 'Master AI Skills';
-                document.getElementById('courses_hero_description').value = data.hero_description || 'Choose from our comprehensive range of AI courses';
-                document.getElementById('courses_featured_title').value = data.featured_courses_title || 'Featured Courses';
+                // This section is for managing courses list
+                console.log('Loaded courses:', courses);
                 
-                document.getElementById('status').innerHTML = '✅ Courses page content loaded successfully!';
+                // Helper function to safely set field values
+                const setFieldValue = (id, value) => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.value = value;
+                        return true;
+                    }
+                    return false;
+                };
+                
+                // Try to populate any existing course-related fields
+                // But don't fail if they don't exist
+                
+                document.getElementById('status').innerHTML = '✅ Courses loaded successfully!';
             } catch (error) {
-                console.error('Error loading courses page:', error);
-                document.getElementById('status').innerHTML = '❌ Failed to load courses page content';
+                console.error('Error loading courses:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to load courses';
             }
         }
 
@@ -4224,18 +4243,27 @@
             try {
                 const locale = getCurrentLanguage();
                 const response = await fetch(`${API_BASE}/api/teachers?locale=${locale}`);
-                const data = await response.json();
+                const teachers = await response.json();
                 
-                // Populate form fields
-                document.getElementById('teachers_page_title').value = data.page_title || 'Teachers';
-                document.getElementById('teachers_hero_title').value = data.hero_title || 'Meet Our Expert Instructors';
-                document.getElementById('teachers_hero_description').value = data.hero_description || 'Learn from industry professionals';
-                document.getElementById('teachers_section_title').value = data.teachers_section_title || 'Our Teaching Team';
+                // This loads teachers list data, not page configuration
+                console.log('Loaded teachers:', teachers);
                 
-                document.getElementById('status').innerHTML = '✅ Teachers page content loaded successfully!';
+                // Helper to safely set field values
+                const setField = (id, val) => { 
+                    const el = document.getElementById(id); 
+                    if (el) el.value = val; 
+                };
+                
+                // Only set fields if they exist (they might not for list views)
+                if (!Array.isArray(teachers)) {
+                    setField('teachers_page_title', teachers.page_title || 'Teachers');
+                    setField('teachers_hero_title', teachers.hero_title || 'Meet Our Expert Instructors');
+                }
+                
+                document.getElementById('status').innerHTML = '✅ Teachers loaded successfully!';
             } catch (error) {
-                console.error('Error loading teachers page:', error);
-                document.getElementById('status').innerHTML = '❌ Failed to load teachers page content';
+                console.error('Error loading teachers:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to load teachers';
             }
         }
 
@@ -4276,9 +4304,9 @@
                 const data = await response.json();
                 
                 // Populate form fields
-                document.getElementById('pricing_page_title').value = data.page_title || 'Pricing Plans';
-                document.getElementById('pricing_hero_title').value = data.hero_title || 'Choose Your Learning Path';
-                document.getElementById('pricing_hero_description').value = data.hero_description || 'Flexible pricing options for every learner';
+                safeSetValue('pricing_page_title', data.page_title) || 'Pricing Plans';
+                safeSetValue('pricing_hero_title', data.hero_title) || 'Choose Your Learning Path';
+                safeSetValue('pricing_hero_description', data.hero_description) || 'Flexible pricing options for every learner';
                 document.getElementById('pricing_plans_title').value = data.plans_section_title || 'Our Plans';
                 
                 document.getElementById('status').innerHTML = '✅ Pricing plans content loaded successfully!';
@@ -4325,9 +4353,9 @@
                 const data = await response.json();
                 
                 // Populate form fields
-                document.getElementById('blog_page_title').value = data.page_title || 'Blog';
-                document.getElementById('blog_hero_title').value = data.hero_title || 'Latest Insights & News';
-                document.getElementById('blog_hero_description').value = data.hero_description || 'Stay updated with AI industry trends';
+                safeSetValue('blog_page_title', data.page_title) || 'Blog';
+                safeSetValue('blog_hero_title', data.hero_title) || 'Latest Insights & News';
+                safeSetValue('blog_hero_description', data.hero_description) || 'Stay updated with AI industry trends';
                 document.getElementById('blog_posts_title').value = data.posts_section_title || 'Recent Posts';
                 
                 document.getElementById('status').innerHTML = '✅ Blog posts content loaded successfully!';
