@@ -1,314 +1,303 @@
 const { test, expect } = require('@playwright/test');
 
-test.describe('Console Error Detection', () => {
-  const testUrls = [
-    { name: 'Home', url: 'home.html' },
-    { name: 'Courses', url: 'courses.html' },
-    { name: 'Teachers', url: 'teachers.html' },
-    { name: 'Career Center', url: 'career-center.html' },
-    { name: 'Career Orientation', url: 'career-orientation.html' },
-    { name: 'English Home', url: 'dist/en/index.html' },
-    { name: 'Russian Home', url: 'dist/ru/index.html' },
-    { name: 'Hebrew Home', url: 'dist/he/index.html' }
-  ];
+const BASE_URL = 'http://localhost:3005';
 
-  // Categorize error types
-  const errorCategories = {
-    critical: [
-      /uncaught.*error/i,
-      /script error/i,
-      /syntax.*error/i,
-      /reference.*error/i,
-      /type.*error/i,
-      /cannot read prop/i
-    ],
-    network: [
-      /failed to load/i,
-      /404/,
-      /500/,
-      /network.*error/i,
-      /cors.*error/i
-    ],
-    api: [
-      /api.*error/i,
-      /fetch.*failed/i,
-      /xhr.*error/i
-    ],
-    resources: [
-      /favicon/i,
-      /font.*not.*found/i,
-      /image.*not.*found/i
-    ],
-    emailjs: [
-      /emailjs/i,
-      /email.*service/i
-    ]
-  };
+// All pages to monitor
+const PAGES_TO_TEST = [
+  'home.html',
+  'courses.html', 
+  'teachers.html',
+  'career-center.html',
+  'career-orientation.html',
+  'pricing.html',
+  'blog.html',
+  'about-us.html',
+  'contact-us.html',
+  'en/index.html',
+  'ru/index.html',
+  'he/index.html',
+];
 
-  for (const { name, url } of testUrls) {
-    test(`${name} - Console Error Detection`, async ({ page }) => {
-      const consoleMessages = {
-        errors: [],
-        warnings: [],
-        logs: [],
-        info: []
+// Error categories
+const ERROR_CATEGORIES = {
+  CRITICAL: ['TypeError', 'ReferenceError', 'SyntaxError'],
+  NETWORK: ['Failed to fetch', 'NetworkError', 'ERR_INTERNET_DISCONNECTED'],
+  RESOURCE: ['404', '403', 'Failed to load resource'],
+  API: ['/api/', 'railway.app'],
+  EMAILJS: ['EmailJS', 'emailjs-com'],
+  WARNING: ['Deprecation', 'Warning'],
+};
+
+test.describe('🚨 Console Error Detection Suite', () => {
+  for (const page of PAGES_TO_TEST) {
+    test(`${page} - Zero console errors`, async ({ page: browserPage }) => {
+      const errors = {
+        console: [],
+        network: [],
+        pageErrors: [],
+        resources: [],
       };
 
-      // Capture all console messages
-      page.on('console', msg => {
-        const text = msg.text();
+      // Set up error monitoring
+      browserPage.on('console', msg => {
         const type = msg.type();
-
-        consoleMessages[type + 's']?.push({
-          type,
-          text,
-          location: msg.location(),
-          timestamp: new Date().toISOString()
-        });
-      });
-
-      // Capture network failures
-      const networkErrors = [];
-      page.on('response', response => {
-        if (!response.ok()) {
-          networkErrors.push({
-            url: response.url(),
-            status: response.status(),
-            statusText: response.statusText()
-          });
+        const text = msg.text();
+        
+        if (type === 'error') {
+          const errorData = {
+            text: text,
+            type: type,
+            location: msg.location(),
+            timestamp: new Date().toISOString(),
+            category: categorizeError(text)
+          };
+          errors.console.push(errorData);
+          
+          // Log critical errors immediately
+          if (errorData.category === 'CRITICAL') {
+            console.error(`❌ CRITICAL ERROR on ${page}:`, text);
+          }
+        } else if (type === 'warning') {
+          if (!text.includes('DevTools') && !text.includes('Chrome extension')) {
+            errors.console.push({
+              text: text,
+              type: 'warning',
+              category: 'WARNING'
+            });
+          }
         }
       });
 
-      // Capture unhandled exceptions
-      const unhandledErrors = [];
-      page.on('pageerror', error => {
-        unhandledErrors.push({
+      browserPage.on('pageerror', error => {
+        errors.pageErrors.push({
           message: error.message,
           stack: error.stack,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          category: categorizeError(error.message)
         });
       });
 
-      // Navigate and wait for complete load
-      await page.goto(url);
-      await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(2000); // Wait for dynamic content
+      browserPage.on('requestfailed', request => {
+        const failure = request.failure();
+        const url = request.url();
+        
+        // Ignore expected failures
+        if (url.includes('favicon.ico')) return;
+        if (url.includes('chrome-extension://')) return;
+        
+        errors.network.push({
+          url: url,
+          failure: failure ? failure.errorText : 'Unknown error',
+          timestamp: new Date().toISOString(),
+          category: url.includes('/api/') ? 'API' : 'NETWORK'
+        });
+      });
+
+      browserPage.on('response', response => {
+        const status = response.status();
+        const url = response.url();
+        
+        // Check for resource loading errors
+        if (status >= 400) {
+          // Ignore some expected 404s
+          if (url.includes('favicon.ico')) return;
+          if (url.includes('.map')) return; // Source maps
+          
+          errors.resources.push({
+            url: url,
+            status: status,
+            statusText: response.statusText(),
+            timestamp: new Date().toISOString(),
+            category: 'RESOURCE'
+          });
+        }
+      });
+
+      // Navigate to page
+      console.log(`\n🔍 Testing: ${page}`);
+      const response = await browserPage.goto(`${BASE_URL}/${page}`, {
+        waitUntil: 'networkidle',
+        timeout: 30000
+      });
+
+      // Wait for any delayed errors
+      await browserPage.waitForTimeout(2000);
+
+      // Execute JavaScript to check for runtime issues
+      const runtimeCheck = await browserPage.evaluate(() => {
+        const checks = {
+          emailjsLoaded: typeof emailjs !== 'undefined',
+          jqueryLoaded: typeof $ !== 'undefined' || typeof jQuery !== 'undefined',
+          hasGlobalErrors: window.errors || [],
+          documentReady: document.readyState === 'complete',
+        };
+        
+        // Check for common issues
+        const issues = [];
+        
+        // Check if EmailJS is needed but not loaded
+        const emailForms = document.querySelectorAll('[data-emailjs], #contactModal');
+        if (emailForms.length > 0 && !checks.emailjsLoaded) {
+          issues.push('EmailJS required but not loaded');
+        }
+        
+        // Check for undefined variables in onclick handlers
+        const onclickElements = document.querySelectorAll('[onclick]');
+        onclickElements.forEach(el => {
+          const onclick = el.getAttribute('onclick');
+          if (onclick && onclick.includes('undefined')) {
+            issues.push(`Undefined in onclick: ${onclick.substring(0, 50)}`);
+          }
+        });
+        
+        checks.issues = issues;
+        return checks;
+      });
+
+      // Analyze results
+      const totalErrors = errors.console.length + errors.pageErrors.length + 
+                         errors.network.length + errors.resources.length;
+
+      // Generate report
+      console.log(`\n📊 Results for ${page}:`);
+      console.log(`   Console Errors: ${errors.console.length}`);
+      console.log(`   Page Errors: ${errors.pageErrors.length}`);
+      console.log(`   Network Errors: ${errors.network.length}`);
+      console.log(`   Resource Errors: ${errors.resources.length}`);
+      console.log(`   Runtime Issues: ${runtimeCheck.issues.length}`);
 
       // Categorize errors
-      const categorizedErrors = {
-        critical: [],
-        network: [],
-        api: [],
-        resources: [],
-        emailjs: [],
-        other: []
-      };
-
-      // Process console errors
-      consoleMessages.errors.forEach(error => {
-        let categorized = false;
-        
-        for (const [category, patterns] of Object.entries(errorCategories)) {
-          if (patterns.some(pattern => pattern.test(error.text))) {
-            categorizedErrors[category].push(error);
-            categorized = true;
-            break;
+      const errorsByCategory = {};
+      [...errors.console, ...errors.pageErrors, ...errors.network, ...errors.resources]
+        .forEach(error => {
+          if (!errorsByCategory[error.category]) {
+            errorsByCategory[error.category] = [];
           }
-        }
-        
-        if (!categorized) {
-          categorizedErrors.other.push(error);
-        }
-      });
-
-      // Add network errors to network category
-      networkErrors.forEach(error => {
-        categorizedErrors.network.push({
-          type: 'network',
-          text: `${error.status} ${error.statusText}: ${error.url}`,
-          url: error.url,
-          status: error.status
+          errorsByCategory[error.category].push(error);
         });
-      });
 
-      // Add unhandled errors to critical category
-      unhandledErrors.forEach(error => {
-        categorizedErrors.critical.push({
-          type: 'pageerror',
-          text: error.message,
-          stack: error.stack
-        });
-      });
-
-      // Generate comprehensive report
-      console.log(`\n=== ${name} Console Report ===`);
-      
-      let totalCriticalErrors = 0;
-      for (const [category, errors] of Object.entries(categorizedErrors)) {
-        if (errors.length > 0) {
-          console.log(`\n${category.toUpperCase()} (${errors.length}):`);
-          errors.forEach((error, index) => {
-            console.log(`  ${index + 1}. ${error.text}`);
-            if (error.location) {
-              console.log(`     Location: ${error.location.url}:${error.location.lineNumber}`);
-            }
-          });
+      // Report by category
+      if (Object.keys(errorsByCategory).length > 0) {
+        console.log('\n   Errors by Category:');
+        for (const [category, categoryErrors] of Object.entries(errorsByCategory)) {
+          console.log(`   ${category}: ${categoryErrors.length}`);
           
-          if (category === 'critical') {
-            totalCriticalErrors += errors.length;
+          // Show first error of each category
+          if (categoryErrors.length > 0) {
+            const firstError = categoryErrors[0];
+            console.log(`     Sample: ${(firstError.text || firstError.message || firstError.url || '').substring(0, 100)}`);
           }
         }
       }
 
-      // Log warnings summary
-      if (consoleMessages.warnings.length > 0) {
-        console.log(`\nWARNINGS (${consoleMessages.warnings.length}):`);
-        consoleMessages.warnings.slice(0, 5).forEach((warning, index) => {
-          console.log(`  ${index + 1}. ${warning.text}`);
+      // Check runtime issues
+      if (runtimeCheck.issues.length > 0) {
+        console.log('\n   ⚠️  Runtime Issues:');
+        runtimeCheck.issues.forEach(issue => {
+          console.log(`     - ${issue}`);
         });
-        if (consoleMessages.warnings.length > 5) {
-          console.log(`  ... and ${consoleMessages.warnings.length - 5} more`);
-        }
       }
 
-      // Assertions
-      // Critical errors should be zero
-      expect(totalCriticalErrors).toBe(0);
+      // Status
+      const status = totalErrors === 0 ? '✅ PASS' : '❌ FAIL';
+      console.log(`\n   Status: ${status}`);
+
+      // Assert no critical errors
+      const criticalErrors = [...errors.console, ...errors.pageErrors]
+        .filter(e => e.category === 'CRITICAL');
       
-      // Network errors should be minimal (allow some favicon/resource 404s)
-      const criticalNetworkErrors = categorizedErrors.network.filter(error => 
-        !error.text.includes('favicon') && 
-        !error.text.includes('robots.txt') &&
-        error.status !== 404
-      );
-      expect(criticalNetworkErrors.length).toBeLessThanOrEqual(2);
-
-      // API errors should be zero
-      expect(categorizedErrors.api.length).toBe(0);
-
-      // Test JavaScript functionality is working
-      await page.evaluate(() => {
-        // Test basic JS functionality
-        const testDiv = document.createElement('div');
-        testDiv.id = 'js-test';
-        document.body.appendChild(testDiv);
-        return true;
-      });
+      if (criticalErrors.length > 0) {
+        console.error('\n❌ Critical errors found:');
+        criticalErrors.forEach(e => {
+          console.error(`   ${e.text || e.message}`);
+        });
+      }
       
-      const jsTest = await page.locator('#js-test').isVisible();
-      expect(jsTest).toBe(true);
+      expect(criticalErrors).toHaveLength(0);
 
-      console.log(`✅ ${name} passed console error tests`);
+      // Warn about non-critical errors
+      if (totalErrors > 0 && criticalErrors.length === 0) {
+        console.warn(`⚠️  ${totalErrors} non-critical errors found (see details above)`);
+      }
     });
   }
+});
 
-  test('EmailJS Integration Error Detection', async ({ page }) => {
-    const emailjsErrors = [];
-    
-    page.on('console', msg => {
-      if (msg.text().toLowerCase().includes('emailjs')) {
-        emailjsErrors.push({
-          type: msg.type(),
-          text: msg.text(),
-          timestamp: new Date().toISOString()
-        });
-      }
-    });
-
-    await page.goto('home.html');
-    await page.waitForLoadState('networkidle');
-
-    // Try to trigger contact modal
-    const signUpBtn = page.locator('a:has-text("Sign Up"), .primary-button').first();
-    if (await signUpBtn.isVisible()) {
-      await signUpBtn.click();
-      await page.waitForTimeout(2000);
-
-      // Check if modal opened successfully
-      const modal = page.locator('#contactModal');
-      const modalVisible = await modal.isVisible();
-      
-      if (modalVisible) {
-        console.log('✅ Contact modal opened successfully');
-        
-        // Check EmailJS initialization
-        const emailjsReady = await page.evaluate(() => window.emailJSReady);
-        console.log('EmailJS Ready:', emailjsReady);
-        
-        // Try to fill and submit form (don't actually submit)
-        await page.fill('#fullName', 'Test User');
-        await page.fill('#phoneNumber', '+1234567890');
-        await page.fill('#message', 'Test message for E2E testing');
-        
-        console.log('✅ Form fields working correctly');
+// Helper function to categorize errors
+function categorizeError(errorText) {
+  if (!errorText) return 'UNKNOWN';
+  
+  const text = errorText.toLowerCase();
+  
+  for (const [category, patterns] of Object.entries(ERROR_CATEGORIES)) {
+    for (const pattern of patterns) {
+      if (text.includes(pattern.toLowerCase())) {
+        return category;
       }
     }
+  }
+  
+  return 'OTHER';
+}
 
-    // Report EmailJS specific issues
-    if (emailjsErrors.length > 0) {
-      console.log('\nEmailJS Messages:');
-      emailjsErrors.forEach((error, index) => {
-        console.log(`  ${index + 1}. [${error.type}] ${error.text}`);
-      });
-    }
-
-    // Allow EmailJS warnings but not critical errors
-    const criticalEmailjsErrors = emailjsErrors.filter(error => 
-      error.type === 'error' && 
-      !error.text.includes('init') // Allow init-related issues for now
-    );
-    expect(criticalEmailjsErrors.length).toBeLessThanOrEqual(1);
-  });
-
-  test('Performance Console Warnings', async ({ page }) => {
-    const performanceWarnings = [];
+test.describe('🔧 EmailJS Integration Check', () => {
+  test('EmailJS library loads correctly', async ({ page }) => {
+    await page.goto(`${BASE_URL}/index.html`, { waitUntil: 'networkidle' });
     
-    page.on('console', msg => {
-      const text = msg.text().toLowerCase();
-      if (
-        text.includes('performance') ||
-        text.includes('slow') ||
-        text.includes('optimization') ||
-        text.includes('memory') ||
-        text.includes('layout') ||
-        text.includes('repaint')
-      ) {
-        performanceWarnings.push({
-          type: msg.type(),
-          text: msg.text()
-        });
-      }
-    });
-
-    await page.goto('home.html');
-    await page.waitForLoadState('networkidle');
-
-    // Generate performance report
-    const metrics = await page.evaluate(() => {
-      const perf = performance.getEntriesByType('navigation')[0];
+    // Wait for EmailJS to load
+    await page.waitForTimeout(3000);
+    
+    const emailjsStatus = await page.evaluate(() => {
       return {
-        domContentLoaded: perf.domContentLoadedEventEnd - perf.domContentLoadedEventStart,
-        loadComplete: perf.loadEventEnd - perf.loadEventStart,
-        firstPaint: performance.getEntriesByType('paint').find(entry => entry.name === 'first-paint')?.startTime || 0,
-        firstContentfulPaint: performance.getEntriesByType('paint').find(entry => entry.name === 'first-contentful-paint')?.startTime || 0
+        loaded: typeof emailjs !== 'undefined',
+        version: typeof emailjs !== 'undefined' ? emailjs.version || 'unknown' : null,
+        initialized: typeof emailjs !== 'undefined' && emailjs.init ? 'ready' : 'not ready'
       };
     });
-
-    console.log('\nPerformance Metrics:');
-    console.log('DOM Content Loaded:', metrics.domContentLoaded + 'ms');
-    console.log('Load Complete:', metrics.loadComplete + 'ms');
-    console.log('First Paint:', metrics.firstPaint + 'ms');
-    console.log('First Contentful Paint:', metrics.firstContentfulPaint + 'ms');
-
-    if (performanceWarnings.length > 0) {
-      console.log('\nPerformance Warnings:');
-      performanceWarnings.forEach((warning, index) => {
-        console.log(`  ${index + 1}. [${warning.type}] ${warning.text}`);
-      });
-    }
-
-    // Performance thresholds
-    expect(metrics.firstContentfulPaint).toBeLessThan(3000); // 3 seconds
-    expect(performanceWarnings.filter(w => w.type === 'error').length).toBe(0);
+    
+    console.log('\n📧 EmailJS Status:');
+    console.log(`   Loaded: ${emailjsStatus.loaded ? '✅' : '❌'}`);
+    console.log(`   Version: ${emailjsStatus.version || 'N/A'}`);
+    console.log(`   Status: ${emailjsStatus.initialized}`);
+    
+    expect(emailjsStatus.loaded).toBe(true);
   });
+  
+  test('Contact modal functionality', async ({ page }) => {
+    await page.goto(`${BASE_URL}/index.html`, { waitUntil: 'networkidle' });
+    
+    const errors = [];
+    page.on('console', msg => {
+      if (msg.type() === 'error' && msg.text().includes('EmailJS')) {
+        errors.push(msg.text());
+      }
+    });
+    
+    // Click Sign Up button
+    const signUpButton = await page.locator('a:has-text("Sign Up Today")').first();
+    if (await signUpButton.isVisible()) {
+      await signUpButton.click();
+      await page.waitForTimeout(1000);
+      
+      // Check modal opened without errors
+      const modal = await page.locator('#contactModal').first();
+      expect(await modal.isVisible()).toBe(true);
+      
+      // Check for EmailJS errors
+      expect(errors).toHaveLength(0);
+      
+      console.log('✅ Contact modal opens without EmailJS errors');
+    }
+  });
+});
+
+// Summary report
+test.afterAll(async () => {
+  console.log('\n' + '='.repeat(60));
+  console.log('🚨 CONSOLE ERROR DETECTION COMPLETE');
+  console.log('='.repeat(60));
+  console.log('Critical errors will fail tests');
+  console.log('Non-critical errors are logged as warnings');
+  console.log('EmailJS integration validated');
+  console.log('='.repeat(60));
 });

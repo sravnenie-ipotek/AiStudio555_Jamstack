@@ -219,7 +219,7 @@ class CustomAPIIntegration {
         console.log('🎓 Updating featured courses from API...');
         
         // Find courses container
-        const coursesContainer = document.querySelector('.featured-courses-grid, .courses-grid, [data-courses-container]');
+        const coursesContainer = document.querySelector('.featured-courses-collection-list, .featured-courses-grid, .courses-grid, [data-courses-container]');
         
         if (!coursesContainer) {
             console.warn('⚠️ Courses container not found');
