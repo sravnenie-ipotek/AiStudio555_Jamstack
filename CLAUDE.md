@@ -156,7 +156,8 @@ fetch('https://aistudio555jamstack-production.up.railway.app/api/home-page?previ
 ├── css/                  # Webflow styles
 ├── js/                   # Client-side scripts
 │   ├── webflow-strapi-integration.js  # Main API integration (misleading name)
-│   └── strapi-integration.js          # Secondary integration (misleading name)
+│   ├── strapi-integration.js          # Secondary integration (misleading name)
+│   └── contact-form-modal.js          # Contact form modal with EmailJS integration
 ├── images/               # Static assets
 ├── Docs/                 # Project documentation
 │   └── architecture/     # System architecture docs
@@ -198,6 +199,35 @@ fetch('https://aistudio555jamstack-production.up.railway.app/api/home-page?previ
 - **Database Migration**: Automatic SQLite → PostgreSQL on Railway
 - **Static File Serving**: Built-in Express.js static file serving
 
+## Critical Frontend Components
+
+### Contact Form Modal System
+- **File**: `js/contact-form-modal.js`
+- **Purpose**: Handles "Sign Up Today" buttons to open modal instead of navigating
+- **Integration**: EmailJS for sending leads + WhatsApp fallback
+- **Key Features**:
+  - Intercepts all "Sign Up Today" button clicks
+  - Opens modal with contact form
+  - Sends emails via EmailJS (service_id: service_t2uqbxs)
+  - WhatsApp fallback if email fails
+  - Auto-retry logic for EmailJS loading
+
+### Career Services Dropdown
+- **Styling**: Universal dark theme applied via CSS
+- **Files**: All 54+ HTML pages must have consistent dropdown styling
+- **CSS Classes**:
+  ```css
+  .dropdown-list {
+    background: rgba(5, 5, 26, 0.98) !important;
+    backdrop-filter: blur(20px) !important;
+  }
+  ```
+
+### Path Issues in Subdirectories
+- **Important**: Language versions in `/dist/en/`, `/dist/ru/`, `/dist/he/` need relative paths
+- **Script References**: Use `../js/` for scripts from language subdirectories
+- **Image References**: Check for proper path resolution
+
 ## Testing and Validation
 
 ### Manual Testing URLs
@@ -216,6 +246,24 @@ curl "http://localhost:3000/api/home-page?locale=ru"
 curl "http://localhost:3000/api/home-page?preview=true"
 ```
 
+### Automated Testing
+```bash
+# Run Playwright tests for responsive design
+npx playwright test tests/responsive.spec.js
+
+# Quick responsive test
+npx playwright test tests/responsive-quick.spec.js
+
+# Test production navigation consistency
+node test-production-navigation.js
+```
+
+### Critical Test Points
+1. **Contact Form Modal**: "Sign Up Today" buttons must open modal, not navigate
+2. **EmailJS Loading**: Check console for EmailJS initialization
+3. **Career Dropdown**: Verify consistent dark theme across all pages
+4. **Banner Images**: Check for 404s in `/en/images/`
+
 ## Git Repository
 
 Remote: `git@github.com:sravnenie-ipotek/AiStudio555_Jamstack.git`
@@ -223,6 +271,28 @@ Remote: `git@github.com:sravnenie-ipotek/AiStudio555_Jamstack.git`
 - **Current branch**: Track feature development carefully
 - **Production**: Auto-deploys from main branch to Railway
 - **Database**: NEVER delete or reset without user approval
+
+## Common Issues and Solutions
+
+### EmailJS Not Loading
+- **Symptom**: "EmailJS library not loaded" in console
+- **Solution**: Scripts must be on separate lines in HTML, not concatenated
+- **Fallback**: `contact-form-modal.js` has auto-retry and manual loading fallback
+
+### Banner Image 404s
+- **Issue**: File names with spaces vs hyphens mismatch
+- **Example**: `Banner Man Img1.png` vs `Banner-Man-Img1.png`
+- **Solution**: Copy files with correct hyphenated names
+
+### Navigation Inconsistency
+- **Issue**: Career Services dropdown styling varies between pages
+- **Solution**: Apply universal CSS with `!important` flags
+- **Verification**: Use `test-production-navigation.js`
+
+### Script Path Issues
+- **Issue**: Scripts fail to load in language subdirectories
+- **Wrong**: `src="js/script.js"` in `/dist/en/page.html`
+- **Correct**: `src="../js/script.js"` or `src="/js/script.js"`
 
 ## Key Differences from Standard JAMstack
 

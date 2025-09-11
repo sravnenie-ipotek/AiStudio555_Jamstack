@@ -1,11 +1,11 @@
 /**
- * Custom API Frontend Integration
+ * Strapi Frontend Integration
  * Handles dynamic content loading and live preview
  */
 
-class CustomAPIIntegration {
+class StrapiIntegration {
   constructor() {
-    this.apiUrl = 'https://aistudio555jamstack-production.up.railway.app';
+    this.strapiUrl = 'https://aistudio555jamstack-production.up.railway.app';
     this.apiToken = '6ba76f584778637fd308f48aac27461c1aca7f088c963d614ad2e73bb7f3f9a646ad9e38cf12e5bd8f7e6f8e0ad2f014ea90ee088bb8a3c3c84a40f9fb0c592e5c8b05e8d25c09f4a9c0b685b2c90bacd5e604fbe4e1b01e0a6e32c76e7e93b1f21e5e47dcad5e80a6b0cf967e2a38b74f5edd19e92f5c0e6d387e1c16e5ce59';
     this.currentLocale = this.getLocale();
     this.isPreviewMode = this.checkPreviewMode();
@@ -19,7 +19,9 @@ class CustomAPIIntegration {
   }
 
   init() {
-    console.log('🚀 Initializing Custom API Integration');
+    console.log('🚀 Initializing Strapi Integration');
+    console.log('📍 Current URL:', window.location.pathname);
+    console.log('🏷️ Page detected:', this.getPageName());
     
     // Load dynamic content
     this.loadPageContent();
@@ -66,7 +68,8 @@ class CustomAPIIntegration {
 
   getPageName() {
     const path = window.location.pathname;
-    if (path === '/' || path === '/index.html' || path === '/home.html') {
+    // Handle dist/en/index.html and similar paths
+    if (path === '/' || path.includes('index.html') || path.includes('home.html')) {
       return 'home-page';
     }
     if (path.includes('courses')) {
@@ -75,13 +78,27 @@ class CustomAPIIntegration {
     if (path.includes('about')) {
       return 'about-page';
     }
+    if (path.includes('teachers')) {
+      return 'teachers-page';
+    }
+    if (path.includes('career-center')) {
+      return 'career-center-page';
+    }
+    if (path.includes('career-orientation')) {
+      return 'career-orientation-page';
+    }
     return 'home-page';
   }
 
   async fetchPageContent(pageName) {
     try {
       const response = await fetch(
-        `${this.apiUrl}/api/${pageName}?locale=${this.currentLocale}`
+        `${this.strapiUrl}/api/${pageName}?locale=${this.currentLocale}&populate=deep`,
+        {
+          headers: {
+            'Authorization': `Bearer ${this.apiToken}`
+          }
+        }
       );
       
       if (!response.ok) {
@@ -91,15 +108,32 @@ class CustomAPIIntegration {
       const data = await response.json();
       return data.data?.attributes;
     } catch (error) {
-      console.warn('Could not fetch content from Custom API:', error.message);
+      console.warn('Could not fetch content from Strapi:', error.message);
       return null;
     }
   }
 
   applyContent(content) {
+    console.log('📝 Applying content:', content);
+    
+    // Update site branding (fix Zohacous -> AI Studio)
+    this.updateSiteBranding(content);
+    
     // Apply hero section content
+    // Check if hero data is nested or flat
     if (content.hero) {
+      console.log('🎯 Applying nested hero content');
       this.applyHeroContent(content.hero);
+    } else if (content.heroTitle || content.heroSubtitle || content.heroDescription) {
+      // Handle flat structure from our custom API
+      console.log('🎯 Applying flat hero content from API');
+      this.applyHeroContent({
+        title: content.heroTitle,
+        subtitle: content.heroSubtitle,
+        description: content.heroDescription
+      });
+    } else {
+      console.warn('⚠️ No hero content found in response');
     }
     
     // Apply featured courses
@@ -124,22 +158,33 @@ class CustomAPIIntegration {
   }
 
   applyHeroContent(hero) {
+    console.log('🎨 Updating hero with:', hero);
+    
     // Update hero title
     const titleElement = document.querySelector('h1.banner-heading');
     if (titleElement && hero.title) {
+      console.log(`✅ Updating title from "${titleElement.textContent}" to "${hero.title}"`);
       titleElement.textContent = hero.title;
+    } else {
+      console.warn('❌ Title element not found or no title data');
     }
     
     // Update subtitle
     const subtitleElement = document.querySelector('.banner-subtitle');
     if (subtitleElement && hero.subtitle) {
+      console.log(`✅ Updating subtitle to "${hero.subtitle}"`);
       subtitleElement.textContent = hero.subtitle;
+    } else {
+      console.warn('❌ Subtitle element not found or no subtitle data');
     }
     
     // Update description
     const descriptionElement = document.querySelector('p.banner-description-text');
     if (descriptionElement && hero.description) {
+      console.log(`✅ Updating description to "${hero.description}"`);
       descriptionElement.textContent = hero.description;
+    } else {
+      console.warn('❌ Description element not found or no description data');
     }
     
     // Update primary button
@@ -152,6 +197,47 @@ class CustomAPIIntegration {
     const secondaryButton = document.querySelector('.banner-button-wrapper a:last-child .primary-button-text-block');
     if (secondaryButton && hero.secondaryButtonText) {
       secondaryButton.textContent = hero.secondaryButtonText;
+    }
+  }
+
+  updateSiteBranding(content) {
+    console.log('🏢 Updating site branding to AI Studio');
+    
+    // Update navbar brand
+    const navbarBrand = document.querySelector('.navbar-brand, .logo-text, a[href="/"].w-nav-brand');
+    if (navbarBrand) {
+      const brandText = content.siteName || 'AI Studio';
+      console.log(`✅ Updating brand from "${navbarBrand.textContent}" to "${brandText}"`);
+      navbarBrand.textContent = brandText;
+    }
+    
+    // Update any Zohacous references
+    const allTextNodes = document.evaluate(
+      "//text()[contains(., 'Zohacous')]",
+      document,
+      null,
+      XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
+      null
+    );
+    
+    for (let i = 0; i < allTextNodes.snapshotLength; i++) {
+      const node = allTextNodes.snapshotItem(i);
+      node.textContent = node.textContent.replace(/Zohacous/g, 'AI Studio');
+      console.log('✅ Replaced Zohacous reference');
+    }
+    
+    // Update page title
+    if (document.title.includes('Zohacous')) {
+      document.title = document.title.replace(/Zohacous/g, 'AI Studio');
+      console.log('✅ Updated page title');
+    }
+    
+    // Update footer email
+    const footerEmail = document.querySelector('a[href*="zohacous@email.com"]');
+    if (footerEmail) {
+      footerEmail.href = 'mailto:info@aistudio555.com';
+      footerEmail.textContent = 'info@aistudio555.com';
+      console.log('✅ Updated footer email');
     }
   }
 
@@ -316,7 +402,7 @@ class CustomAPIIntegration {
       // Update thumbnail if available
       const imageElement = card.querySelector('.featured-courses-image');
       if (imageElement && attributes.thumbnail?.data?.attributes?.url) {
-        imageElement.src = `${this.apiUrl}${attributes.thumbnail.data.attributes.url}`;
+        imageElement.src = `${this.strapiUrl}${attributes.thumbnail.data.attributes.url}`;
       }
     });
   }
@@ -370,7 +456,7 @@ class CustomAPIIntegration {
   connectWebSocket() {
     // Import Socket.IO client if available
     if (typeof io !== 'undefined') {
-      this.socket = io(this.apiUrl);
+      this.socket = io(this.strapiUrl);
       
       this.socket.on('content-update', (data) => {
         console.log('📝 Content update received:', data);
@@ -439,7 +525,7 @@ class CustomAPIIntegration {
             type: 'edit-field',
             selector: selector,
             currentValue: currentValue
-          }, this.apiUrl);
+          }, this.strapiUrl);
         }
         
         console.log('Edit field:', selector, currentValue);
@@ -518,5 +604,5 @@ class CustomAPIIntegration {
   }
 }
 
-// Initialize Custom API Integration
-window.customAPIIntegration = new CustomAPIIntegration();
+// Initialize Strapi Integration
+window.strapiIntegration = new StrapiIntegration();

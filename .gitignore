@@ -54,3 +54,13 @@ test-results/
 
 # Backup directories
 backups/
+
+# Sensitive Documentation
+Docs/access/
+/Docs/access/addToAdmin.md
+**/addToAdmin.md
+
+# API Tokens and Credentials
+test-api-token.js
+*api-token*
+*credentials*

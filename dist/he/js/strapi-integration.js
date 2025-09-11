@@ -20,6 +20,8 @@ class StrapiIntegration {
 
   init() {
     console.log('🚀 Initializing Strapi Integration');
+    console.log('📍 Current URL:', window.location.pathname);
+    console.log('🏷️ Page detected:', this.getPageName());
     
     // Load dynamic content
     this.loadPageContent();
@@ -66,7 +68,8 @@ class StrapiIntegration {
 
   getPageName() {
     const path = window.location.pathname;
-    if (path === '/' || path === '/index.html' || path === '/home.html') {
+    // Handle dist/en/index.html and similar paths
+    if (path === '/' || path.includes('index.html') || path.includes('home.html')) {
       return 'home-page';
     }
     if (path.includes('courses')) {
@@ -74,6 +77,15 @@ class StrapiIntegration {
     }
     if (path.includes('about')) {
       return 'about-page';
+    }
+    if (path.includes('teachers')) {
+      return 'teachers-page';
+    }
+    if (path.includes('career-center')) {
+      return 'career-center-page';
+    }
+    if (path.includes('career-orientation')) {
+      return 'career-orientation-page';
     }
     return 'home-page';
   }
@@ -102,17 +114,26 @@ class StrapiIntegration {
   }
 
   applyContent(content) {
+    console.log('📝 Applying content:', content);
+    
+    // Update site branding (fix Zohacous -> AI Studio)
+    this.updateSiteBranding(content);
+    
     // Apply hero section content
     // Check if hero data is nested or flat
     if (content.hero) {
+      console.log('🎯 Applying nested hero content');
       this.applyHeroContent(content.hero);
     } else if (content.heroTitle || content.heroSubtitle || content.heroDescription) {
       // Handle flat structure from our custom API
+      console.log('🎯 Applying flat hero content from API');
       this.applyHeroContent({
         title: content.heroTitle,
         subtitle: content.heroSubtitle,
         description: content.heroDescription
       });
+    } else {
+      console.warn('⚠️ No hero content found in response');
     }
     
     // Apply featured courses
@@ -137,22 +158,33 @@ class StrapiIntegration {
   }
 
   applyHeroContent(hero) {
+    console.log('🎨 Updating hero with:', hero);
+    
     // Update hero title
     const titleElement = document.querySelector('h1.banner-heading');
     if (titleElement && hero.title) {
+      console.log(`✅ Updating title from "${titleElement.textContent}" to "${hero.title}"`);
       titleElement.textContent = hero.title;
+    } else {
+      console.warn('❌ Title element not found or no title data');
     }
     
     // Update subtitle
     const subtitleElement = document.querySelector('.banner-subtitle');
     if (subtitleElement && hero.subtitle) {
+      console.log(`✅ Updating subtitle to "${hero.subtitle}"`);
       subtitleElement.textContent = hero.subtitle;
+    } else {
+      console.warn('❌ Subtitle element not found or no subtitle data');
     }
     
     // Update description
     const descriptionElement = document.querySelector('p.banner-description-text');
     if (descriptionElement && hero.description) {
+      console.log(`✅ Updating description to "${hero.description}"`);
       descriptionElement.textContent = hero.description;
+    } else {
+      console.warn('❌ Description element not found or no description data');
     }
     
     // Update primary button
@@ -165,6 +197,47 @@ class StrapiIntegration {
     const secondaryButton = document.querySelector('.banner-button-wrapper a:last-child .primary-button-text-block');
     if (secondaryButton && hero.secondaryButtonText) {
       secondaryButton.textContent = hero.secondaryButtonText;
+    }
+  }
+
+  updateSiteBranding(content) {
+    console.log('🏢 Updating site branding to AI Studio');
+    
+    // Update navbar brand
+    const navbarBrand = document.querySelector('.navbar-brand, .logo-text, a[href="/"].w-nav-brand');
+    if (navbarBrand) {
+      const brandText = content.siteName || 'AI Studio';
+      console.log(`✅ Updating brand from "${navbarBrand.textContent}" to "${brandText}"`);
+      navbarBrand.textContent = brandText;
+    }
+    
+    // Update any Zohacous references
+    const allTextNodes = document.evaluate(
+      "//text()[contains(., 'Zohacous')]",
+      document,
+      null,
+      XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
+      null
+    );
+    
+    for (let i = 0; i < allTextNodes.snapshotLength; i++) {
+      const node = allTextNodes.snapshotItem(i);
+      node.textContent = node.textContent.replace(/Zohacous/g, 'AI Studio');
+      console.log('✅ Replaced Zohacous reference');
+    }
+    
+    // Update page title
+    if (document.title.includes('Zohacous')) {
+      document.title = document.title.replace(/Zohacous/g, 'AI Studio');
+      console.log('✅ Updated page title');
+    }
+    
+    // Update footer email
+    const footerEmail = document.querySelector('a[href*="zohacous@email.com"]');
+    if (footerEmail) {
+      footerEmail.href = 'mailto:info@aistudio555.com';
+      footerEmail.textContent = 'info@aistudio555.com';
+      console.log('✅ Updated footer email');
     }
   }
 
