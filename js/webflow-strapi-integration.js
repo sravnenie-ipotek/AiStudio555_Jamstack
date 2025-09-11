@@ -6,11 +6,8 @@
 
 class CustomAPIIntegration {
     constructor() {
-        // Smart API URL detection
-        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        this.API_BASE = isLocal 
-            ? 'http://localhost:3000/api'  // Local development
-            : 'https://aistudio555jamstack-production.up.railway.app/api';  // Production
+        // Production API URL
+        this.API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
         this.isInitialized = false;
         this.currentLanguage = 'en';
         this.cache = {};
@@ -88,31 +85,16 @@ class CustomAPIIntegration {
             
             // Load home page data
             const homeData = await this.fetchAPI('/home-page');
-            if (homeData && homeData.data && homeData.data.attributes) {
-                const attrs = homeData.data.attributes;
-                console.log('📊 Home page attributes:', attrs);
-                
-                // Create hero data object with correct structure
-                const heroData = {
-                    title: attrs.heroTitle,
-                    subtitle: attrs.heroSubtitle, 
-                    description: attrs.heroDescription
-                };
-                
-                this.updateHomeHero(heroData);
+            if (homeData) {
+                this.updateHomeHero(homeData.hero);
+                this.updateFeaturedCoursesFromAPI(homeData.featuredCourses);
+                this.updateTestimonials(homeData.testimonials);
             }
 
             // Load latest courses for featured section
             const courses = await this.fetchAPI('/courses?populate=*&pagination[limit]=6');
             if (courses?.data) {
                 this.updateFeaturedCoursesFromAPI(courses.data);
-            }
-
-            // Load FAQs
-            const faqs = await this.fetchAPI('/faqs');
-            if (faqs?.data) {
-                this.updateFAQsSection(faqs.data);
-                console.log(`✅ Loaded ${faqs.data.length} FAQs`);
             }
 
         } catch (error) {
@@ -215,10 +197,9 @@ class CustomAPIIntegration {
         console.log('🎯 Updating hero section...');
         
         // Update hero title
-        const heroTitle = document.querySelector('.banner-heading, .hero-title, h1.hero, [data-hero-title]');
+        const heroTitle = document.querySelector('.hero-title, h1.hero, [data-hero-title]');
         if (heroTitle && heroData.title) {
             heroTitle.textContent = heroData.title;
-            console.log('✅ Updated hero title:', heroData.title);
         }
 
         // Update hero subtitle
@@ -228,10 +209,9 @@ class CustomAPIIntegration {
         }
 
         // Update hero description
-        const heroDesc = document.querySelector('.banner-description-text, .hero-text, .hero-description-text, [data-hero-description]');
+        const heroDesc = document.querySelector('.hero-text, .hero-description-text, [data-hero-description]');
         if (heroDesc && heroData.description) {
             heroDesc.textContent = heroData.description;
-            console.log('✅ Updated hero description:', heroData.description);
         }
     }
 
@@ -545,87 +525,6 @@ class CustomAPIIntegration {
         document.body.prepend(banner);
         
         console.log('👁️ Preview mode enabled');
-    }
-
-    updateFAQsSection(faqsData) {
-        console.log('❓ Updating FAQs section...');
-        
-        // Find FAQ container - look for multiple possible selectors
-        const faqContainer = document.querySelector('.faq-accordion-wrapper, .faqs-container, .faq-items, [data-faqs]');
-        
-        if (!faqContainer) {
-            console.warn('⚠️ FAQ container not found on page');
-            return;
-        }
-
-        // Clear existing FAQs
-        faqContainer.innerHTML = '';
-        
-        // Create FAQ items
-        faqsData.forEach((faq, index) => {
-            const faqItem = this.createFAQItem(faq, index);
-            faqContainer.appendChild(faqItem);
-        });
-        
-        console.log(`✅ Updated FAQs section with ${faqsData.length} items`);
-        
-        // Re-initialize accordion functionality
-        this.initializeFAQAccordion();
-    }
-
-    createFAQItem(faqData, index) {
-        const faq = faqData.attributes || faqData;
-        
-        const faqElement = document.createElement('div');
-        faqElement.className = 'single-faq-accordion-wrap';
-        faqElement.setAttribute('data-faq-index', index);
-        
-        faqElement.innerHTML = `
-            <div class="faq-question-wrap" role="button" tabindex="0">
-                <div class="faq-question">Q: ${faq.question}</div>
-                <div class="faq-icon-wrap">
-                    <div class="faq-icon">+</div>
-                </div>
-            </div>
-            <div class="faq-answer-wrap" style="display: none;">
-                <div class="faq-answer">${faq.answer}</div>
-            </div>
-        `;
-        
-        // Add click handler for accordion
-        const questionWrap = faqElement.querySelector('.faq-question-wrap');
-        questionWrap.addEventListener('click', () => {
-            this.toggleFAQItem(faqElement);
-        });
-        
-        return faqElement;
-    }
-
-    toggleFAQItem(faqElement) {
-        const answerWrap = faqElement.querySelector('.faq-answer-wrap');
-        const icon = faqElement.querySelector('.faq-icon');
-        const isOpen = answerWrap.style.display !== 'none';
-        
-        if (isOpen) {
-            answerWrap.style.display = 'none';
-            icon.textContent = '+';
-            faqElement.classList.remove('open');
-        } else {
-            answerWrap.style.display = 'block';
-            icon.textContent = '−';
-            faqElement.classList.add('open');
-        }
-    }
-
-    initializeFAQAccordion() {
-        console.log('🎵 Initializing FAQ accordion functionality');
-        
-        // Add any additional accordion initialization if needed
-        const faqItems = document.querySelectorAll('.single-faq-accordion-wrap');
-        faqItems.forEach(item => {
-            // Already have click handlers, just log
-            console.log('FAQ item ready:', item.querySelector('.faq-question')?.textContent);
-        });
     }
 }
 

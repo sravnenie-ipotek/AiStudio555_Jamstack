@@ -87,7 +87,7 @@ class CustomAPIIntegration {
             const homeData = await this.fetchAPI('/home-page');
             if (homeData) {
                 this.updateHomeHero(homeData.hero);
-                this.updateFeaturedCourses(homeData.featuredCourses);
+                this.updateFeaturedCoursesFromAPI(homeData.featuredCourses);
                 this.updateTestimonials(homeData.testimonials);
             }
 
