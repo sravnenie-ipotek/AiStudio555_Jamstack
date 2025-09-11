@@ -4356,7 +4356,7 @@
                 safeSetValue('blog_page_title', data.page_title) || 'Blog';
                 safeSetValue('blog_hero_title', data.hero_title) || 'Latest Insights & News';
                 safeSetValue('blog_hero_description', data.hero_description) || 'Stay updated with AI industry trends';
-                document.getElementById('blog_posts_title').value = data.posts_section_title || 'Recent Posts';
+                safeSetValue('blog_posts_title', data.posts_section_title || 'Recent Posts');
                 
                 document.getElementById('status').innerHTML = '✅ Blog posts content loaded successfully!';
             } catch (error) {
@@ -4401,12 +4401,12 @@
                 const response = await fetch(`${API_BASE}/api/about-page?locale=${locale}`);
                 const data = await response.json();
                 
-                // Populate form fields
-                document.getElementById('about_page_title').value = data.page_title || 'About Us';
-                document.getElementById('about_hero_title').value = data.hero_title || 'About AI Studio';
-                document.getElementById('about_company_story').value = data.company_story || 'Our story and mission';
-                document.getElementById('about_mission_statement').value = data.mission_statement || 'Empowering the future through AI education';
-                document.getElementById('about_team_section').value = data.team_section_title || 'Our Team';
+                // Safely populate form fields
+                safeSetValue('about_page_title', data.page_title || 'About Us');
+                safeSetValue('about_hero_title', data.hero_title || 'About AI Studio');
+                safeSetValue('about_company_story', data.company_story || 'Our story and mission');
+                safeSetValue('about_mission_statement', data.mission_statement || 'Empowering the future through AI education');
+                safeSetValue('about_team_section', data.team_section_title || 'Our Team');
                 
                 document.getElementById('status').innerHTML = '✅ About page content loaded successfully!';
             } catch (error) {
@@ -4452,12 +4452,12 @@
                 const response = await fetch(`${API_BASE}/api/contact-page?locale=${locale}`);
                 const data = await response.json();
                 
-                // Populate form fields
-                document.getElementById('contact_page_title').value = data.page_title || 'Contact Us';
-                document.getElementById('contact_hero_title').value = data.hero_title || 'Get in Touch';
-                document.getElementById('contact_info_section').value = data.contact_info || 'Contact information';
-                document.getElementById('contact_office_hours').value = data.office_hours || 'Monday - Friday: 9AM - 6PM';
-                document.getElementById('contact_map_embed').value = data.map_embed || '';
+                // Safely populate form fields
+                safeSetValue('contact_page_title', data.page_title || 'Contact Us');
+                safeSetValue('contact_hero_title', data.hero_title || 'Get in Touch');
+                safeSetValue('contact_info_section', data.contact_info || 'Contact information');
+                safeSetValue('contact_office_hours', data.office_hours || 'Monday - Friday: 9AM - 6PM');
+                safeSetValue('contact_map_embed', data.map_embed || '');
                 
                 document.getElementById('status').innerHTML = '✅ Contact page content loaded successfully!';
             } catch (error) {
