@@ -3803,8 +3803,7 @@
             });
         }
 
-        // API Configuration - Smart detection for local vs production
-        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        // API Configuration - Use existing isLocal variable from above
         const API_BASE = isLocal 
             ? 'http://localhost:3000'
             : 'https://aistudio555jamstack-production.up.railway.app';
