@@ -88,16 +88,16 @@
         <div class="tabs">
             <!-- CORE PAGES (matching your website pages) -->
             <button class="tab active" onclick="showSection('home-page')">🏠 Home Page <span class="field-count">123 Fields</span></button>
-            <button class="tab" onclick="showSection('courses-page')">📚 Courses Page <span class="field-count">30+ Fields</span></button>
-            <button class="tab" onclick="showSection('teachers-page')">👨‍🏫 Teachers Page <span class="field-count">25+ Fields</span></button>
-            <button class="tab" onclick="showSection('career-center-page')">🎯 Career Center <span class="field-count">40+ Fields</span></button>
-            <button class="tab" onclick="showSection('career-orientation-page')">🧭 Career Orientation <span class="field-count">50+ Fields</span></button>
-            <button class="tab" onclick="showSection('pricing-page')">💰 Pricing Page <span class="field-count">20+ Fields</span></button>
-            <button class="tab" onclick="showSection('blog-page')">📝 Blog Page <span class="field-count">15+ Fields</span></button>
+            <button class="tab" onclick="showSection('courses')">📚 Courses Page <span class="field-count">30+ Fields</span></button>
+            <button class="tab" onclick="showSection('teachers')">👨‍🏫 Teachers Page <span class="field-count">25+ Fields</span></button>
+            <button class="tab" onclick="showSection('career-services')">🎯 Career Center <span class="field-count">40+ Fields</span></button>
+            <button class="tab" onclick="showSection('career-orientation')">🧭 Career Orientation <span class="field-count">50+ Fields</span></button>
+            <button class="tab" onclick="showSection('pricing-plans')">💰 Pricing Page <span class="field-count">20+ Fields</span></button>
+            <button class="tab" onclick="showSection('blog-posts')">📝 Blog Page <span class="field-count">15+ Fields</span></button>
             <button class="tab" onclick="showSection('about-page')">ℹ️ About Page <span class="field-count">35+ Fields</span></button>
             <button class="tab" onclick="showSection('contact-page')">📞 Contact Page <span class="field-count">25+ Fields</span></button>
-            <button class="tab" onclick="showSection('detail-courses-page')">📖 Course Detail <span class="field-count">15+ Fields</span></button>
-            <button class="tab" onclick="showSection('detail-blog-page')">📰 Blog Detail <span class="field-count">12+ Fields</span></button>
+            <button class="tab" onclick="showSection('courses')">📖 Course Detail <span class="field-count">15+ Fields</span></button>
+            <button class="tab" onclick="showSection('blog-posts')">📰 Blog Detail <span class="field-count">12+ Fields</span></button>
         </div>
 
         <!-- COMPREHENSIVE HOME PAGE Section -->
@@ -2468,11 +2468,21 @@
                 tab.classList.remove('active');
             });
             
-            // Show selected section
-            document.getElementById(sectionName).classList.add('active');
+            // Show selected section (with error handling)
+            const section = document.getElementById(sectionName);
+            if (section) {
+                section.classList.add('active');
+            } else {
+                console.error(`Section "${sectionName}" not found!`);
+                // Show home page as fallback
+                const homePage = document.getElementById('home-page');
+                if (homePage) homePage.classList.add('active');
+            }
             
             // Add active class to clicked tab
-            event.target.classList.add('active');
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
             
             // Load data for the section
             loadSectionData(sectionName);
