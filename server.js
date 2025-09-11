@@ -1943,11 +1943,26 @@ app.get('/api/contact-page', async (req, res) => {
 app.put('/api/home-page/:id', async (req, res) => {
   const updates = req.body;
   const updateFields = [];
+  const values = [];
   
-  // Build UPDATE query dynamically
+  // Build UPDATE query dynamically with proper escaping
   Object.keys(updates).forEach(key => {
     const dbField = key.replace(/([A-Z])/g, '_$1').toLowerCase();
-    updateFields.push(`${dbField} = '${updates[key]}'`);
+    let value = updates[key];
+    
+    // Handle different data types properly
+    if (value === null || value === undefined) {
+      value = '';
+    } else if (typeof value === 'boolean') {
+      value = value ? 1 : 0;
+    } else if (typeof value === 'object') {
+      value = JSON.stringify(value);
+    } else {
+      // Escape single quotes to prevent SQL injection
+      value = String(value).replace(/'/g, "''");
+    }
+    
+    updateFields.push(`${dbField} = '${value}'`);
   });
   
   if (updateFields.length === 0) {
@@ -1955,7 +1970,7 @@ app.put('/api/home-page/:id', async (req, res) => {
   }
   
   try {
-    const query = `UPDATE home_pages SET ${updateFields.join(', ')} WHERE id = ${req.params.id}`;
+    const query = `UPDATE home_pages SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = ${req.params.id}`;
     await queryDatabase(query);
     
     res.json({
@@ -1964,6 +1979,7 @@ app.put('/api/home-page/:id', async (req, res) => {
       updatedFields: Object.keys(updates)
     });
   } catch (error) {
+    console.error('Update error:', error);
     res.status(500).json({ error: 'Update failed', details: error.message });
   }
 });
