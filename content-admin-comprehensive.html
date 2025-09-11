@@ -2048,7 +2048,10 @@
                 console.log('💾 Saving Complete Home Page Data:', homeData);
 
                 // Save to database via API
-                const response = await fetch(`${API_URL_CRUD}/home-page/1`, {
+                // Use correct ID based on locale: 1 for English, 2 for Russian, 3 for Hebrew
+                const localeIds = { 'en': 1, 'ru': 2, 'he': 3 };
+                const homePageId = localeIds[currentLocale] || 1;
+                const response = await fetch(`${API_URL_CRUD}/home-page/${homePageId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
