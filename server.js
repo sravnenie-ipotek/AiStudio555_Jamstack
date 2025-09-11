@@ -3187,6 +3187,470 @@ app.put('/api/page-meta/:slug', async (req, res) => {
   }
 });
 
+// Additional PUT endpoints for comprehensive page management
+
+// Update courses page
+app.put('/api/courses-page', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const data = req.body;
+    
+    // Check if record exists
+    const checkQuery = 'SELECT id FROM courses_pages WHERE locale = $1';
+    const existing = await queryDatabase(checkQuery, [locale]);
+    
+    if (existing.length > 0) {
+      // Update existing
+      const fields = Object.keys(data).filter(key => key !== 'id');
+      const setClause = fields.map((field, index) => `${field} = $${index + 2}`).join(', ');
+      const values = [existing[0].id, ...fields.map(field => data[field])];
+      
+      const updateQuery = `
+        UPDATE courses_pages 
+        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = $1 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(updateQuery, values);
+      res.json(result[0]);
+    } else {
+      // Insert new
+      const fields = ['locale', ...Object.keys(data)];
+      const values = [locale, ...Object.values(data)];
+      const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+      
+      const insertQuery = `
+        INSERT INTO courses_pages (${fields.join(', ')}) 
+        VALUES (${placeholders}) 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(insertQuery, values);
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error updating courses page:', error);
+    res.status(500).json({ error: 'Failed to update courses page' });
+  }
+});
+
+// Update blog posts
+app.put('/api/blog-posts', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const data = req.body;
+    
+    // Check if record exists
+    const checkQuery = 'SELECT id FROM blog_posts WHERE locale = $1';
+    const existing = await queryDatabase(checkQuery, [locale]);
+    
+    if (existing.length > 0) {
+      // Update existing
+      const fields = Object.keys(data).filter(key => key !== 'id');
+      const setClause = fields.map((field, index) => `${field} = $${index + 2}`).join(', ');
+      const values = [existing[0].id, ...fields.map(field => data[field])];
+      
+      const updateQuery = `
+        UPDATE blog_posts 
+        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = $1 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(updateQuery, values);
+      res.json(result[0]);
+    } else {
+      // Insert new
+      const fields = ['locale', ...Object.keys(data)];
+      const values = [locale, ...Object.values(data)];
+      const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+      
+      const insertQuery = `
+        INSERT INTO blog_posts (${fields.join(', ')}) 
+        VALUES (${placeholders}) 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(insertQuery, values);
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error updating blog posts:', error);
+    res.status(500).json({ error: 'Failed to update blog posts' });
+  }
+});
+
+// Update teachers
+app.put('/api/teachers', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const data = req.body;
+    
+    // Check if record exists
+    const checkQuery = 'SELECT id FROM teachers WHERE locale = $1';
+    const existing = await queryDatabase(checkQuery, [locale]);
+    
+    if (existing.length > 0) {
+      // Update existing
+      const fields = Object.keys(data).filter(key => key !== 'id');
+      const setClause = fields.map((field, index) => `${field} = $${index + 2}`).join(', ');
+      const values = [existing[0].id, ...fields.map(field => data[field])];
+      
+      const updateQuery = `
+        UPDATE teachers 
+        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = $1 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(updateQuery, values);
+      res.json(result[0]);
+    } else {
+      // Insert new
+      const fields = ['locale', ...Object.keys(data)];
+      const values = [locale, ...Object.values(data)];
+      const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+      
+      const insertQuery = `
+        INSERT INTO teachers (${fields.join(', ')}) 
+        VALUES (${placeholders}) 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(insertQuery, values);
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error updating teachers:', error);
+    res.status(500).json({ error: 'Failed to update teachers' });
+  }
+});
+
+// Update FAQs
+app.put('/api/faqs', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const data = req.body;
+    
+    // Check if record exists
+    const checkQuery = 'SELECT id FROM faqs WHERE locale = $1';
+    const existing = await queryDatabase(checkQuery, [locale]);
+    
+    if (existing.length > 0) {
+      // Update existing
+      const fields = Object.keys(data).filter(key => key !== 'id');
+      const setClause = fields.map((field, index) => `${field} = $${index + 2}`).join(', ');
+      const values = [existing[0].id, ...fields.map(field => data[field])];
+      
+      const updateQuery = `
+        UPDATE faqs 
+        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = $1 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(updateQuery, values);
+      res.json(result[0]);
+    } else {
+      // Insert new
+      const fields = ['locale', ...Object.keys(data)];
+      const values = [locale, ...Object.values(data)];
+      const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+      
+      const insertQuery = `
+        INSERT INTO faqs (${fields.join(', ')}) 
+        VALUES (${placeholders}) 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(insertQuery, values);
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error updating faqs:', error);
+    res.status(500).json({ error: 'Failed to update faqs' });
+  }
+});
+
+// Update about page
+app.put('/api/about-page', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const data = req.body;
+    
+    // Check if record exists
+    const checkQuery = 'SELECT id FROM about_pages WHERE locale = $1';
+    const existing = await queryDatabase(checkQuery, [locale]);
+    
+    if (existing.length > 0) {
+      // Update existing
+      const fields = Object.keys(data).filter(key => key !== 'id');
+      const setClause = fields.map((field, index) => `${field} = $${index + 2}`).join(', ');
+      const values = [existing[0].id, ...fields.map(field => data[field])];
+      
+      const updateQuery = `
+        UPDATE about_pages 
+        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = $1 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(updateQuery, values);
+      res.json(result[0]);
+    } else {
+      // Insert new
+      const fields = ['locale', ...Object.keys(data)];
+      const values = [locale, ...Object.values(data)];
+      const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+      
+      const insertQuery = `
+        INSERT INTO about_pages (${fields.join(', ')}) 
+        VALUES (${placeholders}) 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(insertQuery, values);
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error updating about page:', error);
+    res.status(500).json({ error: 'Failed to update about page' });
+  }
+});
+
+// Update career resources
+app.put('/api/career-resources', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const data = req.body;
+    
+    // Check if record exists
+    const checkQuery = 'SELECT id FROM career_resources WHERE locale = $1';
+    const existing = await queryDatabase(checkQuery, [locale]);
+    
+    if (existing.length > 0) {
+      // Update existing
+      const fields = Object.keys(data).filter(key => key !== 'id');
+      const setClause = fields.map((field, index) => `${field} = $${index + 2}`).join(', ');
+      const values = [existing[0].id, ...fields.map(field => data[field])];
+      
+      const updateQuery = `
+        UPDATE career_resources 
+        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = $1 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(updateQuery, values);
+      res.json(result[0]);
+    } else {
+      // Insert new
+      const fields = ['locale', ...Object.keys(data)];
+      const values = [locale, ...Object.values(data)];
+      const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+      
+      const insertQuery = `
+        INSERT INTO career_resources (${fields.join(', ')}) 
+        VALUES (${placeholders}) 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(insertQuery, values);
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error updating career resources:', error);
+    res.status(500).json({ error: 'Failed to update career resources' });
+  }
+});
+
+// Update contact page
+app.put('/api/contact-page', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const data = req.body;
+    
+    // Check if record exists
+    const checkQuery = 'SELECT id FROM contact_pages WHERE locale = $1';
+    const existing = await queryDatabase(checkQuery, [locale]);
+    
+    if (existing.length > 0) {
+      // Update existing
+      const fields = Object.keys(data).filter(key => key !== 'id');
+      const setClause = fields.map((field, index) => `${field} = $${index + 2}`).join(', ');
+      const values = [existing[0].id, ...fields.map(field => data[field])];
+      
+      const updateQuery = `
+        UPDATE contact_pages 
+        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = $1 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(updateQuery, values);
+      res.json(result[0]);
+    } else {
+      // Insert new
+      const fields = ['locale', ...Object.keys(data)];
+      const values = [locale, ...Object.values(data)];
+      const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+      
+      const insertQuery = `
+        INSERT INTO contact_pages (${fields.join(', ')}) 
+        VALUES (${placeholders}) 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(insertQuery, values);
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error updating contact page:', error);
+    res.status(500).json({ error: 'Failed to update contact page' });
+  }
+});
+
+// Get and Update pricing plans (new endpoints)
+app.get('/api/pricing-plans', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const query = `
+      SELECT * FROM pricing_plans 
+      WHERE locale = $1 
+      ORDER BY id DESC LIMIT 1
+    `;
+    
+    const result = await queryDatabase(query, [locale]);
+    
+    if (result.length === 0) {
+      // Fallback to English if locale not found
+      const fallbackResult = await queryDatabase(query, ['en']);
+      res.json(fallbackResult[0] || {});
+    } else {
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error fetching pricing plans:', error);
+    res.status(500).json({ error: 'Failed to fetch pricing plans' });
+  }
+});
+
+app.put('/api/pricing-plans', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const data = req.body;
+    
+    // Check if record exists
+    const checkQuery = 'SELECT id FROM pricing_plans WHERE locale = $1';
+    const existing = await queryDatabase(checkQuery, [locale]);
+    
+    if (existing.length > 0) {
+      // Update existing
+      const fields = Object.keys(data).filter(key => key !== 'id');
+      const setClause = fields.map((field, index) => `${field} = $${index + 2}`).join(', ');
+      const values = [existing[0].id, ...fields.map(field => data[field])];
+      
+      const updateQuery = `
+        UPDATE pricing_plans 
+        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = $1 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(updateQuery, values);
+      res.json(result[0]);
+    } else {
+      // Insert new
+      const fields = ['locale', ...Object.keys(data)];
+      const values = [locale, ...Object.values(data)];
+      const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+      
+      const insertQuery = `
+        INSERT INTO pricing_plans (${fields.join(', ')}) 
+        VALUES (${placeholders}) 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(insertQuery, values);
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error updating pricing plans:', error);
+    res.status(500).json({ error: 'Failed to update pricing plans' });
+  }
+});
+
+// Get and Update job postings (new endpoints)
+app.get('/api/job-postings', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const query = `
+      SELECT * FROM job_postings 
+      WHERE locale = $1 
+      ORDER BY id DESC LIMIT 1
+    `;
+    
+    const result = await queryDatabase(query, [locale]);
+    
+    if (result.length === 0) {
+      // Fallback to English if locale not found
+      const fallbackResult = await queryDatabase(query, ['en']);
+      res.json(fallbackResult[0] || {});
+    } else {
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error fetching job postings:', error);
+    res.status(500).json({ error: 'Failed to fetch job postings' });
+  }
+});
+
+app.put('/api/job-postings', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const data = req.body;
+    
+    // Check if record exists
+    const checkQuery = 'SELECT id FROM job_postings WHERE locale = $1';
+    const existing = await queryDatabase(checkQuery, [locale]);
+    
+    if (existing.length > 0) {
+      // Update existing
+      const fields = Object.keys(data).filter(key => key !== 'id');
+      const setClause = fields.map((field, index) => `${field} = $${index + 2}`).join(', ');
+      const values = [existing[0].id, ...fields.map(field => data[field])];
+      
+      const updateQuery = `
+        UPDATE job_postings 
+        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = $1 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(updateQuery, values);
+      res.json(result[0]);
+    } else {
+      // Insert new
+      const fields = ['locale', ...Object.keys(data)];
+      const values = [locale, ...Object.values(data)];
+      const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+      
+      const insertQuery = `
+        INSERT INTO job_postings (${fields.join(', ')}) 
+        VALUES (${placeholders}) 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(insertQuery, values);
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error updating job postings:', error);
+    res.status(500).json({ error: 'Failed to update job postings' });
+  }
+});
+
 // 7. COMBINED GLOBAL CONTENT API (for easier frontend integration)
 // Get all global content at once
 app.get('/api/global-content', async (req, res) => {
@@ -3342,6 +3806,167 @@ app.post('/api/run-missing-fields-migration', async (req, res) => {
       error: 'Migration failed', 
       details: error.message 
     });
+  }
+});
+
+// ========================================
+// PRICING PLANS API (Missing from QA)
+// ========================================
+
+// Get pricing plans
+app.get('/api/pricing-plans', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    
+    const query = `
+      SELECT * FROM pricing_plans 
+      WHERE locale = $1 
+      ORDER BY display_order, id DESC LIMIT 1
+    `;
+    
+    const result = await queryDatabase(query, [locale]);
+    
+    if (result.length === 0) {
+      // Fallback to English if locale not found
+      const fallbackResult = await queryDatabase(query, ['en']);
+      res.json(fallbackResult[0] || {});
+    } else {
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error fetching pricing plans:', error);
+    res.status(500).json({ error: 'Failed to fetch pricing plans' });
+  }
+});
+
+// Update pricing plans
+app.put('/api/pricing-plans', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const data = req.body;
+    
+    // Check if record exists
+    const checkQuery = `SELECT id FROM pricing_plans WHERE locale = $1`;
+    const existing = await queryDatabase(checkQuery, [locale]);
+    
+    if (existing.length > 0) {
+      // Update existing
+      const filteredData = Object.keys(data)
+        .filter(key => !['id', 'created_at', 'locale'].includes(key))
+        .reduce((obj, key) => {
+          obj[key] = data[key];
+          return obj;
+        }, {});
+      
+      const setClause = Object.keys(filteredData).map((key, index) => `${key} = $${index + 2}`).join(', ');
+      const values = [existing[0].id, ...Object.values(filteredData)];
+      
+      const updateQuery = `
+        UPDATE pricing_plans 
+        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = $1 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(updateQuery, values);
+      res.json(result[0]);
+    } else {
+      // Insert new
+      const fields = ['locale', ...Object.keys(data)];
+      const values = [locale, ...Object.values(data)];
+      const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+      
+      const insertQuery = `
+        INSERT INTO pricing_plans (${fields.join(', ')}) 
+        VALUES (${placeholders}) 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(insertQuery, values);
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error saving pricing plans:', error);
+    res.status(500).json({ error: 'Failed to save pricing plans' });
+  }
+});
+
+// ========================================
+// JOB POSTINGS API (Missing from QA)
+// ========================================
+
+// Get job postings
+app.get('/api/job-postings', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    
+    const query = `
+      SELECT * FROM job_postings 
+      WHERE locale = $1 AND visible = 1
+      ORDER BY featured DESC, created_at DESC
+    `;
+    
+    const result = await queryDatabase(query, [locale]);
+    
+    if (result.length === 0) {
+      // Fallback to English if locale not found
+      const fallbackResult = await queryDatabase(query, ['en']);
+      res.json(fallbackResult || []);
+    } else {
+      res.json(result);
+    }
+  } catch (error) {
+    console.error('Error fetching job postings:', error);
+    res.status(500).json({ error: 'Failed to fetch job postings' });
+  }
+});
+
+// Update job postings
+app.put('/api/job-postings', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const data = req.body;
+    const id = req.body.id;
+    
+    if (id) {
+      // Update existing
+      const filteredData = Object.keys(data)
+        .filter(key => !['id', 'created_at'].includes(key))
+        .reduce((obj, key) => {
+          obj[key] = data[key];
+          return obj;
+        }, {});
+      
+      const setClause = Object.keys(filteredData).map((key, index) => `${key} = $${index + 2}`).join(', ');
+      const values = [id, ...Object.values(filteredData)];
+      
+      const updateQuery = `
+        UPDATE job_postings 
+        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = $1 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(updateQuery, values);
+      res.json(result[0]);
+    } else {
+      // Insert new
+      const fields = ['locale', ...Object.keys(data).filter(key => key !== 'id')];
+      const values = [locale, ...Object.keys(data).filter(key => key !== 'id').map(key => data[key])];
+      const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+      
+      const insertQuery = `
+        INSERT INTO job_postings (${fields.join(', ')}) 
+        VALUES (${placeholders}) 
+        RETURNING *
+      `;
+      
+      const result = await queryDatabase(insertQuery, values);
+      res.json(result[0]);
+    }
+  } catch (error) {
+    console.error('Error saving job posting:', error);
+    res.status(500).json({ error: 'Failed to save job posting' });
   }
 });
 

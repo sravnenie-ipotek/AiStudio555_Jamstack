@@ -86,12 +86,43 @@
         </div>
 
         <div class="tabs">
+            <!-- CORE PAGES (matching your website pages) -->
             <button class="tab active" onclick="showSection('home-page')">🏠 Home Page <span class="field-count">123 Fields</span></button>
+            <button class="tab" onclick="showSection('courses-page')">📚 Courses Page <span class="field-count">30+ Fields</span></button>
+            <button class="tab" onclick="showSection('teachers-page')">👨‍🏫 Teachers Page <span class="field-count">25+ Fields</span></button>
+            <button class="tab" onclick="showSection('career-center-page')">🎯 Career Center <span class="field-count">40+ Fields</span></button>
+            <button class="tab" onclick="showSection('career-orientation-page')">🧭 Career Orientation <span class="field-count">50+ Fields</span></button>
+            <button class="tab" onclick="showSection('pricing-page')">💰 Pricing Page <span class="field-count">20+ Fields</span></button>
+            <button class="tab" onclick="showSection('blog-page')">📝 Blog Page <span class="field-count">15+ Fields</span></button>
+            <button class="tab" onclick="showSection('about-page')">ℹ️ About Page <span class="field-count">35+ Fields</span></button>
+            <button class="tab" onclick="showSection('contact-page')">📞 Contact Page <span class="field-count">25+ Fields</span></button>
+            
+            <!-- CONTENT MANAGEMENT -->
+            <button class="tab" onclick="showSection('faqs-content')">❓ FAQs <span class="field-count">10+ Fields</span></button>
+            <button class="tab" onclick="showSection('job-postings-content')">💼 Job Postings <span class="field-count">20+ Fields</span></button>
+            <button class="tab" onclick="showSection('career-resources-content')">📄 Career Resources <span class="field-count">15+ Fields</span></button>
+            
+            <!-- SITE CONFIGURATION -->
             <button class="tab" onclick="showSection('site-settings')">⚙️ Site Settings <span class="field-count">25+ Fields</span></button>
             <button class="tab" onclick="showSection('navigation-menu')">🧭 Navigation Menu <span class="field-count">20+ Fields</span></button>
             <button class="tab" onclick="showSection('statistics')">📊 Statistics <span class="field-count">15+ Fields</span></button>
             <button class="tab" onclick="showSection('button-texts')">🔘 Button Texts <span class="field-count">18+ Fields</span></button>
             <button class="tab" onclick="showSection('company-logos')">🏢 Company Logos <span class="field-count">28+ Fields</span></button>
+            
+            <!-- PAGE MANAGEMENT TABS -->
+            <button class="tab" onclick="showSection('courses')">📚 Courses Management <span class="field-count">25+ Fields</span></button>
+            <button class="tab" onclick="showSection('teachers')">👨‍🏫 Teachers Management <span class="field-count">20+ Fields</span></button>
+            <button class="tab" onclick="showSection('pricing-plans')">💰 Pricing Plans <span class="field-count">30+ Fields</span></button>
+            <button class="tab" onclick="showSection('blog-posts')">📝 Blog Posts <span class="field-count">15+ Fields</span></button>
+            <button class="tab" onclick="showSection('about-page')">ℹ️ About Page <span class="field-count">35+ Fields</span></button>
+            <button class="tab" onclick="showSection('contact-page')">📞 Contact Page <span class="field-count">20+ Fields</span></button>
+            
+            <!-- CONTENT MANAGEMENT TABS -->
+            <button class="tab" onclick="showSection('faqs')">❓ FAQs Management <span class="field-count">Dynamic</span></button>
+            <button class="tab" onclick="showSection('job-postings')">💼 Job Postings <span class="field-count">Dynamic</span></button>
+            <button class="tab" onclick="showSection('career-resources')">📋 Career Resources <span class="field-count">Dynamic</span></button>
+            <button class="tab" onclick="showSection('career-services')">🏢 Career Center <span class="field-count">25+ Fields</span></button>
+            <button class="tab" onclick="showSection('career-orientation')">🧭 Career Orientation <span class="field-count">20+ Fields</span></button>
         </div>
 
         <!-- COMPREHENSIVE HOME PAGE Section -->
@@ -4148,6 +4179,457 @@
             }
         }
 
+        // ADDITIONAL PAGE MANAGEMENT FUNCTIONS
+
+        // COURSES PAGE Functions
+        async function loadCoursesPage() {
+            try {
+                const locale = getCurrentLanguage();
+                const response = await fetch(`${API_BASE}/api/courses-page?locale=${locale}`);
+                const data = await response.json();
+                
+                // Populate form fields
+                document.getElementById('courses_page_title').value = data.page_title || 'Courses';
+                document.getElementById('courses_page_description').value = data.page_description || 'Browse our comprehensive course catalog';
+                document.getElementById('courses_hero_title').value = data.hero_title || 'Master AI Skills';
+                document.getElementById('courses_hero_description').value = data.hero_description || 'Choose from our comprehensive range of AI courses';
+                document.getElementById('courses_featured_title').value = data.featured_courses_title || 'Featured Courses';
+                
+                document.getElementById('status').innerHTML = '✅ Courses page content loaded successfully!';
+            } catch (error) {
+                console.error('Error loading courses page:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to load courses page content';
+            }
+        }
+
+        async function saveCoursesPage() {
+            try {
+                const locale = getCurrentLanguage();
+                const data = {
+                    page_title: document.getElementById('courses_page_title').value,
+                    page_description: document.getElementById('courses_page_description').value,
+                    hero_title: document.getElementById('courses_hero_title').value,
+                    hero_description: document.getElementById('courses_hero_description').value,
+                    featured_courses_title: document.getElementById('courses_featured_title').value
+                };
+                
+                const response = await fetch(`${API_BASE}/api/courses-page?locale=${locale}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('status').innerHTML = '✅ Courses page saved successfully!';
+                } else {
+                    throw new Error('Failed to save courses page');
+                }
+            } catch (error) {
+                console.error('Error saving courses page:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to save courses page';
+            }
+        }
+
+        // TEACHERS PAGE Functions
+        async function loadTeachersPage() {
+            try {
+                const locale = getCurrentLanguage();
+                const response = await fetch(`${API_BASE}/api/teachers?locale=${locale}`);
+                const data = await response.json();
+                
+                // Populate form fields
+                document.getElementById('teachers_page_title').value = data.page_title || 'Teachers';
+                document.getElementById('teachers_hero_title').value = data.hero_title || 'Meet Our Expert Instructors';
+                document.getElementById('teachers_hero_description').value = data.hero_description || 'Learn from industry professionals';
+                document.getElementById('teachers_section_title').value = data.teachers_section_title || 'Our Teaching Team';
+                
+                document.getElementById('status').innerHTML = '✅ Teachers page content loaded successfully!';
+            } catch (error) {
+                console.error('Error loading teachers page:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to load teachers page content';
+            }
+        }
+
+        async function saveTeachersPage() {
+            try {
+                const locale = getCurrentLanguage();
+                const data = {
+                    page_title: document.getElementById('teachers_page_title').value,
+                    hero_title: document.getElementById('teachers_hero_title').value,
+                    hero_description: document.getElementById('teachers_hero_description').value,
+                    teachers_section_title: document.getElementById('teachers_section_title').value
+                };
+                
+                const response = await fetch(`${API_BASE}/api/teachers?locale=${locale}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('status').innerHTML = '✅ Teachers page saved successfully!';
+                } else {
+                    throw new Error('Failed to save teachers page');
+                }
+            } catch (error) {
+                console.error('Error saving teachers page:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to save teachers page';
+            }
+        }
+
+        // PRICING PLANS Functions
+        async function loadPricingPlans() {
+            try {
+                const locale = getCurrentLanguage();
+                const response = await fetch(`${API_BASE}/api/pricing-plans?locale=${locale}`);
+                const data = await response.json();
+                
+                // Populate form fields
+                document.getElementById('pricing_page_title').value = data.page_title || 'Pricing Plans';
+                document.getElementById('pricing_hero_title').value = data.hero_title || 'Choose Your Learning Path';
+                document.getElementById('pricing_hero_description').value = data.hero_description || 'Flexible pricing options for every learner';
+                document.getElementById('pricing_plans_title').value = data.plans_section_title || 'Our Plans';
+                
+                document.getElementById('status').innerHTML = '✅ Pricing plans content loaded successfully!';
+            } catch (error) {
+                console.error('Error loading pricing plans:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to load pricing plans content';
+            }
+        }
+
+        async function savePricingPlans() {
+            try {
+                const locale = getCurrentLanguage();
+                const data = {
+                    page_title: document.getElementById('pricing_page_title').value,
+                    hero_title: document.getElementById('pricing_hero_title').value,
+                    hero_description: document.getElementById('pricing_hero_description').value,
+                    plans_section_title: document.getElementById('pricing_plans_title').value
+                };
+                
+                const response = await fetch(`${API_BASE}/api/pricing-plans?locale=${locale}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('status').innerHTML = '✅ Pricing plans saved successfully!';
+                } else {
+                    throw new Error('Failed to save pricing plans');
+                }
+            } catch (error) {
+                console.error('Error saving pricing plans:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to save pricing plans';
+            }
+        }
+
+        // BLOG POSTS Functions
+        async function loadBlogPosts() {
+            try {
+                const locale = getCurrentLanguage();
+                const response = await fetch(`${API_BASE}/api/blog-posts?locale=${locale}`);
+                const data = await response.json();
+                
+                // Populate form fields
+                document.getElementById('blog_page_title').value = data.page_title || 'Blog';
+                document.getElementById('blog_hero_title').value = data.hero_title || 'Latest Insights & News';
+                document.getElementById('blog_hero_description').value = data.hero_description || 'Stay updated with AI industry trends';
+                document.getElementById('blog_posts_title').value = data.posts_section_title || 'Recent Posts';
+                
+                document.getElementById('status').innerHTML = '✅ Blog posts content loaded successfully!';
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to load blog posts content';
+            }
+        }
+
+        async function saveBlogPosts() {
+            try {
+                const locale = getCurrentLanguage();
+                const data = {
+                    page_title: document.getElementById('blog_page_title').value,
+                    hero_title: document.getElementById('blog_hero_title').value,
+                    hero_description: document.getElementById('blog_hero_description').value,
+                    posts_section_title: document.getElementById('blog_posts_title').value
+                };
+                
+                const response = await fetch(`${API_BASE}/api/blog-posts?locale=${locale}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('status').innerHTML = '✅ Blog posts saved successfully!';
+                } else {
+                    throw new Error('Failed to save blog posts');
+                }
+            } catch (error) {
+                console.error('Error saving blog posts:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to save blog posts';
+            }
+        }
+
+        // ABOUT PAGE Functions
+        async function loadAboutPage() {
+            try {
+                const locale = getCurrentLanguage();
+                const response = await fetch(`${API_BASE}/api/about-page?locale=${locale}`);
+                const data = await response.json();
+                
+                // Populate form fields
+                document.getElementById('about_page_title').value = data.page_title || 'About Us';
+                document.getElementById('about_hero_title').value = data.hero_title || 'About AI Studio';
+                document.getElementById('about_company_story').value = data.company_story || 'Our story and mission';
+                document.getElementById('about_mission_statement').value = data.mission_statement || 'Empowering the future through AI education';
+                document.getElementById('about_team_section').value = data.team_section_title || 'Our Team';
+                
+                document.getElementById('status').innerHTML = '✅ About page content loaded successfully!';
+            } catch (error) {
+                console.error('Error loading about page:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to load about page content';
+            }
+        }
+
+        async function saveAboutPage() {
+            try {
+                const locale = getCurrentLanguage();
+                const data = {
+                    page_title: document.getElementById('about_page_title').value,
+                    hero_title: document.getElementById('about_hero_title').value,
+                    company_story: document.getElementById('about_company_story').value,
+                    mission_statement: document.getElementById('about_mission_statement').value,
+                    team_section_title: document.getElementById('about_team_section').value
+                };
+                
+                const response = await fetch(`${API_BASE}/api/about-page?locale=${locale}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('status').innerHTML = '✅ About page saved successfully!';
+                } else {
+                    throw new Error('Failed to save about page');
+                }
+            } catch (error) {
+                console.error('Error saving about page:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to save about page';
+            }
+        }
+
+        // CONTACT PAGE Functions
+        async function loadContactPage() {
+            try {
+                const locale = getCurrentLanguage();
+                const response = await fetch(`${API_BASE}/api/contact-page?locale=${locale}`);
+                const data = await response.json();
+                
+                // Populate form fields
+                document.getElementById('contact_page_title').value = data.page_title || 'Contact Us';
+                document.getElementById('contact_hero_title').value = data.hero_title || 'Get in Touch';
+                document.getElementById('contact_info_section').value = data.contact_info || 'Contact information';
+                document.getElementById('contact_office_hours').value = data.office_hours || 'Monday - Friday: 9AM - 6PM';
+                document.getElementById('contact_map_embed').value = data.map_embed || '';
+                
+                document.getElementById('status').innerHTML = '✅ Contact page content loaded successfully!';
+            } catch (error) {
+                console.error('Error loading contact page:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to load contact page content';
+            }
+        }
+
+        async function saveContactPage() {
+            try {
+                const locale = getCurrentLanguage();
+                const data = {
+                    page_title: document.getElementById('contact_page_title').value,
+                    hero_title: document.getElementById('contact_hero_title').value,
+                    contact_info: document.getElementById('contact_info_section').value,
+                    office_hours: document.getElementById('contact_office_hours').value,
+                    map_embed: document.getElementById('contact_map_embed').value
+                };
+                
+                const response = await fetch(`${API_BASE}/api/contact-page?locale=${locale}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('status').innerHTML = '✅ Contact page saved successfully!';
+                } else {
+                    throw new Error('Failed to save contact page');
+                }
+            } catch (error) {
+                console.error('Error saving contact page:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to save contact page';
+            }
+        }
+
+        // FAQS Functions
+        async function loadFaqs() {
+            try {
+                const locale = getCurrentLanguage();
+                const response = await fetch(`${API_BASE}/api/faqs?locale=${locale}`);
+                const data = await response.json();
+                
+                // Populate form fields
+                document.getElementById('faqs_category_name').value = data.category_name || 'Frequently Asked Questions';
+                document.getElementById('faqs_question_text').value = data.question_text || '';
+                document.getElementById('faqs_answer_text').value = data.answer_text || '';
+                document.getElementById('faqs_display_order').value = data.display_order || '1';
+                
+                document.getElementById('status').innerHTML = '✅ FAQs content loaded successfully!';
+            } catch (error) {
+                console.error('Error loading faqs:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to load FAQs content';
+            }
+        }
+
+        async function saveFaqs() {
+            try {
+                const locale = getCurrentLanguage();
+                const data = {
+                    category_name: document.getElementById('faqs_category_name').value,
+                    question_text: document.getElementById('faqs_question_text').value,
+                    answer_text: document.getElementById('faqs_answer_text').value,
+                    display_order: parseInt(document.getElementById('faqs_display_order').value) || 1
+                };
+                
+                const response = await fetch(`${API_BASE}/api/faqs?locale=${locale}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('status').innerHTML = '✅ FAQs saved successfully!';
+                } else {
+                    throw new Error('Failed to save FAQs');
+                }
+            } catch (error) {
+                console.error('Error saving faqs:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to save FAQs';
+            }
+        }
+
+        // JOB POSTINGS Functions
+        async function loadJobPostings() {
+            try {
+                const locale = getCurrentLanguage();
+                const response = await fetch(`${API_BASE}/api/job-postings?locale=${locale}`);
+                const data = await response.json();
+                
+                // Populate form fields
+                document.getElementById('job_title').value = data.job_title || '';
+                document.getElementById('job_description').value = data.job_description || '';
+                document.getElementById('job_requirements').value = data.job_requirements || '';
+                document.getElementById('job_location').value = data.job_location || '';
+                document.getElementById('job_salary_range').value = data.salary_range || '';
+                
+                document.getElementById('status').innerHTML = '✅ Job postings content loaded successfully!';
+            } catch (error) {
+                console.error('Error loading job postings:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to load job postings content';
+            }
+        }
+
+        async function saveJobPostings() {
+            try {
+                const locale = getCurrentLanguage();
+                const data = {
+                    job_title: document.getElementById('job_title').value,
+                    job_description: document.getElementById('job_description').value,
+                    job_requirements: document.getElementById('job_requirements').value,
+                    job_location: document.getElementById('job_location').value,
+                    salary_range: document.getElementById('job_salary_range').value
+                };
+                
+                const response = await fetch(`${API_BASE}/api/job-postings?locale=${locale}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('status').innerHTML = '✅ Job postings saved successfully!';
+                } else {
+                    throw new Error('Failed to save job postings');
+                }
+            } catch (error) {
+                console.error('Error saving job postings:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to save job postings';
+            }
+        }
+
+        // CAREER RESOURCES Functions
+        async function loadCareerResources() {
+            try {
+                const locale = getCurrentLanguage();
+                const response = await fetch(`${API_BASE}/api/career-resources?locale=${locale}`);
+                const data = await response.json();
+                
+                // Populate form fields
+                document.getElementById('career_resource_title').value = data.resource_title || '';
+                document.getElementById('career_resource_description').value = data.resource_description || '';
+                document.getElementById('career_resource_link').value = data.resource_link || '';
+                document.getElementById('career_resource_category').value = data.resource_category || '';
+                
+                document.getElementById('status').innerHTML = '✅ Career resources content loaded successfully!';
+            } catch (error) {
+                console.error('Error loading career resources:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to load career resources content';
+            }
+        }
+
+        async function saveCareerResources() {
+            try {
+                const locale = getCurrentLanguage();
+                const data = {
+                    resource_title: document.getElementById('career_resource_title').value,
+                    resource_description: document.getElementById('career_resource_description').value,
+                    resource_link: document.getElementById('career_resource_link').value,
+                    resource_category: document.getElementById('career_resource_category').value
+                };
+                
+                const response = await fetch(`${API_BASE}/api/career-resources?locale=${locale}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('status').innerHTML = '✅ Career resources saved successfully!';
+                } else {
+                    throw new Error('Failed to save career resources');
+                }
+            } catch (error) {
+                console.error('Error saving career resources:', error);
+                document.getElementById('status').innerHTML = '❌ Failed to save career resources';
+            }
+        }
+
         // RUN MIGRATION Function
         async function runMissingFieldsMigration() {
             try {
@@ -4222,6 +4704,45 @@
                     break;
                 case 'company-logos':
                     loadCompanyLogos();
+                    break;
+                case 'courses':
+                    loadCoursesPage();
+                    break;
+                case 'teachers':
+                    loadTeachersPage();
+                    break;
+                case 'pricing-plans':
+                    loadPricingPlans();
+                    break;
+                case 'blog-posts':
+                    loadBlogPosts();
+                    break;
+                case 'about-page':
+                    loadAboutPage();
+                    break;
+                case 'contact-page':
+                    loadContactPage();
+                    break;
+                case 'faqs':
+                    loadFaqs();
+                    break;
+                case 'job-postings':
+                    loadJobPostings();
+                    break;
+                case 'career-resources':
+                    loadCareerResources();
+                    break;
+                case 'career-services':
+                    // For career services, use existing career center functionality
+                    if (typeof loadCareerCenter === 'function') {
+                        loadCareerCenter();
+                    }
+                    break;
+                case 'career-orientation':
+                    // For career orientation, use existing functionality  
+                    if (typeof loadCareerOrientation === 'function') {
+                        loadCareerOrientation();
+                    }
                     break;
             }
         };
