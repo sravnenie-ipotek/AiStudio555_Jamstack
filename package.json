@@ -24,6 +24,10 @@
     "test:responsive": "node responsive-qa-subagent.js http://localhost:9090",
     "test:responsive:prod": "node responsive-qa-subagent.js https://www.aistudio555.com",
     "test:responsive:quick": "node responsive-qa-quick.js",
+    "test:playwright": "npx playwright test tests/responsive.spec.js --reporter=list",
+    "test:responsive:full": "node run-responsive-tests.js",
+    "test:responsive:analyze": "node analyze-responsive-results.js",
+    "test:responsive:report": "python3 -m http.server 8080 --directory test-results",
     "setup": "npm install && cd strapi-fresh && npm install",
     "clean": "rm -rf node_modules strapi-fresh/node_modules",
     "rebuild": "npm run clean && npm run setup"
