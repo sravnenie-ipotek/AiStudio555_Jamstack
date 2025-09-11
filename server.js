@@ -3232,13 +3232,108 @@ app.get('/api/global-content', async (req, res) => {
 app.post('/api/run-missing-fields-migration', async (req, res) => {
   try {
     console.log('🔄 Running missing fields migration...');
-    const { addMissingFields } = require('./add-missing-fields-migration');
-    await addMissingFields();
+    
+    // Inline migration code - create essential tables
+    const createTableQueries = [
+      // 1. Site Settings
+      `CREATE TABLE IF NOT EXISTS site_settings (
+        id SERIAL PRIMARY KEY,
+        locale VARCHAR(5) DEFAULT 'en',
+        site_name VARCHAR(255) DEFAULT 'AI Studio',
+        site_tagline VARCHAR(500),
+        logo_url VARCHAR(500),
+        footer_email VARCHAR(255) DEFAULT 'info@aistudio555.com',
+        footer_phone VARCHAR(50),
+        footer_address TEXT,
+        footer_copyright TEXT DEFAULT '© 2024 AI Studio. All rights reserved.',
+        facebook_url VARCHAR(500),
+        twitter_url VARCHAR(500),
+        instagram_url VARCHAR(500),
+        linkedin_url VARCHAR(500),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )`,
+      
+      // 2. Navigation Menu
+      `CREATE TABLE IF NOT EXISTS navigation_menus (
+        id SERIAL PRIMARY KEY,
+        locale VARCHAR(5) DEFAULT 'en',
+        home_label VARCHAR(100) DEFAULT 'Home',
+        courses_label VARCHAR(100) DEFAULT 'Courses',
+        teachers_label VARCHAR(100) DEFAULT 'Teachers',
+        career_services_label VARCHAR(100) DEFAULT 'Career Services',
+        career_center_label VARCHAR(100) DEFAULT 'Career Center',
+        career_orientation_label VARCHAR(100) DEFAULT 'Career Orientation',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )`,
+      
+      // 3. Statistics  
+      `CREATE TABLE IF NOT EXISTS statistics (
+        id SERIAL PRIMARY KEY,
+        locale VARCHAR(5) DEFAULT 'en',
+        courses_count VARCHAR(50) DEFAULT '125+',
+        courses_label VARCHAR(100) DEFAULT 'Courses',
+        learners_count VARCHAR(50) DEFAULT '14,000+',
+        learners_label VARCHAR(100) DEFAULT 'Learners',
+        years_count VARCHAR(50) DEFAULT '10+',
+        years_label VARCHAR(100) DEFAULT 'Years',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )`,
+      
+      // 4. Button Texts
+      `CREATE TABLE IF NOT EXISTS button_texts (
+        id SERIAL PRIMARY KEY,
+        locale VARCHAR(5) DEFAULT 'en',
+        get_started VARCHAR(100) DEFAULT 'Get Started',
+        explore_courses VARCHAR(100) DEFAULT 'Explore Courses',
+        learn_more VARCHAR(100) DEFAULT 'Learn More',
+        enroll_now VARCHAR(100) DEFAULT 'Enroll Now',
+        contact_us VARCHAR(100) DEFAULT 'Contact Us',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )`,
+      
+      // 5. Company Logos
+      `CREATE TABLE IF NOT EXISTS company_logos (
+        id SERIAL PRIMARY KEY,
+        locale VARCHAR(5) DEFAULT 'en',
+        section_title VARCHAR(255) DEFAULT 'Our Graduates Work At',
+        company_1_name VARCHAR(255) DEFAULT 'Google',
+        company_1_logo VARCHAR(500),
+        company_2_name VARCHAR(255) DEFAULT 'Microsoft',
+        company_2_logo VARCHAR(500),
+        company_3_name VARCHAR(255) DEFAULT 'Amazon',
+        company_3_logo VARCHAR(500),
+        company_4_name VARCHAR(255) DEFAULT 'Meta',
+        company_4_logo VARCHAR(500),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )`
+    ];
+    
+    // Execute all queries
+    for (const query of createTableQueries) {
+      await queryDatabase(query, []);
+    }
+    
+    // Seed initial data for English
+    const seedQueries = [
+      "INSERT INTO site_settings (locale, site_name) VALUES ('en', 'AI Studio') ON CONFLICT DO NOTHING",
+      "INSERT INTO navigation_menus (locale) VALUES ('en') ON CONFLICT DO NOTHING", 
+      "INSERT INTO statistics (locale) VALUES ('en') ON CONFLICT DO NOTHING",
+      "INSERT INTO button_texts (locale) VALUES ('en') ON CONFLICT DO NOTHING",
+      "INSERT INTO company_logos (locale) VALUES ('en') ON CONFLICT DO NOTHING"
+    ];
+    
+    for (const query of seedQueries) {
+      try {
+        await queryDatabase(query, []);
+      } catch (error) {
+        console.log('Seeding query failed (may already exist):', error.message);
+      }
+    }
     
     res.json({ 
       success: true, 
       message: 'Missing fields migration completed successfully!',
-      note: 'New tables created: site_settings, navigation_menus, statistics, button_texts, company_logos, page_meta'
+      note: 'New tables created: site_settings, navigation_menus, statistics, button_texts, company_logos'
     });
   } catch (error) {
     console.error('Migration failed:', error);
