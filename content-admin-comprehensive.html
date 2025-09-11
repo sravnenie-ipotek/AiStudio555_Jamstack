@@ -2023,12 +2023,26 @@
                     // Testimonials Section
                     testimonialsTitle: getFieldValue('homeTestimonialsTitle'),
                     testimonialsSubtitle: getFieldValue('homeTestimonialsSubtitle'),
-                    testimonialsVisible: getCheckboxValue('homeTestimonialsVisible')
+                    testimonialsVisible: getCheckboxValue('homeTestimonialsVisible'),
                     
-                    // NOTE: Courses and testimonials are stored separately, not in home_pages table
-                    // Removing these from save to prevent database errors:
-                    // courses: [...] 
-                    // testimonials: [...]
+                    // Individual Courses (All 6) - stored as JSON string
+                    courses: JSON.stringify([1, 2, 3, 4, 5, 6].map(num => ({
+                        title: getFieldValue(`course${num}Title`),
+                        rating: parseFloat(getFieldValue(`course${num}Rating`)) || 0,
+                        lessons: parseInt(getFieldValue(`course${num}Lessons`)) || 0,
+                        duration: getFieldValue(`course${num}Duration`),
+                        category: getFieldValue(`course${num}Category`),
+                        description: getFieldValue(`course${num}Description`),
+                        visible: getCheckboxValue(`course${num}Visible`)
+                    }))),
+                    
+                    // Individual Testimonials (All 4) - stored as JSON string
+                    testimonials: JSON.stringify([1, 2, 3, 4].map(num => ({
+                        author: getFieldValue(`testimonial${num}Author`),
+                        rating: parseFloat(getFieldValue(`testimonial${num}Rating`)) || 0,
+                        text: getFieldValue(`testimonial${num}Text`),
+                        visible: getCheckboxValue(`testimonial${num}Visible`)
+                    })))
                 };
 
                 console.log('💾 Saving Complete Home Page Data:', homeData);
