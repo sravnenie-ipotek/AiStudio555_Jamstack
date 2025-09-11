@@ -103,8 +103,16 @@ class StrapiIntegration {
 
   applyContent(content) {
     // Apply hero section content
+    // Check if hero data is nested or flat
     if (content.hero) {
       this.applyHeroContent(content.hero);
+    } else if (content.heroTitle || content.heroSubtitle || content.heroDescription) {
+      // Handle flat structure from our custom API
+      this.applyHeroContent({
+        title: content.heroTitle,
+        subtitle: content.heroSubtitle,
+        description: content.heroDescription
+      });
     }
     
     // Apply featured courses

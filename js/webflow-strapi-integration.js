@@ -228,9 +228,10 @@ class CustomAPIIntegration {
         }
 
         // Update hero description
-        const heroDesc = document.querySelector('.hero-text, .hero-description-text, [data-hero-description]');
+        const heroDesc = document.querySelector('.banner-description-text, .hero-text, .hero-description-text, [data-hero-description]');
         if (heroDesc && heroData.description) {
             heroDesc.textContent = heroData.description;
+            console.log('✅ Updated hero description:', heroData.description);
         }
     }
 
