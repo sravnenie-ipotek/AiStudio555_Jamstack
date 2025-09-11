@@ -11,7 +11,6 @@ const fs = require('fs');
 const path = require('path');
 const { Client } = require('pg');
 const { migrate } = require('./migrate-to-railway');
-const { applyIntegrationFix } = require('./server-side-integration-fix');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,9 +19,6 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// 🔧 CRITICAL FIX: Server-side HTML integration injection
-// Automatically adds webflow-strapi-integration.js to HTML files
-applyIntegrationFix(app);
 
 app.use(express.static('.'));
 
