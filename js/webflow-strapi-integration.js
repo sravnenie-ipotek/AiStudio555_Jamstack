@@ -108,6 +108,13 @@ class CustomAPIIntegration {
                 this.updateFeaturedCoursesFromAPI(courses.data);
             }
 
+            // Load FAQs
+            const faqs = await this.fetchAPI('/faqs');
+            if (faqs?.data) {
+                this.updateFAQsSection(faqs.data);
+                console.log(`✅ Loaded ${faqs.data.length} FAQs`);
+            }
+
         } catch (error) {
             console.error('❌ Failed to load home content:', error);
         }
@@ -537,6 +544,87 @@ class CustomAPIIntegration {
         document.body.prepend(banner);
         
         console.log('👁️ Preview mode enabled');
+    }
+
+    updateFAQsSection(faqsData) {
+        console.log('❓ Updating FAQs section...');
+        
+        // Find FAQ container - look for multiple possible selectors
+        const faqContainer = document.querySelector('.faq-accordion-wrapper, .faqs-container, .faq-items, [data-faqs]');
+        
+        if (!faqContainer) {
+            console.warn('⚠️ FAQ container not found on page');
+            return;
+        }
+
+        // Clear existing FAQs
+        faqContainer.innerHTML = '';
+        
+        // Create FAQ items
+        faqsData.forEach((faq, index) => {
+            const faqItem = this.createFAQItem(faq, index);
+            faqContainer.appendChild(faqItem);
+        });
+        
+        console.log(`✅ Updated FAQs section with ${faqsData.length} items`);
+        
+        // Re-initialize accordion functionality
+        this.initializeFAQAccordion();
+    }
+
+    createFAQItem(faqData, index) {
+        const faq = faqData.attributes || faqData;
+        
+        const faqElement = document.createElement('div');
+        faqElement.className = 'single-faq-accordion-wrap';
+        faqElement.setAttribute('data-faq-index', index);
+        
+        faqElement.innerHTML = `
+            <div class="faq-question-wrap" role="button" tabindex="0">
+                <div class="faq-question">Q: ${faq.question}</div>
+                <div class="faq-icon-wrap">
+                    <div class="faq-icon">+</div>
+                </div>
+            </div>
+            <div class="faq-answer-wrap" style="display: none;">
+                <div class="faq-answer">${faq.answer}</div>
+            </div>
+        `;
+        
+        // Add click handler for accordion
+        const questionWrap = faqElement.querySelector('.faq-question-wrap');
+        questionWrap.addEventListener('click', () => {
+            this.toggleFAQItem(faqElement);
+        });
+        
+        return faqElement;
+    }
+
+    toggleFAQItem(faqElement) {
+        const answerWrap = faqElement.querySelector('.faq-answer-wrap');
+        const icon = faqElement.querySelector('.faq-icon');
+        const isOpen = answerWrap.style.display !== 'none';
+        
+        if (isOpen) {
+            answerWrap.style.display = 'none';
+            icon.textContent = '+';
+            faqElement.classList.remove('open');
+        } else {
+            answerWrap.style.display = 'block';
+            icon.textContent = '−';
+            faqElement.classList.add('open');
+        }
+    }
+
+    initializeFAQAccordion() {
+        console.log('🎵 Initializing FAQ accordion functionality');
+        
+        // Add any additional accordion initialization if needed
+        const faqItems = document.querySelectorAll('.single-faq-accordion-wrap');
+        faqItems.forEach(item => {
+            // Already have click handlers, just log
+            console.log('FAQ item ready:', item.querySelector('.faq-question')?.textContent);
+        });
     }
 }
 
