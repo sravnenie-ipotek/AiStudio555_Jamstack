@@ -1775,11 +1775,42 @@
 
     <script>
         // Production API URLs - Updated to use correct production endpoint
-        const API_URL_READ = 'https://aistudio555jamstack-production.up.railway.app/api';
-        const API_URL_CRUD = 'https://aistudio555jamstack-production.up.railway.app/api';
+        // Smart API URL detection with automatic fallback to production
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const LOCAL_API = 'http://localhost:3000/api';
+        const PROD_API = 'https://aistudio555jamstack-production.up.railway.app/api';
+        
+        // For local development, try local first then fallback to production if error
+        const API_URL_READ = isLocal ? LOCAL_API : PROD_API;
+        const API_URL_CRUD = PROD_API; // Always save to production for consistency
+        const FALLBACK_API = PROD_API;
         let currentEditingId = null;
         let currentEditingType = null;
         let currentLocale = 'en';  // Default to English
+
+        // Smart fetch with automatic fallback
+        async function smartFetch(endpoint, options = {}) {
+            let url = `${API_URL_READ}${endpoint}`;
+            
+            try {
+                const response = await fetch(url, options);
+                if (response.ok) {
+                    return response;
+                }
+                throw new Error(`HTTP ${response.status}`);
+            } catch (error) {
+                // If local fails and we're in local mode, try production fallback
+                if (isLocal && url.includes('localhost')) {
+                    console.log(`🔄 Local API failed for ${endpoint}, falling back to production...`);
+                    try {
+                        return await fetch(`${FALLBACK_API}${endpoint}`, options);
+                    } catch (fallbackError) {
+                        throw new Error(`Both local and production APIs failed: ${error.message}`);
+                    }
+                }
+                throw error;
+            }
+        }
 
         // Language switching functionality
         function switchLanguage(locale) {
@@ -1890,8 +1921,7 @@
         // COMPLETE HOME PAGE FUNCTIONS - ALL 123 FIELDS
         async function loadCompleteHomePage() {
             try {
-                const response = await fetch(`${API_URL_READ}/home-page?locale=${currentLocale}`);
-                if (!response.ok) throw new Error('Failed to fetch home page data');
+                const response = await smartFetch(`/home-page?locale=${currentLocale}`);
                 
                 const data = await response.json();
                 console.log('📊 Complete Home Page Data:', data);
@@ -2017,12 +2047,24 @@
 
                 console.log('💾 Saving Complete Home Page Data:', homeData);
 
-                // TODO: Implement actual save to database
-                // For now, show success message
-                showMessage('🎉 COMPLETE Home Page saved with ALL 123 fields! (Database save pending)', 'success');
+                // Save to database via API
+                const response = await fetch(`${API_URL_CRUD}/home-page/1`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(homeData)
+                });
                 
-                // Log the complete data structure for verification
-                console.log('📊 Complete Home Data Structure:', JSON.stringify(homeData, null, 2));
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                showMessage('🎉 COMPLETE Home Page saved with ALL 123 fields successfully!', 'success');
+                
+                // Log the result for verification
+                console.log('✅ Home Page Save Result:', result);
                 
             } catch (error) {
                 console.error('Error saving home page:', error);
@@ -2283,7 +2325,7 @@
         async function loadCareerCenterData() {
             // Load career center page data
             try {
-                const centerResponse = await fetch(`${API_URL_READ}/career-center-page`);
+                const centerResponse = await smartFetch(`/career-center-page`);
                 if (centerResponse.ok) {
                     const centerData = await centerResponse.json();
                     if (centerData.data && centerData.data.attributes) {
@@ -3076,8 +3118,8 @@
             loadSectionData('home-page');
             loadCareerCenterData();
             
-            // Check API status
-            fetch(`${API_URL_READ}/status`)
+            // Check API status with fallback
+            smartFetch('/status')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('status').innerHTML = `

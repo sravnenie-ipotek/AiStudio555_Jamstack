@@ -6,8 +6,11 @@
 
 class CustomAPIIntegration {
     constructor() {
-        // Production API URL
-        this.API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+        // Smart API URL detection
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        this.API_BASE = isLocal 
+            ? 'http://localhost:3000/api'  // Local development
+            : 'https://aistudio555jamstack-production.up.railway.app/api';  // Production
         this.isInitialized = false;
         this.currentLanguage = 'en';
         this.cache = {};
@@ -85,10 +88,18 @@ class CustomAPIIntegration {
             
             // Load home page data
             const homeData = await this.fetchAPI('/home-page');
-            if (homeData) {
-                this.updateHomeHero(homeData.hero);
-                this.updateFeaturedCourses(homeData.featuredCourses);
-                this.updateTestimonials(homeData.testimonials);
+            if (homeData && homeData.data && homeData.data.attributes) {
+                const attrs = homeData.data.attributes;
+                console.log('📊 Home page attributes:', attrs);
+                
+                // Create hero data object with correct structure
+                const heroData = {
+                    title: attrs.heroTitle,
+                    subtitle: attrs.heroSubtitle, 
+                    description: attrs.heroDescription
+                };
+                
+                this.updateHomeHero(heroData);
             }
 
             // Load latest courses for featured section
@@ -197,9 +208,10 @@ class CustomAPIIntegration {
         console.log('🎯 Updating hero section...');
         
         // Update hero title
-        const heroTitle = document.querySelector('.hero-title, h1.hero, [data-hero-title]');
+        const heroTitle = document.querySelector('.banner-heading, .hero-title, h1.hero, [data-hero-title]');
         if (heroTitle && heroData.title) {
             heroTitle.textContent = heroData.title;
+            console.log('✅ Updated hero title:', heroData.title);
         }
 
         // Update hero subtitle
