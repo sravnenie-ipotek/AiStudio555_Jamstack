@@ -2096,14 +2096,14 @@
                     
                     // Using existing About fields for Online Learning
                     aboutTitle: getFieldValue('homeOnlineTitle') || 'Learn From Anywhere, Anytime',
-                    aboutSubtitle: getFieldValue('homeTotalCourses') + ' Courses, ' + getFieldValue('homeTotalLearners') + ' Learners',
-                    aboutDescription: getFieldValue('homeOnlineDescription'),
-                    aboutVisible: getCheckboxValue('homeOnlineVisible'),
+                    aboutSubtitle: (getFieldValue('homeTotalCourses') || '50+') + ' Courses, ' + (getFieldValue('homeTotalLearners') || '10,000+') + ' Learners',
+                    aboutDescription: getFieldValue('homeOnlineDescription') || 'Our online learning platform makes education accessible',
+                    aboutVisible: getCheckboxValue('homeOnlineVisible') !== false,
                     
                     // Using existing Companies fields for Career Success
                     companiesTitle: getFieldValue('homeCareerTitle') || 'Our Graduates Work At',
-                    companiesDescription: getFieldValue('homeCareerDescription'),
-                    companiesVisible: getCheckboxValue('homeCareerVisible'),
+                    companiesDescription: getFieldValue('homeCareerDescription') || 'Join alumni at leading tech companies',
+                    companiesVisible: getCheckboxValue('homeCareerVisible') !== false,
                     
                     // Testimonials Section
                     testimonialsTitle: getFieldValue('homeTestimonialsTitle'),
