@@ -31,6 +31,71 @@
     .primary-button-wrapper.mobile { display: none !important; }
     @media (max-width: 991px) { .primary-button-wrapper.desktop { display: none !important; } .primary-button-wrapper.mobile { display: block !important; } }
 
+    /* Language Selector Styles */
+    .language-selector-wrapper {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 20px;
+      position: relative;
+    }
+    
+    .language-selector {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 6px 16px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .language-selector:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .language-selector select {
+      background: transparent;
+      border: none;
+      color: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      cursor: pointer;
+      outline: none;
+      padding-right: 5px;
+    }
+    
+    .language-selector select option {
+      background: #05051a;
+      color: white;
+    }
+    
+    .language-flag {
+      font-size: 18px;
+    }
+    
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .language-selector-wrapper {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        margin: 0;
+        z-index: 999;
+      }
+      
+      .language-selector {
+        background: rgba(5, 5, 26, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      }
+    }
+
     /* Blog Page Specific Styles - Dark Theme with Blue Gradients */
     .blog-hero-section {
       background: linear-gradient(180deg, #05051a 0%, #04193f 100%); 
@@ -707,11 +772,44 @@
         <div class="navbar-content">
           <a href="index.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
           <nav role="navigation" class="nav-menu w-nav-menu">
-            <a href="home.html" class="nav-link w-nav-link">Home</a>
+            <a href="index.html" class="nav-link w-nav-link">Home</a>
             <a href="courses.html" class="nav-link w-nav-link">Courses</a>
             <a href="teachers.html" class="nav-link w-nav-link">Teachers</a>
-            
-            <!-- Cart and other components would go here -->
+            <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
+              <div class="dropdown-toggle w-dropdown-toggle">
+                <div class="dropdown-toggle-text-block">Career Services</div>
+                <div class="dropdown-toggle-arrow-2">▼</div>
+              </div>
+              <nav class="dropdown-list w-dropdown-list">
+                <a href="career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
+                  <div>Career Orientation</div>
+                </a>
+                <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block">
+                  <div>Career Center</div>
+                </a>
+              </nav>
+            </div>
+            <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
+            <div class="primary-button-wrapper mobile">
+              <a href="authentication-pages/sign-up.html" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block">
+                <div class="primary-button-text-wrap">
+                  <div class="primary-button-text-block">Sign Up Today</div>
+                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                </div>
+              </a>
+            </div>
+          </nav>
+          <div class="navbar-button-wrapper">
+            <div class="language-selector-wrapper">
+              <div class="language-selector">
+                <span class="language-flag">🇬🇧</span>
+                <select onchange="switchLanguage(this.value)">
+                  <option value="en">English</option>
+                  <option value="ru">Русский</option>
+                  <option value="he">עברית</option>
+                </select>
+              </div>
+            </div>
             <div class="primary-button-wrapper desktop">
               <a href="authentication-pages/sign-up.html" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
@@ -1469,6 +1567,64 @@
         createLanguageSwitcher();
       }
     })();
+  </script>
+  
+  <script>
+    // Language switcher function for navbar selector
+    function switchLanguage(lang) {
+      const currentPath = window.location.pathname;
+      let newPath = currentPath;
+      
+      // Extract the current filename
+      const pathParts = currentPath.split('/');
+      let filename = pathParts[pathParts.length - 1] || 'index.html';
+      
+      // Normalize home.html to index.html
+      if (filename === 'home.html' || filename === '') {
+        filename = 'index.html';
+      }
+      
+      // Build new path
+      if (currentPath.includes('/dist/')) {
+        const basePath = currentPath.substring(0, currentPath.indexOf('/dist/') + 6);
+        newPath = `${basePath}${lang}/${filename}`;
+      } else if (currentPath.includes('/en/') || currentPath.includes('/ru/') || currentPath.includes('/he/')) {
+        // Replace the language code in the path
+        newPath = currentPath.replace(/\/(en|ru|he)\//, `/${lang}/`);
+      } else {
+        // If no language in path, add it
+        newPath = `/dist/${lang}/${filename}`;
+      }
+      
+      // Apply RTL for Hebrew
+      if (lang === 'he') {
+        document.documentElement.setAttribute('dir', 'rtl');
+      } else {
+        document.documentElement.setAttribute('dir', 'ltr');
+      }
+      
+      // Store language preference
+      localStorage.setItem('selectedLanguage', lang);
+      
+      // Navigate to new path
+      window.location.href = newPath;
+    }
+    
+    // Set current language flag
+    document.addEventListener('DOMContentLoaded', function() {
+      const path = window.location.pathname;
+      let currentLang = 'en';
+      
+      if (path.includes('/ru/')) currentLang = 'ru';
+      else if (path.includes('/he/')) currentLang = 'he';
+      
+      const flags = { en: '🇬🇧', ru: '🇷🇺', he: '🇮🇱' };
+      const flagEl = document.querySelector('.language-flag');
+      if (flagEl) flagEl.textContent = flags[currentLang];
+      
+      const selectEl = document.querySelector('.language-selector select');
+      if (selectEl) selectEl.value = currentLang;
+    });
   </script>
 </body>
 </html>

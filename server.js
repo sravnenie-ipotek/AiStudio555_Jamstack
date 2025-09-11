@@ -2174,6 +2174,35 @@ app.get('/ru/teachers.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/ru/teachers.html'));
 });
 
+// Serve blog pages
+app.get('/blog.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'blog.html'));
+});
+
+app.get('/en/blog.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'blog.html'));
+});
+
+app.get('/ru/blog.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'blog.html'));
+});
+
+app.get('/he/blog.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'blog.html'));
+});
+
+app.get('/dist/en/blog.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'blog.html'));
+});
+
+app.get('/dist/ru/blog.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'blog.html'));
+});
+
+app.get('/dist/he/blog.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'blog.html'));
+});
+
 // Serve all pages with /dist prefix (for compatibility)
 app.get('/dist/en/courses.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/en/courses.html'));
