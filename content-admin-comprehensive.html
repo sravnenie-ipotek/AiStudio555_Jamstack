@@ -3803,8 +3803,11 @@
             });
         }
 
-        // API Configuration
-        const API_BASE = 'http://localhost:3000';
+        // API Configuration - Smart detection for local vs production
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const API_BASE = isLocal 
+            ? 'http://localhost:3000'
+            : 'https://aistudio555jamstack-production.up.railway.app';
         
         // Helper function to get current language
         function getCurrentLanguage() {
