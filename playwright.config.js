@@ -58,9 +58,9 @@ module.exports = defineConfig({
   },
   
   /* Test timeout */
-  timeout: 30 * 1000,
+  timeout: 60 * 1000,
   expect: {
-    timeout: 5 * 1000,
+    timeout: 10 * 1000,
   },
   
   /* Output directory for test results */

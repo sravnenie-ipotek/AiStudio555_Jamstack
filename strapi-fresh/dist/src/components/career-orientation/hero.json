@@ -1,0 +1,74 @@
+{
+    "collectionName": "components_career_orientation_heroes",
+    "info": {
+        "displayName": "Career Orientation Hero",
+        "description": "Hero section for career orientation page"
+    },
+    "options": {},
+    "attributes": {
+        "mainTitle": {
+            "type": "string",
+            "required": true,
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            }
+        },
+        "subtitle": {
+            "type": "string",
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            }
+        },
+        "description": {
+            "type": "text",
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            }
+        },
+        "statistics": {
+            "type": "component",
+            "repeatable": true,
+            "component": "shared.statistic"
+        },
+        "ctaText": {
+            "type": "string",
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            }
+        },
+        "ctaUrl": {
+            "type": "string"
+        },
+        "ctaStyle": {
+            "type": "enumeration",
+            "enum": ["primary", "secondary", "outline"],
+            "default": "primary"
+        },
+        "backgroundImage": {
+            "type": "media",
+            "multiple": false,
+            "required": false,
+            "allowedTypes": ["images"]
+        },
+        "backgroundVideo": {
+            "type": "media",
+            "multiple": false,
+            "required": false,
+            "allowedTypes": ["videos"]
+        },
+        "overlayOpacity": {
+            "type": "decimal",
+            "min": 0,
+            "max": 1,
+            "default": 0.5
+        }
+    }
+}

@@ -1,7 +1,7 @@
 {
   "page": "courses",
-  "lastSync": "2025-09-04T11:56:31.203Z",
-  "htmlVersion": "88d1b0ce17d3747d9cffb28f8bcaad07ab698194",
+  "lastSync": "2025-09-11T10:02:42.735Z",
+  "htmlVersion": "a01de44374e4ac4ca2e633132c07f20c564eab79",
   "structure": {
     "sections": [
       {
@@ -24,6 +24,36 @@
         "index": 1,
         "id": "section-1",
         "classes": [
+          "category-cards-section"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 2,
+          "paragraphs": 2,
+          "buttons": 0,
+          "images": 0,
+          "forms": 0
+        }
+      },
+      {
+        "index": 2,
+        "id": "section-2",
+        "classes": [
+          "career-section"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 2,
+          "paragraphs": 3,
+          "buttons": 1,
+          "images": 0,
+          "forms": 0
+        }
+      },
+      {
+        "index": 3,
+        "id": "featured-courses",
+        "classes": [
           "section",
           "featured-courses"
         ],
@@ -37,8 +67,68 @@
         }
       },
       {
-        "index": 2,
-        "id": "section-2",
+        "index": 4,
+        "id": "section-4",
+        "classes": [
+          "testimonials-section"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 1,
+          "paragraphs": 4,
+          "buttons": 0,
+          "images": 0,
+          "forms": 0
+        }
+      },
+      {
+        "index": 5,
+        "id": "section-5",
+        "classes": [
+          "faq-section"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 1,
+          "paragraphs": 6,
+          "buttons": 0,
+          "images": 0,
+          "forms": 0
+        }
+      },
+      {
+        "index": 6,
+        "id": "section-6",
+        "classes": [
+          "companies-section"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 1,
+          "paragraphs": 1,
+          "buttons": 0,
+          "images": 0,
+          "forms": 0
+        }
+      },
+      {
+        "index": 7,
+        "id": "consultation",
+        "classes": [
+          "consultation-section"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 1,
+          "paragraphs": 1,
+          "buttons": 1,
+          "images": 0,
+          "forms": 1
+        }
+      },
+      {
+        "index": 8,
+        "id": "section-8",
         "classes": [
           "section",
           "track"
@@ -53,8 +143,8 @@
         }
       },
       {
-        "index": 3,
-        "id": "section-3",
+        "index": 9,
+        "id": "section-9",
         "classes": [
           "section",
           "cta"
@@ -69,8 +159,8 @@
         }
       },
       {
-        "index": 4,
-        "id": "section-4",
+        "index": 10,
+        "id": "section-10",
         "classes": [
           "section",
           "footer"
@@ -85,7 +175,7 @@
         }
       }
     ],
-    "timestamp": "2025-09-04T11:56:31.200Z",
-    "htmlSize": 55886
+    "timestamp": "2025-09-11T10:02:42.728Z",
+    "htmlSize": 89476
   }
 }

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Modal Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 50px;
+            background: #f0f0f0;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .test-button {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        .console-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            height: 200px;
+            overflow-y: auto;
+        }
+        .status-indicator {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .status-ready {
+            background: #48bb78;
+            color: white;
+        }
+        .status-error {
+            background: #f56565;
+            color: white;
+        }
+        .info-box {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>
+            Contact Modal Email Test
+            <span id="status" class="status-indicator">Loading...</span>
+        </h1>
+        
+        <div class="info-box">
+            <h3>Test Configuration</h3>
+            <p><strong>EmailJS Service ID:</strong> service_kw2tzof</p>
+            <p><strong>EmailJS Template ID:</strong> template_1vj21xl</p>
+            <p><strong>EmailJS Public Key:</strong> VVXP5uHwE5OJZXCg-</p>
+            <p><strong>Expected Behavior:</strong> Send email via EmailJS, show success toast, NO automatic WhatsApp opening</p>
+        </div>
+        
+        <h2>Click to Test Modal:</h2>
+        
+        <div style="text-align: center; padding: 20px;">
+            <a href="authentication-pages/sign-up.html" class="test-button primary-button">
+                Sign Up Today (Should Open Modal)
+            </a>
+        </div>
+        
+        <h3>Console Output:</h3>
+        <div id="console" class="console-output"></div>
+    </div>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- Contact Form Modal -->
+    <script src="js/contact-form-modal.js"></script>
+    
+    <!-- Test Script -->
+    <script>
+        // Custom console logger
+        const consoleDiv = document.getElementById('console');
+        const statusDiv = document.getElementById('status');
+        
+        function logToConsole(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#f56565' : type === 'success' ? '#48bb78' : '#d4d4d4';
+            consoleDiv.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+        
+        // Override console methods to capture output
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            logToConsole(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            logToConsole(args.join(' '), 'error');
+        };
+        
+        // Check EmailJS initialization
+        setTimeout(() => {
+            if (typeof emailjs !== 'undefined') {
+                logToConsole('✓ EmailJS library loaded', 'success');
+                
+                if (window.emailJSReady) {
+                    logToConsole('✓ EmailJS initialized with public key', 'success');
+                    statusDiv.textContent = 'Ready';
+                    statusDiv.className = 'status-indicator status-ready';
+                } else {
+                    logToConsole('✗ EmailJS not initialized', 'error');
+                    statusDiv.textContent = 'Error';
+                    statusDiv.className = 'status-indicator status-error';
+                }
+            } else {
+                logToConsole('✗ EmailJS library not found', 'error');
+                statusDiv.textContent = 'Error';
+                statusDiv.className = 'status-indicator status-error';
+            }
+            
+            // Check modal functions
+            if (typeof window.showModal === 'function') {
+                logToConsole('✓ Modal functions loaded', 'success');
+            } else {
+                logToConsole('✗ Modal functions not available', 'error');
+            }
+        }, 1000);
+        
+        // Track form submission
+        document.addEventListener('submit', (e) => {
+            if (e.target.id === 'contactForm') {
+                logToConsole('Form submitted - checking EmailJS...', 'log');
+            }
+        });
+        
+        // Override emailjs.send to see what's being sent
+        setTimeout(() => {
+            if (typeof emailjs !== 'undefined' && emailjs.send) {
+                const originalSend = emailjs.send;
+                emailjs.send = function(serviceID, templateID, params) {
+                    logToConsole(`EmailJS Send Called:`, 'log');
+                    logToConsole(`- Service ID: ${serviceID}`, 'log');
+                    logToConsole(`- Template ID: ${templateID}`, 'log');
+                    logToConsole(`- Parameters: ${JSON.stringify(params)}`, 'log');
+                    return originalSend.call(this, serviceID, templateID, params);
+                };
+            }
+        }, 500);
+        
+        // Track WhatsApp opens (should not happen automatically)
+        const originalOpen = window.open;
+        window.open = function(url, ...args) {
+            if (url && url.includes('wa.me')) {
+                logToConsole('⚠️ WhatsApp URL opened: ' + url, 'error');
+            }
+            return originalOpen.call(window, url, ...args);
+        };
+    </script>
+</body>
+</html>

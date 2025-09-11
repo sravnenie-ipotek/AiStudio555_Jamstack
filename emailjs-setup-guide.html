@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmailJS Setup Guide</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #667eea;
+            margin-top: 30px;
+        }
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 10px 0;
+        }
+        .button:hover {
+            background: #5a67d8;
+            text-decoration: none;
+        }
+        img {
+            max-width: 100%;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .credentials-box {
+            background: #f1f3f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .credentials-box input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-btn:hover {
+            background: #5a67d8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 EmailJS Setup & Troubleshooting Guide</h1>
+        
+        <div class="error">
+            <strong>Current Error:</strong> 404 - Account not found<br>
+            This means the public key <code>VVXP5uHwE5OJZXCg-</code> is not recognized by EmailJS.
+        </div>
+
+        <h2>🔍 How to Get Your Correct EmailJS Credentials</h2>
+
+        <div class="step">
+            <h3>Step 1: Log into EmailJS</h3>
+            <p>Go to <a href="https://dashboard.emailjs.com/sign-in" target="_blank">https://dashboard.emailjs.com/sign-in</a></p>
+            <p>Sign in with your account (the one where you created the service and template)</p>
+        </div>
+
+        <div class="step">
+            <h3>Step 2: Get Your Public Key</h3>
+            <p>Once logged in, look for one of these locations:</p>
+            <ol>
+                <li>Click on <strong>"Integration"</strong> in the left sidebar</li>
+                <li>Or go to <strong>"Account"</strong> → <strong>"General"</strong></li>
+                <li>Or look at the top right corner for your user ID</li>
+            </ol>
+            <p>You'll see a section called <strong>"Public Key"</strong> or <strong>"User ID"</strong></p>
+            <p>It should look something like: <code>AbCdEfGhIjKlMnOpQr</code></p>
+            
+            <div class="warning">
+                <strong>Important:</strong> The public key is different from your API keys. Make sure you're copying the PUBLIC key, not a private/secret key.
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>Step 3: Verify Your Service ID</h3>
+            <p>Click on <strong>"Email Services"</strong> in the left sidebar</p>
+            <p>Find your service (probably Gmail or another email provider)</p>
+            <p>Click on it and copy the <strong>Service ID</strong></p>
+            <p>It should look like: <code>service_xxxxxxx</code></p>
+            <p>Current value in code: <code>service_kw2tzof</code></p>
+        </div>
+
+        <div class="step">
+            <h3>Step 4: Verify Your Template ID</h3>
+            <p>Click on <strong>"Email Templates"</strong> in the left sidebar</p>
+            <p>Find your template (the one with variables: from_name, phone_number, message)</p>
+            <p>Click on it and copy the <strong>Template ID</strong></p>
+            <p>It should look like: <code>template_xxxxxxx</code></p>
+            <p>Current value in code: <code>template_1vj21xl</code></p>
+        </div>
+
+        <h2>📝 Enter Your Correct Credentials</h2>
+        
+        <div class="credentials-box">
+            <label>Public Key (User ID):</label>
+            <input type="text" id="publicKey" placeholder="Enter your EmailJS public key">
+            
+            <label>Service ID:</label>
+            <input type="text" id="serviceId" value="service_kw2tzof" placeholder="service_xxxxxxx">
+            
+            <label>Template ID:</label>
+            <input type="text" id="templateId" value="template_1vj21xl" placeholder="template_xxxxxxx">
+            
+            <br><br>
+            <button onclick="generateUpdateCommand()" class="button">Generate Update Command</button>
+        </div>
+
+        <div id="updateCommand" style="display:none;">
+            <h2>✅ Update Command</h2>
+            <div class="success">
+                <p>Copy and paste this to update your credentials:</p>
+                <pre id="commandText" style="background: white; padding: 10px; border-radius: 3px; overflow-x: auto;"></pre>
+                <button onclick="copyCommand()" class="copy-btn">Copy Command</button>
+            </div>
+        </div>
+
+        <h2>🔧 Alternative: Test with EmailJS CDN</h2>
+        
+        <div class="step">
+            <p>You can also test your credentials directly on EmailJS:</p>
+            <a href="https://www.emailjs.com/docs/examples/reactjs/" target="_blank" class="button">EmailJS Live Playground</a>
+        </div>
+
+        <h2>❓ Common Issues</h2>
+        
+        <div class="warning">
+            <h3>If you see "Account not found":</h3>
+            <ul>
+                <li>The public key is incorrect or malformed</li>
+                <li>You might be using a private key instead of public key</li>
+                <li>Your EmailJS account might not be activated</li>
+                <li>There might be a typo in the key (check for spaces or special characters)</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h3>If you see "Service not found":</h3>
+            <ul>
+                <li>The service ID doesn't match any service in your account</li>
+                <li>The service might be paused or deleted</li>
+                <li>You might be logged into a different EmailJS account</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function generateUpdateCommand() {
+            const publicKey = document.getElementById('publicKey').value.trim();
+            const serviceId = document.getElementById('serviceId').value.trim();
+            const templateId = document.getElementById('templateId').value.trim();
+            
+            if (!publicKey) {
+                alert('Please enter your public key');
+                return;
+            }
+            
+            const command = `The correct EmailJS credentials are:
+- Public Key: ${publicKey}
+- Service ID: ${serviceId}
+- Template ID: ${templateId}
+
+Please update these in contact-form-modal.js`;
+            
+            document.getElementById('commandText').textContent = command;
+            document.getElementById('updateCommand').style.display = 'block';
+        }
+        
+        function copyCommand() {
+            const text = document.getElementById('commandText').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Command copied to clipboard!');
+            });
+        }
+    </script>
+</body>
+</html>

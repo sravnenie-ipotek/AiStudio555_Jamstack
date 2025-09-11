@@ -1,0 +1,40 @@
+{
+    "collectionName": "components_career_orientation_solutions_sections",
+    "info": {
+        "displayName": "Solutions Section",
+        "description": "Section showcasing solution features and benefits"
+    },
+    "options": {},
+    "attributes": {
+        "sectionTitle": {
+            "type": "string",
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            }
+        },
+        "sectionSubtitle": {
+            "type": "string",
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            }
+        },
+        "sectionDescription": {
+            "type": "text",
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            }
+        },
+        "solutionFeatures": {
+            "type": "component",
+            "repeatable": true,
+            "component": "career-orientation.solution-feature",
+            "required": true
+        }
+    }
+}

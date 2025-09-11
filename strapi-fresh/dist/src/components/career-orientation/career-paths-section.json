@@ -1,0 +1,40 @@
+{
+    "collectionName": "components_career_orientation_career_paths_sections",
+    "info": {
+        "displayName": "Career Paths Section",
+        "description": "Section showcasing available career paths and specializations"
+    },
+    "options": {},
+    "attributes": {
+        "sectionTitle": {
+            "type": "string",
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            }
+        },
+        "sectionSubtitle": {
+            "type": "string",
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            }
+        },
+        "sectionDescription": {
+            "type": "text",
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            }
+        },
+        "careerPaths": {
+            "type": "component",
+            "repeatable": true,
+            "component": "career-orientation.career-path",
+            "required": true
+        }
+    }
+}

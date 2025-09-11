@@ -1,7 +1,7 @@
 {
   "page": "home",
-  "lastSync": "2025-09-04T11:56:31.170Z",
-  "htmlVersion": "88d1b0ce17d3747d9cffb28f8bcaad07ab698194",
+  "lastSync": "2025-09-11T10:02:42.701Z",
+  "htmlVersion": "a01de44374e4ac4ca2e633132c07f20c564eab79",
   "structure": {
     "sections": [
       {
@@ -15,7 +15,7 @@
         "childElements": {
           "headings": 1,
           "paragraphs": 1,
-          "buttons": 2,
+          "buttons": 0,
           "images": 6,
           "forms": 0
         }
@@ -45,10 +45,10 @@
         ],
         "hasContent": true,
         "childElements": {
-          "headings": 16,
-          "paragraphs": 11,
+          "headings": 11,
+          "paragraphs": 7,
           "buttons": 0,
-          "images": 10,
+          "images": 6,
           "forms": 0
         }
       },
@@ -104,6 +104,21 @@
         "index": 6,
         "id": "section-6",
         "classes": [
+          "companies-section"
+        ],
+        "hasContent": true,
+        "childElements": {
+          "headings": 1,
+          "paragraphs": 1,
+          "buttons": 0,
+          "images": 0,
+          "forms": 0
+        }
+      },
+      {
+        "index": 7,
+        "id": "section-7",
+        "classes": [
           "section",
           "footer"
         ],
@@ -117,7 +132,7 @@
         }
       }
     ],
-    "timestamp": "2025-09-04T11:56:31.148Z",
-    "htmlSize": 103563
+    "timestamp": "2025-09-11T10:02:42.681Z",
+    "htmlSize": 107358
   }
 }
