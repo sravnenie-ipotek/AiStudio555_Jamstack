@@ -1839,7 +1839,7 @@
             if (activeTab) {
                 const sectionName = activeTab.textContent.toLowerCase().replace(' ', '-');
                 if (sectionName.includes('home')) {
-                    loadHomePageData();
+                    loadCompleteHomePage();
                 } else if (sectionName.includes('course')) {
                     loadAllCourses();
                 } else if (sectionName.includes('blog')) {
@@ -2023,26 +2023,12 @@
                     // Testimonials Section
                     testimonialsTitle: getFieldValue('homeTestimonialsTitle'),
                     testimonialsSubtitle: getFieldValue('homeTestimonialsSubtitle'),
-                    testimonialsVisible: getCheckboxValue('homeTestimonialsVisible'),
+                    testimonialsVisible: getCheckboxValue('homeTestimonialsVisible')
                     
-                    // Individual Courses (All 6)
-                    courses: [1, 2, 3, 4, 5, 6].map(num => ({
-                        title: getFieldValue(`course${num}Title`),
-                        rating: parseFloat(getFieldValue(`course${num}Rating`)) || 0,
-                        lessons: parseInt(getFieldValue(`course${num}Lessons`)) || 0,
-                        duration: getFieldValue(`course${num}Duration`),
-                        category: getFieldValue(`course${num}Category`),
-                        description: getFieldValue(`course${num}Description`),
-                        visible: getCheckboxValue(`course${num}Visible`)
-                    })),
-                    
-                    // Individual Testimonials (All 4)
-                    testimonials: [1, 2, 3, 4].map(num => ({
-                        author: getFieldValue(`testimonial${num}Author`),
-                        rating: parseFloat(getFieldValue(`testimonial${num}Rating`)) || 0,
-                        text: getFieldValue(`testimonial${num}Text`),
-                        visible: getCheckboxValue(`testimonial${num}Visible`)
-                    }))
+                    // NOTE: Courses and testimonials are stored separately, not in home_pages table
+                    // Removing these from save to prevent database errors:
+                    // courses: [...] 
+                    // testimonials: [...]
                 };
 
                 console.log('💾 Saving Complete Home Page Data:', homeData);
