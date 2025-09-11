@@ -398,48 +398,111 @@
                 </div>
             </div>
 
-            <!-- About Section -->
+            <!-- Focus on Practice Section (85% Practice, 15% Theory) -->
             <div class="subsection">
-                <h4>ℹ️ About Section</h4>
+                <h4>🎯 Focus on Practice Section</h4>
                 <div class="grid">
                     <div class="form-group">
-                        <label>About Title</label>
-                        <input type="text" id="homeAboutTitle" placeholder="Why Choose AI Studio?">
+                        <label>Section Title</label>
+                        <input type="text" id="homePracticeTitle" placeholder="85% Practice, 15% Theory - Real Skills That Matter">
                     </div>
                     <div class="checkbox-group">
-                        <input type="checkbox" id="homeAboutVisible">
-                        <label for="homeAboutVisible">🔥 Show About Section</label>
+                        <input type="checkbox" id="homePracticeVisible">
+                        <label for="homePracticeVisible">🔥 Show Practice Section</label>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label>Section Description</label>
+                    <textarea id="homePracticeDescription" rows="3" placeholder="We provide structured knowledge that's in demand in today's job market."></textarea>
                 </div>
                 <div class="grid">
                     <div class="form-group">
-                        <label>About Subtitle</label>
-                        <input type="text" id="homeAboutSubtitle" placeholder="Industry-Leading Education Platform">
+                        <label>Practice Percentage</label>
+                        <input type="number" id="homePracticePercent" placeholder="85" min="0" max="100">
                     </div>
-                    <div></div>
-                </div>
-                <div class="form-group">
-                    <label>About Description</label>
-                    <textarea id="homeAboutDescription" rows="4" placeholder="We combine cutting-edge curriculum with real-world projects, expert mentorship, and career support to ensure your success in the tech industry."></textarea>
+                    <div class="form-group">
+                        <label>Theory Percentage</label>
+                        <input type="number" id="homeTheoryPercent" placeholder="15" min="0" max="100">
+                    </div>
                 </div>
             </div>
 
-            <!-- Companies Section -->
+            <!-- Online Learning Section -->
             <div class="subsection">
-                <h4>🏢 Companies Section</h4>
+                <h4>🌐 Online Learning Section</h4>
                 <div class="grid">
                     <div class="form-group">
-                        <label>Companies Title</label>
-                        <input type="text" id="homeCompaniesTitle" placeholder="Our Graduates Work At">
+                        <label>Section Title</label>
+                        <input type="text" id="homeOnlineTitle" placeholder="Learn From Anywhere, Anytime With Our Platform">
                     </div>
                     <div class="checkbox-group">
-                        <input type="checkbox" id="homeCompaniesVisible">
-                        <label for="homeCompaniesVisible">🔥 Show Companies Section</label>
+                        <input type="checkbox" id="homeOnlineVisible">
+                        <label for="homeOnlineVisible">🔥 Show Online Learning Section</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Companies Description</label>
-                    <textarea id="homeCompaniesDescription" rows="2" placeholder="Join thousands of AI Studio graduates working at top companies worldwide"></textarea>
+                    <label>Section Description</label>
+                    <textarea id="homeOnlineDescription" rows="3" placeholder="Our online learning platform makes it easy to access world-class education from the comfort of your home."></textarea>
+                </div>
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label>Total Courses</label>
+                        <input type="text" id="homeTotalCourses" placeholder="50+">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Learners</label>
+                        <input type="text" id="homeTotalLearners" placeholder="10,000+">
+                    </div>
+                    <div class="form-group">
+                        <label>Years Experience</label>
+                        <input type="text" id="homeYearsExperience" placeholder="8+">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expert Mentor Section -->
+            <div class="subsection">
+                <h4>👩‍🏫 Expert Mentor Section</h4>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Mentor Name</label>
+                        <input type="text" id="homeMentorName" placeholder="Mrs. Sarah Johnson">
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="homeMentorVisible">
+                        <label for="homeMentorVisible">🔥 Show Mentor Section</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Mentor Title</label>
+                    <input type="text" id="homeMentorTitle" placeholder="Expert Mentor In Technology">
+                </div>
+                <div class="form-group">
+                    <label>Mentor Bio</label>
+                    <textarea id="homeMentorBio" rows="3" placeholder="15+ years of industry experience leading digital transformation initiatives at Fortune 500 companies."></textarea>
+                </div>
+            </div>
+
+            <!-- Career Success Section (Our Graduates Work At) -->
+            <div class="subsection">
+                <h4>🎓 Career Success Section</h4>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Section Title</label>
+                        <input type="text" id="homeCareerTitle" placeholder="Our Graduates Work At">
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="homeCareerVisible">
+                        <label for="homeCareerVisible">🔥 Show Career Success Section</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Section Description</label>
+                    <textarea id="homeCareerDescription" rows="2" placeholder="Join alumni at the world's leading technology companies"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Company Names (comma-separated)</label>
+                    <input type="text" id="homeCompanyList" placeholder="Google, Microsoft, Amazon, Meta, Apple">
                 </div>
             </div>
 
@@ -1943,16 +2006,32 @@
                     setFieldValue('homeFeaturedDescription', attrs.featuredCoursesDescription);
                     setCheckboxValue('homeFeaturedVisible', attrs.featuredCoursesVisible);
                     
-                    // About Section
-                    setFieldValue('homeAboutTitle', attrs.aboutTitle);
-                    setFieldValue('homeAboutSubtitle', attrs.aboutSubtitle);
-                    setFieldValue('homeAboutDescription', attrs.aboutDescription);
-                    setCheckboxValue('homeAboutVisible', attrs.aboutVisible);
+                    // Focus on Practice Section
+                    setFieldValue('homePracticeTitle', attrs.practiceTitle);
+                    setFieldValue('homePracticeDescription', attrs.practiceDescription);
+                    setFieldValue('homePracticePercent', attrs.practicePercent);
+                    setFieldValue('homeTheoryPercent', attrs.theoryPercent);
+                    setCheckboxValue('homePracticeVisible', attrs.practiceVisible);
                     
-                    // Companies Section
-                    setFieldValue('homeCompaniesTitle', attrs.companiesTitle);
-                    setFieldValue('homeCompaniesDescription', attrs.companiesDescription);
-                    setCheckboxValue('homeCompaniesVisible', attrs.companiesVisible);
+                    // Online Learning Section
+                    setFieldValue('homeOnlineTitle', attrs.onlineTitle);
+                    setFieldValue('homeOnlineDescription', attrs.onlineDescription);
+                    setFieldValue('homeTotalCourses', attrs.totalCourses);
+                    setFieldValue('homeTotalLearners', attrs.totalLearners);
+                    setFieldValue('homeYearsExperience', attrs.yearsExperience);
+                    setCheckboxValue('homeOnlineVisible', attrs.onlineVisible);
+                    
+                    // Expert Mentor Section
+                    setFieldValue('homeMentorName', attrs.mentorName);
+                    setFieldValue('homeMentorTitle', attrs.mentorTitle);
+                    setFieldValue('homeMentorBio', attrs.mentorBio);
+                    setCheckboxValue('homeMentorVisible', attrs.mentorVisible);
+                    
+                    // Career Success Section
+                    setFieldValue('homeCareerTitle', attrs.careerTitle);
+                    setFieldValue('homeCareerDescription', attrs.careerDescription);
+                    setFieldValue('homeCompanyList', attrs.companyList);
+                    setCheckboxValue('homeCareerVisible', attrs.careerVisible);
                     
                     // Testimonials Section
                     setFieldValue('homeTestimonialsTitle', attrs.testimonialsTitle);
@@ -2009,16 +2088,32 @@
                     featuredCoursesDescription: getFieldValue('homeFeaturedDescription'),
                     featuredCoursesVisible: getCheckboxValue('homeFeaturedVisible'),
                     
-                    // About Section
-                    aboutTitle: getFieldValue('homeAboutTitle'),
-                    aboutSubtitle: getFieldValue('homeAboutSubtitle'),
-                    aboutDescription: getFieldValue('homeAboutDescription'),
-                    aboutVisible: getCheckboxValue('homeAboutVisible'),
+                    // Focus on Practice Section
+                    practiceTitle: getFieldValue('homePracticeTitle'),
+                    practiceDescription: getFieldValue('homePracticeDescription'),
+                    practicePercent: getFieldValue('homePracticePercent'),
+                    theoryPercent: getFieldValue('homeTheoryPercent'),
+                    practiceVisible: getCheckboxValue('homePracticeVisible'),
                     
-                    // Companies Section
-                    companiesTitle: getFieldValue('homeCompaniesTitle'),
-                    companiesDescription: getFieldValue('homeCompaniesDescription'),
-                    companiesVisible: getCheckboxValue('homeCompaniesVisible'),
+                    // Online Learning Section  
+                    onlineTitle: getFieldValue('homeOnlineTitle'),
+                    onlineDescription: getFieldValue('homeOnlineDescription'),
+                    totalCourses: getFieldValue('homeTotalCourses'),
+                    totalLearners: getFieldValue('homeTotalLearners'),
+                    yearsExperience: getFieldValue('homeYearsExperience'),
+                    onlineVisible: getCheckboxValue('homeOnlineVisible'),
+                    
+                    // Expert Mentor Section
+                    mentorName: getFieldValue('homeMentorName'),
+                    mentorTitle: getFieldValue('homeMentorTitle'),
+                    mentorBio: getFieldValue('homeMentorBio'),
+                    mentorVisible: getCheckboxValue('homeMentorVisible'),
+                    
+                    // Career Success Section
+                    careerTitle: getFieldValue('homeCareerTitle'),
+                    careerDescription: getFieldValue('homeCareerDescription'),
+                    companyList: getFieldValue('homeCompanyList'),
+                    careerVisible: getCheckboxValue('homeCareerVisible'),
                     
                     // Testimonials Section
                     testimonialsTitle: getFieldValue('homeTestimonialsTitle'),
