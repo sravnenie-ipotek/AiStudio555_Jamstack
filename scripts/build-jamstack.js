@@ -63,6 +63,7 @@ async function buildLanguageSite(langCode, langConfig) {
   copyDirectory('css', path.join(langDir, 'css'));
   copyDirectory('js', path.join(langDir, 'js'));
   copyDirectory('images', path.join(langDir, 'images'));
+  copyDirectory('fonts', path.join(langDir, 'fonts'));
   
   // Process HTML files - map home.html to index.html
   const htmlFiles = [
