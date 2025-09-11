@@ -626,10 +626,10 @@
             <!-- Save Button for Home Page -->
             <div style="margin-top: 30px; text-align: center; padding: 20px; background: #f8f9fa; border-radius: 12px; border: 2px solid #28a745;">
                 <button type="button" class="btn btn-success" onclick="saveAllHomePage()" style="font-size: 18px; padding: 15px 30px;">
-                    💾 Save All Home Page Content (123 Fields)
+                    💾 Save All Home Page Content
                 </button>
                 <p style="margin-top: 10px; color: #666; font-size: 14px;">
-                    Save all home page sections, courses, testimonials, and settings
+                    Save all home page sections and settings (courses and testimonials save separately)
                 </p>
             </div>
 
@@ -2110,24 +2110,8 @@
                     testimonialsSubtitle: getFieldValue('homeTestimonialsSubtitle'),
                     testimonialsVisible: getCheckboxValue('homeTestimonialsVisible'),
                     
-                    // Individual Courses (All 6) - stored as JSON string
-                    courses: JSON.stringify([1, 2, 3, 4, 5, 6].map(num => ({
-                        title: getFieldValue(`course${num}Title`),
-                        rating: parseFloat(getFieldValue(`course${num}Rating`)) || 0,
-                        lessons: parseInt(getFieldValue(`course${num}Lessons`)) || 0,
-                        duration: getFieldValue(`course${num}Duration`),
-                        category: getFieldValue(`course${num}Category`),
-                        description: getFieldValue(`course${num}Description`),
-                        visible: getCheckboxValue(`course${num}Visible`)
-                    }))),
-                    
-                    // Individual Testimonials (All 4) - stored as JSON string
-                    testimonials: JSON.stringify([1, 2, 3, 4].map(num => ({
-                        author: getFieldValue(`testimonial${num}Author`),
-                        rating: parseFloat(getFieldValue(`testimonial${num}Rating`)) || 0,
-                        text: getFieldValue(`testimonial${num}Text`),
-                        visible: getCheckboxValue(`testimonial${num}Visible`)
-                    })))
+                    // NOTE: Courses and testimonials are saved separately via their own endpoints
+                    // They are not part of the home_pages table structure
                 };
 
                 console.log('💾 Saving Complete Home Page Data:', homeData);
