@@ -36,14 +36,24 @@ class StrapiIntegration {
   }
 
   getLocale() {
+    // Check URL path first (e.g., /dist/ru/index.html)
+    const pathParts = window.location.pathname.split('/').filter(p => p);
+    const pathLang = pathParts.find(part => ['en', 'ru', 'he'].includes(part));
+    
+    // Then check URL parameters and localStorage
     const params = new URLSearchParams(window.location.search);
-    const locale = params.get('locale') || localStorage.getItem('locale') || 'en';
+    const locale = pathLang || params.get('locale') || localStorage.getItem('locale') || 'en';
+    
+    console.log('🌍 Detected locale:', locale, 'from path:', pathLang);
     
     // Apply RTL for Hebrew
     if (locale === 'he') {
       document.documentElement.setAttribute('dir', 'rtl');
       document.body.classList.add('rtl');
     }
+    
+    // Store detected locale in localStorage for consistency
+    localStorage.setItem('locale', locale);
     
     return locale;
   }
@@ -115,6 +125,7 @@ class StrapiIntegration {
 
   applyContent(content) {
     console.log('📝 Applying content:', content);
+    console.log('📝 Content keys:', Object.keys(content));
     
     // Update site branding (fix Zohacous -> AI Studio)
     this.updateSiteBranding(content);
@@ -136,9 +147,19 @@ class StrapiIntegration {
       console.warn('⚠️ No hero content found in response');
     }
     
-    // Apply featured courses
+    // Apply featured courses - with better handling
     if (content.featuredCourses) {
+      console.log('📚 Applying featured courses:', content.featuredCourses);
       this.applyFeaturedCoursesContent(content.featuredCourses);
+    } else if (content.featuredCoursesTitle) {
+      console.log('📚 Applying featured courses from flat structure');
+      // Handle flat structure from API
+      this.applyFeaturedCoursesContent({
+        sectionTitle: content.featuredCoursesTitle,
+        sectionDescription: content.featuredCoursesDescription
+      });
+    } else {
+      console.log('⚠️ No featured courses content found, available keys:', Object.keys(content));
     }
     
     // Apply focus on practice

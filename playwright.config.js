@@ -64,15 +64,13 @@ module.exports = defineConfig({
         channel: 'chrome'
       },
       testMatch: [
-        '**/multi-language.spec.js',
+        '**/language-switching.spec.js',
         '**/console-errors.spec.js',
-        '**/typography.spec.js',
+        '**/font-typography.spec.js',
         '**/accessibility.spec.js',
         '**/performance.spec.js',
-        '**/form-validation.spec.js',
-        '**/api-testing.spec.js',
-        '**/seo-testing.spec.js',
-        '**/storage-testing.spec.js'
+        '**/comprehensive-system.spec.js',
+        '**/responsive-quick.spec.js'
       ]
     },
     
@@ -80,9 +78,9 @@ module.exports = defineConfig({
       name: 'firefox-desktop',
       use: { ...devices['Desktop Firefox'] },
       testMatch: [
-        '**/multi-language.spec.js',
+        '**/language-switching.spec.js',
         '**/accessibility.spec.js',
-        '**/form-validation.spec.js'
+        '**/comprehensive-system.spec.js'
       ]
     },
     

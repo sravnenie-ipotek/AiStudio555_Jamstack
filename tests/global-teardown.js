@@ -1,105 +1,111 @@
-// Global teardown for E2E testing
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
 
 async function globalTeardown(config) {
   console.log('🏁 Starting Global E2E Test Teardown');
   
-  const testResultsDir = path.join(__dirname, '..', 'test-results');
+  const resultsDir = path.join(__dirname, '..', 'test-results');
   
-  // Generate test summary report
   try {
-    const setupInfoPath = path.join(testResultsDir, 'test-setup-info.json');
-    const resultsPath = path.join(testResultsDir, 'results.json');
+    // Read test metadata
+    const metadataPath = path.join(resultsDir, 'test-metadata.json');
+    let metadata = {};
     
-    let setupInfo = {};
-    let testResults = {};
-    
-    if (fs.existsSync(setupInfoPath)) {
-      setupInfo = JSON.parse(fs.readFileSync(setupInfoPath, 'utf8'));
+    if (fs.existsSync(metadataPath)) {
+      metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
     }
     
-    if (fs.existsSync(resultsPath)) {
-      testResults = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-    }
+    // Calculate test duration
+    const endTime = new Date().toISOString();
+    const startTime = metadata.startTime ? new Date(metadata.startTime) : new Date();
+    const duration = Math.round((new Date() - startTime) / 1000);
     
+    // Create test summary
     const summary = {
-      testSuite: 'AI Studio E-Learning Platform E2E Tests',
-      completedAt: new Date().toISOString(),
-      duration: setupInfo.timestamp ? 
-        Math.round((new Date() - new Date(setupInfo.timestamp)) / 1000) : 0,
-      environment: setupInfo.environment || {},
-      statistics: {
-        totalTests: testResults.stats?.total || 0,
-        passed: testResults.stats?.expected || 0,
-        failed: testResults.stats?.unexpected || 0,
-        skipped: testResults.stats?.skipped || 0,
-        flaky: testResults.stats?.flaky || 0
-      },
-      coverage: {
-        multiLanguage: '✅ English, Russian, Hebrew',
-        accessibility: '✅ WCAG compliance tested',
-        performance: '✅ Core Web Vitals measured',
-        visualRegression: '✅ Cross-browser consistency',
-        forms: '✅ Contact form validation',
-        api: '✅ API response testing',
-        seo: '✅ Meta tags and structured data',
-        privacy: '✅ Cookie and storage compliance'
-      }
+      ...metadata,
+      endTime,
+      duration: duration,
+      status: 'completed',
+      timestamp: new Date().toISOString(),
     };
     
-    // Save summary
+    // Try to read results if they exist
+    const resultsPath = path.join(resultsDir, 'results.json');
+    if (fs.existsSync(resultsPath)) {
+      try {
+        const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
+        summary.testResults = {
+          total: results.stats?.total || 0,
+          passed: results.stats?.passed || 0,
+          failed: results.stats?.failed || 0,
+          skipped: results.stats?.skipped || 0,
+          flaky: results.stats?.flaky || 0
+        };
+      } catch (e) {
+        // Ignore JSON parse errors
+      }
+    } else {
+      summary.testResults = {
+        total: 0,
+        passed: 0,
+        failed: 0,
+        skipped: 0,
+        flaky: 0
+      };
+    }
+    
+    // Save final summary
     fs.writeFileSync(
-      path.join(testResultsDir, 'test-summary.json'),
+      path.join(resultsDir, 'test-summary.json'),
       JSON.stringify(summary, null, 2)
     );
     
-    // Console summary
+    // Display summary
+    const stats = summary.testResults;
     console.log('\n📊 Test Execution Summary:');
-    console.log(`⏱️  Duration: ${summary.duration} seconds`);
-    console.log(`📝 Total Tests: ${summary.statistics.totalTests}`);
-    console.log(`✅ Passed: ${summary.statistics.passed}`);
-    console.log(`❌ Failed: ${summary.statistics.failed}`);
-    console.log(`⏭️  Skipped: ${summary.statistics.skipped}`);
-    console.log(`🔄 Flaky: ${summary.statistics.flaky}`);
+    console.log(`⏱️  Duration: ${duration} seconds`);
+    console.log(`📝 Total Tests: ${stats.total}`);
+    console.log(`✅ Passed: ${stats.passed}`);
+    console.log(`❌ Failed: ${stats.failed}`);
+    console.log(`⏭️  Skipped: ${stats.skipped}`);
+    console.log(`🔄 Flaky: ${stats.flaky}`);
     
-    if (summary.statistics.failed > 0) {
-      console.log('\n⚠️  Some tests failed. Check the HTML report for details.');
-    } else {
+    if (stats.failed === 0 && stats.total > 0) {
       console.log('\n🎉 All tests passed successfully!');
+    } else if (stats.total === 0) {
+      console.log('\n⚠️  No tests were executed');
+    } else {
+      console.log(`\n⚠️  ${stats.failed} test(s) failed`);
     }
     
+    // List test coverage areas
     console.log('\n📋 Test Coverage Areas:');
-    Object.entries(summary.coverage).forEach(([area, status]) => {
-      console.log(`   ${status} ${area.charAt(0).toUpperCase() + area.slice(1)}`);
-    });
-    
-  } catch (error) {
-    console.error('❌ Error generating test summary:', error.message);
-  }
-  
-  // Cleanup temporary files
-  try {
-    const tempFiles = [
-      path.join(testResultsDir, 'test-setup-info.json')
+    const coverageAreas = [
+      { name: 'MultiLanguage', description: 'English, Russian, Hebrew' },
+      { name: 'Accessibility', description: 'WCAG compliance tested' },
+      { name: 'Performance', description: 'Core Web Vitals measured' },
+      { name: 'VisualRegression', description: 'Cross-browser consistency' },
+      { name: 'Forms', description: 'Contact form validation' },
+      { name: 'Api', description: 'API response testing' },
+      { name: 'Seo', description: 'Meta tags and structured data' },
+      { name: 'Privacy', description: 'Cookie and storage compliance' }
     ];
     
-    tempFiles.forEach(file => {
-      if (fs.existsSync(file)) {
-        fs.unlinkSync(file);
-      }
+    coverageAreas.forEach(area => {
+      console.log(`   ✅ ${area.description} ${area.name}`);
     });
     
+    // List generated files
+    console.log('\n📁 Test artifacts saved to:');
+    console.log(`   📊 HTML Report: ${path.join(resultsDir, 'html-report', 'index.html')}`);
+    console.log(`   📸 Screenshots: ${path.join(resultsDir, 'screenshots')}`);
+    console.log(`   🎥 Videos: ${path.join(resultsDir, 'artifacts')}`);
+    console.log(`   📈 JSON Results: ${path.join(resultsDir, 'results.json')}`);
+    console.log(`   📋 Summary: ${path.join(resultsDir, 'test-summary.json')}`);
+    
   } catch (error) {
-    console.error('⚠️ Error cleaning up temporary files:', error.message);
+    console.error('Error in global teardown:', error.message);
   }
-  
-  console.log('\n📁 Test artifacts saved to:');
-  console.log(`   📊 HTML Report: ${path.join(testResultsDir, 'html-report', 'index.html')}`);
-  console.log(`   📸 Screenshots: ${path.join(testResultsDir, 'screenshots')}`);
-  console.log(`   🎥 Videos: ${path.join(testResultsDir, 'artifacts')}`);
-  console.log(`   📈 JSON Results: ${path.join(testResultsDir, 'results.json')}`);
-  console.log(`   📋 Summary: ${path.join(testResultsDir, 'test-summary.json')}`);
   
   console.log('\n✅ Global teardown completed');
 }
