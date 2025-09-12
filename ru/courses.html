@@ -813,6 +813,133 @@
     }
   </style>
 
+    <!-- COMPREHENSIVE NAVIGATION RESPONSIVE FIX -->
+    <style>
+    /* CRITICAL: Override Webflow responsive navigation hiding */
+    
+    /* Force navigation menu visibility on desktop and tablet */
+    @media screen and (min-width: 768px) {
+      /* Override Webflow's collapse behavior */
+      .w-nav[data-collapse='medium'] .w-nav-menu,
+      .w-nav[data-collapse='small'] .w-nav-menu,
+      .w-nav[data-collapse='tiny'] .w-nav-menu {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: static !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        max-height: none !important;
+        width: auto !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+      }
+      
+      /* Force all navigation elements to be visible */
+      .nav-menu { 
+        display: flex !important; 
+        align-items: center !important; 
+        gap: 30px !important;
+        flex-grow: 1 !important;
+        justify-content: center !important;
+        margin: 0 40px !important;
+        width: auto !important;
+        height: auto !important;
+      }
+      
+      .nav-link, 
+      .menu-dropdown-wrapper { 
+        display: inline-block !important; 
+        visibility: visible !important; 
+        opacity: 1 !important;
+        white-space: nowrap !important;
+        position: static !important;
+      }
+      
+      /* Hide mobile hamburger menu on desktop/tablet */
+      .w-nav[data-collapse='medium'] .w-nav-button,
+      .w-nav[data-collapse='small'] .w-nav-button,
+      .w-nav[data-collapse='tiny'] .w-nav-button {
+        display: none !important;
+      }
+      
+      /* Ensure navbar layout */
+      .navbar-content {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+      }
+    }
+    
+    /* Desktop-specific reinforcement */
+    @media screen and (min-width: 992px) {
+      .navbar .nav-menu,
+      .navbar .nav-link,
+      .navbar .menu-dropdown-wrapper,
+      .navbar .dropdown-toggle {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+      
+      .nav-menu {
+        display: flex !important;
+      }
+      
+      .nav-link,
+      .menu-dropdown-wrapper {
+        display: inline-block !important;
+      }
+    }
+    
+    /* Additional specific overrides for stubborn elements */
+    .w-nav-menu {
+      position: static !important;
+      max-width: none !important;
+      overflow: visible !important;
+    }
+    
+    /* Ensure dropdown functionality */
+    .dropdown-toggle { 
+      display: flex !important; 
+      align-items: center !important; 
+      gap: 5px !important; 
+      cursor: pointer !important; 
+      color: rgba(255,255,255,0.9) !important; 
+      padding: 8px 16px !important;
+      transition: all 0.3s ease !important;
+    }
+    
+    .dropdown-list { 
+      position: absolute !important; 
+      top: 100% !important; 
+      left: 50% !important;
+      transform: translateX(-50%) translateY(-10px) !important;
+      background: rgba(5, 5, 26, 0.98) !important;
+      backdrop-filter: blur(20px) !important; 
+      border: 1px solid rgba(255,255,255,0.1) !important; 
+      border-radius: 8px !important; 
+      padding: 10px 0 !important; 
+      min-width: 220px !important; 
+      z-index: 1000 !important; 
+      opacity: 0 !important; 
+      visibility: hidden !important; 
+      transition: all 0.2s ease !important;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+    }
+    
+    .menu-dropdown-wrapper:hover .dropdown-list,
+    .dropdown-list.w--open { 
+      opacity: 1 !important; 
+      visibility: visible !important; 
+      transform: translateX(-50%) translateY(0) !important;
+    }
+    </style>
+  
 </head>
 <body>
     <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">

@@ -222,3 +222,52 @@
 .w-dropdown-list {
   position: absolute !important;
 }
+
+/* CRITICAL FIX: Override Webflow's responsive navigation hiding */
+/* Force navigation menu to always be visible on desktop and tablet */
+@media screen and (min-width: 768px) {
+  .w-nav[data-collapse='medium'] .w-nav-menu,
+  .w-nav[data-collapse='small'] .w-nav-menu,
+  .w-nav[data-collapse='tiny'] .w-nav-menu {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Ensure all nav links are visible */
+  .nav-menu .nav-link,
+  .nav-menu .menu-dropdown-wrapper {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Force desktop behavior for navigation items */
+  .w-nav[data-collapse='medium'] .w-nav-button,
+  .w-nav[data-collapse='small'] .w-nav-button,
+  .w-nav[data-collapse='tiny'] .w-nav-button {
+    display: none !important;
+  }
+}
+
+/* Additional enforcement for specific navigation elements */
+@media screen and (min-width: 992px) {
+  /* Force all navigation elements to be visible on desktop */
+  .navbar .nav-menu,
+  .navbar .nav-link,
+  .navbar .menu-dropdown-wrapper,
+  .navbar .dropdown-toggle {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  .nav-menu {
+    display: flex !important;
+  }
+  
+  .nav-link,
+  .menu-dropdown-wrapper {
+    display: inline-block !important;
+  }
+}
