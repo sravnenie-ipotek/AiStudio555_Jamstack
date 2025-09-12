@@ -4176,10 +4176,10 @@ app.post('/api/fix-russian-ui', async (req, res) => {
       uiPrint: 'Печать'
     };
     
-    // Build UPDATE query
+    // Build UPDATE query with properly quoted column names
     const updates = [];
     for (const [field, value] of Object.entries(russianTranslations)) {
-      updates.push(`${field} = '${value.replace(/'/g, "''")}'`);
+      updates.push(`"${field}" = '${value.replace(/'/g, "''")}'`);
     }
     
     const updateQuery = `
@@ -4193,7 +4193,7 @@ app.post('/api/fix-russian-ui', async (req, res) => {
     
     // Verify the update
     const verifyResult = await queryDatabase(`
-      SELECT navHome, btnSignUpToday, navCourses 
+      SELECT "navHome", "btnSignUpToday", "navCourses" 
       FROM home_pages 
       WHERE locale = 'ru'
     `);
