@@ -4704,7 +4704,7 @@ app.post('/api/force-russian-ui', async (req, res) => {
       try {
         await queryDatabase(`
           UPDATE home_pages 
-          SET "${field}" = $1
+          SET ${field} = $1
           WHERE locale = 'ru'
         `, [value]);
         successCount++;
@@ -4713,13 +4713,13 @@ app.post('/api/force-russian-ui', async (req, res) => {
         try {
           await queryDatabase(`
             ALTER TABLE home_pages 
-            ADD COLUMN IF NOT EXISTS "${field}" VARCHAR(500)
+            ADD COLUMN IF NOT EXISTS ${field} VARCHAR(500)
           `);
           
           // Now try update again
           await queryDatabase(`
             UPDATE home_pages 
-            SET "${field}" = $1
+            SET ${field} = $1
             WHERE locale = 'ru'
           `, [value]);
           successCount++;
