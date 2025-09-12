@@ -4748,9 +4748,9 @@ app.post('/api/force-russian-ui', async (req, res) => {
         totalFields: Object.keys(russianUI).length
       },
       verification: {
-        navHome: verify[0]?.navHome || 'NOT FOUND',
-        btnSignUpToday: verify[0]?.btnSignUpToday || 'NOT FOUND',
-        navCourses: verify[0]?.navCourses || 'NOT FOUND',
+        navHome: verify[0]?.nav_home || 'NOT FOUND',
+        btnSignUpToday: verify[0]?.btn_sign_up_today || 'NOT FOUND',
+        navCourses: verify[0]?.nav_courses || 'NOT FOUND',
         isFullyRussian: isRussian
       },
       errors: errors.length > 0 ? errors : undefined
