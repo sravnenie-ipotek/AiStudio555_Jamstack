@@ -320,6 +320,14 @@
                         <p>AI Studio - פלטפורמת למידה מקוונת</p>
                         <button class="edit-btn" onclick="editContent('he', 'home')">Edit Hebrew</button>
                     </div>
+                    
+                    <div class="content-card">
+                        <div class="language-indicator" style="background: #6f42c1; color: white;">FOOTER</div>
+                        <div class="card-title">Footer Content</div>
+                        <div class="card-subtitle">Multi-language footer</div>
+                        <p>Company info, links, and contact details</p>
+                        <button class="edit-btn" onclick="editContent('footer', 'footer')">Edit Footer</button>
+                    </div>
                 </div>
             </div>
             
@@ -352,6 +360,34 @@
                     <div class="form-group">
                         <label>Hero Description</label>
                         <textarea id="hero-description" placeholder="Enter hero description"></textarea>
+                    </div>
+                    
+                    <!-- Footer Fields (hidden by default) -->
+                    <div id="footer-fields" style="display: none;">
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" id="company-name" placeholder="Enter company name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Footer Description</label>
+                            <textarea id="footer-description" placeholder="Enter footer description"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Copyright Text</label>
+                            <input type="text" id="copyright-text" placeholder="© 2024 Company Name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Contact Email</label>
+                            <input type="email" id="contact-email" placeholder="contact@company.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Contact Phone</label>
+                            <input type="text" id="contact-phone" placeholder="+1 (555) 123-4567">
+                        </div>
                     </div>
                     
                     <button class="save-btn" onclick="saveContent()">💾 Save Changes</button>
@@ -393,12 +429,39 @@
             document.getElementById('language-overview').style.display = 'none';
             document.getElementById('content-editor').style.display = 'block';
             
-            // Update language indicators
+            // Handle footer content
+            if (lang === 'footer') {
+                document.getElementById('current-lang-flag').textContent = '🦶';
+                document.getElementById('current-lang-name').textContent = 'Footer Content';
+                document.getElementById('current-lang-badge').textContent = 'FOOTER';
+                document.getElementById('current-lang-badge').className = 'language-badge badge-en';
+                
+                // Show footer fields, hide home fields
+                document.querySelectorAll('.form-group').forEach(el => {
+                    if (el.parentNode.id !== 'footer-fields') {
+                        el.style.display = 'none';
+                    }
+                });
+                document.getElementById('footer-fields').style.display = 'block';
+                
+                loadFooterContent('en');
+                return;
+            }
+            
+            // Handle regular language content
             const config = languageConfig[lang];
             document.getElementById('current-lang-flag').textContent = config.flag;
             document.getElementById('current-lang-name').textContent = config.name;
             document.getElementById('current-lang-badge').textContent = config.badge;
             document.getElementById('current-lang-badge').className = `language-badge badge-${lang}`;
+            
+            // Show home fields, hide footer fields
+            document.querySelectorAll('.form-group').forEach(el => {
+                if (el.parentNode.id !== 'footer-fields') {
+                    el.style.display = 'block';
+                }
+            });
+            document.getElementById('footer-fields').style.display = 'none';
             
             // Load content for editing
             loadContent(lang);
@@ -431,6 +494,12 @@
         }
         
         async function saveContent() {
+            // Handle footer content differently
+            if (currentLanguage === 'footer') {
+                return await saveFooterContent();
+            }
+            
+            // Handle regular page content
             const data = {
                 locale: currentLanguage,
                 title: document.getElementById('page-title').value,
@@ -475,6 +544,69 @@
             loadContentOverview();
         });
         
+        // Footer content management functions
+        async function loadFooterContent(lang) {
+            try {
+                const response = await fetch(`${API_BASE}/api/footer-content?locale=${lang}`);
+                const data = await response.json();
+                
+                if (data && !data.error) {
+                    // Populate footer fields
+                    document.getElementById('company-name').value = data.companyName || 'AI Studio';
+                    document.getElementById('footer-description').value = data.description || 'Elevate tech career with expert-led courses.';
+                    document.getElementById('copyright-text').value = data.copyright || '© 2024 AI Studio. All rights reserved.';
+                    document.getElementById('contact-email').value = data.email || 'contact@aistudio555.com';
+                    document.getElementById('contact-phone').value = data.phone || '+1 (555) 123-4567';
+                    
+                    showStatus('Footer content loaded', 'success');
+                } else {
+                    // Set default values when no footer content exists
+                    document.getElementById('company-name').value = 'AI Studio';
+                    document.getElementById('footer-description').value = 'Elevate tech career with expert-led courses.';
+                    document.getElementById('copyright-text').value = '© 2024 AI Studio. All rights reserved.';
+                    document.getElementById('contact-email').value = 'contact@aistudio555.com';
+                    document.getElementById('contact-phone').value = '+1 (555) 123-4567';
+                    
+                    showStatus('Using default footer content (API not available)', 'error');
+                }
+            } catch (error) {
+                showStatus('Footer API not available - using defaults', 'error');
+                // Set default values
+                document.getElementById('company-name').value = 'AI Studio';
+                document.getElementById('footer-description').value = 'Elevate tech career with expert-led courses.';
+                document.getElementById('copyright-text').value = '© 2024 AI Studio. All rights reserved.';
+                document.getElementById('contact-email').value = 'contact@aistudio555.com';
+                document.getElementById('contact-phone').value = '+1 (555) 123-4567';
+            }
+        }
+        
+        async function saveFooterContent() {
+            const data = {
+                locale: currentLanguage,
+                companyName: document.getElementById('company-name').value,
+                description: document.getElementById('footer-description').value,
+                copyright: document.getElementById('copyright-text').value,
+                email: document.getElementById('contact-email').value,
+                phone: document.getElementById('contact-phone').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/footer-content`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    showStatus('✅ Footer content saved successfully!', 'success');
+                } else {
+                    throw new Error('Failed to save footer content');
+                }
+            } catch (error) {
+                showStatus('❌ Footer API not available yet - content saved locally only', 'error');
+            }
+        }
+
         async function loadContentOverview() {
             // This would load all language versions for the overview grid
             // For now, using static content for demonstration
