@@ -2310,4 +2310,109 @@
 
   <!-- API Integration - CRITICAL FOR DYNAMIC CONTENT -->
   <script src="../js/webflow-strapi-integration.js"></script>
+  <script>
+    // Initialize dynamic content loading for Russian courses
+    document.addEventListener('DOMContentLoaded', async function() {
+      console.log('🚀 Initializing Russian courses page integration...');
+      
+      // Force Russian locale for this page
+      const locale = 'ru';
+      
+      try {
+        // Fetch courses from API with Russian locale
+        const API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+        const response = await fetch(`${API_BASE}/courses?locale=${locale}`);
+        const coursesData = await response.json();
+        
+        console.log(`📚 Fetched ${coursesData.data.length} Russian courses`);
+        
+        // Find all course list containers (there are 5 tabs)
+        const courseLists = document.querySelectorAll('.featured-courses-collection-list');
+        
+        courseLists.forEach((listContainer, tabIndex) => {
+          // Clear the empty message
+          const emptyMsg = listContainer.parentElement.querySelector('.w-dyn-empty');
+          if (emptyMsg) {
+            emptyMsg.style.display = 'none';
+          }
+          
+          // Clear existing placeholder items
+          listContainer.innerHTML = '';
+          
+          // Add courses to this tab
+          coursesData.data.forEach(course => {
+            const courseItem = createCourseElement(course);
+            listContainer.appendChild(courseItem);
+          });
+        });
+        
+        console.log('✅ Russian courses loaded successfully');
+        
+      } catch (error) {
+        console.error('❌ Failed to load Russian courses:', error);
+      }
+      
+      function createCourseElement(courseData) {
+        const course = courseData.attributes;
+        
+        const courseEl = document.createElement('div');
+        courseEl.className = 'featured-courses-collection-item w-dyn-item';
+        courseEl.setAttribute('role', 'listitem');
+        
+        courseEl.innerHTML = `
+          <div class="featured-courses-single" style="background-color:rgb(4,25,63)">
+            <a href="/dist/ru/detail_courses.html?id=${courseData.id}" class="featured-courses-image-link w-inline-block">
+              <img loading="lazy" 
+                   src="${course.image || 'https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg'}" 
+                   alt="${course.title}" 
+                   class="featured-courses-image">
+            </a>
+            <div class="featured-courses-typography">
+              <div class="featured-courses-name-wrap">
+                <a href="/dist/ru/detail_courses.html?id=${courseData.id}" class="featured-courses-name">${course.title}</a>
+                <div class="featured-courses-rating">
+                  <div class="featured-courses-rating-icon-wrapper">
+                    ${generateStars(course.rating || 4.8)}
+                  </div>
+                  <div class="featured-courses-rating-text">${course.rating || '4.8'}</div>
+                </div>
+                <div class="courses-video-session-time-wrap">
+                  <div class="courses-video-session-time">
+                    <img loading="lazy" src="../images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
+                    <div class="courses-video-session-time-text">${course.duration || '8 недель'}</div>
+                  </div>
+                  <div class="courses-video-session-time">
+                    <img loading="lazy" src="../images/Courses-Video-Session--Time-Icon2.svg" alt="" class="courses-video-session-time-icon">
+                    <div class="courses-video-session-time-text">${course.lessons || '24 урока'}</div>
+                  </div>
+                </div>
+                <div class="featured-courses-button-wrapper">
+                  <a href="/dist/ru/detail_courses.html?id=${courseData.id}" class="primary-button secondary w-inline-block" style="background-color:rgba(255,255,255,0);color:rgb(255,255,255)">
+                    <div class="primary-button-text-wrap">
+                      <div class="primary-button-text-block">Подробнее</div>
+                      <div class="primary-button-text-block is-text-absolute">Подробнее</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="featured-courses-categories-tag" style="background-color:rgb(0,128,255);color:rgb(255,255,255)">
+              ${course.category || 'Программирование'}
+            </div>
+          </div>
+        `;
+        
+        return courseEl;
+      }
+      
+      function generateStars(rating) {
+        const fullStars = Math.floor(parseFloat(rating) || 4);
+        let starsHTML = '';
+        for (let i = 0; i < 5; i++) {
+          starsHTML += '<img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon">';
+        }
+        return starsHTML;
+      }
+    });
+  </script>
 </body></html>

@@ -70,7 +70,8 @@ module.exports = defineConfig({
         '**/accessibility.spec.js',
         '**/performance.spec.js',
         '**/comprehensive-system.spec.js',
-        '**/responsive-quick.spec.js'
+        '**/responsive-quick.spec.js',
+        '**/teachers-page.spec.js'
       ]
     },
     

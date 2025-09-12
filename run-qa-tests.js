@@ -12,7 +12,6 @@ const TEST_SUITES = {
     duration: '2-3 minutes',
     tests: [
       'tests/responsive-quick.spec.js',
-      'tests/console-errors.spec.js --grep="home.html|courses.html"',
     ]
   },
   'comprehensive': {

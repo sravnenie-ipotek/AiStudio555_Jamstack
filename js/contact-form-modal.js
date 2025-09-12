@@ -995,6 +995,15 @@
       const href = target.getAttribute('href') || '';
       const text = target.textContent || '';
       
+      // Exclude navigation buttons that should work normally
+      if (href.includes('courses.html') || 
+          text.includes('Uncover All Courses') ||
+          text.includes('View All Courses') ||
+          text.includes('Browse Courses')) {
+        // Let these buttons navigate normally
+        return;
+      }
+      
       // Check if it's a sign up/sign in link
       if (href.includes('sign-up') || 
           href.includes('sign-in') || 

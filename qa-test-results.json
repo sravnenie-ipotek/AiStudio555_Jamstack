@@ -1,0 +1,33 @@
+{
+  "timestamp": "2025-09-12T06:50:47.818Z",
+  "results": [
+    {
+      "locale": "en",
+      "totalFields": 85,
+      "uiFieldsFound": 21,
+      "correctTranslations": 21,
+      "incorrectTranslations": [],
+      "missingFields": [],
+      "passed": true
+    },
+    {
+      "locale": "ru",
+      "totalFields": 85,
+      "uiFieldsFound": 21,
+      "correctTranslations": 21,
+      "incorrectTranslations": [],
+      "missingFields": [],
+      "passed": true
+    },
+    {
+      "locale": "he",
+      "totalFields": 85,
+      "uiFieldsFound": 15,
+      "correctTranslations": 15,
+      "incorrectTranslations": [],
+      "missingFields": [],
+      "passed": true
+    }
+  ],
+  "verdict": "PASSED"
+}

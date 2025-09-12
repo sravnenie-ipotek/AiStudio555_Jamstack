@@ -1,0 +1,92 @@
+{
+  "timestamp": "2025-09-12T06:50:48.389Z",
+  "target": "https://aistudio555jamstack-production.up.railway.app",
+  "totalTeachers": 16,
+  "locales": [
+    "en",
+    "ru",
+    "he"
+  ],
+  "teachers": [
+    {
+      "name": "Sarah Chen",
+      "role": "Senior ML Engineer at Google",
+      "order": 1
+    },
+    {
+      "name": "Michael Rodriguez",
+      "role": "AI Research Scientist at OpenAI",
+      "order": 2
+    },
+    {
+      "name": "Elena Petrov",
+      "role": "Head of Data Science at Meta",
+      "order": 3
+    },
+    {
+      "name": "David Kim",
+      "role": "Computer Vision Engineer at Tesla",
+      "order": 4
+    },
+    {
+      "name": "Anna Kowalski",
+      "role": "NLP Engineer at Microsoft",
+      "order": 5
+    },
+    {
+      "name": "James Wilson",
+      "role": "Principal Data Scientist at Amazon",
+      "order": 6
+    },
+    {
+      "name": "Maria Santos",
+      "role": "Data Analytics Lead at Stripe",
+      "order": 7
+    },
+    {
+      "name": "Alex Thompson",
+      "role": "Senior Backend Engineer at Slack",
+      "order": 8
+    },
+    {
+      "name": "Lisa Zhang",
+      "role": "Python Architect at Twitter",
+      "order": 9
+    },
+    {
+      "name": "Robert Johnson",
+      "role": "Full Stack Lead at Apple",
+      "order": 10
+    },
+    {
+      "name": "Sofia Andersson",
+      "role": "Frontend Architect at Spotify",
+      "order": 11
+    },
+    {
+      "name": "Raj Patel",
+      "role": "Cloud Solutions Architect at AWS",
+      "order": 12
+    },
+    {
+      "name": "Jennifer Wu",
+      "role": "DevOps Principal at GitHub",
+      "order": 13
+    },
+    {
+      "name": "Marcus Brown",
+      "role": "BI Director at Salesforce",
+      "order": 14
+    },
+    {
+      "name": "Sarah Kim",
+      "role": "Senior Product Manager at Airbnb",
+      "order": 15
+    },
+    {
+      "name": "Emma Davis",
+      "role": "Principal Designer at Adobe",
+      "order": 16
+    }
+  ]
+}

@@ -2818,5 +2818,154 @@
     })();
   </script>
 
+  <!-- Dynamic Content Integration -->
+  <script src="../js/webflow-strapi-integration.js"></script>
+  <script>
+    // Initialize dynamic content loading for Russian career-center page
+    document.addEventListener('DOMContentLoaded', async function() {
+      console.log('🚀 Initializing Russian career-center page integration...');
+      
+      try {
+        // Fetch career-center data from API with Russian locale
+        const API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+        const response = await fetch(`${API_BASE}/career-center-page?locale=ru`);
+        const data = await response.json();
+        
+        console.log('💼 Fetched Russian career-center data:', data);
+        
+        if (data && data.data && data.data.attributes) {
+          const content = data.data.attributes;
+          updateCareerCenterContent(content);
+        }
+        
+        console.log('✅ Russian career-center content loaded successfully');
+        
+      } catch (error) {
+        console.error('❌ Failed to load Russian career-center content:', error);
+      }
+      
+      function updateCareerCenterContent(content) {
+        // Update main title and descriptions
+        updateElement('[data-title]', content.title);
+        updateElement('[data-subtitle]', content.subtitle);
+        updateElement('[data-description]', content.description);
+        
+        // Update hero section
+        updateElement('[data-hero-title]', content.heroTitle);
+        updateElement('[data-hero-subtitle]', content.heroSubtitle);
+        updateElement('[data-hero-description]', content.heroDescription);
+        
+        // Update hero stats if available
+        if (content.heroStats && Array.isArray(content.heroStats)) {
+          content.heroStats.forEach((stat, index) => {
+            updateElement(`[data-stat-${index + 1}-number]`, stat.number);
+            updateElement(`[data-stat-${index + 1}-label]`, stat.label);
+          });
+        }
+        
+        // Update services section
+        if (content.services && Array.isArray(content.services)) {
+          updateServicesSection(content.services);
+        }
+        
+        // Update advantages section  
+        if (content.advantages && Array.isArray(content.advantages)) {
+          updateAdvantagesSection(content.advantages);
+        }
+        
+        // Update package information
+        if (content.package) {
+          updateElement('[data-package-title]', content.package.title);
+          updateElement('[data-package-price]', content.package.price);
+          updateElement('[data-package-description]', content.package.description);
+        }
+        
+        console.log('✅ Career center content updated');
+      }
+      
+      function updateServicesSection(services) {
+        const servicesContainer = document.querySelector('[data-services-container]');
+        if (!servicesContainer || services.length === 0) return;
+        
+        // Clear existing content
+        servicesContainer.innerHTML = '';
+        
+        // Add new services
+        services.forEach(service => {
+          const serviceElement = createServiceElement(service);
+          servicesContainer.appendChild(serviceElement);
+        });
+      }
+      
+      function createServiceElement(service) {
+        const serviceEl = document.createElement('div');
+        serviceEl.className = 'service-item';
+        serviceEl.innerHTML = `
+          <div class="service-icon">${service.icon || '💼'}</div>
+          <div class="service-content">
+            <h3 class="service-title">${service.title}</h3>
+            <p class="service-description">${service.description}</p>
+          </div>
+        `;
+        return serviceEl;
+      }
+      
+      function updateAdvantagesSection(advantages) {
+        const advantagesContainer = document.querySelector('[data-advantages-container]');
+        if (!advantagesContainer || advantages.length === 0) return;
+        
+        advantagesContainer.innerHTML = '';
+        
+        advantages.forEach(advantage => {
+          const advantageElement = createAdvantageElement(advantage);
+          advantagesContainer.appendChild(advantageElement);
+        });
+      }
+      
+      function createAdvantageElement(advantage) {
+        const advantageEl = document.createElement('div');
+        advantageEl.className = 'advantage-item';
+        advantageEl.innerHTML = `
+          <div class="advantage-icon">${advantage.icon || '✓'}</div>
+          <div class="advantage-content">
+            <h4 class="advantage-title">${advantage.title}</h4>
+            <p class="advantage-description">${advantage.description}</p>
+          </div>
+        `;
+        return advantageEl;
+      }
+      
+      function updateElement(selector, value) {
+        if (!value) return;
+        
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+          if (el) {
+            el.textContent = value;
+          }
+        });
+        
+        // Also try generic selectors for hero content
+        if (selector === '[data-title]') {
+          const titles = document.querySelectorAll('h1, .main-title, .page-title');
+          titles.forEach(el => {
+            if (el.textContent.includes('Career') || el.textContent.includes('Центр') || el.textContent.includes('карьер')) {
+              el.textContent = value;
+            }
+          });
+        }
+        
+        if (selector === '[data-hero-title]') {
+          const heroTitles = document.querySelectorAll('.hero-title, h1, h2');
+          heroTitles.forEach(el => {
+            if (el.textContent.includes('Career') || el.textContent.includes('центр') || el.textContent.includes('Карьер')) {
+              el.textContent = value;
+            }
+          });
+        }
+      }
+    });
+  </script>
+
 </body>
 </html>

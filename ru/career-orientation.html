@@ -2277,5 +2277,97 @@
     })();
   </script>
 
+  <!-- Dynamic Content Integration -->
+  <script src="../js/webflow-strapi-integration.js"></script>
+  <script>
+    // Initialize dynamic content loading for Russian career-orientation page
+    document.addEventListener('DOMContentLoaded', async function() {
+      console.log('🚀 Initializing Russian career-orientation page integration...');
+      
+      try {
+        // Fetch career-orientation data from API with Russian locale
+        const API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+        const response = await fetch(`${API_BASE}/career-orientation-page?locale=ru`);
+        const data = await response.json();
+        
+        console.log('📊 Fetched Russian career-orientation data:', data);
+        
+        if (data && data.data && data.data.attributes) {
+          const content = data.data.attributes;
+          updateCareerOrientationContent(content);
+        }
+        
+        console.log('✅ Russian career-orientation content loaded successfully');
+        
+      } catch (error) {
+        console.error('❌ Failed to load Russian career-orientation content:', error);
+      }
+      
+      function updateCareerOrientationContent(content) {
+        // Update hero section
+        updateElement('[data-hero-title]', content.heroMainTitle);
+        updateElement('[data-hero-subtitle]', content.heroSubtitle);
+        updateElement('[data-hero-description]', content.heroDescription);
+        updateElement('[data-hero-cta-text]', content.heroCtaText);
+        
+        // Update hero stats
+        if (content.heroStat1Value) {
+          updateElement('[data-stat-1-value]', content.heroStat1Value);
+          updateElement('[data-stat-1-label]', content.heroStat1Label);
+        }
+        if (content.heroStat2Value) {
+          updateElement('[data-stat-2-value]', content.heroStat2Value);
+          updateElement('[data-stat-2-label]', content.heroStat2Label);
+        }
+        if (content.heroStat3Value) {
+          updateElement('[data-stat-3-value]', content.heroStat3Value);
+          updateElement('[data-stat-3-label]', content.heroStat3Label);
+        }
+        
+        // Update problems section
+        updateElement('[data-problems-title]', content.problemsMainTitle);
+        updateElement('[data-problems-subtitle]', content.problemsSubtitle);
+        updateElement('[data-problems-description]', content.problemsDescription);
+        
+        // Update individual problems
+        updateElement('[data-problem-1-title]', content.problem1Title);
+        updateElement('[data-problem-1-description]', content.problem1Description);
+        updateElement('[data-problem-1-stat]', content.problem1Stat);
+        
+        console.log('✅ Career orientation content updated');
+      }
+      
+      function updateElement(selector, value) {
+        if (!value) return;
+        
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+          if (el) {
+            el.textContent = value;
+          }
+        });
+        
+        // Also try generic selectors for hero content
+        if (selector === '[data-hero-title]') {
+          const heroTitles = document.querySelectorAll('h1, .hero-title, .main-title');
+          heroTitles.forEach(el => {
+            if (el.textContent.includes('Career') || el.textContent.includes('Карьер')) {
+              el.textContent = value;
+            }
+          });
+        }
+        
+        if (selector === '[data-hero-subtitle]') {
+          const heroSubtitles = document.querySelectorAll('.hero-subtitle, .subtitle, h2');
+          heroSubtitles.forEach(el => {
+            if (el.textContent.length > 20 && el.textContent.includes('career') || el.textContent.includes('карьер')) {
+              el.textContent = value;
+            }
+          });
+        }
+      }
+    });
+  </script>
+
 </body>
 </html>
