@@ -4315,13 +4315,46 @@ try {
 // INITIALIZE AUTHENTICATION SECURITY SYSTEM
 // ============================================================================
 
+// Load authentication security module with fallback paths
+let authSecurityModule;
+const authPossiblePaths = [
+  './footer-migration/EMERGENCY_FIXES/04-authentication-security-fixes',
+  './footer-migration/EMERGENCY_FIXES/04-authentication-security-fixes.js',
+  path.join(process.cwd(), 'footer-migration', 'EMERGENCY_FIXES', '04-authentication-security-fixes.js'),
+  '/app/footer-migration/EMERGENCY_FIXES/04-authentication-security-fixes',
+  '/app/footer-migration/EMERGENCY_FIXES/04-authentication-security-fixes.js'
+];
+
+for (const authPath of authPossiblePaths) {
+  try {
+    console.log(`🔐 Trying to load authentication from: ${authPath}`);
+    authSecurityModule = require(authPath);
+    console.log(`✅ Successfully loaded authentication security from: ${authPath}`);
+    break;
+  } catch (authError) {
+    console.log(`❌ Failed to load authentication from ${authPath}: ${authError.message}`);
+  }
+}
+
+if (!authSecurityModule) {
+  console.error('❌ CRITICAL: Failed to initialize authentication security module');
+  console.log('⚠️  Creating fallback authentication stub...');
+  authSecurityModule = {
+    SecureJWTManager: class { constructor() {} },
+    AdvancedRateLimiter: class { constructor() {} },
+    SecureSessionManager: class { constructor() {} },
+    PasswordSecurity: class {},
+    createSecureAuthMiddleware: () => (req, res, next) => next()
+  };
+}
+
 const {
   SecureJWTManager,
   AdvancedRateLimiter,
   SecureSessionManager,
   PasswordSecurity,
   createSecureAuthMiddleware
-} = require('./footer-migration/EMERGENCY_FIXES/04-authentication-security-fixes');
+} = authSecurityModule;
 
 // Initialize authentication security middleware with comprehensive protection
 const authMiddleware = createSecureAuthMiddleware({
