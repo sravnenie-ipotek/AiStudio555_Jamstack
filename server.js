@@ -4001,14 +4001,14 @@ app.post('/api/migrate-ui', async (req, res) => {
 
     console.log('🚀 Starting UI fields migration...');
     
-    // Add columns for each field
+    // Add columns for each field with quoted names
     const alterPromises = [];
     for (const [fieldName, translations] of Object.entries(fields)) {
-      // Add column if it doesn't exist
+      // Add column if it doesn't exist (with quoted name)
       alterPromises.push(
         queryDatabase(`
           ALTER TABLE home_pages 
-          ADD COLUMN IF NOT EXISTS ${fieldName} VARCHAR(500)
+          ADD COLUMN IF NOT EXISTS "${fieldName}" VARCHAR(500)
         `).catch(err => console.log(`Column ${fieldName} might already exist`))
       );
     }
@@ -4016,10 +4016,10 @@ app.post('/api/migrate-ui', async (req, res) => {
     await Promise.all(alterPromises);
     console.log('✅ Columns added/verified');
     
-    // Update English values
+    // Update English values with quoted column names
     const englishUpdates = [];
     for (const [fieldName, translations] of Object.entries(fields)) {
-      englishUpdates.push(`${fieldName} = '${translations.en.replace(/'/g, "''")}'`);
+      englishUpdates.push(`"${fieldName}" = '${translations.en.replace(/'/g, "''")}'`);
     }
     
     await queryDatabase(`
@@ -4029,10 +4029,10 @@ app.post('/api/migrate-ui', async (req, res) => {
     `);
     console.log('✅ English values updated');
     
-    // Update Russian values
+    // Update Russian values with quoted column names
     const russianUpdates = [];
     for (const [fieldName, translations] of Object.entries(fields)) {
-      russianUpdates.push(`${fieldName} = '${translations.ru.replace(/'/g, "''")}'`);
+      russianUpdates.push(`"${fieldName}" = '${translations.ru.replace(/'/g, "''")}'`);
     }
     
     // Check if Russian record exists
