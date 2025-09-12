@@ -4776,19 +4776,29 @@ app.post('/api/debug-russian', async (req, res) => {
   
   if (action === 'check_fields') {
     try {
-      const result = await pool.query(`
+      // Check what's in home_pages for Russian locale
+      const result = await queryDatabase(`
         SELECT nav_home, nav_courses, btn_sign_up_today, 
                btn_learn_more, form_label_email
-        FROM content_ru 
-        WHERE page_name = 'home' 
+        FROM home_pages 
+        WHERE locale = 'ru' 
         LIMIT 1
+      `);
+      
+      // Also check column existence
+      const columns = await queryDatabase(`
+        SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_name = 'home_pages' 
+        AND column_name IN ('nav_home', 'nav_courses', 'btn_sign_up_today')
       `);
       
       res.json({
         success: true,
-        hasData: result.rows.length > 0,
-        fields: result.rows[0] || {},
-        message: result.rows.length > 0 ? 'Found Russian fields' : 'No Russian fields in database'
+        hasRussianRecord: result.length > 0,
+        fields: result[0] || {},
+        columnsExist: columns.map(c => c.column_name),
+        message: result.length > 0 ? 'Found Russian record' : 'No Russian record in home_pages'
       });
     } catch (error) {
       res.json({
