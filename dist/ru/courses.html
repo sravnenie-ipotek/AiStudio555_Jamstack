@@ -643,74 +643,59 @@
       background: transparent !important;
       display: block !important;
     }
+  
+    /* Hide unwanted elements */
+    .w-commerce-commercecartwrapper,
+    .navbar-cart,
+    .pages-dropdown,
+    .navbar-menu-button-cart-quantity,
+    .navbar-menu-button-cart-wrapper {
+      display: none !important;
+    }
+    
+    /* Fix dropdown styling */
+    .w-dropdown {
+      position: relative;
+    }
+    
+    .w-dropdown-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: rgba(5, 5, 26, 0.98);
+      border: 1px solid rgba(0, 128, 255, 0.2);
+      border-radius: 12px;
+      padding: 10px 0;
+      min-width: 200px;
+      z-index: 1000;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      margin-top: 10px;
+    }
+    
+    .w-dropdown-list a {
+      display: block;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .w-dropdown-list a:hover,
+    .w-dropdown-list a.w--current {
+      background: rgba(0, 128, 255, 0.1);
+      color: #ffd659;
+    }
+    
+    .dropdown-toggle-arrow-2 {
+      margin-left: 5px;
+      transition: transform 0.3s ease;
+      font-size: 12px;
+    }
+    
+    .w-dropdown.w--open .dropdown-toggle-arrow-2 {
+      transform: rotate(180deg);
+    }
   </style>
-
-    <!-- Language Selector - Integrated into Navbar -->
-    <style>
-      .language-selector-wrapper {
-        display: inline-flex;
-        align-items: center;
-        margin-left: 20px;
-        position: relative;
-      }
-      
-      .language-selector {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 20px;
-        padding: 6px 16px;
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      
-      .language-selector:hover {
-        background: rgba(255, 255, 255, 0.15);
-        border-color: rgba(255, 255, 255, 0.3);
-      }
-      
-      .language-selector select {
-        background: transparent;
-        border: none;
-        color: inherit;
-        font-size: inherit;
-        font-weight: inherit;
-        cursor: pointer;
-        outline: none;
-        padding-right: 5px;
-      }
-      
-      .language-selector select option {
-        background: #05051a;
-        color: white;
-      }
-      
-      .language-flag {
-        font-size: 18px;
-      }
-      
-      /* Mobile responsive */
-      @media (max-width: 768px) {
-        .language-selector-wrapper {
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          margin: 0;
-          z-index: 999;
-        }
-        
-        .language-selector {
-          background: rgba(5, 5, 26, 0.95);
-          backdrop-filter: blur(10px);
-          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-      }
-    </style>
 
   <style id="universal-career-dropdown-fix">
     /* UNIVERSAL CAREER SERVICES DROPDOWN FIX - Applied to ALL pages */
@@ -894,13 +879,32 @@
 
 </head>
 <body>
-    
+    <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+      <select onchange="switchLanguage(this.value)" style="padding: 8px; border-radius: 4px;">
+        <option value="en">English</option><option value="ru" selected="">Russian</option><option value="he">Hebrew</option>
+      </select>
+    </div>
+    <script>
+      function switchLanguage(lang) {
+        const currentPath = window.location.pathname;
+        const pathParts = currentPath.split('/').filter(p => p);
+        
+        // Remove current language from path
+        if (['en', 'ru', 'he'].includes(pathParts[0])) {
+          pathParts.shift();
+        }
+        
+        // Navigate to new language
+        const newPath = '/' + lang + '/' + pathParts.join('/');
+        window.location.href = newPath;
+      }
+    </script>
   
   <div class="page-wrapper">
     <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
       <div class="container">
         <div class="navbar-content">
-          <a href="index.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
+          <a href="home.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
           <nav role="navigation" class="nav-menu w-nav-menu">
             <a href="home.html" class="nav-link w-nav-link">Home</a>
             <a href="courses.html" aria-current="page" class="nav-link w-nav-link w--current">Courses</a>
@@ -1660,7 +1664,7 @@
         <div class="footer-content">
           <div data-w-id="6ab616f4-e8bf-402d-a96f-e34ee9f6b187" class="footer-top-content">
             <div class="footer-details-content">
-              <a href="index.html" class="footer-logo-link w-inline-block"><img loading="lazy" src="images/Logo.svg" alt="" class="footer-logo-image"></a>
+              <a href="home.html" class="footer-logo-link w-inline-block"><img loading="lazy" src="images/Logo.svg" alt="" class="footer-logo-image"></a>
               <div class="footer-description-text-wrapper">
                 <p class="footer-description-text">Elevate tech career with expert-led courses. if you're just aiming to advance skills, practical training is designed.</p>
               </div>
@@ -1806,7 +1810,7 @@
           </div>
           <div class="footer-bottom-content">
             <div class="footer-information-wrapper">
-              <div class="footer-information-text">© Copyright - <a href="index.html" class="footer-information-text-link">AI Studio</a> | Designed by <a href="#" target="_blank" class="footer-information-text-link">AI Studio Team</a> - <a href="template-pages/license.html" class="footer-information-text-link">Licensing </a>Powered by <a href="https://webflow.com/" target="_blank" class="footer-information-text-link">Webflow</a>
+              <div class="footer-information-text">© Copyright - <a href="home.html" class="footer-information-text-link">AI Studio</a> | Designed by <a href="#" target="_blank" class="footer-information-text-link">AI Studio Team</a> - <a href="template-pages/license.html" class="footer-information-text-link">Licensing </a>Powered by <a href="https://webflow.com/" target="_blank" class="footer-information-text-link">Webflow</a>
               </div>
             </div>
           </div>
@@ -1851,69 +1855,39 @@
     });
   </script>
 
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Handle all lead forms
-        const forms = document.querySelectorAll('form[data-name="lead-form"], form[id*="lead"], form[action*="leads"]');
-        
-        forms.forEach(form => {
-          form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(form);
-            const data = {
-              data: {
-                name: formData.get('name') || formData.get('Name'),
-                email: formData.get('email') || formData.get('Email'),
-                phone: formData.get('phone') || formData.get('Phone'),
-                message: formData.get('message') || formData.get('Message'),
-                language: document.documentElement.lang,
-                source: window.location.pathname
-              }
-            };
-            
-            try {
-              // Try HTTPS first, fallback to HTTP if SSL issues
-              let response = await fetch('https://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-              });
-              
-              // If HTTPS fails, try HTTP fallback
-              if (!response.ok && response.status === 0) {
-                console.log('HTTPS failed, trying HTTP fallback...');
-                response = await fetch('http://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify(data)
-                });
-              }
-              
-              if (response.ok) {
-                // Show success message
-                alert('Thank you! We will contact you soon.');
-                form.reset();
-                
-                // Optional: redirect to thank you page
-                // window.location.href = '/thank-you.html';
-              } else {
-                throw new Error('Submission failed');
-              }
-            } catch (error) {
-              console.error('Form submission error:', error);
-              alert('Sorry, there was an error. Please try again or contact us directly.');
-            }
-          });
+  <script>
+    // Fix Career Services dropdown
+    document.addEventListener('DOMContentLoaded', function() {
+      const dropdown = document.querySelector('.w-dropdown');
+      const dropdownToggle = document.querySelector('.w-dropdown-toggle');
+      const dropdownList = document.querySelector('.w-dropdown-list');
+      
+      if (dropdown && dropdownToggle && dropdownList) {
+        // Add hover functionality
+        dropdown.addEventListener('mouseenter', function() {
+          dropdownList.style.display = 'block';
+          dropdown.classList.add('w--open');
+          dropdownToggle.classList.add('w--open');
         });
-      });
-    </script>
-    <!-- Navigation Fix Script -->
+        
+        dropdown.addEventListener('mouseleave', function() {
+          dropdownList.style.display = 'none';
+          dropdown.classList.remove('w--open');
+          dropdownToggle.classList.remove('w--open');
+        });
+        
+        // Add click functionality as backup
+        dropdownToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          const isOpen = dropdownList.style.display === 'block';
+          dropdownList.style.display = isOpen ? 'none' : 'block';
+          dropdown.classList.toggle('w--open');
+          dropdownToggle.classList.toggle('w--open');
+        });
+      }
+    });
+  </script>
+  <!-- Navigation Fix Script -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       console.log('Navigation fix initializing...');
@@ -2024,134 +1998,7 @@
               }
             }
           </style>
-
-    <!-- COMPREHENSIVE NAVIGATION RESPONSIVE FIX -->
-    <style>
-    /* CRITICAL: Override Webflow responsive navigation hiding */
-    
-    /* Force navigation menu visibility on desktop and tablet */
-    @media screen and (min-width: 768px) {
-      /* Override Webflow's collapse behavior */
-      .w-nav[data-collapse='medium'] .w-nav-menu,
-      .w-nav[data-collapse='small'] .w-nav-menu,
-      .w-nav[data-collapse='tiny'] .w-nav-menu {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        position: static !important;
-        background: transparent !important;
-        box-shadow: none !important;
-        height: auto !important;
-        overflow: visible !important;
-        max-height: none !important;
-        width: auto !important;
-        left: auto !important;
-        top: auto !important;
-        transform: none !important;
-      }
-      
-      /* Force all navigation elements to be visible */
-      .nav-menu { 
-        display: flex !important; 
-        align-items: center !important; 
-        gap: 30px !important;
-        flex-grow: 1 !important;
-        justify-content: center !important;
-        margin: 0 40px !important;
-        width: auto !important;
-        height: auto !important;
-      }
-      
-      .nav-link, 
-      .menu-dropdown-wrapper { 
-        display: inline-block !important; 
-        visibility: visible !important; 
-        opacity: 1 !important;
-        white-space: nowrap !important;
-        position: static !important;
-      }
-      
-      /* Hide mobile hamburger menu on desktop/tablet */
-      .w-nav[data-collapse='medium'] .w-nav-button,
-      .w-nav[data-collapse='small'] .w-nav-button,
-      .w-nav[data-collapse='tiny'] .w-nav-button {
-        display: none !important;
-      }
-      
-      /* Ensure navbar layout */
-      .navbar-content {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        width: 100% !important;
-      }
-    }
-    
-    /* Desktop-specific reinforcement */
-    @media screen and (min-width: 992px) {
-      .navbar .nav-menu,
-      .navbar .nav-link,
-      .navbar .menu-dropdown-wrapper,
-      .navbar .dropdown-toggle {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-      }
-      
-      .nav-menu {
-        display: flex !important;
-      }
-      
-      .nav-link,
-      .menu-dropdown-wrapper {
-        display: inline-block !important;
-      }
-    }
-    
-    /* Additional specific overrides for stubborn elements */
-    .w-nav-menu {
-      position: static !important;
-      max-width: none !important;
-      overflow: visible !important;
-    }
-    
-    /* Ensure dropdown functionality */
-    .dropdown-toggle { 
-      display: flex !important; 
-      align-items: center !important; 
-      gap: 5px !important; 
-      cursor: pointer !important; 
-      color: rgba(255,255,255,0.9) !important; 
-      padding: 8px 16px !important;
-      transition: all 0.3s ease !important;
-    }
-    
-    .dropdown-list { 
-      position: absolute !important; 
-      top: 100% !important; 
-      left: 50% !important;
-      transform: translateX(-50%) translateY(-10px) !important;
-      background: rgba(5, 5, 26, 0.98) !important;
-      backdrop-filter: blur(20px) !important; 
-      border: 1px solid rgba(255,255,255,0.1) !important; 
-      border-radius: 8px !important; 
-      padding: 10px 0 !important; 
-      min-width: 220px !important; 
-      z-index: 1000 !important; 
-      opacity: 0 !important; 
-      visibility: hidden !important; 
-      transition: all 0.2s ease !important;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
-    }
-    
-    .menu-dropdown-wrapper:hover .dropdown-list,
-    .dropdown-list.w--open { 
-      opacity: 1 !important; 
-      visibility: visible !important; 
-      transform: translateX(-50%) translateY(0) !important;
-    }
-    </style>
-            <select onchange="switchLanguage(this.value)" id="languageSelect">
+          <select onchange="switchLanguage(this.value)" id="languageSelect">
             ${Object.entries(LANGUAGES).map(([code, lang]) => 
               `<option value="${code}" ${code === currentLang ? 'selected' : ''}>${lang.flag} ${lang.name}</option>`
             ).join('')}
@@ -2208,46 +2055,10 @@
       }
     })();
   </script>
-
-    <script>
-      function switchLanguage(lang) {
-        const currentPath = window.location.pathname;
-        const pathParts = currentPath.split('/').filter(p => p);
-        
-        // Remove 'dist' and current language from path
-        if (pathParts[0] === 'dist') pathParts.shift();
-        if (['en', 'ru', 'he'].includes(pathParts[0])) {
-          pathParts.shift();
-        }
-        
-        // Build new path
-        const pageName = pathParts.join('/') || 'index.html';
-        const newPath = '/dist/' + lang + '/' + pageName;
-        
-        // Navigate to new language
-        window.location.href = newPath;
-      }
-      
-      // Set current language flag
-      document.addEventListener('DOMContentLoaded', function() {
-        const path = window.location.pathname;
-        let currentLang = 'en';
-        
-        if (path.includes('/ru/')) currentLang = 'ru';
-        else if (path.includes('/he/')) currentLang = 'he';
-        
-        const flags = { en: '🇬🇧', ru: '🇷🇺', he: '🇮🇱' };
-        const flagEl = document.querySelector('.language-flag');
-        if (flagEl) flagEl.textContent = flags[currentLang];
-        
-        const selectEl = document.querySelector('.language-selector select');
-        if (selectEl) selectEl.value = currentLang;
-      });
-    </script>
   <!-- Contact Form Modal -->
   <!-- EmailJS SDK -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script src="../../js/contact-form-modal.js"></script>
+  <script src="js/contact-form-modal.js"></script>
   <script id="career-dropdown-fix-js">
     // Career Services Dropdown Consistency Fix
     (function() {
@@ -2309,110 +2120,71 @@
 
 
   <!-- API Integration - CRITICAL FOR DYNAMIC CONTENT -->
-  <script src="../js/webflow-strapi-integration.js"></script>
-  <script>
-    // Initialize dynamic content loading for Russian courses
-    document.addEventListener('DOMContentLoaded', async function() {
-      console.log('🚀 Initializing Russian courses page integration...');
-      
-      // Force Russian locale for this page
-      const locale = 'ru';
-      
-      try {
-        // Fetch courses from API with Russian locale
-        const API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
-        const response = await fetch(`${API_BASE}/courses?locale=${locale}`);
-        const coursesData = await response.json();
+  <script src="js/webflow-strapi-integration.js"></script>
+  
+  <!-- Visibility Controller -->
+  <script src="js/visibility-controller.js"></script>
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Handle all lead forms
+        const forms = document.querySelectorAll('form[data-name="lead-form"], form[id*="lead"], form[action*="leads"]');
         
-        console.log(`📚 Fetched ${coursesData.data.length} Russian courses`);
-        
-        // Find all course list containers (there are 5 tabs)
-        const courseLists = document.querySelectorAll('.featured-courses-collection-list');
-        
-        courseLists.forEach((listContainer, tabIndex) => {
-          // Clear the empty message
-          const emptyMsg = listContainer.parentElement.querySelector('.w-dyn-empty');
-          if (emptyMsg) {
-            emptyMsg.style.display = 'none';
-          }
-          
-          // Clear existing placeholder items
-          listContainer.innerHTML = '';
-          
-          // Add courses to this tab
-          coursesData.data.forEach(course => {
-            const courseItem = createCourseElement(course);
-            listContainer.appendChild(courseItem);
+        forms.forEach(form => {
+          form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const data = {
+              data: {
+                name: formData.get('name') || formData.get('Name'),
+                email: formData.get('email') || formData.get('Email'),
+                phone: formData.get('phone') || formData.get('Phone'),
+                message: formData.get('message') || formData.get('Message'),
+                language: document.documentElement.lang,
+                source: window.location.pathname
+              }
+            };
+            
+            try {
+              // Try HTTPS first, fallback to HTTP if SSL issues
+              let response = await fetch('https://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+              });
+              
+              // If HTTPS fails, try HTTP fallback
+              if (!response.ok && response.status === 0) {
+                console.log('HTTPS failed, trying HTTP fallback...');
+                response = await fetch('http://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(data)
+                });
+              }
+              
+              if (response.ok) {
+                // Show success message
+                alert('Thank you! We will contact you soon.');
+                form.reset();
+                
+                // Optional: redirect to thank you page
+                // window.location.href = '/thank-you.html';
+              } else {
+                throw new Error('Submission failed');
+              }
+            } catch (error) {
+              console.error('Form submission error:', error);
+              alert('Sorry, there was an error. Please try again or contact us directly.');
+            }
           });
         });
-        
-        console.log('✅ Russian courses loaded successfully');
-        
-      } catch (error) {
-        console.error('❌ Failed to load Russian courses:', error);
-      }
-      
-      function createCourseElement(courseData) {
-        const course = courseData.attributes;
-        
-        const courseEl = document.createElement('div');
-        courseEl.className = 'featured-courses-collection-item w-dyn-item';
-        courseEl.setAttribute('role', 'listitem');
-        
-        courseEl.innerHTML = `
-          <div class="featured-courses-single" style="background-color:rgb(4,25,63)">
-            <a href="/dist/ru/detail_courses.html?id=${courseData.id}" class="featured-courses-image-link w-inline-block">
-              <img loading="lazy" 
-                   src="${course.image || 'https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg'}" 
-                   alt="${course.title}" 
-                   class="featured-courses-image">
-            </a>
-            <div class="featured-courses-typography">
-              <div class="featured-courses-name-wrap">
-                <a href="/dist/ru/detail_courses.html?id=${courseData.id}" class="featured-courses-name">${course.title}</a>
-                <div class="featured-courses-rating">
-                  <div class="featured-courses-rating-icon-wrapper">
-                    ${generateStars(course.rating || 4.8)}
-                  </div>
-                  <div class="featured-courses-rating-text">${course.rating || '4.8'}</div>
-                </div>
-                <div class="courses-video-session-time-wrap">
-                  <div class="courses-video-session-time">
-                    <img loading="lazy" src="../images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
-                    <div class="courses-video-session-time-text">${course.duration || '8 недель'}</div>
-                  </div>
-                  <div class="courses-video-session-time">
-                    <img loading="lazy" src="../images/Courses-Video-Session--Time-Icon2.svg" alt="" class="courses-video-session-time-icon">
-                    <div class="courses-video-session-time-text">${course.lessons || '24 урока'}</div>
-                  </div>
-                </div>
-                <div class="featured-courses-button-wrapper">
-                  <a href="/dist/ru/detail_courses.html?id=${courseData.id}" class="primary-button secondary w-inline-block" style="background-color:rgba(255,255,255,0);color:rgb(255,255,255)">
-                    <div class="primary-button-text-wrap">
-                      <div class="primary-button-text-block">Подробнее</div>
-                      <div class="primary-button-text-block is-text-absolute">Подробнее</div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="featured-courses-categories-tag" style="background-color:rgb(0,128,255);color:rgb(255,255,255)">
-              ${course.category || 'Программирование'}
-            </div>
-          </div>
-        `;
-        
-        return courseEl;
-      }
-      
-      function generateStars(rating) {
-        const fullStars = Math.floor(parseFloat(rating) || 4);
-        let starsHTML = '';
-        for (let i = 0; i < 5; i++) {
-          starsHTML += '<img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon">';
-        }
-        return starsHTML;
-      }
-    });
-  </script>
-</body></html>
+      });
+    </script>
+  </body></html>

@@ -1,0 +1,122 @@
+/* Mobile Responsive Fix - Prevent Horizontal Scrolling */
+@media screen and (max-width: 479px) {
+  /* Prevent overflow on mobile */
+  body {
+    overflow-x: hidden !important;
+  }
+  
+  .page-wrapper {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+  
+  .container {
+    max-width: 100% !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+  
+  /* Fix any elements that might be too wide */
+  img, video, iframe, embed, object {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Fix tables on mobile */
+  table {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+  }
+  
+  /* Fix pre and code blocks */
+  pre, code {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    word-wrap: break-word !important;
+  }
+  
+  /* Fix any absolute positioned elements */
+  [style*="position: absolute"] {
+    max-width: 100vw !important;
+  }
+  
+  /* Ensure navbar doesn't cause overflow */
+  .navbar {
+    max-width: 100vw !important;
+  }
+  
+  .nav-menu {
+    max-width: 100vw !important;
+  }
+}
+
+/* Tablet Landscape Fix - iPad specific */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  /* iPad landscape horizontal scroll fix */
+  body, html {
+    overflow-x: hidden !important;
+  }
+  
+  .page-wrapper {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+  
+  /* Fix navigation button overflow */
+  .navbar-button-wrapper,
+  .primary-button-wrapper {
+    max-width: 150px !important;
+    overflow: hidden !important;
+  }
+  
+  .primary-button {
+    max-width: 150px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  
+  .primary-button-text-block {
+    font-size: 13px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  
+  /* Fix navbar content layout */
+  .navbar-content {
+    max-width: 100% !important;
+    justify-content: space-between !important;
+  }
+  
+  .nav-menu {
+    max-width: calc(100% - 180px) !important;
+    gap: 15px !important;
+  }
+  
+  /* Fix instructor grid on iPad landscape */
+  .instructor-grid,
+  .instructor-cards-wrapper {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+  
+  .instructor-card,
+  .instructor-card-enhanced {
+    max-width: calc(50% - 20px) !important;
+    margin: 10px !important;
+  }
+  
+  /* Fix any wide containers */
+  .container {
+    max-width: 100% !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  
+  /* Fix grid layouts */
+  .grid-wrapper {
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+  }
+}
