@@ -4770,6 +4770,37 @@ app.post('/api/force-russian-ui', async (req, res) => {
   }
 });
 
+// Debug endpoint to check Russian UI fields
+app.post('/api/debug-russian', async (req, res) => {
+  const { action } = req.body;
+  
+  if (action === 'check_fields') {
+    try {
+      const result = await pool.query(`
+        SELECT nav_home, nav_courses, btn_sign_up_today, 
+               btn_learn_more, form_label_email
+        FROM content_ru 
+        WHERE page_name = 'home' 
+        LIMIT 1
+      `);
+      
+      res.json({
+        success: true,
+        hasData: result.rows.length > 0,
+        fields: result.rows[0] || {},
+        message: result.rows.length > 0 ? 'Found Russian fields' : 'No Russian fields in database'
+      });
+    } catch (error) {
+      res.json({
+        success: false,
+        error: error.message
+      });
+    }
+  } else {
+    res.json({ error: 'Invalid action' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════════╗
