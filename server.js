@@ -4345,7 +4345,14 @@ if (!authSecurityModule) {
     SecureSessionManager: class { constructor() {} },
     PasswordSecurity: class {},
     createSecureAuthMiddleware: () => ({
-      requireAuth: (req, res, next) => next(),
+      requireAuth: (req, res, next) => {
+        console.log('⚠️  Using fallback auth middleware (no authentication required)');
+        next();
+      },
+      requireAdmin: (req, res, next) => {
+        console.log('⚠️  Using fallback admin middleware (no admin check required)');
+        next();
+      },
       securityHeaders: (req, res, next) => {
         // Basic security headers
         res.set({
@@ -4358,7 +4365,20 @@ if (!authSecurityModule) {
       },
       rateLimiter: (req, res, next) => next(),
       validateSession: (req, res, next) => next(),
-      getInstances: () => ({}),
+      getInstances: () => ({
+        rateLimiter: { 
+          isAllowed: () => true, 
+          getClientStats: () => ({ requests: 0, blocked: 0 }),
+          getStats: () => ({ totalRequests: 0, blocked: 0 })
+        },
+        jwtManager: { 
+          getStats: () => ({ activeTokens: 0, tokensIssued: 0 }) 
+        },
+        sessionManager: { 
+          destroySession: () => Promise.resolve(),
+          getStats: () => ({ activeSessions: 0 })
+        }
+      }),
       cleanup: async () => {}
     })
   };
