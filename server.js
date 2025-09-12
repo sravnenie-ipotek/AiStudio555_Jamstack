@@ -467,7 +467,7 @@ app.get('/api/teachers', async (req, res) => {
     console.log(`🌍 Fetching teachers for locale: ${locale}`);
     
     const data = await queryWithFallback(
-      'SELECT * FROM teachers WHERE locale = $1 AND published_at IS NOT NULL ORDER BY "order" ASC',
+      'SELECT * FROM teachers WHERE locale = $1 AND published_at IS NOT NULL ORDER BY id ASC',
       [locale]
     );
     
@@ -476,11 +476,10 @@ app.get('/api/teachers', async (req, res) => {
         id: teacher.id,
         attributes: {
           name: teacher.name,
-          role: teacher.role,
+          role: teacher.title,
           bio: teacher.bio,
-          linkedin: teacher.linkedin,
-          twitter: teacher.twitter,
-          order: teacher.order
+          image_url: teacher.image_url,
+          expertise: teacher.expertise
         }
       }))
     });
@@ -4105,6 +4104,111 @@ app.post('/api/migrate-ui', async (req, res) => {
   } catch (error) {
     console.error('Migration error:', error);
     res.status(500).json({ error: 'Migration failed', details: error.message });
+  }
+});
+
+// URGENT FIX: Update Russian UI translations
+app.post('/api/fix-russian-ui', async (req, res) => {
+  try {
+    console.log('🔄 Fixing Russian UI translations...');
+    
+    const russianTranslations = {
+      nav_home: 'Главная',
+      nav_courses: 'Курсы', 
+      nav_teachers: 'Преподаватели',
+      nav_blog: 'Блог',
+      nav_career_center: 'Карьерный центр',
+      nav_about: 'О нас',
+      nav_contact: 'Контакты',
+      nav_pricing: 'Тарифы',
+      btn_sign_up_today: 'Записаться сегодня',
+      btn_learn_more: 'Узнать больше',
+      btn_view_all_courses: 'Посмотреть все курсы',
+      btn_get_started: 'Начать',
+      btn_contact_us: 'Связаться с нами',
+      btn_enroll_now: 'Записаться сейчас',
+      btn_start_learning: 'Начать обучение',
+      btn_explore_courses: 'Изучить курсы',
+      btn_view_details: 'Подробнее',
+      btn_book_consultation: 'Записаться на консультацию',
+      btn_download_brochure: 'Скачать брошюру',
+      btn_watch_demo: 'Посмотреть демо',
+      btn_free_trial: 'Бесплатная пробная версия',
+      form_label_email: 'Электронная почта',
+      form_label_name: 'Имя',
+      form_label_phone: 'Телефон',
+      form_label_message: 'Сообщение',
+      form_label_subject: 'Тема',
+      form_placeholder_email: 'Введите ваш email',
+      form_placeholder_name: 'Введите ваше имя',
+      form_placeholder_phone: 'Введите ваш телефон',
+      form_placeholder_message: 'Введите ваше сообщение',
+      form_btn_submit: 'Отправить',
+      form_btn_subscribe: 'Подписаться',
+      form_btn_send: 'Отправить сообщение',
+      stats_courses_label: 'Курсы',
+      stats_learners_label: 'Студенты',
+      stats_years_label: 'Лет',
+      stats_success_rate_label: 'Успеха',
+      stats_countries_label: 'Страны',
+      stats_instructors_label: 'Экспертов',
+      msg_loading: 'Загрузка...',
+      msg_error: 'Произошла ошибка. Попробуйте еще раз.',
+      msg_success: 'Успех!',
+      msg_form_success: 'Спасибо! Мы свяжемся с вами в ближайшее время.',
+      msg_subscribe_success: 'Успешно подписались на рассылку!',
+      msg_no_courses: 'Курсы в данный момент недоступны',
+      msg_coming_soon: 'Скоро',
+      msg_enrollment_closed: 'Запись закрыта',
+      msg_limited_seats: 'Ограниченное количество мест',
+      ui_search_placeholder: 'Поиск курсов...',
+      ui_filter_all: 'Все',
+      ui_sort_by: 'Сортировать по',
+      ui_view_mode: 'Вид',
+      ui_grid_view: 'Сетка',
+      ui_list_view: 'Список',
+      ui_read_more: 'Читать далее',
+      ui_show_less: 'Скрыть',
+      ui_back_to_top: 'Наверх',
+      ui_share: 'Поделиться',
+      ui_print: 'Печать'
+    };
+    
+    // Build UPDATE query
+    const updates = [];
+    for (const [field, value] of Object.entries(russianTranslations)) {
+      updates.push(`${field} = '${value.replace(/'/g, "''")}'`);
+    }
+    
+    const updateQuery = `
+      UPDATE home_pages 
+      SET ${updates.join(', ')}, updated_at = NOW()
+      WHERE locale = 'ru'
+    `;
+    
+    await queryDatabase(updateQuery);
+    console.log('✅ Russian UI translations updated successfully!');
+    
+    // Verify the update
+    const verifyResult = await queryDatabase(`
+      SELECT nav_home, btn_sign_up_today, nav_courses 
+      FROM home_pages 
+      WHERE locale = 'ru'
+    `);
+    
+    res.json({
+      success: true,
+      message: 'Russian UI translations fixed successfully!',
+      sample: verifyResult[0] || {},
+      fieldsUpdated: Object.keys(russianTranslations).length
+    });
+    
+  } catch (error) {
+    console.error('❌ Failed to fix Russian UI translations:', error);
+    res.status(500).json({ 
+      error: 'Failed to update Russian UI translations', 
+      details: error.message 
+    });
   }
 });
 
