@@ -133,7 +133,7 @@ test.describe('Teachers Page QA Tests', () => {
       console.log('\n🔄 Checking API vs Frontend Consistency:');
       
       // Get API data
-      const apiResponse = await request.get('https://aistudio555jamstack-production.up.railway.app/api/teachers');
+      const apiResponse = await request.get('http://localhost:3002/api/teachers');
       const apiData = await apiResponse.json();
       const apiTeachers = apiData.data || [];
       

@@ -26,6 +26,9 @@ class StrapiIntegration {
     // Load dynamic content
     this.loadPageContent();
     
+    // ULTRATHINK: Load UI translations
+    this.loadUITranslations();
+    
     // Set up live preview if in preview mode
     if (this.isPreviewMode) {
       this.initLivePreview();
@@ -56,6 +59,203 @@ class StrapiIntegration {
     localStorage.setItem('locale', locale);
     
     return locale;
+  }
+
+  // ULTRATHINK: Load and apply UI translations from database
+  async loadUITranslations() {
+    if (this.currentLocale === 'en') {
+      console.log('📝 Skipping UI translation for English (default)');
+      return;
+    }
+
+    try {
+      console.log('🌍 Loading UI translations for locale:', this.currentLocale);
+      const response = await fetch(`${this.strapiUrl}/api/home-page?locale=${this.currentLocale}`);
+      const data = await response.json();
+      
+      if (data.data && data.data.attributes) {
+        console.log('✅ UI translations loaded, applying...');
+        this.applyUITranslations(data.data.attributes);
+      }
+    } catch (error) {
+      console.error('❌ Failed to load UI translations:', error);
+    }
+  }
+
+  applyUITranslations(ui) {
+    console.log('🎨 Applying UI translations...');
+    
+    // Update navigation
+    this.updateNavigation(ui);
+    
+    // Update buttons
+    this.updateButtons(ui);
+    
+    // Update forms
+    this.updateForms(ui);
+    
+    // Update section titles
+    this.updateSectionTitles(ui);
+    
+    // Update messages
+    this.updateMessages(ui);
+    
+    console.log('✅ UI translations applied successfully');
+  }
+
+  updateNavigation(ui) {
+    console.log('🧭 Updating navigation...');
+    
+    const navMappings = [
+      { selectors: ['a[href="/home"], a[href="home.html"], a[href="../home.html"], a[href="index.html"]'], field: 'navHome' },
+      { selectors: ['a[href="/courses"], a[href="courses.html"], a[href="../courses.html"]'], field: 'navCourses' },
+      { selectors: ['a[href="/teachers"], a[href="teachers.html"], a[href="../teachers.html"]'], field: 'navTeachers' },
+      { selectors: ['a[href="/blog"], a[href="blog.html"], a[href="../blog.html"]'], field: 'navBlog' },
+      { selectors: ['a[href="/career-center"], a[href="career-center.html"], a[href="../career-center.html"]'], field: 'navCareerCenter' },
+      { selectors: ['a[href="/about"], a[href="about.html"], a[href="../about.html"]'], field: 'navAbout' },
+      { selectors: ['a[href="/contact"], a[href="contact.html"], a[href="../contact.html"]'], field: 'navContact' }
+    ];
+
+    navMappings.forEach(mapping => {
+      mapping.selectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+          if (ui[mapping.field]) {
+            console.log(`✅ Nav: "${el.textContent.trim()}" → "${ui[mapping.field]}"`);
+            el.textContent = ui[mapping.field];
+          }
+        });
+      });
+    });
+
+    // Also update nav link text in dropdown menus
+    const dropdownLinks = document.querySelectorAll('.dropdown-menu-text-link-block, .nav-link');
+    dropdownLinks.forEach(link => {
+      const href = link.getAttribute('href') || '';
+      if (href.includes('career') && ui.navCareerCenter) {
+        link.textContent = ui.navCareerCenter;
+      }
+    });
+  }
+
+  updateButtons(ui) {
+    console.log('🔘 Updating buttons...');
+    
+    const buttonMappings = [
+      { texts: ['Sign Up Today', 'sign up today'], field: 'btnSignUpToday' },
+      { texts: ['Learn More', 'learn more'], field: 'btnLearnMore' },
+      { texts: ['View All Courses', 'view all courses', 'Uncover All Courses'], field: 'btnViewAllCourses' },
+      { texts: ['Get Started', 'get started'], field: 'btnGetStarted' },
+      { texts: ['Contact Us', 'contact us', 'get in touch'], field: 'btnContactUs' },
+      { texts: ['Course Details', 'course details', 'View Details'], field: 'btnViewDetails' },
+      { texts: ['Enroll Now', 'enroll now'], field: 'btnEnrollNow' }
+    ];
+
+    const buttonSelectors = ['button', '.primary-button-text-block', '.secondary-button-text-block', '.button', '.btn', 'a.primary-button', 'a.secondary-button', '[class*="button"]'];
+    
+    buttonSelectors.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(button => {
+        const currentText = button.textContent.trim().toLowerCase();
+        
+        buttonMappings.forEach(mapping => {
+          if (mapping.texts.some(text => currentText.includes(text.toLowerCase())) && ui[mapping.field]) {
+            console.log(`✅ Button: "${button.textContent.trim()}" → "${ui[mapping.field]}"`);
+            button.textContent = ui[mapping.field];
+          }
+        });
+      });
+    });
+  }
+
+  updateForms(ui) {
+    console.log('📝 Updating forms...');
+    
+    // Update newsletter form label
+    const newsletterLabel = document.querySelector('.footer-details-form-text, label[for="email-2"]');
+    if (newsletterLabel && ui.formBtnSubscribe) {
+      if (newsletterLabel.textContent.includes('Subscribe') || newsletterLabel.textContent.includes('Newsletter')) {
+        console.log(`✅ Newsletter Label: "${newsletterLabel.textContent}" → "${ui.formBtnSubscribe}"`);
+        newsletterLabel.textContent = `Подписаться на рассылку`; // Hardcoded for now
+      }
+    }
+
+    // Update email placeholders
+    const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"]');
+    emailInputs.forEach(input => {
+      if (ui.formPlaceholderEmail && input.placeholder !== ui.formPlaceholderEmail) {
+        console.log(`✅ Email Placeholder: "${input.placeholder}" → "${ui.formPlaceholderEmail}"`);
+        input.placeholder = ui.formPlaceholderEmail;
+      }
+    });
+
+    // Update submit buttons
+    const submitButtons = document.querySelectorAll('input[type="submit"], .footer-details-form-submit-button');
+    submitButtons.forEach(btn => {
+      if (ui.formBtnSubscribe && (btn.value === '' || btn.value === 'Submit')) {
+        console.log(`✅ Submit Button: "${btn.value}" → "${ui.formBtnSubscribe}"`);
+        btn.value = ui.formBtnSubscribe;
+      }
+    });
+  }
+
+  updateSectionTitles(ui) {
+    console.log('📑 Updating section titles...');
+    
+    // Common section titles to translate
+    const titleMappings = [
+      { texts: ['Most Popular IT Courses', 'Featured Courses'], field: 'featuredCoursesTitle' },
+      { texts: ['FAQ & Answer', 'Frequently Asked Questions'], replacement: 'Часто задаваемые вопросы' },
+      { texts: ['Student Success Stories', 'Alumni Reviews'], replacement: 'Истории успеха студентов' },
+      { texts: ['Your Questions Answered Here'], replacement: 'Ответы на ваши вопросы' },
+      { texts: ['Expert-Led Learning'], replacement: 'Обучение от экспертов' },
+      { texts: ['Focus on Practice'], replacement: 'Фокус на практике' },
+      { texts: ['Core Skills'], replacement: 'Основные навыки' },
+      { texts: ['Online Learning'], replacement: 'Онлайн обучение' },
+      { texts: ['Unlock Potential With Proven Courses'], replacement: 'Раскройте потенциал с проверенными курсами' },
+      { texts: ['Learn From Anywhere, Anytime With Our Platform'], replacement: 'Учитесь где угодно и когда угодно на нашей платформе' }
+    ];
+
+    const headingSelectors = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', '.section-title', '.heading', '.title', '.banner-title', '.banner-subtitle'];
+    
+    headingSelectors.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(heading => {
+        const currentText = heading.textContent.trim();
+        
+        titleMappings.forEach(mapping => {
+          if (mapping.texts.some(text => currentText.includes(text))) {
+            const newText = mapping.field ? ui[mapping.field] : mapping.replacement;
+            if (newText && currentText !== newText) {
+              console.log(`✅ Section Title: "${currentText}" → "${newText}"`);
+              heading.textContent = newText;
+            }
+          }
+        });
+      });
+    });
+  }
+
+  updateMessages(ui) {
+    console.log('💬 Updating messages...');
+    
+    // Update form success messages
+    const successMessages = document.querySelectorAll('.w-form-done div');
+    successMessages.forEach(el => {
+      if (ui.msgFormSuccess && el.textContent.includes('Thank you')) {
+        console.log(`✅ Success Message: "${el.textContent}" → "${ui.msgFormSuccess}"`);
+        el.textContent = ui.msgFormSuccess;
+      }
+    });
+
+    // Update "Read more" links
+    const readMoreLinks = document.querySelectorAll('a');
+    readMoreLinks.forEach(link => {
+      if (link.textContent.toLowerCase().includes('read more') && ui.uiReadMore) {
+        console.log(`✅ Read More: "${link.textContent}" → "${ui.uiReadMore}"`);
+        link.textContent = ui.uiReadMore;
+      }
+    });
   }
 
   checkPreviewMode() {

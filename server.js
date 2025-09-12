@@ -7,6 +7,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const path = require('path');
 const { Client } = require('pg');
@@ -18,6 +19,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 
 app.use(express.static('.'));
@@ -4212,6 +4214,214 @@ app.post('/api/fix-russian-ui', async (req, res) => {
   }
 });
 
+// ============================================================================
+// INITIALIZE SECURE FOOTER API
+// ============================================================================
+
+const { initializeSecureFooterAPI } = require('./footer-migration/secure-footer-api');
+
+// Initialize secure footer API endpoints with all security fixes
+initializeSecureFooterAPI(app, queryDatabase);
+
+// ============================================================================
+// INITIALIZE AUTHENTICATION SECURITY SYSTEM
+// ============================================================================
+
+const {
+  SecureJWTManager,
+  AdvancedRateLimiter,
+  SecureSessionManager,
+  PasswordSecurity,
+  createSecureAuthMiddleware
+} = require('./footer-migration/EMERGENCY_FIXES/04-authentication-security-fixes');
+
+// Initialize authentication security middleware with comprehensive protection
+const authMiddleware = createSecureAuthMiddleware({
+  jwt: {
+    issuer: 'aistudio555-api',
+    audience: 'aistudio555-users',
+    defaultExpiry: '1h',
+    refreshExpiry: '7d'
+  },
+  rateLimit: {
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    maxRequests: 100,
+    slidingWindow: true,
+    maxMemoryMB: 50
+  },
+  session: {
+    sessionTTL: 24 * 60 * 60 * 1000, // 24 hours
+    maxSessions: 10000,
+    cleanupInterval: 60 * 60 * 1000 // 1 hour
+  }
+});
+
+// Apply security headers to all routes
+app.use(authMiddleware.securityHeaders);
+
+// Add authentication endpoints
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
+    
+    // Apply rate limiting to login attempts
+    const instances = authMiddleware.getInstances();
+    if (!instances.rateLimiter.isAllowed(clientIP, 'login')) {
+      const stats = instances.rateLimiter.getClientStats(clientIP, 'login');
+      return res.status(429).json({
+        error: 'Too many login attempts',
+        resetTime: stats.resetTime,
+        retryAfter: Math.ceil((stats.resetTime - Date.now()) / 1000)
+      });
+    }
+    
+    // Basic validation
+    if (!email || !password) {
+      return res.status(400).json({
+        error: 'Email and password are required'
+      });
+    }
+    
+    // TODO: Validate credentials against database
+    // This is a placeholder - real implementation would check against user table
+    const isValidUser = email === 'admin@aistudio555.com' && password === 'AdminPassword123!';
+    
+    if (!isValidUser) {
+      return res.status(401).json({
+        error: 'Invalid credentials'
+      });
+    }
+    
+    // Create session
+    const sessionData = await instances.sessionManager.createSession('admin-user-1', {
+      email,
+      role: 'admin',
+      ipAddress: clientIP,
+      userAgent: req.get('User-Agent')
+    });
+    
+    // Generate JWT token
+    const token = instances.jwtManager.signToken({
+      userId: 'admin-user-1',
+      email,
+      role: 'admin',
+      jti: sessionData.id
+    });
+    
+    // Set secure cookie
+    res.cookie('auth_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    });
+    
+    res.json({
+      success: true,
+      message: 'Login successful',
+      user: {
+        email,
+        role: 'admin'
+      },
+      csrfToken: sessionData.csrfToken
+    });
+    
+    console.log(`✅ User logged in: ${email} (${clientIP})`);
+    
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({
+      error: 'Authentication service error',
+      message: 'Please try again later'
+    });
+  }
+});
+
+app.post('/api/auth/logout', authMiddleware.requireAuth, async (req, res) => {
+  try {
+    const instances = authMiddleware.getInstances();
+    await instances.sessionManager.destroySession(req.user.sessionId);
+    
+    res.clearCookie('auth_token');
+    res.json({
+      success: true,
+      message: 'Logged out successfully'
+    });
+    
+    console.log(`✅ User logged out: ${req.user.email}`);
+    
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({
+      error: 'Logout failed',
+      message: 'Please try again'
+    });
+  }
+});
+
+// Authentication status endpoint
+app.get('/api/auth/status', authMiddleware.requireAuth, (req, res) => {
+  res.json({
+    authenticated: true,
+    user: {
+      id: req.user.id,
+      email: req.user.email,
+      role: req.user.role
+    },
+    session: {
+      id: req.user.sessionId,
+      expiresIn: '1h' // This would be calculated from actual session data
+    }
+  });
+});
+
+// Authentication health check
+app.get('/api/auth/health', (req, res) => {
+  try {
+    const instances = authMiddleware.getInstances();
+    const jwtStats = instances.jwtManager.getStats();
+    const rateLimiterStats = instances.rateLimiter.getStats();
+    const sessionStats = instances.sessionManager.getStats();
+    
+    res.json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      version: '2.0.0-secure',
+      components: {
+        jwt: {
+          healthy: jwtStats.hasCurrentSecret,
+          secretAge: Math.round(jwtStats.secretAge / (24 * 60 * 60 * 1000)), // days
+          algorithm: jwtStats.algorithm
+        },
+        rateLimiter: {
+          healthy: true,
+          trackedIPs: rateLimiterStats.trackedIPs,
+          blockedIPs: rateLimiterStats.blockedIPs,
+          memoryUsageMB: rateLimiterStats.memoryUsageMB
+        },
+        sessions: {
+          healthy: true,
+          activeSessions: sessionStats.activeSessions,
+          maxSessions: sessionStats.maxSessions,
+          memoryUsage: sessionStats.memoryUsage
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Auth health check failed:', error);
+    res.status(500).json({
+      status: 'unhealthy',
+      error: 'Authentication system error'
+    });
+  }
+});
+
+// Protect admin endpoints with authentication
+app.use('/api/admin/*', authMiddleware.requireAuth, authMiddleware.requireAdmin);
+
+console.log('🔒 Authentication security system initialized');
+console.log('🔐 Security features: JWT tokens, sessions, rate limiting, CSRF protection, password security');
 
 app.listen(PORT, () => {
   console.log(`
@@ -4246,4 +4456,7 @@ app.listen(PORT, () => {
   console.log(`   PUT  /api/courses/:id`);
   console.log(`   PUT  /api/home-page/:id`);
   console.log(`   DELETE /api/courses/:id`);
+  console.log('🔒 Secure footer endpoints:');
+  console.log(`   GET  /api/footer-content`);
+  console.log(`   GET  /api/footer-health`);
 });

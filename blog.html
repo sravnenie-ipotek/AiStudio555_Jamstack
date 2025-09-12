@@ -1244,7 +1244,7 @@
     </section>
 
     <!-- Footer Section -->
-    <section class="section footer">
+    <section class="section footer" id="secure-footer-container">
       <div class="container">
         <div class="footer-content">
           <div data-w-id="6ab616f4-e8bf-402d-a96f-e34ee9f6b187" class="footer-top-content">
@@ -1874,5 +1874,22 @@
 
   <!-- API Integration - CRITICAL FOR DYNAMIC CONTENT -->
   <script src="js/webflow-strapi-integration.js"></script>
+
+  <!-- Secure Footer Loader - Emergency Security Fix -->
+  <script src="js/secure-footer-loader.js"></script>
+  <script>
+    // Initialize secure footer loading
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.SecureFooterLoader) {
+        const footerLoader = new window.SecureFooterLoader({
+          containerId: 'secure-footer-container',
+          debug: false,
+          fallbackEnabled: true
+        });
+        footerLoader.initialize();
+      }
+    });
+  </script>
+
 </body>
 </html>

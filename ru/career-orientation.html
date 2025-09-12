@@ -2304,65 +2304,61 @@
       }
       
       function updateCareerOrientationContent(content) {
+        console.log('🔧 updateCareerOrientationContent called with:', content);
+        
         // Update hero section - target actual HTML elements
-        const heroSection = document.querySelector('.career-orientation-hero');
+        const heroSection = document.querySelector('.section.career-orientation-hero');
+        console.log('🔍 Hero section found:', !!heroSection);
+        
         if (heroSection) {
           // Hero main title
           const heroTitle = heroSection.querySelector('.section-title.featured-courses');
+          console.log('🔍 Hero title element found:', !!heroTitle, 'Current text:', heroTitle?.textContent);
+          console.log('🔍 Russian title to set:', content.heroMainTitle);
           if (heroTitle && content.heroMainTitle) {
             heroTitle.textContent = content.heroMainTitle;
+            console.log('✅ Hero title updated to:', heroTitle.textContent);
+          }
+          
+          // Hero subtitle
+          const heroSubtitle = heroSection.querySelector('.section-subtitle');
+          console.log('🔍 Hero subtitle element found:', !!heroSubtitle, 'Current text:', heroSubtitle?.textContent);
+          console.log('🔍 Russian subtitle to set:', content.heroSubtitle);
+          if (heroSubtitle && content.heroSubtitle) {
+            heroSubtitle.textContent = content.heroSubtitle;
+            console.log('✅ Hero subtitle updated to:', heroSubtitle.textContent);
           }
           
           // Hero description  
           const heroDescription = heroSection.querySelector('.section-description-text.featured-courses');
+          console.log('🔍 Hero description element found:', !!heroDescription, 'Current text:', heroDescription?.textContent?.substring(0, 50) + '...');
+          console.log('🔍 Russian description to set:', content.heroDescription?.substring(0, 50) + '...');
           if (heroDescription && content.heroDescription) {
             heroDescription.textContent = content.heroDescription;
+            console.log('✅ Hero description updated');
           }
           
-          // Update hero stats
-          const statNumbers = heroSection.querySelectorAll('.hero-stat-number');
-          const statLabels = heroSection.querySelectorAll('.hero-stat-label');
+          // Also try to find ANY title element and update it as a fallback
+          const allTitles = document.querySelectorAll('h1, .hero-title, .main-title, .section-title');
+          console.log('🔍 All title elements found:', allTitles.length);
+          allTitles.forEach((title, index) => {
+            console.log(`🔍 Title ${index}:`, title.className, title.textContent?.substring(0, 30));
+            if (title.textContent?.includes('Career') && content.heroMainTitle) {
+              title.textContent = content.heroMainTitle;
+              console.log(`✅ Updated fallback title ${index} to Russian`);
+            }
+          });
           
-          if (statNumbers.length >= 3 && statLabels.length >= 3) {
-            if (content.heroStat1Value) {
-              statNumbers[0].textContent = content.heroStat1Value;
-              statLabels[0].textContent = content.heroStat1Label || 'Career Paths Mapped';
-            }
-            if (content.heroStat2Value) {
-              statNumbers[1].textContent = content.heroStat2Value;  
-              statLabels[1].textContent = content.heroStat2Label || 'AI Specializations';
-            }
-            if (content.heroStat3Value) {
-              statNumbers[2].textContent = content.heroStat3Value;
-              statLabels[2].textContent = content.heroStat3Label || 'Success Rate';
-            }
-          }
-          
-          // Update CTA button text
-          const ctaButton = heroSection.querySelector('.primary-button-text-block');
-          if (ctaButton && content.heroCtaText) {
-            ctaButton.textContent = content.heroCtaText;
-          }
+        } else {
+          console.error('❌ Hero section not found. Checking available sections...');
+          const allSections = document.querySelectorAll('.section, section');
+          console.log('🔍 All sections found:', allSections.length);
+          allSections.forEach((section, index) => {
+            console.log(`Section ${index}:`, section.className);
+          });
         }
         
-        // Update problems section
-        const problemsSection = document.querySelector('.section:has([data-w-id="problem-title"])');
-        if (problemsSection || document.querySelector('[data-w-id="problem-title"]')) {
-          const problemsTitleWrapper = document.querySelector('[data-w-id="problem-title"]');
-          if (problemsTitleWrapper) {
-            const problemsTitle = problemsTitleWrapper.querySelector('.section-title.featured-courses');
-            const problemsDescription = problemsTitleWrapper.querySelector('.section-description-text.featured-courses');
-            
-            if (problemsTitle && content.problemsMainTitle) {
-              problemsTitle.textContent = content.problemsMainTitle;
-            }
-            if (problemsDescription && content.problemsDescription) {
-              problemsDescription.textContent = content.problemsDescription;
-            }
-          }
-        }
-        
-        console.log('✅ Career orientation content updated with Russian text');
+        console.log('✅ Career orientation content update completed');
       }
       
       function updateElement(selector, value) {

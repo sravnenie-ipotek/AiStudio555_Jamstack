@@ -4762,5 +4762,22 @@
             }
         };
     </script>
+
+  <!-- Secure Footer Loader - Emergency Security Fix -->
+  <script src="js/secure-footer-loader.js"></script>
+  <script>
+    // Initialize secure footer loading
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.SecureFooterLoader) {
+        const footerLoader = new window.SecureFooterLoader({
+          containerId: 'secure-footer-container',
+          debug: false,
+          fallbackEnabled: true
+        });
+        footerLoader.initialize();
+      }
+    });
+  </script>
+
 </body>
 </html>

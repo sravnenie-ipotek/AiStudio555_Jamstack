@@ -62,8 +62,8 @@ CREATE TABLE footer_content (
     created_by VARCHAR(100),
     updated_by VARCHAR(100),
     
-    -- Unique constraint on locale
-    CONSTRAINT unique_locale UNIQUE(locale)
+    -- Allow multiple versions per locale for A/B testing
+    CONSTRAINT unique_locale_published UNIQUE(locale, published) DEFERRABLE
 );
 
 -- ============================================================================
@@ -305,7 +305,7 @@ BEGIN
         old_json,
         new_json,
         changed_fields,
-        current_setting('app.current_user', true),
+        COALESCE(current_setting('app.current_user', true), 'system'),
         CURRENT_TIMESTAMP
     );
     
@@ -321,6 +321,16 @@ CREATE TRIGGER audit_footer_content_changes
 
 CREATE TRIGGER audit_footer_nav_changes
     AFTER INSERT OR UPDATE OR DELETE ON footer_navigation_menus
+    FOR EACH ROW
+    EXECUTE FUNCTION audit_footer_changes();
+
+CREATE TRIGGER audit_footer_social_changes
+    AFTER INSERT OR UPDATE OR DELETE ON footer_social_links
+    FOR EACH ROW
+    EXECUTE FUNCTION audit_footer_changes();
+
+CREATE TRIGGER audit_footer_newsletter_changes
+    AFTER INSERT OR UPDATE OR DELETE ON footer_newsletter_config
     FOR EACH ROW
     EXECUTE FUNCTION audit_footer_changes();
 

@@ -69,7 +69,9 @@ async function buildLanguageSite(langCode, langConfig) {
   const htmlFiles = [
     { source: 'home.html', target: 'index.html' },
     { source: 'courses.html', target: 'courses.html' },
-    { source: 'detail_courses.html', target: 'detail_courses.html' }
+    { source: 'detail_courses.html', target: 'detail_courses.html' },
+    { source: 'career-orientation.html', target: 'career-orientation.html' },
+    { source: 'career-center.html', target: 'career-center.html' }
   ];
   
   for (const fileMap of htmlFiles) {

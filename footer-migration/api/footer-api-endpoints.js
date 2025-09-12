@@ -17,11 +17,28 @@
 
 const express = require('express');
 const { Pool } = require('pg');
+const { requireAuth, requireAdmin, securityHeaders } = require('../security-patches/auth-middleware');
+const { validateLocale, validateFooterContent, createValidationMiddleware } = require('../security-patches/input-validator');
 
-// Cache configuration
+// Secure cache configuration with automatic cleanup
 const cache = new Map();
 const CACHE_TTL = 3600000; // 1 hour in milliseconds
 const CACHE_PREFIX = 'footer:';
+
+// Automatic cache cleanup to prevent memory leaks
+setInterval(() => {
+  const now = Date.now();
+  let cleaned = 0;
+  for (const [key, value] of cache.entries()) {
+    if (now - value.timestamp > CACHE_TTL) {
+      cache.delete(key);
+      cleaned++;
+    }
+  }
+  if (cleaned > 0) {
+    console.log(`🧹 Cleaned ${cleaned} expired cache entries`);
+  }
+}, 300000); // Clean every 5 minutes
 
 /**
  * Cache utility functions
@@ -69,12 +86,17 @@ function clearCache(pattern = null) {
  */
 function initFooterAPI(app, pool) {
   
+  // Apply security headers to all footer API routes
+  app.use('/api/footer*', securityHeaders);
+  
   // ============================================================================
   // GET /api/footer-content - Get complete footer content
   // ============================================================================
   app.get('/api/footer-content', async (req, res) => {
     try {
-      const locale = req.query.locale || 'en';
+      // Validate locale input
+      const localeValidation = validateLocale(req.query.locale);
+      const locale = localeValidation.sanitized;
       const preview = req.query.preview === 'true';
       const cacheKey = getCacheKey('complete', locale, preview);
       
@@ -243,8 +265,8 @@ function initFooterAPI(app, pool) {
       console.error('❌ Error fetching footer content:', error);
       res.status(500).json({ 
         error: 'Failed to fetch footer content',
-        message: error.message,
-        locale: req.query.locale || 'en'
+        message: process.env.NODE_ENV === 'production' ? 'Internal server error' : error.message,
+        locale: validateLocale(req.query.locale).sanitized
       });
     }
   });
@@ -252,8 +274,13 @@ function initFooterAPI(app, pool) {
   // ============================================================================
   // POST /api/footer-content - Update footer content (Admin only)
   // ============================================================================
-  app.post('/api/footer-content', async (req, res) => {
+  app.post('/api/footer-content', 
+    requireAuth, 
+    requireAdmin, 
+    createValidationMiddleware(validateFooterContent), 
+    async (req, res) => {
     try {
+      // Locale already validated by middleware
       const { locale = 'en', ...updates } = req.body;
       
       console.log(`💾 Updating footer content (locale: ${locale})`);
@@ -263,7 +290,7 @@ function initFooterAPI(app, pool) {
         return res.status(400).json({ error: 'No updates provided' });
       }
       
-      // Build dynamic update query
+      // Build secure parameterized update query
       const allowedFields = [
         'company_name', 'company_description', 'company_logo_url', 'company_tagline',
         'contact_email', 'contact_phone', 'contact_address', 'support_email', 'sales_email',
@@ -277,6 +304,7 @@ function initFooterAPI(app, pool) {
       const values = [locale];
       let paramIndex = 2;
       
+      // Use whitelisted field validation to prevent SQL injection
       for (const [field, value] of Object.entries(updates)) {
         if (allowedFields.includes(field)) {
           updateFields.push(`${field} = $${paramIndex}`);
@@ -333,7 +361,7 @@ function initFooterAPI(app, pool) {
       console.error('❌ Error updating footer content:', error);
       res.status(500).json({ 
         error: 'Failed to update footer content',
-        message: error.message 
+        message: process.env.NODE_ENV === 'production' ? 'Internal server error' : error.message
       });
     }
   });
@@ -343,7 +371,8 @@ function initFooterAPI(app, pool) {
   // ============================================================================
   app.get('/api/footer-navigation', async (req, res) => {
     try {
-      const locale = req.query.locale || 'en';
+      const localeValidation = validateLocale(req.query.locale);
+      const locale = localeValidation.sanitized;
       const menuType = req.query.menu_type;
       const cacheKey = getCacheKey('navigation', locale);
       
@@ -401,7 +430,7 @@ function initFooterAPI(app, pool) {
       console.error('❌ Error fetching footer navigation:', error);
       res.status(500).json({ 
         error: 'Failed to fetch footer navigation',
-        message: error.message 
+        message: process.env.NODE_ENV === 'production' ? 'Internal server error' : error.message
       });
     }
   });
@@ -411,7 +440,8 @@ function initFooterAPI(app, pool) {
   // ============================================================================
   app.get('/api/footer-social', async (req, res) => {
     try {
-      const locale = req.query.locale || 'en';
+      const localeValidation = validateLocale(req.query.locale);
+      const locale = localeValidation.sanitized;
       const cacheKey = getCacheKey('social', locale);
       
       let cachedResult = getCache(cacheKey);
@@ -451,7 +481,7 @@ function initFooterAPI(app, pool) {
       console.error('❌ Error fetching footer social links:', error);
       res.status(500).json({ 
         error: 'Failed to fetch footer social links',
-        message: error.message 
+        message: process.env.NODE_ENV === 'production' ? 'Internal server error' : error.message
       });
     }
   });

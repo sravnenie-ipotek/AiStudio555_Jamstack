@@ -2845,22 +2845,54 @@
       }
       
       function updateCareerCenterContent(content) {
-        // Update main title and descriptions
-        updateElement('[data-title]', content.title);
-        updateElement('[data-subtitle]', content.subtitle);
-        updateElement('[data-description]', content.description);
+        // Update hero section - target actual HTML elements
+        const heroSection = document.querySelector('.career-hero-section');
+        if (heroSection) {
+          // Main hero title
+          const heroTitle = heroSection.querySelector('.career-hero-title');
+          if (heroTitle && content.heroTitle) {
+            heroTitle.textContent = content.heroTitle;
+          }
+          
+          // Hero subtitle
+          const heroSubtitle = heroSection.querySelector('.career-hero-subtitle');
+          if (heroSubtitle && content.heroSubtitle) {
+            heroSubtitle.textContent = content.heroSubtitle;
+          }
+          
+          // Hero description
+          const heroDescription = heroSection.querySelector('.career-hero-description');
+          if (heroDescription && content.heroDescription) {
+            heroDescription.textContent = content.heroDescription;
+          }
+          
+          // Update hero stats
+          const statNumbers = heroSection.querySelectorAll('.career-stat-number');
+          const statLabels = heroSection.querySelectorAll('.career-stat-label');
+          
+          // Update stats from database content
+          if (content.heroStats && Array.isArray(content.heroStats) && content.heroStats.length >= 3) {
+            for (let i = 0; i < Math.min(3, content.heroStats.length); i++) {
+              if (statNumbers[i] && content.heroStats[i].number) {
+                statNumbers[i].textContent = content.heroStats[i].number;
+              }
+              if (statLabels[i] && content.heroStats[i].label) {
+                statLabels[i].textContent = content.heroStats[i].label;
+              }
+            }
+          }
+        }
         
-        // Update hero section
-        updateElement('[data-hero-title]', content.heroTitle);
-        updateElement('[data-hero-subtitle]', content.heroSubtitle);
-        updateElement('[data-hero-description]', content.heroDescription);
+        // Update main page title and descriptions if they exist as separate elements
+        const pageTitle = document.querySelector('h1:not(.career-hero-title)');
+        if (pageTitle && content.title && content.title !== content.heroTitle) {
+          pageTitle.textContent = content.title;
+        }
         
-        // Update hero stats if available
-        if (content.heroStats && Array.isArray(content.heroStats)) {
-          content.heroStats.forEach((stat, index) => {
-            updateElement(`[data-stat-${index + 1}-number]`, stat.number);
-            updateElement(`[data-stat-${index + 1}-label]`, stat.label);
-          });
+        // Update services section title
+        const servicesTitle = document.querySelector('.core-services-section .section-title');
+        if (servicesTitle && content.servicesTitle) {
+          servicesTitle.textContent = content.servicesTitle;
         }
         
         // Update services section
@@ -2875,12 +2907,22 @@
         
         // Update package information
         if (content.package) {
-          updateElement('[data-package-title]', content.package.title);
-          updateElement('[data-package-price]', content.package.price);
-          updateElement('[data-package-description]', content.package.description);
+          const packageTitle = document.querySelector('.consultation-card h3, .package-title');
+          const packagePrice = document.querySelector('.consultation-price, .package-price');
+          const packageDescription = document.querySelector('.consultation-card p, .package-description');
+          
+          if (packageTitle && content.package.title) {
+            packageTitle.textContent = content.package.title;
+          }
+          if (packagePrice && content.package.price) {
+            packagePrice.textContent = content.package.price;
+          }
+          if (packageDescription && content.package.description) {
+            packageDescription.textContent = content.package.description;
+          }
         }
         
-        console.log('✅ Career center content updated');
+        console.log('✅ Career center content updated with Russian text');
       }
       
       function updateServicesSection(services) {

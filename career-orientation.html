@@ -8,12 +8,12 @@
   <meta content="Career Orientation - AI Studio E-Learning Platform" property="twitter:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
-  <link href="css/normalize.css" rel="stylesheet" type="text/css">
-  <link href="css/webflow.css" rel="stylesheet" type="text/css">
-  <link href="css/aizeks-marvelous-site.webflow.css" rel="stylesheet" type="text/css">
-  <link href="css/enhanced-sections.css" rel="stylesheet" type="text/css">
-  <link href="css/style-guide-compliance.css" rel="stylesheet" type="text/css">
-  <link href="css/unified-navigation.css" rel="stylesheet" type="text/css">
+  <link href="../css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="../css/webflow.css" rel="stylesheet" type="text/css">
+  <link href="../css/aizeks-marvelous-site.webflow.css" rel="stylesheet" type="text/css">
+  <link href="../css/enhanced-sections.css" rel="stylesheet" type="text/css">
+  <link href="../css/style-guide-compliance.css" rel="stylesheet" type="text/css">
+  <link href="../css/unified-navigation.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
@@ -793,7 +793,7 @@
     </section>
 
     <!-- Footer (Same as other pages but updated with career orientation) -->
-    <section class="section footer">
+    <section class="section footer" id="secure-footer-container">
       <div class="container">
         <div class="footer-content">
           <div data-w-id="6ab616f4-e8bf-402d-a96f-e34ee9f6b187" class="footer-top-content">
@@ -2217,9 +2217,7 @@
     })();
   </script>
   <!-- Contact Form Modal -->
-  <!-- EmailJS SDK -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script src="js/contact-form-modal.js"></script>
+  <script src="../js/contact-form-modal.js"></script>
   <script id="career-dropdown-fix-js">
     // Career Services Dropdown Consistency Fix
     (function() {
@@ -2279,12 +2277,138 @@
     })();
   </script>
 
+  <!-- Dynamic Content Integration -->
+  <script src="../js/webflow-strapi-integration.js"></script>
+  <script>
+    // Initialize dynamic content loading for Russian career-orientation page
+    document.addEventListener('DOMContentLoaded', async function() {
+      console.log('🚀 Initializing Russian career-orientation page integration...');
+      
+      try {
+        // Fetch career-orientation data from API with Russian locale
+        const API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+        const response = await fetch(`${API_BASE}/career-orientation-page?locale=ru`);
+        const data = await response.json();
+        
+        console.log('📊 Fetched Russian career-orientation data:', data);
+        
+        if (data && data.data && data.data.attributes) {
+          const content = data.data.attributes;
+          updateCareerOrientationContent(content);
+        }
+        
+        console.log('✅ Russian career-orientation content loaded successfully');
+        
+      } catch (error) {
+        console.error('❌ Failed to load Russian career-orientation content:', error);
+      }
+      
+      function updateCareerOrientationContent(content) {
+        console.log('🔧 updateCareerOrientationContent called with:', content);
+        
+        // Update hero section - target actual HTML elements
+        const heroSection = document.querySelector('.section.career-orientation-hero');
+        console.log('🔍 Hero section found:', !!heroSection);
+        
+        if (heroSection) {
+          // Hero main title
+          const heroTitle = heroSection.querySelector('.section-title.featured-courses');
+          console.log('🔍 Hero title element found:', !!heroTitle, 'Current text:', heroTitle?.textContent);
+          console.log('🔍 Russian title to set:', content.heroMainTitle);
+          if (heroTitle && content.heroMainTitle) {
+            heroTitle.textContent = content.heroMainTitle;
+            console.log('✅ Hero title updated to:', heroTitle.textContent);
+          }
+          
+          // Hero subtitle
+          const heroSubtitle = heroSection.querySelector('.section-subtitle');
+          console.log('🔍 Hero subtitle element found:', !!heroSubtitle, 'Current text:', heroSubtitle?.textContent);
+          console.log('🔍 Russian subtitle to set:', content.heroSubtitle);
+          if (heroSubtitle && content.heroSubtitle) {
+            heroSubtitle.textContent = content.heroSubtitle;
+            console.log('✅ Hero subtitle updated to:', heroSubtitle.textContent);
+          }
+          
+          // Hero description  
+          const heroDescription = heroSection.querySelector('.section-description-text.featured-courses');
+          console.log('🔍 Hero description element found:', !!heroDescription, 'Current text:', heroDescription?.textContent?.substring(0, 50) + '...');
+          console.log('🔍 Russian description to set:', content.heroDescription?.substring(0, 50) + '...');
+          if (heroDescription && content.heroDescription) {
+            heroDescription.textContent = content.heroDescription;
+            console.log('✅ Hero description updated');
+          }
+          
+          // Also try to find ANY title element and update it as a fallback
+          const allTitles = document.querySelectorAll('h1, .hero-title, .main-title, .section-title');
+          console.log('🔍 All title elements found:', allTitles.length);
+          allTitles.forEach((title, index) => {
+            console.log(`🔍 Title ${index}:`, title.className, title.textContent?.substring(0, 30));
+            if (title.textContent?.includes('Career') && content.heroMainTitle) {
+              title.textContent = content.heroMainTitle;
+              console.log(`✅ Updated fallback title ${index} to Russian`);
+            }
+          });
+          
+        } else {
+          console.error('❌ Hero section not found. Checking available sections...');
+          const allSections = document.querySelectorAll('.section, section');
+          console.log('🔍 All sections found:', allSections.length);
+          allSections.forEach((section, index) => {
+            console.log(`Section ${index}:`, section.className);
+          });
+        }
+        
+        console.log('✅ Career orientation content update completed');
+      }
+      
+      function updateElement(selector, value) {
+        if (!value) return;
+        
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+          if (el) {
+            el.textContent = value;
+          }
+        });
+        
+        // Also try generic selectors for hero content
+        if (selector === '[data-hero-title]') {
+          const heroTitles = document.querySelectorAll('h1, .hero-title, .main-title');
+          heroTitles.forEach(el => {
+            if (el.textContent.includes('Career') || el.textContent.includes('Карьер')) {
+              el.textContent = value;
+            }
+          });
+        }
+        
+        if (selector === '[data-hero-subtitle]') {
+          const heroSubtitles = document.querySelectorAll('.hero-subtitle, .subtitle, h2');
+          heroSubtitles.forEach(el => {
+            if (el.textContent.length > 20 && el.textContent.includes('career') || el.textContent.includes('карьер')) {
+              el.textContent = value;
+            }
+          });
+        }
+      }
+    });
+  </script>
 
-  <!-- API Integration - CRITICAL FOR DYNAMIC CONTENT -->
-  <script src="js/webflow-strapi-integration.js"></script>
-  
-  <!-- Visibility Controller -->
-  <script src="js/visibility-controller.js"></script>
+
+  <!-- Secure Footer Loader - Emergency Security Fix -->
+  <script src="js/secure-footer-loader.js"></script>
+  <script>
+    // Initialize secure footer loading
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.SecureFooterLoader) {
+        const footerLoader = new window.SecureFooterLoader({
+          containerId: 'secure-footer-container',
+          debug: false,
+          fallbackEnabled: true
+        });
+        footerLoader.initialize();
+      }
+    });
+  </script>
+
 </body>
 </html>
-

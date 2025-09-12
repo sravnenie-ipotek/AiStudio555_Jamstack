@@ -1576,7 +1576,7 @@
       </div>
     </section>
     
-    <section class="section footer">
+    <section class="section footer" id="secure-footer-container">
       <div class="container">
         <div class="footer-content">
           <div data-w-id="6ab616f4-e8bf-402d-a96f-e34ee9f6b187" class="footer-top-content">
@@ -1898,39 +1898,49 @@
         localStorage.setItem(STORAGE_KEY, currentLang);
       }
       
-      window.switchLanguage = function(newLang) {
-        if (!LANGUAGES[newLang]) return;
-        
-        localStorage.setItem(STORAGE_KEY, newLang);
-        
-        // Determine new path
-        const currentPath = window.location.pathname;
-        const pathParts = currentPath.split('/').filter(part => part);
-        
-        // Handle different URL structures
-        if (pathParts[0] === 'dist' && LANGUAGES[pathParts[1]]) {
-          // Fix home.html to index.html issue
-          if (pathParts[pathParts.length - 1] === 'home.html') {
-            pathParts[pathParts.length - 1] = 'index.html';
-          }
-          pathParts[1] = newLang;
-        } else if (pathParts[0] === 'dist') {
-          pathParts.splice(1, 0, newLang);
-        } else if (LANGUAGES[pathParts[0]]) {
-          pathParts[0] = newLang;
-        } else {
-          // For production, construct language-specific path
-          let fileName = currentPath.split('/').pop() || 'index.html';
-          // FIX: Normalize home.html to index.html
-          if (fileName === 'home.html' || fileName === '') {
-            fileName = 'index.html';
-          }
-          window.location.href = '/dist/' + newLang + '/' + fileName;
-          return;
-        }
-        
-        window.location.href = '/' + pathParts.join('/');
-      };;
+      // Enhanced switchLanguage function that triggers footer updates
+window.switchLanguage = function(newLang) {
+  if (!newLang || !['en', 'ru', 'he'].includes(newLang)) return;
+  
+  console.log('🌐 Switching language to:', newLang);
+  
+  // Dispatch event for footer to listen to
+  document.dispatchEvent(new CustomEvent('languageChanged', {
+    detail: { locale: newLang }
+  }));
+  
+  // Store preference
+  localStorage.setItem('preferredLanguage', newLang);
+  
+  // Update document attributes
+  document.documentElement.lang = newLang;
+  document.documentElement.dir = newLang === 'he' ? 'rtl' : 'ltr';
+  
+  // Navigate to new language version
+  const currentPath = window.location.pathname;
+  const pathParts = currentPath.split('/').filter(part => part);
+  
+  let newPath;
+  if (pathParts[0] === 'dist' && ['en', 'ru', 'he'].includes(pathParts[1])) {
+    pathParts[1] = newLang;
+    newPath = '/' + pathParts.join('/');
+  } else if (pathParts[0] === 'dist') {
+    pathParts.splice(1, 0, newLang);
+    newPath = '/' + pathParts.join('/');
+  } else if (['en', 'ru', 'he'].includes(pathParts[0])) {
+    pathParts[0] = newLang;
+    newPath = '/' + pathParts.join('/');
+  } else {
+    let fileName = currentPath.split('/').pop() || 'index.html';
+    if (fileName === 'home.html' || fileName === '') {
+      fileName = 'index.html';
+    }
+    newPath = '/dist/' + newLang + '/' + fileName;
+  }
+  
+  console.log('🔄 Navigating to:', newPath);
+  window.location.href = newPath;
+};;
       
       // Initialize when DOM is ready
       if (document.readyState === 'loading') {
@@ -2008,6 +2018,22 @@
 
   <!-- Visibility Controller -->
   <script src="js/visibility-controller.js"></script>
+
+  <!-- Secure Footer Loader - Emergency Security Fix -->
+  <script src="js/secure-footer-loader.js"></script>
+  <script>
+    // Initialize secure footer loading
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.SecureFooterLoader) {
+        const footerLoader = new window.SecureFooterLoader({
+          containerId: 'secure-footer-container',
+          debug: false,
+          fallbackEnabled: true
+        });
+        footerLoader.initialize();
+      }
+    });
+  </script>
 
 </body>
 </html>

@@ -165,7 +165,7 @@ class CustomAPIIntegration {
         try {
             console.log(`💼 Loading ${pageType} content...`);
             
-            const endpoint = pageType === 'career-center' ? '/career-center' : '/career-orientation';
+            const endpoint = pageType === 'career-center' ? '/career-center-page' : '/career-orientation-page';
             const careerData = await this.fetchAPI(endpoint);
             
             if (careerData) {
@@ -676,22 +676,33 @@ class CustomAPIIntegration {
     updateCareerHero(heroData) {
         if (!heroData) return;
         
-        // Update title
-        const heroTitle = document.querySelector('.hero-heading, h1');
+        console.log('🎯 Updating career hero with data:', heroData);
+        
+        // Update title - use actual career page selectors
+        const heroTitle = document.querySelector('.section-title.featured-courses, .hero-heading, h1');
         if (heroTitle && heroData.title) {
+            console.log(`✅ Updating hero title: "${heroTitle.textContent}" → "${heroData.title}"`);
             heroTitle.textContent = heroData.title;
+        } else {
+            console.warn('⚠️ Hero title element not found');
         }
         
-        // Update subtitle  
-        const heroSubtitle = document.querySelector('.hero-subtitle, .subtitle');
+        // Update subtitle - use actual career page selectors
+        const heroSubtitle = document.querySelector('.section-subtitle, .hero-subtitle, .subtitle');
         if (heroSubtitle && heroData.subtitle) {
+            console.log(`✅ Updating hero subtitle: "${heroSubtitle.textContent}" → "${heroData.subtitle}"`);
             heroSubtitle.textContent = heroData.subtitle;
+        } else {
+            console.warn('⚠️ Hero subtitle element not found');
         }
         
-        // Update description
-        const heroDesc = document.querySelector('.hero-description, .description');
+        // Update description - use actual career page selectors  
+        const heroDesc = document.querySelector('.section-description-text.featured-courses, .hero-description, .description');
         if (heroDesc && heroData.description) {
+            console.log(`✅ Updating hero description: "${heroDesc.textContent.substring(0,50)}..." → "${heroData.description.substring(0,50)}..."`);
             heroDesc.textContent = heroData.description;
+        } else {
+            console.warn('⚠️ Hero description element not found');
         }
         
         // UPDATE STATS - THIS IS THE CRITICAL FIX
