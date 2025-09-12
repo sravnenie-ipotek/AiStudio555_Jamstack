@@ -2304,37 +2304,65 @@
       }
       
       function updateCareerOrientationContent(content) {
-        // Update hero section
-        updateElement('[data-hero-title]', content.heroMainTitle);
-        updateElement('[data-hero-subtitle]', content.heroSubtitle);
-        updateElement('[data-hero-description]', content.heroDescription);
-        updateElement('[data-hero-cta-text]', content.heroCtaText);
-        
-        // Update hero stats
-        if (content.heroStat1Value) {
-          updateElement('[data-stat-1-value]', content.heroStat1Value);
-          updateElement('[data-stat-1-label]', content.heroStat1Label);
-        }
-        if (content.heroStat2Value) {
-          updateElement('[data-stat-2-value]', content.heroStat2Value);
-          updateElement('[data-stat-2-label]', content.heroStat2Label);
-        }
-        if (content.heroStat3Value) {
-          updateElement('[data-stat-3-value]', content.heroStat3Value);
-          updateElement('[data-stat-3-label]', content.heroStat3Label);
+        // Update hero section - target actual HTML elements
+        const heroSection = document.querySelector('.career-orientation-hero');
+        if (heroSection) {
+          // Hero main title
+          const heroTitle = heroSection.querySelector('.section-title.featured-courses');
+          if (heroTitle && content.heroMainTitle) {
+            heroTitle.textContent = content.heroMainTitle;
+          }
+          
+          // Hero description  
+          const heroDescription = heroSection.querySelector('.section-description-text.featured-courses');
+          if (heroDescription && content.heroDescription) {
+            heroDescription.textContent = content.heroDescription;
+          }
+          
+          // Update hero stats
+          const statNumbers = heroSection.querySelectorAll('.hero-stat-number');
+          const statLabels = heroSection.querySelectorAll('.hero-stat-label');
+          
+          if (statNumbers.length >= 3 && statLabels.length >= 3) {
+            if (content.heroStat1Value) {
+              statNumbers[0].textContent = content.heroStat1Value;
+              statLabels[0].textContent = content.heroStat1Label || 'Career Paths Mapped';
+            }
+            if (content.heroStat2Value) {
+              statNumbers[1].textContent = content.heroStat2Value;  
+              statLabels[1].textContent = content.heroStat2Label || 'AI Specializations';
+            }
+            if (content.heroStat3Value) {
+              statNumbers[2].textContent = content.heroStat3Value;
+              statLabels[2].textContent = content.heroStat3Label || 'Success Rate';
+            }
+          }
+          
+          // Update CTA button text
+          const ctaButton = heroSection.querySelector('.primary-button-text-block');
+          if (ctaButton && content.heroCtaText) {
+            ctaButton.textContent = content.heroCtaText;
+          }
         }
         
         // Update problems section
-        updateElement('[data-problems-title]', content.problemsMainTitle);
-        updateElement('[data-problems-subtitle]', content.problemsSubtitle);
-        updateElement('[data-problems-description]', content.problemsDescription);
+        const problemsSection = document.querySelector('.section:has([data-w-id="problem-title"])');
+        if (problemsSection || document.querySelector('[data-w-id="problem-title"]')) {
+          const problemsTitleWrapper = document.querySelector('[data-w-id="problem-title"]');
+          if (problemsTitleWrapper) {
+            const problemsTitle = problemsTitleWrapper.querySelector('.section-title.featured-courses');
+            const problemsDescription = problemsTitleWrapper.querySelector('.section-description-text.featured-courses');
+            
+            if (problemsTitle && content.problemsMainTitle) {
+              problemsTitle.textContent = content.problemsMainTitle;
+            }
+            if (problemsDescription && content.problemsDescription) {
+              problemsDescription.textContent = content.problemsDescription;
+            }
+          }
+        }
         
-        // Update individual problems
-        updateElement('[data-problem-1-title]', content.problem1Title);
-        updateElement('[data-problem-1-description]', content.problem1Description);
-        updateElement('[data-problem-1-stat]', content.problem1Stat);
-        
-        console.log('✅ Career orientation content updated');
+        console.log('✅ Career orientation content updated with Russian text');
       }
       
       function updateElement(selector, value) {
