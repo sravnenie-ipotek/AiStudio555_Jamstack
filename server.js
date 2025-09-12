@@ -4218,10 +4218,98 @@ app.post('/api/fix-russian-ui', async (req, res) => {
 // INITIALIZE SECURE FOOTER API
 // ============================================================================
 
-const { initializeSecureFooterAPI } = require('./footer-migration/secure-footer-api');
+let secureFooterAPIInitialized = false;
 
-// Initialize secure footer API endpoints with all security fixes
-initializeSecureFooterAPI(app, queryDatabase);
+try {
+  console.log('🔄 Loading secure footer API module...');
+  console.log('📍 Current working directory:', process.cwd());
+  console.log('📍 __dirname:', __dirname);
+  
+  // Check if footer-migration directory exists
+  const fs = require('fs');
+  const path = require('path');
+  
+  const footerMigrationPath = path.join(process.cwd(), 'footer-migration');
+  console.log('📂 Checking if footer-migration exists at:', footerMigrationPath);
+  
+  if (fs.existsSync(footerMigrationPath)) {
+    console.log('✅ footer-migration directory found');
+    const files = fs.readdirSync(footerMigrationPath);
+    console.log('📂 Files in footer-migration:', files.join(', '));
+    
+    const apiFilePath = path.join(footerMigrationPath, 'secure-footer-api.js');
+    if (fs.existsSync(apiFilePath)) {
+      console.log('✅ secure-footer-api.js file found');
+    } else {
+      console.log('❌ secure-footer-api.js file NOT found');
+    }
+  } else {
+    console.log('❌ footer-migration directory NOT found');
+  }
+  
+  // Try multiple possible paths for Railway compatibility
+  let secureFooterAPI;
+  const possiblePaths = [
+    './footer-migration/secure-footer-api',
+    './footer-migration/secure-footer-api.js',
+    path.join(process.cwd(), 'footer-migration', 'secure-footer-api.js'),
+    '/app/footer-migration/secure-footer-api',
+    '/app/footer-migration/secure-footer-api.js'
+  ];
+  
+  for (const path of possiblePaths) {
+    try {
+      console.log(`📂 Trying to load from: ${path}`);
+      secureFooterAPI = require(path);
+      console.log(`✅ Successfully loaded secure footer API from: ${path}`);
+      break;
+    } catch (pathError) {
+      console.log(`❌ Failed to load from ${path}: ${pathError.message}`);
+    }
+  }
+  
+  if (!secureFooterAPI) {
+    throw new Error('Unable to load secure footer API from any path');
+  }
+  
+  const { initializeSecureFooterAPI } = secureFooterAPI;
+  
+  if (typeof initializeSecureFooterAPI !== 'function') {
+    throw new Error('initializeSecureFooterAPI is not a function');
+  }
+  
+  // Initialize secure footer API endpoints with all security fixes
+  console.log('🚀 Initializing secure footer API...');
+  initializeSecureFooterAPI(app, queryDatabase);
+  secureFooterAPIInitialized = true;
+  console.log('✅ Secure footer API initialized successfully');
+  
+} catch (error) {
+  console.error('❌ CRITICAL: Failed to initialize secure footer API:', error.message);
+  console.error('Stack trace:', error.stack);
+  
+  // Create fallback footer endpoints to prevent total failure
+  console.log('⚠️  Creating basic fallback footer endpoints...');
+  
+  app.get('/api/footer-content', (req, res) => {
+    res.status(503).json({
+      error: 'Footer API temporarily unavailable',
+      message: 'Secure footer API failed to load',
+      fallback: true,
+      timestamp: new Date().toISOString()
+    });
+  });
+  
+  app.get('/api/footer-health', (req, res) => {
+    res.status(503).json({
+      status: 'degraded',
+      message: 'Secure footer API not loaded',
+      timestamp: new Date().toISOString()
+    });
+  });
+  
+  console.log('⚠️  Fallback footer endpoints created - server can still start');
+}
 
 // ============================================================================
 // INITIALIZE AUTHENTICATION SECURITY SYSTEM
