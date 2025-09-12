@@ -4580,6 +4580,196 @@ app.use('/api/admin/*', authMiddleware.requireAuth, authMiddleware.requireAdmin)
 console.log('🔒 Authentication security system initialized');
 console.log('🔐 Security features: JWT tokens, sessions, rate limiting, CSRF protection, password security');
 
+// ULTRATHINK: FORCE Russian UI translations with comprehensive fix
+app.post('/api/force-russian-ui', async (req, res) => {
+  try {
+    console.log('🚀 ULTRATHINK: FORCING Russian UI translations...');
+    
+    // Complete Russian translations
+    const russianUI = {
+      "navHome": "Главная",
+      "navCourses": "Курсы",
+      "navTeachers": "Преподаватели",
+      "navBlog": "Блог",
+      "navCareerCenter": "Карьерный центр",
+      "navAbout": "О нас",
+      "navContact": "Контакты",
+      "navPricing": "Цены",
+      "btnSignUpToday": "Записаться сегодня",
+      "btnLearnMore": "Узнать больше",
+      "btnViewAllCourses": "Посмотреть все курсы",
+      "btnGetStarted": "Начать",
+      "btnContactUs": "Связаться с нами",
+      "btnEnrollNow": "Записаться сейчас",
+      "btnStartLearning": "Начать обучение",
+      "btnExploreCourses": "Изучить курсы",
+      "btnViewDetails": "Подробнее",
+      "btnBookConsultation": "Записаться на консультацию",
+      "btnDownloadBrochure": "Скачать брошюру",
+      "btnWatchDemo": "Посмотреть демо",
+      "btnFreeTrial": "Бесплатная версия",
+      "formLabelEmail": "Электронная почта",
+      "formLabelName": "Имя",
+      "formLabelPhone": "Телефон",
+      "formLabelMessage": "Сообщение",
+      "formLabelSubject": "Тема",
+      "formPlaceholderEmail": "Введите ваш email",
+      "formPlaceholderName": "Введите ваше имя",
+      "formPlaceholderPhone": "Введите ваш телефон",
+      "formPlaceholderMessage": "Введите ваше сообщение",
+      "formBtnSubmit": "Отправить",
+      "formBtnSubscribe": "Подписаться",
+      "formBtnSend": "Отправить сообщение",
+      "statsCoursesLabel": "Курсы",
+      "statsLearnersLabel": "Студенты",
+      "statsYearsLabel": "Лет опыта",
+      "statsSuccessRateLabel": "Успеха",
+      "statsCountriesLabel": "Страны",
+      "statsInstructorsLabel": "Экспертов",
+      "statsCoursesNumber": "125+",
+      "statsLearnersNumber": "14,000+",
+      "statsYearsNumber": "10+",
+      "statsSuccessRateNumber": "95%",
+      "statsCountriesNumber": "45+",
+      "statsInstructorsNumber": "200+",
+      "msgLoading": "Загрузка...",
+      "msgError": "Произошла ошибка. Попробуйте еще раз.",
+      "msgSuccess": "Успех!",
+      "msgFormSuccess": "Спасибо! Мы свяжемся с вами в ближайшее время.",
+      "msgSubscribeSuccess": "Успешно подписались на рассылку!",
+      "msgNoCourses": "Курсы в данный момент недоступны",
+      "msgComingSoon": "Скоро",
+      "msgEnrollmentClosed": "Запись закрыта",
+      "msgLimitedSeats": "Ограниченное количество мест",
+      "uiSearchPlaceholder": "Поиск курсов...",
+      "uiFilterAll": "Все",
+      "uiSortBy": "Сортировать по",
+      "uiViewMode": "Вид",
+      "uiGridView": "Сетка",
+      "uiListView": "Список",
+      "uiReadMore": "Читать далее",
+      "uiShowLess": "Скрыть",
+      "uiBackToTop": "Наверх",
+      "uiShare": "Поделиться",
+      "uiPrint": "Печать"
+    };
+    
+    // First, ensure Russian record exists
+    const checkRu = await queryDatabase('SELECT id FROM home_pages WHERE locale = \'ru\'');
+    if (checkRu.length === 0) {
+      console.log('📝 Creating Russian record...');
+      // Create Russian record by copying from English
+      await queryDatabase(`
+        INSERT INTO home_pages (
+          locale, title, hero_title, hero_subtitle, hero_description,
+          hero_section_visible, featured_courses_title, featured_courses_description,
+          featured_courses_visible, about_title, about_subtitle, about_description, 
+          about_visible, companies_title, companies_description, companies_visible,
+          testimonials_title, testimonials_subtitle, testimonials_visible, 
+          courses, testimonials, published_at, created_at, updated_at
+        )
+        SELECT 
+          'ru', 
+          'AI Studio - Платформа онлайн-обучения от экспертов',
+          'Освойте ИИ и технологии',
+          'Трансформируйте карьеру с курсами от экспертов',
+          'Присоединяйтесь к тысячам студентов, изучающих передовые технологии',
+          hero_section_visible, 
+          'Популярные курсы',
+          'Изучите наши самые популярные курсы от экспертов индустрии',
+          featured_courses_visible, 
+          'О AI Studio',
+          'Ваш путь к успеху',
+          'Мы предоставляем образование мирового класса в области ИИ и машинного обучения',
+          about_visible, 
+          'Нам доверяют ведущие компании',
+          'Наши выпускники работают в топовых технологических компаниях',
+          companies_visible,
+          'Истории успеха студентов',
+          'Отзывы наших выпускников',
+          testimonials_visible,
+          courses, testimonials, NOW(), NOW(), NOW()
+        FROM home_pages 
+        WHERE locale = 'en' 
+        LIMIT 1
+      `);
+    }
+    
+    // Build individual UPDATE statements for each field
+    let successCount = 0;
+    let failCount = 0;
+    const errors = [];
+    
+    for (const [field, value] of Object.entries(russianUI)) {
+      try {
+        await queryDatabase(`
+          UPDATE home_pages 
+          SET "${field}" = $1
+          WHERE locale = 'ru'
+        `, [value]);
+        successCount++;
+      } catch (fieldError) {
+        // If column doesn't exist, try to add it first
+        try {
+          await queryDatabase(`
+            ALTER TABLE home_pages 
+            ADD COLUMN IF NOT EXISTS "${field}" VARCHAR(500)
+          `);
+          
+          // Now try update again
+          await queryDatabase(`
+            UPDATE home_pages 
+            SET "${field}" = $1
+            WHERE locale = 'ru'
+          `, [value]);
+          successCount++;
+        } catch (retryError) {
+          failCount++;
+          errors.push({ field, error: retryError.message });
+        }
+      }
+    }
+    
+    // Verify the update
+    const verify = await queryDatabase(`
+      SELECT "navHome", "btnSignUpToday", "navCourses", "navTeachers"
+      FROM home_pages 
+      WHERE locale = 'ru'
+    `);
+    
+    const isRussian = verify[0]?.navHome === 'Главная';
+    
+    res.json({
+      success: true,
+      message: `ULTRATHINK: Russian UI force update complete!`,
+      stats: {
+        fieldsUpdated: successCount,
+        fieldsFailed: failCount,
+        totalFields: Object.keys(russianUI).length
+      },
+      verification: {
+        navHome: verify[0]?.navHome || 'NOT FOUND',
+        btnSignUpToday: verify[0]?.btnSignUpToday || 'NOT FOUND',
+        navCourses: verify[0]?.navCourses || 'NOT FOUND',
+        isFullyRussian: isRussian
+      },
+      errors: errors.length > 0 ? errors : undefined
+    });
+    
+    console.log(`✅ ULTRATHINK: Force updated ${successCount} Russian UI fields!`);
+    if (isRussian) {
+      console.log('🎉 RUSSIAN TRANSLATIONS NOW ACTIVE!');
+    }
+    
+  } catch (error) {
+    console.error('❌ ULTRATHINK force update error:', error);
+    res.status(500).json({ 
+      error: 'Force update failed', 
+      details: error.message 
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════════╗
