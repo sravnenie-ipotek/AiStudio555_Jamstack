@@ -4344,7 +4344,23 @@ if (!authSecurityModule) {
     AdvancedRateLimiter: class { constructor() {} },
     SecureSessionManager: class { constructor() {} },
     PasswordSecurity: class {},
-    createSecureAuthMiddleware: () => (req, res, next) => next()
+    createSecureAuthMiddleware: () => ({
+      requireAuth: (req, res, next) => next(),
+      securityHeaders: (req, res, next) => {
+        // Basic security headers
+        res.set({
+          'X-Content-Type-Options': 'nosniff',
+          'X-Frame-Options': 'DENY',
+          'X-XSS-Protection': '1; mode=block',
+          'Referrer-Policy': 'strict-origin-when-cross-origin'
+        });
+        next();
+      },
+      rateLimiter: (req, res, next) => next(),
+      validateSession: (req, res, next) => next(),
+      getInstances: () => ({}),
+      cleanup: async () => {}
+    })
   };
 }
 
