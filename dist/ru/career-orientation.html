@@ -1,11 +1,9 @@
-<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Enhanced for AI Studio E-Learning Platform  -->
-<html data-wf-page="career-orientation-page" data-wf-site="68b7601d918996218465c4a6" lang="ru">
-<head>
+<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Enhanced for AI Studio E-Learning Platform  --><html data-wf-page="career-orientation-page" data-wf-site="68b7601d918996218465c4a6" lang="ru" dir="ltr"><head>
   <meta charset="utf-8">
-  <title>Профориентация - AI Студия E-Learning Platform</title>
-  <meta content="Откройте для себя идеальный карьерный путь в AI/ML с персонализированным руководством и комплексной оценкой навыков" name="description">
-  <meta content="Профориентация - AI Студия E-Learning Platform" property="og:title">
-  <meta content="Профориентация - AI Студия E-Learning Platform" property="twitter:title">
+  <title>Career Orientation - AI Студия E-Learning Platform</title>
+  <meta content="Discover your perfect AI/ML career path with personalized guidance and comprehensive skills assessment" name="description">
+  <meta content="Career Orientation - AI Studio E-Learning Platform" property="og:title">
+  <meta content="Career Orientation - AI Studio E-Learning Platform" property="twitter:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
   <link href="../css/normalize.css" rel="stylesheet" type="text/css">
@@ -204,6 +202,27 @@
 
 </head>
 <body>
+    <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+      <select onchange="switchLanguage(this.value)" style="padding: 8px; border-radius: 4px;">
+        <option value="en">English</option><option value="ru" selected="">Russian</option><option value="he">Hebrew</option>
+      </select>
+    </div>
+    <script>
+      function switchLanguage(lang) {
+        const currentPath = window.location.pathname;
+        const pathParts = currentPath.split('/').filter(p => p);
+        
+        // Remove current language from path
+        if (['en', 'ru', 'he'].includes(pathParts[0])) {
+          pathParts.shift();
+        }
+        
+        // Navigate to new language
+        const newPath = '/' + lang + '/' + pathParts.join('/');
+        window.location.href = newPath;
+      }
+    </script>
+  
   <div class="page-wrapper">
     <!-- Navigation (Updated with Career Services dropdown) -->
     <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
@@ -211,29 +230,29 @@
         <div class="navbar-content">
           <a href="home.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
           <nav role="navigation" class="nav-menu w-nav-menu">
-            <a href="home.html" class="nav-link w-nav-link">Главная</a>
-            <a href="courses.html" class="nav-link w-nav-link">Курсы</a>
-            <a href="teachers.html" class="nav-link w-nav-link">Преподаватели</a>
+            <a href="home.html" class="nav-link w-nav-link">Home</a>
+            <a href="courses.html" class="nav-link w-nav-link">Courses</a>
+            <a href="teachers.html" class="nav-link w-nav-link">Teachers</a>
             <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
               <div class="dropdown-toggle w-dropdown-toggle">
-                <div class="dropdown-toggle-text-block">Карьерные услуги</div>
+                <div class="dropdown-toggle-text-block">Career Services</div>
                 <div class="dropdown-toggle-arrow-2">▼</div>
               </div>
               <nav class="dropdown-list w-dropdown-list">
                 <a href="career-orientation.html" aria-current="page" class="dropdown-menu-text-link-block w-inline-block w--current">
-                  <div>Профориентация</div>
+                  <div>Career Orientation</div>
                 </a>
                 <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block">
-                  <div>Карьерный центр</div>
+                  <div>Career Center</div>
                 </a>
               </nav>
             </div>
-            <a href="pricing.html" class="nav-link w-nav-link">Цены</a>
+            <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
             <div class="primary-button-wrapper mobile">
               <a href="authentication-pages/sign-up.html" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">Регистрируйтесь сегодня</div>
-                  <div class="primary-button-text-block is-text-absolute">Регистрируйтесь сегодня</div>
+                  <div class="primary-button-text-block">Sign Up Today</div>
+                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
                 </div>
               </a>
             </div>
@@ -242,8 +261,8 @@
             <div class="primary-button-wrapper desktop">
               <a href="authentication-pages/sign-up.html" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">Регистрируйтесь сегодня</div>
-                  <div class="primary-button-text-block is-text-absolute">Регистрируйтесь сегодня</div>
+                  <div class="primary-button-text-block">Sign Up Today</div>
+                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
                 </div>
               </a>
             </div>
@@ -260,12 +279,12 @@
       <div class="container">
         <div class="inner-banner-content">
           <div class="inner-banner-title-wrapper">
-            <h1 class="inner-banner-title">Профориентация</h1>
+            <h1 class="inner-banner-title">Career Orientation</h1>
           </div>
           <div class="inner-banner-text-link-wrapper">
-            <a href="home.html" class="inner-banner-text-link">Главная</a>
+            <a href="home.html" class="inner-banner-text-link">Home</a>
             <div class="inner-banner-text-link-arrow">|</div>
-            <a href="career-orientation.html" aria-current="page" class="inner-banner-text-link w--current">Профориентация</a>
+            <a href="career-orientation.html" aria-current="page" class="inner-banner-text-link w--current">Career Orientation</a>
           </div>
         </div>
       </div>
@@ -277,33 +296,33 @@
         <div data-w-id="orientation-hero" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle" style="color: rgba(255,255,255,0.9);">Откройте свой путь</div>
+            <div class="section-subtitle" style="color: rgba(255,255,255,0.9);">Discover Your Path</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color: white;">Откройте для себя идеальный карьерный путь в AI/ML</h2>
-          <p class="section-description-text featured-courses" style="color: rgba(255,255,255,0.9);">Получите персонализированное карьерное руководство и найдите свою идеальную роль в области искусственного интеллекта и машинного обучения с нашей экспертной программой оценки.</p>
+          <h2 class="section-title featured-courses" style="color: white;">Discover Your Perfect AI/ML Career Path</h2>
+          <p class="section-description-text featured-courses" style="color: rgba(255,255,255,0.9);">Get personalized career guidance and find your ideal role in artificial intelligence and machine learning with our expert assessment program.</p>
         </div>
         
         <div data-w-id="orientation-stats" style="opacity:0" class="hero-stats-wrapper orientation">
           <div class="hero-stat-item">
             <div class="hero-stat-number">500+</div>
-            <div class="hero-stat-label">Карьерных путей проложено</div>
+            <div class="hero-stat-label">Career Paths Mapped</div>
           </div>
           <div class="hero-stat-item">
             <div class="hero-stat-number">15+</div>
-            <div class="hero-stat-label">Специализации ИИ</div>
+            <div class="hero-stat-label">AI Specializations</div>
           </div>
           <div class="hero-stat-item">
             <div class="hero-stat-number">95%</div>
-            <div class="hero-stat-label">Успешность</div>
+            <div class="hero-stat-label">Success Rate</div>
           </div>
         </div>
 
         <div data-w-id="orientation-hero-cta" style="opacity:0; margin-top: 48px;" class="preview-banner-button-wrapper">
           <a href="#assessment-form" data-w-id="orientation-assessment-cta" class="primary-button orientation-cta w-inline-block">
             <div class="primary-button-text-wrap">
-              <div class="primary-button-text-block">Начать оценку AI карьеры</div>
-              <div class="primary-button-text-block is-text-absolute">Начать оценку AI карьеры</div>
+              <div class="primary-button-text-block">Start Your AI Career Assessment</div>
+              <div class="primary-button-text-block is-text-absolute">Start Your AI Career Assessment</div>
             </div>
           </a>
         </div>
@@ -316,33 +335,33 @@
         <div data-w-id="problem-title" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle" style="color: #0080ff;">Общие проблемы</div>
+            <div class="section-subtitle" style="color: #0080ff;">Common Challenges</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color: #04193f;">Чувствуете себя потерянными среди вариантов карьеры в AI/ML?</h2>
-          <p class="section-description-text featured-courses" style="color: #6a7280;">Вы не одиноки. Многие начинающие AI-специалисты сталкиваются с этими общими проблемами в начале своего пути.</p>
+          <h2 class="section-title featured-courses" style="color: #04193f;">Feeling Lost in AI/ML Career Options?</h2>
+          <p class="section-description-text featured-courses" style="color: #6a7280;">You're not alone. Many aspiring AI professionals face these common challenges when starting their journey.</p>
         </div>
         
         <div data-w-id="problem-grid" style="opacity:0" class="problem-challenges-grid">
           <div class="problem-challenge-card">
             <div class="problem-challenge-icon">🤯</div>
-            <h3>Перегружены вариантами карьеры в AI/ML</h3>
-            <p>Слишком много путей на выбор - Machine Learning, Data Science, Computer Vision, NLP, Robotics...</p>
+            <h3>Overwhelmed by AI/ML Career Options</h3>
+            <p>Too many paths to choose from - Machine Learning, Data Science, Computer Vision, NLP, Robotics...</p>
           </div>
           <div class="problem-challenge-card">
             <div class="problem-challenge-icon">❓</div>
-            <h3>Неуверенность в необходимых навыках</h3>
-            <p>Не знаете, какие языки программирования, инструменты и фреймворки необходимы для вашей целевой роли.</p>
+            <h3>Uncertain About Required Skills</h3>
+            <p>Don't know which programming languages, tools, and frameworks are essential for your target role.</p>
           </div>
           <div class="problem-challenge-card">
             <div class="problem-challenge-icon">😰</div>
-            <h3>Страх выбора неправильной специализации</h3>
-            <p>Беспокоитесь об инвестировании времени и денег в неправильную область AI или карьерное направление.</p>
+            <h3>Fear of Choosing Wrong Specialization</h3>
+            <p>Worried about investing time and money in the wrong AI field or career direction.</p>
           </div>
           <div class="problem-challenge-card">
             <div class="problem-challenge-icon">🎯</div>
-            <h3>Не знаете, какой путь AI подходит вашему опыту</h3>
-            <p>Неясно, как ваш текущий опыт переводится в различные карьерные возможности AI/ML.</p>
+            <h3>Don't Know Which AI Path Fits Background</h3>
+            <p>Unclear how your current experience translates to different AI/ML career opportunities.</p>
           </div>
         </div>
       </div>
@@ -354,33 +373,33 @@
         <div data-w-id="solution-title" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">Наше решение</div>
+            <div class="section-subtitle">Our Solution</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">Процесс AI карьерного руководства</h2>
-          <p class="section-description-text featured-courses" style="color:#04193f;">Наш комплексный подход помогает принимать обоснованные решения о вашем карьерном пути в AI.</p>
+          <h2 class="section-title featured-courses" style="color:#04193f;">AI Career Guidance Process</h2>
+          <p class="section-description-text featured-courses" style="color:#04193f;">Our comprehensive approach helps you make informed decisions about your AI career journey.</p>
         </div>
         
         <div data-w-id="solution-features" style="opacity:0" class="solution-features-grid">
           <div class="solution-feature-card">
             <div class="solution-feature-icon">💬</div>
-            <h3>Бесплатная 20-минутная ознакомительная консультация</h3>
-            <p>Индивидуальный звонок со специалистом по AI карьере для понимания ваших целей и опыта</p>
+            <h3>Free 20-Minute Discovery Consultation</h3>
+            <p>One-on-one call with AI career specialist to understand your goals and background</p>
           </div>
           <div class="solution-feature-card">
             <div class="solution-feature-icon">📊</div>
-            <h3>Комплексная оценка навыков AI/ML</h3>
-            <p>Детальная оценка ваших технических способностей и предпочтений в обучении</p>
+            <h3>Comprehensive AI/ML Skills Assessment</h3>
+            <p>Detailed evaluation of your technical aptitude and learning preferences</p>
           </div>
           <div class="solution-feature-card">
             <div class="solution-feature-icon">🗺️</div>
-            <h3>Персонализированная учебная дорожная карта</h3>
-            <p>Индивидуальный карьерный путь с рекомендованными курсами, проектами и временными рамками</p>
+            <h3>Personalized Learning Roadmap</h3>
+            <p>Custom career path with recommended courses, projects, and timeline</p>
           </div>
           <div class="solution-feature-card">
             <div class="solution-feature-icon">🏢</div>
-            <h3>Отраслевое карьерное руководство</h3>
-            <p>Инсайты о различных AI-отраслях и типах компаний, соответствующих вашим интересам</p>
+            <h3>Industry-Specific Career Guidance</h3>
+            <p>Insights into different AI industries and company types that match your interests</p>
           </div>
         </div>
       </div>
@@ -392,56 +411,56 @@
         <div data-w-id="process-title-main" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">5-этапный процесс</div>
+            <div class="section-subtitle">5-Step Process</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">Процесс открытия AI карьеры</h2>
-          <p class="section-description-text featured-courses" style="color:#04193f;">Наш систематический подход к поиску идеального карьерного пути в AI всего за 5 простых шагов.</p>
+          <h2 class="section-title featured-courses" style="color:#04193f;">AI Career Discovery Process</h2>
+          <p class="section-description-text featured-courses" style="color:#04193f;">Our systematic approach to finding your perfect AI career path in just 5 simple steps.</p>
         </div>
         
         <div data-w-id="process-steps-timeline" style="opacity:0" class="process-steps-timeline">
           <div class="process-step-item">
             <div class="process-step-number-large">1</div>
             <div class="process-step-content-large">
-              <h3>Подать заявку</h3>
-              <p>Быстрая форма о вашем опыте, интересах и карьерных целях в AI/ML</p>
-              <div class="process-step-duration">Продолжительность: 5 минут</div>
+              <h3>Submit Application</h3>
+              <p>Quick form about your background, interests, and career goals in AI/ML</p>
+              <div class="process-step-duration">Duration: 5 minutes</div>
             </div>
           </div>
           
           <div class="process-step-item">
             <div class="process-step-number-large">2</div>
             <div class="process-step-content-large">
-              <h3>Ознакомительный звонок (Бесплатно)</h3>
-              <p>20-минутная консультация с экспертом по AI карьере для понимания вашей ситуации</p>
-              <div class="process-step-duration">Продолжительность: 20 минут</div>
+              <h3>Discovery Call (Free)</h3>
+              <p>20-minute consultation with AI career expert to understand your situation</p>
+              <div class="process-step-duration">Duration: 20 minutes</div>
             </div>
           </div>
           
           <div class="process-step-item">
             <div class="process-step-number-large">3</div>
             <div class="process-step-content-large">
-              <h3>Оценка навыков</h3>
-              <p>Комплексная оценка технических способностей, стиля обучения и предпочтений</p>
-              <div class="process-step-duration">Продолжительность: 45 минут</div>
+              <h3>Skills Assessment</h3>
+              <p>Comprehensive evaluation of technical aptitude, learning style, and preferences</p>
+              <div class="process-step-duration">Duration: 45 minutes</div>
             </div>
           </div>
           
           <div class="process-step-item">
             <div class="process-step-number-large">4</div>
             <div class="process-step-content-large">
-              <h3>Карьерная дорожная карта</h3>
-              <p>Персонализированный путь с рекомендованными курсами, временными рамками и карьерной траекторией</p>
-              <div class="process-step-duration">Продолжительность: Доставка в течение 48 часов</div>
+              <h3>Career Roadmap</h3>
+              <p>Personalized path with recommended courses, timeline, and career trajectory</p>
+              <div class="process-step-duration">Duration: Delivered within 48 hours</div>
             </div>
           </div>
           
           <div class="process-step-item">
             <div class="process-step-number-large">5</div>
             <div class="process-step-content-large">
-              <h3>Поддержка внедрения</h3>
-              <p>Постоянное руководство, помощь в трудоустройстве и проверка прогресса</p>
-              <div class="process-step-duration">Продолжительность: Постоянно</div>
+              <h3>Implementation Support</h3>
+              <p>Ongoing guidance, job placement assistance, and progress check-ins</p>
+              <div class="process-step-duration">Duration: Ongoing</div>
             </div>
           </div>
         </div>
@@ -454,68 +473,68 @@
         <div data-w-id="career-paths-title" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">Карьерные специализации</div>
+            <div class="section-subtitle">Career Specializations</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">Рекомендуемые карьерные пути в AI/ML</h2>
-          <p class="section-description-text featured-courses" style="color:#04193f;">Изучите наиболее востребованные AI специализации и откройте, какой путь соответствует вашим интересам и навыкам.</p>
+          <h2 class="section-title featured-courses" style="color:#04193f;">Featured AI/ML Career Paths</h2>
+          <p class="section-description-text featured-courses" style="color:#04193f;">Explore the most in-demand AI specializations and discover which path aligns with your interests and skills.</p>
         </div>
         
         <div data-w-id="career-paths-grid" style="opacity:0" class="career-paths-grid">
           <div class="career-path-card">
             <div class="career-path-icon">🤖</div>
             <h3>Machine Learning Engineer</h3>
-            <p>Создавайте и развертывайте ML модели, которые приводят в действие интеллектуальные приложения и системы.</p>
-            <div class="career-path-salary">Средняя зарплата: $130,000/год</div>
+            <p>Build and deploy ML models that power intelligent applications and systems.</p>
+            <div class="career-path-salary">Average: $130,000/year</div>
           </div>
           
           <div class="career-path-card">
             <div class="career-path-icon">📊</div>
             <h3>Data Scientist</h3>
-            <p>Извлекайте инсайты из сложных данных для принятия бизнес-решений и стратегии.</p>
-            <div class="career-path-salary">Средняя зарплата: $120,000/год</div>
+            <p>Extract insights from complex data to drive business decisions and strategy.</p>
+            <div class="career-path-salary">Average: $120,000/year</div>
           </div>
           
           <div class="career-path-card">
             <div class="career-path-icon">🔬</div>
             <h3>AI Research Scientist</h3>
-            <p>Открывайте новые AI технологии и продвигайте область через передовые исследования.</p>
-            <div class="career-path-salary">Средняя зарплата: $150,000/год</div>
+            <p>Pioneer new AI technologies and advance the field through cutting-edge research.</p>
+            <div class="career-path-salary">Average: $150,000/year</div>
           </div>
           
           <div class="career-path-card">
             <div class="career-path-icon">👁️</div>
             <h3>Computer Vision Specialist</h3>
-            <p>Разрабатывайте AI системы, которые могут анализировать и понимать визуальную информацию.</p>
-            <div class="career-path-salary">Средняя зарплата: $135,000/год</div>
+            <p>Develop AI systems that can analyze and understand visual information.</p>
+            <div class="career-path-salary">Average: $135,000/year</div>
           </div>
           
           <div class="career-path-card">
             <div class="career-path-icon">💬</div>
             <h3>NLP Engineer</h3>
-            <p>Создавайте AI системы, которые понимают и генерируют человеческий язык.</p>
-            <div class="career-path-salary">Средняя зарплата: $125,000/год</div>
+            <p>Create AI systems that understand and generate human language.</p>
+            <div class="career-path-salary">Average: $125,000/year</div>
           </div>
           
           <div class="career-path-card">
             <div class="career-path-icon">⚙️</div>
             <h3>MLOps Engineer</h3>
-            <p>Создавайте инфраструктуру и пайплайны для развертывания ML моделей в масштабе.</p>
-            <div class="career-path-salary">Средняя зарплата: $140,000/год</div>
+            <p>Build infrastructure and pipelines for deploying ML models at scale.</p>
+            <div class="career-path-salary">Average: $140,000/year</div>
           </div>
           
           <div class="career-path-card">
             <div class="career-path-icon">📱</div>
             <h3>AI Product Manager</h3>
-            <p>Направляйте разработку AI-powered продуктов и функций.</p>
-            <div class="career-path-salary">Средняя зарплата: $145,000/год</div>
+            <p>Guide the development of AI-powered products and features.</p>
+            <div class="career-path-salary">Average: $145,000/year</div>
           </div>
           
           <div class="career-path-card">
             <div class="career-path-icon">🤖</div>
             <h3>Robotics Engineer</h3>
-            <p>Проектируйте интеллектуальные робототехнические системы, которые взаимодействуют с физическим миром.</p>
-            <div class="career-path-salary">Средняя зарплата: $110,000/год</div>
+            <p>Design intelligent robotic systems that interact with the physical world.</p>
+            <div class="career-path-salary">Average: $110,000/year</div>
           </div>
         </div>
       </div>
@@ -527,26 +546,26 @@
         <div data-w-id="expert-title" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">Знакомьтесь с вашим наставником</div>
+            <div class="section-subtitle">Meet Your Guide</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">Специалист по карьерному консультированию в ИИ</h2>
+          <h2 class="section-title featured-courses" style="color:#04193f;">AI Career Guidance Specialist</h2>
         </div>
         
         <div data-w-id="expert-profile-card" style="opacity:0" class="expert-profile-card">
           <div class="expert-avatar-large">
-            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b1ac?w=300&h=300&fit=crop&crop=face" alt="Sarah Chen">
+            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b1ac?w=300&amp;h=300&amp;fit=crop&amp;crop=face" alt="Sarah Chen">
           </div>
           <div class="expert-content-large">
             <h3>Sarah Chen</h3>
-            <p class="expert-title-large">Специалист по карьерному консультированию в ИИ и бывший ML инженер</p>
-            <p class="expert-experience">7+ лет в ИИ индустрии • 500+ карьерных консультаций</p>
-            <p class="expert-bio">Сара перешла от успешной карьеры ML инженера в Google к помощи другим в навигации по ИИ индустрии. Она лично направила 300+ профессионалов на роли в области ИИ и понимает вызовы попадания в эту конкурентную область.</p>
+            <p class="expert-title-large">AI Career Guidance Specialist &amp; Former ML Engineer</p>
+            <p class="expert-experience">7+ years in AI industry • 500+ career consultations</p>
+            <p class="expert-bio">Sarah transitioned from a successful ML engineering career at Google to helping others navigate the AI industry. She has personally guided 300+ professionals into AI roles and understands the challenges of breaking into this competitive field.</p>
             <div class="expert-achievements">
-              <div class="achievement-item">✓ Помогла 300+ профессионалам перейти на роли в области ИИ</div>
-              <div class="achievement-item">✓ Бывший старший ML инженер в Google</div>
-              <div class="achievement-item">✓ Магистр компьютерных наук стэнфордского университета</div>
-              <div class="achievement-item">✓ Опубликованный исследователь на конференциях по ИИ</div>
+              <div class="achievement-item">✓ Helped 300+ professionals transition into AI roles</div>
+              <div class="achievement-item">✓ Former Senior ML Engineer at Google</div>
+              <div class="achievement-item">✓ MS in Computer Science from Stanford</div>
+              <div class="achievement-item">✓ Published researcher in AI conferences</div>
             </div>
           </div>
         </div>
@@ -559,11 +578,11 @@
         <div data-w-id="companies-title" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">Истории успеха</div>
+            <div class="section-subtitle">Success Stories</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">Где работают наши выпускники</h2>
-          <p class="section-description-text featured-courses" style="color:#04193f;">Наше карьерное консультирование помогло профессионалам занять должности в ведущих ИИ компаниях по всему миру.</p>
+          <h2 class="section-title featured-courses" style="color:#04193f;">Where Our Graduates Work</h2>
+          <p class="section-description-text featured-courses" style="color:#04193f;">Our career guidance has helped professionals secure positions at leading AI companies worldwide.</p>
         </div>
         
         <div data-w-id="companies-logos" style="opacity:0" class="w-layout-grid included-grid">
@@ -573,7 +592,7 @@
             </div>
             <div class="included-title-description">
               <h3 class="included-title">Google</h3>
-              <p class="included-description-text">ML Инженеры, Специалисты по данным, Исследователи</p>
+              <p class="included-description-text">ML Engineers, Data Scientists, Research Scientists</p>
             </div>
           </div>
           
@@ -583,7 +602,7 @@
             </div>
             <div class="included-title-description">
               <h3 class="included-title">Microsoft</h3>
-              <p class="included-description-text">Azure AI, Office AI, Исследовательские подразделения</p>
+              <p class="included-description-text">Azure AI, Office AI, Research divisions</p>
             </div>
           </div>
           
@@ -593,7 +612,7 @@
             </div>
             <div class="included-title-description">
               <h3 class="included-title">Meta</h3>
-              <p class="included-description-text">Исследования ИИ, Продуктовый ИИ, Reality Labs</p>
+              <p class="included-description-text">AI Research, Product AI, Reality Labs</p>
             </div>
           </div>
           
@@ -603,7 +622,7 @@
             </div>
             <div class="included-title-description">
               <h3 class="included-title">Amazon</h3>
-              <p class="included-description-text">AWS AI/ML, Alexa, Подразделения роботехники</p>
+              <p class="included-description-text">AWS AI/ML, Alexa, Robotics divisions</p>
             </div>
           </div>
           
@@ -613,7 +632,7 @@
             </div>
             <div class="included-title-description">
               <h3 class="included-title">Apple</h3>
-              <p class="included-description-text">ML Платформа, Siri, Команды компьютерного зрения</p>
+              <p class="included-description-text">ML Platform, Siri, Computer Vision teams</p>
             </div>
           </div>
           
@@ -623,7 +642,7 @@
             </div>
             <div class="included-title-description">
               <h3 class="included-title">OpenAI</h3>
-              <p class="included-description-text">Исследования, Разработка, Продуктовые команды</p>
+              <p class="included-description-text">Research, Engineering, Product teams</p>
             </div>
           </div>
           
@@ -633,7 +652,7 @@
             </div>
             <div class="included-title-description">
               <h3 class="included-title">Tesla</h3>
-              <p class="included-description-text">Автопилот, Компьютерное зрение, Роботехника</p>
+              <p class="included-description-text">Autopilot, Computer Vision, Robotics</p>
             </div>
           </div>
           
@@ -643,7 +662,7 @@
             </div>
             <div class="included-title-description">
               <h3 class="included-title">Stripe</h3>
-              <p class="included-description-text">ML Инфраструктура, Risk AI, Наука о данных</p>
+              <p class="included-description-text">ML Infrastructure, Risk AI, Data Science</p>
             </div>
           </div>
         </div>
@@ -656,79 +675,79 @@
         <div data-w-id="form-title" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">Начать</div>
+            <div class="section-subtitle">Get Started</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">Заявка на оценку карьеры</h2>
-          <p class="section-description-text featured-courses" style="color:#010b1c;">Заполните эту форму, чтобы начать ваше путешествие по открытию карьеры в области ИИ. Мы запланируем вашу бесплатную консультацию в течение 24 часов.</p>
+          <h2 class="section-title featured-courses" style="color:#04193f;">Career Assessment Application</h2>
+          <p class="section-description-text featured-courses" style="color:#010b1c;">Complete this form to begin your AI career discovery journey. We'll schedule your free consultation within 24 hours.</p>
         </div>
         
         <div data-w-id="assessment-form-wrapper" style="opacity:0" class="assessment-form-wrapper">
           <form id="career-assessment-form" class="career-assessment-form-block">
             <div class="form-row">
               <div class="form-group half">
-                <label for="full-name" class="form-label">Полное имя *</label>
-                <input type="text" name="name" id="full-name" class="form-input" required placeholder="Введите ваше полное имя">
+                <label for="full-name" class="form-label">Full Name *</label>
+                <input type="text" name="name" id="full-name" class="form-input" required="" placeholder="Enter your full name">
               </div>
               <div class="form-group half">
-                <label for="email" class="form-label">Адрес электронной почты *</label>
-                <input type="email" name="email" id="email" class="form-input" required placeholder="ваш.email@example.com">
+                <label for="email" class="form-label">Email Address *</label>
+                <input type="email" name="email" id="email" class="form-input" required="" placeholder="your.email@example.com">
               </div>
             </div>
             
             <div class="form-row">
               <div class="form-group half">
-                <label for="phone" class="form-label">Номер телефона</label>
+                <label for="phone" class="form-label">Phone Number</label>
                 <input type="tel" name="phone" id="phone" class="form-input" placeholder="+1 (555) 123-4567">
               </div>
               <div class="form-group half">
-                <label for="background" class="form-label">Текущий опыт *</label>
-                <select name="background" id="background" class="form-select" required>
-                  <option value="">Выберите ваш опыт</option>
-                  <option value="software-developer">Разработчик ПО</option>
-                  <option value="data-analyst">Аналитик данных</option>
-                  <option value="recent-graduate">Недавний выпускник</option>
-                  <option value="career-changer">Меняющий карьеру</option>
-                  <option value="student">Студент</option>
-                  <option value="engineer">Инженер (не ПО)</option>
-                  <option value="business-analyst">Бизнес-аналитик</option>
-                  <option value="other">Другое</option>
+                <label for="background" class="form-label">Current Background *</label>
+                <select name="background" id="background" class="form-select" required="">
+                  <option value="">Select your background</option>
+                  <option value="software-developer">Software Developer</option>
+                  <option value="data-analyst">Data Analyst</option>
+                  <option value="recent-graduate">Recent Graduate</option>
+                  <option value="career-changer">Career Changer</option>
+                  <option value="student">Student</option>
+                  <option value="engineer">Engineer (Non-Software)</option>
+                  <option value="business-analyst">Business Analyst</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
             </div>
             
             <div class="form-group">
-              <label for="interests" class="form-label">Области интереса ИИ/ML * (Выберите все подходящие)</label>
+              <label for="interests" class="form-label">AI/ML Interest Areas * (Select all that apply)</label>
               <div class="checkbox-group">
                 <label class="checkbox-label">
                   <input type="checkbox" name="interest" value="machine-learning">
                   <span class="checkmark"></span>
-                  Машинное обучение
+                  Machine Learning
                 </label>
                 <label class="checkbox-label">
                   <input type="checkbox" name="interest" value="computer-vision">
                   <span class="checkmark"></span>
-                  Компьютерное зрение
+                  Computer Vision
                 </label>
                 <label class="checkbox-label">
                   <input type="checkbox" name="interest" value="nlp">
                   <span class="checkmark"></span>
-                  Обработка естественного языка
+                  Natural Language Processing
                 </label>
                 <label class="checkbox-label">
                   <input type="checkbox" name="interest" value="data-science">
                   <span class="checkmark"></span>
-                  Наука о данных
+                  Data Science
                 </label>
                 <label class="checkbox-label">
                   <input type="checkbox" name="interest" value="robotics">
                   <span class="checkmark"></span>
-                  Роботехника
+                  Robotics
                 </label>
                 <label class="checkbox-label">
                   <input type="checkbox" name="interest" value="ai-research">
                   <span class="checkmark"></span>
-                  Исследования ИИ
+                  AI Research
                 </label>
                 <label class="checkbox-label">
                   <input type="checkbox" name="interest" value="mlops">
@@ -738,48 +757,48 @@
                 <label class="checkbox-label">
                   <input type="checkbox" name="interest" value="ai-product">
                   <span class="checkmark"></span>
-                  Продуктовое управление ИИ
+                  AI Product Management
                 </label>
               </div>
             </div>
             
             <div class="form-row">
               <div class="form-group half">
-                <label for="consultation-time" class="form-label">Предпочтительное время консультации *</label>
-                <select name="consultation-time" id="consultation-time" class="form-select" required>
-                  <option value="">Выберите предпочтительное время</option>
-                  <option value="morning">Утро (9:00-12:00 EST)</option>
-                  <option value="afternoon">День (12:00-17:00 EST)</option>
-                  <option value="evening">Вечер (17:00-20:00 EST)</option>
+                <label for="consultation-time" class="form-label">Preferred Consultation Time *</label>
+                <select name="consultation-time" id="consultation-time" class="form-select" required="">
+                  <option value="">Select preferred time</option>
+                  <option value="morning">Morning (9AM-12PM EST)</option>
+                  <option value="afternoon">Afternoon (12PM-5PM EST)</option>
+                  <option value="evening">Evening (5PM-8PM EST)</option>
                 </select>
               </div>
               <div class="form-group half">
-                <label for="urgency" class="form-label">Временные рамки смены карьеры</label>
+                <label for="urgency" class="form-label">Timeline for Career Change</label>
                 <select name="urgency" id="urgency" class="form-select">
-                  <option value="">Выберите временные рамки</option>
-                  <option value="immediate">Немедленно (0-3 месяца)</option>
-                  <option value="short-term">Краткосрочно (3-6 месяцев)</option>
-                  <option value="medium-term">Среднесрочно (6-12 месяцев)</option>
-                  <option value="long-term">Долгосрочно (12+ месяцев)</option>
+                  <option value="">Select timeline</option>
+                  <option value="immediate">Immediate (0-3 months)</option>
+                  <option value="short-term">Short-term (3-6 months)</option>
+                  <option value="medium-term">Medium-term (6-12 months)</option>
+                  <option value="long-term">Long-term (12+ months)</option>
                 </select>
               </div>
             </div>
             
             <div class="form-group">
-              <label for="experience" class="form-label">Текущий технический опыт</label>
-              <textarea name="experience" id="experience" class="form-textarea" rows="4" placeholder="Кратко опишите ваш технический опыт, языки программирования, соответствующие проекты и т.д."></textarea>
+              <label for="experience" class="form-label">Current Technical Experience</label>
+              <textarea name="experience" id="experience" class="form-textarea" rows="4" placeholder="Briefly describe your technical background, programming languages you know, relevant projects, etc."></textarea>
             </div>
             
             <div class="form-group">
-              <label for="goals" class="form-label">Карьерные цели</label>
-              <textarea name="goals" id="goals" class="form-textarea" rows="4" placeholder="Какие у вас карьерные цели? Какой тип роли в области ИИ вас больше всего интересует? Конкретные компании или отрасли?"></textarea>
+              <label for="goals" class="form-label">Career Goals</label>
+              <textarea name="goals" id="goals" class="form-textarea" rows="4" placeholder="What are your career goals? What type of AI role interests you most? Any specific companies or industries you're targeting?"></textarea>
             </div>
             
             <div class="form-submit-wrapper">
               <button type="submit" class="primary-button form-submit w-inline-block">
                 <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">Запланировать бесплатную консультацию</div>
-                  <div class="primary-button-text-block is-text-absolute">Запланировать бесплатную консультацию</div>
+                  <div class="primary-button-text-block">Schedule Free Consultation</div>
+                  <div class="primary-button-text-block is-text-absolute">Schedule Free Consultation</div>
                 </div>
               </button>
             </div>
@@ -800,7 +819,7 @@
             <div class="footer-details-content">
               <a href="home.html" class="footer-logo-link w-inline-block"><img loading="lazy" src="images/Logo.svg" alt="" class="footer-logo-image"></a>
               <div class="footer-description-text-wrapper">
-                <p class="footer-description-text">Повысьте свою техническую карьеру с помощью курсов под руководством экспертов. Практическое обучение разработано для развития ваших навыков.</p>
+                <p class="footer-description-text">Elevate tech career with expert-led courses. if you're just aiming to advance skills, practical training is designed.</p>
               </div>
               <div class="footer-social-media-wrapper">
                 <a href="https://www.facebook.com/" target="_blank" class="footer-social-media-link w-inline-block">
@@ -820,17 +839,17 @@
                   <div class="footer-social-media-circel"></div>
                 </a>
               </div>
-              <div class="footer-details-gmail">Контакты: <span class="footer-details-gmail-text">career@aistudiolearning.com</span></div>
+              <div class="footer-details-gmail">Contact: <span class="footer-details-gmail-text">career@aistudiolearning.com</span></div>
               <div class="footer-details-form-wrapper">
                 <div class="footer-details-form-block w-form">
-                  <form id="email-form" name="email-form" data-name="Email Form" method="get" class="footer-details-form" data-wf-page-id="career-orientation-page" data-wf-element-id="footer-form"><label for="email-2" class="footer-details-form-text">Подписаться на рассылку</label>
-                    <div class="footer-details-form-single"><input class="footer-details-form-input-field w-input" maxlength="256" name="email-2" data-name="Email 2" placeholder="Введите email для подписки" type="email" id="email-2" required=""><input type="submit" data-wait="" class="footer-details-form-submit-button w-button" value=""></div>
+                  <form id="email-form" name="email-form" data-name="Email Form" method="get" class="footer-details-form" data-wf-page-id="career-orientation-page" data-wf-element-id="footer-form"><label for="email-2" class="footer-details-form-text">Subscribe to Newsletter</label>
+                    <div class="footer-details-form-single"><input class="footer-details-form-input-field w-input" maxlength="256" name="email-2" data-name="Email 2" placeholder="Enter email to subscribe" type="email" id="email-2" required=""><input type="submit" data-wait="" class="footer-details-form-submit-button w-button" value=""></div>
                   </form>
                   <div class="w-form-done">
-                    <div>Спасибо! Ваша заявка получена!</div>
+                    <div>Thank you! Your submission has been received!</div>
                   </div>
                   <div class="w-form-fail">
-                    <div>Ошибка! Что-то пошло не так при отправке формы.</div>
+                    <div>Oops! Something went wrong while submitting the form.</div>
                   </div>
                 </div>
               </div>
@@ -839,66 +858,66 @@
               <div class="w-layout-grid footer-menu-grid">
                 <div class="footer-menu-single">
                   <div class="footer-menu-title-wrapper">
-                    <h4 class="footer-menu-title">Меню</h4>
+                    <h4 class="footer-menu-title">Menu</h4>
                     <div class="footer-menu-title-line"></div>
                   </div>
                   <div class="footer-menu-list-wrapper">
                     <ul role="list" class="footer-menu-list">
                       <li class="footer-menu-list-item">
-                        <a href="home.html" class="footer-menu-text-link">Главная</a>
+                        <a href="home.html" class="footer-menu-text-link">Home</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="about-us.html" class="footer-menu-text-link">О нас</a>
+                        <a href="about-us.html" class="footer-menu-text-link">About Us</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="courses.html" class="footer-menu-text-link">Курсы</a>
+                        <a href="courses.html" class="footer-menu-text-link">Courses</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="teachers.html" class="footer-menu-text-link">Преподаватели</a>
+                        <a href="teachers.html" class="footer-menu-text-link">Teachers</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="pricing.html" class="footer-menu-text-link">Цены</a>
+                        <a href="pricing.html" class="footer-menu-text-link">Pricing</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="career-center.html" class="footer-menu-text-link">Карьерный центр</a>
+                        <a href="career-center.html" class="footer-menu-text-link">Career Center</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="blog.html" class="footer-menu-text-link">Блог</a>
+                        <a href="blog.html" class="footer-menu-text-link">Blog</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="contact-us.html" class="footer-menu-text-link">Свяжитесь с нами</a>
+                        <a href="contact-us.html" class="footer-menu-text-link">Contact Us</a>
                       </li>
                     </ul>
                   </div>
                 </div>
                 <div class="footer-menu-single">
                   <div class="footer-menu-title-wrapper">
-                    <h4 class="footer-menu-title">Карьерные услуги</h4>
+                    <h4 class="footer-menu-title">Career Services</h4>
                     <div class="footer-menu-title-line"></div>
                   </div>
                   <div class="footer-menu-list-wrapper">
                     <ul role="list" class="footer-menu-list">
                       <li class="footer-menu-list-item">
-                        <a href="career-orientation.html" aria-current="page" class="footer-menu-text-link w--current">Профориентация</a>
+                        <a href="career-orientation.html" aria-current="page" class="footer-menu-text-link w--current">Career Orientation</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="career-center.html" class="footer-menu-text-link">Карьерный центр</a>
+                        <a href="career-center.html" class="footer-menu-text-link">Career Center</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="#" class="footer-menu-text-link">Доска вакансий</a>
+                        <a href="#" class="footer-menu-text-link">Job Board</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="#" class="footer-menu-text-link">Проверка резюме</a>
+                        <a href="#" class="footer-menu-text-link">Resume Review</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="#" class="footer-menu-text-link">Подготовка к собеседованию</a>
+                        <a href="#" class="footer-menu-text-link">Interview Prep</a>
                       </li>
                     </ul>
                   </div>
                 </div>
                 <div class="footer-menu-single">
                   <div class="footer-menu-title-wrapper">
-                    <h4 class="footer-menu-title">Контакты</h4>
+                    <h4 class="footer-menu-title">Contact</h4>
                     <div class="footer-menu-title-line"></div>
                   </div>
                   <div class="footer-contact-details">
@@ -909,7 +928,7 @@
                       <div class="footer-contact-details-text">career@aistudiolearning.com</div>
                     </div>
                     <div class="footer-contact-details-single"><img loading="lazy" src="images/Footer-Contact-Details-Icon3.svg" alt="" class="footer-contact-details-icon">
-                      <div class="footer-contact-details-text">Карьерный центр, Технический кампус</div>
+                      <div class="footer-contact-details-text">Career Center, Tech Campus</div>
                     </div>
                   </div>
                 </div>
@@ -2277,121 +2296,144 @@
     })();
   </script>
 
-  <!-- Dynamic Content Integration -->
-  <script src="../js/webflow-strapi-integration.js"></script>
+  <!-- Hebrew Database Integration Script -->
   <script>
-    // Initialize dynamic content loading for Russian career-orientation page
-    document.addEventListener('DOMContentLoaded', async function() {
-      console.log('🚀 Initializing Russian career-orientation page integration...');
+    (async function loadHebrewCareerOrientationContent() {
+      console.log('Loading Hebrew Career Orientation content...');
+      
+      const API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
       
       try {
-        // Fetch career-orientation data from API with Russian locale
-        const API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
-        const response = await fetch(`${API_BASE}/career-orientation-page?locale=ru`);
-        const data = await response.json();
+        const response = await fetch(`${API_BASE}/career-orientation-page?locale=he`);
+        console.log('Hebrew API response status:', response.status);
         
-        console.log('📊 Fetched Russian career-orientation data:', data);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Hebrew Career Orientation data received:', data);
         
         if (data && data.data && data.data.attributes) {
           const content = data.data.attributes;
           updateCareerOrientationContent(content);
+        } else {
+          console.log('Hebrew content structure not as expected:', data);
         }
-        
-        console.log('✅ Russian career-orientation content loaded successfully');
-        
       } catch (error) {
-        console.error('❌ Failed to load Russian career-orientation content:', error);
+        console.error('Error loading Hebrew career orientation content:', error);
       }
       
       function updateCareerOrientationContent(content) {
-        console.log('🔧 updateCareerOrientationContent called with:', content);
+        console.log('Updating Hebrew Career Orientation content...');
         
-        // Update hero section - target actual HTML elements
-        const heroSection = document.querySelector('.section.career-orientation-hero');
-        console.log('🔍 Hero section found:', !!heroSection);
+        // Update main hero title - multiple selectors for robustness
+        const heroTitle = document.querySelector('.section-title.featured-courses, .hero-heading, h1, .career-orientation-title');
+        if (heroTitle && content.title) {
+          console.log('Updating hero title to:', content.title);
+          heroTitle.textContent = content.title;
+        }
         
-        if (heroSection) {
-          // Hero main title
-          const heroTitle = heroSection.querySelector('.section-title.featured-courses');
-          console.log('🔍 Hero title element found:', !!heroTitle, 'Current text:', heroTitle?.textContent);
-          console.log('🔍 Russian title to set:', content.heroMainTitle);
-          if (heroTitle && content.heroMainTitle) {
-            heroTitle.textContent = content.heroMainTitle;
-            console.log('✅ Hero title updated to:', heroTitle.textContent);
-          }
-          
-          // Hero subtitle
-          const heroSubtitle = heroSection.querySelector('.section-subtitle');
-          console.log('🔍 Hero subtitle element found:', !!heroSubtitle, 'Current text:', heroSubtitle?.textContent);
-          console.log('🔍 Russian subtitle to set:', content.heroSubtitle);
-          if (heroSubtitle && content.heroSubtitle) {
-            heroSubtitle.textContent = content.heroSubtitle;
-            console.log('✅ Hero subtitle updated to:', heroSubtitle.textContent);
-          }
-          
-          // Hero description  
-          const heroDescription = heroSection.querySelector('.section-description-text.featured-courses');
-          console.log('🔍 Hero description element found:', !!heroDescription, 'Current text:', heroDescription?.textContent?.substring(0, 50) + '...');
-          console.log('🔍 Russian description to set:', content.heroDescription?.substring(0, 50) + '...');
-          if (heroDescription && content.heroDescription) {
-            heroDescription.textContent = content.heroDescription;
-            console.log('✅ Hero description updated');
-          }
-          
-          // Also try to find ANY title element and update it as a fallback
-          const allTitles = document.querySelectorAll('h1, .hero-title, .main-title, .section-title');
-          console.log('🔍 All title elements found:', allTitles.length);
-          allTitles.forEach((title, index) => {
-            console.log(`🔍 Title ${index}:`, title.className, title.textContent?.substring(0, 30));
-            if (title.textContent?.includes('Career') && content.heroMainTitle) {
-              title.textContent = content.heroMainTitle;
-              console.log(`✅ Updated fallback title ${index} to Russian`);
+        // Update hero subtitle
+        const heroSubtitle = document.querySelector('.section-subtitle, .hero-subtitle, .subtitle');
+        if (heroSubtitle && content.subtitle) {
+          console.log('Updating hero subtitle to:', content.subtitle);
+          heroSubtitle.textContent = content.subtitle;
+        }
+        
+        // Update hero description
+        const heroDesc = document.querySelector('.section-description-text.featured-courses, .hero-description, .description, .career-orientation-description');
+        if (heroDesc && content.description) {
+          console.log('Updating hero description to:', content.description);
+          heroDesc.innerHTML = content.description;
+        }
+        
+        // Update services if available
+        if (content.services && Array.isArray(content.services)) {
+          console.log('Updating services section...');
+          content.services.forEach((service, index) => {
+            const serviceTitle = document.querySelector(`.service-item:nth-child(${index + 1}) .service-title, .feature-item:nth-child(${index + 1}) .feature-title`);
+            const serviceDesc = document.querySelector(`.service-item:nth-child(${index + 1}) .service-description, .feature-item:nth-child(${index + 1}) .feature-description`);
+            
+            if (serviceTitle && service.title) {
+              serviceTitle.textContent = service.title;
             }
-          });
-          
-        } else {
-          console.error('❌ Hero section not found. Checking available sections...');
-          const allSections = document.querySelectorAll('.section, section');
-          console.log('🔍 All sections found:', allSections.length);
-          allSections.forEach((section, index) => {
-            console.log(`Section ${index}:`, section.className);
+            if (serviceDesc && service.description) {
+              serviceDesc.textContent = service.description;
+            }
           });
         }
         
-        console.log('✅ Career orientation content update completed');
+        // Set HTML language to Hebrew and RTL direction
+        document.documentElement.lang = 'he';
+        document.documentElement.dir = 'rtl';
+        
+        console.log('Hebrew Career Orientation content update completed');
       }
-      
-      function updateElement(selector, value) {
-        if (!value) return;
-        
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(el => {
-          if (el) {
-            el.textContent = value;
-          }
-        });
-        
-        // Also try generic selectors for hero content
-        if (selector === '[data-hero-title]') {
-          const heroTitles = document.querySelectorAll('h1, .hero-title, .main-title');
-          heroTitles.forEach(el => {
-            if (el.textContent.includes('Career') || el.textContent.includes('Карьер')) {
-              el.textContent = value;
-            }
-          });
-        }
-        
-        if (selector === '[data-hero-subtitle]') {
-          const heroSubtitles = document.querySelectorAll('.hero-subtitle, .subtitle, h2');
-          heroSubtitles.forEach(el => {
-            if (el.textContent.length > 20 && el.textContent.includes('career') || el.textContent.includes('карьер')) {
-              el.textContent = value;
-            }
-          });
-        }
-      }
-    });
+    })();
   </script>
 
-</body>
-</html>
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Handle all lead forms
+        const forms = document.querySelectorAll('form[data-name="lead-form"], form[id*="lead"], form[action*="leads"]');
+        
+        forms.forEach(form => {
+          form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const data = {
+              data: {
+                name: formData.get('name') || formData.get('Name'),
+                email: formData.get('email') || formData.get('Email'),
+                phone: formData.get('phone') || formData.get('Phone'),
+                message: formData.get('message') || formData.get('Message'),
+                language: document.documentElement.lang,
+                source: window.location.pathname
+              }
+            };
+            
+            try {
+              // Try HTTPS first, fallback to HTTP if SSL issues
+              let response = await fetch('https://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+              });
+              
+              // If HTTPS fails, try HTTP fallback
+              if (!response.ok && response.status === 0) {
+                console.log('HTTPS failed, trying HTTP fallback...');
+                response = await fetch('http://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(data)
+                });
+              }
+              
+              if (response.ok) {
+                // Show success message
+                alert('Thank you! We will contact you soon.');
+                form.reset();
+                
+                // Optional: redirect to thank you page
+                // window.location.href = '/thank-you.html';
+              } else {
+                throw new Error('Submission failed');
+              }
+            } catch (error) {
+              console.error('Form submission error:', error);
+              alert('Sorry, there was an error. Please try again or contact us directly.');
+            }
+          });
+        });
+      });
+    </script>
+  </body></html>
