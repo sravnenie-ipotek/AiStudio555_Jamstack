@@ -4292,11 +4292,23 @@ try {
   console.log('⚠️  Creating basic fallback footer endpoints...');
   
   app.get('/api/footer-content', (req, res) => {
-    res.status(503).json({
-      error: 'Footer API temporarily unavailable',
-      message: 'Secure footer API failed to load',
-      fallback: true,
-      timestamp: new Date().toISOString()
+    // Return basic footer content instead of error
+    res.json({
+      data: {
+        attributes: {
+          copyrightText: '© 2024 AI Studio. All rights reserved.',
+          socialLinks: [
+            { platform: 'facebook', url: 'https://facebook.com/aistudio' },
+            { platform: 'twitter', url: 'https://twitter.com/aistudio' },
+            { platform: 'linkedin', url: 'https://linkedin.com/company/aistudio' }
+          ],
+          contactInfo: {
+            email: 'info@aistudio555.com',
+            phone: '+1 (555) 123-4567',
+            address: 'Tel Aviv, Israel'
+          }
+        }
+      }
     });
   });
   

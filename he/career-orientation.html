@@ -202,6 +202,7 @@
     }
   </style>
 
+  <link href="css/mobile-fix.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <div class="page-wrapper">
@@ -2277,5 +2278,83 @@
     })();
   </script>
 
+  <!-- Hebrew Database Integration Script -->
+  <script>
+    (async function loadHebrewCareerOrientationContent() {
+      console.log('Loading Hebrew Career Orientation content...');
+      
+      const API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+      
+      try {
+        const response = await fetch(`${API_BASE}/career-orientation-page?locale=he`);
+        console.log('Hebrew API response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Hebrew Career Orientation data received:', data);
+        
+        if (data && data.data && data.data.attributes) {
+          const content = data.data.attributes;
+          updateCareerOrientationContent(content);
+        } else {
+          console.log('Hebrew content structure not as expected:', data);
+        }
+      } catch (error) {
+        console.error('Error loading Hebrew career orientation content:', error);
+      }
+      
+      function updateCareerOrientationContent(content) {
+        console.log('Updating Hebrew Career Orientation content...');
+        
+        // Update main hero title - multiple selectors for robustness
+        const heroTitle = document.querySelector('.section-title.featured-courses, .hero-heading, h1, .career-orientation-title');
+        if (heroTitle && content.title) {
+          console.log('Updating hero title to:', content.title);
+          heroTitle.textContent = content.title;
+        }
+        
+        // Update hero subtitle
+        const heroSubtitle = document.querySelector('.section-subtitle, .hero-subtitle, .subtitle');
+        if (heroSubtitle && content.subtitle) {
+          console.log('Updating hero subtitle to:', content.subtitle);
+          heroSubtitle.textContent = content.subtitle;
+        }
+        
+        // Update hero description
+        const heroDesc = document.querySelector('.section-description-text.featured-courses, .hero-description, .description, .career-orientation-description');
+        if (heroDesc && content.description) {
+          console.log('Updating hero description to:', content.description);
+          heroDesc.innerHTML = content.description;
+        }
+        
+        // Update services if available
+        if (content.services && Array.isArray(content.services)) {
+          console.log('Updating services section...');
+          content.services.forEach((service, index) => {
+            const serviceTitle = document.querySelector(`.service-item:nth-child(${index + 1}) .service-title, .feature-item:nth-child(${index + 1}) .feature-title`);
+            const serviceDesc = document.querySelector(`.service-item:nth-child(${index + 1}) .service-description, .feature-item:nth-child(${index + 1}) .feature-description`);
+            
+            if (serviceTitle && service.title) {
+              serviceTitle.textContent = service.title;
+            }
+            if (serviceDesc && service.description) {
+              serviceDesc.textContent = service.description;
+            }
+          });
+        }
+        
+        // Set HTML language to Hebrew and RTL direction
+        document.documentElement.lang = 'he';
+        document.documentElement.dir = 'rtl';
+        
+        console.log('Hebrew Career Orientation content update completed');
+      }
+    })();
+  </script>
+
+  <script src="js/mobile-menu-fix.js"></script>
 </body>
 </html>

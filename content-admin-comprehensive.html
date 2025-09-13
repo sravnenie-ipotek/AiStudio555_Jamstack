@@ -66,6 +66,7 @@
         .save-all-btn:hover { background: #218838; }
         .field-count { background: #007aff; color: white; padding: 5px 10px; border-radius: 20px; font-size: 12px; margin-left: 10px; }
     </style>
+  <link href="css/mobile-fix.css" rel="stylesheet" type="text/css">
 </head>
 <body>
     <div class="header">
@@ -98,6 +99,7 @@
             <button class="tab" onclick="showSection('contact-page')">📞 Contact Page <span class="field-count">25+ Fields</span></button>
             <button class="tab" onclick="showSection('courses')">📖 Course Detail <span class="field-count">15+ Fields</span></button>
             <button class="tab" onclick="showSection('blog-posts')">📰 Blog Detail <span class="field-count">12+ Fields</span></button>
+            <button class="tab" onclick="showSection('footer-management')">🦶 Footer <span class="field-count">20+ Fields</span></button>
         </div>
 
         <!-- COMPREHENSIVE HOME PAGE Section -->
@@ -4761,6 +4763,84 @@
                     break;
             }
         };
+
+        // Footer Management Functions
+        let currentFooterLocale = 'en';
+
+        async function loadFooterContent(locale) {
+            currentFooterLocale = locale;
+            const status = document.getElementById('footer-locale-status');
+            if (!status) return;
+            
+            status.textContent = `Loading ${locale.toUpperCase()}...`;
+            
+            try {
+                const response = await fetch(`/api/footer-content?locale=${locale}`);
+                if (!response.ok) throw new Error('Failed to load');
+                
+                const data = await response.json();
+                
+                // Populate fields
+                document.getElementById('footer_company_name').value = data.company_name || '';
+                document.getElementById('footer_company_tagline').value = data.company_tagline || '';
+                document.getElementById('footer_company_description').value = data.company_description || '';
+                document.getElementById('footer_contact_email').value = data.contact_email || '';
+                document.getElementById('footer_support_email').value = data.support_email || '';
+                document.getElementById('footer_newsletter_title').value = data.newsletter_title || '';
+                document.getElementById('footer_newsletter_button').value = data.newsletter_button_text || '';
+                document.getElementById('footer_copyright_text').value = data.copyright || '';
+                
+                status.textContent = `✅ ${locale.toUpperCase()} loaded`;
+                status.style.color = '#28a745';
+                
+                // Apply RTL for Hebrew
+                const container = document.getElementById('footer-content-fields');
+                if (container) {
+                    if (locale === 'he') {
+                        container.style.direction = 'rtl';
+                        container.style.textAlign = 'right';
+                    } else {
+                        container.style.direction = 'ltr';
+                        container.style.textAlign = 'left';
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error loading footer:', error);
+                status.textContent = `❌ Error loading ${locale.toUpperCase()}`;
+                status.style.color = '#dc3545';
+            }
+        }
+
+        async function saveFooterContent() {
+            const footerData = {
+                locale: currentFooterLocale,
+                company_name: document.getElementById('footer_company_name').value,
+                company_tagline: document.getElementById('footer_company_tagline').value,
+                company_description: document.getElementById('footer_company_description').value,
+                contact_email: document.getElementById('footer_contact_email').value,
+                support_email: document.getElementById('footer_support_email').value,
+                newsletter_title: document.getElementById('footer_newsletter_title').value,
+                newsletter_button_text: document.getElementById('footer_newsletter_button').value,
+                copyright: document.getElementById('footer_copyright_text').value,
+                published: true
+            };
+
+            try {
+                const response = await fetch(`/api/footer-content?locale=${currentFooterLocale}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(footerData)
+                });
+
+                if (!response.ok) throw new Error('Failed to save');
+                
+                alert(`✅ Footer saved for ${currentFooterLocale.toUpperCase()}!`);
+            } catch (error) {
+                console.error('Error saving footer:', error);
+                alert('❌ Failed to save footer: ' + error.message);
+            }
+        }
     </script>
 
   <!-- Secure Footer Loader - Emergency Security Fix -->
@@ -4779,5 +4859,25 @@
     });
   </script>
 
+  <!-- Footer Admin Panel Integration -->
+  <script src="footer-migration/admin/footer-admin-panel.js"></script>
+  <script>
+    // Initialize Footer Admin Panel
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🦶 Initializing Footer Admin Panel...');
+      
+      // Wait a bit for main admin to load
+      setTimeout(() => {
+        if (typeof FooterAdminPanel !== 'undefined') {
+          window.footerAdmin = new FooterAdminPanel();
+          console.log('✅ Footer Admin Panel loaded successfully');
+        } else {
+          console.warn('⚠️ Footer Admin Panel not available');
+        }
+      }, 1000);
+    });
+  </script>
+
+  <script src="js/mobile-menu-fix.js"></script>
 </body>
 </html>

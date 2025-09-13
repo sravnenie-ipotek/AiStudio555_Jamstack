@@ -119,6 +119,11 @@ async function processHtmlFile(filename, langCode, langConfig, outputDir, target
   // Add form submission handler
   addFormHandler($);
   
+  // Add language-specific database integration scripts
+  if (langCode === 'he') {
+    addHebrewIntegration($, filename);
+  }
+  
   // Update navigation links for multi-language
   updateNavigationLinks($, langCode);
   
@@ -236,6 +241,179 @@ function updateNavigationLinks($, langCode) {
       $(link).attr('href', newHref);
     }
   });
+}
+
+function addHebrewIntegration($, filename) {
+  // Only add Hebrew integration for career pages
+  if (filename.includes('career-orientation.html')) {
+    const hebrewScript = `
+      <!-- Hebrew Database Integration Script -->
+      <script>
+        (async function loadHebrewCareerOrientationContent() {
+          console.log('Loading Hebrew Career Orientation content...');
+          
+          const API_BASE = '${API_BASE}';
+          
+          try {
+            const response = await fetch(\`\${API_BASE}/career-orientation-page?locale=he\`);
+            console.log('Hebrew API response status:', response.status);
+            
+            if (!response.ok) {
+              throw new Error(\`HTTP error! status: \${response.status}\`);
+            }
+            
+            const data = await response.json();
+            console.log('Hebrew Career Orientation data received:', data);
+            
+            if (data && data.data && data.data.attributes) {
+              const content = data.data.attributes;
+              updateCareerOrientationContent(content);
+            } else {
+              console.log('Hebrew content structure not as expected:', data);
+            }
+          } catch (error) {
+            console.error('Error loading Hebrew career orientation content:', error);
+          }
+          
+          function updateCareerOrientationContent(content) {
+            console.log('Updating Hebrew Career Orientation content...');
+            
+            // Update main hero title - multiple selectors for robustness
+            const heroTitle = document.querySelector('.section-title.featured-courses, .hero-heading, h1, .career-orientation-title');
+            if (heroTitle && content.title) {
+              console.log('Updating hero title to:', content.title);
+              heroTitle.textContent = content.title;
+            }
+            
+            // Update hero subtitle
+            const heroSubtitle = document.querySelector('.section-subtitle, .hero-subtitle, .subtitle');
+            if (heroSubtitle && content.subtitle) {
+              console.log('Updating hero subtitle to:', content.subtitle);
+              heroSubtitle.textContent = content.subtitle;
+            }
+            
+            // Update hero description
+            const heroDesc = document.querySelector('.section-description-text.featured-courses, .hero-description, .description, .career-orientation-description');
+            if (heroDesc && content.description) {
+              console.log('Updating hero description to:', content.description);
+              heroDesc.innerHTML = content.description;
+            }
+            
+            // Update services if available
+            if (content.services && Array.isArray(content.services)) {
+              console.log('Updating services section...');
+              content.services.forEach((service, index) => {
+                const serviceTitle = document.querySelector(\`.service-item:nth-child(\${index + 1}) .service-title, .feature-item:nth-child(\${index + 1}) .feature-title\`);
+                const serviceDesc = document.querySelector(\`.service-item:nth-child(\${index + 1}) .service-description, .feature-item:nth-child(\${index + 1}) .feature-description\`);
+                
+                if (serviceTitle && service.title) {
+                  serviceTitle.textContent = service.title;
+                }
+                if (serviceDesc && service.description) {
+                  serviceDesc.textContent = service.description;
+                }
+              });
+            }
+            
+            console.log('Hebrew Career Orientation content update completed');
+          }
+        })();
+      </script>
+    `;
+    $('body').append(hebrewScript);
+  } else if (filename.includes('career-center.html')) {
+    const hebrewScript = `
+      <!-- Hebrew Database Integration Script -->
+      <script>
+        (async function loadHebrewCareerCenterContent() {
+          console.log('Loading Hebrew Career Center content...');
+          
+          const API_BASE = '${API_BASE}';
+          
+          try {
+            const response = await fetch(\`\${API_BASE}/career-center-page?locale=he\`);
+            console.log('Hebrew API response status:', response.status);
+            
+            if (!response.ok) {
+              throw new Error(\`HTTP error! status: \${response.status}\`);
+            }
+            
+            const data = await response.json();
+            console.log('Hebrew Career Center data received:', data);
+            
+            if (data && data.data && data.data.attributes) {
+              const content = data.data.attributes;
+              updateCareerCenterContent(content);
+            } else {
+              console.log('Hebrew content structure not as expected:', data);
+            }
+          } catch (error) {
+            console.error('Error loading Hebrew career center content:', error);
+          }
+          
+          function updateCareerCenterContent(content) {
+            console.log('Updating Hebrew Career Center content...');
+            
+            // Update main hero title - multiple selectors for robustness
+            const heroTitle = document.querySelector('.section-title.featured-courses, .hero-heading, h1, .career-hero-title');
+            if (heroTitle && content.title) {
+              console.log('Updating hero title to:', content.title);
+              heroTitle.textContent = content.title;
+            }
+            
+            // Update hero subtitle
+            const heroSubtitle = document.querySelector('.section-subtitle, .hero-subtitle, .subtitle');
+            if (heroSubtitle && content.subtitle) {
+              console.log('Updating hero subtitle to:', content.subtitle);
+              heroSubtitle.textContent = content.subtitle;
+            }
+            
+            // Update hero description
+            const heroDesc = document.querySelector('.section-description-text.featured-courses, .hero-description, .description, .career-hero-description');
+            if (heroDesc && content.description) {
+              console.log('Updating hero description to:', content.description);
+              heroDesc.innerHTML = content.description;
+            }
+            
+            // Update stats if available
+            if (content.stats && Array.isArray(content.stats)) {
+              console.log('Updating stats section...');
+              content.stats.forEach((stat, index) => {
+                const statValue = document.querySelector(\`.stat-item:nth-child(\${index + 1}) .stat-value, .metric-item:nth-child(\${index + 1}) .metric-value\`);
+                const statLabel = document.querySelector(\`.stat-item:nth-child(\${index + 1}) .stat-label, .metric-item:nth-child(\${index + 1}) .metric-label\`);
+                
+                if (statValue && stat.value) {
+                  statValue.textContent = stat.value;
+                }
+                if (statLabel && stat.label) {
+                  statLabel.textContent = stat.label;
+                }
+              });
+            }
+            
+            // Update services if available
+            if (content.services && Array.isArray(content.services)) {
+              console.log('Updating services section...');
+              content.services.forEach((service, index) => {
+                const serviceTitle = document.querySelector(\`.service-item:nth-child(\${index + 1}) .service-title, .feature-item:nth-child(\${index + 1}) .feature-title\`);
+                const serviceDesc = document.querySelector(\`.service-item:nth-child(\${index + 1}) .service-description, .feature-item:nth-child(\${index + 1}) .feature-description\`);
+                
+                if (serviceTitle && service.title) {
+                  serviceTitle.textContent = service.title;
+                }
+                if (serviceDesc && service.description) {
+                  serviceDesc.textContent = service.description;
+                }
+              });
+            }
+            
+            console.log('Hebrew Career Center content update completed');
+          }
+        })();
+      </script>
+    `;
+    $('body').append(hebrewScript);
+  }
 }
 
 function createRootRedirect() {
