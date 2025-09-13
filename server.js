@@ -177,6 +177,7 @@ app.get('/api/home-page', async (req, res) => {
           heroTitle: homeData.hero_title,
           heroSubtitle: homeData.hero_subtitle,
           heroDescription: homeData.hero_description,
+          heroExpertLed: homeData.hero_expert_led || 'Expert-Led Learning',
           heroSectionVisible: Boolean(homeData.hero_section_visible),
           
           // Featured Courses Section
@@ -4820,6 +4821,123 @@ app.post('/api/debug-russian', async (req, res) => {
     }
   } else {
     res.json({ error: 'Invalid action' });
+  }
+});
+
+// COMPREHENSIVE: Force ALL translations for ALL languages
+app.post('/api/force-all-translations', async (req, res) => {
+  try {
+    const { locale, translations } = req.body;
+    console.log(`🌐 ULTRATHINK: Forcing ${locale?.toUpperCase() || 'ALL'} translations...`);
+    
+    if (!locale || !translations) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: locale and translations' 
+      });
+    }
+    
+    // First, ensure record exists for this locale
+    const checkLocale = await queryDatabase('SELECT id FROM home_pages WHERE locale = $1', [locale]);
+    if (checkLocale.length === 0) {
+      console.log(`📝 Creating ${locale} record...`);
+      
+      // Create record by copying from English
+      await queryDatabase(`
+        INSERT INTO home_pages (
+          locale, title, hero_title, hero_subtitle, hero_description,
+          hero_section_visible, featured_courses_title, featured_courses_description,
+          featured_courses_visible, about_title, about_subtitle, about_description, 
+          about_visible, companies_title, companies_description, companies_visible,
+          testimonials_title, testimonials_subtitle, testimonials_visible, 
+          courses, testimonials, published_at, created_at, updated_at
+        )
+        SELECT 
+          $1, title, hero_title, hero_subtitle, hero_description,
+          hero_section_visible, featured_courses_title, featured_courses_description,
+          featured_courses_visible, about_title, about_subtitle, about_description, 
+          about_visible, companies_title, companies_description, companies_visible,
+          testimonials_title, testimonials_subtitle, testimonials_visible,
+          courses, testimonials, NOW(), NOW(), NOW()
+        FROM home_pages 
+        WHERE locale = 'en' 
+        LIMIT 1
+      `, [locale]);
+    }
+    
+    // Update all translation fields
+    let successCount = 0;
+    let failCount = 0;
+    const errors = [];
+    
+    // Add hero_expert_led if not in translations but needed
+    if (!translations.hero_expert_led && locale === 'he') {
+      translations.hero_expert_led = 'למידה בהובלת מומחים';
+    } else if (!translations.hero_expert_led && locale === 'ru') {
+      translations.hero_expert_led = 'Обучение с экспертами';
+    }
+    
+    for (const [field, value] of Object.entries(translations)) {
+      try {
+        // First try to update
+        await queryDatabase(`
+          UPDATE home_pages 
+          SET ${field} = $1
+          WHERE locale = $2
+        `, [value, locale]);
+        successCount++;
+      } catch (fieldError) {
+        // If column doesn't exist, try to add it first
+        try {
+          await queryDatabase(`
+            ALTER TABLE home_pages 
+            ADD COLUMN IF NOT EXISTS ${field} VARCHAR(500)
+          `);
+          
+          // Now try update again
+          await queryDatabase(`
+            UPDATE home_pages 
+            SET ${field} = $1
+            WHERE locale = $2
+          `, [value, locale]);
+          successCount++;
+        } catch (retryError) {
+          failCount++;
+          errors.push({ field, error: retryError.message });
+        }
+      }
+    }
+    
+    // Verify the update
+    const verify = await queryDatabase(`
+      SELECT nav_home, hero_expert_led, btn_sign_up_today
+      FROM home_pages 
+      WHERE locale = $1
+    `, [locale]);
+    
+    res.json({
+      success: true,
+      message: `Updated ${locale} translations`,
+      stats: {
+        fieldsUpdated: successCount,
+        fieldsFailed: failCount,
+        totalFields: Object.keys(translations).length
+      },
+      verification: {
+        navHome: verify[0]?.nav_home,
+        heroExpertLed: verify[0]?.hero_expert_led,
+        btnSignUpToday: verify[0]?.btn_sign_up_today
+      },
+      errors: errors.length > 0 ? errors : undefined
+    });
+    
+    console.log(`✅ Updated ${successCount} ${locale} translation fields!`);
+    
+  } catch (error) {
+    console.error('❌ Translation update error:', error);
+    res.status(500).json({ 
+      error: 'Translation update failed', 
+      details: error.message 
+    });
   }
 });
 

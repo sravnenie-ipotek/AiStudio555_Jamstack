@@ -210,17 +210,30 @@ class UITranslator {
   updateSectionTitles(ui) {
     console.log('📑 Updating section titles...');
     
+    // CRITICAL: Update Expert-Led Learning with dynamic translation
+    if (ui.heroExpertLed) {
+      const expertLedElements = document.querySelectorAll('*');
+      expertLedElements.forEach(el => {
+        if (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) {
+          const text = el.textContent.trim();
+          if (text === 'Expert-Led Learning') {
+            console.log(`✅ Hero Expert-Led: "${text}" → "${ui.heroExpertLed}"`);
+            el.textContent = ui.heroExpertLed;
+          }
+        }
+      });
+    }
+    
     // Common section title mappings based on content
     const titleMappings = [
       { text: ['Most Popular IT Courses', 'Featured Courses', 'Popular Courses'], field: 'featuredCoursesTitle' },
-      { text: ['FAQ & Answer', 'Frequently Asked Questions', 'FAQ'], replacement: 'Часто задаваемые вопросы' },
-      { text: ['Student Success Stories', 'Alumni Reviews'], replacement: 'Истории успеха студентов' },
-      { text: ['Your Questions Answered Here'], replacement: 'Ответы на ваши вопросы' },
-      { text: ['Expert-Led Learning'], replacement: 'Обучение от экспертов' },
-      { text: ['Focus on Practice'], replacement: 'Фокус на практике' },
-      { text: ['Core Skills'], replacement: 'Основные навыки' },
-      { text: ['Online Learning'], replacement: 'Онлайн обучение' },
-      { text: ['Expert Mentor In Technology'], replacement: 'Эксперт-наставник в технологиях' }
+      { text: ['FAQ & Answer', 'Frequently Asked Questions', 'FAQ'], field: 'faqTitle' },
+      { text: ['Student Success Stories', 'Alumni Reviews'], field: 'testimonialsTitle' },
+      { text: ['Your Questions Answered Here'], field: 'faqSubtitle' },
+      { text: ['Focus on Practice'], field: 'focusPractice' },
+      { text: ['Core Skills'], field: 'coreSkills' },
+      { text: ['Online Learning'], field: 'onlineLearning' },
+      { text: ['Expert Mentor In Technology'], field: 'expertMentor' }
     ];
 
     // Find all heading elements
