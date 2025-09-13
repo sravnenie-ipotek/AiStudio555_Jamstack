@@ -182,6 +182,7 @@ app.get('/api/home-page', async (req, res) => {
           
           // Featured Courses Section
           featuredCoursesTitle: homeData.featured_courses_title,
+          featuredCoursesSubtitle: homeData.featured_courses_subtitle,
           featuredCoursesDescription: homeData.featured_courses_description,
           featuredCoursesVisible: Boolean(homeData.featured_courses_visible),
           
@@ -277,6 +278,48 @@ app.get('/api/home-page', async (req, res) => {
           uiBackToTop: homeData.ui_back_to_top || 'Back to Top',
           uiShare: homeData.ui_share || 'Share',
           uiPrint: homeData.ui_print || 'Print',
+          
+          // Additional Section Titles
+          focusPracticeTitle: homeData.focus_practice_title || 'Focus on Practice',
+          focusPracticeSubtitle: homeData.focus_practice_subtitle,
+          focusPracticeDescription: homeData.focus_practice_description,
+          coreSkillsTitle: homeData.core_skills_title || 'Core Skills',
+          coreSkillsSubtitle: homeData.core_skills_subtitle,
+          onlineLearningTitle: homeData.online_learning_title || 'Online Learning',
+          onlineLearningSubtitle: homeData.online_learning_subtitle,
+          onlineLearningDescription: homeData.online_learning_description,
+          expertMentorTitle: homeData.expert_mentor_title || 'Expert Mentor In Technology',
+          expertMentorSubtitle: homeData.expert_mentor_subtitle,
+          expertMentorDescription: homeData.expert_mentor_description,
+          faqTitle: homeData.faq_title || 'FAQ & Answer',
+          faqSubtitle: homeData.faq_subtitle,
+          faqHeading: homeData.faq_heading || 'Your Questions Answered Here',
+          careerSuccessTitle: homeData.career_success_title || 'Career Success',
+          careerSuccessSubtitle: homeData.career_success_subtitle,
+          careerSuccessDescription: homeData.career_success_description,
+          
+          // Course Metadata
+          lessonsLabel: homeData.lessons_label || 'Lessons',
+          weeksLabel: homeData.weeks_label || 'Weeks',
+          btnReadMore: homeData.btn_read_more || 'Read more',
+          
+          // Practice Section Fields
+          practicalWork: homeData.practical_work || 'Practical Work',
+          theoryOnly: homeData.theory_only || 'Theory Only',
+          jobSupport: homeData.job_support || 'Job Support',
+          
+          // Skills List
+          skill1: homeData.skill_1,
+          skill2: homeData.skill_2,
+          skill3: homeData.skill_3,
+          skill4: homeData.skill_4,
+          skill5: homeData.skill_5,
+          skill6: homeData.skill_6,
+          
+          // Stats Text
+          statsCoursesText: homeData.stats_courses_text || 'Total Courses Taught',
+          statsLearnersText: homeData.stats_learners_text || 'Total Happy Learners',
+          statsYearsText: homeData.stats_years_text || 'Years Of Experience',
           
           // Individual Courses (6 courses)
           
