@@ -81,7 +81,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
-    "axe-playwright": "^2.2.1",
+    "axe-playwright": "^2.2.2",
     "concurrently": "^8.2.2",
     "jest": "^29.7.0",
     "nodemon": "^3.0.2",

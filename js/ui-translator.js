@@ -185,7 +185,7 @@ class UITranslator {
     });
 
     // Newsletter subscribe button
-    const subscribeButtons = document.querySelectorAll('.footer-details-form-submit-button, [value="Subscribe"], button:contains("Subscribe")');
+    const subscribeButtons = document.querySelectorAll('.footer-details-form-submit-button, [value="Subscribe"]');
     subscribeButtons.forEach(btn => {
       if (ui.formBtnSubscribe) {
         console.log(`✅ Subscribe Button: "${btn.value || btn.textContent}" → "${ui.formBtnSubscribe}"`);
@@ -194,6 +194,15 @@ class UITranslator {
         } else {
           btn.textContent = ui.formBtnSubscribe;
         }
+      }
+    });
+    
+    // Also find buttons with "Subscribe" text content
+    const allButtons = document.querySelectorAll('button');
+    allButtons.forEach(btn => {
+      if (btn.textContent && btn.textContent.trim().toLowerCase() === 'subscribe' && ui.formBtnSubscribe) {
+        console.log(`✅ Subscribe Button (text): "${btn.textContent}" → "${ui.formBtnSubscribe}"`);
+        btn.textContent = ui.formBtnSubscribe;
       }
     });
   }
