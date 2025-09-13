@@ -82,6 +82,9 @@
     } else {
       // MOBILE: Show hamburger, hide menu initially
       hamburgers.forEach(btn => {
+        // Remove any "open" state classes
+        btn.classList.remove('w--open');
+        
         btn.style.cssText = `
           display: flex !important;
           visibility: visible !important;
@@ -93,7 +96,7 @@
           cursor: pointer !important;
         `;
         
-        // Ensure hamburger icon is visible
+        // Ensure hamburger icon is visible and in closed state
         const icon = btn.querySelector('svg, .hamburger-menu-icon, [data-w-id]');
         if (icon) {
           icon.style.cssText = `
@@ -101,6 +104,8 @@
             width: 24px !important;
             height: 24px !important;
           `;
+          // Reset any transforms that might show "X" state
+          icon.style.transform = 'none';
         }
         
         // Add basic hamburger if missing
@@ -115,12 +120,21 @@
         }
       });
       
-      // Hide menu initially on mobile (unless already open)
-      if (!document.documentElement.classList.contains('w--nav-menu-open')) {
-        navMenus.forEach(menu => {
-          menu.style.display = 'none';
-        });
+      // Always hide menu initially on mobile
+      navMenus.forEach(menu => {
+        menu.style.display = 'none';
+      });
+      
+      // Ensure nav overlay is also hidden
+      const navOverlay = document.querySelector('.w-nav-overlay');
+      if (navOverlay) {
+        navOverlay.style.display = 'none';
+        navOverlay.style.height = '0';
       }
+      
+      // Remove any open classes
+      document.documentElement.classList.remove('w--nav-menu-open');
+      document.body.classList.remove('w--nav-menu-open')
       
       console.log('✅ Mobile navigation fixed');
     }
