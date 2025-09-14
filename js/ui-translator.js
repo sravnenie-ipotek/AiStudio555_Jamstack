@@ -243,7 +243,7 @@ class UITranslator {
       const elements = document.querySelectorAll(selector);
       elements.forEach(heading => {
         const currentText = heading.textContent.trim();
-        
+
         titleMappings.forEach(mapping => {
           if (mapping.text.some(text => currentText.includes(text))) {
             const newText = mapping.field ? ui[mapping.field] : mapping.replacement;

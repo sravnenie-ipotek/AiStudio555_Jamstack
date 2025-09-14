@@ -561,6 +561,42 @@ app.get('/api/teachers', async (req, res) => {
   }
 });
 
+// TEACHERS PAGE (with locale support) - Page content, not individual teachers
+app.get('/api/teachers-page', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching teachers-page content for locale: ${locale}`);
+
+    // Return static page content for teachers page
+    const pageContent = {
+      hero_title: locale === 'en' ? 'Our Expert Teachers' :
+                  locale === 'ru' ? 'Наши Преподаватели-Эксперты' :
+                  'המורים המומחים שלנו',
+      hero_subtitle: locale === 'en' ? 'Learn from industry professionals with real-world experience' :
+                     locale === 'ru' ? 'Учитесь у профессионалов отрасли с реальным опытом' :
+                     'למד ממקצוענים בתעשייה עם ניסיון בעולם האמיתי',
+      page_title: locale === 'en' ? 'Meet Our Teachers' :
+                  locale === 'ru' ? 'Познакомьтесь с нашими преподавателями' :
+                  'הכירו את המורים שלנו',
+      description: locale === 'en' ? 'Our teachers are industry experts who bring practical knowledge to every lesson.' :
+                   locale === 'ru' ? 'Наши преподаватели - это эксперты отрасли, которые привносят практические знания в каждый урок.' :
+                   'המורים שלנו הם מומחי תעשייה המביאים ידע מעשי לכל שיעור.',
+      published_at: new Date().toISOString(),
+      locale: locale
+    };
+
+    res.json({
+      data: {
+        id: 1,
+        attributes: pageContent
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching teachers-page:', error);
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
+});
+
 // FAQs (with locale support)
 app.get('/api/faqs', async (req, res) => {
   try {
@@ -4285,128 +4321,15 @@ app.post('/api/fix-russian-ui', async (req, res) => {
   }
 });
 
-// ============================================================================
-// INITIALIZE SECURE FOOTER API
-// ============================================================================
-
-let secureFooterAPIInitialized = false;
-
-try {
-  console.log('🔄 Loading secure footer API module...');
-  console.log('📍 Current working directory:', process.cwd());
-  console.log('📍 __dirname:', __dirname);
-  
-  // Check if footer-migration directory exists
-  const fs = require('fs');
-  const path = require('path');
-  
-  const footerMigrationPath = path.join(process.cwd(), 'footer-migration');
-  console.log('📂 Checking if footer-migration exists at:', footerMigrationPath);
-  
-  if (fs.existsSync(footerMigrationPath)) {
-    console.log('✅ footer-migration directory found');
-    const files = fs.readdirSync(footerMigrationPath);
-    console.log('📂 Files in footer-migration:', files.join(', '));
-    
-    const apiFilePath = path.join(footerMigrationPath, 'secure-footer-api.js');
-    if (fs.existsSync(apiFilePath)) {
-      console.log('✅ secure-footer-api.js file found');
-    } else {
-      console.log('❌ secure-footer-api.js file NOT found');
-    }
-  } else {
-    console.log('❌ footer-migration directory NOT found');
-  }
-  
-  // Try multiple possible paths for Railway compatibility
-  let secureFooterAPI;
-  const possiblePaths = [
-    './footer-migration/secure-footer-api',
-    './footer-migration/secure-footer-api.js',
-    path.join(process.cwd(), 'footer-migration', 'secure-footer-api.js'),
-    '/app/footer-migration/secure-footer-api',
-    '/app/footer-migration/secure-footer-api.js'
-  ];
-  
-  for (const path of possiblePaths) {
-    try {
-      console.log(`📂 Trying to load from: ${path}`);
-      secureFooterAPI = require(path);
-      console.log(`✅ Successfully loaded secure footer API from: ${path}`);
-      break;
-    } catch (pathError) {
-      console.log(`❌ Failed to load from ${path}: ${pathError.message}`);
-    }
-  }
-  
-  if (!secureFooterAPI) {
-    throw new Error('Unable to load secure footer API from any path');
-  }
-  
-  const { initializeSecureFooterAPI } = secureFooterAPI;
-  
-  if (typeof initializeSecureFooterAPI !== 'function') {
-    throw new Error('initializeSecureFooterAPI is not a function');
-  }
-  
-  // Initialize secure footer API endpoints with all security fixes
-  console.log('🚀 Initializing secure footer API...');
-  initializeSecureFooterAPI(app, queryDatabase);
-  secureFooterAPIInitialized = true;
-  console.log('✅ Secure footer API initialized successfully');
-  
-} catch (error) {
-  console.error('❌ CRITICAL: Failed to initialize secure footer API:', error.message);
-  console.error('Stack trace:', error.stack);
-  
-  // Create fallback footer endpoints to prevent total failure
-  console.log('⚠️  Creating basic fallback footer endpoints...');
-  
-  app.get('/api/footer-content', (req, res) => {
-    // Return basic footer content instead of error
-    res.json({
-      data: {
-        attributes: {
-          copyrightText: '© 2024 AI Studio. All rights reserved.',
-          socialLinks: [
-            { platform: 'facebook', url: 'https://facebook.com/aistudio' },
-            { platform: 'twitter', url: 'https://twitter.com/aistudio' },
-            { platform: 'linkedin', url: 'https://linkedin.com/company/aistudio' }
-          ],
-          contactInfo: {
-            email: 'info@aistudio555.com',
-            phone: '+1 (555) 123-4567',
-            address: 'Tel Aviv, Israel'
-          }
-        }
-      }
-    });
-  });
-  
-  app.get('/api/footer-health', (req, res) => {
-    res.status(503).json({
-      status: 'degraded',
-      message: 'Secure footer API not loaded',
-      timestamp: new Date().toISOString()
-    });
-  });
-  
-  console.log('⚠️  Fallback footer endpoints created - server can still start');
-}
+// Footer API endpoints removed - using static footer implementation
 
 // ============================================================================
 // INITIALIZE AUTHENTICATION SECURITY SYSTEM
 // ============================================================================
 
-// Load authentication security module with fallback paths
-let authSecurityModule;
-const authPossiblePaths = [
-  './footer-migration/EMERGENCY_FIXES/04-authentication-security-fixes',
-  './footer-migration/EMERGENCY_FIXES/04-authentication-security-fixes.js',
-  path.join(process.cwd(), 'footer-migration', 'EMERGENCY_FIXES', '04-authentication-security-fixes.js'),
-  '/app/footer-migration/EMERGENCY_FIXES/04-authentication-security-fixes',
-  '/app/footer-migration/EMERGENCY_FIXES/04-authentication-security-fixes.js'
-];
+// Authentication security system initialization - footer-migration removed
+
+const authPossiblePaths = [];
 
 for (const authPath of authPossiblePaths) {
   try {

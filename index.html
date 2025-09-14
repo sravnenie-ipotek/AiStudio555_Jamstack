@@ -497,21 +497,6 @@ window.switchLanguage = function(newLang) {
   <!-- API Integration - CRITICAL FOR DYNAMIC CONTENT -->
   <script src="js/webflow-strapi-integration.js"></script>
 
-  <!-- Secure Footer Loader - Emergency Security Fix -->
-  <script src="js/secure-footer-loader.js"></script>
-  <script>
-    // Initialize secure footer loading
-    document.addEventListener('DOMContentLoaded', function() {
-      if (window.SecureFooterLoader) {
-        const footerLoader = new window.SecureFooterLoader({
-          containerId: 'secure-footer-container',
-          debug: false,
-          fallbackEnabled: true
-        });
-        footerLoader.loadFooter();
-      }
-    });
-  </script>
 
   <script src="js/navigation-responsive-fix.js"></script>
   <script src="js/emergency-fix.js"></script>

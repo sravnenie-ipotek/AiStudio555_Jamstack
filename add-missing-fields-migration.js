@@ -25,7 +25,7 @@ async function addMissingFields() {
   // Connect to PostgreSQL
   const pgClient = new Client({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
+    ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false }
   });
 
   try {

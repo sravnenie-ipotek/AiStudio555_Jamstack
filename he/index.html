@@ -748,12 +748,34 @@
     });
   </script>
   <link href="../css/faq-visibility-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/mobile-responsive-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
+  <link href="css/desktop-menu-force-visible.css" rel="stylesheet" type="text/css">
+  <!-- IMMEDIATE Menu Fix - Load before everything else -->
+  <script src="js/immediate-menu-fix.js"></script>
 </head>
 <body>
-    <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
-      <select onchange="switchLanguage(this.value)" style="padding: 8px; border-radius: 4px;">
-        <option value="en">English</option><option value="ru">Russian</option><option value="he" selected="">Hebrew</option>
-      </select>
+  <div id="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+    <select onchange="switchLanguage(this.value)" style="padding: 8px; border-radius: 4px; background: rgba(5, 5, 26, 0.9); color: white; border: 1px solid rgba(255, 255, 255, 0.3);">
+      <option value="en">English</option>
+      <option value="ru">Russian</option>
+      <option value="he" selected>Hebrew</option>
+    </select>
+  </div>
+  <script>
+    function switchLanguage(lang) {
+      const currentPath = window.location.pathname;
+      const fileName = currentPath.split('/').pop();
+
+      if (lang === 'en') {
+        window.location.href = '/en/' + fileName;
+      } else {
+        window.location.href = '/' + lang + '/' + fileName;
+      }
+    }
+  </script>
     </div>
     <script>
       function switchLanguage(lang) {
@@ -1646,7 +1668,6 @@
       <div class="container">
         <div class="footer-content">
           <!-- Database-driven footer content will be loaded here by MasterFooterLoader -->
-          <div id="dynamic-footer-container">
             <div class="loading-state" style="padding: 40px; text-align: center; color: #666;">
               <div class="loading-spinner"></div>
               <p>Loading footer...</p>
@@ -1818,7 +1839,6 @@
   <script src="../js/enhanced-integration.js"></script>
   <script src="../js/mobile-menu-toggle-fix.js"></script>
 
-  <script src="../js/master-footer-loader.js"></script>
 
   <!-- Contact Form Modal for Sign Up buttons -->
   <script src="../js/contact-form-modal.js"></script>
@@ -1830,7 +1850,6 @@
     });
 
     async function loadHebrewFooter() {
-      const container = document.getElementById('dynamic-footer-container');
       if (!container) {
         console.error('Footer container not found');
         return;
@@ -1936,4 +1955,7 @@
         </div>`;
     }
   </script>
+  <!-- Mobile Menu and Language Selector Scripts -->
+  <script src="../js/mobile-menu-initial-state.js"></script>
+  <script src="../js/mobile-menu-toggle-fix.js"></script>
 </body></html><!-- test comment -->

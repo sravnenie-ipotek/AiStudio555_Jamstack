@@ -691,6 +691,41 @@
         display: block !important;
       }
     }
+
+    /* Ensure background video is visible on mobile */
+    @media (max-width: 768px) {
+      .banner-video.w-background-video {
+        min-height: 400px !important;
+        max-height: none !important;
+        display: block !important;
+        position: relative !important;
+      }
+
+      .banner-video.w-background-video video {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+      }
+
+      .banner-bottom-content {
+        position: relative !important;
+        min-height: 400px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      /* Ensure video shapes are visible */
+      .banner-video-shape {
+        display: block !important;
+        z-index: 2 !important;
+        position: relative !important;
+      }
+    }
   </style>
 
   <link href="../css/faq-visibility-fix.css" rel="stylesheet" type="text/css">
@@ -1613,7 +1648,6 @@
       <div class="container">
         <div class="footer-content">
           <!-- Database-driven footer content will be loaded here by MasterFooterLoader -->
-          <div id="dynamic-footer-container">
             <div class="loading-state" style="padding: 40px; text-align: center; color: #666;">
               <div class="loading-spinner"></div>
               <p>Loading footer...</p>
@@ -1783,10 +1817,39 @@
   <script src="../js/navigation-responsive-fix.js"></script>
   <script src="../js/mobile-menu-toggle-fix.js"></script>
 
-  <script src="../js/master-footer-loader.js"></script>
 
   <!-- Contact Form Modal for Sign Up buttons -->
   <script src="../js/contact-form-modal.js"></script>
+
+  <!-- Mobile Background Video Fix -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Ensure background video plays properly on mobile
+      const video = document.getElementById('318d1361-fd67-5c2d-a57c-fa93f86bf604-video');
+      if (video) {
+        // Force video attributes for mobile compatibility
+        video.setAttribute('muted', 'true');
+        video.setAttribute('playsinline', 'true');
+        video.setAttribute('autoplay', 'true');
+        video.setAttribute('loop', 'true');
+
+        // Try to play the video
+        video.play().catch(function(error) {
+          console.log('Video autoplay failed:', error);
+          // Fallback: Try to play on user interaction
+          document.addEventListener('touchstart', function() {
+            video.play().catch(function(e) {
+              console.log('Video play on touch failed:', e);
+            });
+          }, { once: true });
+        });
+
+        console.log('🎬 Mobile background video initialized');
+      } else {
+        console.log('⚠️ Background video element not found');
+      }
+    });
+  </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
