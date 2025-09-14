@@ -1,6 +1,6 @@
 <!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Tue Sep 02 2025 21:54:44 GMT+0000 (Coordinated Universal Time)  --><html data-wf-page="68b7601f918996218465c555" data-wf-site="68b7601d918996218465c4a6" lang="he" dir="rtl"><head>
   <meta charset="utf-8">
-  <title>Home - Zohacous - Webflow Ecommerce Website Template</title>
+  <title>בית - AI Studio פלטפורמת למידה</title>
   <meta content="Home - Zohacous - Webflow Ecommerce Website Template" property="og:title">
   <meta content="Home - Zohacous - Webflow Ecommerce Website Template" property="twitter:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -83,23 +83,25 @@
       right: 0;
     }
     
-    /* Language switcher styles */
+    /* Language switcher styles - Fixed for mobile dark theme */
     .language-switcher button {
       padding: 5px 10px;
-      border: 1px solid #ddd;
-      background: white;
+      border: 1px solid rgba(0, 128, 255, 0.2);
+      background: rgba(5, 5, 26, 0.95);
+      color: white;
       cursor: pointer;
       transition: all 0.3s;
     }
-    
+
     .language-switcher button:hover {
-      background: #f0f0f0;
+      background: rgba(0, 128, 255, 0.1);
+      border-color: rgba(0, 128, 255, 0.3);
     }
-    
+
     .language-switcher button.active {
-      background: #007bff;
-      color: white;
-      border-color: #007bff;
+      background: rgba(0, 128, 255, 0.2);
+      color: #ffd659;
+      border-color: rgba(0, 128, 255, 0.4);
     }
   </style>
   
@@ -625,6 +627,8 @@
   </style>
 
   <link href="css/mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
 </head>
 <body>
     <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
@@ -654,16 +658,16 @@
         <div class="navbar-content">
           <a href="index.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
           <nav role="navigation" class="nav-menu w-nav-menu">
-            <a href="home.html" aria-current="page" class="nav-link w-nav-link w--current">Home</a>
-            <a href="courses.html" class="nav-link w-nav-link">Courses</a>
-            <a href="teachers.html" class="nav-link w-nav-link">Teachers</a>
+            <a href="home.html" aria-current="page" class="nav-link w-nav-link w--current">בית</a>
+            <a href="courses.html" class="nav-link w-nav-link">קורסים</a>
+            <a href="teachers.html" class="nav-link w-nav-link">מורים</a>
             
             <a href="blog.html" class="nav-link w-nav-link">Blog</a>
             <div class="primary-button-wrapper mobile">
               <a href="#" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">Sign Up Today</div>
-                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                  <div class="primary-button-text-block">הרשמו היום</div>
+                  <div class="primary-button-text-block is-text-absolute">הרשמו היום</div>
                 </div>
               </a>
             </div>
@@ -706,8 +710,8 @@
             <div class="primary-button-wrapper desktop">
               <a href="authentication-pages/sign-up.html" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">Sign Up Today</div>
-                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                  <div class="primary-button-text-block">הרשמו היום</div>
+                  <div class="primary-button-text-block is-text-absolute">הרשמו היום</div>
                 </div>
               </a>
             </div>
@@ -725,12 +729,12 @@
             <div class="banner-typography">
               <div data-w-id="318d1361-fd67-5c2d-a57c-fa93f86bf5e2" style="opacity:0" class="banner-subtitle-wrapper">
                 <div class="banner-subtitle-line"></div>
-                <div class="banner-subtitle">Expert-Led Learning</div>
+                <div class="banner-subtitle">למידה בהובלת מומחים</div>
                 <div class="banner-subtitle-line right"></div>
               </div>
               <div data-w-id="318d1361-fd67-5c2d-a57c-fa93f86bf5e7" style="opacity:0" class="banner-title-description">
-                <h1 class="banner-heading">Unlock Potential With Proven Courses.</h1>
-                <p class="banner-description-text">Here you can elevate your tech career with expert-led courses. whether you're just starting out or aiming to advance your skills, our hands-on, practical training is designed.</p>
+                <h1 class="banner-heading">שחררו את הפוטנציאל שלכם עם קורסים מוכחים.</h1>
+                <p class="banner-description-text">כאן תוכלו לקדם את הקריירה הטכנולוגית שלכם עם קורסים בהובלת מומחים. בין אם אתם רק מתחילים או שואפים לשפר את כישוריכם, ההכשרה המעשית שלנו מתוכננת במיוחד עבורכם.</p>
               </div><img loading="lazy" src="images/Banner-Man-Img1_1Banner-Man-Img1.png" alt="" class="banner-man-img1"><img loading="lazy" src="images/Banner-Man-Img2_1Banner-Man-Img2.png" alt="" class="banner-man-img2">
             </div>
           </div>
@@ -756,11 +760,11 @@
         <div data-w-id="4481d4c6-c4a9-18cf-7ed1-edc5dd4e542d" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">Most Popular IT Courses</div>
+            <div class="section-subtitle">הקורסים הפופולריים ביותר בתחום ה-IT</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses">Most Popular IT Courses To Advance Your Career.</h2>
-          <p class="section-description-text featured-courses">Dive into our expertly curated selection of featured courses, designed to equip you with the skills and knowledge needed to excel.</p>
+          <h2 class="section-title featured-courses">קורסי IT הפופולריים ביותר לקידום הקריירה שלכם.</h2>
+          <p class="section-description-text featured-courses">צללו לתוך מבחר הקורסים המובחרים שלנו, שנאספו בקפידה על ידי מומחים ומעוצבים כדי להעניק לכם את הכישורים והידע הדרושים להצטיינות.</p>
         </div>
         <div data-w-id="7997d2e5-a547-6caf-56a9-fdfdbb488cbd" style="opacity:0" class="featured-courses-content">
           <div class="featured-courses-main-content">
@@ -798,8 +802,8 @@
                               <div class="featured-courses-button-wrapper">
                                 <a href="detail_courses.html" data-w-id="897edd3e-881e-ddfc-6304-6ee94d687c54" style="background-color:rgba(255,255,255,0);color:rgb(255,255,255)" class="primary-button secondary w-inline-block">
                                   <div class="primary-button-text-wrap">
-                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">Course Details</div>
-                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Course Details</div>
+                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">פרטי הקורס</div>
+                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">פרטי הקורס</div>
                                   </div>
                                 </a>
                               </div>
@@ -841,14 +845,14 @@
                               <div class="featured-courses-button-wrapper">
                                 <a href="detail_courses.html" style="background-color:rgba(255,255,255,0);color:rgb(255,255,255)" class="primary-button secondary w-inline-block">
                                   <div class="primary-button-text-wrap">
-                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">Course Details</div>
-                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Course Details</div>
+                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">פרטי הקורס</div>
+                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">פרטי הקורס</div>
                                   </div>
                                 </a>
                               </div>
                             </div>
                           </div>
-                          <div style="background-color:rgb(255,87,51);color:rgb(255,255,255)" class="featured-courses-categories-tag">Data Science</div>
+                          <div style="background-color:rgb(255,87,51);color:rgb(255,255,255)" class="featured-courses-categories-tag">מדע הנתונים</div>
                         </div>
                       </div>
                       
@@ -884,8 +888,8 @@
                               <div class="featured-courses-button-wrapper">
                                 <a href="detail_courses.html" style="background-color:rgba(255,255,255,0);color:rgb(255,255,255)" class="primary-button secondary w-inline-block">
                                   <div class="primary-button-text-wrap">
-                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">Course Details</div>
-                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Course Details</div>
+                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">פרטי הקורס</div>
+                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">פרטי הקורס</div>
                                   </div>
                                 </a>
                               </div>
@@ -927,8 +931,8 @@
                               <div class="featured-courses-button-wrapper">
                                 <a href="detail_courses.html" style="background-color:rgba(255,255,255,0);color:rgb(255,255,255)" class="primary-button secondary w-inline-block">
                                   <div class="primary-button-text-wrap">
-                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">Course Details</div>
-                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Course Details</div>
+                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">פרטי הקורס</div>
+                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">פרטי הקורס</div>
                                   </div>
                                 </a>
                               </div>
@@ -970,8 +974,8 @@
                               <div class="featured-courses-button-wrapper">
                                 <a href="detail_courses.html" style="background-color:rgba(255,255,255,0);color:rgb(255,255,255)" class="primary-button secondary w-inline-block">
                                   <div class="primary-button-text-wrap">
-                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">Course Details</div>
-                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Course Details</div>
+                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">פרטי הקורס</div>
+                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">פרטי הקורס</div>
                                   </div>
                                 </a>
                               </div>
@@ -1013,8 +1017,8 @@
                               <div class="featured-courses-button-wrapper">
                                 <a href="detail_courses.html" style="background-color:rgba(255,255,255,0);color:rgb(255,255,255)" class="primary-button secondary w-inline-block">
                                   <div class="primary-button-text-wrap">
-                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">Course Details</div>
-                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Course Details</div>
+                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">פרטי הקורס</div>
+                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">פרטי הקורס</div>
                                   </div>
                                 </a>
                               </div>
@@ -1030,8 +1034,8 @@
         <div class="featured-courses-btn-wrapper">
           <a href="courses.html" data-w-id="7e7dff23-d8a7-33c6-c170-b77124309a56" class="primary-button w-inline-block">
             <div class="primary-button-text-wrap">
-              <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">Uncover All Courses</div>
-              <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Uncover All Courses</div>
+              <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">צפו בכל הקורסים</div>
+              <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">צפו בכל הקורסים</div>
             </div>
           </a>
         </div>
@@ -1042,10 +1046,10 @@
         <div data-w-id="7ede69eb-85e1-92d5-1485-fd83778e5c97" class="why-choose-us-section-title-wrapper">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">Focus on Practice</div>
+            <div class="section-subtitle">התמקדות בפרקטיקה</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title why-choose-us">85% Practice, 15% Theory - Real Skills That Matter</h2>
+          <h2 class="section-title why-choose-us">85% פרקטיקה, 15% תיאוריה - כישורים אמיתיים שחשובים</h2>
           <p class="section-description-text why-choose-us">We provide structured knowledge that's in demand in today's job market. No fluff in our teaching - only hands-on experience and real-world projects.</p>
         </div>
         <div data-w-id="7ede69eb-85e1-92d5-1485-fd83778e5ca4" class="why-choose-us-content">
@@ -1069,7 +1073,7 @@
           <div class="course-categories-content">
             <div class="section-subtitle-wrapper center-align">
               <div class="banner-subtitle-line left"></div>
-              <div class="section-subtitle">Core Skills</div>
+              <div class="section-subtitle">כישורי ליבה</div>
               <div class="banner-subtitle-line right"></div>
             </div>
             <h3 class="section-title">Skills You'll Master Through Practice</h3>
@@ -1130,11 +1134,11 @@
             <div class="about-us-section-title-wrapper">
               <div class="section-subtitle-wrapper mobile-view-center">
                 <div class="banner-subtitle-line left mobile"></div>
-                <div class="section-subtitle">Online Learning</div>
+                <div class="section-subtitle">למידה מקוונת</div>
                 <div class="banner-subtitle-line right"></div>
               </div>
-              <h2 class="section-title about-us">Learn From Anywhere, Anytime With Our Platform.</h2>
-              <p class="section-description-text">Our online learning platform makes it easy to access world-class education from the comfort of your home. Learn at your own pace with expert instructors and interactive course materials.</p>
+              <h2 class="section-title about-us">למדו מכל מקום, בכל זמן עם הפלטפורמה שלנו.</h2>
+              <p class="section-description-text">פלטפורמת הלמידה המקוונת שלנו מאפשרת גישה נוחה לחינוך ברמה עולמית מהנוחות של הבית שלך. למדו בקצב שלכם עם מדריכים מומחים וחומרי לימוד אינטראקטיביים.</p>
             </div>
             <div class="about-us-counter-up-wrapper">
               <div class="about-us-counter-single">
@@ -1229,7 +1233,7 @@
               <div class="about-us-subtitle-main">
                 <div class="about-us-subtitle-wrap">
                   <div class="about-us-subtitle-circel"></div>
-                  <div class="about-us-subtitle-text">Expert Mentor In Technology</div>
+                  <div class="about-us-subtitle-text">מנטורים מומחים בטכנולוגיה</div>
                 </div>
               </div>
               <div class="about-us-name-description">
@@ -1263,15 +1267,15 @@
               <div class="section-subtitle">FAQ &amp; Answer</div>
               <div class="banner-subtitle-line right"></div>
             </div>
-            <h2 class="section-title">Frequently Asked Questions</h2>
+            <h2 class="section-title">שאלות נפוצות</h2>
           </div>
           <div class="faq-section-description-button-wrapper">
-            <p class="faq-section-description-text">Find answers to the most common questions about our courses, learning platform, and support services.</p>
+            <p class="faq-section-description-text">מצאו תשובות לשאלות הנפוצות ביותר על הקורסים שלנו, פלטפורמת הלמידה ושירותי התמיכה.</p>
             <div class="faq-section-button-wrapper">
               <a href="contact-us.html" data-w-id="22376131-7507-c1b4-d47d-9f294196f532" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
-                  <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">get in touch</div>
-                  <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">get in touch</div>
+                  <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">צרו קשר</div>
+                  <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">צרו קשר</div>
                 </div>
               </a>
             </div>
@@ -1377,10 +1381,10 @@
         <div class="testimonials-section-title-wrapper">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">Student Success Stories</div>
+            <div class="section-subtitle">סיפורי הצלחה של סטודנטים</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title testimonials">Alumni Reviews</h2>
+          <h2 class="section-title testimonials">ביקורות בוגרים</h2>
           <div class="testimonials-rating-wrapper" style="text-align: center; margin: 30px 0;">
             <div style="display: flex; justify-content: center; align-items: center; gap: 30px; flex-wrap: wrap;">
               <div style="display: flex; align-items: center; gap: 10px;">
@@ -1426,7 +1430,7 @@
                   <div class="testimonials-card-description-text-wrapper">
                     <p class="testimonials-card-description-text" style="font-size: 16px; line-height: 1.6; color: #303030;">Completed the Android Development course. It was very convenient that it was held online. The material is presented clearly and structured. Practice-oriented approach helped me land a job immediately after graduation.</p>
                   </div>
-                  <a href="#" style="color: #FFD60A; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 15px;">Read more</a>
+                  <a href="#" style="color: #FFD60A; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 15px;">קרא עוד</a>
                 </div>
               </div>
               <!-- Review 2 -->
@@ -1449,7 +1453,7 @@
                   <div class="testimonials-card-description-text-wrapper">
                     <p class="testimonials-card-description-text" style="font-size: 16px; line-height: 1.6; color: #303030;">Finished Data Science training. Instructor Maxim Stepanovich is excellent. Great presentation of complex topics, always ready to help with questions. The course gave me practical skills I use daily at work.</p>
                   </div>
-                  <a href="#" style="color: #FFD60A; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 15px;">Read more</a>
+                  <a href="#" style="color: #FFD60A; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 15px;">קרא עוד</a>
                 </div>
               </div>
               <!-- Review 3 -->
@@ -1472,7 +1476,7 @@
                   <div class="testimonials-card-description-text-wrapper">
                     <p class="testimonials-card-description-text" style="font-size: 16px; line-height: 1.6; color: #303030;">Completed JavaScript automation course and I'm very satisfied! The material is presented clearly and comprehensively. Real-world projects helped me build an impressive portfolio that helped me get hired.</p>
                   </div>
-                  <a href="#" style="color: #FFD60A; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 15px;">Read more</a>
+                  <a href="#" style="color: #FFD60A; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 15px;">קרא עוד</a>
                 </div>
               </div>
               <!-- Review 4 -->
@@ -1495,7 +1499,7 @@
                   <div class="testimonials-card-description-text-wrapper">
                     <p class="testimonials-card-description-text" style="font-size: 16px; line-height: 1.6; color: #303030;">The UX/UI Design course exceeded my expectations! From zero knowledge to landing my dream job in just 5 months. The instructors are industry professionals who really care about your success.</p>
                   </div>
-                  <a href="#" style="color: #FFD60A; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 15px;">Read more</a>
+                  <a href="#" style="color: #FFD60A; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 15px;">קרא עוד</a>
                 </div>
               </div>
             </div>
@@ -1510,10 +1514,10 @@
         <div class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">Career Success</div>
+            <div class="section-subtitle">הצלחה בקריירה</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title" style="color: #04193f;">Our Graduates Work At</h2>
+          <h2 class="section-title" style="color: #04193f;">הבוגרים שלנו עובדים ב</h2>
           <p class="section-description-text" style="color: #6b7280;">Join alumni at the world's leading technology companies</p>
         </div>
         <div class="companies-grid">
@@ -1603,22 +1607,22 @@
                   <div class="footer-menu-list-wrapper">
                     <ul role="list" class="footer-menu-list">
                       <li class="footer-menu-list-item">
-                        <a href="home.html" aria-current="page" class="footer-menu-text-link w--current">Home</a>
+                        <a href="home.html" aria-current="page" class="footer-menu-text-link w--current">בית</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="about-us.html" class="footer-menu-text-link">About Us</a>
+                        <a href="about-us.html" class="footer-menu-text-link">אודותינו</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="courses.html" class="footer-menu-text-link">Courses</a>
+                        <a href="courses.html" class="footer-menu-text-link">קורסים</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="teachers.html" class="footer-menu-text-link">Teachers</a>
+                        <a href="teachers.html" class="footer-menu-text-link">מורים</a>
                       </li>
                       <li class="footer-menu-list-item">
                         <a href="https://zohacous.webflow.io/courses/html-css-bootstrap-build-responsive-websites" class="footer-menu-text-link">Course Single</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="pricing.html" class="footer-menu-text-link">Pricing</a>
+                        <a href="pricing.html" class="footer-menu-text-link">מחירים</a>
                       </li>
                       <li class="footer-menu-list-item">
                         <a href="https://zohacous.webflow.io/product/premium-plan" class="footer-menu-text-link">Pricing Single</a>
@@ -1630,7 +1634,7 @@
                         <a href="https://zohacous.webflow.io/blog/future-of-web-app-develop-trends-to-watch-in-2024" class="footer-menu-text-link">Blog Single</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="contact-us.html" class="footer-menu-text-link">Contact Us</a>
+                        <a href="contact-us.html" class="footer-menu-text-link">צור קשר</a>
                       </li>
                     </ul>
                   </div>
@@ -1671,7 +1675,7 @@
                         <a href="authentication-pages/sign-up.html" class="footer-menu-text-link">Sign Up</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="authentication-pages/sign-in.html" class="footer-menu-text-link">Sign In</a>
+                        <a href="authentication-pages/sign-in.html" class="footer-menu-text-link">התחברות</a>
                       </li>
                       <li class="footer-menu-list-item">
                         <a href="authentication-pages/forgot-password.html" class="footer-menu-text-link">Forgot Password</a>
@@ -1864,5 +1868,16 @@
     })();
   </script>
 
+  <!-- Hebrew Translations Fix - Must load before API integration -->
+  <script src="js/hebrew-translations-fix.js"></script>
+  <!-- API Integration Scripts -->
+  <script src="js/webflow-strapi-integration.js"></script>
+  <script src="js/strapi-integration.js"></script>
+  <script src="js/ui-translator.js"></script>
   <script src="js/navigation-responsive-fix.js"></script>
+
+  <!-- Enhanced Integration for Translation Support -->
+  <script src="../js/translations-config.js"></script>
+  <script src="../js/enhanced-integration.js"></script>
+  <script src="../js/mobile-menu-toggle-fix.js"></script>
 </body></html><!-- test comment -->

@@ -4826,6 +4826,232 @@ app.post('/api/force-russian-ui', async (req, res) => {
   }
 });
 
+// FORCE Hebrew UI translations - Complete implementation
+app.post('/api/force-hebrew-ui', async (req, res) => {
+  try {
+    console.log('🚀 FORCING Hebrew UI translations...');
+
+    // Complete Hebrew translations using snake_case column names
+    const hebrewUI = {
+      // Navigation
+      "nav_home": "בית",
+      "nav_courses": "קורסים",
+      "nav_teachers": "מרצים",
+      "nav_blog": "בלוג",
+      "nav_career_center": "מרכז קריירה",
+      "nav_career_orientation": "הכוונה תעסוקתית",
+      "nav_about": "אודותינו",
+      "nav_contact": "צור קשר",
+      "nav_pricing": "מחירון",
+
+      // Buttons
+      "btn_sign_up_today": "הרשמה היום",
+      "btn_learn_more": "למידע נוסף",
+      "btn_view_all_courses": "צפה בכל הקורסים",
+      "btn_get_started": "התחל עכשיו",
+      "btn_contact_us": "צור קשר",
+      "btn_enroll_now": "הרשם עכשיו",
+      "btn_start_learning": "התחל ללמוד",
+      "btn_explore_courses": "חקור קורסים",
+      "btn_view_details": "פרטים נוספים",
+      "btn_book_consultation": "קבע ייעוץ",
+      "btn_download_brochure": "הורד חוברת",
+      "btn_watch_demo": "צפה בהדגמה",
+      "btn_free_trial": "גרסת ניסיון",
+
+      // Form Labels
+      "form_label_email": "אימייל",
+      "form_label_name": "שם",
+      "form_label_phone": "טלפון",
+      "form_label_message": "הודעה",
+      "form_label_subject": "נושא",
+      "form_placeholder_email": "הכנס את האימייל שלך",
+      "form_placeholder_name": "הכנס את שמך",
+      "form_placeholder_phone": "הכנס את הטלפון שלך",
+      "form_placeholder_message": "הכנס את הודעתך",
+      "form_btn_submit": "שלח",
+      "form_btn_subscribe": "הירשם",
+      "form_btn_send": "שלח הודעה",
+
+      // Statistics
+      "stats_courses_label": "קורסים",
+      "stats_learners_label": "סטודנטים",
+      "stats_years_label": "שנות ניסיון",
+      "stats_success_rate_label": "אחוז הצלחה",
+      "stats_countries_label": "מדינות",
+      "stats_instructors_label": "מדריכים",
+      "stats_lessons_label": "שיעורים",
+      "stats_projects_label": "פרויקטים",
+
+      // Messages
+      "msg_success": "הפעולה בוצעה בהצלחה",
+      "msg_error": "אירעה שגיאה",
+      "msg_loading": "טוען...",
+      "msg_welcome": "ברוכים הבאים",
+      "msg_thank_you": "תודה רבה",
+      "msg_congratulations": "מזל טוב",
+      "msg_please_wait": "אנא המתן",
+
+      // Hero/Banner Section
+      "hero_subtitle": "למידה בהובלת מומחים",
+      "hero_title": "שלטון ב-AI וטכנולוגיה",
+      "hero_description": "כאן תוכלו לקדם את הקריירה הטכנולוגית שלכם עם קורסים בהנחיית מומחים. בין אם אתם רק מתחילים או שואפים לשפר את כישוריכם, ההכשרה המעשית שלנו מתוכננת במיוחד עבורכם.",
+
+      // Section Titles
+      "section_featured_courses": "הקורסים הפופולריים ביותר",
+      "section_featured_courses_desc": "צללו למבחר הקורסים המובחרים שלנו, שנאספו בקפידה על ידי מומחים ונועדו להקנות לכם את הכישורים והידע הדרושים להצטיין.",
+      "section_testimonials": "סיפורי הצלחה של סטודנטים",
+      "section_faq": "שאלות נפוצות",
+      "section_why_choose": "למה לבחור בנו",
+      "section_stats": "המספרים שלנו",
+
+      // Career Services Dropdown
+      "dropdown_career_services": "שירותי קריירה",
+      "dropdown_career_orientation": "הכוונה תעסוקתית",
+      "dropdown_career_center": "מרכז קריירה",
+
+      // Why Choose Us Section
+      "why_title": "שלטו ב-AI וטכנולוגיה",
+      "why_description": "אנו מספקים הכשרה מעשית ומנטורינג מהעולם האמיתי, במטרה לגשר על הפער בין ידע תיאורטי ליישום מעשי, תוך הבטחה שכל סטודנט יוכל ליישם את כישוריו בביטחון.",
+      "why_practical_label": "עבודה מעשית",
+      "why_theory_label": "תיאוריה בלבד",
+      "why_job_support_label": "תמיכה בתעסוקה",
+
+      // Core Skills Section
+      "core_skills_title": "כישורי ליבה",
+      "core_skills_subtitle": "שלטו ב-AI וטכנולוגיה",
+
+      // Skills Items
+      "skill_1_title": "שלטו ב-AI וטכנולוגיה",
+      "skill_1_desc": "פתח חשיבה אלגוריתמית דרך אתגרי קידוד",
+
+      "skill_2_title": "שלטו ב-AI וטכנולוגיה",
+      "skill_2_desc": "כתוב קוד נקי, ניתן לתחזוקה וסקלבילי",
+
+      "skill_3_title": "שלטו ב-AI וטכנולוגיה",
+      "skill_3_desc": "שלוט ב-Git ובתהליכי פיתוח שיתופיים",
+
+      "skill_4_title": "שלטו ב-AI וטכנולוגיה",
+      "skill_4_desc": "הבטח איכות קוד עם בדיקות אוטומטיות",
+
+      "skill_5_title": "שלטו ב-AI וטכנולוגיה",
+      "skill_5_desc": "פרוס אפליקציות לפלטפורמות ענן",
+
+      "skill_6_title": "שלטו ב-AI וטכנולוגיה",
+      "skill_6_desc": "תקשורת ועבודת צוות למקצועני טכנולוגיה",
+
+      // About Us Section
+      "about_title": "שלטו ב-AI וטכנולוגיה",
+      "about_description": "אנו מספקים ידע מובנה המבוקש בשוק העבודה של היום. אין מילוי בהוראה שלנו - רק ניסיון מעשי ופרויקטים מהעולם האמיתי.",
+
+      // Stats Values (percentages/numbers)
+      "stats_practical_percent": "85%",
+      "stats_theory_percent": "15%",
+      "stats_job_rate_percent": "94%",
+      "stats_courses_count": "50+",
+      "stats_learners_count": "10,000+",
+      "stats_years_count": "7+",
+      "stats_success_rate_percent": "94%"
+    };
+
+    // First ensure Hebrew locale exists
+    const checkHebrew = await queryDatabase(`
+      SELECT id FROM home_pages WHERE locale = 'he'
+    `);
+
+    if (checkHebrew.length === 0) {
+      console.log('Creating Hebrew locale entry...');
+      await queryDatabase(`
+        INSERT INTO home_pages (locale, title, created_at, updated_at)
+        VALUES ('he', 'AI Studio - פלטפורמת למידה', NOW(), NOW())
+        ON CONFLICT (locale) DO NOTHING
+      `);
+    }
+
+    // Update all fields
+    let successCount = 0;
+    let failCount = 0;
+    const errors = [];
+
+    for (const [field, value] of Object.entries(hebrewUI)) {
+      try {
+        await queryDatabase(`
+          UPDATE home_pages
+          SET ${field} = $1, updated_at = NOW()
+          WHERE locale = 'he'
+        `, [value]);
+        successCount++;
+      } catch (error) {
+        // Try adding column if it doesn't exist
+        if (error.message.includes('column') && error.message.includes('does not exist')) {
+          try {
+            console.log(`Adding missing column: ${field}`);
+            await queryDatabase(`
+              ALTER TABLE home_pages
+              ADD COLUMN IF NOT EXISTS ${field} VARCHAR(500)
+            `);
+
+            // Now try update again
+            await queryDatabase(`
+              UPDATE home_pages
+              SET ${field} = $1
+              WHERE locale = 'he'
+            `, [value]);
+            successCount++;
+          } catch (retryError) {
+            failCount++;
+            errors.push({ field, error: retryError.message });
+          }
+        } else {
+          failCount++;
+          errors.push({ field, error: error.message });
+        }
+      }
+    }
+
+    // Verify the update
+    const verify = await queryDatabase(`
+      SELECT nav_home, btn_sign_up_today, nav_courses, hero_title
+      FROM home_pages
+      WHERE locale = 'he'
+    `);
+
+    const isHebrew = verify[0]?.nav_home === 'בית';
+
+    res.json({
+      success: true,
+      message: `Hebrew UI force update complete!`,
+      stats: {
+        fieldsUpdated: successCount,
+        fieldsFailed: failCount,
+        totalFields: Object.keys(hebrewUI).length
+      },
+      verification: {
+        navHome: verify[0]?.nav_home || 'NOT FOUND',
+        btnSignUpToday: verify[0]?.btn_sign_up_today || 'NOT FOUND',
+        navCourses: verify[0]?.nav_courses || 'NOT FOUND',
+        heroTitle: verify[0]?.hero_title || 'NOT FOUND',
+        isFullyHebrew: isHebrew
+      },
+      errors: errors.length > 0 ? errors : undefined,
+      adminUrl: `${process.env.RAILWAY_STATIC_URL || 'http://localhost:' + PORT}/content-admin-comprehensive.html`
+    });
+
+    console.log(`✅ Force updated ${successCount} Hebrew UI fields!`);
+    if (isHebrew) {
+      console.log('🎉 HEBREW TRANSLATIONS NOW ACTIVE IN DATABASE!');
+      console.log('📝 View in admin panel: /content-admin-comprehensive.html');
+    }
+
+  } catch (error) {
+    console.error('❌ Force Hebrew UI failed:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 // Debug endpoint to check Russian UI fields
 app.post('/api/debug-russian', async (req, res) => {
   const { action } = req.body;

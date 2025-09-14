@@ -80,7 +80,7 @@
     display: block !important;
   }
   
-  /* Ensure Sign Up buttons remain clickable */
+  /* Ensure Sign Up buttons remain clickable and styled properly */
   .primary-button,
   .primary-button-wrapper,
   .navbar-button-wrapper,
@@ -97,6 +97,35 @@
     min-height: 44px !important;
     min-width: 44px !important;
     cursor: pointer !important;
+  }
+
+  /* Mobile menu Sign Up button specific styling */
+  .w-nav-menu .primary-button-wrapper.mobile {
+    display: block !important;
+    width: 100% !important;
+    padding: 20px !important;
+  }
+
+  .w-nav-menu .primary-button-wrapper.mobile .primary-button {
+    display: block !important;
+    width: 100% !important;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+    border-radius: 8px !important;
+    padding: 15px 30px !important;
+    text-align: center !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .w-nav-menu .primary-button-wrapper.mobile .primary-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5) !important;
+  }
+
+  .w-nav-menu .primary-button-text-block {
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
   }
   
   /* Prevent any overlays from blocking buttons */

@@ -12,6 +12,8 @@
   <link href="css/aizeks-marvelous-site.webflow.css" rel="stylesheet" type="text/css">
   <link href="css/card-height-fix.css" rel="stylesheet" type="text/css">
   <link href="css/unified-navigation.css" rel="stylesheet" type="text/css">
+  <link href="css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
   <link href="css/mobile-fix.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous">
@@ -99,23 +101,25 @@
       right: 0;
     }
     
-    /* Language switcher styles */
+    /* Language switcher styles - Fixed for mobile dark theme */
     .language-switcher button {
       padding: 5px 10px;
-      border: 1px solid #ddd;
-      background: white;
+      border: 1px solid rgba(0, 128, 255, 0.2);
+      background: rgba(5, 5, 26, 0.95);
+      color: white;
       cursor: pointer;
       transition: all 0.3s;
     }
-    
+
     .language-switcher button:hover {
-      background: #f0f0f0;
+      background: rgba(0, 128, 255, 0.1);
+      border-color: rgba(0, 128, 255, 0.3);
     }
-    
+
     .language-switcher button.active {
-      background: #007bff;
-      color: white;
-      border-color: #007bff;
+      background: rgba(0, 128, 255, 0.2);
+      color: #ffd659;
+      border-color: rgba(0, 128, 255, 0.4);
     }
   
     /* Hide unwanted elements */
@@ -718,11 +722,11 @@
               </nav>
             </div>
             <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
-            <div class="primary-button-wrapper mobile">
-              <a href="#" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block">
+            <div class="primary-button-wrapper mobile" style="width: 100%; margin: 20px 0;">
+              <a href="#" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block" style="display: block; width: calc(100% - 40px); margin: 0 20px; text-align: center; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); border-radius: 8px; padding: 15px 30px;">
                 <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">Sign Up Today</div>
-                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                  <div class="primary-button-text-block" style="color: white; font-weight: 600;">Sign Up Today</div>
+                  <div class="primary-button-text-block is-text-absolute" style="color: white; font-weight: 600;">Sign Up Today</div>
                 </div>
               </a>
             </div>
@@ -2037,5 +2041,10 @@ window.switchLanguage = function(newLang) {
 
   <script src="js/navigation-responsive-fix.js"></script>
   <script src="js/emergency-fix.js"></script>
+
+  <!-- Enhanced Integration for Translation Support -->
+  <script src="js/translations-config.js"></script>
+  <script src="js/enhanced-integration.js"></script>
+  <script src="js/mobile-menu-toggle-fix.js"></script>
 </body>
 </html>
