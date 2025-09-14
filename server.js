@@ -4329,6 +4329,7 @@ app.post('/api/fix-russian-ui', async (req, res) => {
 
 // Authentication security system initialization - footer-migration removed
 
+let authSecurityModule = null;
 const authPossiblePaths = [];
 
 for (const authPath of authPossiblePaths) {
