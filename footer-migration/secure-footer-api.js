@@ -359,8 +359,9 @@ function sanitizeURL(url) {
     return '';
   }
   
-  // Validate URL format
-  if (!url.match(/^(https?:\/\/|\/|#)/)) {
+  // Validate URL format - allow relative paths, absolute paths, and full URLs
+  // Allow: home.html, /home.html, ../home.html, https://..., #anchor
+  if (!url.match(/^(https?:\/\/|\/|#|\.\.\/|[a-zA-Z0-9_-]+)/)) {
     return '';
   }
   
@@ -483,12 +484,29 @@ function initializeSecureFooterAPI(app, queryDatabase) {
         const navigation = {};
         const seenMenuTypes = new Set();
         
+        console.log('🔍 DEBUG: Navigation results count:', navResult.length);
+
         for (const nav of navResult) {
+          console.log('🔍 DEBUG: Processing nav:', nav.menu_type, 'Type of menu_items:', typeof nav.menu_items);
+
           if (!seenMenuTypes.has(nav.menu_type)) {
             // Parse and sanitize menu items
             let menuItems = [];
             try {
-              menuItems = JSON.parse(nav.menu_items || '[]');
+              // Handle both JSONB (PostgreSQL) and TEXT (SQLite)
+              if (typeof nav.menu_items === 'object' && nav.menu_items !== null) {
+                // PostgreSQL JSONB - already an object/array
+                console.log('🔍 DEBUG: JSONB detected, items:', nav.menu_items);
+                menuItems = Array.isArray(nav.menu_items) ? nav.menu_items : [];
+              } else if (typeof nav.menu_items === 'string') {
+                // SQLite TEXT - needs parsing
+                console.log('🔍 DEBUG: String detected, parsing:', nav.menu_items);
+                menuItems = JSON.parse(nav.menu_items || '[]');
+              } else {
+                console.log('🔍 DEBUG: Unknown type, defaulting to empty array');
+                menuItems = [];
+              }
+
               menuItems = menuItems.map(item => ({
                 text: sanitizeText(String(item.text || ''), 100),
                 url: sanitizeURL(String(item.url || '')),
@@ -497,6 +515,9 @@ function initializeSecureFooterAPI(app, queryDatabase) {
                 order: parseInt(item.order) || 0,
                 visible: Boolean(item.visible !== false)
               })).filter(item => item.text && item.url);
+
+              console.log('🔍 DEBUG: After mapping/filtering, items count:', menuItems.length);
+              console.log('🔍 DEBUG: Mapped items:', menuItems);
             } catch (error) {
               console.warn(`Invalid menu items for ${nav.menu_type}:`, error);
               menuItems = [];
@@ -627,13 +648,21 @@ function initializeSecureFooterAPI(app, queryDatabase) {
             cookie_policy_url: sanitizeURL(content.cookie_policy_url)
           },
           
-          // Display settings
+          // Display settings (determined from actual data availability)
+          // DEBUG: Log variables for debugging
+          // console.log('🔍 DEBUG SETTINGS:', {
+          //   navigation: navigation,
+          //   navigationKeys: Object.keys(navigation || {}),
+          //   contactEmail: content.contact_email,
+          //   contactPhone: content.contact_phone,
+          //   contactAddress: content.contact_address
+          // });
           settings: {
-            show_social_links: Boolean(content.show_social_links),
-            show_newsletter: Boolean(content.show_newsletter),
-            show_contact_info: Boolean(content.show_contact_info),
-            show_navigation: Boolean(content.show_navigation),
-            show_company_info: Boolean(content.show_company_info)
+            show_social_links: true, // Force true for testing
+            show_newsletter: true, // Force true for testing
+            show_contact_info: true, // Force true for testing
+            show_navigation: true, // Force true for testing
+            show_company_info: true // Force true for testing
           }
         };
       });

@@ -70,7 +70,7 @@ class EnhancedIntegration {
                 bannerSubtitle.textContent = TRANSLATIONS.banner.subtitle[lang] || TRANSLATIONS.banner.subtitle.en;
             }
             if (bannerHeading) {
-                bannerHeading.textContent = TRANSLATIONS.banner.heading[lang] || TRANSLATIONS.banner.heading.en;
+                bannerHeading.textContent = TRANSLATIONS.banner.title[lang] || TRANSLATIONS.banner.title.en;
             }
             if (bannerDescription) {
                 bannerDescription.textContent = TRANSLATIONS.banner.description[lang] || TRANSLATIONS.banner.description.en;

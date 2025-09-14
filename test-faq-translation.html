@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>Test FAQ Translation</title>
+  <link href="css/faq-visibility-fix.css" rel="stylesheet" type="text/css">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #050520; color: white; }
+    .test-section { margin: 20px 0; padding: 15px; border: 1px solid #333; }
+    .faq-question { color: white; font-size: 18px; font-weight: 600; margin: 10px 0; }
+    .faq-answer { color: rgba(255,255,255,0.9); margin: 5px 0; }
+    .log { background: #222; padding: 10px; margin: 10px 0; font-family: monospace; }
+    .success { color: #0f0; }
+    .error { color: #f00; }
+  </style>
+</head>
+<body>
+
+<h1>FAQ Translation Test</h1>
+
+<div class="test-section">
+  <h2>Test Results</h2>
+  <div id="testResults" class="log">
+    Starting test...
+  </div>
+</div>
+
+<div class="test-section">
+  <h2>FAQ Content (Should translate from Hebrew placeholder)</h2>
+  <div class="faq-question" id="faq1">שלטו ב-AI וטכנולוגיה</div>
+  <div class="faq-answer" id="faq1-answer">Loading...</div>
+  <div class="faq-question" id="faq2">שלטו ב-AI וטכנולוגיה</div>
+  <div class="faq-answer" id="faq2-answer">Loading...</div>
+  <div class="faq-question" id="faq3">שלטו ב-AI וטכנולוגיה</div>
+  <div class="faq-answer" id="faq3-answer">Loading...</div>
+  <div class="faq-question" id="faq4">שלטו ב-AI וטכנולוגיה</div>
+  <div class="faq-answer" id="faq4-answer">Loading...</div>
+  <div class="faq-question" id="faq5">שלטו ב-AI וטכנולוגיה</div>
+  <div class="faq-answer" id="faq5-answer">Loading...</div>
+</div>
+
+<script src="js/ui-translator.js"></script>
+<script>
+// Test log function
+function log(message, type = 'info') {
+  const div = document.getElementById('testResults');
+  const timestamp = new Date().toLocaleTimeString();
+  const color = type === 'success' ? '#0f0' : type === 'error' ? '#f00' : '#fff';
+  div.innerHTML += `<div style="color:${color}">[${timestamp}] ${message}</div>`;
+}
+
+// Test the translation
+log('📝 Testing FAQ translation...', 'info');
+
+// Load Hebrew content after DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  log('📄 DOM loaded, starting translation test...', 'info');
+
+  // Test API connection
+  fetch('http://localhost:3000/api/home-page?locale=he')
+    .then(response => response.json())
+    .then(data => {
+      log('✅ API response received', 'success');
+      log(`FAQ 1 Title: ${data.faq_1_title}`, 'success');
+      log(`FAQ 1 Answer: ${data.faq_1_answer?.substring(0, 50)}...`, 'success');
+
+      // Test if ui-translator is working
+      if (window.UITranslator) {
+        log('✅ UITranslator found', 'success');
+        setTimeout(() => {
+          log('🔄 Checking if FAQ content was translated...', 'info');
+          const faq1 = document.getElementById('faq1');
+          if (faq1.textContent !== 'שלטו ב-AI וטכנולוגיה') {
+            log(`✅ FAQ 1 translated: ${faq1.textContent}`, 'success');
+          } else {
+            log('❌ FAQ 1 NOT translated - still showing placeholder', 'error');
+          }
+        }, 2000);
+      } else {
+        log('❌ UITranslator not found', 'error');
+      }
+    })
+    .catch(error => {
+      log(`❌ API error: ${error.message}`, 'error');
+    });
+});
+
+log('Test page loaded - waiting for DOM...', 'info');
+</script>
+
+</body>
+</html>

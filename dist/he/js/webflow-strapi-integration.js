@@ -458,6 +458,20 @@ class CustomAPIIntegration {
     updateFeaturedCoursesFromAPI(coursesData) {
         console.log('🎓 Updating featured courses from API...');
         
+        // Validate input
+        if (!coursesData) {
+            console.warn('⚠️ No courses data provided');
+            return;
+        }
+        
+        // Ensure coursesData is an array
+        const courses = Array.isArray(coursesData) ? coursesData : [];
+        
+        if (courses.length === 0) {
+            console.warn('⚠️ No courses to display');
+            return;
+        }
+        
         // Find courses container
         const coursesContainer = document.querySelector('.featured-courses-collection-list, .featured-courses-grid, .courses-grid, [data-courses-container]');
         
@@ -470,12 +484,12 @@ class CustomAPIIntegration {
         coursesContainer.innerHTML = '';
 
         // Create course cards
-        coursesData.forEach(course => {
+        courses.forEach(course => {
             const courseElement = this.createCourseCard(course);
             coursesContainer.appendChild(courseElement);
         });
 
-        console.log(`✅ Updated featured courses with ${coursesData.length} items`);
+        console.log(`✅ Updated featured courses with ${courses.length} items`);
     }
 
     updateCoursesGrid(coursesData) {

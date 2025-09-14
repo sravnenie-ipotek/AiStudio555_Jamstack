@@ -218,8 +218,11 @@ class MasterFooterLoader {
             }
 
             // Try API
+            this.log(`🌐 Fetching from API: ${this.apiEndpoint}/api/footer-content?locale=${locale}`, 'debug');
             const footerData = await this.fetchFooterFromAPI(locale);
+            this.log(`📊 API returned data: ${footerData ? 'YES' : 'NO'}`, 'debug');
             if (footerData) {
+                this.log(`🧭 Navigation in API data: ${footerData.navigation ? 'YES' : 'NO'}`, 'debug');
                 this.cacheFooterData(locale, footerData);
                 await this.renderFooter(footerData, containerId);
                 this.recordPerformance(startTime, 'api');
@@ -231,8 +234,33 @@ class MasterFooterLoader {
 
         } catch (error) {
             this.handleError(error);
-            await this.activateFallback(locale, containerId);
-            this.recordPerformance(startTime, 'fallback');
+
+            // FORCE RENDER: Always render fallback, even if error
+            try {
+                await this.activateFallback(locale, containerId);
+                this.recordPerformance(startTime, 'fallback');
+            } catch (fallbackError) {
+                this.log(`❌ Fallback also failed: ${fallbackError.message}`, 'error');
+
+                // EMERGENCY RENDER: Force minimal footer if everything fails
+                const container = document.getElementById(containerId);
+                if (container) {
+                    container.innerHTML = `
+                        <div class="emergency-footer" style="padding: 20px; text-align: center; border-top: 1px solid #ccc;">
+                            <div style="margin-bottom: 10px;">
+                                <strong>Navigation:</strong>
+                                <a href="home.html" style="margin: 0 10px;">Home</a>
+                                <a href="courses.html" style="margin: 0 10px;">Courses</a>
+                                <a href="teachers.html" style="margin: 0 10px;">Teachers</a>
+                                <a href="pricing.html" style="margin: 0 10px;">Pricing</a>
+                                <a href="career-orientation.html" style="margin: 0 10px;">Career Orientation</a>
+                                <a href="career-center.html" style="margin: 0 10px;">Career Center</a>
+                            </div>
+                            <p>© AI Studio - Emergency Footer Mode</p>
+                        </div>`;
+                    this.log('🚨 Emergency footer rendered', 'warn');
+                }
+            }
         }
     }
 

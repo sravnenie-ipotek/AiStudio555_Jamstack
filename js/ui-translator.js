@@ -444,6 +444,65 @@ class UITranslator {
     }
   }
 
+  updateFAQAnswers(ui) {
+    console.log('📝 Updating FAQ answers...');
+
+    // FAQ answer mappings
+    const faqAnswerMappings = [
+      { field: 'faq1Answer', fallback: 'faq_1_answer' },
+      { field: 'faq2Answer', fallback: 'faq_2_answer' },
+      { field: 'faq3Answer', fallback: 'faq_3_answer' },
+      { field: 'faq4Answer', fallback: 'faq_4_answer' },
+      { field: 'faq5Answer', fallback: 'faq_5_answer' },
+      { field: 'faq6Answer', fallback: 'faq_6_answer' }
+    ];
+
+    // Find all FAQ answer elements
+    const faqAnswerElements = document.querySelectorAll('.faq-answer');
+    console.log(`🔍 Found ${faqAnswerElements.length} .faq-answer elements`);
+
+    faqAnswerElements.forEach((element, index) => {
+      if (index < faqAnswerMappings.length) {
+        const mapping = faqAnswerMappings[index];
+        const answerText = ui[mapping.field] || ui[mapping.fallback];
+
+        if (answerText) {
+          const currentText = element.textContent.trim();
+          console.log(`✅ FAQ ${index + 1} Answer: Updating from "${currentText.substring(0, 50)}..." to "${answerText.substring(0, 50)}..."`);
+          element.textContent = answerText;
+        }
+      }
+    });
+
+    // Also update FAQ CTA if available
+    if (ui.faqCtaTitle || ui.faq_cta_title) {
+      const ctaTitle = ui.faqCtaTitle || ui.faq_cta_title;
+      const ctaTitleElements = document.querySelectorAll('.faq-cta-title, [class*="faq-cta"] h3');
+      ctaTitleElements.forEach(el => {
+        console.log(`✅ FAQ CTA Title: "${el.textContent}" → "${ctaTitle}"`);
+        el.textContent = ctaTitle;
+      });
+    }
+
+    if (ui.faqCtaDescription || ui.faq_cta_description) {
+      const ctaDesc = ui.faqCtaDescription || ui.faq_cta_description;
+      const ctaDescElements = document.querySelectorAll('.faq-cta-description, [class*="faq-cta"] p');
+      ctaDescElements.forEach(el => {
+        console.log(`✅ FAQ CTA Description: "${el.textContent}" → "${ctaDesc}"`);
+        el.textContent = ctaDesc;
+      });
+    }
+
+    if (ui.faqCtaButton || ui.faq_cta_button) {
+      const ctaButton = ui.faqCtaButton || ui.faq_cta_button;
+      const ctaButtonElements = document.querySelectorAll('.faq-cta-button, [class*="faq-cta"] a, [class*="faq-cta"] button');
+      ctaButtonElements.forEach(el => {
+        console.log(`✅ FAQ CTA Button: "${el.textContent}" → "${ctaButton}"`);
+        el.textContent = ctaButton;
+      });
+    }
+  }
+
   updateUIElements(ui) {
     console.log('🎨 Updating UI elements...');
 
@@ -482,6 +541,20 @@ class UITranslator {
       this.updateForms(ui);
       this.updateSectionTitles(ui);
       this.updateFAQTitles(ui);
+
+      // Delay FAQ answers loading to avoid conflict with hebrew-translations-fix.js
+      // Hebrew fix runs at 1500ms, so we load FAQ at 1700ms to ensure it's finished
+      if (this.currentLocale === 'he') {
+        console.log('🔷 Delaying FAQ answers for Hebrew to avoid timing conflict...');
+        setTimeout(() => {
+          console.log('📝 Loading FAQ answers after Hebrew fix completion');
+          this.updateFAQAnswers(ui);
+        }, 1700); // 1.7 seconds - after hebrew-translations-fix.js completes
+      } else {
+        // For other languages, load FAQ immediately
+        this.updateFAQAnswers(ui);
+      }
+
       this.updateMessages(ui);
       this.updateUIElements(ui);
 
@@ -501,6 +574,7 @@ class UITranslator {
       console.error('❌ Translation failed:', error);
     }
   }
+
 }
 
 // Auto-initialize when DOM is ready

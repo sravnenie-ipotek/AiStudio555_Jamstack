@@ -694,12 +694,34 @@
   </style>
 
   <link href="../css/faq-visibility-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/mobile-responsive-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
+  <link href="css/desktop-menu-force-visible.css" rel="stylesheet" type="text/css">
+  <!-- IMMEDIATE Menu Fix - Load before everything else -->
+  <script src="js/immediate-menu-fix.js"></script>
 </head>
 <body>
-    <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
-      <select onchange="switchLanguage(this.value)" style="padding: 8px; border-radius: 4px;">
-        <option value="en" selected="">English</option><option value="ru">Russian</option><option value="he">Hebrew</option>
-      </select>
+  <div id="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+    <select onchange="switchLanguage(this.value)" style="padding: 8px; border-radius: 4px; background: rgba(5, 5, 26, 0.9); color: white; border: 1px solid rgba(255, 255, 255, 0.3);">
+      <option value="en" selected>English</option>
+      <option value="ru">Russian</option>
+      <option value="he">Hebrew</option>
+    </select>
+  </div>
+  <script>
+    function switchLanguage(lang) {
+      const currentPath = window.location.pathname;
+      const fileName = currentPath.split('/').pop();
+
+      if (lang === 'en') {
+        window.location.href = '/en/' + fileName;
+      } else {
+        window.location.href = '/' + lang + '/' + fileName;
+      }
+    }
+  </script>
     </div>
     <script>
       function switchLanguage(lang) {
@@ -1774,4 +1796,7 @@
       }
     });
   </script>
+  <!-- Mobile Menu and Language Selector Scripts -->
+  <script src="../js/mobile-menu-initial-state.js"></script>
+  <script src="../js/mobile-menu-toggle-fix.js"></script>
 </body></html><!-- test comment -->

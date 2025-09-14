@@ -1,0 +1,257 @@
+/* Mobile Menu Proper Fix - Desktop visible, mobile hamburger */
+
+/* Desktop - menu always visible - STRONGEST OVERRIDE */
+@media screen and (min-width: 992px) {
+  .w-nav-menu,
+  .nav-menu.w-nav-menu,
+  nav .w-nav-menu {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    transform: none !important;
+    background: transparent !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    z-index: auto !important;
+    max-width: none !important;
+    overflow: visible !important;
+    clip: auto !important;
+    clip-path: none !important;
+  }
+
+  /* Desktop navigation links */
+  .w-nav-menu .nav-link {
+    display: inline-block !important;
+    padding: 10px 20px !important;
+    color: inherit !important;
+    font-size: inherit !important;
+    text-align: left !important;
+    border: none !important;
+    text-decoration: none !important;
+  }
+
+  /* Desktop menu button should be hidden */
+  .w-nav-button {
+    display: none !important;
+  }
+}
+
+/* Mobile and tablet breakpoint */
+@media screen and (max-width: 991px) {
+
+  /* Initial state - menu hidden but ready */
+  body:not(.w--nav-menu-open) .w-nav-menu {
+    display: none !important;
+  }
+
+  /* When menu is open - show it properly */
+  body.w--nav-menu-open .w-nav-menu,
+  html.w--nav-menu-open .w-nav-menu,
+  .w--nav-menu-open .w-nav-menu {
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(5, 5, 26, 0.98) !important;
+    padding: 80px 20px 20px !important;
+    z-index: 9998 !important;
+    overflow-y: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(0) !important;
+  }
+
+  /* Style nav links in mobile menu */
+  .w-nav-menu .nav-link {
+    display: block !important;
+    padding: 15px 20px !important;
+    color: white !important;
+    font-size: 18px !important;
+    text-align: center !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* Mobile menu items styling */
+  .w-nav-menu .nav-link:hover {
+    background: rgba(0, 128, 255, 0.1) !important;
+    color: #ffd659 !important;
+  }
+
+  /* Dropdown in mobile menu */
+  .w-nav-menu .menu-dropdown-wrapper {
+    width: 100% !important;
+  }
+
+  .w-nav-menu .dropdown-list {
+    position: static !important;
+    display: block !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  .w-nav-menu .dropdown-menu-text-link-block {
+    padding: 10px 30px !important;
+    font-size: 16px !important;
+  }
+
+  /* Sign up button in mobile menu */
+  .w-nav-menu .primary-button-wrapper {
+    padding: 20px !important;
+  }
+
+  .w-nav-menu .primary-button {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+    padding: 15px !important;
+    border-radius: 12px !important;
+    color: white !important;
+    text-decoration: none !important;
+  }
+
+  /* Overlay for mobile menu */
+  body:not(.w--nav-menu-open) .w-nav-overlay {
+    display: none !important;
+  }
+
+  body.w--nav-menu-open .w-nav-overlay,
+  html.w--nav-menu-open .w-nav-overlay {
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    z-index: 9997 !important;
+  }
+}
+
+/* Hamburger button styling */
+.w-nav-button {
+  display: none !important;
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  z-index: 10001 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 10px !important;
+  cursor: pointer !important;
+}
+
+@media screen and (max-width: 991px) {
+  .w-nav-button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+/* Hamburger icon lines */
+.w-nav-button .w-icon-nav-menu {
+  display: block !important;
+  width: 24px !important;
+  height: 18px !important;
+  position: relative !important;
+}
+
+.w-nav-button .w-icon-nav-menu:before,
+.w-nav-button .w-icon-nav-menu:after {
+  content: '' !important;
+  position: absolute !important;
+  width: 100% !important;
+  height: 2px !important;
+  background: white !important;
+  left: 0 !important;
+  transition: transform 0.3s ease !important;
+}
+
+.w-nav-button .w-icon-nav-menu:before {
+  top: 0 !important;
+}
+
+.w-nav-button .w-icon-nav-menu:after {
+  bottom: 0 !important;
+}
+
+/* Middle line */
+.w-nav-button .w-icon-nav-menu span {
+  position: absolute !important;
+  width: 100% !important;
+  height: 2px !important;
+  background: white !important;
+  top: 50% !important;
+  left: 0 !important;
+  transform: translateY(-50%) !important;
+  transition: opacity 0.3s ease !important;
+}
+
+/* Hamburger animation when menu is open */
+.w--nav-menu-open .w-nav-button .w-icon-nav-menu:before {
+  transform: rotate(45deg) translateY(8px) !important;
+}
+
+.w--nav-menu-open .w-nav-button .w-icon-nav-menu:after {
+  transform: rotate(-45deg) translateY(-8px) !important;
+}
+
+.w--nav-menu-open .w-nav-button .w-icon-nav-menu span {
+  opacity: 0 !important;
+}
+
+/* Language selector positioning */
+@media screen and (max-width: 991px) {
+  #language-switcher {
+    position: fixed !important;
+    top: 20px !important;
+    right: 70px !important;
+    z-index: 9999 !important;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  #language-switcher {
+    top: 15px !important;
+    right: 60px !important;
+  }
+}
+
+/* RTL adjustments */
+html[dir="rtl"] .w-nav-button {
+  right: auto !important;
+  left: 20px !important;
+}
+
+html[dir="rtl"] #language-switcher {
+  right: auto !important;
+  left: 70px !important;
+}
+
+@media screen and (max-width: 479px) {
+  html[dir="rtl"] #language-switcher {
+    left: 60px !important;
+  }
+}
+
+/* Remove conflicting styles */
+.w-nav-menu {
+  /* Remove any transform that might hide the menu */
+  transform: none !important;
+}
+
+/* Ensure menu is interactive when open */
+.w--nav-menu-open .w-nav-menu {
+  pointer-events: auto !important;
+}

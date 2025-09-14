@@ -26,13 +26,19 @@
       overlay.classList.remove('w--nav-menu-open');
     });
 
-    // Find all nav menus and hide them
+    // Find all nav menus and set their visibility based on screen size
     const menus = document.querySelectorAll('.w-nav-menu');
     menus.forEach(menu => {
       if (window.innerWidth <= 991) {
+        // Mobile/tablet - hide menu
         menu.style.display = 'none';
         menu.style.opacity = '0';
         menu.style.visibility = 'hidden';
+      } else {
+        // Desktop - ensure menu is visible
+        menu.style.display = 'flex';
+        menu.style.opacity = '1';
+        menu.style.visibility = 'visible';
       }
     });
 
