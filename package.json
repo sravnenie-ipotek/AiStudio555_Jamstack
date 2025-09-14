@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "echo 'Starting Custom Live API Server (NOT Strapi)' && node server.js",
+    "start:dev": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/aistudio_db NODE_ENV=development PORT=3000 node server.js",
     "start:local": "bash scripts/start-local.sh",
     "dev:local": "concurrently \"node server.local.js\" \"python3 -m http.server 3005\"",
     "sync:production": "node scripts/sync-production-data.js",

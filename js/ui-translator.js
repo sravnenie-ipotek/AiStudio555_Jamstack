@@ -292,69 +292,149 @@ class UITranslator {
       { field: 'faq6Title', fallback: 'faq_6_title' }
     ];
 
-    // Find FAQ container elements
-    const faqSelectors = [
-      '.faq-item', '.accordion-item', '.question-item',
-      '.faq-question', '.accordion-header', '.faq-title',
-      '[class*="faq"]', '[class*="question"]', '[class*="accordion"]'
-    ];
+    console.log('📋 Available FAQ titles in UI data:', faqMappings.map(m => `${m.field}: ${ui[m.field] || ui[m.fallback] || 'NOT SET'}`));
 
-    // Look for FAQ elements by index
+    // Strategy 1: Target .faq-question elements directly (from browser test output)
+    const faqQuestionElements = document.querySelectorAll('.faq-question');
+    console.log(`🔍 Found ${faqQuestionElements.length} .faq-question elements`);
+
     faqMappings.forEach((mapping, index) => {
       const faqNumber = index + 1;
       const titleText = ui[mapping.field] || ui[mapping.fallback];
 
-      if (titleText) {
-        // Try multiple strategies to find FAQ titles
+      if (titleText && faqQuestionElements[index]) {
+        const currentText = faqQuestionElements[index].textContent.trim();
+        console.log(`✅ FAQ ${faqNumber} Question: "${currentText}" → "${titleText}"`);
+        faqQuestionElements[index].textContent = titleText;
+      }
+    });
 
-        // Strategy 1: Look for FAQ items by index
-        const faqItems = document.querySelectorAll('.faq-item, .accordion-item, .question-item');
-        if (faqItems[index]) {
-          const titleElements = faqItems[index].querySelectorAll('h3, h4, .faq-title, .question-title, .accordion-title');
-          titleElements.forEach(el => {
+    // Strategy 2: Target elements inside .faq-accordion-question-wrap (from browser test)
+    const faqWrapElements = document.querySelectorAll('.faq-accordion-question-wrap');
+    console.log(`🔍 Found ${faqWrapElements.length} .faq-accordion-question-wrap elements`);
+
+    faqWrapElements.forEach((wrap, index) => {
+      if (index < faqMappings.length) {
+        const mapping = faqMappings[index];
+        const titleText = ui[mapping.field] || ui[mapping.fallback];
+
+        if (titleText) {
+          const questionElements = wrap.querySelectorAll('h3, .faq-question, [class*="question"]');
+          questionElements.forEach(el => {
             const currentText = el.textContent.trim();
-            if (currentText === 'שלטו ב-AI וטכנולוגיה' || currentText.includes('AI') || currentText === '') {
-              console.log(`✅ FAQ ${faqNumber} Title: "${currentText}" → "${titleText}"`);
+            if (currentText === 'שלטו ב-AI וטכנולוגיה') {
+              console.log(`✅ FAQ Wrap ${index + 1}: "${currentText}" → "${titleText}"`);
               el.textContent = titleText;
             }
           });
         }
-
-        // Strategy 2: Look for generic "שלטו ב-AI וטכנולוגיה" text in FAQ context
-        const allHeadings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-        allHeadings.forEach(heading => {
-          if (heading.textContent.trim() === 'שלטו ב-AI וטכנולוגיה') {
-            // Check if this heading is in an FAQ context
-            const parentFAQ = heading.closest('.faq-item, .accordion-item, .question-item');
-            if (parentFAQ) {
-              console.log(`✅ FAQ Generic Title: "שלטו ב-AI וטכנולוגיה" → "${titleText}"`);
-              heading.textContent = titleText;
-            }
-          }
-        });
-
-        // Strategy 3: Look for data attributes or IDs
-        const specificSelectors = [
-          `#faq-${faqNumber}-title`,
-          `[data-faq="${faqNumber}"] .title`,
-          `.faq-${faqNumber} .title`,
-          `.question-${faqNumber} .title`
-        ];
-
-        specificSelectors.forEach(selector => {
-          const elements = document.querySelectorAll(selector);
-          elements.forEach(el => {
-            console.log(`✅ FAQ ${faqNumber} Specific Title: "${el.textContent}" → "${titleText}"`);
-            el.textContent = titleText;
-          });
-        });
       }
     });
+
+    // Strategy 3: Comprehensive search for all "שלטו ב-AI וטכנולוגיה" in FAQ contexts
+    const allElements = document.querySelectorAll('*');
+    let faqIndex = 0;
+
+    allElements.forEach(el => {
+      if (el.textContent && el.textContent.trim() === 'שלטו ב-AI וטכנולوגיה') {
+        // Check if it's in an FAQ context
+        const isInFAQ = el.closest('[class*="faq"]') ||
+                        el.closest('[class*="accordion"]') ||
+                        el.closest('[class*="question"]') ||
+                        el.classList.contains('faq-question') ||
+                        el.parentElement?.classList.contains('faq-accordion-question-wrap');
+
+        if (isInFAQ && faqIndex < faqMappings.length) {
+          const mapping = faqMappings[faqIndex];
+          const titleText = ui[mapping.field] || ui[mapping.fallback];
+
+          if (titleText) {
+            console.log(`✅ FAQ Generic ${faqIndex + 1}: "שלטו ב-AI וטכנולוגיה" → "${titleText}"`);
+            el.textContent = titleText;
+            faqIndex++;
+          }
+        }
+      }
+    });
+
+    console.log('✅ Strategy 3 completed, starting Strategy 4...');
+
+    // Strategy 4: Immediate post-load Hebrew placeholder replacement
+    console.log('🚀 Strategy 4: Immediate Hebrew placeholder search');
+
+    // Use setTimeout to ensure DOM is fully rendered
+    setTimeout(() => {
+      console.log('⏰ Strategy 4 delayed execution starting...');
+      const hebrewElements = [];
+
+      // Search all elements
+      document.querySelectorAll('*').forEach(el => {
+        const text = el.textContent ? el.textContent.trim() : '';
+        if (text === 'שלטו ב-AI וטכנולוגיה') {
+          hebrewElements.push(el);
+          console.log(`🔍 Found Hebrew placeholder: ${el.tagName}.${el.className || 'no-class'}`);
+        }
+      });
+
+      console.log(`📋 Strategy 4 delayed search found ${hebrewElements.length} Hebrew placeholders`);
+
+      // Replace visible Hebrew placeholders with FAQ titles
+      let faqCount = 0;
+      hebrewElements.forEach(el => {
+        const text = el.textContent ? el.textContent.trim() : '';
+        if (text === 'שלטו ב-AI וטכנולוגיה' && faqCount < faqMappings.length) {
+
+          // Check if it's likely an FAQ element
+          const isLikelyFAQ = el.closest('[class*="faq"]') ||
+                              el.closest('[class*="accordion"]') ||
+                              el.className.includes('faq') ||
+                              el.className.includes('question');
+
+          if (isLikelyFAQ) {
+            const mapping = faqMappings[faqCount];
+            const titleText = ui[mapping.field] || ui[mapping.fallback];
+
+            if (titleText) {
+              console.log(`✅ Strategy 4 FAQ Replace ${faqCount + 1}: "שלטו ב-AI וטכנולוגיה" → "${titleText}"`);
+              el.textContent = titleText;
+              faqCount++;
+            }
+          }
+        }
+      });
+
+      console.log(`📊 Strategy 4 replaced ${faqCount} FAQ placeholders`);
+    }, 1000); // 1 second delay to ensure full DOM rendering
+
+    // Strategy 5: Direct targeting of .faq-question elements with Hebrew text
+    console.log('🎯 Strategy 5: Direct .faq-question targeting');
+    const faqQuestionElementsStrategy5 = document.querySelectorAll('.faq-question');
+    console.log(`📋 Found ${faqQuestionElementsStrategy5.length} .faq-question elements`);
+
+    let hebrewFaqCount = 0;
+    faqQuestionElementsStrategy5.forEach((el, index) => {
+      const text = el.textContent ? el.textContent.trim() : '';
+      console.log(`🔍 FAQ Question ${index + 1}: "${text}"`);
+
+      if (text === 'שלטו ב-AI וטכנולוגיה' && index < faqMappings.length) {
+        const mapping = faqMappings[hebrewFaqCount];
+        const titleText = ui[mapping.field] || ui[mapping.fallback];
+
+        if (titleText) {
+          console.log(`✅ Direct FAQ Replace ${hebrewFaqCount + 1}: "שלטו ב-AI וטכנולוגיה" → "${titleText}"`);
+          el.textContent = titleText;
+          hebrewFaqCount++;
+        }
+      }
+    });
+
+    console.log(`📊 Strategy 5 replaced ${hebrewFaqCount} Hebrew FAQ questions`);
 
     // Update main FAQ section title
     if (ui.faqTitle || ui.faq_title) {
       const mainTitle = ui.faqTitle || ui.faq_title;
-      const faqSectionTitles = document.querySelectorAll('.faq-section-title, .faq-main-title, h2:contains("FAQ")');
+      // Fix: Use valid CSS selectors and check content with JavaScript
+      const faqSectionTitles = document.querySelectorAll('.faq-section-title, .faq-main-title, h2, h3');
       faqSectionTitles.forEach(title => {
         if (title.textContent.includes('FAQ') || title.textContent === 'שלטו ב-AI וטכנולוגיה') {
           console.log(`✅ Main FAQ Title: "${title.textContent}" → "${mainTitle}"`);
@@ -376,10 +456,10 @@ class UITranslator {
       }
     });
 
-    // Update "Read More" links
-    const readMoreLinks = document.querySelectorAll('a:contains("Read more"), a:contains("Read More"), .read-more');
+    // Update "Read More" links - Fix: Use valid CSS selector
+    const readMoreLinks = document.querySelectorAll('a, .read-more');
     readMoreLinks.forEach(link => {
-      if (ui.uiReadMore && link.textContent.toLowerCase().includes('read more')) {
+      if (ui.uiReadMore && link.textContent && link.textContent.toLowerCase().includes('read more')) {
         console.log(`✅ Read More: "${link.textContent}" → "${ui.uiReadMore}"`);
         link.textContent = ui.uiReadMore;
       }
@@ -428,10 +508,65 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     const translator = new UITranslator();
     translator.translatePage();
+
+    // Additional Hebrew placeholder replacement with delay
+    setTimeout(() => initHebrewPlaceholderReplacement(), 2500);
   });
 } else {
   const translator = new UITranslator();
   translator.translatePage();
+
+  // Additional Hebrew placeholder replacement with delay
+  setTimeout(() => initHebrewPlaceholderReplacement(), 2500);
+}
+
+// Global Hebrew placeholder replacement function
+function initHebrewPlaceholderReplacement() {
+  // Only run for Hebrew pages
+  const isHebrew = window.location.pathname.includes('/he/');
+  if (!isHebrew) return;
+
+  console.log('🔥 Global Hebrew placeholder replacement activated');
+
+  const hebrewPlaceholders = [];
+  document.querySelectorAll('*').forEach(el => {
+    const text = el.textContent ? el.textContent.trim() : '';
+    if (text === 'שלטו ב-AI וטכנולוגיה') {
+      hebrewPlaceholders.push(el);
+    }
+  });
+
+  console.log(`🔍 Global search found ${hebrewPlaceholders.length} Hebrew placeholders`);
+
+  // Hebrew FAQ titles
+  const faqTitles = [
+    'קורסים מוצעים',    // Offered Courses
+    'משך הקורסים',     // Course Duration
+    'תעודות והסמכה',   // Certificates
+    'תמיכה בקריירה',   // Career Support
+    'דרישות קדם',      // Prerequisites
+    'למידה בקצב אישי'   // Self-paced Learning
+  ];
+
+  let faqCount = 0;
+  hebrewPlaceholders.forEach(el => {
+    const text = el.textContent ? el.textContent.trim() : '';
+    if (text === 'שלטו ב-AI וטכנולוגיה') {
+      // Check if it's FAQ-related
+      const isInFAQ = el.closest('[class*="faq"]') ||
+                     el.closest('[class*="accordion"]') ||
+                     el.className.includes('faq') ||
+                     el.className.includes('question');
+
+      if (isInFAQ && faqCount < faqTitles.length) {
+        console.log(`✅ Global FAQ Replace ${faqCount + 1}: "${text}" → "${faqTitles[faqCount]}"`);
+        el.textContent = faqTitles[faqCount];
+        faqCount++;
+      }
+    }
+  });
+
+  console.log(`📊 Global replacement completed: ${faqCount} FAQ titles replaced`);
 }
 
 // Also make it available globally

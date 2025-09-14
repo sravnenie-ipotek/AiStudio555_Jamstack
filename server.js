@@ -54,37 +54,27 @@ if (process.env.DATABASE_URL) {
   }
   console.log('🔗 Database URL pattern:', process.env.DATABASE_URL.substring(0, 30) + '...');
 } else {
-  // Local development fallback (SQLite)
-  const sqlite3 = require('sqlite3').verbose();
-  console.log('📦 Using local SQLite for development');
-  console.log('⚠️  No DATABASE_URL found - using SQLite fallback');
-  console.log('💡 Run ./start-local-like-prod.sh to use PostgreSQL with production data');
+  // No fallback - PostgreSQL required
+  console.error('❌ DATABASE_URL is required!');
+  console.error('💡 Run ./use-existing-postgres.sh to set up PostgreSQL');
+  console.error('🔧 Or set DATABASE_URL environment variable');
+  process.exit(1);
 }
 
-// PostgreSQL query helper
+// PostgreSQL query helper (PostgreSQL ONLY - no SQLite fallback)
 async function queryDatabase(query, params = []) {
   if (!process.env.DATABASE_URL) {
-    // SQLite fallback for local development
-    const sqlite3 = require('sqlite3').verbose();
-    const db = new sqlite3.Database(path.join(__dirname, 'strapi-fresh/.tmp/data.db'));
-    
-    return new Promise((resolve, reject) => {
-      db.all(query, params, (err, rows) => {
-        db.close();
-        if (err) reject(err);
-        else resolve(rows);
-      });
-    });
+    throw new Error('❌ DATABASE_URL not configured. PostgreSQL is required.');
   }
-  
-  // Railway PostgreSQL
+
+  // PostgreSQL connection
   const client = new Client(dbConfig);
   try {
     await client.connect();
     const result = await client.query(query, params);
     return result.rows;
   } catch (error) {
-    console.error('Database error:', error);
+    console.error('PostgreSQL error:', error);
     throw error;
   } finally {
     await client.end();
@@ -128,8 +118,8 @@ async function initializeDatabase() {
   }
 }
 
-// Initialize database on startup
-initializeDatabase();
+// Initialize database on startup (disabled - migration already complete)
+// initializeDatabase();
 
 // ==================== MULTI-LANGUAGE HELPERS ====================
 
@@ -165,17 +155,26 @@ app.get('/api/home-page', async (req, res) => {
   try {
     const locale = getLocale(req);
     console.log(`🌍 Fetching home page for locale: ${locale}`);
-    
+
     const data = await queryWithFallback(
       'SELECT * FROM home_pages WHERE locale = $1 AND published_at IS NOT NULL LIMIT 1',
       [locale]
     );
-    
+
     if (data.length === 0) {
       return res.json({ error: 'No home page data found' });
     }
-    
+
     const homeData = data[0];
+
+    // DEBUG: Log FAQ titles being retrieved
+    console.log('🔍 FAQ DEBUG - homeData.faq_1_title:', homeData.faq_1_title);
+    console.log('🔍 FAQ DEBUG - homeData.faq_2_title:', homeData.faq_2_title);
+    console.log('🔍 FAQ DEBUG - homeData keys:', Object.keys(homeData).filter(k => k.includes('faq')));
+    console.log('🔍 FAQ DEBUG - homeData.id:', homeData.id);
+    console.log('🔍 FAQ DEBUG - homeData.locale:', homeData.locale);
+    console.log('🔍 FAQ DEBUG - homeData.title:', homeData.title);
+
     res.json({
       data: {
         id: homeData.id,
@@ -4858,6 +4857,9 @@ app.post('/api/force-russian-ui', async (req, res) => {
 app.post('/api/force-hebrew-ui', async (req, res) => {
   try {
     console.log('🚀 FORCING Hebrew UI translations...');
+
+    // Detect database type (same logic as main server)
+    const isProduction = !!process.env.DATABASE_URL;
 
     // Complete Hebrew translations using snake_case column names
     const hebrewUI = {
