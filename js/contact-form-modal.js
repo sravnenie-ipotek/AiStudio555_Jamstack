@@ -1005,13 +1005,16 @@
       }
       
       // Check if it's a sign up/sign in link
-      if (href.includes('sign-up') || 
-          href.includes('sign-in') || 
+      if (href.includes('sign-up') ||
+          href.includes('sign-in') ||
           href.includes('authentication-pages') ||
           target.classList.contains('primary-button') ||
           text.includes('Sign Up') ||
           text.includes('Sign In') ||
-          text.includes('Get Started')) {
+          text.includes('Get Started') ||
+          text.includes('הרשמו היום') || // Hebrew: Sign up today
+          text.includes('הרשמה') || // Hebrew: Registration
+          text.includes('התחילו היום')) { // Hebrew: Start today
         
         e.preventDefault();
         e.stopPropagation();
