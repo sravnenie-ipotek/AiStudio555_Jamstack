@@ -735,7 +735,7 @@
           </nav>
           <div class="navbar-button-wrapper">
             <div class="primary-button-wrapper desktop">
-              <a href="authentication-pages/sign-up.html" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
+              <a href="#" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
                   <div class="primary-button-text-block">Sign Up Today</div>
                   <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
@@ -1699,7 +1699,7 @@
                   <div class="footer-menu-list-wrapper">
                     <ul role="list" class="footer-menu-list">
                       <li class="footer-menu-list-item">
-                        <a href="authentication-pages/sign-up.html" class="footer-menu-text-link">Sign Up</a>
+                        <a href="#" class="footer-menu-text-link">Sign Up</a>
                       </li>
                       <li class="footer-menu-list-item">
                         <a href="authentication-pages/sign-in.html" class="footer-menu-text-link">Sign In</a>
@@ -1744,6 +1744,210 @@
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=68b7601d918996218465c4a6" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <script src="js/webflow.js" type="text/javascript"></script>
   
+
+  <!-- Footer Language Translation System -->
+  <script>
+    // Footer translations for all languages
+    const footerTranslations = {
+      en: {
+        description: "Elevate tech career with expert-led courses. if you're just aiming to advance skills, practical training is designed.",
+        menu: "Menu",
+        utilityPages: "Utility Pages",
+        contact: "Contact",
+        menuItems: {
+          home: "Home",
+          aboutUs: "About Us",
+          courses: "Courses",
+          teachers: "Teachers",
+          courseSingle: "Course Single",
+          pricing: "Pricing",
+          pricingSingle: "Pricing Single",
+          blog: "Blog",
+          blogSingle: "Blog Single",
+          contactUs: "Contact Us"
+        },
+        utilityItems: {
+          notFound: "404 Not Found",
+          passwordProtected: "Password Protected",
+          changelog: "Changelog",
+          license: "License",
+          styleGuide: "Style Guide"
+        },
+        authItems: {
+          signUp: "Sign Up",
+          signIn: "Sign In",
+          forgotPassword: "Forgot Password",
+          resetPassword: "Reset Password"
+        },
+        newsletter: {
+          subscribe: "Subscribe to Newsletter",
+          placeholder: "Enter email to subscribe",
+          thankYou: "Thank you! Your submission has been received!",
+          error: "Oops! Something went wrong while submitting the form."
+        }
+      },
+      ru: {
+        description: "Поднимите свою технологическую карьеру с курсами от экспертов. Практическое обучение разработано для тех, кто стремится улучшить свои навыки.",
+        menu: "Меню",
+        utilityPages: "Служебные страницы",
+        contact: "Контакты",
+        menuItems: {
+          home: "Главная",
+          aboutUs: "О нас",
+          courses: "Курсы",
+          teachers: "Преподаватели",
+          courseSingle: "Страница курса",
+          pricing: "Цены",
+          pricingSingle: "Страница цены",
+          blog: "Блог",
+          blogSingle: "Страница блога",
+          contactUs: "Связаться с нами"
+        },
+        utilityItems: {
+          notFound: "404 Не найдено",
+          passwordProtected: "Защищено паролем",
+          changelog: "История изменений",
+          license: "Лицензия",
+          styleGuide: "Руководство по стилю"
+        },
+        authItems: {
+          signUp: "Регистрация",
+          signIn: "Вход",
+          forgotPassword: "Забыли пароль",
+          resetPassword: "Сброс пароля"
+        },
+        newsletter: {
+          subscribe: "Подписаться на рассылку",
+          placeholder: "Введите email для подписки",
+          thankYou: "Спасибо! Ваша заявка принята!",
+          error: "Упс! Что-то пошло не так при отправке формы."
+        }
+      },
+      he: {
+        description: "העלה את הקריירה הטכנולוגית שלך עם קורסים בהדרכת מומחים. הכשרה מעשית מיועדת למי שמטרתו לקדם כישורים.",
+        menu: "תפריט",
+        utilityPages: "דפי שירות",
+        contact: "צור קשר",
+        menuItems: {
+          home: "בית",
+          aboutUs: "אודותינו",
+          courses: "קורסים",
+          teachers: "מורים",
+          courseSingle: "דף קורס",
+          pricing: "תמחור",
+          pricingSingle: "דף תמחור",
+          blog: "בלוג",
+          blogSingle: "דף בלוג",
+          contactUs: "צור קשר"
+        },
+        utilityItems: {
+          notFound: "404 לא נמצא",
+          passwordProtected: "מוגן בסיסמה",
+          changelog: "יומן שינויים",
+          license: "רישיון",
+          styleGuide: "מדריך עיצוב"
+        },
+        authItems: {
+          signUp: "הרשמה",
+          signIn: "כניסה",
+          forgotPassword: "שכחת סיסמה",
+          resetPassword: "איפוס סיסמה"
+        },
+        newsletter: {
+          subscribe: "הרשמה לניוזלטר",
+          placeholder: "הכנס אימייל להרשמה",
+          thankYou: "תודה! הטופס נשלח בהצלחה!",
+          error: "אופס! משהו השתבש בשליחת הטופס."
+        }
+      }
+    };
+
+    // Function to update footer content based on language
+    function updateFooterContent(locale) {
+      const translations = footerTranslations[locale] || footerTranslations.en;
+
+      try {
+        // Update description text
+        const descriptionElement = document.querySelector('.footer-description-text');
+        if (descriptionElement) {
+          descriptionElement.textContent = translations.description;
+        }
+
+        // Update menu titles
+        const menuTitles = document.querySelectorAll('.footer-menu-title');
+        if (menuTitles.length >= 3) {
+          menuTitles[0].textContent = translations.menu;
+          menuTitles[1].textContent = translations.utilityPages;
+          menuTitles[2].textContent = translations.contact;
+        }
+
+        // Update newsletter form
+        const newsletterLabel = document.querySelector('.footer-details-form-text');
+        if (newsletterLabel) {
+          newsletterLabel.textContent = translations.newsletter.subscribe;
+        }
+
+        const newsletterInput = document.querySelector('#email-2');
+        if (newsletterInput) {
+          newsletterInput.placeholder = translations.newsletter.placeholder;
+        }
+
+        const successMessage = document.querySelector('.w-form-done div');
+        if (successMessage) {
+          successMessage.textContent = translations.newsletter.thankYou;
+        }
+
+        const errorMessage = document.querySelector('.w-form-fail div');
+        if (errorMessage) {
+          errorMessage.textContent = translations.newsletter.error;
+        }
+
+        // Update menu items
+        const menuLinks = document.querySelectorAll('.footer-menu-text-link');
+        menuLinks.forEach(link => {
+          const text = link.textContent.trim();
+          // Map English text to translation keys
+          if (text === 'Home') link.textContent = translations.menuItems.home;
+          else if (text === 'About Us') link.textContent = translations.menuItems.aboutUs;
+          else if (text === 'Courses') link.textContent = translations.menuItems.courses;
+          else if (text === 'Teachers') link.textContent = translations.menuItems.teachers;
+          else if (text === 'Course Single') link.textContent = translations.menuItems.courseSingle;
+          else if (text === 'Pricing') link.textContent = translations.menuItems.pricing;
+          else if (text === 'Pricing Single') link.textContent = translations.menuItems.pricingSingle;
+          else if (text === 'Blog') link.textContent = translations.menuItems.blog;
+          else if (text === 'Blog Single') link.textContent = translations.menuItems.blogSingle;
+          else if (text === 'Contact Us') link.textContent = translations.menuItems.contactUs;
+          else if (text === '404 Not Found') link.textContent = translations.utilityItems.notFound;
+          else if (text === 'Password Protected') link.textContent = translations.utilityItems.passwordProtected;
+          else if (text === 'Changelog') link.textContent = translations.utilityItems.changelog;
+          else if (text === 'License') link.textContent = translations.utilityItems.license;
+          else if (text === 'Style Guide') link.textContent = translations.utilityItems.styleGuide;
+          else if (text === 'Sign Up') link.textContent = translations.authItems.signUp;
+          else if (text === 'Sign In') link.textContent = translations.authItems.signIn;
+          else if (text === 'Forgot Password') link.textContent = translations.authItems.forgotPassword;
+          else if (text === 'Reset Password') link.textContent = translations.authItems.resetPassword;
+        });
+
+        console.log('✅ Footer content updated for language:', locale);
+      } catch (error) {
+        console.error('❌ Error updating footer content:', error);
+      }
+    }
+
+    // Listen for language change events
+    document.addEventListener('languageChanged', function(event) {
+      const newLocale = event.detail.locale;
+      console.log('🔄 Footer received language change event:', newLocale);
+      updateFooterContent(newLocale);
+    });
+
+    // Initialize footer with current language on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentLang = localStorage.getItem('preferredLanguage') || 'en';
+      updateFooterContent(currentLang);
+      console.log('🏁 Footer initialized with language:', currentLang);
+    });
+  </script>
 
   <script>
     // Fix Career Services dropdown
@@ -1846,7 +2050,7 @@
         const currentLang = detectCurrentLanguage();
         const switcher = document.createElement('div');
         switcher.id = 'language-switcher';
-        switcher.style.cssText = 'position:fixed;top:20px;right:20px;z-index:10000;';
+        // Let CSS handle positioning via desktop-language-selector-fix.css
         
         switcher.innerHTML = `
           <style>
@@ -1896,7 +2100,7 @@
           </select>
         `;
         
-        document.body.appendChild(switcher);
+        const navbar = document.querySelector(".navbar-content") || document.querySelector(".navbar") || document.body; navbar.appendChild(switcher);
         
         // Apply language settings
         document.documentElement.lang = currentLang;

@@ -17,26 +17,6 @@
   <link href="/css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
-      <select onchange="switchLanguage(this.value)" style="padding: 8px; border-radius: 4px;">
-        <option value="en" selected="">English</option><option value="ru">Russian</option><option value="he">Hebrew</option>
-      </select>
-    </div>
-    <script>
-      function switchLanguage(lang) {
-        const currentPath = window.location.pathname;
-        const pathParts = currentPath.split('/').filter(p => p);
-        
-        // Remove current language from path
-        if (['en', 'ru', 'he'].includes(pathParts[0])) {
-          pathParts.shift();
-        }
-        
-        // Navigate to new language
-        const newPath = '/' + lang + '/' + pathParts.join('/');
-        window.location.href = newPath;
-      }
-    </script>
   
   <div class="page-wrapper">
     <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
@@ -94,7 +74,7 @@
               </div>
             </div>
             <div class="primary-button-wrapper desktop">
-              <a href="authentication-pages/sign-up.html" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
+              <a href="#" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
                   <div class="primary-button-text-block">Sign Up Today</div>
                   <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
@@ -527,7 +507,7 @@
                   <div class="footer-menu-list-wrapper">
                     <ul role="list" class="footer-menu-list">
                       <li class="footer-menu-list-item">
-                        <a href="authentication-pages/sign-up.html" class="footer-menu-text-link">Sign Up</a>
+                        <a href="#" class="footer-menu-text-link">Sign Up</a>
                       </li>
                       <li class="footer-menu-list-item">
                         <a href="authentication-pages/sign-in.html" class="footer-menu-text-link">Sign In</a>

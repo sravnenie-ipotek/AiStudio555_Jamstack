@@ -235,7 +235,7 @@
             </div>
             <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
             <div class="primary-button-wrapper mobile">
-              <a href="authentication-pages/sign-up.html" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block">
+              <a href="#" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
                   <div class="primary-button-text-block">Sign Up Today</div>
                   <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
@@ -245,7 +245,7 @@
           </nav>
           <div class="navbar-button-wrapper">
             <div class="primary-button-wrapper desktop">
-              <a href="authentication-pages/sign-up.html" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
+              <a href="#" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
                   <div class="primary-button-text-block">Sign Up Today</div>
                   <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
@@ -2121,7 +2121,7 @@
         const currentLang = detectCurrentLanguage();
         const switcher = document.createElement('div');
         switcher.id = 'language-switcher';
-        switcher.style.cssText = 'position:fixed;top:20px;right:20px;z-index:10000;';
+        // Let CSS handle positioning via desktop-language-selector-fix.css
         
         switcher.innerHTML = `
           <style>
@@ -2171,7 +2171,7 @@
           </select>
         `;
         
-        document.body.appendChild(switcher);
+        const navbar = document.querySelector(".navbar-content") || document.querySelector(".navbar") || document.body; navbar.appendChild(switcher);
         
         // Apply language settings
         document.documentElement.lang = currentLang;

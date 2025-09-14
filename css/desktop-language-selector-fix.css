@@ -7,12 +7,17 @@ body .language-switcher:not(#language-switcher) {
 
 /* Desktop language selector in navigation */
 @media screen and (min-width: 992px) {
+  /* Position the language selector within the navbar container */
+  .navbar-content {
+    position: relative !important;
+  }
+
   #language-switcher {
     position: absolute !important;
     top: 50% !important;
-    right: 120px !important;
+    right: 70px !important; /* Leave space for hamburger if needed */
     transform: translateY(-50%) !important;
-    z-index: 9999 !important;
+    z-index: 999 !important;
     background: transparent !important;
   }
 
@@ -37,6 +42,11 @@ body .language-switcher:not(#language-switcher) {
     background: rgba(5, 5, 26, 1) !important;
     color: white !important;
     padding: 8px !important;
+  }
+
+  /* Adjust navigation menu to make room */
+  .nav-menu {
+    margin-right: 140px !important;
   }
 }
 

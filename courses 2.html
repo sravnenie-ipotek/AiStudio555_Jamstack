@@ -737,7 +737,7 @@
                         <a href="authentication-pages/sign-in.html" class="dropdown-menu-text-link-block w-inline-block">
                           <div>Sign in</div>
                         </a>
-                        <a href="authentication-pages/sign-up.html" class="dropdown-menu-text-link-block w-inline-block">
+                        <a href="#" class="dropdown-menu-text-link-block w-inline-block">
                           <div>Sign up</div>
                         </a>
                         <a href="authentication-pages/forgot-password.html" class="dropdown-menu-text-link-block w-inline-block">
@@ -849,7 +849,7 @@
               </div>
             </div>
             <div class="primary-button-wrapper desktop">
-              <a href="authentication-pages/sign-up.html" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
+              <a href="#" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
                   <div class="primary-button-text-block">Sign Up Today</div>
                   <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
@@ -1691,7 +1691,7 @@
                   <div class="footer-menu-list-wrapper">
                     <ul role="list" class="footer-menu-list">
                       <li class="footer-menu-list-item">
-                        <a href="authentication-pages/sign-up.html" class="footer-menu-text-link">Sign Up</a>
+                        <a href="#" class="footer-menu-text-link">Sign Up</a>
                       </li>
                       <li class="footer-menu-list-item">
                         <a href="authentication-pages/sign-in.html" class="footer-menu-text-link">Sign In</a>
@@ -1801,7 +1801,7 @@
         const currentLang = detectCurrentLanguage();
         const switcher = document.createElement('div');
         switcher.id = 'language-switcher';
-        switcher.style.cssText = 'position:fixed;top:20px;right:20px;z-index:10000;';
+        // Let CSS handle positioning via desktop-language-selector-fix.css
         
         switcher.innerHTML = `
           <style>
@@ -1851,7 +1851,7 @@
           </select>
         `;
         
-        document.body.appendChild(switcher);
+        const navbar = document.querySelector(".navbar-content") || document.querySelector(".navbar") || document.body; navbar.appendChild(switcher);
         
         // Apply language settings
         document.documentElement.lang = currentLang;

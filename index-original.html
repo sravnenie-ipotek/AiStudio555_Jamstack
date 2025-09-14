@@ -289,7 +289,7 @@
         </div>
         <div data-w-id="68a52d98-1b8b-18b7-d586-db358c4bf7c3" style="opacity:0" class="inner-demo-wrapper">
           <div class="w-layout-grid inner-demo-grid">
-            <a href="authentication-pages/sign-up.html" class="demo-single w-inline-block">
+            <a href="#" class="demo-single w-inline-block">
               <div class="demo-image-single"><img src="images/Demo-Image14.jpg" loading="lazy" width="284" sizes="(max-width: 479px) 79vw, (max-width: 767px) 86vw, 100vw" alt="" srcset="images/Demo-Image14-p-500.jpg 500w, images/Demo-Image14.jpg 568w" class="demo-image">
                 <div class="demo-single-tag-wrapper">
                   <div class="demo-single-tag">Sign Up</div>
@@ -490,7 +490,7 @@
         const currentLang = detectCurrentLanguage();
         const switcher = document.createElement('div');
         switcher.id = 'language-switcher';
-        switcher.style.cssText = 'position:fixed;top:20px;right:20px;z-index:10000;';
+        // Let CSS handle positioning via desktop-language-selector-fix.css
         
         switcher.innerHTML = `
           <style>
@@ -540,7 +540,7 @@
           </select>
         `;
         
-        document.body.appendChild(switcher);
+        const navbar = document.querySelector(".navbar-content") || document.querySelector(".navbar") || document.body; navbar.appendChild(switcher);
         
         // Apply language settings
         document.documentElement.lang = currentLang;

@@ -319,7 +319,7 @@
         const currentLang = detectCurrentLanguage();
         const switcher = document.createElement('div');
         switcher.id = 'language-switcher';
-        switcher.style.cssText = 'position:fixed;top:20px;right:20px;z-index:10000;';
+        // Let CSS handle positioning via desktop-language-selector-fix.css
         
         switcher.innerHTML = `
           <style>
@@ -369,7 +369,7 @@
           </select>
         `;
         
-        document.body.appendChild(switcher);
+        const navbar = document.querySelector(".navbar-content") || document.querySelector(".navbar") || document.body; navbar.appendChild(switcher);
         
         // Apply language settings
         document.documentElement.lang = currentLang;
