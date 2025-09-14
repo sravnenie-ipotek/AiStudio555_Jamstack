@@ -457,6 +457,13 @@ class UITranslator {
       { field: 'faq6Answer', fallback: 'faq_6_answer' }
     ];
 
+    // Debug: Log available FAQ answer fields
+    console.log('🔍 Available FAQ answers in UI data:');
+    faqAnswerMappings.forEach((mapping, index) => {
+      const answerText = ui[mapping.field] || ui[mapping.fallback];
+      console.log(`${mapping.field}: ${answerText ? answerText.substring(0, 40) + '...' : 'NOT FOUND'}`);
+    });
+
     // Find all FAQ answer elements
     const faqAnswerElements = document.querySelectorAll('.faq-answer');
     console.log(`🔍 Found ${faqAnswerElements.length} .faq-answer elements`);
@@ -468,8 +475,10 @@ class UITranslator {
 
         if (answerText) {
           const currentText = element.textContent.trim();
-          console.log(`✅ FAQ ${index + 1} Answer: Updating from "${currentText.substring(0, 50)}..." to "${answerText.substring(0, 50)}..."`);
+          console.log(`✅ FAQ ${index + 1} Answer: Updating from "${currentText.substring(0, 30)}..." to "${answerText.substring(0, 30)}..."`);
           element.textContent = answerText;
+        } else {
+          console.log(`⚠️ FAQ ${index + 1} Answer: No translation found for ${mapping.field} or ${mapping.fallback}`);
         }
       }
     });

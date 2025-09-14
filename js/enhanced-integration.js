@@ -89,14 +89,14 @@ class EnhancedIntegration {
     applyNavigationTranslations(lang) {
         // Navigation links
         const navMappings = {
-            'Home': TRANSLATIONS.navigation.home[lang],
-            'Courses': TRANSLATIONS.navigation.courses[lang],
-            'Teachers': TRANSLATIONS.navigation.teachers[lang],
-            'Career Services': TRANSLATIONS.navigation.careerServices[lang],
-            'Career Orientation': TRANSLATIONS.navigation.careerOrientation[lang],
-            'Career Center': TRANSLATIONS.navigation.careerCenter[lang],
-            'Pricing': TRANSLATIONS.navigation.pricing[lang],
-            'Blog': TRANSLATIONS.navigation.blog[lang]
+            'Home': TRANSLATIONS.nav.home[lang],
+            'Courses': TRANSLATIONS.nav.courses[lang],
+            'Teachers': TRANSLATIONS.nav.teachers[lang],
+            'Career Services': TRANSLATIONS.nav.careerServices[lang],
+            'Career Orientation': TRANSLATIONS.nav.careerOrientation[lang],
+            'Career Center': TRANSLATIONS.nav.careerCenter[lang],
+            'Pricing': TRANSLATIONS.nav.pricing[lang],
+            'Blog': TRANSLATIONS.nav.blog ? TRANSLATIONS.nav.blog[lang] : 'Blog'
         };
 
         // Update nav links
