@@ -708,7 +708,25 @@ Frontend Architecture:
     └── webflow.js                    # Standard Webflow JS
 ```
 
-### ⚡ Integration Layer
+### ⚡ Integration Layer (Text-Matching Translation System)
+
+> **⚠️ CRITICAL**: The translation system finds elements by matching English text content!
+
+#### How Translations Actually Work:
+```javascript
+// FRAGILE: Finds buttons by exact text match
+if (button.textContent === 'Sign Up Today') {
+  button.textContent = translations.btnSignUpToday; // Russian/Hebrew
+}
+// If English text changes, translations BREAK!
+```
+
+#### Translation System Components:
+1. **js/ui-translator.js** - Finds elements by text content
+2. **js/translations-config.js** - Static fallback translations
+3. **js/hebrew-translations-fix.js** - Override hack for Hebrew
+4. **js/webflow-strapi-integration.js** - Misleading name, custom API
+
 ```javascript
 // Frontend-Backend Integration (Custom Implementation)
 class CustomIntegration {
