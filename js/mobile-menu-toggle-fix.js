@@ -173,7 +173,7 @@
 
   // Check if menu element exists
   function checkMenuExists() {
-    const menu = document.querySelector('.w-nav-menu');
+    let menu = document.querySelector('.w-nav-menu');
     if (!menu) {
       console.warn('⚠️ No .w-nav-menu element found on page');
 
@@ -192,11 +192,86 @@
 
           nav.appendChild(menuContainer);
           console.log('✅ Created mobile menu container');
+          menu = menuContainer;
         }
       }
     } else {
       console.log('✅ Menu element found');
     }
+
+    // Add language selector to mobile menu if not present
+    if (menu && !menu.querySelector('.mobile-language-selector')) {
+      addLanguageSelector(menu);
+    }
+  }
+
+  // Add language selector to mobile menu
+  function addLanguageSelector(menuElement) {
+    // Detect current language
+    const currentPath = window.location.pathname;
+    let currentLang = 'en';
+    if (currentPath.includes('/he/')) currentLang = 'he';
+    else if (currentPath.includes('/ru/')) currentLang = 'ru';
+
+    // Create language selector container
+    const languageDiv = document.createElement('div');
+    languageDiv.className = 'mobile-language-selector';
+    languageDiv.style.cssText = 'padding: 15px 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto;';
+
+    // Create select element
+    const select = document.createElement('select');
+    select.id = 'mobile-language-select';
+    select.style.cssText = `
+      width: 100%;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      font-family: inherit;
+    `;
+
+    // Add options
+    const languages = [
+      { value: 'en', text: '🇬🇧 English' },
+      { value: 'ru', text: '🇷🇺 Русский' },
+      { value: 'he', text: '🇮🇱 עברית' }
+    ];
+
+    languages.forEach(lang => {
+      const option = document.createElement('option');
+      option.value = lang.value;
+      option.textContent = lang.text;
+      if (lang.value === currentLang) {
+        option.selected = true;
+      }
+      select.appendChild(option);
+    });
+
+    // Add change handler
+    select.addEventListener('change', function(e) {
+      const selectedLang = e.target.value;
+      const currentFile = currentPath.split('/').pop() || 'index.html';
+
+      let newPath;
+      if (selectedLang === 'en') {
+        if (currentPath.includes('/he/') || currentPath.includes('/ru/')) {
+          newPath = `/en/${currentFile}`;
+        } else {
+          newPath = `/${currentFile}`;
+        }
+      } else {
+        newPath = `/${selectedLang}/${currentFile}`;
+      }
+
+      window.location.href = newPath;
+    });
+
+    languageDiv.appendChild(select);
+    menuElement.appendChild(languageDiv);
+    console.log('✅ Added language selector to mobile menu');
   }
 
   // Initialize when DOM is ready
