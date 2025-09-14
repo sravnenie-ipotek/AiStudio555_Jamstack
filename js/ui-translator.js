@@ -279,9 +279,94 @@ class UITranslator {
     });
   }
 
+  updateFAQTitles(ui) {
+    console.log('❓ Updating FAQ titles...');
+
+    // FAQ title mappings - look for FAQ elements and update their titles
+    const faqMappings = [
+      { field: 'faq1Title', fallback: 'faq_1_title' },
+      { field: 'faq2Title', fallback: 'faq_2_title' },
+      { field: 'faq3Title', fallback: 'faq_3_title' },
+      { field: 'faq4Title', fallback: 'faq_4_title' },
+      { field: 'faq5Title', fallback: 'faq_5_title' },
+      { field: 'faq6Title', fallback: 'faq_6_title' }
+    ];
+
+    // Find FAQ container elements
+    const faqSelectors = [
+      '.faq-item', '.accordion-item', '.question-item',
+      '.faq-question', '.accordion-header', '.faq-title',
+      '[class*="faq"]', '[class*="question"]', '[class*="accordion"]'
+    ];
+
+    // Look for FAQ elements by index
+    faqMappings.forEach((mapping, index) => {
+      const faqNumber = index + 1;
+      const titleText = ui[mapping.field] || ui[mapping.fallback];
+
+      if (titleText) {
+        // Try multiple strategies to find FAQ titles
+
+        // Strategy 1: Look for FAQ items by index
+        const faqItems = document.querySelectorAll('.faq-item, .accordion-item, .question-item');
+        if (faqItems[index]) {
+          const titleElements = faqItems[index].querySelectorAll('h3, h4, .faq-title, .question-title, .accordion-title');
+          titleElements.forEach(el => {
+            const currentText = el.textContent.trim();
+            if (currentText === 'שלטו ב-AI וטכנולוגיה' || currentText.includes('AI') || currentText === '') {
+              console.log(`✅ FAQ ${faqNumber} Title: "${currentText}" → "${titleText}"`);
+              el.textContent = titleText;
+            }
+          });
+        }
+
+        // Strategy 2: Look for generic "שלטו ב-AI וטכנולוגיה" text in FAQ context
+        const allHeadings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+        allHeadings.forEach(heading => {
+          if (heading.textContent.trim() === 'שלטו ב-AI וטכנולוגיה') {
+            // Check if this heading is in an FAQ context
+            const parentFAQ = heading.closest('.faq-item, .accordion-item, .question-item');
+            if (parentFAQ) {
+              console.log(`✅ FAQ Generic Title: "שלטו ב-AI וטכנולוגיה" → "${titleText}"`);
+              heading.textContent = titleText;
+            }
+          }
+        });
+
+        // Strategy 3: Look for data attributes or IDs
+        const specificSelectors = [
+          `#faq-${faqNumber}-title`,
+          `[data-faq="${faqNumber}"] .title`,
+          `.faq-${faqNumber} .title`,
+          `.question-${faqNumber} .title`
+        ];
+
+        specificSelectors.forEach(selector => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(el => {
+            console.log(`✅ FAQ ${faqNumber} Specific Title: "${el.textContent}" → "${titleText}"`);
+            el.textContent = titleText;
+          });
+        });
+      }
+    });
+
+    // Update main FAQ section title
+    if (ui.faqTitle || ui.faq_title) {
+      const mainTitle = ui.faqTitle || ui.faq_title;
+      const faqSectionTitles = document.querySelectorAll('.faq-section-title, .faq-main-title, h2:contains("FAQ")');
+      faqSectionTitles.forEach(title => {
+        if (title.textContent.includes('FAQ') || title.textContent === 'שלטו ב-AI וטכנולוגיה') {
+          console.log(`✅ Main FAQ Title: "${title.textContent}" → "${mainTitle}"`);
+          title.textContent = mainTitle;
+        }
+      });
+    }
+  }
+
   updateUIElements(ui) {
     console.log('🎨 Updating UI elements...');
-    
+
     // Update search placeholders
     const searchInputs = document.querySelectorAll('input[type="search"], input[placeholder*="search" i], input[placeholder*="поиск" i]');
     searchInputs.forEach(input => {
@@ -316,6 +401,7 @@ class UITranslator {
       this.updateButtons(ui);
       this.updateForms(ui);
       this.updateSectionTitles(ui);
+      this.updateFAQTitles(ui);
       this.updateMessages(ui);
       this.updateUIElements(ui);
 
