@@ -410,51 +410,7 @@
 <body>
   <div class="page-wrapper">
     <!-- Navigation (Same as courses.html) -->
-    <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
-      <div class="container">
-        <div class="navbar-content">
-          <a href="home.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
-          <nav role="navigation" class="nav-menu w-nav-menu">
-            <a href="home.html" class="nav-link w-nav-link">בית</a>
-            <a href="courses.html" class="nav-link w-nav-link">קורסים</a>
-            <a href="teachers.html" aria-current="page" class="nav-link w-nav-link w--current">מורים</a>
-            <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
-              <div class="dropdown-toggle w-dropdown-toggle">
-                <div class="dropdown-toggle-text-block">שירותי קריירה</div>
-                <div class="dropdown-toggle-arrow-2">▼</div>
-              </div>
-              <nav class="dropdown-list w-dropdown-list">
-                <a href="career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
-                  <div>Career Orientation</div>
-                </a>
-                <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block">
-                  <div>Career Center</div>
-                </a>
-              </nav>
-            </div>
-            <a href="pricing.html" class="nav-link w-nav-link">מחירים</a>
-            <div class="primary-button-wrapper mobile">
-              <a href="#" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block">
-                <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">הרשמו היום</div>
-                  <div class="primary-button-text-block is-text-absolute">הרשמו היום</div>
-                </div>
-              </a>
-            </div>
-          </nav>
-          <div class="navbar-button-wrapper">
-            <div class="primary-button-wrapper desktop">
-              <a href="#" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
-                <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">הרשמו היום</div>
-                  <div class="primary-button-text-block is-text-absolute">הרשמו היום</div>
-                </div>
-              </a>
-            </div>
-            <div class="menu-button w-nav-button">
-              <div data-is-ix2-target="1" class="hamburger-menu-icon" data-w-id="9700d956-7e80-623a-3836-d267f1fdd0f6" data-animation-type="lottie" data-src="https://uploads-ssl.webflow.com/6649cc3a1ea038d81fed488f/665c6513c402f5112b50428d_Hamburger%20White.lottie" data-loop="0" data-direction="1" data-autoplay="0" data-renderer="svg" data-duration="0" data-ix2-initial-state="0"></div>
-            </div>
-          </div>
+    <div id="shared-menu-container"></div>
         </div>
       </div>
     </div>
@@ -921,7 +877,7 @@
     <!-- Footer (Same as courses.html) -->
     <section class="section footer">
       <div class="container">
-        <div class="footer-content">
+        <div class="footer-content" id="dynamic-footer-container">
           <!-- Database-driven footer content will be loaded here by MasterFooterLoader -->
             <div class="loading-state" style="padding: 40px; text-align: center; color: #666;">
               <div class="loading-spinner"></div>
@@ -1136,7 +1092,7 @@
     })();
   </script>
   <!-- Contact Form Modal -->
-  <script src="/js/contact-form-modal.js"></script>
+  <script src="../js/contact-form-modal.js"></script>
   <script id="career-dropdown-fix-js">
     // Career Services Dropdown Consistency Fix
     (function() {
@@ -1199,20 +1155,136 @@
   <script src="../js/navigation-responsive-fix.js"></script>
 
   <!-- Hebrew Translations Fix - Must load before API integration -->
-  <script src="/js/hebrew-translations-fix.js"></script>
+  <script src="../js/hebrew-translations-fix.js"></script>
   <!-- API Integration Scripts -->
-  <script src="/js/webflow-strapi-integration.js"></script>
-  <script src="/js/strapi-integration.js"></script>
-  <script src="/js/ui-translator.js"></script>
-  <script src="/js/mobile-menu-toggle-fix.js"></script>
+  <script src="../js/webflow-strapi-integration.js"></script>
+  <script src="../js/strapi-integration.js"></script>
+  <script src="../js/ui-translator.js"></script>
+  <script src="../js/mobile-menu-toggle-fix.js"></script>
 
+  <!-- Teachers Database Loader - Direct Integration -->
+  <script src="../js/teachers-db-loader.js"></script>
+
+  <!-- Master Footer Loader -->
+  <script src="../js/master-footer-loader.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       if (typeof window.MasterFooterLoader !== 'undefined') {
         const footerLoader = new window.MasterFooterLoader();
-        footerLoader.loadFooter();
+        footerLoader.loadFooter('he', 'dynamic-footer-container');
       }
     });
   </script>
+  <!-- COMPREHENSIVE DEBUG: API Integration Analysis -->
+  <script>
+    // Enhanced debugging for teachers page
+    console.log('=== TEACHERS PAGE DEBUG START ===');
+    console.log('Page URL:', window.location.href);
+    console.log('Hostname:', window.location.hostname);
+    console.log('Pathname:', window.location.pathname);
+    console.log('Search params:', window.location.search);
+
+    // Check initialization conditions
+    const urlParams = new URLSearchParams(window.location.search);
+    const previewMode = urlParams.get('preview') === 'true';
+    const isLocalhost = window.location.hostname === 'localhost';
+    const isProduction = window.location.hostname.includes('aistudio555.com');
+
+    console.log('Initialization conditions:');
+    console.log('- previewMode:', previewMode);
+    console.log('- isLocalhost:', isLocalhost);
+    console.log('- isProduction:', isProduction);
+    console.log('- Should initialize:', previewMode || isLocalhost || isProduction);
+
+    // Monitor CustomAPIIntegration creation
+    let checkCount = 0;
+    const checkInterval = setInterval(() => {
+      checkCount++;
+      if (window.CustomAPIIntegration) {
+        console.log(`✅ CustomAPIIntegration found after ${checkCount * 100}ms`);
+        console.log('Integration object:', window.CustomAPIIntegration);
+        console.log('API_BASE:', window.CustomAPIIntegration.API_BASE);
+        console.log('currentLanguage:', window.CustomAPIIntegration.currentLanguage);
+        console.log('isInitialized:', window.CustomAPIIntegration.isInitialized);
+        clearInterval(checkInterval);
+
+        // Try to manually load teachers after a delay
+        setTimeout(async () => {
+          console.log('=== MANUAL TEACHERS LOAD ATTEMPT ===');
+          const grid = document.querySelector('#instructors-grid');
+          console.log('Grid element found:', !!grid);
+
+          if (grid) {
+            console.log('Current grid children count:', grid.children.length);
+            console.log('First child text:', grid.children[0]?.textContent?.substring(0, 100));
+          }
+
+          try {
+            console.log('Calling loadTeachersContent()...');
+            await window.CustomAPIIntegration.loadTeachersContent();
+            console.log('loadTeachersContent() completed');
+
+            // Check grid again
+            setTimeout(() => {
+              console.log('=== POST-LOAD CHECK ===');
+              const updatedGrid = document.querySelector('#instructors-grid');
+              if (updatedGrid) {
+                console.log('Updated grid children count:', updatedGrid.children.length);
+                console.log('First child text:', updatedGrid.children[0]?.textContent?.substring(0, 100));
+
+                // Check for Hebrew content
+                const hasHebrew = /[\u0590-\u05FF]/.test(updatedGrid.textContent);
+                console.log('Has Hebrew content:', hasHebrew);
+              }
+            }, 1000);
+          } catch (error) {
+            console.error('Error loading teachers:', error);
+          }
+        }, 3000);
+      } else if (checkCount >= 50) {
+        console.error('❌ CustomAPIIntegration not found after 5 seconds');
+        clearInterval(checkInterval);
+      }
+    }, 100);
+
+    // Monitor DOM changes
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('=== DOM CONTENT LOADED ===');
+      const grid = document.querySelector('#instructors-grid');
+      console.log('Grid element exists:', !!grid);
+
+      if (grid) {
+        // Set up mutation observer
+        const observer = new MutationObserver((mutations) => {
+          console.log('=== GRID MUTATION DETECTED ===');
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'childList') {
+              console.log(`Added ${mutation.addedNodes.length} nodes, removed ${mutation.removedNodes.length} nodes`);
+            }
+          });
+        });
+
+        observer.observe(grid, { childList: true, subtree: true });
+        console.log('Mutation observer attached to grid');
+      }
+    });
+
+    // Test API directly
+    setTimeout(async () => {
+      console.log('=== DIRECT API TEST ===');
+      try {
+        const response = await fetch('http://localhost:3000/api/teachers?locale=he');
+        const data = await response.json();
+        console.log('Direct API call successful:', data);
+        console.log('Teachers count:', data.data?.length);
+        if (data.data?.length > 0) {
+          console.log('First teacher:', data.data[0].attributes);
+        }
+      } catch (error) {
+        console.error('Direct API call failed:', error);
+      }
+    }, 1000);
+  </script>
+    <script src="../js/shared-menu-component.js"></script>
 </body>
 </html>

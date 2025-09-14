@@ -282,6 +282,12 @@ class UITranslator {
   updateFAQTitles(ui) {
     console.log('❓ Updating FAQ titles...');
 
+    // Skip FAQ translation on courses page - it already has correct Hebrew content
+    if (window.location.pathname.includes('/courses.html')) {
+      console.log('📍 Skipping FAQ translation on courses page - already has correct Hebrew content');
+      return;
+    }
+
     // FAQ title mappings - look for FAQ elements and update their titles
     const faqMappings = [
       { field: 'faq1Title', fallback: 'faq_1_title' },
@@ -303,6 +309,9 @@ class UITranslator {
       const titleText = ui[mapping.field] || ui[mapping.fallback];
 
       if (titleText && faqQuestionElements[index]) {
+        // Skip elements with data-no-translate attribute
+        if (faqQuestionElements[index].hasAttribute('data-no-translate')) return;
+
         const currentText = faqQuestionElements[index].textContent.trim();
         console.log(`✅ FAQ ${faqNumber} Question: "${currentText}" → "${titleText}"`);
         faqQuestionElements[index].textContent = titleText;
@@ -436,6 +445,9 @@ class UITranslator {
       // Fix: Use valid CSS selectors and check content with JavaScript
       const faqSectionTitles = document.querySelectorAll('.faq-section-title, .faq-main-title, h2, h3');
       faqSectionTitles.forEach(title => {
+        // Skip elements with data-no-translate attribute
+        if (title.hasAttribute('data-no-translate')) return;
+
         if (title.textContent.includes('FAQ') || title.textContent === 'שלטו ב-AI וטכנולוגיה') {
           console.log(`✅ Main FAQ Title: "${title.textContent}" → "${mainTitle}"`);
           title.textContent = mainTitle;
@@ -608,6 +620,12 @@ function initHebrewPlaceholderReplacement() {
   // Only run for Hebrew pages
   const isHebrew = window.location.pathname.includes('/he/');
   if (!isHebrew) return;
+
+  // Skip global replacement on courses page - it already has correct Hebrew FAQ content
+  if (window.location.pathname.includes('/courses.html')) {
+    console.log('📍 Skipping global Hebrew placeholder replacement on courses page');
+    return;
+  }
 
   console.log('🔥 Global Hebrew placeholder replacement activated');
 

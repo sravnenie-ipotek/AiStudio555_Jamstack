@@ -1,0 +1,26 @@
+/* Minimal Language Selector Styling - Use Webflow Defaults */
+
+/* Only add subtle highlight background - no layout changes at all */
+a#language-switcher.nav-link {
+    background: rgba(139, 92, 246, 0.08);
+    border-radius: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+a#language-switcher.nav-link:hover {
+    background: rgba(139, 92, 246, 0.15);
+}
+
+/* Dropdown positioning only */
+#languageDropdown {
+    margin-top: 8px;
+}
+
+/* Mobile only */
+@media screen and (max-width: 991px) {
+    a#language-switcher.nav-link {
+        background: transparent;
+        border-radius: 0;
+    }
+}

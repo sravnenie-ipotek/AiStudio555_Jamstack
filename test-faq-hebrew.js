@@ -51,8 +51,12 @@ const { chromium } = require('playwright');
     });
     console.log('📸 Screenshot saved as faq-test-screenshot.png');
 
-    // Check if API is being called
+    // Check console logs and API calls
     let apiCalled = false;
+    page.on('console', msg => {
+      console.log('🐛 CONSOLE:', msg.text());
+    });
+
     page.on('request', request => {
       if (request.url().includes('/api/home-page') && request.url().includes('locale=he')) {
         apiCalled = true;
@@ -61,8 +65,8 @@ const { chromium } = require('playwright');
     });
 
     // Refresh to see API calls
-    await page.reload({ waitUntil: 'networkidle' });
-    await page.waitForTimeout(2000);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(5000); // Give more time for translation
 
     if (!apiCalled) {
       console.log('❌ No API call detected for Hebrew locale');

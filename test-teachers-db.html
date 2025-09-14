@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Teachers DB Loading</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #1a1a2e; color: white; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #444; border-radius: 8px; }
+        .success { color: #4caf50; }
+        .error { color: #f44336; }
+        .info { color: #2196f3; }
+        pre { background: #0f0f23; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Teachers Database Integration Test</h1>
+
+    <div class="test-section">
+        <h2>1. API Response Test</h2>
+        <div id="api-test"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Page Integration Test</h2>
+        <div id="page-test"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. DOM Elements Check</h2>
+        <div id="dom-test"></div>
+    </div>
+
+    <script>
+        async function runTests() {
+            // Test 1: Direct API Call
+            const apiTest = document.getElementById('api-test');
+            try {
+                const response = await fetch('http://localhost:3000/api/teachers?locale=he');
+                const data = await response.json();
+
+                apiTest.innerHTML = `
+                    <p class="success">✅ API is working!</p>
+                    <p class="info">Found ${data.data.length} Hebrew teachers in database:</p>
+                    <pre>${JSON.stringify(data.data.map(t => ({
+                        name: t.attributes.name,
+                        bio: t.attributes.bio
+                    })), null, 2)}</pre>
+                `;
+            } catch (error) {
+                apiTest.innerHTML = `<p class="error">❌ API Error: ${error.message}</p>`;
+            }
+
+            // Test 2: Check if page loads the integration
+            const pageTest = document.getElementById('page-test');
+            try {
+                const pageResponse = await fetch('http://localhost:3005/he/teachers.html');
+                const pageHTML = await pageResponse.text();
+
+                const checks = {
+                    'Has webflow-strapi-integration.js': pageHTML.includes('webflow-strapi-integration.js'),
+                    'Has instructors-grid container': pageHTML.includes('id="instructors-grid"'),
+                    'Has static content (should be replaced)': pageHTML.includes('Sarah Chen'),
+                    'Has Hebrew locale set': pageHTML.includes('lang="he"')
+                };
+
+                pageTest.innerHTML = '<p class="info">Page integration checks:</p><ul>';
+                for (const [check, result] of Object.entries(checks)) {
+                    pageTest.innerHTML += `<li class="${result ? 'success' : 'error'}">${result ? '✅' : '❌'} ${check}</li>`;
+                }
+                pageTest.innerHTML += '</ul>';
+            } catch (error) {
+                pageTest.innerHTML = `<p class="error">❌ Page Load Error: ${error.message}</p>`;
+            }
+
+            // Test 3: Test in iframe
+            const domTest = document.getElementById('dom-test');
+            domTest.innerHTML = `
+                <p class="info">Loading Hebrew teachers page in iframe to check DOM...</p>
+                <iframe id="test-frame" src="http://localhost:3005/he/teachers.html"
+                        style="width: 100%; height: 400px; border: 1px solid #666; border-radius: 4px;"
+                        onload="checkIframeContent()"></iframe>
+            `;
+        }
+
+        window.checkIframeContent = function() {
+            setTimeout(() => {
+                try {
+                    const iframe = document.getElementById('test-frame');
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+                    // Check for dynamic content
+                    const grid = iframeDoc.getElementById('instructors-grid');
+                    const cards = grid ? grid.querySelectorAll('.instructor-card-enhanced') : [];
+
+                    // Check if Hebrew content is present
+                    const hasHebrewContent = Array.from(cards).some(card => {
+                        const text = card.textContent || '';
+                        return /[\u0590-\u05FF]/.test(text); // Hebrew Unicode range
+                    });
+
+                    // Check first card content
+                    const firstCard = cards[0];
+                    const firstName = firstCard ? firstCard.querySelector('.instructor-name')?.textContent : 'None';
+
+                    const results = document.createElement('div');
+                    results.innerHTML = `
+                        <h3>Iframe DOM Analysis:</h3>
+                        <ul>
+                            <li class="${grid ? 'success' : 'error'}">
+                                ${grid ? '✅' : '❌'} Found instructors grid container
+                            </li>
+                            <li class="${cards.length > 0 ? 'success' : 'error'}">
+                                ${cards.length > 0 ? '✅' : '❌'} Found ${cards.length} instructor cards
+                            </li>
+                            <li class="${hasHebrewContent ? 'success' : 'error'}">
+                                ${hasHebrewContent ? '✅' : '❌'} Hebrew content detected: ${hasHebrewContent}
+                            </li>
+                            <li class="info">
+                                ℹ️ First instructor name: "${firstName}"
+                            </li>
+                            <li class="${firstName.includes('Sarah Chen') ? 'error' : 'info'}">
+                                ${firstName.includes('Sarah Chen') ? '⚠️ Still showing static content' : '✅ Not showing static content'}
+                            </li>
+                        </ul>
+                    `;
+
+                    // Check console for API calls
+                    if (iframe.contentWindow.CustomAPIIntegration) {
+                        results.innerHTML += '<p class="success">✅ CustomAPIIntegration is loaded</p>';
+                    } else {
+                        results.innerHTML += '<p class="error">❌ CustomAPIIntegration not found</p>';
+                    }
+
+                    document.getElementById('dom-test').appendChild(results);
+                } catch (error) {
+                    console.error('Iframe check error:', error);
+                    document.getElementById('dom-test').innerHTML +=
+                        `<p class="error">❌ Could not analyze iframe content: ${error.message}</p>`;
+                }
+            }, 3000); // Wait for page to load and initialize
+        };
+
+        // Run tests on load
+        runTests();
+    </script>
+</body>
+</html>

@@ -2,8 +2,8 @@
 <html data-wf-page="teachers-page" data-wf-site="68b7601d918996218465c4a6" lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Our Teachers - AI Studio E-Learning Platform</title>
-  <meta content="Meet our expert instructors who bring years of real-world experience to help you master IT skills" name="description">
+  <title>Expert Teachers - AI Studio E-Learning Platform</title>
+  <meta content="Learn from industry leaders at Google, Microsoft, Tesla & more. Expert instructors with 5-15+ years of commercial experience in AI, ML, Development, Design & Management." name="description">
   <meta content="Our Teachers - AI Studio E-Learning Platform" property="og:title">
   <meta content="Our Teachers - AI Studio E-Learning Platform" property="twitter:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -406,39 +406,12 @@
   </style>
 
   <link href="../css/mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/teachers-tabbed-minimal.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <div class="page-wrapper">
     <!-- Navigation (Same as courses.html) -->
-    <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
-      <div class="container">
-        <div class="navbar-content">
-          <a href="home.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
-          <nav role="navigation" class="nav-menu w-nav-menu">
-            <a href="home.html" class="nav-link w-nav-link">Home</a>
-            <a href="courses.html" class="nav-link w-nav-link">Courses</a>
-            <a href="teachers.html" aria-current="page" class="nav-link w-nav-link w--current">Teachers</a>
-            <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
-              <div class="dropdown-toggle w-dropdown-toggle">
-                <div class="dropdown-toggle-text-block">Career Services</div>
-                <div class="dropdown-toggle-arrow-2">▼</div>
-              </div>
-              <nav class="dropdown-list w-dropdown-list">
-                <a href="career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
-                  <div>Career Orientation</div>
-                </a>
-                <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block">
-                  <div>Career Center</div>
-                </a>
-              </nav>
-            </div>
-            <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
-          </nav>
-          <div class="navbar-button-wrapper">
-            <div class="menu-button w-nav-button">
-              <div data-is-ix2-target="1" class="hamburger-menu-icon" data-w-id="9700d956-7e80-623a-3836-d267f1fdd0f6" data-animation-type="lottie" data-src="https://uploads-ssl.webflow.com/6649cc3a1ea038d81fed488f/665c6513c402f5112b50428d_Hamburger%20White.lottie" data-loop="0" data-direction="1" data-autoplay="0" data-renderer="svg" data-duration="0" data-ix2-initial-state="0"></div>
-            </div>
-          </div>
+    <div id="shared-menu-container"></div>
         </div>
       </div>
     </div>
@@ -472,367 +445,264 @@
       </div>
     </section>
 
-    <!-- Technology Track Navigation -->
-    <section class="section tech-tracks-navigation">
+    <!-- Tabbed Teacher Categories -->
+    <section class="section teacher-tabs-navigation">
       <div class="container">
-        <div data-w-id="tech-tracks" style="opacity:0" class="section-title-wrapper align-center">
+        <div data-w-id="teacher-categories" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">Technology Specializations</div>
+            <div class="section-subtitle">Expert Categories</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title">Choose Your Learning Track</h2>
+          <h2 class="section-title">Learn from Industry Leaders</h2>
         </div>
-        <div data-w-id="track-filters" style="opacity:0" class="category-filter-wrapper">
-          <button class="category-filter-btn active" data-filter="all">All Tracks</button>
-          <button class="category-filter-btn" data-filter="machine-learning">Machine Learning</button>
-          <button class="category-filter-btn" data-filter="deep-learning">Deep Learning</button>
-          <button class="category-filter-btn" data-filter="data-science">Data Science</button>
-          <button class="category-filter-btn" data-filter="python">Python Development</button>
-          <button class="category-filter-btn" data-filter="web-development">Web Development</button>
-          <button class="category-filter-btn" data-filter="cloud-computing">Cloud Computing</button>
-          <button class="category-filter-btn" data-filter="devops">DevOps Engineering</button>
-          <button class="category-filter-btn" data-filter="business-intelligence">Business Intelligence</button>
-          <button class="category-filter-btn" data-filter="product-management">Product Management</button>
-          <button class="category-filter-btn" data-filter="ux-ui-design">UX/UI Design</button>
+
+        <!-- Tab Navigation -->
+        <div data-w-id="teacher-tabs" style="opacity:0" class="teacher-tabs-wrapper">
+          <button class="teacher-tab-btn active" data-category="all">All Teachers</button>
+          <button class="teacher-tab-btn" data-category="machine-learning">Machine Learning & AI</button>
+          <button class="teacher-tab-btn" data-category="development">Software Development</button>
+          <button class="teacher-tab-btn" data-category="cloud-devops">Cloud & DevOps</button>
+          <button class="teacher-tab-btn" data-category="data-analytics">Data & Analytics</button>
+          <button class="teacher-tab-btn" data-category="design">Design & UX</button>
+          <button class="teacher-tab-btn" data-category="management">Management</button>
         </div>
       </div>
     </section>
 
-    <!-- Instructors Grid -->
-    <section class="section instructor-showcase">
+    <!-- Teachers Grid -->
+    <section class="section teachers-showcase">
       <div class="container">
-        <div data-w-id="instructors-grid-main" style="opacity:0" class="instructor-grid-enhanced animate-stagger" id="instructors-grid">
-          
-          <!-- Machine Learning Track -->
-          <div class="instructor-card-enhanced" data-category="machine-learning">
-            <div class="instructor-category-badge">Machine Learning</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-ml-1.jpg" alt="Sarah Chen" onerror="this.src='https://images.unsplash.com/photo-1494790108755-2616b612b1ac?w=300&h=300&fit=crop&crop=face'">
+        <div data-w-id="teachers-grid-main" style="opacity:0" class="teachers-grid-minimal animate-stagger" id="teachers-grid">
+
+          <!-- Machine Learning & AI Category -->
+          <div class="teacher-card-minimal" data-category="machine-learning" data-tab="machine-learning">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-ml-1.jpg" alt="Dr. Sarah Chen" onerror="this.src='https://images.unsplash.com/photo-1494790108755-2616b612b1ac?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Sarah Chen</h3>
-            <p class="instructor-title">Senior ML Engineer at Google</p>
-            <p class="instructor-experience">8+ years experience</p>
-            <p class="instructor-bio">Leading ML engineer at Google with expertise in recommendation systems, natural language processing, and AutoML. Has deployed ML models serving billions of users.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">TensorFlow</span>
-              <span class="specialty-tag">PyTorch</span>
-              <span class="specialty-tag">AutoML</span>
-              <span class="specialty-tag">NLP</span>
+            <h3 class="teacher-name-minimal">Dr. Sarah Chen</h3>
+            <p class="teacher-role-minimal">Senior ML Engineer | Google</p>
+            <p class="teacher-experience-minimal">8+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <div class="instructor-card-enhanced" data-category="machine-learning">
-            <div class="instructor-category-badge">Machine Learning</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-ml-2.jpg" alt="Michael Rodriguez" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'">
+          <div class="teacher-card-minimal" data-category="machine-learning" data-tab="machine-learning">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-ml-2.jpg" alt="Dr. Michael Rodriguez" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Michael Rodriguez</h3>
-            <p class="instructor-title">AI Research Scientist at OpenAI</p>
-            <p class="instructor-experience">10+ years experience</p>
-            <p class="instructor-bio">Research scientist at OpenAI working on large language models and reinforcement learning. Co-author of 25+ published papers in top-tier ML conferences.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">Large Language Models</span>
-              <span class="specialty-tag">Reinforcement Learning</span>
-              <span class="specialty-tag">Research</span>
+            <h3 class="teacher-name-minimal">Dr. Michael Rodriguez</h3>
+            <p class="teacher-role-minimal">AI Research Scientist | OpenAI</p>
+            <p class="teacher-experience-minimal">10+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <div class="instructor-card-enhanced" data-category="machine-learning">
-            <div class="instructor-category-badge">Machine Learning</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-ml-3.jpg" alt="Elena Petrov" onerror="this.src='https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop&crop=face'">
+          <div class="teacher-card-minimal" data-category="machine-learning" data-tab="machine-learning">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-ml-3.jpg" alt="Dr. Elena Petrov" onerror="this.src='https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Elena Petrov</h3>
-            <p class="instructor-title">Head of Data Science at Meta</p>
-            <p class="instructor-experience">12+ years experience</p>
-            <p class="instructor-bio">Leads data science initiatives at Meta, focusing on user behavior modeling and content recommendation. Expert in scaling ML systems for social platforms.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">Recommendation Systems</span>
-              <span class="specialty-tag">User Modeling</span>
-              <span class="specialty-tag">A/B Testing</span>
+            <h3 class="teacher-name-minimal">Dr. Elena Petrov</h3>
+            <p class="teacher-role-minimal">Head of Data Science | Meta</p>
+            <p class="teacher-experience-minimal">12+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <!-- Deep Learning Track -->
-          <div class="instructor-card-enhanced" data-category="deep-learning">
-            <div class="instructor-category-badge">Deep Learning</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-dl-1.jpg" alt="David Kim" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face'">
+          <!-- Software Development Category -->
+          <div class="teacher-card-minimal" data-category="development" data-tab="development">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-dl-1.jpg" alt="David Kim" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">David Kim</h3>
-            <p class="instructor-title">Computer Vision Engineer at Tesla</p>
-            <p class="instructor-experience">6+ years experience</p>
-            <p class="instructor-bio">Computer vision expert at Tesla working on autonomous driving perception systems. Specializes in object detection, depth estimation, and real-time inference.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">Computer Vision</span>
-              <span class="specialty-tag">Object Detection</span>
-              <span class="specialty-tag">Autonomous Driving</span>
+            <h3 class="teacher-name-minimal">David Kim</h3>
+            <p class="teacher-role-minimal">Computer Vision Engineer | Tesla</p>
+            <p class="teacher-experience-minimal">6+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <div class="instructor-card-enhanced" data-category="deep-learning">
-            <div class="instructor-category-badge">Deep Learning</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-dl-2.jpg" alt="Anna Kowalski" onerror="this.src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face'">
+          <div class="teacher-card-minimal" data-category="development" data-tab="development">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-dl-2.jpg" alt="Anna Kowalski" onerror="this.src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Anna Kowalski</h3>
-            <p class="instructor-title">NLP Engineer at Microsoft</p>
-            <p class="instructor-experience">7+ years experience</p>
-            <p class="instructor-bio">Leading NLP engineer at Microsoft working on Azure Cognitive Services. Expert in transformer architectures, multilingual models, and conversational AI.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">Transformers</span>
-              <span class="specialty-tag">BERT</span>
-              <span class="specialty-tag">Conversational AI</span>
+            <h3 class="teacher-name-minimal">Anna Kowalski</h3>
+            <p class="teacher-role-minimal">Senior Software Engineer | Microsoft</p>
+            <p class="teacher-experience-minimal">7+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <!-- Data Science Track -->
-          <div class="instructor-card-enhanced" data-category="data-science">
-            <div class="instructor-category-badge">Data Science</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-ds-1.jpg" alt="James Wilson" onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?w=300&h=300&fit=crop&crop=face'">
+          <!-- Data & Analytics Category -->
+          <div class="teacher-card-minimal" data-category="data-analytics" data-tab="data-analytics">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-ds-1.jpg" alt="Dr. James Wilson" onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">James Wilson</h3>
-            <p class="instructor-title">Principal Data Scientist at Amazon</p>
-            <p class="instructor-experience">9+ years experience</p>
-            <p class="instructor-bio">Principal data scientist at Amazon leading customer analytics and forecasting models. Expert in statistical modeling, time series analysis, and business intelligence.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">Statistical Modeling</span>
-              <span class="specialty-tag">Time Series</span>
-              <span class="specialty-tag">Forecasting</span>
+            <h3 class="teacher-name-minimal">Dr. James Wilson</h3>
+            <p class="teacher-role-minimal">Principal Data Scientist | Amazon</p>
+            <p class="teacher-experience-minimal">9+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <div class="instructor-card-enhanced" data-category="data-science">
-            <div class="instructor-category-badge">Data Science</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-ds-2.jpg" alt="Maria Santos" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&crop=face'">
+          <div class="teacher-card-minimal" data-category="data-analytics" data-tab="data-analytics">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-ds-2.jpg" alt="Maria Santos" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Maria Santos</h3>
-            <p class="instructor-title">Data Analytics Lead at Stripe</p>
-            <p class="instructor-experience">5+ years experience</p>
-            <p class="instructor-bio">Data analytics lead at Stripe focusing on payment analytics and fraud detection. Expert in feature engineering, model deployment, and real-time analytics.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">Fraud Detection</span>
-              <span class="specialty-tag">Real-time Analytics</span>
-              <span class="specialty-tag">SQL</span>
+            <h3 class="teacher-name-minimal">Maria Santos</h3>
+            <p class="teacher-role-minimal">Data Analytics Lead | Stripe</p>
+            <p class="teacher-experience-minimal">5+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <!-- Python Development Track -->
-          <div class="instructor-card-enhanced" data-category="python">
-            <div class="instructor-category-badge">Python Development</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-py-1.jpg" alt="Alex Thompson" onerror="this.src='https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&h=300&fit=crop&crop=face'">
+          <!-- Cloud & DevOps Category -->
+          <div class="teacher-card-minimal" data-category="cloud-devops" data-tab="cloud-devops">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-py-1.jpg" alt="Alex Thompson" onerror="this.src='https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Alex Thompson</h3>
-            <p class="instructor-title">Senior Backend Engineer at Slack</p>
-            <p class="instructor-experience">11+ years experience</p>
-            <p class="instructor-bio">Senior backend engineer at Slack building scalable messaging infrastructure. Expert in Python web frameworks, microservices architecture, and API design.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">Django</span>
-              <span class="specialty-tag">FastAPI</span>
-              <span class="specialty-tag">Microservices</span>
+            <h3 class="teacher-name-minimal">Alex Thompson</h3>
+            <p class="teacher-role-minimal">Senior Backend Engineer | Slack</p>
+            <p class="teacher-experience-minimal">11+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <div class="instructor-card-enhanced" data-category="python">
-            <div class="instructor-category-badge">Python Development</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-py-2.jpg" alt="Lisa Zhang" onerror="this.src='https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=300&h=300&fit=crop&crop=face'">
+          <div class="teacher-card-minimal" data-category="cloud-devops" data-tab="cloud-devops">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-py-2.jpg" alt="Lisa Zhang" onerror="this.src='https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Lisa Zhang</h3>
-            <p class="instructor-title">Python Architect at Twitter</p>
-            <p class="instructor-experience">8+ years experience</p>
-            <p class="instructor-bio">Python architect at Twitter responsible for platform performance optimization. Expert in async programming, testing frameworks, and distributed systems.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">Async Programming</span>
-              <span class="specialty-tag">Performance Optimization</span>
-              <span class="specialty-tag">Testing</span>
+            <h3 class="teacher-name-minimal">Lisa Zhang</h3>
+            <p class="teacher-role-minimal">DevOps Architect | Twitter</p>
+            <p class="teacher-experience-minimal">8+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <!-- Web Development Track -->
-          <div class="instructor-card-enhanced" data-category="web-development">
-            <div class="instructor-category-badge">Web Development</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-web-1.jpg" alt="Robert Johnson" onerror="this.src='https://images.unsplash.com/photo-1556157382-97eda2d62296?w=300&h=300&fit=crop&crop=face'">
+          <!-- Design & UX Category -->
+          <div class="teacher-card-minimal" data-category="design" data-tab="design">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-web-1.jpg" alt="Robert Johnson" onerror="this.src='https://images.unsplash.com/photo-1556157382-97eda2d62296?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Robert Johnson</h3>
-            <p class="instructor-title">Full Stack Lead at Apple</p>
-            <p class="instructor-experience">7+ years experience</p>
-            <p class="instructor-bio">Full stack lead at Apple working on developer tools and web platforms. Expert in React, Node.js, and modern web development practices.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">React</span>
-              <span class="specialty-tag">Node.js</span>
-              <span class="specialty-tag">TypeScript</span>
+            <h3 class="teacher-name-minimal">Robert Johnson</h3>
+            <p class="teacher-role-minimal">UX Design Lead | Apple</p>
+            <p class="teacher-experience-minimal">7+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <div class="instructor-card-enhanced" data-category="web-development">
-            <div class="instructor-category-badge">Web Development</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-web-2.jpg" alt="Sofia Andersson" onerror="this.src='https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=300&h=300&fit=crop&crop=face'">
+          <div class="teacher-card-minimal" data-category="design" data-tab="design">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-web-2.jpg" alt="Sofia Andersson" onerror="this.src='https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Sofia Andersson</h3>
-            <p class="instructor-title">Frontend Architect at Spotify</p>
-            <p class="instructor-experience">6+ years experience</p>
-            <p class="instructor-bio">Frontend architect at Spotify building music streaming interfaces. Expert in React, Vue.js, performance optimization, and responsive design.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">React</span>
-              <span class="specialty-tag">Vue.js</span>
-              <span class="specialty-tag">Performance</span>
+            <h3 class="teacher-name-minimal">Sofia Andersson</h3>
+            <p class="teacher-role-minimal">Product Designer | Spotify</p>
+            <p class="teacher-experience-minimal">6+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <!-- Cloud Computing Track -->
-          <div class="instructor-card-enhanced" data-category="cloud-computing">
-            <div class="instructor-category-badge">Cloud Computing</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-cloud-1.jpg" alt="Raj Patel" onerror="this.src='https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&crop=face'">
+          <!-- Management Category -->
+          <div class="teacher-card-minimal" data-category="management" data-tab="management">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-cloud-1.jpg" alt="Raj Patel" onerror="this.src='https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Raj Patel</h3>
-            <p class="instructor-title">Cloud Solutions Architect at AWS</p>
-            <p class="instructor-experience">9+ years experience</p>
-            <p class="instructor-bio">Cloud solutions architect at AWS helping enterprises migrate to cloud. Expert in serverless architectures, container orchestration, and multi-cloud strategies.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">AWS</span>
-              <span class="specialty-tag">Serverless</span>
-              <span class="specialty-tag">Multi-Cloud</span>
+            <h3 class="teacher-name-minimal">Raj Patel</h3>
+            <p class="teacher-role-minimal">Engineering Manager | AWS</p>
+            <p class="teacher-experience-minimal">9+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <!-- DevOps Engineering Track -->
-          <div class="instructor-card-enhanced" data-category="devops">
-            <div class="instructor-category-badge">DevOps Engineering</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-devops-1.jpg" alt="Jennifer Wu" onerror="this.src='https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=300&fit=crop&crop=face'">
+          <div class="teacher-card-minimal" data-category="management" data-tab="management">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-devops-1.jpg" alt="Jennifer Wu" onerror="this.src='https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Jennifer Wu</h3>
-            <p class="instructor-title">DevOps Principal at GitHub</p>
-            <p class="instructor-experience">8+ years experience</p>
-            <p class="instructor-bio">DevOps principal at GitHub building CI/CD infrastructure for millions of developers. Expert in Kubernetes, Docker, and infrastructure as code.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">Kubernetes</span>
-              <span class="specialty-tag">CI/CD</span>
-              <span class="specialty-tag">Infrastructure as Code</span>
+            <h3 class="teacher-name-minimal">Jennifer Wu</h3>
+            <p class="teacher-role-minimal">Technical Program Manager | GitHub</p>
+            <p class="teacher-experience-minimal">8+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <!-- Business Intelligence Track -->
-          <div class="instructor-card-enhanced" data-category="business-intelligence">
-            <div class="instructor-category-badge">Business Intelligence</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-bi-1.jpg" alt="Marcus Brown" onerror="this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671d66?w=300&h=300&fit=crop&crop=face'">
+          <div class="teacher-card-minimal" data-category="management" data-tab="management">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-bi-1.jpg" alt="Marcus Brown" onerror="this.src='https://images.unsplash.com/photo-1566492031773-4f4e44671d66?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Marcus Brown</h3>
-            <p class="instructor-title">BI Director at Salesforce</p>
-            <p class="instructor-experience">10+ years experience</p>
-            <p class="instructor-bio">Business intelligence director at Salesforce leading data visualization and analytics initiatives. Expert in Tableau, Power BI, and executive reporting.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">Tableau</span>
-              <span class="specialty-tag">Power BI</span>
-              <span class="specialty-tag">Executive Reporting</span>
+            <h3 class="teacher-name-minimal">Marcus Brown</h3>
+            <p class="teacher-role-minimal">Product Manager | Salesforce</p>
+            <p class="teacher-experience-minimal">10+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <!-- Product Management Track -->
-          <div class="instructor-card-enhanced" data-category="product-management">
-            <div class="instructor-category-badge">Product Management</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-pm-1.jpg" alt="Sarah Kim" onerror="this.src='https://images.unsplash.com/photo-1507101105822-7472b28e22ac?w=300&h=300&fit=crop&crop=face'">
+          <div class="teacher-card-minimal" data-category="management" data-tab="management">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-pm-1.jpg" alt="Sarah Kim" onerror="this.src='https://images.unsplash.com/photo-1507101105822-7472b28e22ac?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Sarah Kim</h3>
-            <p class="instructor-title">Senior Product Manager at Airbnb</p>
-            <p class="instructor-experience">7+ years experience</p>
-            <p class="instructor-bio">Senior product manager at Airbnb leading host experience products. Expert in product strategy, user research, and agile development methodologies.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">Product Strategy</span>
-              <span class="specialty-tag">User Research</span>
-              <span class="specialty-tag">Agile</span>
+            <h3 class="teacher-name-minimal">Sarah Kim</h3>
+            <p class="teacher-role-minimal">Senior Product Manager | Airbnb</p>
+            <p class="teacher-experience-minimal">7+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
-          <!-- UX/UI Design Track -->
-          <div class="instructor-card-enhanced" data-category="ux-ui-design">
-            <div class="instructor-category-badge">UX/UI Design</div>
-            <div class="instructor-avatar-enhanced">
-              <img src="images/instructor-ux-1.jpg" alt="Emma Davis" onerror="this.src='https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=300&h=300&fit=crop&crop=face'">
+          <div class="teacher-card-minimal" data-category="design" data-tab="design">
+            <div class="teacher-avatar-minimal">
+              <img src="images/instructor-ux-1.jpg" alt="Emma Davis" onerror="this.src='https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=200&h=200&fit=crop&crop=face'">
             </div>
-            <h3 class="instructor-name">Emma Davis</h3>
-            <p class="instructor-title">Principal Designer at Adobe</p>
-            <p class="instructor-experience">9+ years experience</p>
-            <p class="instructor-bio">Principal designer at Adobe leading Creative Cloud user experience. Expert in user-centered design, prototyping, and design systems.</p>
-            <div class="instructor-specialties">
-              <span class="specialty-tag">User Experience</span>
-              <span class="specialty-tag">Design Systems</span>
-              <span class="specialty-tag">Prototyping</span>
+            <h3 class="teacher-name-minimal">Emma Davis</h3>
+            <p class="teacher-role-minimal">Principal Designer | Adobe</p>
+            <p class="teacher-experience-minimal">9+ years of commercial experience</p>
+            <div class="teacher-social-minimal">
+              <a href="#" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+              <a href="#" class="social-link-minimal github" title="GitHub">🐱</a>
             </div>
-            <div class="instructor-social">
-              <a href="#" class="instructor-social-link">💼</a>
-              <a href="#" class="instructor-social-link">🐦</a>
-            </div>
+            <button class="contact-teacher-btn">Contact Teacher</button>
           </div>
 
         </div>
@@ -905,7 +775,7 @@
     <!-- Footer (Same as courses.html) -->
     <section class="section footer">
       <div class="container">
-        <div class="footer-content">
+        <div class="footer-content" id="dynamic-footer-container">
           <!-- Database-driven footer content will be loaded here by MasterFooterLoader -->
             <div class="loading-state" style="padding: 40px; text-align: center; color: #666;">
               <div class="loading-spinner"></div>
@@ -1182,14 +1052,19 @@
 
   <script src="../js/navigation-responsive-fix.js"></script>
   <script src="../js/mobile-menu-toggle-fix.js"></script>
+  <script src="../js/webflow-animation-fix.js"></script>
+  <script src="../js/teachers-tabbed-functionality.js"></script>
 
+  <!-- Master Footer Loader -->
+  <script src="../js/master-footer-loader.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       if (typeof window.MasterFooterLoader !== 'undefined') {
         const footerLoader = new window.MasterFooterLoader();
-        footerLoader.loadFooter();
+        footerLoader.loadFooter('en', 'dynamic-footer-container');
       }
     });
   </script>
+    <script src="../js/shared-menu-component.js"></script>
 </body>
 </html>

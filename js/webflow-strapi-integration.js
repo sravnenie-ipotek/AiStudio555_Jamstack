@@ -6,8 +6,10 @@
 
 class CustomAPIIntegration {
     constructor() {
-        // Production API URL
-        this.API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+        // Use local API if available, fallback to production
+        this.API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:3000/api'
+            : 'https://aistudio555jamstack-production.up.railway.app/api';
         this.isInitialized = false;
         this.currentLanguage = this.detectLocale();
         this.cache = {};
@@ -136,8 +138,8 @@ class CustomAPIIntegration {
     async loadTeachersContent() {
         try {
             console.log('👨‍🏫 Loading teachers content...');
-            
-            const teachers = await this.fetchAPI('/teachers?populate=*');
+
+            const teachers = await this.fetchAPI(`/teachers?locale=${this.currentLanguage}`);
             if (teachers?.data) {
                 this.updateTeachersGrid(teachers.data);
                 console.log(`✅ Loaded ${teachers.data.length} teachers`);
@@ -572,9 +574,12 @@ class CustomAPIIntegration {
 
     updateTeachersGrid(teachersData) {
         console.log('👨‍🏫 Updating teachers grid...');
-        
-        const teachersContainer = document.querySelector('.teachers-grid, [data-teachers-grid]');
-        if (!teachersContainer) return;
+
+        const teachersContainer = document.querySelector('.teachers-grid, [data-teachers-grid], .instructor-grid-enhanced, #instructors-grid');
+        if (!teachersContainer) {
+            console.log('❌ No teachers container found');
+            return;
+        }
 
         teachersContainer.innerHTML = '';
         
@@ -588,30 +593,62 @@ class CustomAPIIntegration {
 
     createTeacherCard(teacherData) {
         const teacher = teacherData.attributes || teacherData;
-        
+
         const teacherCard = document.createElement('div');
-        teacherCard.className = 'teacher-item w-dyn-item';
-        
-        teacherCard.innerHTML = `
-            <div class="teacher-card">
-                <div class="teacher-image">
-                    <img src="${teacher.image || '/images/teacher-placeholder.jpg'}" 
-                         alt="${teacher.name}" 
-                         class="teacher-img" />
+
+        // Check if we're on Hebrew teachers page with enhanced design
+        const isHebrewTeachersPage = document.querySelector('.instructor-grid-enhanced, #instructors-grid');
+
+        if (isHebrewTeachersPage) {
+            teacherCard.className = 'instructor-card-enhanced';
+            teacherCard.setAttribute('data-category', 'all');
+
+            teacherCard.innerHTML = `
+                <div class="instructor-category-badge">מומחה</div>
+                <div class="instructor-avatar-enhanced">
+                    <img src="${teacher.image_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face'}"
+                         alt="${teacher.name}"
+                         onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face'">
                 </div>
-                <div class="teacher-info">
-                    <h3 class="teacher-name">${teacher.name}</h3>
-                    <p class="teacher-title">${teacher.title || ''}</p>
-                    <p class="teacher-bio">${teacher.bio || ''}</p>
-                    <div class="teacher-expertise">
-                        ${teacher.expertise ? teacher.expertise.split(',').map(skill => 
-                            `<span class="skill-tag">${skill.trim()}</span>`
-                        ).join('') : ''}
+                <h3 class="instructor-name">${teacher.name}</h3>
+                <p class="instructor-title">מומחה בתחום הטכנולוגיה</p>
+                <p class="instructor-experience">ניסיון מקצועי רב</p>
+                <p class="instructor-bio">${teacher.bio || 'מומחה מקצועי עם ניסיון עשיר בתחום הטכנולוגיה והחדשנות'}</p>
+                <div class="instructor-specialties">
+                    <span class="specialty-tag">AI/ML</span>
+                    <span class="specialty-tag">Python</span>
+                    <span class="specialty-tag">Data Science</span>
+                </div>
+                <div class="instructor-social">
+                    <a href="#" class="instructor-social-link">💼</a>
+                    <a href="#" class="instructor-social-link">🐦</a>
+                </div>
+            `;
+        } else {
+            // Original design for other pages
+            teacherCard.className = 'teacher-item w-dyn-item';
+
+            teacherCard.innerHTML = `
+                <div class="teacher-card">
+                    <div class="teacher-image">
+                        <img src="${teacher.image_url || '/images/teacher-placeholder.jpg'}"
+                             alt="${teacher.name}"
+                             class="teacher-img" />
+                    </div>
+                    <div class="teacher-info">
+                        <h3 class="teacher-name">${teacher.name}</h3>
+                        <p class="teacher-title">${teacher.title || ''}</p>
+                        <p class="teacher-bio">${teacher.bio || ''}</p>
+                        <div class="teacher-expertise">
+                            ${teacher.expertise ? teacher.expertise.split(',').map(skill =>
+                                `<span class="skill-tag">${skill.trim()}</span>`
+                            ).join('') : ''}
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-        
+            `;
+        }
+
         return teacherCard;
     }
 

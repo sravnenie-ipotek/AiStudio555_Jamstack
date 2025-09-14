@@ -539,26 +539,42 @@ app.get('/api/blog-posts', async (req, res) => {
   }
 });
 
-// TEACHERS (with locale support)
+// TEACHERS (with locale support and categories)
 app.get('/api/teachers', async (req, res) => {
   try {
     const locale = getLocale(req);
-    console.log(`🌍 Fetching teachers for locale: ${locale}`);
-    
-    const data = await queryWithFallback(
-      'SELECT * FROM teachers WHERE locale = $1 AND published_at IS NOT NULL ORDER BY id ASC',
-      [locale]
-    );
-    
+    const category = req.query.category;
+    console.log(`🌍 Fetching teachers for locale: ${locale}${category ? `, category: ${category}` : ''}`);
+
+    let query = 'SELECT * FROM teachers WHERE locale = $1 AND published_at IS NOT NULL';
+    const params = [locale];
+
+    if (category && category !== 'all') {
+      query += ' AND category = $2';
+      params.push(category);
+    }
+
+    query += ' ORDER BY display_order ASC, id ASC';
+
+    const data = await queryWithFallback(query, params);
+
     res.json({
       data: data.map(teacher => ({
         id: teacher.id,
         attributes: {
           name: teacher.name,
+          title: teacher.title,
           role: teacher.title,
           bio: teacher.bio,
           image_url: teacher.image_url,
-          expertise: teacher.expertise
+          expertise: teacher.expertise,
+          category: teacher.category || 'all',
+          experience: teacher.experience,
+          specialties: teacher.specialties,
+          company: teacher.company,
+          linkedin_url: teacher.linkedin_url,
+          twitter_url: teacher.twitter_url,
+          github_url: teacher.github_url
         }
       }))
     });
@@ -592,6 +608,55 @@ app.get('/api/faqs', async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: 'Database error', details: error.message });
+  }
+});
+
+// FOOTER CONTENT (with locale support)
+app.get('/api/footer-content', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    console.log(`🌍 Fetching footer content for locale: ${locale}`);
+
+    // Return footer structure expected by MasterFooterLoader
+    const footerData = {
+      navigation: {
+        links: [
+          { text: 'Home', url: 'home.html' },
+          { text: 'Courses', url: 'courses.html' },
+          { text: 'Teachers', url: 'teachers.html' },
+          { text: 'Career Center', url: 'career-center.html' },
+          { text: 'Blog', url: 'blog.html' }
+        ]
+      },
+      socialLinks: [
+        { platform: 'facebook', url: 'https://facebook.com/aistudio555', icon: 'fab fa-facebook-f' },
+        { platform: 'twitter', url: 'https://twitter.com/aistudio555', icon: 'fab fa-twitter' },
+        { platform: 'linkedin', url: 'https://linkedin.com/company/aistudio555', icon: 'fab fa-linkedin-in' },
+        { platform: 'instagram', url: 'https://instagram.com/aistudio555', icon: 'fab fa-instagram' }
+      ],
+      newsletter: {
+        title: 'Stay Updated',
+        description: 'Get the latest AI news and course updates',
+        placeholder: 'Enter your email',
+        buttonText: 'Subscribe'
+      },
+      contact: {
+        email: 'info@aistudio555.com',
+        phone: '+1 (555) 123-4567',
+        address: '123 AI Street, Tech City, TC 12345'
+      },
+      copyright: '© 2024 AI Studio 555. All rights reserved.',
+      locale: locale
+    };
+
+    console.log(`✅ Footer content fetched successfully for locale: ${locale}`);
+    res.json(footerData);
+  } catch (error) {
+    console.error('❌ Error fetching footer content:', error);
+    res.status(500).json({
+      error: 'Failed to fetch footer content',
+      message: error.message
+    });
   }
 });
 
