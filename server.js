@@ -39,18 +39,26 @@ console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('PORT:', process.env.PORT);
 
 if (process.env.DATABASE_URL) {
-  // Railway PostgreSQL (production)
+  // PostgreSQL (Railway in production OR local Docker)
   dbConfig = {
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
   };
-  console.log('🐘 Using Railway PostgreSQL database');
+
+  // Detect if it's local or Railway
+  if (process.env.DATABASE_URL.includes('localhost') || process.env.DATABASE_URL.includes('127.0.0.1')) {
+    console.log('🐘 Using LOCAL PostgreSQL database (Docker)');
+    console.log('📊 This is an exact copy of production data');
+  } else {
+    console.log('🐘 Using Railway PostgreSQL database (Production)');
+  }
   console.log('🔗 Database URL pattern:', process.env.DATABASE_URL.substring(0, 30) + '...');
 } else {
-  // Local development fallback
+  // Local development fallback (SQLite)
   const sqlite3 = require('sqlite3').verbose();
   console.log('📦 Using local SQLite for development');
   console.log('⚠️  No DATABASE_URL found - using SQLite fallback');
+  console.log('💡 Run ./start-local-like-prod.sh to use PostgreSQL with production data');
 }
 
 // PostgreSQL query helper

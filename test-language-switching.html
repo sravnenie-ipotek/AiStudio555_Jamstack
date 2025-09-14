@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Switching Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #05051a;
+            color: white;
+        }
+        h1 {
+            color: #ffd659;
+        }
+        .test-section {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid rgba(0,128,255,0.2);
+        }
+        .language-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        .status {
+            padding: 10px;
+            background: rgba(0,255,0,0.1);
+            border: 1px solid rgba(0,255,0,0.3);
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .error {
+            background: rgba(255,0,0,0.1);
+            border-color: rgba(255,0,0,0.3);
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 2px solid rgba(0,128,255,0.3);
+            border-radius: 8px;
+        }
+        .test-results {
+            background: rgba(102,126,234,0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌐 Language Switching Test Suite</h1>
+
+    <div class="test-section">
+        <h2>1. Static Translations Test</h2>
+        <p>Load the translations config and test static translations:</p>
+        <div class="language-buttons">
+            <button onclick="testStaticTranslations('en')">English</button>
+            <button onclick="testStaticTranslations('he')">Hebrew</button>
+            <button onclick="testStaticTranslations('ru')">Russian</button>
+        </div>
+        <div id="static-results" class="test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Environment Detection Test</h2>
+        <button onclick="testEnvironment()">Test Environment</button>
+        <div id="env-results" class="test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Live Page Test</h2>
+        <p>Test the actual pages with language switching:</p>
+        <div class="language-buttons">
+            <button onclick="loadPage('home.html')">English Home</button>
+            <button onclick="loadPage('he/home.html')">Hebrew Home</button>
+            <button onclick="loadPage('he/index.html')">Hebrew Index</button>
+        </div>
+        <iframe id="test-frame" src="home.html"></iframe>
+    </div>
+
+    <div class="test-section">
+        <h2>4. API Connection Test</h2>
+        <button onclick="testAPI()">Test API Endpoints</button>
+        <div id="api-results" class="test-results"></div>
+    </div>
+
+    <script src="js/translations-config.js"></script>
+    <script>
+        // Test static translations
+        function testStaticTranslations(lang) {
+            const results = document.getElementById('static-results');
+
+            if (typeof TRANSLATIONS === 'undefined') {
+                results.innerHTML = '<div class="error">❌ TRANSLATIONS not loaded!</div>';
+                return;
+            }
+
+            const tests = [
+                { key: 'banner.subtitle', expected: { en: 'Expert-Led Learning', he: 'למידה בהובלת מומחים', ru: 'Обучение под руководством экспертов' }},
+                { key: 'banner.description', expected: {
+                    en: 'Here you can elevate your tech career',
+                    he: 'כאן תוכלו לקדם את הקריירה',
+                    ru: 'Здесь вы можете поднять'
+                }}
+            ];
+
+            let html = `<h3>Testing ${lang.toUpperCase()} translations:</h3>`;
+
+            tests.forEach(test => {
+                const value = getTranslation(test.key, lang);
+                const expected = test.expected[lang];
+                const pass = value && value.includes(expected.substring(0, 20));
+
+                html += `<div>
+                    ${pass ? '✅' : '❌'} <code>${test.key}</code>:
+                    ${pass ? 'OK' : `Expected "${expected.substring(0, 30)}..." but got "${value ? value.substring(0, 30) : 'undefined'}..."`}
+                </div>`;
+            });
+
+            results.innerHTML = html;
+        }
+
+        // Test environment detection
+        function testEnvironment() {
+            const results = document.getElementById('env-results');
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const apiBase = isLocal ? 'http://localhost:3000/api' : 'https://aistudio555jamstack-production.up.railway.app/api';
+
+            results.innerHTML = `
+                <h3>Environment Information:</h3>
+                <div>📍 Hostname: <code>${window.location.hostname}</code></div>
+                <div>🌍 Environment: <code>${isLocal ? 'LOCAL' : 'PRODUCTION'}</code></div>
+                <div>🔗 API Base: <code>${apiBase}</code></div>
+                <div>🗂️ Current Path: <code>${window.location.pathname}</code></div>
+                <div>💾 Stored Language: <code>${localStorage.getItem('preferredLanguage') || 'none'}</code></div>
+            `;
+        }
+
+        // Load page in iframe
+        function loadPage(url) {
+            document.getElementById('test-frame').src = url;
+        }
+
+        // Test API endpoints
+        async function testAPI() {
+            const results = document.getElementById('api-results');
+            results.innerHTML = '<h3>Testing API Endpoints...</h3>';
+
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const apiBase = isLocal ? 'http://localhost:3000/api' : 'https://aistudio555jamstack-production.up.railway.app/api';
+
+            const endpoints = [
+                '/status',
+                '/home-page?locale=en',
+                '/home-page?locale=he',
+                '/courses?locale=he'
+            ];
+
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(apiBase + endpoint);
+                    const status = response.ok ? '✅' : '❌';
+                    const data = response.ok ? await response.json() : null;
+
+                    results.innerHTML += `<div>${status} <code>${endpoint}</code>: ${response.status} ${response.statusText}</div>`;
+
+                    if (data && endpoint.includes('home-page')) {
+                        const hasHero = data.hero ? '✅ Has hero data' : '❌ Missing hero data';
+                        results.innerHTML += `<div style="margin-left: 20px">${hasHero}</div>`;
+                    }
+                } catch (error) {
+                    results.innerHTML += `<div>❌ <code>${endpoint}</code>: ${error.message}</div>`;
+                }
+            }
+        }
+
+        // Run initial tests
+        window.addEventListener('DOMContentLoaded', () => {
+            testEnvironment();
+            console.log('Test suite loaded. Use the buttons to run specific tests.');
+        });
+    </script>
+</body>
+</html>
