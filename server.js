@@ -175,6 +175,12 @@ app.get('/api/home-page', async (req, res) => {
     console.log('🔍 FAQ DEBUG - homeData.locale:', homeData.locale);
     console.log('🔍 FAQ DEBUG - homeData.title:', homeData.title);
 
+    // DEBUG: Check the values right before JSON response
+    const faq1Value = homeData.faq_1_title;
+    const faq2Value = homeData.faq_2_title;
+    console.log('🔍 RESPONSE DEBUG - About to send faq1Title:', faq1Value);
+    console.log('🔍 RESPONSE DEBUG - About to send faq2Title:', faq2Value);
+
     res.json({
       data: {
         id: homeData.id,
@@ -302,23 +308,23 @@ app.get('/api/home-page', async (req, res) => {
           faqSubtitle: homeData.faq_subtitle,
           faqHeading: homeData.faq_heading || 'Your Questions Answered Here',
 
-          // Individual FAQ Questions & Titles
-          faq1Title: homeData.faq_1_title,
+          // Individual FAQ Questions & Titles with Hebrew fallback
+          faq1Title: homeData.faq_1_title || (locale === 'he' ? 'אילו סוגי קורסי AI ו-IT זמינים?' : 'What types of AI and IT courses are available?'),
           faq1Question: homeData.faq_1_question,
           faq1Answer: homeData.faq_1_answer,
-          faq2Title: homeData.faq_2_title,
+          faq2Title: homeData.faq_2_title || (locale === 'he' ? 'כמה זמן לוקח להשלים קורס?' : 'How long does it take to complete a course?'),
           faq2Question: homeData.faq_2_question,
           faq2Answer: homeData.faq_2_answer,
-          faq3Title: homeData.faq_3_title,
+          faq3Title: homeData.faq_3_title || (locale === 'he' ? 'איזו תמיכה ניתנת במהלך הלמידה?' : 'What kind of support is provided during learning?'),
           faq3Question: homeData.faq_3_question,
           faq3Answer: homeData.faq_3_answer,
-          faq4Title: homeData.faq_4_title,
+          faq4Title: homeData.faq_4_title || (locale === 'he' ? 'האם אני צריך ניסיון תכנות קודם?' : 'Do I need prior programming experience?'),
           faq4Question: homeData.faq_4_question,
           faq4Answer: homeData.faq_4_answer,
-          faq5Title: homeData.faq_5_title,
+          faq5Title: homeData.faq_5_title || (locale === 'he' ? 'האם אקבל תעודה לאחר השלמה?' : 'Will I receive a certificate after completion?'),
           faq5Question: homeData.faq_5_question,
           faq5Answer: homeData.faq_5_answer,
-          faq6Title: homeData.faq_6_title,
+          faq6Title: homeData.faq_6_title || (locale === 'he' ? 'מה כולל התמיכה בקריירה?' : 'What career support is included?'),
           faq6Question: homeData.faq_6_question,
           faq6Answer: homeData.faq_6_answer,
           careerSuccessTitle: homeData.career_success_title || 'Career Success',
@@ -561,41 +567,6 @@ app.get('/api/teachers', async (req, res) => {
   }
 });
 
-// TEACHERS PAGE (with locale support) - Page content, not individual teachers
-app.get('/api/teachers-page', async (req, res) => {
-  try {
-    const locale = getLocale(req);
-    console.log(`🌍 Fetching teachers-page content for locale: ${locale}`);
-
-    // Return static page content for teachers page
-    const pageContent = {
-      hero_title: locale === 'en' ? 'Our Expert Teachers' :
-                  locale === 'ru' ? 'Наши Преподаватели-Эксперты' :
-                  'המורים המומחים שלנו',
-      hero_subtitle: locale === 'en' ? 'Learn from industry professionals with real-world experience' :
-                     locale === 'ru' ? 'Учитесь у профессионалов отрасли с реальным опытом' :
-                     'למד ממקצוענים בתעשייה עם ניסיון בעולם האמיתי',
-      page_title: locale === 'en' ? 'Meet Our Teachers' :
-                  locale === 'ru' ? 'Познакомьтесь с нашими преподавателями' :
-                  'הכירו את המורים שלנו',
-      description: locale === 'en' ? 'Our teachers are industry experts who bring practical knowledge to every lesson.' :
-                   locale === 'ru' ? 'Наши преподаватели - это эксперты отрасли, которые привносят практические знания в каждый урок.' :
-                   'המורים שלנו הם מומחי תעשייה המביאים ידע מעשי לכל שיעור.',
-      published_at: new Date().toISOString(),
-      locale: locale
-    };
-
-    res.json({
-      data: {
-        id: 1,
-        attributes: pageContent
-      }
-    });
-  } catch (error) {
-    console.error('Error fetching teachers-page:', error);
-    res.status(500).json({ error: 'Database error', details: error.message });
-  }
-});
 
 // FAQs (with locale support)
 app.get('/api/faqs', async (req, res) => {
