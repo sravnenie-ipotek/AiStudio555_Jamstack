@@ -5,6 +5,9 @@
  * Database: Railway PostgreSQL (no external dependencies!)
  */
 
+// Load environment variables from .env file
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -89,6 +92,17 @@ async function initializeDatabase() {
       await migrate();
       console.log('✅ Database ready');
       
+      // Run display_order migration for teachers table
+      try {
+        console.log('🔧 Running display_order column migration...');
+        const { addDisplayOrderColumn } = require('./add-display-order-migration.js');
+        await addDisplayOrderColumn();
+        console.log('✅ display_order migration completed');
+      } catch (migrationError) {
+        console.error('⚠️  display_order migration failed:', migrationError.message);
+        // Don't fail startup for this migration
+      }
+
       // Run career orientation migration using simpler approach
       try {
         const migrationPath = path.join(__dirname, 'run-migration-manually.js');
@@ -118,8 +132,8 @@ async function initializeDatabase() {
   }
 }
 
-// Initialize database on startup (disabled - migration already complete)
-// initializeDatabase();
+// Initialize database on startup
+initializeDatabase();
 
 // ==================== MULTI-LANGUAGE HELPERS ====================
 
@@ -156,10 +170,52 @@ app.get('/api/home-page', async (req, res) => {
     const locale = getLocale(req);
     console.log(`🌍 Fetching home page for locale: ${locale}`);
 
-    const data = await queryWithFallback(
-      'SELECT * FROM home_pages WHERE locale = $1 AND published_at IS NOT NULL LIMIT 1',
-      [locale]
-    );
+    let data;
+    try {
+      // Try the locale-aware query first
+      data = await queryWithFallback(
+        'SELECT * FROM home_pages WHERE locale = $1 AND published_at IS NOT NULL LIMIT 1',
+        [locale]
+      );
+    } catch (localeError) {
+      // If locale column doesn't exist, try adding it and use fallback query
+      if (localeError.message.includes('column "locale" does not exist')) {
+        console.log('⚠️  Locale column missing, adding it...');
+
+        try {
+          // Add locale column
+          await queryDatabase('ALTER TABLE home_pages ADD COLUMN IF NOT EXISTS locale VARCHAR(10) DEFAULT \'en\'');
+
+          // Update existing records to have locale 'en'
+          await queryDatabase('UPDATE home_pages SET locale = \'en\' WHERE locale IS NULL OR locale = \'\'');
+
+          // Create Hebrew record if needed
+          if (locale === 'he') {
+            const existing = await queryDatabase('SELECT COUNT(*) as count FROM home_pages WHERE locale = \'he\'');
+            if (existing[0].count === 0 || existing[0].count === '0') {
+              await queryDatabase(`
+                INSERT INTO home_pages (locale, title, hero_title, hero_subtitle, hero_description, published_at)
+                SELECT 'he', title, hero_title, hero_subtitle, hero_description, published_at
+                FROM home_pages WHERE locale = 'en' LIMIT 1
+              `);
+              console.log('✅ Created Hebrew home page record');
+            }
+          }
+
+          // Try the query again
+          data = await queryWithFallback(
+            'SELECT * FROM home_pages WHERE locale = $1 AND published_at IS NOT NULL LIMIT 1',
+            [locale]
+          );
+        } catch (migrationError) {
+          console.log('⚠️  Migration failed, using fallback query:', migrationError.message);
+          // Use fallback query without locale
+          data = await queryDatabase('SELECT * FROM home_pages WHERE published_at IS NOT NULL LIMIT 1');
+        }
+      } else {
+        throw localeError;
+      }
+    }
 
     if (data.length === 0) {
       return res.json({ error: 'No home page data found' });

@@ -209,7 +209,7 @@ async function createTables(pgClient) {
     )
   `);
 
-  // Create teachers table
+  // Create teachers table (with display_order column)
   await pgClient.query(`
     CREATE TABLE teachers (
       id SERIAL PRIMARY KEY,
@@ -219,6 +219,13 @@ async function createTables(pgClient) {
       linkedin VARCHAR(255),
       twitter VARCHAR(255),
       "order" INTEGER,
+      display_order INTEGER DEFAULT 0,
+      locale VARCHAR(5) DEFAULT 'en',
+      image_url VARCHAR(500),
+      company VARCHAR(255),
+      experience_years INTEGER,
+      categories TEXT,
+      specializations TEXT,
       published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
