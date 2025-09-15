@@ -208,11 +208,58 @@
 
   <link href="../css/mobile-fix.css" rel="stylesheet" type="text/css">
   <link href="../css/teachmeskills-career-orientation.css" rel="stylesheet" type="text/css">
+  <link href="../css/career-orientation-cards.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <div class="page-wrapper">
-    <!-- Navigation (Updated with Career Services dropdown) -->
-    <div id="shared-menu-container"></div>
+    <!-- Navigation (Direct Hebrew Menu) -->
+    <div role="banner" class="navbar w-nav" dir="rtl">
+      <div class="container">
+        <div class="navbar-content">
+          <a href="home.html" class="zohacous-logo-link w-nav-brand">
+            <img loading="lazy" src="../images/Logo.svg" alt="" class="zohacous-logo-image">
+          </a>
+          <nav role="navigation" class="nav-menu w-nav-menu">
+            <a href="home.html" class="nav-link w-nav-link">בית</a>
+            <a href="courses.html" class="nav-link w-nav-link">קורסים</a>
+            <a href="teachers.html" class="nav-link w-nav-link">מורים</a>
+            <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
+              <div class="dropdown-toggle w-dropdown-toggle">
+                <div class="dropdown-toggle-text-block">שירותי קריירה</div>
+                <div class="dropdown-toggle-arrow-2">▼</div>
+              </div>
+              <nav class="dropdown-list w-dropdown-list" style="background: rgba(5, 5, 26, 0.98) !important; backdrop-filter: blur(20px) !important;">
+                <a href="career-orientation.html" aria-current="page" class="dropdown-menu-text-link-block w-inline-block w--current">
+                  <div>כיוון קריירה</div>
+                </a>
+                <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block">
+                  <div>מרכז קריירה</div>
+                </a>
+              </nav>
+            </div>
+            <!-- Language Selector -->
+            <div class="language-nav-item">
+              <select id="language-switcher-nav" onchange="switchLanguage(this.value)" class="language-nav-select" style="background: transparent !important; border: none !important; color: rgba(255, 255, 255, 0.9) !important;">
+                <option value="en" style="background: #05051a !important; color: white !important;">English</option>
+                <option value="ru" style="background: #05051a !important; color: white !important;">Русский</option>
+                <option value="he" selected style="background: #05051a !important; color: white !important;">עברית</option>
+              </select>
+            </div>
+            <a href="pricing.html" class="nav-link w-nav-link">תוכניות תמחור</a>
+          </nav>
+          <!-- Sign Up Button -->
+          <div class="navbar-button-wrapper">
+            <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">הרשמו היום</a>
+          </div>
+          <!-- Mobile Menu Button -->
+          <div class="menu-button w-nav-button">
+            <div class="w-icon-nav-menu"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile Menu Overlay -->
+      <div class="w-nav-overlay"></div>
+    </div>
         </div>
       </div>
     </div>
@@ -261,7 +308,7 @@
             <div class="section-subtitle" style="color: #0080ff;">האתגרים הנפוצים</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color: #04193f;">מתלבטים בבחירת הקריירה שלכם?</h2>
+          <h2 class="section-title featured-courses" style="color: white;">מתלבטים בבחירת הקריירה שלכם?</h2>
           <p class="section-description-text featured-courses" style="color: #6a7280;">אתם לא לבד. רבים מתמודדים עם האתגרים הבאים בדרך למציאת הקריירה המתאימה.</p>
         </div>
 
@@ -299,8 +346,8 @@
             <div class="section-subtitle">אלגוריתם העבודה שלנו</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">4 שלבים לקריירה מצליחה</h2>
-          <p class="section-description-text featured-courses" style="color:#04193f;">התהליך המקצועי שלנו יוביל אתכם צעד אחר צעד למציאת הקריירה המתאימה.</p>
+          <h2 class="section-title featured-courses" style="color: white;">4 שלבים לקריירה מצליחה</h2>
+          <p class="section-description-text featured-courses" style="color: white;">התהליך המקצועי שלנו יוביל אתכם צעד אחר צעד למציאת הקריירה המתאימה.</p>
         </div>
 
         <div data-w-id="solution-features" style="opacity:1" class="work-algorithm-steps">
@@ -333,8 +380,8 @@
             <div class="section-subtitle">מה תקבלו מהתהליך</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">התוצאות הצפויות</h2>
-          <p class="section-description-text featured-courses" style="color:#04193f;">בסיום התהליך תהיו מצוידים בכל הכלים הדרושים להצלחה מקצועית.</p>
+          <h2 class="section-title featured-courses" style="color: white;">התוצאות הצפויות</h2>
+          <p class="section-description-text featured-courses" style="color: white;">בסיום התהליך תהיו מצוידים בכל הכלים הדרושים להצלחה מקצועית.</p>
         </div>
 
         <div data-w-id="outcomes-grid" style="opacity:1" class="outcomes-grid">
@@ -361,124 +408,106 @@
     <!-- Step-by-Step Process Section -->
     <section class="section process-steps">
       <div class="container">
-        <div data-w-id="process-title-main" style="opacity:1" class="section-title-wrapper align-center">
-          <div class="section-subtitle-wrapper center-align">
-            <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">תהליך בן 4 שלבים</div>
-            <div class="banner-subtitle-line right"></div>
-          </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">4 שלבים לקריירה מצליחה</h2>
-          <p class="section-description-text featured-courses" style="color:#04193f;">התהליך המוכח שלנו לבניית קריירה מצליחה בטכנולוגיה</p>
+        <div class="cards-section-header">
+          <h2 class="cards-section-title">4 שלבים לקריירה מצליחה</h2>
+          <p class="cards-section-subtitle">התהליך המוכח שלנו לבניית קריירה מצליחה בטכנולוגיה</p>
         </div>
-        
-        <div data-w-id="process-steps-timeline" style="opacity:1" class="process-steps-timeline">
-          <div class="process-step-item">
-            <div class="process-step-number-large">1</div>
-            <div class="process-step-content-large">
-              <h3>השאירו בקשה באתר</h3>
-              <p>מלאו טופס קצר עם הפרטים שלכם ונחזור אליכם תוך 24 שעות</p>
-              <div class="process-step-duration">משך זמן: 3 דקות</div>
-            </div>
+
+        <div class="process-cards-container">
+          <div class="process-card fade-in-up">
+            <div class="process-card-number">1</div>
+            <h3 class="process-card-title">השאירו בקשה באתר</h3>
+            <p class="process-card-description">מלאו טופס קצר עם הפרטים שלכם ונחזור אליכם תוך 24 שעות</p>
+            <div class="process-card-duration">משך זמן: 3 דקות</div>
           </div>
-          
-          <div class="process-step-item">
-            <div class="process-step-number-large">2</div>
-            <div class="process-step-content-large">
-              <h3>ייעוץ ראשוני חינם</h3>
-              <p>שיחת ייעוץ של עד 20 דקות להבנת הצרכים והמטרות שלכם</p>
-              <div class="process-step-duration">משך זמן: עד 20 דקות</div>
-            </div>
+
+          <div class="process-card fade-in-up">
+            <div class="process-card-number">2</div>
+            <h3 class="process-card-title">ייעוץ ראשוני חינם</h3>
+            <p class="process-card-description">שיחת ייעוץ של עד 20 דקות להבנת הצרכים והמטרות שלכם</p>
+            <div class="process-card-duration">משך זמן: עד 20 דקות</div>
           </div>
-          
-          <div class="process-step-item">
-            <div class="process-step-number-large">3</div>
-            <div class="process-step-content-large">
-              <h3>עבודה עם יועץ קריירה</h3>
-              <p>פגישות ייעוץ מעמיקות לבניית אסטרטגיה אישית</p>
-              <div class="process-step-duration">משך זמן: מותאם אישית</div>
-            </div>
+
+          <div class="process-card fade-in-up">
+            <div class="process-card-number">3</div>
+            <h3 class="process-card-title">עבודה עם יועץ קריירה</h3>
+            <p class="process-card-description">פגישות ייעוץ מעמיקות לבניית אסטרטגיה אישית</p>
+            <div class="process-card-duration">משך זמן: מותאם אישית</div>
           </div>
-          
-          <div class="process-step-item">
-            <div class="process-step-number-large">4</div>
-            <div class="process-step-content-large">
-              <h3>בניית תכנית קריירה</h3>
-              <p>תכנית פעולה מפורטת עם יעדים ברורים ולוחות זמנים</p>
-              <div class="process-step-duration">משך זמן: תוך 48 שעות</div>
-            </div>
+
+          <div class="process-card fade-in-up">
+            <div class="process-card-number">4</div>
+            <h3 class="process-card-title">בניית תכנית קריירה</h3>
+            <p class="process-card-description">תכנית פעולה מפורטת עם יעדים ברורים ולוחות זמנים</p>
+            <div class="process-card-duration">משך זמן: תוך 48 שעות</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- AI/ML Career Paths Section -->
+    <!-- AI/Tech Career Paths Section -->
     <section class="section ai-career-paths">
       <div class="container">
-        <div data-w-id="career-paths-title" style="opacity:1" class="section-title-wrapper align-center">
-          <div class="section-subtitle-wrapper center-align">
-            <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">Career Specializations</div>
-            <div class="banner-subtitle-line right"></div>
-          </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">Featured AI/ML Career Paths</h2>
-          <p class="section-description-text featured-courses" style="color:#04193f;">Explore the most in-demand AI specializations and discover which path aligns with your interests and skills.</p>
+        <div class="cards-section-header">
+          <h2 class="cards-section-title">מסלולי קריירה בטכנולוגיה ו-AI</h2>
+          <p class="cards-section-subtitle">גלו את ההתמחויות המבוקשות ביותר במדעי המחשב והבינה המלאכותית ומצאו את הנתיב המתאים לכם</p>
         </div>
-        
-        <div data-w-id="career-paths-grid" style="opacity:1" class="career-paths-grid">
-          <div class="career-path-card">
-            <div class="career-path-icon">🤖</div>
-            <h3>Machine Learning Engineer</h3>
-            <p>Build and deploy ML models that power intelligent applications and systems.</p>
-            <div class="career-path-salary">Average: $130,000/year</div>
+
+        <div class="career-specializations-container">
+          <div class="career-card fade-in-up">
+            <div class="career-card-icon">🤖</div>
+            <h3 class="career-card-title">מהנדס למידת מכונה</h3>
+            <p class="career-card-description">פיתוח ופריסת מודלי למידת מכונה למערכות ויישומים חכמים</p>
+            <div class="career-card-salary">שכר ממוצע: $130,000 לשנה</div>
           </div>
-          
-          <div class="career-path-card">
-            <div class="career-path-icon">📊</div>
-            <h3>Data Scientist</h3>
-            <p>Extract insights from complex data to drive business decisions and strategy.</p>
-            <div class="career-path-salary">Average: $120,000/year</div>
+
+          <div class="career-card fade-in-up">
+            <div class="career-card-icon">📊</div>
+            <h3 class="career-card-title">מדען נתונים</h3>
+            <p class="career-card-description">הפקת תובנות מנתונים מורכבים לקבלת החלטות עסקיות</p>
+            <div class="career-card-salary">שכר ממוצע: $120,000 לשנה</div>
           </div>
-          
-          <div class="career-path-card">
-            <div class="career-path-icon">🔬</div>
-            <h3>AI Research Scientist</h3>
-            <p>Pioneer new AI technologies and advance the field through cutting-edge research.</p>
-            <div class="career-path-salary">Average: $150,000/year</div>
+
+          <div class="career-card fade-in-up">
+            <div class="career-card-icon">🔬</div>
+            <h3 class="career-card-title">חוקר בינה מלאכותית</h3>
+            <p class="career-card-description">פיתוח טכנולוגיות AI חדשניות וקידום התחום באמצעות מחקר מתקדם</p>
+            <div class="career-card-salary">שכר ממוצע: $150,000 לשנה</div>
           </div>
-          
-          <div class="career-path-card">
-            <div class="career-path-icon">👁️</div>
-            <h3>Computer Vision Specialist</h3>
-            <p>Develop AI systems that can analyze and understand visual information.</p>
-            <div class="career-path-salary">Average: $135,000/year</div>
+
+          <div class="career-card fade-in-up">
+            <div class="career-card-icon">👁️</div>
+            <h3 class="career-card-title">מומחה ראיית מחשב</h3>
+            <p class="career-card-description">פיתוח מערכות AI לניתוח והבנת מידע ויזואלי</p>
+            <div class="career-card-salary">שכר ממוצע: $135,000 לשנה</div>
           </div>
-          
-          <div class="career-path-card">
-            <div class="career-path-icon">💬</div>
-            <h3>NLP Engineer</h3>
-            <p>Create AI systems that understand and generate human language.</p>
-            <div class="career-path-salary">Average: $125,000/year</div>
+
+          <div class="career-card fade-in-up">
+            <div class="career-card-icon">💬</div>
+            <h3 class="career-card-title">מהנדס עיבוד שפה טבעית</h3>
+            <p class="career-card-description">יצירת מערכות AI להבנת וייצור שפה אנושית</p>
+            <div class="career-card-salary">שכר ממוצע: $125,000 לשנה</div>
           </div>
-          
-          <div class="career-path-card">
-            <div class="career-path-icon">⚙️</div>
-            <h3>MLOps Engineer</h3>
-            <p>Build infrastructure and pipelines for deploying ML models at scale.</p>
-            <div class="career-path-salary">Average: $140,000/year</div>
+
+          <div class="career-card fade-in-up">
+            <div class="career-card-icon">⚙️</div>
+            <h3 class="career-card-title">מהנדס MLOps</h3>
+            <p class="career-card-description">בניית תשתית וצינורות לפריסת מודלי למידת מכונה בקנה מידה</p>
+            <div class="career-card-salary">שכר ממוצע: $140,000 לשנה</div>
           </div>
-          
-          <div class="career-path-card">
-            <div class="career-path-icon">📱</div>
-            <h3>AI Product Manager</h3>
-            <p>Guide the development of AI-powered products and features.</p>
-            <div class="career-path-salary">Average: $145,000/year</div>
+
+          <div class="career-card fade-in-up">
+            <div class="career-card-icon">📱</div>
+            <h3 class="career-card-title">מנהל מוצר AI</h3>
+            <p class="career-card-description">ניהול פיתוח מוצרים ותכונות מבוססי AI</p>
+            <div class="career-card-salary">שכר ממוצע: $145,000 לשנה</div>
           </div>
-          
-          <div class="career-path-card">
-            <div class="career-path-icon">🤖</div>
-            <h3>Robotics Engineer</h3>
-            <p>Design intelligent robotic systems that interact with the physical world.</p>
-            <div class="career-path-salary">Average: $110,000/year</div>
+
+          <div class="career-card fade-in-up">
+            <div class="career-card-icon">🦾</div>
+            <h3 class="career-card-title">מהנדס רובוטיקה</h3>
+            <p class="career-card-description">תכנון מערכות רובוטיקה חכמות לאינטראקציה עם העולם הפיזי</p>
+            <div class="career-card-salary">שכר ממוצע: $110,000 לשנה</div>
           </div>
         </div>
       </div>
@@ -493,7 +522,7 @@
             <div class="section-subtitle">Meet Your Guide</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">AI Career Guidance Specialist</h2>
+          <h2 class="section-title featured-courses" style="color: white;">AI Career Guidance Specialist</h2>
         </div>
         
         <div data-w-id="expert-profile-card" style="opacity:1" class="expert-profile-enhanced">
@@ -530,8 +559,8 @@
             <div class="section-subtitle">Success Stories</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">Where Our Graduates Work</h2>
-          <p class="section-description-text featured-courses" style="color:#04193f;">Our career guidance has helped professionals secure positions at leading AI companies worldwide.</p>
+          <h2 class="section-title featured-courses" style="color: white;">Where Our Graduates Work</h2>
+          <p class="section-description-text featured-courses" style="color: white;">Our career guidance has helped professionals secure positions at leading AI companies worldwide.</p>
         </div>
         
         <div data-w-id="companies-logos" style="opacity:1" class="w-layout-grid included-grid">
@@ -627,7 +656,7 @@
             <div class="section-subtitle">התחל עכשיו</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">קבלו ייעוץ חינם</h2>
+          <h2 class="section-title featured-courses" style="color: white;">קבלו ייעוץ חינם</h2>
           <p class="section-description-text featured-courses" style="color:#010b1c;">השאירו פרטים ונחזור אליכם תוך 24 שעות לתיאום פגישת ייעוץ ללא עלות.</p>
         </div>
 
@@ -876,6 +905,52 @@
   <!-- Disabled for static career orientation page -->
   <!-- <script src="../js/hebrew-translations-fix.js"></script> -->
   <!-- API Integration Scripts -->
+  <!-- Career Orientation Dynamic Loading -->
+  <script>
+    // Custom career orientation dynamic content loader
+    (async function() {
+      try {
+        console.log('🚀 Loading Hebrew career orientation content from database...');
+
+        // Detect API endpoint
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const API_BASE = isLocal ? 'http://localhost:3000/api' : 'https://aistudio555jamstack-production.up.railway.app/api';
+
+        // Fetch Hebrew career orientation content
+        const response = await fetch(`${API_BASE}/career-orientation?locale=he`);
+        const data = await response.json();
+
+        if (data?.hero) {
+          console.log('✅ Loaded career data:', data);
+
+          // Update hero title
+          const heroTitle = document.querySelector('.section-title.featured-courses');
+          if (heroTitle && data.hero.title) {
+            heroTitle.textContent = data.hero.title;
+            console.log('📝 Updated hero title');
+          }
+
+          // Update hero subtitle
+          const heroSubtitle = document.querySelector('.hero-problem-statement');
+          if (heroSubtitle && data.hero.subtitle) {
+            heroSubtitle.textContent = data.hero.subtitle;
+            console.log('📝 Updated hero subtitle');
+          }
+
+          console.log('✅ Database integration active - content loaded dynamically');
+
+          console.log('🎉 Successfully loaded dynamic Hebrew content!');
+        } else {
+          console.warn('⚠️ No career data received from API');
+        }
+
+      } catch (error) {
+        console.error('❌ Failed to load dynamic content:', error);
+        console.log('📄 Falling back to static content');
+      }
+    })();
+  </script>
+
   <!-- <script src="../js/webflow-strapi-integration.js"></script> -->
   <!-- <script src="../js/strapi-integration.js"></script> -->
   <!-- <script src="../js/ui-translator.js"></script> -->
@@ -949,6 +1024,22 @@
         });
       }
     });
+  </script>
+
+  <!-- Language Switching Function -->
+  <script>
+    function switchLanguage(selectedLang) {
+      const currentPage = 'career-orientation';
+      let newUrl;
+
+      if (selectedLang === 'en') {
+        newUrl = `/${currentPage}.html`;
+      } else {
+        newUrl = `/${selectedLang}/${currentPage}.html`;
+      }
+
+      window.location.href = newUrl;
+    }
   </script>
 </body>
 </html>
