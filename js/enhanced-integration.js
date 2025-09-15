@@ -12,14 +12,14 @@ class EnhancedIntegration {
         // Detect API endpoint based on current port
         const currentPort = window.location.port;
         if (currentPort === '3005') {
-            // Frontend on Python server (3005), API on Express (4005)
-            this.API_BASE = 'http://localhost:4005/api';
+            // Frontend on Python server (3005), API on Express (1337)
+            this.API_BASE = 'http://localhost:1337/api';
         } else if (currentPort === '4005') {
-            // Accessing directly via Express server
-            this.API_BASE = 'http://localhost:4005/api';
+            // Legacy port - still use 1337
+            this.API_BASE = 'http://localhost:1337/api';
         } else if (this.isLocal) {
             // Default local setup
-            this.API_BASE = 'http://localhost:4005/api';
+            this.API_BASE = 'http://localhost:1337/api';
         } else {
             // Production
             this.API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
@@ -238,6 +238,15 @@ class EnhancedIntegration {
                 this.updateLearningFeatures(attributes);
             }
 
+            // Load FAQ content dynamically
+            await this.loadFAQContent();
+
+            // Load button texts dynamically
+            await this.loadButtonTexts();
+
+            // Load footer content dynamically
+            await this.loadFooterContent();
+
             console.log('✅ Dynamic home content loaded');
         } catch (error) {
             console.log('⚠️ Using static content for home page');
@@ -305,6 +314,165 @@ class EnhancedIntegration {
         });
 
         console.log('✅ Learning features updated from API');
+    }
+
+    async loadFAQContent() {
+        try {
+            const response = await fetch(`${this.API_BASE}/faqs?locale=${this.currentLanguage}`);
+
+            if (!response.ok) {
+                console.log('⚠️ FAQ API not available');
+                return;
+            }
+
+            const data = await response.json();
+
+            if (data.data && data.data.length > 0) {
+                // Find the FAQ accordion container
+                const faqContainer = document.querySelector('.faq-accordion-wrapper.w-tab-menu');
+
+                if (!faqContainer) {
+                    console.log('⚠️ FAQ container not found');
+                    return;
+                }
+
+                // Clear existing static FAQs
+                faqContainer.innerHTML = '';
+
+                // Add dynamic FAQs
+                data.data.forEach((faq, index) => {
+                    const faqItem = document.createElement('a');
+                    faqItem.setAttribute('data-w-tab', `Tab ${index + 1}`);
+                    faqItem.className = index === 0 ? 'single-faq-accordion-wrap w-inline-block w-tab-link w--current' : 'single-faq-accordion-wrap w-inline-block w-tab-link';
+
+                    faqItem.innerHTML = `
+                        <div class="faq-accordion-question-wrap">
+                            <h3 class="faq-question">Q: ${faq.attributes.question}</h3>
+                            <div class="faq-icon-wrapper">
+                                <img src="images/Faq-Icon.svg" loading="lazy" alt="" class="faq-icon">
+                            </div>
+                        </div>
+                        <div class="faq-accordion-answer-wrap">
+                            <p class="faq-answer">${faq.attributes.answer}</p>
+                        </div>
+                    `;
+
+                    faqContainer.appendChild(faqItem);
+                });
+
+                console.log(`✅ Loaded ${data.data.length} FAQs from API`);
+            }
+        } catch (error) {
+            console.error('❌ Failed to load FAQs:', error);
+        }
+    }
+
+    async loadButtonTexts() {
+        try {
+            const response = await fetch(`${this.API_BASE}/button-texts?locale=${this.currentLanguage}`);
+
+            if (!response.ok) {
+                console.log('⚠️ Button texts API not available');
+                return;
+            }
+
+            const data = await response.json();
+
+            if (data.data && data.data.attributes) {
+                const buttons = data.data.attributes;
+
+                // Update "Get Started" buttons
+                if (buttons.get_started) {
+                    document.querySelectorAll('.primary-button-text-block').forEach(btn => {
+                        if (btn.textContent.toLowerCase().includes('get') && btn.textContent.toLowerCase().includes('start')) {
+                            btn.textContent = buttons.get_started;
+                        }
+                    });
+                }
+
+                // Update "Learn More" buttons
+                if (buttons.learn_more) {
+                    document.querySelectorAll('.primary-button-text-block, .secondary-button-text-block').forEach(btn => {
+                        if (btn.textContent.toLowerCase().includes('learn') && btn.textContent.toLowerCase().includes('more')) {
+                            btn.textContent = buttons.learn_more;
+                        }
+                    });
+                }
+
+                // Update "Enroll Now" buttons
+                if (buttons.enroll_now) {
+                    document.querySelectorAll('.primary-button-text-block').forEach(btn => {
+                        if (btn.textContent.toLowerCase().includes('enroll') || btn.textContent.toLowerCase().includes('sign up')) {
+                            btn.textContent = buttons.enroll_now;
+                        }
+                    });
+                }
+
+                // Update "Contact Us" buttons
+                if (buttons.contact_us) {
+                    document.querySelectorAll('.primary-button-text-block').forEach(btn => {
+                        if (btn.textContent.toLowerCase().includes('contact') || btn.textContent.toLowerCase().includes('touch')) {
+                            btn.textContent = buttons.contact_us;
+                        }
+                    });
+                }
+
+                console.log('✅ Button texts updated from API');
+            }
+        } catch (error) {
+            console.error('❌ Failed to load button texts:', error);
+        }
+    }
+
+    async loadFooterContent() {
+        try {
+            const response = await fetch(`${this.API_BASE}/site-settings?locale=${this.currentLanguage}`);
+
+            if (!response.ok) {
+                console.log('⚠️ Site settings API not available');
+                return;
+            }
+
+            const data = await response.json();
+
+            if (data) {
+                // Update footer email
+                if (data.footer_email) {
+                    const emailElement = document.querySelector('.footer-contact-details-text');
+                    if (emailElement && emailElement.textContent.includes('@')) {
+                        emailElement.textContent = data.footer_email;
+                    }
+                }
+
+                // Update footer copyright
+                if (data.footer_copyright) {
+                    const copyrightElement = document.querySelector('.footer-information-text');
+                    if (copyrightElement) {
+                        // Keep the design and links, just update the main copyright text
+                        const currentText = copyrightElement.innerHTML;
+                        const updatedText = currentText.replace(
+                            /© Copyright - .*? \|/,
+                            `${data.footer_copyright} |`
+                        );
+                        copyrightElement.innerHTML = updatedText;
+                    }
+                }
+
+                // Update site name in footer links if available
+                if (data.site_name) {
+                    const siteNameLinks = document.querySelectorAll('.footer-information-text-link');
+                    siteNameLinks.forEach(link => {
+                        if (link.textContent.includes('Zohacous')) {
+                            link.textContent = data.site_name;
+                        }
+                    });
+                }
+
+                console.log('✅ Footer content updated from API');
+            }
+        } catch (error) {
+            console.error('❌ Failed to load footer content:', error);
+        }
     }
 
     async loadCoursesContent() {

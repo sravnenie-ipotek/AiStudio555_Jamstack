@@ -77,7 +77,7 @@
             <div class="container">
                 <div class="navbar-content">
                     <a href="${getUrl('home')}" class="zohacous-logo-link nav-brand">
-                        <img loading="lazy" src="../images/Logo.svg" alt="" class="zohacous-logo-image">
+                        <img loading="lazy" src="../images/Logo 2.svg" alt="" class="zohacous-logo-image">
                     </a>
                     <nav role="navigation" class="nav-menu custom-nav-menu">
                         <a href="${getUrl('home')}" class="nav-link custom-nav-link ${currentPage === 'home' ? 'current-page' : ''}">${t.home || 'בית'}</a>
