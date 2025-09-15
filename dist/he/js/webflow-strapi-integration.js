@@ -572,12 +572,15 @@ class CustomAPIIntegration {
 
     updateTeachersGrid(teachersData) {
         console.log('👨‍🏫 Updating teachers grid...');
-        
-        const teachersContainer = document.querySelector('.teachers-grid, [data-teachers-grid]');
-        if (!teachersContainer) return;
+
+        const teachersContainer = document.querySelector('#instructors-grid');
+        if (!teachersContainer) {
+            console.error('❌ Teachers grid container #instructors-grid not found');
+            return;
+        }
 
         teachersContainer.innerHTML = '';
-        
+
         teachersData.forEach(teacher => {
             const teacherCard = this.createTeacherCard(teacher);
             teachersContainer.appendChild(teacherCard);
@@ -587,31 +590,49 @@ class CustomAPIIntegration {
     }
 
     createTeacherCard(teacherData) {
+        // Handle both API response format and direct data
         const teacher = teacherData.attributes || teacherData;
-        
+
         const teacherCard = document.createElement('div');
-        teacherCard.className = 'teacher-item w-dyn-item';
-        
+        teacherCard.className = 'instructor-card-enhanced';
+        teacherCard.setAttribute('data-category', teacher.categories || 'all');
+
+        // Extract specializations for display
+        let specializations = [];
+        if (teacher.specializations) {
+            if (Array.isArray(teacher.specializations)) {
+                specializations = teacher.specializations;
+            } else if (typeof teacher.specializations === 'string') {
+                specializations = teacher.specializations.split(',').map(s => s.trim());
+            }
+        }
+
+        // Create category badge text
+        const categoryText = teacher.categories || 'General Development';
+
         teacherCard.innerHTML = `
-            <div class="teacher-card">
-                <div class="teacher-image">
-                    <img src="${teacher.image || '/images/teacher-placeholder.jpg'}" 
-                         alt="${teacher.name}" 
-                         class="teacher-img" />
-                </div>
-                <div class="teacher-info">
-                    <h3 class="teacher-name">${teacher.name}</h3>
-                    <p class="teacher-title">${teacher.title || ''}</p>
-                    <p class="teacher-bio">${teacher.bio || ''}</p>
-                    <div class="teacher-expertise">
-                        ${teacher.expertise ? teacher.expertise.split(',').map(skill => 
-                            `<span class="skill-tag">${skill.trim()}</span>`
-                        ).join('') : ''}
-                    </div>
-                </div>
+            <div class="instructor-category-badge">${categoryText}</div>
+            <div class="instructor-avatar-enhanced">
+                <img src="${teacher.image_url || teacher.image || 'https://images.unsplash.com/photo-1494790108755-2616b612b1ac?w=300&h=300&fit=crop&crop=face'}"
+                     alt="${teacher.name}"
+                     onerror="this.src='https://images.unsplash.com/photo-1494790108755-2616b612b1ac?w=300&h=300&fit=crop&crop=face'">
+            </div>
+            <h3 class="instructor-name">${teacher.name}</h3>
+            <p class="instructor-title">${teacher.position || teacher.role || teacher.title || ''}</p>
+            <p class="instructor-experience">${teacher.experience_years ? teacher.experience_years + '+ years experience' : (teacher.experience || '')}</p>
+            <p class="instructor-bio">${teacher.description || teacher.bio || ''}</p>
+            <div class="instructor-specialties">
+                ${specializations.slice(0, 4).map(skill =>
+                    `<span class="specialty-tag">${skill}</span>`
+                ).join('')}
+            </div>
+            <div class="instructor-social">
+                ${teacher.linkedin ? `<a href="${teacher.linkedin}" class="instructor-social-link">💼</a>` : ''}
+                ${teacher.twitter ? `<a href="${teacher.twitter}" class="instructor-social-link">🐦</a>` : ''}
+                ${teacher.company ? `<span class="instructor-company">${teacher.company}</span>` : ''}
             </div>
         `;
-        
+
         return teacherCard;
     }
 

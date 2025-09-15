@@ -190,8 +190,17 @@ class EnhancedIntegration {
 
     async loadHomeContent() {
         try {
-            const response = await fetch(`${this.API_BASE}/home-page?locale=${this.currentLanguage}`);
-            if (!response.ok) throw new Error('Failed to fetch home content');
+            let response = await fetch(`${this.API_BASE}/home-page?locale=${this.currentLanguage}`);
+
+            if (!response.ok) {
+                // Try fallback without locale parameter
+                console.log('⚠️ Locale-specific API failed, trying fallback...');
+                response = await fetch(`${this.API_BASE}/home-page`);
+
+                if (!response.ok) {
+                    throw new Error('Both API endpoints failed');
+                }
+            }
 
             const data = await response.json();
 

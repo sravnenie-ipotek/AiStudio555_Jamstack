@@ -27,16 +27,39 @@ class UITranslator {
     try {
       console.log('📡 Loading UI translations...');
       const response = await fetch(`${this.apiBase}/api/home-page?locale=${this.currentLocale}`);
+
+      if (!response.ok) {
+        // If API returns an error, try without locale parameter as fallback
+        console.log('⚠️  Locale-specific API failed, trying fallback...');
+        const fallbackResponse = await fetch(`${this.apiBase}/api/home-page`);
+
+        if (!fallbackResponse.ok) {
+          // If both fail, return empty object but don't break the page
+          console.log('⚠️  API unavailable, using default translations');
+          return {};
+        }
+
+        const fallbackData = await fallbackResponse.json();
+        if (fallbackData.data && fallbackData.data.attributes) {
+          console.log('✅ UI translations loaded (fallback):', Object.keys(fallbackData.data.attributes).length, 'fields');
+          return fallbackData.data.attributes;
+        }
+      }
+
       const data = await response.json();
-      
+
       if (data.data && data.data.attributes) {
         console.log('✅ UI translations loaded:', Object.keys(data.data.attributes).length, 'fields');
         return data.data.attributes;
       }
-      throw new Error('Invalid API response');
+
+      // If we get here, API returned something but not in expected format
+      console.log('⚠️  API returned unexpected format, using defaults');
+      return {};
     } catch (error) {
       console.error('❌ Failed to load UI translations:', error);
-      return null;
+      // Return empty object instead of null to prevent page breaking
+      return {};
     }
   }
 

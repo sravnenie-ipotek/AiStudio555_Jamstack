@@ -1,0 +1,133 @@
+/* ULTRA-AGGRESSIVE Desktop Menu Visibility Fix */
+/* This CSS forces the menu to be visible on desktop regardless of JavaScript interference */
+
+/* Desktop menu - STRONGEST possible overrides */
+@media screen and (min-width: 992px) {
+
+  /* Force navigation menu to be visible with maximum specificity */
+  .w-nav-menu,
+  .nav-menu.w-nav-menu,
+  nav .w-nav-menu,
+  .navbar .w-nav-menu,
+  .w-nav .w-nav-menu,
+  body .w-nav-menu,
+  html .w-nav-menu {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+    z-index: auto !important;
+    pointer-events: auto !important;
+    clip: auto !important;
+    clip-path: none !important;
+  }
+
+  /* Force navigation links to be visible */
+  .w-nav-menu .nav-link,
+  .nav-menu .nav-link {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    transform: none !important;
+  }
+
+  /* Ensure hamburger button is hidden on desktop */
+  .w-nav-button {
+    display: none !important;
+  }
+
+  /* Remove any mobile menu states that might interfere */
+  .w--nav-menu-open .w-nav-menu {
+    position: static !important;
+    display: flex !important;
+    background: transparent !important;
+  }
+
+  /* Override any webflow states */
+  .w-nav--open .w-nav-menu,
+  .w-nav.w--open .w-nav-menu {
+    display: flex !important;
+    position: static !important;
+    background: transparent !important;
+  }
+}
+
+/* Animation overrides to prevent flashing */
+@media screen and (min-width: 992px) {
+  .w-nav-menu {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+/* NUCLEAR OPTION - Override Webflow JavaScript interference */
+@media screen and (min-width: 992px) {
+  
+  /* Ultra-specific selectors with maximum CSS specificity */
+  html body .page-wrapper .navbar .w-nav .nav-menu.w-nav-menu,
+  html body .page-wrapper .navbar .w-nav .w-nav-menu,
+  html body div.page-wrapper div.navbar.w-nav nav.nav-menu.w-nav-menu,
+  html body div.page-wrapper div.navbar.w-nav nav.w-nav-menu {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+    z-index: auto !important;
+    pointer-events: auto !important;
+    clip: auto !important;
+    clip-path: none !important;
+    grid-column-gap: 50px !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+  }
+  
+  /* Force Webflow navigation states */
+  .w-nav[data-nav-menu-open="1"] .w-nav-menu {
+    display: flex !important;
+    position: static !important;
+    background: transparent !important;
+  }
+  
+  /* Remove any animation or transition delays */
+  .w-nav-menu * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Additional JavaScript interference prevention */
+@media screen and (min-width: 992px) {
+  .w-nav-menu[style] {
+    display: flex !important;
+  }
+  
+  .w-nav-menu[style*="display: none"] {
+    display: flex !important;
+  }
+  
+  .w-nav-menu[style*="display:none"] {
+    display: flex !important;
+  }
+}
