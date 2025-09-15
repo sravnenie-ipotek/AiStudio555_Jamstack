@@ -128,9 +128,18 @@ class StrapiIntegration {
       mapping.selectors.forEach(selector => {
         const elements = document.querySelectorAll(selector);
         elements.forEach(el => {
-          if (ui[mapping.field]) {
-            console.log(`✅ Nav: "${el.textContent.trim()}" → "${ui[mapping.field]}"`);
+          const currentText = el.textContent.trim();
+          // Check if current text is already in Hebrew or Russian (preserve it!)
+          const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+          const isRussianText = /[\u0400-\u04FF]/.test(currentText);
+
+          if (ui[mapping.field] && !isHebrewText && !isRussianText) {
+            console.log(`✅ Nav: "${currentText}" → "${ui[mapping.field]}"`);
             el.textContent = ui[mapping.field];
+          } else if (isHebrewText) {
+            console.log(`✅ [strapi-integration] Preserving Hebrew text: "${currentText}"`);
+          } else if (isRussianText) {
+            console.log(`✅ [strapi-integration] Preserving Russian text: "${currentText}"`);
           }
         });
       });
@@ -140,7 +149,18 @@ class StrapiIntegration {
     const dropdownLinks = document.querySelectorAll('.dropdown-menu-text-link-block, .nav-link');
     dropdownLinks.forEach(link => {
       const href = link.getAttribute('href') || '';
-      if (href.includes('career') && ui.navCareerCenter) {
+      const currentText = link.textContent.trim();
+      const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+      const isRussianText = /[\u0400-\u04FF]/.test(currentText);
+
+      if (href.includes('career') && ui.navCareerCenter && !isHebrewText && !isRussianText) {
+        console.log(`🔄 [strapi-integration] Updating dropdown: "${currentText}" → "${ui.navCareerCenter}"`);
+        link.textContent = ui.navCareerCenter;
+      } else if (href.includes('career') && isHebrewText) {
+        console.log(`✅ [strapi-integration] Preserving Hebrew dropdown text: "${currentText}"`);
+      } else if (href.includes('career') && isRussianText) {
+        console.log(`✅ [strapi-integration] Preserving Russian dropdown text: "${currentText}"`);
+      } else if (href.includes('career') && ui.navCareerCenter) {
         link.textContent = ui.navCareerCenter;
       }
     });

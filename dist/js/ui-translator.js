@@ -105,15 +105,18 @@ class UITranslator {
       elements.forEach(el => {
         const currentText = el.textContent.trim();
 
-        // Check if current text is already in Hebrew (preserve it!)
+        // Check if current text is already in Hebrew or Russian (preserve it!)
         const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+        const isRussianText = /[\u0400-\u04FF]/.test(currentText);
 
-        // Only update if we have valid translations AND current text isn't already Hebrew
-        if (ui[item.field] && currentText !== ui[item.field] && !isHebrewText) {
+        // Only update if we have valid translations AND current text isn't already Hebrew or Russian
+        if (ui[item.field] && currentText !== ui[item.field] && !isHebrewText && !isRussianText) {
           console.log(`✅ Nav: "${currentText}" → "${ui[item.field]}"`);
           el.textContent = ui[item.field];
         } else if (isHebrewText) {
           console.log(`✅ Preserving Hebrew nav text: "${currentText}"`);
+        } else if (isRussianText) {
+          console.log(`✅ Preserving Russian nav text: "${currentText}"`);
         } else if (!ui[item.field]) {
           console.log(`⚠️ No translation for ${item.field}, preserving: "${currentText}"`);
         }
@@ -131,15 +134,18 @@ class UITranslator {
       const href = item.getAttribute('href') || '';
       const currentText = item.textContent.trim();
 
-      // Check if current text is already in Hebrew (preserve it!)
+      // Check if current text is already in Hebrew or Russian (preserve it!)
       const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+      const isRussianText = /[\u0400-\u04FF]/.test(currentText);
 
-      // Only update if we have valid translations AND current text isn't already Hebrew
-      if (href.includes('career') && ui.navCareerCenter && !isHebrewText) {
+      // Only update if we have valid translations AND current text isn't already Hebrew or Russian
+      if (href.includes('career') && ui.navCareerCenter && !isHebrewText && !isRussianText) {
         console.log(`🔄 Updating dropdown item: "${currentText}" → "${ui.navCareerCenter}"`);
         item.textContent = ui.navCareerCenter;
       } else if (href.includes('career') && isHebrewText) {
         console.log(`✅ Preserving existing Hebrew text: "${currentText}"`);
+      } else if (href.includes('career') && isRussianText) {
+        console.log(`✅ Preserving existing Russian text: "${currentText}"`);
       } else if (href.includes('career') && !ui.navCareerCenter) {
         console.log(`⚠️ No translation available for career link, preserving existing text: "${currentText}"`);
       }

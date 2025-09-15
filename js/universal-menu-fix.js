@@ -55,38 +55,8 @@
         else if (currentPath.includes('/ru/')) currentLang = 'ru';
         else if (currentPath.includes('/en/')) currentLang = 'en';
 
-        // Create language switcher HTML
-        const switcherHTML = `
-            <div id="language-switcher" style="
-                display: inline-flex;
-                align-items: center;
-                margin-left: 30px;
-                margin-right: 20px;
-                background: transparent;
-                padding: 0;
-                order: 999;
-                position: relative;
-            ">
-                <select id="languageSelect" onchange="switchLanguage(this.value)" style="
-                    background: transparent;
-                    color: #fff;
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    padding: 8px 12px;
-                    border-radius: 4px;
-                    font-size: 14px;
-                    cursor: pointer;
-                    outline: none;
-                    transition: all 0.3s ease;
-                " onmouseover="this.style.borderColor='rgba(255, 255, 255, 0.6)'"
-                   onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.3)'">
-                    <option value="en" ${currentLang === 'en' ? 'selected' : ''}>English</option>
-                    <option value="ru" ${currentLang === 'ru' ? 'selected' : ''}>Русский</option>
-                    <option value="he" ${currentLang === 'he' ? 'selected' : ''}>עברית</option>
-                </select>
-            </div>
-        `;
-
-        // Define the switch language function globally
+        // Language switcher removed - now using navbar language switcher
+        // Define the switch language function globally (keep this for compatibility)
         window.switchLanguage = function(lang) {
             const currentPath = window.location.pathname;
             const currentFile = currentPath.split('/').pop() || 'home.html';
@@ -107,24 +77,6 @@
             // Navigate to new language version
             window.location.href = newPath;
         };
-
-        // Insert switcher into nav menu
-        const navMenu = document.querySelector('.nav-menu.w-nav-menu');
-        if (navMenu) {
-            // Find mobile button wrapper if it exists
-            const mobileButtonWrapper = navMenu.querySelector('.mobile-button-wrapper');
-
-            if (mobileButtonWrapper) {
-                // Insert before mobile button wrapper
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = switcherHTML;
-                const switcher = tempDiv.firstElementChild;
-                navMenu.insertBefore(switcher, mobileButtonWrapper);
-            } else {
-                // Append to nav menu
-                navMenu.insertAdjacentHTML('beforeend', switcherHTML);
-            }
-        }
     }
 
     // Apply responsive styles

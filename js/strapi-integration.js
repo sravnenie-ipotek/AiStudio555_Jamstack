@@ -129,14 +129,17 @@ class StrapiIntegration {
         const elements = document.querySelectorAll(selector);
         elements.forEach(el => {
           const currentText = el.textContent.trim();
-          // Check if current text is already in Hebrew (preserve it!)
+          // Check if current text is already in Hebrew or Russian (preserve it!)
           const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+          const isRussianText = /[\u0400-\u04FF]/.test(currentText);
 
-          if (ui[mapping.field] && !isHebrewText) {
+          if (ui[mapping.field] && !isHebrewText && !isRussianText) {
             console.log(`✅ Nav: "${currentText}" → "${ui[mapping.field]}"`);
             el.textContent = ui[mapping.field];
           } else if (isHebrewText) {
             console.log(`✅ [strapi-integration] Preserving Hebrew text: "${currentText}"`);
+          } else if (isRussianText) {
+            console.log(`✅ [strapi-integration] Preserving Russian text: "${currentText}"`);
           }
         });
       });
@@ -148,13 +151,16 @@ class StrapiIntegration {
       const href = link.getAttribute('href') || '';
       const currentText = link.textContent.trim();
       const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+      const isRussianText = /[\u0400-\u04FF]/.test(currentText);
 
-      // Only update if NOT already Hebrew
-      if (href.includes('career') && ui.navCareerCenter && !isHebrewText) {
+      // Only update if NOT already Hebrew or Russian
+      if (href.includes('career') && ui.navCareerCenter && !isHebrewText && !isRussianText) {
         console.log(`🔄 [strapi-integration] Updating dropdown: "${currentText}" → "${ui.navCareerCenter}"`);
         link.textContent = ui.navCareerCenter;
       } else if (href.includes('career') && isHebrewText) {
         console.log(`✅ [strapi-integration] Preserving Hebrew dropdown text: "${currentText}"`);
+      } else if (href.includes('career') && isRussianText) {
+        console.log(`✅ [strapi-integration] Preserving Russian dropdown text: "${currentText}"`);
       }
     });
   }
