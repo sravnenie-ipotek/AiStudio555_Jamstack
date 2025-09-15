@@ -57,8 +57,23 @@ class MasterFooterLoader {
      */
     detectApiEndpoint() {
         const hostname = window.location.hostname;
+        const currentPort = window.location.port;
         const isDevelopment = hostname === 'localhost' || hostname === '127.0.0.1';
-        const endpoint = isDevelopment ? this.config.localApiBase : this.config.apiBase;
+
+        let endpoint;
+        if (currentPort === '3005') {
+            // Frontend on Python server (3005), API on Express (4005)
+            endpoint = 'http://localhost:4005';
+        } else if (currentPort === '4005') {
+            // Accessing directly via Express server
+            endpoint = 'http://localhost:4005';
+        } else if (isDevelopment) {
+            // Default local setup - use port 4005
+            endpoint = 'http://localhost:4005';
+        } else {
+            // Production
+            endpoint = this.config.apiBase;
+        }
 
         this.log(`🌐 API Endpoint detected: ${endpoint} (${isDevelopment ? 'development' : 'production'})`, 'info');
         return endpoint;

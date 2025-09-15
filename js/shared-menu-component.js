@@ -58,25 +58,32 @@
     console.log('Current language detected:', currentLang);
     console.log('Using translations:', t);
 
+    // Build language-aware URLs
+    const getUrl = (page) => {
+        if (currentLang === 'en') return `/${page}.html`;
+        return `/${currentLang}/${page}.html`;
+    };
+
     // Build menu HTML with explicit debug values for Hebrew
     console.log('Building menu HTML...');
     console.log('t.home =', t.home);
     console.log('t.courses =', t.courses);
     console.log('t.teachers =', t.teachers);
     console.log('t.pricing =', t.pricing);
+    console.log('URLs:', { home: getUrl('home'), courses: getUrl('courses'), teachers: getUrl('teachers'), pricing: getUrl('pricing') });
 
     const menuHTML = `
-        <div data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
+        <div role="banner" class="navbar custom-nav">
             <div class="container">
                 <div class="navbar-content">
-                    <a href="home.html" class="zohacous-logo-link w-nav-brand">
+                    <a href="${getUrl('home')}" class="zohacous-logo-link nav-brand">
                         <img loading="lazy" src="../images/Logo.svg" alt="" class="zohacous-logo-image">
                     </a>
-                    <nav role="navigation" class="nav-menu w-nav-menu">
-                        <a href="home.html" class="nav-link w-nav-link ${currentPage === 'home' ? 'w--current' : ''}">${t.home || 'בית'}</a>
-                        <a href="courses.html" class="nav-link w-nav-link ${currentPage === 'courses' ? 'w--current' : ''}">${t.courses || 'קורסים'}</a>
-                        <a href="teachers.html" class="nav-link w-nav-link ${currentPage === 'teachers' ? 'w--current' : ''}">${t.teachers || 'מורים'}</a>
-                        <a href="#" id="career-dropdown" class="nav-link w-nav-link" onclick="toggleCareerDropdown(); return false;">
+                    <nav role="navigation" class="nav-menu custom-nav-menu">
+                        <a href="${getUrl('home')}" class="nav-link custom-nav-link ${currentPage === 'home' ? 'current-page' : ''}">${t.home || 'בית'}</a>
+                        <a href="${getUrl('courses')}" class="nav-link custom-nav-link ${currentPage === 'courses' ? 'current-page' : ''}">${t.courses || 'קורסים'}</a>
+                        <a href="${getUrl('teachers')}" class="nav-link custom-nav-link ${currentPage === 'teachers' ? 'current-page' : ''}">${t.teachers || 'מורים'}</a>
+                        <a href="#" id="career-dropdown" class="nav-link custom-nav-link" onclick="toggleCareerDropdown(); return false;" style="position: relative;">
                             <span>${t.careerServices}</span>
                             <span style="font-size: 10px; margin-left: 5px;">▼</span>
                             <div id="careerDropdownMenu" style="
@@ -90,12 +97,13 @@
                                 padding: 10px 0;
                                 min-width: 180px;
                                 z-index: 1000;
+                                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
                             ">
-                                <a href="career-orientation.html" style="display: block; padding: 8px 16px; color: #fff; text-decoration: none;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">${t.careerOrientation}</a>
-                                <a href="career-center.html" style="display: block; padding: 8px 16px; color: #fff; text-decoration: none;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">${t.careerCenter}</a>
+                                <a href="${getUrl('career-orientation')}" style="display: block; padding: 8px 16px; color: #fff; text-decoration: none;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">${t.careerOrientation}</a>
+                                <a href="${getUrl('career-center')}" style="display: block; padding: 8px 16px; color: #fff; text-decoration: none;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">${t.careerCenter}</a>
                             </div>
                         </a>
-                        <a href="pricing.html" class="nav-link w-nav-link ${currentPage === 'pricing' ? 'w--current' : ''}">${t.pricing || 'תוכניות תמחור'}</a>
+                        <a href="${getUrl('pricing')}" class="nav-link custom-nav-link ${currentPage === 'pricing' ? 'current-page' : ''}">${t.pricing || 'תוכניות תמחור'}</a>
                         <!-- Language Selector integrated as navigation item -->
                         <div class="language-nav-item">
                             <select id="language-switcher-nav" onchange="switchLanguageSelect(this.value)" class="language-nav-select">
@@ -171,6 +179,15 @@
 
     // Apply menu styles
     function applyMenuStyles() {
+        // Load custom navigation CSS (Webflow-free)
+        if (!document.getElementById('custom-nav-css')) {
+            const link = document.createElement('link');
+            link.id = 'custom-nav-css';
+            link.rel = 'stylesheet';
+            link.href = '../css/custom-nav-no-webflow.css?v=1.3';
+            document.head.appendChild(link);
+        }
+
         // Load external CSS for better language selector styling
         if (!document.getElementById('menu-language-fix-css')) {
             const link = document.createElement('link');
@@ -739,7 +756,7 @@
 
     // Initialize
     function init() {
-        console.log('🚀 Shared menu component initializing... v2.3');
+        console.log('🚀 Shared menu component initializing... v2.6 (Fixed dropdown positioning & duplicate menu)');
         console.log('📱 Viewport width:', window.innerWidth);
         console.log('🌐 Current language:', currentLang);
         console.log('📄 Current page:', currentPage);

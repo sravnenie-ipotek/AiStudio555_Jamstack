@@ -8,9 +8,10 @@
 const { Client } = require('pg');
 
 async function runMigration() {
+  const isLocal = (process.env.DATABASE_URL || '').includes('localhost') || process.env.NODE_ENV === 'development';
   const client = new Client({
     connectionString: process.env.DATABASE_URL || 'postgresql://postgres:password@localhost:5432/aistudio',
-    ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
+    ssl: isLocal ? false : { rejectUnauthorized: false }
   });
 
   try {

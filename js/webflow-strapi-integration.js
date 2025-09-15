@@ -6,10 +6,23 @@
 
 class CustomAPIIntegration {
     constructor() {
-        // Use local API if available, fallback to production
-        this.API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'http://localhost:3000/api'
-            : 'https://aistudio555jamstack-production.up.railway.app/api';
+        // Detect API endpoint based on current port
+        const currentPort = window.location.port;
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+        if (currentPort === '3005') {
+            // Frontend on Python server (3005), API on Express (4005)
+            this.API_BASE = 'http://localhost:4005/api';
+        } else if (currentPort === '4005') {
+            // Accessing directly via Express server
+            this.API_BASE = 'http://localhost:4005/api';
+        } else if (isLocal) {
+            // Default local setup
+            this.API_BASE = 'http://localhost:4005/api';
+        } else {
+            // Production
+            this.API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+        }
         this.isInitialized = false;
         this.currentLanguage = this.detectLocale();
         this.cache = {};
@@ -268,7 +281,15 @@ class CustomAPIIntegration {
 
     updateNavigation(ui) {
         console.log('🧭 Updating navigation...');
-        
+
+        // Skip updating navigation if shared menu component already handled it
+        // The shared menu component properly handles Hebrew translations
+        const sharedMenuContainer = document.getElementById('shared-menu-container');
+        if (sharedMenuContainer && sharedMenuContainer.innerHTML.trim()) {
+            console.log('📌 Navigation already handled by shared menu component, skipping webflow-strapi navigation update');
+            return;
+        }
+
         // Navigation menu items
         const navItems = [
             { selector: 'a[href="/home"], a[href="home.html"], a[href="../home.html"], a[href="index.html"]', field: 'navHome' },
@@ -588,7 +609,11 @@ class CustomAPIIntegration {
             teachersContainer.appendChild(teacherCard);
         });
 
-        console.log(`✅ Updated teachers grid with ${teachersData.length} teachers`);
+        // Make container visible after updating content
+        teachersContainer.style.opacity = '1';
+        teachersContainer.style.visibility = 'visible';
+
+        console.log(`✅ Updated teachers grid with ${teachersData.length} teachers and made it visible`);
     }
 
     createTeacherCard(teacherData) {

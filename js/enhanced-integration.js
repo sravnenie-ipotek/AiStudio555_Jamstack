@@ -8,9 +8,22 @@ class EnhancedIntegration {
     constructor() {
         // Environment detection
         this.isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        this.API_BASE = this.isLocal
-            ? 'http://localhost:3000/api'
-            : 'https://aistudio555jamstack-production.up.railway.app/api';
+
+        // Detect API endpoint based on current port
+        const currentPort = window.location.port;
+        if (currentPort === '3005') {
+            // Frontend on Python server (3005), API on Express (4005)
+            this.API_BASE = 'http://localhost:4005/api';
+        } else if (currentPort === '4005') {
+            // Accessing directly via Express server
+            this.API_BASE = 'http://localhost:4005/api';
+        } else if (this.isLocal) {
+            // Default local setup
+            this.API_BASE = 'http://localhost:4005/api';
+        } else {
+            // Production
+            this.API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+        }
 
         // Language detection
         this.currentLanguage = this.detectLanguage();
@@ -190,8 +203,17 @@ class EnhancedIntegration {
 
     async loadHomeContent() {
         try {
-            const response = await fetch(`${this.API_BASE}/home-page?locale=${this.currentLanguage}`);
-            if (!response.ok) throw new Error('Failed to fetch home content');
+            let response = await fetch(`${this.API_BASE}/home-page?locale=${this.currentLanguage}`);
+
+            if (!response.ok) {
+                // Try fallback without locale parameter
+                console.log('⚠️ Locale-specific API failed, trying fallback...');
+                response = await fetch(`${this.API_BASE}/home-page`);
+
+                if (!response.ok) {
+                    throw new Error('Both API endpoints failed');
+                }
+            }
 
             const data = await response.json();
 

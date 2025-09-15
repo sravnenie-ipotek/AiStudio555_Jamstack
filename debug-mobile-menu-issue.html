@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Mobile Menu</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #1a1a2e;
+            color: white;
+        }
+        .debug-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-frame {
+            width: 375px;
+            height: 667px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            margin: 20px auto;
+            background: white;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0052a3;
+        }
+        .log {
+            background: #2a2a3e;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #0066cc;
+            padding-left: 10px;
+        }
+        .error {
+            border-left-color: #ff4444;
+            color: #ff6666;
+        }
+        .success {
+            border-left-color: #44ff44;
+            color: #66ff66;
+        }
+        .warning {
+            border-left-color: #ffaa44;
+            color: #ffcc66;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>🔍 Mobile Menu Debugger</h1>
+
+        <div style="text-align: center;">
+            <button onclick="loadPage()">Load Hebrew Page</button>
+            <button onclick="debugMenu()">Debug Menu State</button>
+            <button onclick="testHamburger()">Test Hamburger Click</button>
+            <button onclick="forceOpenMenu()">Force Open Menu</button>
+            <button onclick="checkCSS()">Check CSS Rules</button>
+            <button onclick="clearLog()">Clear Log</button>
+        </div>
+
+        <iframe id="testFrame" class="test-frame" src="/he/home.html"></iframe>
+
+        <div id="log" class="log">
+            <div class="log-entry">Debugger ready. Load a page to start.</div>
+        </div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry ' + type;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '<div class="log-entry">Log cleared.</div>';
+        }
+
+        function loadPage() {
+            const frame = document.getElementById('testFrame');
+            frame.src = '/he/home.html';
+            log('Loading Hebrew home page...', 'info');
+
+            frame.onload = function() {
+                log('Page loaded successfully', 'success');
+                setTimeout(debugMenu, 1000);
+            };
+        }
+
+        function debugMenu() {
+            const frame = document.getElementById('testFrame');
+            const doc = frame.contentDocument || frame.contentWindow.document;
+
+            log('=== DEBUGGING MENU STATE ===', 'warning');
+
+            // Check if menu exists
+            const menu = doc.querySelector('.w-nav-menu');
+            if (menu) {
+                log('✓ Menu element found', 'success');
+
+                // Get computed styles
+                const styles = frame.contentWindow.getComputedStyle(menu);
+                log(`Display: ${styles.display}`);
+                log(`Visibility: ${styles.visibility}`);
+                log(`Opacity: ${styles.opacity}`);
+                log(`Position: ${styles.position}`);
+                log(`Z-index: ${styles.zIndex}`);
+
+                // Check for inline styles
+                if (menu.style.cssText) {
+                    log(`Inline styles: ${menu.style.cssText}`, 'warning');
+                }
+
+                // Count menu items
+                const items = menu.querySelectorAll('.nav-link');
+                log(`Menu items: ${items.length}`);
+            } else {
+                log('✗ Menu element NOT found', 'error');
+            }
+
+            // Check hamburger button
+            const hamburger = doc.querySelector('.w-nav-button');
+            if (hamburger) {
+                log('✓ Hamburger button found', 'success');
+                const hStyles = frame.contentWindow.getComputedStyle(hamburger);
+                log(`Hamburger display: ${hStyles.display}`);
+                log(`Hamburger visibility: ${hStyles.visibility}`);
+
+                // Check for event listeners
+                const hasListener = hamburger.onclick !== null || hamburger.addEventListener;
+                log(`Has click handler: ${hasListener ? 'Maybe' : 'No'}`);
+            } else {
+                log('✗ Hamburger button NOT found', 'error');
+            }
+
+            // Check body classes
+            const bodyClasses = doc.body.className;
+            log(`Body classes: ${bodyClasses || 'none'}`);
+
+            // Check for w--nav-menu-open class
+            const isOpen = doc.body.classList.contains('w--nav-menu-open');
+            log(`Menu open state: ${isOpen}`, isOpen ? 'warning' : 'info');
+        }
+
+        function testHamburger() {
+            const frame = document.getElementById('testFrame');
+            const doc = frame.contentDocument || frame.contentWindow.document;
+
+            log('=== TESTING HAMBURGER CLICK ===', 'warning');
+
+            const hamburger = doc.querySelector('.w-nav-button');
+            if (hamburger) {
+                // Check initial state
+                const beforeOpen = doc.body.classList.contains('w--nav-menu-open');
+                log(`Before click: Menu ${beforeOpen ? 'OPEN' : 'CLOSED'}`);
+
+                // Click hamburger
+                hamburger.click();
+                log('Clicked hamburger button');
+
+                // Check state after click
+                setTimeout(() => {
+                    const afterOpen = doc.body.classList.contains('w--nav-menu-open');
+                    log(`After click: Menu ${afterOpen ? 'OPEN' : 'CLOSED'}`, afterOpen ? 'success' : 'error');
+
+                    // Check menu visibility
+                    const menu = doc.querySelector('.w-nav-menu');
+                    if (menu) {
+                        const styles = frame.contentWindow.getComputedStyle(menu);
+                        log(`Menu display after click: ${styles.display}`);
+                        log(`Menu visibility after click: ${styles.visibility}`);
+
+                        if (styles.display === 'none' && afterOpen) {
+                            log('ERROR: Body has open class but menu is hidden!', 'error');
+                            log('This suggests CSS rules are not applying correctly', 'error');
+                        }
+                    }
+                }, 500);
+            } else {
+                log('Hamburger button not found!', 'error');
+            }
+        }
+
+        function forceOpenMenu() {
+            const frame = document.getElementById('testFrame');
+            const doc = frame.contentDocument || frame.contentWindow.document;
+
+            log('=== FORCING MENU OPEN ===', 'warning');
+
+            // Add open class
+            doc.body.classList.add('w--nav-menu-open');
+            log('Added w--nav-menu-open class to body');
+
+            // Force menu visible
+            const menu = doc.querySelector('.w-nav-menu');
+            if (menu) {
+                menu.style.display = 'flex';
+                menu.style.visibility = 'visible';
+                menu.style.opacity = '1';
+                menu.style.position = 'fixed';
+                menu.style.top = '0';
+                menu.style.left = '0';
+                menu.style.width = '100%';
+                menu.style.height = '100vh';
+                menu.style.background = 'rgba(5, 5, 26, 0.98)';
+                menu.style.zIndex = '9999';
+                menu.style.flexDirection = 'column';
+                menu.style.padding = '80px 20px';
+
+                log('Applied inline styles to force menu visible', 'success');
+                log('If menu is now visible, CSS rules are the problem', 'warning');
+            } else {
+                log('Menu element not found!', 'error');
+            }
+        }
+
+        function checkCSS() {
+            const frame = document.getElementById('testFrame');
+            const doc = frame.contentDocument || frame.contentWindow.document;
+
+            log('=== CHECKING CSS RULES ===', 'warning');
+
+            // Check for our custom styles
+            const sharedStyles = doc.getElementById('shared-menu-styles');
+            if (sharedStyles) {
+                log('✓ shared-menu-styles found', 'success');
+
+                // Check if mobile rules exist
+                const hasMediaQuery = sharedStyles.textContent.includes('@media screen and (max-width: 991px)');
+                log(`Has mobile media query: ${hasMediaQuery}`, hasMediaQuery ? 'success' : 'error');
+
+                const hasOpenClass = sharedStyles.textContent.includes('w--nav-menu-open');
+                log(`Has open menu styles: ${hasOpenClass}`, hasOpenClass ? 'success' : 'error');
+            } else {
+                log('✗ shared-menu-styles NOT found', 'error');
+            }
+
+            // Check all stylesheets
+            const styleSheets = doc.styleSheets;
+            log(`Total stylesheets: ${styleSheets.length}`);
+
+            // Look for conflicting styles
+            const menu = doc.querySelector('.w-nav-menu');
+            if (menu) {
+                // Check which styles are winning
+                const styles = frame.contentWindow.getComputedStyle(menu);
+
+                // Try to find which stylesheet is setting display: none
+                for (let sheet of styleSheets) {
+                    try {
+                        const rules = sheet.cssRules || sheet.rules;
+                        if (rules) {
+                            for (let rule of rules) {
+                                if (rule.selectorText && rule.selectorText.includes('nav-menu')) {
+                                    if (rule.style.display) {
+                                        log(`Found rule: ${rule.selectorText} { display: ${rule.style.display} }`, 'warning');
+                                    }
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        // Cross-origin stylesheets can't be read
+                    }
+                }
+            }
+        }
+
+        // Auto-load on page ready
+        window.onload = function() {
+            setTimeout(loadPage, 500);
+        };
+    </script>
+</body>
+</html>

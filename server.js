@@ -43,9 +43,10 @@ console.log('PORT:', process.env.PORT);
 
 if (process.env.DATABASE_URL) {
   // PostgreSQL (Railway in production OR local Docker)
+  const isLocal = process.env.DATABASE_URL.includes('localhost') || process.env.NODE_ENV === 'development';
   dbConfig = {
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+    ssl: isLocal ? false : { rejectUnauthorized: false }
   };
 
   // Detect if it's local or Railway
@@ -1893,6 +1894,155 @@ function generateCareerRecommendations(profile) {
 
   return recommendations;
 }
+
+// CONSULTATION FORM SUBMISSION API - For Hebrew courses page consultation form
+app.post('/api/consultations', async (req, res) => {
+  try {
+    const { name, email, phone, interest, experience } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !interest || !experience) {
+      return res.status(400).json({
+        success: false,
+        error: 'Name, email, interest area, and experience level are required fields'
+      });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please provide a valid email address'
+      });
+    }
+
+    // Validate interest options
+    const validInterests = ['ai-ml', 'data-science', 'web-dev', 'cloud', 'mobile', 'blockchain', 'cybersecurity', 'product'];
+    if (!validInterests.includes(interest)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid interest area selected'
+      });
+    }
+
+    // Validate experience options
+    const validExperience = ['beginner', 'some', 'intermediate', 'advanced'];
+    if (!validExperience.includes(experience)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid experience level selected'
+      });
+    }
+
+    // Insert consultation request into database
+    await queryDatabase(`
+      INSERT INTO consultations (
+        name, email, phone, interest, experience, locale, created_at, updated_at
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+      )
+    `, [
+      name.trim(),
+      email.trim().toLowerCase(),
+      phone?.trim() || null,
+      interest,
+      experience,
+      'he' // Default to Hebrew since this is for Hebrew courses page
+    ]);
+
+    console.log(`✅ New consultation request received: ${name} (${email}) - ${interest} - ${experience}`);
+
+    // Return success response
+    res.status(200).json({
+      success: true,
+      message: 'Consultation request submitted successfully! We will contact you soon.',
+      data: {
+        submissionId: Date.now(),
+        nextSteps: [
+          'Check your email for confirmation',
+          'Our team will contact you within 24 hours',
+          'Prepare questions about your chosen field',
+          'Consider your schedule for a consultation call'
+        ]
+      }
+    });
+
+  } catch (error) {
+    console.error('Consultation submission error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to submit consultation request. Please try again.',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
+// GET CONSULTATION SUBMISSIONS API - For admin dashboard
+app.get('/api/consultations', async (req, res) => {
+  try {
+    const { limit = 50, offset = 0, interest, experience } = req.query;
+
+    // Build query with optional filters
+    let query = 'SELECT * FROM consultations WHERE 1=1';
+    const params = [];
+    let paramIndex = 1;
+
+    if (interest) {
+      query += ` AND interest = $${paramIndex}`;
+      params.push(interest);
+      paramIndex++;
+    }
+
+    if (experience) {
+      query += ` AND experience = $${paramIndex}`;
+      params.push(experience);
+      paramIndex++;
+    }
+
+    query += ` ORDER BY created_at DESC LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
+    params.push(parseInt(limit), parseInt(offset));
+
+    const consultations = await queryDatabase(query, params);
+
+    // Get total count for pagination
+    let countQuery = 'SELECT COUNT(*) as total FROM consultations WHERE 1=1';
+    const countParams = [];
+    let countParamIndex = 1;
+
+    if (interest) {
+      countQuery += ` AND interest = $${countParamIndex}`;
+      countParams.push(interest);
+      countParamIndex++;
+    }
+
+    if (experience) {
+      countQuery += ` AND experience = $${countParamIndex}`;
+      countParams.push(experience);
+    }
+
+    const [{ total }] = await queryDatabase(countQuery, countParams);
+
+    res.json({
+      success: true,
+      data: consultations,
+      pagination: {
+        total: parseInt(total),
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+        hasMore: parseInt(offset) + parseInt(limit) < parseInt(total)
+      }
+    });
+
+  } catch (error) {
+    console.error('Error fetching consultations:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve consultation submissions',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
 
 // UPDATE CAREER ORIENTATION PAGE (comprehensive)
 app.put('/api/career-orientation-page', async (req, res) => {

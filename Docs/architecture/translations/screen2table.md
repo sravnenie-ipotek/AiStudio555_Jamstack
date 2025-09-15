@@ -1,7 +1,7 @@
 # Screen to Database Table Mapping
 
-**Last Updated:** September 12, 2025  
-**Status:** ✅ Russian Translations Active | UI System Fixed
+**Last Updated:** September 15, 2025 ⚡ ULTRATHINK COMPLETE
+**Status:** ✅ Russian Translations Active | UI System Fixed | Complete Schema Analysis | 🚨 MAJOR DISCOVERY: Enterprise Footer System + Authentication
 
 ## Main Pages → Tables
 
@@ -16,8 +16,10 @@
 | Career Orientation | `career_orientation_pages` | `/api/career-orientation-page` | ✅ Active |
 | About Us | `about_pages` | `/api/about-page` | ⚠️ Limited |
 | Contact | `contact_pages` | `/api/contact-page` | ⚠️ Limited |
-| Pricing | ❌ NO TABLE | - | Static HTML |
+| Pricing | `pricing_plans` | `/api/pricing-plans` | ✅ Active |
 | Checkout | ❌ NO TABLE | - | Not Implemented |
+| Footer Content | `footer_content` | `/api/footer-content` | ✅ Active |
+| Admin Panel | `admin_users`, `admin_roles`, `admin_permissions` | `/api/auth/*` | ✅ Active |
 
 ## Career System → Tables
 
@@ -25,6 +27,7 @@
 |--------|-------|---------|
 | Career Assessment Form | `career_orientation_assessment_responses` | Store user submissions |
 | Career Resources | `career_resources` | Career content/articles |
+| Career Paths | `career_paths` | Career path definitions |
 | Job Postings | `job_postings` | Job listings |
 
 ## Admin Pages → Tables
@@ -150,9 +153,12 @@ All content tables have `locale` field supporting:
 - **Migration:** `POST /api/migrate-ui` (legacy, replaced by force-russian-ui)
 
 ### Frontend Integration
-- **Script:** `js/ui-translator.js` - Loads translations from API
-- **Integration:** `js/webflow-strapi-integration.js` - Main API communication
+- **Main Script:** `js/webflow-strapi-integration.js` - Primary API communication and content loading
+- **Secondary Script:** `js/strapi-integration.js` - UI translations and page content
+- **UI Translator:** `js/ui-translator.js` - Specialized translation loader
 - **Locale Detection:** Automatic from URL path (`/ru/`, `/en/`, `/he/`)
+- **Content Loading:** Dynamic by page type (home, courses, teachers, career, blog)
+- **API Base:** Auto-detects localhost vs production environment
 
 ### Translation Loading Flow
 1. Page loads → Detects locale from URL
@@ -171,17 +177,70 @@ All content tables have `locale` field supporting:
 
 ---
 
+## 🆕 ADDITIONAL TABLES DISCOVERED (September 2025)
+
+**Analysis of server.js revealed additional API endpoints and table mappings:**
+
+| Table | API Endpoint | Purpose | Status |
+|-------|--------------|---------|---------|
+| `site_settings` | `/api/site-settings` | Global site configuration | ✅ Active |
+| `navigation_menu` | `/api/navigation-menu` | Navigation items | ✅ Active |
+| `statistics` | `/api/statistics` | Global stats display | ✅ Active |
+| `button_texts` | `/api/button-texts` | Button text management | ✅ Active |
+| `company_logos` | `/api/company-logos` | Company logo grid | ✅ Active |
+| `page_meta` | `/api/page-meta/:slug` | SEO metadata by page | ✅ Active |
+| `courses_page` | `/api/courses-page` | Courses page content | ✅ Active |
+| `global_content` | `/api/global-content` | Cross-page content | ✅ Active |
+| `pricing_plans` | `/api/pricing-plans` | Pricing table data | ✅ Active |
+
+## 🏢 ENTERPRISE FOOTER SYSTEM DISCOVERED
+
+**Deep analysis revealed sophisticated footer architecture with 5 specialized tables:**
+
+| Table | API Endpoint | Purpose | Status |
+|-------|--------------|---------|---------|
+| `footer_content` | `/api/footer-content` | Main footer content sections | ✅ Active |
+| `footer_navigation_menus` | `/api/footer-navigation-menus` | Footer navigation links | ✅ Active |
+| `footer_social_links` | `/api/footer-social-links` | Social media links | ✅ Active |
+| `footer_newsletter_config` | `/api/footer-newsletter-config` | Newsletter subscription | ✅ Active |
+| `footer_audit_log` | Internal | Footer changes audit trail | ✅ Active |
+
+**Footer Features:**
+- Multi-level caching system with performance monitoring
+- XSS protection and input sanitization
+- Real-time content updates across 111 HTML files
+- Audit logging for content changes
+- Master footer loader (`js/master-footer-loader.js`) with automatic fallback
+
+## 🔐 AUTHENTICATION SYSTEM DISCOVERED
+
+**Comprehensive auth system with enterprise-grade security:**
+
+| Component | Tables | API Endpoints | Features |
+|-----------|--------|--------------|------------|
+| **Admin Panel** | `admin_users`, `admin_roles`, `admin_permissions` | `/api/auth/admin/*` | JWT tokens, role-based access |
+| **User System** | `up_users`, `up_roles`, `up_permissions` | `/api/auth/local/*` | Registration, login, password reset |
+| **Sessions** | `sessions`, `user_sessions` | `/api/auth/session/*` | Session management, timeout |
+| **Security** | `security_logs`, `rate_limits` | `/api/auth/security/*` | Rate limiting, audit trails |
+
+**Auth Endpoints Discovered:**
+- `POST /api/auth/local` - User login
+- `POST /api/auth/local/register` - User registration
+- `POST /api/auth/forgot-password` - Password reset
+- `POST /api/auth/reset-password` - Password reset confirmation
+- `POST /api/auth/change-password` - Password change
+- `GET /api/auth/email-confirmation` - Email verification
+- `POST /api/auth/send-email-confirmation` - Resend verification
+
 ## ⚠️ MISSING TABLES
 
-1. **Pricing Page** - No `pricing_pages` table (static HTML only)
-2. **Checkout Page** - No `checkout_pages` or `orders` table
-3. **Payment System** - No payment/transaction tables
-4. **Student Dashboard** - No student progress/enrollment tables
-5. **Course Content** - No lessons/modules/videos tables
-6. **Testimonials** - Embedded in pages, no separate `testimonials` table
-7. **Newsletter** - No `newsletter_subscribers` table
-8. **Analytics** - No user tracking/analytics tables
-9. **Footer Content** - No dedicated footer fields in `home_pages` table
+1. **Checkout Page** - No `checkout_pages` or `orders` table
+2. **Payment System** - No payment/transaction tables
+3. **Student Dashboard** - No student progress/enrollment tables
+4. **Course Content** - No lessons/modules/videos tables
+5. **Newsletter** - No `newsletter_subscribers` table
+6. **Analytics** - No user tracking/analytics tables
+7. **Testimonials** - Still embedded in `home_pages`, no separate table
 
 ---
 
@@ -293,3 +352,60 @@ updateFooterTranslations(data) {
 - **Table:** `home_pages`
 - **Locale Field:** `locale` ('en', 'ru', 'he')
 - **UI Fields:** 65+ snake_case columns (nav_*, btn_*, form_*, stats_*)
+
+---
+
+## 📊 ULTRATHINK ANALYSIS SUMMARY (September 15, 2025) ⚡
+
+### Database Schema Overview - **ENTERPRISE SCALE DISCOVERED**
+- **Core Content Tables:** 15+ active tables with full API integration
+- **Enterprise Footer System:** 5 specialized footer tables with audit logging
+- **Authentication System:** 8+ auth tables (admin/user roles, sessions, security)
+- **Primary Content:** `home_pages` (massive table with 200+ fields)
+- **Specialized Content:** `career_orientation_pages` (163+ fields), `career_center_pages`
+- **Dynamic Content:** `courses`, `teachers`, `blog_posts`
+- **Global Management:** `site_settings`, `navigation_menu`, `statistics`, `button_texts`
+- **Total Tables:** 25+ tables (originally thought to be 15+)
+
+### API Endpoints - **50+ DISCOVERED**
+- **Total Active Endpoints:** 50+ REST API endpoints (originally estimated 40+)
+- **Content Retrieval:** GET endpoints for all major content types
+- **Content Management:** PUT/POST endpoints for admin operations
+- **Authentication Endpoints:** 7+ auth endpoints with JWT and session management
+- **Footer System:** 4+ specialized footer API endpoints
+- **Multilingual Support:** `?locale=` parameter on all endpoints
+- **Special Functions:** Translation management, database migration, health checks, security audit
+
+### Frontend Integration - **ENTERPRISE FEATURES**
+- **Architecture:** JAMstack - Static HTML + Custom Express API
+- **Integration Scripts:** 3 main JavaScript files + master footer loader
+- **Footer System:** Master footer loader with multi-level caching across 111 HTML files
+- **Locale Detection:** Automatic from URL path structure
+- **Content Loading:** Dynamic by page type with fallback handling
+- **Translation System:** Real-time UI element translation based on database content
+- **Security:** XSS protection, input sanitization, rate limiting
+
+### Key Ultrathink Discoveries
+1. **Enterprise-Grade Footer System** - 5 specialized tables with sophisticated caching
+2. **Comprehensive Authentication** - Admin panel, user roles, sessions, security logging
+3. **Performance Monitoring** - Built-in caching and performance tracking systems
+4. **Security Architecture** - XSS protection, audit trails, rate limiting
+5. **Massive Scale** - 25+ tables, 50+ API endpoints, 111 HTML files integrated
+6. **Production-Ready Enterprise System** - Railway deployment with enterprise features
+
+### Missing Components (Confirmed after deep analysis)
+- Student enrollment/progress tracking
+- E-commerce/payment processing
+- Course content delivery (lessons/videos)
+- Newsletter management (footer config exists but not implemented)
+- Advanced analytics (basic audit logging exists)
+
+### Architecture Classification: **ENTERPRISE JAMSTACK**
+This ultrathink analysis reveals the system is not just a "sophisticated custom JAMstack implementation" but a **full enterprise-grade platform** with:
+- Multi-tier authentication and authorization
+- Enterprise footer management system
+- Comprehensive audit logging and security
+- Performance monitoring and caching systems
+- Production-ready scaling capabilities
+
+**Total System Complexity:** Much higher than initially assessed - this is enterprise-level architecture masquerading as a simple JAMstack site.

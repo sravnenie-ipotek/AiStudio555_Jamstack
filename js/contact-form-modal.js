@@ -2,7 +2,7 @@
 (function() {
   'use strict';
 
-  // Create modal HTML structure
+  // Create modal HTML structure with Hebrew support
   const modalHTML = `
     <div id="contactModal" class="contact-modal">
       <div class="contact-modal-overlay"></div>
@@ -14,54 +14,54 @@
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
           </button>
-          
+
           <div class="contact-modal-header">
-            <h2 class="contact-modal-title">Get Started Today</h2>
+            <h2 class="contact-modal-title">שלטו ב-AI וטכנולוגיה</h2>
             <p class="contact-modal-subtitle">Fill out the form and we'll contact you via WhatsApp</p>
           </div>
-          
+
           <form id="contactForm" class="contact-form">
             <div class="form-group">
               <label for="fullName" class="form-label">Full Name</label>
-              <input 
-                type="text" 
-                id="fullName" 
-                name="fullName" 
-                class="form-input" 
-                placeholder="Enter your full name"
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                class="form-input"
+                placeholder="Enter your name"
                 required
               />
               <span class="form-error" id="nameError"></span>
             </div>
-            
+
             <div class="form-group">
               <label for="phoneNumber" class="form-label">Phone Number</label>
-              <input 
-                type="tel" 
-                id="phoneNumber" 
-                name="phoneNumber" 
-                class="form-input" 
-                placeholder="+1 234 567 8900"
+              <input
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                class="form-input"
+                placeholder="Enter your phone"
                 required
               />
               <span class="form-error" id="phoneError"></span>
             </div>
-            
+
             <div class="form-group">
               <label for="message" class="form-label">Message</label>
-              <textarea 
-                id="message" 
-                name="message" 
-                class="form-textarea" 
-                rows="4" 
-                placeholder="Tell us about your learning goals..."
+              <textarea
+                id="message"
+                name="message"
+                class="form-textarea"
+                rows="4"
+                placeholder="Enter your message"
                 required
               ></textarea>
               <span class="form-error" id="messageError"></span>
             </div>
-            
+
             <button type="submit" class="form-submit-btn">
-              <span class="btn-text">Send Message</span>
+              <span class="btn-text">Submit</span>
               <span class="btn-loader" style="display: none;">
                 <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
                   <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50" stroke-dashoffset="10">
@@ -74,10 +74,13 @@
         </div>
       </div>
     </div>
-    
+
     <div id="toast" class="toast">
       <div class="toast-content">
-        <svg class="toast-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <svg class="toast-icon error-icon" style="display:none;" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm5 13.59L13.59 15 10 11.41 6.41 15 5 13.59 8.59 10 5 6.41 6.41 5 10 8.59 13.59 5 15 6.41 11.41 10 15 13.59z" fill="currentColor"/>
+        </svg>
+        <svg class="toast-icon success-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
           <path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm-1 15l-5-5 1.5-1.5L9 12l7-7 1.5 1.5L9 15z" fill="currentColor"/>
         </svg>
         <span class="toast-message">Message sent successfully!</span>
@@ -511,16 +514,28 @@
       document.body.style.overflow = '';
     }
 
-    // Show toast notification
+    // Show toast notification with proper icons
     function showToast(message, type = 'success') {
       const toastMessage = toast.querySelector('.toast-message');
+      const errorIcon = toast.querySelector('.error-icon');
+      const successIcon = toast.querySelector('.success-icon');
+
       toastMessage.textContent = message;
       toast.classList.remove('success', 'error');
       toast.classList.add('active', type);
-      
+
+      // Show appropriate icon
+      if (type === 'error') {
+        errorIcon.style.display = 'block';
+        successIcon.style.display = 'none';
+      } else {
+        errorIcon.style.display = 'none';
+        successIcon.style.display = 'block';
+      }
+
       // Error messages stay longer
       const duration = type === 'error' ? 4000 : 3000;
-      
+
       setTimeout(() => {
         toast.classList.remove('active');
       }, duration);
@@ -562,105 +577,104 @@
     if (form.phoneNumber) form.phoneNumber.addEventListener('blur', () => validateField(form.phoneNumber));
     if (form.message) form.message.addEventListener('blur', () => validateField(form.message));
 
-    // Form submission
+    // Form submission handler with consultation API integration
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       // Validate all fields
       const isNameValid = validateField(form.fullName);
       const isPhoneValid = validateField(form.phoneNumber);
       const isMessageValid = validateField(form.message);
-      
+
       if (!isNameValid || !isPhoneValid || !isMessageValid) {
         return;
       }
-      
+
       // Get form data
       const fullName = form.fullName.value.trim();
       const phoneNumber = form.phoneNumber.value.trim();
       const message = form.message.value.trim();
-      
+
       // Show loading state
       const submitBtn = form.querySelector('.form-submit-btn');
       const btnText = submitBtn.querySelector('.btn-text');
       const btnLoader = submitBtn.querySelector('.btn-loader');
-      
+
       submitBtn.classList.add('loading');
       btnText.style.display = 'none';
       btnLoader.style.display = 'inline-flex';
-      
-      // Prepare email data to match your template variables
-      const templateParams = {
+
+      // Prepare consultation data for API
+      const consultationData = {
         name: fullName,
-        email: phoneNumber, // Phone number goes in email field for template
-        message: message,
-        title: 'New Contact Form Submission'
+        email: 'not-provided@example.com', // Default email since form doesn't have email field
+        phone: phoneNumber,
+        interest: 'general', // Default interest
+        experience: 'unknown', // Default experience
+        message: message // Include message in API data
       };
-      
+
       try {
-        // Send email via EmailJS - check if it's available and initialized
-        if (typeof emailjs !== 'undefined') {
-          // Try to initialize EmailJS if not already done
-          if (!window.emailJSReady) {
-            try {
-              emailjs.init('TgAbmI0ROiUaACG34');
-              window.emailJSReady = true;
-              console.log('EmailJS initialized during form submission');
-            } catch (e) {
-              console.error('Failed to initialize EmailJS during submission:', e);
-              window.emailJSReady = false;
+        // Send to consultation API first (same as consultation form)
+        const apiUrl = window.location.hostname === 'localhost'
+          ? 'http://localhost:3000/api/consultations'
+          : 'https://aistudio555jamstack-production.up.railway.app/api/consultations';
+
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(consultationData)
+        });
+
+        if (response.ok) {
+          console.log('Consultation submitted to database successfully');
+
+          // Try to send email notification via EmailJS
+          try {
+            if (typeof emailjs !== 'undefined' && window.emailJSReady) {
+              const templateParams = {
+                to_name: 'AI Studio Team',
+                from_name: fullName,
+                from_email: phoneNumber, // Using phone as email field
+                phone: phoneNumber,
+                message: `New contact form submission from ${fullName}\n\nPhone: ${phoneNumber}\n\nMessage: ${message}`
+              };
+
+              await emailjs.send('service_t2uqbxs', 'template_consultation', templateParams, 'YOUR_USER_ID');
+              console.log('Email notification sent successfully');
             }
+          } catch (emailError) {
+            console.error('EmailJS error (non-critical):', emailError);
           }
-          
-          // Only proceed with email if EmailJS is properly initialized
-          if (window.emailJSReady) {
-            console.log('Sending email with params:', templateParams);
-            const response = await emailjs.send(
-              'service_kw2tzof',      // Service ID
-              'template_ux5c6f5',     // Template ID
-              templateParams
-            );
-            console.log('EmailJS response:', response);
-            
-            // Email sent successfully
-            console.log('Email sent successfully!');
-            showToast('Message sent successfully!');
-          } else {
-            // EmailJS initialization failed
-            console.error('EmailJS failed to initialize');
-            showToast('Email service unavailable, but you can still contact us via WhatsApp.', 'error');
-          }
-          
-          // Show success with WhatsApp option regardless of email status
-          showSuccessWithWhatsApp(fullName, phoneNumber, message);
-          
+
+          // Always show error toaster as requested
+          showToast('Mail NOT SENT', 'error');
+
           // Reset form
           form.reset();
-          
-          // Close modal after delay
+
+          // Don't close modal immediately - let user see the error message
           setTimeout(() => {
-            hideModal();
-          }, 5000); // Give user time to click WhatsApp if they want
+            // Optionally show WhatsApp option
+            showSuccessWithWhatsApp(fullName, phoneNumber, message);
+          }, 2000);
+
         } else {
-          // EmailJS not loaded - show error but still provide WhatsApp option
-          console.error('EmailJS library not available');
-          showToast('Email service unavailable, but you can still contact us via WhatsApp.', 'error');
-          // Still show success screen with WhatsApp option
-          showSuccessWithWhatsApp(fullName, phoneNumber, message);
+          throw new Error('Failed to save consultation');
         }
+
       } catch (error) {
-        console.error('Email sending failed:', error);
-        console.error('Error details:', {
-          message: error.message,
-          status: error.status,
-          text: error.text,
-          name: error.name
-        });
-        // Show error message but don't open WhatsApp automatically
-        const errorMsg = error.text || error.message || 'Email sending failed. Please try again or use WhatsApp.';
-        showToast(errorMsg, 'error');
-        // Still show success screen with WhatsApp option (user can click if they want)
-        showSuccessWithWhatsApp(fullName, phoneNumber, message);
+        console.error('Form submission error:', error);
+
+        // Show error toaster
+        showToast('Mail NOT SENT', 'error');
+
+        // Still provide WhatsApp fallback option
+        setTimeout(() => {
+          showSuccessWithWhatsApp(fullName, phoneNumber, message);
+        }, 2000);
       } finally {
         // Reset loading state
         submitBtn.classList.remove('loading');

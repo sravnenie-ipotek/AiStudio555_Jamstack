@@ -105,7 +105,15 @@ class StrapiIntegration {
 
   updateNavigation(ui) {
     console.log('🧭 Updating navigation...');
-    
+
+    // Skip updating navigation if shared menu component already handled it
+    // The shared menu component properly handles Hebrew translations
+    const sharedMenuContainer = document.getElementById('shared-menu-container');
+    if (sharedMenuContainer && sharedMenuContainer.innerHTML.trim()) {
+      console.log('📌 Navigation already handled by shared menu component, skipping strapi-integration navigation update');
+      return;
+    }
+
     const navMappings = [
       { selectors: ['a[href="/home"], a[href="home.html"], a[href="../home.html"], a[href="index.html"]'], field: 'navHome' },
       { selectors: ['a[href="/courses"], a[href="courses.html"], a[href="../courses.html"]'], field: 'navCourses' },

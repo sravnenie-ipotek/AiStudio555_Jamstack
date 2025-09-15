@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "echo 'Starting Custom Live API Server (NOT Strapi)' && node server.js",
-    "start:dev": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/aistudio_db NODE_ENV=development PORT=3000 node server.js",
+    "start:dev": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/aistudio_db NODE_ENV=development PORT=4005 node server.js",
     "start:local": "bash scripts/start-local.sh",
     "dev:local": "concurrently \"node server.local.js\" \"python3 -m http.server 3005\"",
     "sync:production": "node scripts/sync-production-data.js",
@@ -67,7 +67,7 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.18.0",
-    "axios": "^1.6.2",
+    "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
     "cheerio": "^1.0.0-rc.12",
     "cookie-parser": "^1.4.7",
@@ -88,7 +88,7 @@
     "jest": "^29.7.0",
     "nodemon": "^3.0.2",
     "playwright": "^1.55.0",
-    "puppeteer": "^21.6.1"
+    "puppeteer": "^21.11.0"
   },
   "directories": {
     "test": "tests"

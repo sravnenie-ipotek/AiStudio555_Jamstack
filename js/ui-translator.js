@@ -3,11 +3,25 @@
 
 class UITranslator {
   constructor() {
-    this.apiBase = window.location.hostname.includes('localhost') 
-      ? 'http://localhost:3000' 
-      : 'https://aistudio555jamstack-production.up.railway.app';
+    // Detect API endpoint based on current port
+    const currentPort = window.location.port;
+    if (currentPort === '3005') {
+      // Frontend on Python server (3005), API on Express (4005)
+      this.apiBase = 'http://localhost:4005';
+    } else if (currentPort === '4005') {
+      // Accessing directly via Express server
+      this.apiBase = 'http://localhost:4005';
+    } else if (window.location.hostname.includes('localhost')) {
+      // Default local setup
+      this.apiBase = 'http://localhost:4005';
+    } else {
+      // Production
+      this.apiBase = 'https://aistudio555jamstack-production.up.railway.app';
+    }
+
     this.currentLocale = this.detectLocale();
     console.log('🌍 UI Translator initialized for locale:', this.currentLocale);
+    console.log('🔗 API Base:', this.apiBase);
   }
 
   detectLocale() {
@@ -27,23 +41,54 @@ class UITranslator {
     try {
       console.log('📡 Loading UI translations...');
       const response = await fetch(`${this.apiBase}/api/home-page?locale=${this.currentLocale}`);
+
+      if (!response.ok) {
+        // If API returns an error, try without locale parameter as fallback
+        console.log('⚠️  Locale-specific API failed, trying fallback...');
+        const fallbackResponse = await fetch(`${this.apiBase}/api/home-page`);
+
+        if (!fallbackResponse.ok) {
+          // If both fail, return empty object but don't break the page
+          console.log('⚠️  API unavailable, using default translations');
+          return {};
+        }
+
+        const fallbackData = await fallbackResponse.json();
+        if (fallbackData.data && fallbackData.data.attributes) {
+          console.log('✅ UI translations loaded (fallback):', Object.keys(fallbackData.data.attributes).length, 'fields');
+          return fallbackData.data.attributes;
+        }
+      }
+
       const data = await response.json();
-      
+
       if (data.data && data.data.attributes) {
         console.log('✅ UI translations loaded:', Object.keys(data.data.attributes).length, 'fields');
         return data.data.attributes;
       }
-      throw new Error('Invalid API response');
+
+      // If we get here, API returned something but not in expected format
+      console.log('⚠️  API returned unexpected format, using defaults');
+      return {};
     } catch (error) {
       console.error('❌ Failed to load UI translations:', error);
-      return null;
+      // Return empty object instead of null to prevent page breaking
+      return {};
     }
   }
 
   updateNavigation(ui) {
     console.log('🧭 Updating navigation...');
-    
-    // Navigation menu items
+
+    // Skip updating navigation if shared menu component already handled it
+    // The shared menu component properly handles Hebrew translations
+    const sharedMenuContainer = document.getElementById('shared-menu-container');
+    if (sharedMenuContainer && sharedMenuContainer.innerHTML.trim()) {
+      console.log('📌 Navigation already handled by shared menu component, skipping UI translator navigation update');
+      return;
+    }
+
+    // Navigation menu items (fallback for pages without shared menu)
     const navItems = [
       { selector: 'a[href="/home"], a[href="home.html"], a[href="../home.html"], a[href="index.html"]', field: 'navHome' },
       { selector: 'a[href="/courses"], a[href="courses.html"], a[href="../courses.html"]', field: 'navCourses' },
@@ -65,9 +110,13 @@ class UITranslator {
       });
     });
 
-    // Update dropdown menu text
-    const dropdownItems = document.querySelectorAll('.dropdown-menu-text-link-block, .nav-link, .dropdown-list a');
+    // Update dropdown menu text (but skip if inside shared menu)
+    const dropdownItems = document.querySelectorAll('.dropdown-menu-text-link-block, .dropdown-list a');
     dropdownItems.forEach(item => {
+      // Skip items inside shared menu container
+      if (item.closest('#shared-menu-container')) {
+        return;
+      }
       const href = item.getAttribute('href') || '';
       if (href.includes('career') && ui.navCareerCenter) {
         item.textContent = ui.navCareerCenter;
@@ -118,7 +167,17 @@ class UITranslator {
 
   updateForms(ui) {
     console.log('📝 Updating forms...');
-    
+
+    // Skip updating consultation forms on Hebrew pages
+    const isHebrewPage = window.location.pathname.includes('/he/');
+    const consultationForm = document.getElementById('consultation-form');
+    const staticForm = document.getElementById('static-consultation-form');
+
+    if (isHebrewPage && (consultationForm || staticForm)) {
+      console.log('📌 Skipping consultation forms update on Hebrew page - forms already have Hebrew content');
+      return;
+    }
+
     // Form label mappings
     const formMappings = [
       { selectors: ['label[for*="email"]', 'label:contains("Email")', 'input[type="email"] + label'], field: 'formLabelEmail' },
@@ -132,8 +191,8 @@ class UITranslator {
         // Handle :contains() pseudo-selector manually
         if (selector.includes(':contains(')) {
           const containsText = selector.match(/:contains\("([^"]+)"\)/)[1];
-          const elements = Array.from(document.querySelectorAll('label')).filter(el => 
-            el.textContent.includes(containsText)
+          const elements = Array.from(document.querySelectorAll('label')).filter(el =>
+            el.textContent.includes(containsText) && !el.closest('#consultation-form')
           );
           elements.forEach(el => {
             if (ui[mapping.field]) {
@@ -144,6 +203,11 @@ class UITranslator {
         } else {
           const elements = document.querySelectorAll(selector);
           elements.forEach(el => {
+            // Skip if element is inside consultation forms
+            if (el.closest('#consultation-form') || el.closest('#static-consultation-form')) {
+              console.log(`⏭️ Skipping consultation form element: ${el.textContent}`);
+              return;
+            }
             if (ui[mapping.field]) {
               console.log(`✅ Form Label: "${el.textContent}" → "${ui[mapping.field]}"`);
               el.textContent = ui[mapping.field];
@@ -164,6 +228,11 @@ class UITranslator {
     placeholderMappings.forEach(mapping => {
       const elements = document.querySelectorAll(mapping.selector);
       elements.forEach(input => {
+        // Skip if element is inside consultation forms
+        if (input.closest('#consultation-form') || input.closest('#static-consultation-form')) {
+          console.log(`⏭️ Skipping consultation form placeholder: ${input.placeholder}`);
+          return;
+        }
         if (ui[mapping.field] && input.placeholder !== ui[mapping.field]) {
           console.log(`✅ Placeholder: "${input.placeholder}" → "${ui[mapping.field]}"`);
           input.placeholder = ui[mapping.field];
@@ -174,6 +243,11 @@ class UITranslator {
     // Update submit buttons
     const submitButtons = document.querySelectorAll('input[type="submit"], button[type="submit"], .form-submit-button');
     submitButtons.forEach(btn => {
+      // Skip if button is inside consultation forms
+      if (btn.closest('#consultation-form') || btn.closest('#static-consultation-form')) {
+        console.log(`⏭️ Skipping consultation form submit button: ${btn.textContent || btn.value}`);
+        return;
+      }
       if (ui.formBtnSubmit && btn.value !== ui.formBtnSubmit) {
         console.log(`✅ Submit Button: "${btn.value || btn.textContent}" → "${ui.formBtnSubmit}"`);
         if (btn.tagName === 'INPUT') {

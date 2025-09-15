@@ -23,9 +23,10 @@ async function migrate() {
   }
 
   // Connect to PostgreSQL
+  const isLocal = process.env.DATABASE_URL.includes('localhost') || process.env.NODE_ENV === 'development';
   const pgClient = new Client({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false }
+    ssl: isLocal ? false : { rejectUnauthorized: false }
   });
 
   try {
@@ -34,9 +35,14 @@ async function migrate() {
 
     // Create tables
     await createTables(pgClient);
-    
-    // Migrate data
-    await migrateData(pgClient);
+
+    // Skip data migration in development to avoid column mismatch issues
+    if (process.env.NODE_ENV !== 'development') {
+      // Migrate data
+      await migrateData(pgClient);
+    } else {
+      console.log('⚠️  Skipping data migration in development mode');
+    }
     
     console.log('✅ Migration complete!');
   } catch (error) {
@@ -49,28 +55,30 @@ async function migrate() {
 async function createTables(pgClient) {
   console.log('📊 Creating tables in PostgreSQL...');
   
-  // Drop existing tables (for clean migration)
-  const dropQueries = [
-    'DROP TABLE IF EXISTS home_pages CASCADE',
-    'DROP TABLE IF EXISTS courses CASCADE',
-    'DROP TABLE IF EXISTS blog_posts CASCADE',
-    'DROP TABLE IF EXISTS teachers CASCADE',
-    'DROP TABLE IF EXISTS pricing_plans CASCADE',
-    'DROP TABLE IF EXISTS job_postings CASCADE',
-    'DROP TABLE IF EXISTS career_resources CASCADE',
-    'DROP TABLE IF EXISTS about_pages CASCADE',
-    'DROP TABLE IF EXISTS contact_pages CASCADE',
-    'DROP TABLE IF EXISTS faqs CASCADE',
-    'DROP TABLE IF EXISTS testimonials CASCADE'
-  ];
+  // Only drop tables in production migration, not in development
+  if (process.env.NODE_ENV !== 'development') {
+    const dropQueries = [
+      'DROP TABLE IF EXISTS home_pages CASCADE',
+      'DROP TABLE IF EXISTS courses CASCADE',
+      'DROP TABLE IF EXISTS blog_posts CASCADE',
+      'DROP TABLE IF EXISTS teachers CASCADE',
+      'DROP TABLE IF EXISTS pricing_plans CASCADE',
+      'DROP TABLE IF EXISTS job_postings CASCADE',
+      'DROP TABLE IF EXISTS career_resources CASCADE',
+      'DROP TABLE IF EXISTS about_pages CASCADE',
+      'DROP TABLE IF EXISTS contact_pages CASCADE',
+      'DROP TABLE IF EXISTS faqs CASCADE',
+      'DROP TABLE IF EXISTS testimonials CASCADE'
+    ];
 
-  for (const query of dropQueries) {
-    await pgClient.query(query);
+    for (const query of dropQueries) {
+      await pgClient.query(query);
+    }
   }
 
   // Create home_pages table (123 fields!)
   await pgClient.query(`
-    CREATE TABLE home_pages (
+    CREATE TABLE IF NOT EXISTS home_pages (
       id SERIAL PRIMARY KEY,
       title VARCHAR(255),
       hero_title VARCHAR(255),
@@ -177,7 +185,7 @@ async function createTables(pgClient) {
 
   // Create courses table
   await pgClient.query(`
-    CREATE TABLE courses (
+    CREATE TABLE IF NOT EXISTS courses (
       id SERIAL PRIMARY KEY,
       title VARCHAR(255),
       description TEXT,
@@ -195,7 +203,7 @@ async function createTables(pgClient) {
 
   // Create blog_posts table
   await pgClient.query(`
-    CREATE TABLE blog_posts (
+    CREATE TABLE IF NOT EXISTS blog_posts (
       id SERIAL PRIMARY KEY,
       title VARCHAR(255),
       slug VARCHAR(255),
@@ -211,7 +219,7 @@ async function createTables(pgClient) {
 
   // Create teachers table (with display_order column)
   await pgClient.query(`
-    CREATE TABLE teachers (
+    CREATE TABLE IF NOT EXISTS teachers (
       id SERIAL PRIMARY KEY,
       name VARCHAR(255),
       role VARCHAR(255),
@@ -234,7 +242,7 @@ async function createTables(pgClient) {
 
   // Create pricing_plans table
   await pgClient.query(`
-    CREATE TABLE pricing_plans (
+    CREATE TABLE IF NOT EXISTS pricing_plans (
       id SERIAL PRIMARY KEY,
       name VARCHAR(255),
       price DECIMAL(10,2),
@@ -251,7 +259,7 @@ async function createTables(pgClient) {
 
   // Create job_postings table
   await pgClient.query(`
-    CREATE TABLE job_postings (
+    CREATE TABLE IF NOT EXISTS job_postings (
       id SERIAL PRIMARY KEY,
       title VARCHAR(255),
       company VARCHAR(255),
@@ -267,7 +275,7 @@ async function createTables(pgClient) {
 
   // Create career_resources table (with locale support)
   await pgClient.query(`
-    CREATE TABLE career_resources (
+    CREATE TABLE IF NOT EXISTS career_resources (
       id SERIAL PRIMARY KEY,
       locale VARCHAR(5) DEFAULT 'en',
       title VARCHAR(255),
@@ -284,7 +292,7 @@ async function createTables(pgClient) {
 
   // Create about_pages table (with locale support)
   await pgClient.query(`
-    CREATE TABLE about_pages (
+    CREATE TABLE IF NOT EXISTS about_pages (
       id SERIAL PRIMARY KEY,
       locale VARCHAR(5) DEFAULT 'en',
       hero_title VARCHAR(255),
@@ -301,7 +309,7 @@ async function createTables(pgClient) {
 
   // Create contact_pages table
   await pgClient.query(`
-    CREATE TABLE contact_pages (
+    CREATE TABLE IF NOT EXISTS contact_pages (
       id SERIAL PRIMARY KEY,
       phone VARCHAR(50),
       email VARCHAR(255),
@@ -316,7 +324,7 @@ async function createTables(pgClient) {
 
   // Create faqs table (with locale support)
   await pgClient.query(`
-    CREATE TABLE faqs (
+    CREATE TABLE IF NOT EXISTS faqs (
       id SERIAL PRIMARY KEY,
       locale VARCHAR(5) DEFAULT 'en',
       question TEXT,
@@ -331,7 +339,7 @@ async function createTables(pgClient) {
 
   // Create career_orientation_pages table
   await pgClient.query(`
-    CREATE TABLE career_orientation_pages (
+    CREATE TABLE IF NOT EXISTS career_orientation_pages (
       id SERIAL PRIMARY KEY,
       locale VARCHAR(5) DEFAULT 'en',
       title VARCHAR(255),
@@ -348,7 +356,7 @@ async function createTables(pgClient) {
 
   // Create career_center_pages table
   await pgClient.query(`
-    CREATE TABLE career_center_pages (
+    CREATE TABLE IF NOT EXISTS career_center_pages (
       id SERIAL PRIMARY KEY,
       locale VARCHAR(5) DEFAULT 'en',
       title VARCHAR(255),
@@ -362,6 +370,26 @@ async function createTables(pgClient) {
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+  // Create consultations table for Hebrew courses consultation form submissions
+  await pgClient.query(`
+    CREATE TABLE IF NOT EXISTS consultations (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      email VARCHAR(255) NOT NULL,
+      phone VARCHAR(50),
+      interest VARCHAR(100) NOT NULL,
+      experience VARCHAR(50) NOT NULL,
+      locale VARCHAR(10) DEFAULT 'he',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Create indexes for consultations table
+  await pgClient.query(`CREATE INDEX IF NOT EXISTS idx_consultations_email ON consultations(email)`);
+  await pgClient.query(`CREATE INDEX IF NOT EXISTS idx_consultations_created_at ON consultations(created_at)`);
+  await pgClient.query(`CREATE INDEX IF NOT EXISTS idx_consultations_interest ON consultations(interest)`);
 
   console.log('✅ Tables created successfully');
 }
@@ -389,33 +417,35 @@ async function migrateData(pgClient) {
               about_title, about_subtitle, about_description, about_visible,
               companies_title, companies_description, companies_visible,
               testimonials_title, testimonials_subtitle, testimonials_visible,
-              course_1_title, course_1_rating, course_1_lessons, course_1_duration, course_1_category, course_1_visible,
-              course_2_title, course_2_rating, course_2_lessons, course_2_duration, course_2_category, course_2_visible,
-              course_3_title, course_3_rating, course_3_lessons, course_3_duration, course_3_category, course_3_visible,
-              course_4_title, course_4_rating, course_4_lessons, course_4_duration, course_4_category, course_4_visible,
-              course_5_title, course_5_rating, course_5_lessons, course_5_duration, course_5_category, course_5_visible,
-              course_6_title, course_6_rating, course_6_lessons, course_6_duration, course_6_category, course_6_visible,
+              course_1_title, course_1_rating, course_1_lessons, course_1_duration, course_1_category, course_1_description, course_1_visible,
+              course_2_title, course_2_rating, course_2_lessons, course_2_duration, course_2_category, course_2_description, course_2_visible,
+              course_3_title, course_3_rating, course_3_lessons, course_3_duration, course_3_category, course_3_description, course_3_visible,
+              course_4_title, course_4_rating, course_4_lessons, course_4_duration, course_4_category, course_4_description, course_4_visible,
+              course_5_title, course_5_rating, course_5_lessons, course_5_duration, course_5_category, course_5_description, course_5_visible,
+              course_6_title, course_6_rating, course_6_lessons, course_6_duration, course_6_category, course_6_description, course_6_visible,
               testimonial_1_text, testimonial_1_author, testimonial_1_rating, testimonial_1_visible,
               testimonial_2_text, testimonial_2_author, testimonial_2_rating, testimonial_2_visible,
               testimonial_3_text, testimonial_3_author, testimonial_3_rating, testimonial_3_visible,
-              testimonial_4_text, testimonial_4_author, testimonial_4_rating, testimonial_4_visible
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $60, $61, $62, $63, $64, $65, $66)
+              testimonial_4_text, testimonial_4_author, testimonial_4_rating, testimonial_4_visible,
+              published_at, created_at, updated_at
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $70, $71, $72, $73, $74, $75)
           `, [
             row.title, row.hero_title, row.hero_subtitle, row.hero_description, Boolean(row.hero_section_visible),
             row.featured_courses_title, row.featured_courses_description, Boolean(row.featured_courses_visible),
             row.about_title, row.about_subtitle, row.about_description, Boolean(row.about_visible),
             row.companies_title, row.companies_description, Boolean(row.companies_visible),
             row.testimonials_title, row.testimonials_subtitle, Boolean(row.testimonials_visible),
-            row.course_1_title, row.course_1_rating, row.course_1_lessons, row.course_1_duration, row.course_1_category, Boolean(row.course_1_visible),
-            row.course_2_title, row.course_2_rating, row.course_2_lessons, row.course_2_duration, row.course_2_category, Boolean(row.course_2_visible),
-            row.course_3_title, row.course_3_rating, row.course_3_lessons, row.course_3_duration, row.course_3_category, Boolean(row.course_3_visible),
-            row.course_4_title, row.course_4_rating, row.course_4_lessons, row.course_4_duration, row.course_4_category, Boolean(row.course_4_visible),
-            row.course_5_title, row.course_5_rating, row.course_5_lessons, row.course_5_duration, row.course_5_category, Boolean(row.course_5_visible),
-            row.course_6_title, row.course_6_rating, row.course_6_lessons, row.course_6_duration, row.course_6_category, Boolean(row.course_6_visible),
+            row.course_1_title, row.course_1_rating, row.course_1_lessons, row.course_1_duration, row.course_1_category, row.course_1_description || '', Boolean(row.course_1_visible),
+            row.course_2_title, row.course_2_rating, row.course_2_lessons, row.course_2_duration, row.course_2_category, row.course_2_description || '', Boolean(row.course_2_visible),
+            row.course_3_title, row.course_3_rating, row.course_3_lessons, row.course_3_duration, row.course_3_category, row.course_3_description || '', Boolean(row.course_3_visible),
+            row.course_4_title, row.course_4_rating, row.course_4_lessons, row.course_4_duration, row.course_4_category, row.course_4_description || '', Boolean(row.course_4_visible),
+            row.course_5_title, row.course_5_rating, row.course_5_lessons, row.course_5_duration, row.course_5_category, row.course_5_description || '', Boolean(row.course_5_visible),
+            row.course_6_title, row.course_6_rating, row.course_6_lessons, row.course_6_duration, row.course_6_category, row.course_6_description || '', Boolean(row.course_6_visible),
             row.testimonial_1_text, row.testimonial_1_author, row.testimonial_1_rating, Boolean(row.testimonial_1_visible),
             row.testimonial_2_text, row.testimonial_2_author, row.testimonial_2_rating, Boolean(row.testimonial_2_visible),
             row.testimonial_3_text, row.testimonial_3_author, row.testimonial_3_rating, Boolean(row.testimonial_3_visible),
-            row.testimonial_4_text, row.testimonial_4_author, row.testimonial_4_rating, Boolean(row.testimonial_4_visible)
+            row.testimonial_4_text, row.testimonial_4_author, row.testimonial_4_rating, Boolean(row.testimonial_4_visible),
+            new Date(), new Date(), new Date()
           ]);
           console.log('✅ Migrated home page data');
         } catch (error) {

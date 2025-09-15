@@ -1279,8 +1279,71 @@
     })();
   </script>
 
-  <script src="../js/ui-translator.js"></script>  <script src="../js/navigation-responsive-fix.js"></script>
+  <!-- API Integration Scripts -->
+  <script src="../js/webflow-strapi-integration.js"></script>
+  <script src="../js/strapi-integration.js"></script>
+  <script src="../js/ui-translator.js"></script>
+  <script src="../js/navigation-responsive-fix.js"></script>
   <script src="../js/mobile-menu-toggle-fix.js"></script>
+
+  <!-- Teachers Database Loader - Direct Integration -->
+  <script src="../js/teachers-db-loader.js"></script>
+
+  <!-- Force Integration Initialization -->
+  <script>
+    // Force CustomAPIIntegration initialization for debugging
+    setTimeout(() => {
+      console.log('🔧 RU FORCE INIT: Checking integration...');
+      console.log('- window.CustomAPIIntegration exists:', !!window.CustomAPIIntegration);
+      console.log('- URL hostname:', window.location.hostname);
+      console.log('- URL pathname:', window.location.pathname);
+      
+      if (!window.CustomAPIIntegration) {
+        console.log('🔧 RU FORCE INIT: Creating CustomAPIIntegration manually...');
+        if (typeof CustomAPIIntegration !== 'undefined') {
+          const integration = new CustomAPIIntegration();
+          window.CustomAPIIntegration = integration;
+          
+          integration.initialize().then(success => {
+            console.log('🔧 RU FORCE INIT: Manual initialization result:', success);
+            if (success) {
+              console.log('🔧 RU FORCE INIT: Loading teachers content...');
+              integration.loadTeachersContent();
+            }
+          });
+        } else {
+          console.error('🔧 RU FORCE INIT: CustomAPIIntegration class not found!');
+        }
+      } else {
+        console.log('🔧 RU FORCE INIT: Integration already exists, calling loadTeachersContent...');
+        window.CustomAPIIntegration.loadTeachersContent();
+      }
+    }, 2000);
+  </script>
+
+  <!-- Manual Container Visibility Fix -->
+  <script>
+    // Force container visibility after everything loads
+    setTimeout(() => {
+      console.log('🔧 RU MANUAL VISIBILITY FIX: Making container visible...');
+      const container = document.querySelector('#instructors-grid');
+      if (container) {
+        container.style.opacity = '1';
+        container.style.visibility = 'visible';
+        container.style.display = 'block';
+        console.log('🔧 RU MANUAL VISIBILITY FIX: Container made visible');
+        console.log('- HTML content length:', container.innerHTML.length);
+        console.log('- Children count:', container.children.length);
+        
+        if (container.children.length === 0) {
+          console.log('🔧 RU MANUAL VISIBILITY FIX: No children found, adding test content...');
+          container.innerHTML = '<div style="padding: 20px; color: red;">DEBUG: Container is empty - teachers not loaded</div>';
+        }
+      } else {
+        console.error('🔧 RU MANUAL VISIBILITY FIX: Container not found!');
+      }
+    }, 5000);
+  </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {

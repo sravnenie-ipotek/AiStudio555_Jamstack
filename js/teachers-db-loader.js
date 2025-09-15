@@ -6,8 +6,27 @@
 
 (function() {
   'use strict';
+      // Make container visible (remove opacity:0)
+      console.log('👁️ Making container visible...');
+      container.style.opacity = '1';
+      container.style.visibility = 'visible';
+      container.style.display = 'block';
+      
+      // Extra visibility debugging
+      console.log('👁️ Container visibility after update:');
+      console.log('- opacity:', container.style.opacity);
+      console.log('- visibility:', container.style.visibility);
+      console.log('- display:', container.style.display);
+      console.log('- innerHTML length:', container.innerHTML.length);
+      console.log('- children count:', container.children.length);
 
-  console.log('📚 Teachers DB Loader: Initializing...');
+      // Trigger any Webflow animations
+      if (window.Webflow) {
+        window.Webflow.ready();
+        window.Webflow.require('ix2').init();
+      }
+
+      console.log('🎉 Teachers loaded successfully!');ole.log('📚 Teachers DB Loader: Initializing...');
 
   // Configuration
   const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
@@ -162,13 +181,17 @@
       // Setup category filtering after loading
       setupCategoryFiltering();
 
+      // Make container visible after content loads
+      container.style.opacity = '1';
+      container.style.visibility = 'visible';
+
       // Trigger any Webflow animations
       if (window.Webflow) {
         window.Webflow.ready();
         window.Webflow.require('ix2').init();
       }
 
-      console.log('🎉 Teachers loaded successfully!');
+      console.log('🎉 Teachers loaded successfully and container made visible!');
 
       // Check if content is in Hebrew
       const hasHebrew = /[\u0590-\u05FF]/.test(container.textContent);
