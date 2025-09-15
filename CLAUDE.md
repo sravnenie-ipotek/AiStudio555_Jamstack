@@ -174,6 +174,14 @@ fetch('https://aistudio555jamstack-production.up.railway.app/api/home-page?previ
 - **Fallback System**: Missing translations automatically fall back to English
 - **URL Structure**: `/dist/en/`, `/dist/ru/`, `/dist/he/` for language versions
 
+### Dist Directory Structure
+- **Purpose**: Production-ready multi-language builds
+- **Location**: `/dist/en/`, `/dist/ru/`, `/dist/he/`
+- **Access**: `http://localhost:3005/dist/he/career-orientation.html` (development)
+- **Content**: Optimized, localized versions of all pages
+- **Usage**: The Hebrew version (`dist/he/career-orientation.html`) often contains superior UX patterns
+- **Reference Pattern**: Use Hebrew versions as design templates for better UX
+
 ### Custom Admin Panel Features
 - **215+ Content Fields**: Comprehensive content management
 - **Live Preview**: `?preview=true` shows unsaved changes
@@ -222,6 +230,53 @@ fetch('https://aistudio555jamstack-production.up.railway.app/api/home-page?previ
     backdrop-filter: blur(20px) !important;
   }
   ```
+
+### Career Orientation Page Design Patterns
+- **File**: `career-orientation.html`
+- **Design Philosophy**: Human-centered career guidance over technical AI/ML focus
+- **Reference Version**: Use Hebrew version (`dist/he/career-orientation.html`) as design template
+- **Key UX Patterns**:
+  - Glass-morphism hero sections with backdrop-filter blur
+  - 4-step career guidance process (not 5-step technical process)
+  - Simple name+phone form instead of complex multi-field forms
+  - Professional card-based layouts with hover animations
+  - Mobile-first responsive design with CSS Grid
+  - Phone number input masking for better UX
+  - Immediate content visibility (no opacity:0 dependencies)
+
+### UI/UX Enhancement Patterns
+```css
+/* Glass-morphism hero section */
+.hero-value-proposition {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 40px;
+}
+
+/* Professional card design */
+.challenge-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Form enhancement patterns */
+.form-field input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+```
+
+### Content Strategy Guidelines
+- **Career Pages**: Use human-centered language, not technical jargon
+- **Process Flows**: Simplify to 4 clear steps maximum
+- **Forms**: Name + Phone only for lead generation forms
+- **Visual Hierarchy**: Ensure content is visible without animation dependencies
+- **Mobile-First**: All designs must work on mobile before desktop
 
 ### Path Issues in Subdirectories
 - **Important**: Language versions in `/dist/en/`, `/dist/ru/`, `/dist/he/` need relative paths
@@ -293,6 +348,27 @@ Remote: `git@github.com:sravnenie-ipotek/AiStudio555_Jamstack.git`
 - **Issue**: Scripts fail to load in language subdirectories
 - **Wrong**: `src="js/script.js"` in `/dist/en/page.html`
 - **Correct**: `src="../js/script.js"` or `src="/js/script.js"`
+
+### UI/UX Issues and Solutions
+- **Hidden Content with Opacity:0**:
+  - **Problem**: Content hidden with `opacity: 0` waiting for animations that may not load
+  - **Solution**: Set `opacity: 1` on critical content elements to ensure immediate visibility
+  - **Pattern**: Use `opacity: 1 !important` for content that must be visible
+
+- **Poor Visual Hierarchy**:
+  - **Problem**: Technical content overwhelms human-centered messaging
+  - **Solution**: Lead with benefits, follow with features. Use Hebrew version patterns.
+  - **Example**: "Find Your Perfect Career Path" not "AI-Powered Career Analysis"
+
+- **Complex Forms**:
+  - **Problem**: Multi-field forms reduce conversion rates
+  - **Solution**: Simplify to name + phone for initial lead capture
+  - **Enhancement**: Add input masking and focus states for better UX
+
+- **Animation Dependencies**:
+  - **Problem**: Content visibility depends on JavaScript animations loading
+  - **Solution**: Ensure content is visible by default, enhance with animations
+  - **Pattern**: Progressive enhancement, not animation-dependent visibility
 
 ## Key Differences from Standard JAMstack
 

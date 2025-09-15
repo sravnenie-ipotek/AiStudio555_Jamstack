@@ -504,7 +504,7 @@ class MasterFooterLoader {
                     © Copyright - <a href="home.html" class="footer-information-text-link">${data.companyName}</a> |
                     Designed by <a href="https://zohaflow.webflow.io" target="_blank" class="footer-information-text-link">Zohaflow</a> -
                     <a href="template-pages/license.html" class="footer-information-text-link">Licensing</a>
-                    Powered by <a href="https://webflow.com/" target="_blank" class="footer-information-text-link">Webflow</a>
+                    Powered by <a href="https://aistudio555.com/" target="_blank" class="footer-information-text-link">AiStudio555</a>
                 </div>
             </div>
         </div>`;
