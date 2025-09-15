@@ -2483,6 +2483,204 @@ app.delete('/api/courses/:id', async (req, res) => {
   }
 });
 
+// ==================== DATA SYNC ENDPOINTS ====================
+
+// One-time sync endpoint for production database
+app.get('/api/sync-missing-data', async (req, res) => {
+  // Security: Only allow with secret key
+  const secretKey = req.query.key;
+  if (secretKey !== 'sync-2025-secure-key') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  const client = await pool.connect();
+
+  try {
+    console.log('Starting data sync...');
+    const results = [];
+
+    // Create missing tables if they don't exist
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS faqs (
+        id SERIAL PRIMARY KEY,
+        question TEXT,
+        answer TEXT,
+        category VARCHAR(255),
+        order_index INTEGER,
+        visible BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS consultations (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255),
+        description TEXT,
+        duration VARCHAR(100),
+        price DECIMAL(10,2),
+        features JSONB,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS career_resources (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255),
+        description TEXT,
+        type VARCHAR(100),
+        url VARCHAR(500),
+        icon VARCHAR(100),
+        order_index INTEGER,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS company_logos (
+        id SERIAL PRIMARY KEY,
+        company_name VARCHAR(255),
+        logo_url VARCHAR(500),
+        website_url VARCHAR(500),
+        order_index INTEGER,
+        visible BOOLEAN DEFAULT true,
+        locale VARCHAR(10) DEFAULT 'en',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    results.push('Tables created/verified');
+
+    // Insert missing FAQs
+    const faqsData = [
+      { question: 'What AI courses do you offer?', answer: 'We offer comprehensive courses in Machine Learning, Deep Learning, NLP, Computer Vision, and AI Ethics.', category: 'courses', order_index: 1 },
+      { question: 'How long are the courses?', answer: 'Course duration varies from 8-week intensive bootcamps to 6-month comprehensive programs.', category: 'courses', order_index: 2 },
+      { question: 'Do I need programming experience?', answer: 'Basic programming knowledge is helpful but not required. We offer beginner-friendly tracks.', category: 'requirements', order_index: 3 },
+      { question: 'What career support do you provide?', answer: 'We offer resume reviews, interview prep, job placement assistance, and networking opportunities.', category: 'career', order_index: 4 },
+      { question: 'Are courses available online?', answer: 'Yes, all our courses are available online with live sessions and recorded content.', category: 'format', order_index: 5 },
+      { question: 'What is the cost of courses?', answer: 'Prices range from $999 for short courses to $4999 for comprehensive programs. Payment plans available.', category: 'pricing', order_index: 6 },
+      { question: 'Do you offer certificates?', answer: 'Yes, all graduates receive industry-recognized certificates upon successful completion.', category: 'certification', order_index: 7 },
+      { question: 'Can I get a refund?', answer: 'We offer a 14-day money-back guarantee if you are not satisfied with the course.', category: 'policies', order_index: 8 }
+    ];
+
+    for (const faq of faqsData) {
+      await client.query(
+        `INSERT INTO faqs (question, answer, category, order_index, visible)
+         VALUES ($1, $2, $3, $4, $5)
+         ON CONFLICT DO NOTHING`,
+        [faq.question, faq.answer, faq.category, faq.order_index, true]
+      );
+    }
+    results.push(`${faqsData.length} FAQs inserted`);
+
+    // Insert consultations
+    const consultationsData = [
+      {
+        title: 'Career Strategy Session',
+        description: 'One-on-one career planning and guidance',
+        duration: '60 minutes',
+        price: 150,
+        features: { personalPlan: true, followUp: true, resources: true }
+      },
+      {
+        title: 'Technical Interview Prep',
+        description: 'Mock interviews and coding practice',
+        duration: '90 minutes',
+        price: 200,
+        features: { mockInterview: true, feedback: true, tips: true }
+      },
+      {
+        title: 'Portfolio Review',
+        description: 'Professional review of your AI/ML projects',
+        duration: '45 minutes',
+        price: 100,
+        features: { detailed_feedback: true, improvement_tips: true }
+      }
+    ];
+
+    for (const consultation of consultationsData) {
+      await client.query(
+        `INSERT INTO consultations (title, description, duration, price, features)
+         VALUES ($1, $2, $3, $4, $5)
+         ON CONFLICT DO NOTHING`,
+        [consultation.title, consultation.description, consultation.duration, consultation.price, consultation.features]
+      );
+    }
+    results.push(`${consultationsData.length} Consultations inserted`);
+
+    // Insert career resources
+    const careerResourcesData = [
+      { title: 'AI Career Roadmap', description: 'Complete guide to AI career paths', type: 'guide', url: '/resources/ai-roadmap', icon: 'map', order_index: 1 },
+      { title: 'Resume Templates', description: 'AI-optimized resume templates', type: 'template', url: '/resources/resume', icon: 'document', order_index: 2 },
+      { title: 'Interview Guide', description: 'Common AI interview questions', type: 'guide', url: '/resources/interview', icon: 'chat', order_index: 3 },
+      { title: 'Salary Guide 2024', description: 'AI industry salary insights', type: 'report', url: '/resources/salary', icon: 'chart', order_index: 4 },
+      { title: 'Project Ideas', description: '50+ AI project ideas for portfolio', type: 'list', url: '/resources/projects', icon: 'bulb', order_index: 5 },
+      { title: 'Networking Tips', description: 'Build your AI professional network', type: 'guide', url: '/resources/networking', icon: 'users', order_index: 6 }
+    ];
+
+    for (const resource of careerResourcesData) {
+      await client.query(
+        `INSERT INTO career_resources (title, description, type, url, icon, order_index)
+         VALUES ($1, $2, $3, $4, $5, $6)
+         ON CONFLICT DO NOTHING`,
+        [resource.title, resource.description, resource.type, resource.url, resource.icon, resource.order_index]
+      );
+    }
+    results.push(`${careerResourcesData.length} Career resources inserted`);
+
+    // Insert company logo
+    await client.query(
+      `INSERT INTO company_logos (company_name, logo_url, website_url, order_index, visible, locale)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       ON CONFLICT DO NOTHING`,
+      ['AI Studio', '/images/logoNew.png', 'https://www.aistudio555.com', 1, true, 'en']
+    );
+    results.push('Company logo inserted');
+
+    res.json({
+      success: true,
+      message: 'Data sync completed successfully',
+      results: results
+    });
+
+  } catch (error) {
+    console.error('Sync error:', error);
+    res.status(500).json({ error: error.message });
+  } finally {
+    client.release();
+  }
+});
+
+// Check data status endpoint
+app.get('/api/check-data-status', async (req, res) => {
+  const client = await pool.connect();
+
+  try {
+    const tables = ['faqs', 'consultations', 'career_resources', 'company_logos'];
+    const status = {};
+
+    for (const table of tables) {
+      try {
+        const result = await client.query(`SELECT COUNT(*) FROM ${table}`);
+        status[table] = parseInt(result.rows[0].count);
+      } catch (err) {
+        status[table] = 'table not found';
+      }
+    }
+
+    res.json({ status });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  } finally {
+    client.release();
+  }
+});
+
 // ==================== STATIC FILE SERVING ====================
 
 // Serve admin panel
