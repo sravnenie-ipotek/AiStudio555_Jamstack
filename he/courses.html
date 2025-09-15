@@ -13,6 +13,7 @@
   <link href="../css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
   <link href="../css/mobile-responsive-fix.css" rel="stylesheet" type="text/css">
   <link href="../css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/hebrew-menu-alignment-fix.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
@@ -670,7 +671,22 @@
 
   <style id="universal-career-dropdown-fix">
     /* UNIVERSAL CAREER SERVICES DROPDOWN FIX - Applied to ALL pages */
-    
+
+    /* Ensure dropdowns are not cut off - Critical fix */
+    .navbar,
+    .menu-wrapper,
+    .navbar-wrapper,
+    .nav-wrapper,
+    body,
+    html {
+      overflow: visible !important;
+    }
+
+    .navbar {
+      position: relative !important;
+      z-index: 1000 !important;
+    }
+
     /* Reset any conflicting styles */
     .menu-dropdown-wrapper,
     .menu-dropdown-wrapper.w-dropdown {
@@ -852,7 +868,53 @@
 </head>
 <body>
   <div class="page-wrapper">
-    <div id="shared-menu-container"></div>
+    <div role="banner" class="navbar w-nav" dir="rtl">
+      <div class="container">
+        <div class="navbar-content">
+          <a href="home.html" class="zohacous-logo-link w-nav-brand">
+            <img loading="lazy" src="../images/Logo.svg" alt="" class="zohacous-logo-image">
+          </a>
+          <nav role="navigation" class="nav-menu w-nav-menu">
+            <a href="home.html" class="nav-link w-nav-link">בית</a>
+            <a href="courses.html" aria-current="page" class="nav-link w-nav-link w--current">קורסים</a>
+            <a href="teachers.html" class="nav-link w-nav-link">מורים</a>
+            <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
+              <div class="dropdown-toggle w-dropdown-toggle">
+                <div class="dropdown-toggle-text-block">שירותי קריירה</div>
+                <div class="dropdown-toggle-arrow-2">▼</div>
+              </div>
+              <nav class="dropdown-list w-dropdown-list" style="background: rgba(5, 5, 26, 0.98) !important; backdrop-filter: blur(20px) !important;">
+                <a href="career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
+                  <div>כיוון קריירה</div>
+                </a>
+                <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block">
+                  <div>מרכז קריירה</div>
+                </a>
+              </nav>
+            </div>
+            <!-- Language Selector -->
+            <div class="language-nav-item">
+              <select id="language-switcher-nav" onchange="switchLanguage(this.value)" class="language-nav-select" style="background: transparent !important; border: none !important; color: rgba(255, 255, 255, 0.9) !important;">
+                <option value="en" style="background: #05051a !important; color: white !important;">English</option>
+                <option value="ru" style="background: #05051a !important; color: white !important;">Русский</option>
+                <option value="he" selected style="background: #05051a !important; color: white !important;">עברית</option>
+              </select>
+            </div>
+            <a href="pricing.html" class="nav-link w-nav-link">תוכניות תמחור</a>
+          </nav>
+          <!-- Sign Up Button -->
+          <div class="navbar-button-wrapper">
+            <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">הרשמו היום</a>
+          </div>
+          <!-- Mobile Menu Button -->
+          <div class="menu-button w-nav-button">
+            <div class="w-icon-nav-menu"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile Menu Overlay -->
+      <div class="w-nav-overlay"></div>
+    </div>
     <section class="section inner-banner">
       <div class="container">
         <div class="inner-banner-content">
@@ -863,6 +925,271 @@
             <a href="home.html" class="inner-banner-text-link">בית</a>
             <div class="inner-banner-text-link-arrow">|</div>
             <a href="courses.html" aria-current="page" class="inner-banner-text-link w--current">קורסים</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Studio Info Card Section -->
+    <section class="ai-studio-info-section" style="padding: 60px 20px; background: linear-gradient(135deg, #f8f9fb 0%, #ffffff 100%);">
+      <div class="container">
+        <div class="ai-studio-card" style="
+          background: white;
+          border-radius: 24px;
+          padding: 60px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+          max-width: 1200px;
+          margin: 0 auto;
+          position: relative;
+          overflow: hidden;
+        ">
+          <!-- Decorative gradient element -->
+          <div style="
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #0080ff 0%, #00c6ff 100%);
+            border-radius: 50%;
+            opacity: 0.1;
+          "></div>
+
+          <div style="position: relative; z-index: 1;">
+            <!-- Header -->
+            <div style="text-align: center; margin-bottom: 50px;">
+              <h2 style="
+                font-size: 42px;
+                font-weight: 800;
+                color: #04193f;
+                margin-bottom: 20px;
+                line-height: 1.2;
+              ">משנים קריירות באמצעות חינוך טכנולוגי</h2>
+              <p style="
+                font-size: 18px;
+                color: #6b7280;
+                max-width: 800px;
+                margin: 0 auto;
+                line-height: 1.6;
+              ">AI Studio 555 היא פלטפורמת חינוך מקוונת מובילה המתמחה בקורסי טכנולוגיה חדשניים. עם למעלה מ-8 שנות ניסיון, עזרנו ליותר מ-11,500 סטודנטים להתחיל קריירה מצליחה בטכנולוגיה.</p>
+            </div>
+
+            <!-- Mission Statement -->
+            <div style="
+              background: linear-gradient(135deg, #0080ff05 0%, #00c6ff05 100%);
+              border-radius: 16px;
+              padding: 30px;
+              margin-bottom: 40px;
+              border: 1px solid rgba(0, 128, 255, 0.1);
+            ">
+              <p style="
+                font-size: 16px;
+                color: #04193f;
+                text-align: center;
+                margin: 0;
+                line-height: 1.8;
+              ">המשימה שלנו היא לגשר על הפער בין חינוך מסורתי לדרישות התעשייה על ידי מתן הכשרה מעשית שמכינה סטודנטים לאתגרים בעולם האמיתי.</p>
+            </div>
+
+            <!-- Features Grid -->
+            <div style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+              gap: 30px;
+              margin-bottom: 50px;
+            ">
+              <!-- Feature 1 -->
+              <div style="text-align: center;">
+                <div style="
+                  width: 60px;
+                  height: 60px;
+                  background: linear-gradient(135deg, #0080ff 0%, #00c6ff 100%);
+                  border-radius: 12px;
+                  margin: 0 auto 20px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 24px;
+                  color: white;
+                ">👨‍🏫</div>
+                <h3 style="
+                  font-size: 20px;
+                  font-weight: 700;
+                  color: #04193f;
+                  margin-bottom: 10px;
+                ">מדריכים מומחים</h3>
+                <p style="
+                  font-size: 14px;
+                  color: #6b7280;
+                  line-height: 1.5;
+                ">למדו מאנשי מקצוע בתעשייה עם שנים של ניסיון</p>
+              </div>
+
+              <!-- Feature 2 -->
+              <div style="text-align: center;">
+                <div style="
+                  width: 60px;
+                  height: 60px;
+                  background: linear-gradient(135deg, #0080ff 0%, #00c6ff 100%);
+                  border-radius: 12px;
+                  margin: 0 auto 20px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 24px;
+                  color: white;
+                ">💻</div>
+                <h3 style="
+                  font-size: 20px;
+                  font-weight: 700;
+                  color: #04193f;
+                  margin-bottom: 10px;
+                ">למידה מעשית</h3>
+                <p style="
+                  font-size: 14px;
+                  color: #6b7280;
+                  line-height: 1.5;
+                ">85% תרגול מעשי עם פרויקטים אמיתיים</p>
+              </div>
+
+              <!-- Feature 3 -->
+              <div style="text-align: center;">
+                <div style="
+                  width: 60px;
+                  height: 60px;
+                  background: linear-gradient(135deg, #0080ff 0%, #00c6ff 100%);
+                  border-radius: 12px;
+                  margin: 0 auto 20px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 24px;
+                  color: white;
+                ">🎯</div>
+                <h3 style="
+                  font-size: 20px;
+                  font-weight: 700;
+                  color: #04193f;
+                  margin-bottom: 10px;
+                ">תמיכה בקריירה</h3>
+                <p style="
+                  font-size: 14px;
+                  color: #6b7280;
+                  line-height: 1.5;
+                ">סיוע ייעודי בהשמה וחניכה</p>
+              </div>
+
+              <!-- Feature 4 -->
+              <div style="text-align: center;">
+                <div style="
+                  width: 60px;
+                  height: 60px;
+                  background: linear-gradient(135deg, #0080ff 0%, #00c6ff 100%);
+                  border-radius: 12px;
+                  margin: 0 auto 20px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 24px;
+                  color: white;
+                ">🌍</div>
+                <h3 style="
+                  font-size: 20px;
+                  font-weight: 700;
+                  color: #04193f;
+                  margin-bottom: 10px;
+                ">קהילה גלובלית</h3>
+                <p style="
+                  font-size: 14px;
+                  color: #6b7280;
+                  line-height: 1.5;
+                ">הצטרפו לרשת של 11,500+ בוגרים מצליחים ברחבי העולם</p>
+              </div>
+            </div>
+
+            <!-- Stats Section -->
+            <div style="
+              background: linear-gradient(135deg, #0080ff 0%, #00c6ff 100%);
+              border-radius: 16px;
+              padding: 40px;
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+              gap: 30px;
+            ">
+              <!-- Stat 1 -->
+              <div style="text-align: center;">
+                <div style="
+                  font-size: 36px;
+                  font-weight: 800;
+                  color: white;
+                  margin-bottom: 8px;
+                ">8+</div>
+                <div style="
+                  font-size: 14px;
+                  color: rgba(255, 255, 255, 0.9);
+                ">שנות מצוינות</div>
+              </div>
+
+              <!-- Stat 2 -->
+              <div style="text-align: center;">
+                <div style="
+                  font-size: 36px;
+                  font-weight: 800;
+                  color: white;
+                  margin-bottom: 8px;
+                ">11,500+</div>
+                <div style="
+                  font-size: 14px;
+                  color: rgba(255, 255, 255, 0.9);
+                ">בוגרים מצליחים</div>
+              </div>
+
+              <!-- Stat 3 -->
+              <div style="text-align: center;">
+                <div style="
+                  font-size: 36px;
+                  font-weight: 800;
+                  color: white;
+                  margin-bottom: 8px;
+                ">50+</div>
+                <div style="
+                  font-size: 14px;
+                  color: rgba(255, 255, 255, 0.9);
+                ">קורסים מותאמי תעשייה</div>
+              </div>
+
+              <!-- Stat 4 -->
+              <div style="text-align: center;">
+                <div style="
+                  font-size: 36px;
+                  font-weight: 800;
+                  color: white;
+                  margin-bottom: 8px;
+                ">94%</div>
+                <div style="
+                  font-size: 14px;
+                  color: rgba(255, 255, 255, 0.9);
+                ">שיעור תעסוקה</div>
+              </div>
+            </div>
+
+            <!-- CTA Button -->
+            <div style="text-align: center; margin-top: 40px;">
+              <a href="#featured-courses" style="
+                display: inline-block;
+                padding: 16px 40px;
+                background: linear-gradient(135deg, #0080ff 0%, #00c6ff 100%);
+                color: white;
+                font-weight: 600;
+                font-size: 16px;
+                border-radius: 12px;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                box-shadow: 0 10px 30px rgba(0, 128, 255, 0.2);
+              " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 15px 40px rgba(0, 128, 255, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 30px rgba(0, 128, 255, 0.2)'">
+                למידע נוסף עלינו
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -1624,93 +1951,9 @@
       </div>
     </section>
 
-    <!-- Static Consultation Form -->
-    <section class="consultation-section-static" id="consultation" style="padding: 80px 0; background: linear-gradient(135deg, #f8f9fb 0%, #e9ecef 100%);">
-      <div class="container">
-        <div class="consultation-content" style="max-width: 600px; margin: 0 auto; text-align: center;">
-          <h2 style="font-size: 42px; font-weight: 700; color: #04193f; margin-bottom: 20px;">קבלו ייעוץ אישי לבחירת קורס</h2>
-          <p style="font-size: 18px; color: #6b7280; margin-bottom: 40px;">
-            מלאו את הטופס ונחזור אליכם תוך 24 שעות עם המלצה אישית לקורס המתאים לכם
-          </p>
-          <div style="background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-            <form id="static-consultation-form" data-no-animation="true">
-              <!-- Name Field -->
-              <div style="margin-bottom: 20px; text-align: right;">
-                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-name">שם מלא</label>
-                <input type="text" id="static-name" name="name"
-                       style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: rtl; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box;"
-                       placeholder="הכנס את שמך המלא" required>
-              </div>
-
-              <!-- Email Field -->
-              <div style="margin-bottom: 20px; text-align: right;">
-                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-email">כתובת אימייל</label>
-                <input type="email" id="static-email" name="email"
-                       style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: ltr; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box;"
-                       placeholder="your@email.com" required>
-              </div>
-
-              <!-- Phone Field -->
-              <div style="margin-bottom: 20px; text-align: right;">
-                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-phone">מספר טלפון</label>
-                <input type="tel" id="static-phone" name="phone"
-                       style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: ltr; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box;"
-                       placeholder="מספר טלפון" required>
-              </div>
-
-              <!-- Interest Field -->
-              <div style="margin-bottom: 20px; text-align: right;">
-                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-interest">תחום עניין</label>
-                <select id="static-interest" name="interest"
-                        style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: rtl; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box; cursor: pointer;" required>
-                  <option value="">בחר תחום עניין</option>
-                  <option value="ai-ml">בינה מלאכותית ולמידת מכונה</option>
-                  <option value="data-science">מדע הנתונים</option>
-                  <option value="web-dev">פיתוח אתרים</option>
-                  <option value="cloud">מחשוב ענן</option>
-                  <option value="mobile">פיתוח אפליקציות</option>
-                  <option value="blockchain">בלוקצ'יין</option>
-                  <option value="cybersecurity">אבטחת מידע</option>
-                  <option value="product">ניהול מוצר</option>
-                </select>
-              </div>
-
-              <!-- Experience Field -->
-              <div style="margin-bottom: 30px; text-align: right;">
-                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-experience">רמת ניסיון</label>
-                <select id="static-experience" name="experience"
-                        style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: rtl; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box; cursor: pointer;" required>
-                  <option value="">בחר רמת ניסיון</option>
-                  <option value="beginner">מתחיל - אין לי ניסיון בתכנות</option>
-                  <option value="some">יש לי ניסיון בסיסי</option>
-                  <option value="intermediate">מפתח ברמה בינונית</option>
-                  <option value="advanced">מפתח מנוסה</option>
-                </select>
-              </div>
-
-              <!-- Submit Button -->
-              <button type="submit"
-                      style="width: 100%; padding: 16px 32px; background: linear-gradient(135deg, #0080ff 0%, #00c6ff 100%); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: 600; cursor: pointer; transition: transform 0.2s;">
-                שלח בקשת ייעוץ
-              </button>
-            </form>
-
-            <!-- Success Message (hidden by default) -->
-            <div id="static-form-success" style="display: none; margin-top: 20px; padding: 16px; background: #10b981; color: white; border-radius: 8px; text-align: center;">
-              ✅ הטופס נשלח בהצלחה! נחזור אליך בקרוב.
-            </div>
-
-            <!-- Error Message (hidden by default) -->
-            <div id="static-form-error" style="display: none; margin-top: 20px; padding: 16px; background: #ef4444; color: white; border-radius: 8px; text-align: center;">
-              ❌ אירעה שגיאה. אנא נסה שוב.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- Modern Shadcn-UI Style Consultation Form -->
-    <section style="padding: 80px 0; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); position: relative; z-index: 1;">
+    <section id="consultation" style="padding: 80px 0; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); position: relative; z-index: 1;">
       <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
         <div style="max-width: 600px; margin: 0 auto; text-align: center;">
           <h2 style="font-size: 36px; font-weight: 800; color: #0f172a; margin-bottom: 16px; line-height: 1.2;">
@@ -2949,7 +3192,7 @@
   <script src="../js/webflow-strapi-integration.js"></script>
   <script src="../js/strapi-integration.js"></script>
   <script src="../js/enhanced-integration.js?v=1.1"></script>
-  <script src="../js/shared-menu-component.js?v=2.6"></script>
+  <script src="../js/shared-menu-component.js?v=2.6.5"></script>
 
   <!-- Fix duplicate menu after all scripts load -->
   <script>
@@ -2996,4 +3239,20 @@
 
   <!-- Contact Form Modal -->
   <script src="../js/contact-form-modal.js"></script>
+
+  <!-- Language Switching Function -->
+  <script>
+    function switchLanguage(selectedLang) {
+      const currentPage = 'courses';
+      let newUrl;
+
+      if (selectedLang === 'en') {
+        newUrl = `/${currentPage}.html`;
+      } else {
+        newUrl = `/${selectedLang}/${currentPage}.html`;
+      }
+
+      window.location.href = newUrl;
+    }
+  </script>
 </body></html>
