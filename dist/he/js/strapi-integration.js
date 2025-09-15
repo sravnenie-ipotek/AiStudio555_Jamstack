@@ -5,7 +5,7 @@
 
 class StrapiIntegration {
   constructor() {
-    this.strapiUrl = 'https://aistudio555jamstack-production.up.railway.app';
+    this.strapiUrl = 'http://localhost:1337';
     this.apiToken = '6ba76f584778637fd308f48aac27461c1aca7f088c963d614ad2e73bb7f3f9a646ad9e38cf12e5bd8f7e6f8e0ad2f014ea90ee088bb8a3c3c84a40f9fb0c592e5c8b05e8d25c09f4a9c0b685b2c90bacd5e604fbe4e1b01e0a6e32c76e7e93b1f21e5e47dcad5e80a6b0cf967e2a38b74f5edd19e92f5c0e6d387e1c16e5ce59';
     this.currentLocale = this.getLocale();
     this.isPreviewMode = this.checkPreviewMode();
@@ -20,14 +20,9 @@ class StrapiIntegration {
 
   init() {
     console.log('🚀 Initializing Strapi Integration');
-    console.log('📍 Current URL:', window.location.pathname);
-    console.log('🏷️ Page detected:', this.getPageName());
     
     // Load dynamic content
     this.loadPageContent();
-    
-    // ULTRATHINK: Load UI translations
-    this.loadUITranslations();
     
     // Set up live preview if in preview mode
     if (this.isPreviewMode) {
@@ -39,15 +34,8 @@ class StrapiIntegration {
   }
 
   getLocale() {
-    // Check URL path first (e.g., /dist/ru/index.html)
-    const pathParts = window.location.pathname.split('/').filter(p => p);
-    const pathLang = pathParts.find(part => ['en', 'ru', 'he'].includes(part));
-    
-    // Then check URL parameters and localStorage
     const params = new URLSearchParams(window.location.search);
-    const locale = pathLang || params.get('locale') || localStorage.getItem('locale') || 'en';
-    
-    console.log('🌍 Detected locale:', locale, 'from path:', pathLang);
+    const locale = params.get('locale') || localStorage.getItem('locale') || 'en';
     
     // Apply RTL for Hebrew
     if (locale === 'he') {
@@ -55,207 +43,7 @@ class StrapiIntegration {
       document.body.classList.add('rtl');
     }
     
-    // Store detected locale in localStorage for consistency
-    localStorage.setItem('locale', locale);
-    
     return locale;
-  }
-
-  // ULTRATHINK: Load and apply UI translations from database
-  async loadUITranslations() {
-    if (this.currentLocale === 'en') {
-      console.log('📝 Skipping UI translation for English (default)');
-      return;
-    }
-
-    try {
-      console.log('🌍 Loading UI translations for locale:', this.currentLocale);
-      const response = await fetch(`${this.strapiUrl}/api/home-page?locale=${this.currentLocale}`);
-      const data = await response.json();
-      
-      if (data.data && data.data.attributes) {
-        console.log('✅ UI translations loaded, applying...');
-        this.applyUITranslations(data.data.attributes);
-      }
-    } catch (error) {
-      console.error('❌ Failed to load UI translations:', error);
-    }
-  }
-
-  applyUITranslations(ui) {
-    console.log('🎨 Applying UI translations...');
-    
-    // Update navigation
-    this.updateNavigation(ui);
-    
-    // Update buttons
-    this.updateButtons(ui);
-    
-    // Update forms
-    this.updateForms(ui);
-    
-    // Update section titles
-    this.updateSectionTitles(ui);
-    
-    // Update messages
-    this.updateMessages(ui);
-    
-    console.log('✅ UI translations applied successfully');
-  }
-
-  updateNavigation(ui) {
-    console.log('🧭 Updating navigation...');
-    
-    const navMappings = [
-      { selectors: ['a[href="/home"], a[href="home.html"], a[href="../home.html"], a[href="index.html"]'], field: 'navHome' },
-      { selectors: ['a[href="/courses"], a[href="courses.html"], a[href="../courses.html"]'], field: 'navCourses' },
-      { selectors: ['a[href="/teachers"], a[href="teachers.html"], a[href="../teachers.html"]'], field: 'navTeachers' },
-      { selectors: ['a[href="/blog"], a[href="blog.html"], a[href="../blog.html"]'], field: 'navBlog' },
-      { selectors: ['a[href="/career-center"], a[href="career-center.html"], a[href="../career-center.html"]'], field: 'navCareerCenter' },
-      { selectors: ['a[href="/about"], a[href="about.html"], a[href="../about.html"]'], field: 'navAbout' },
-      { selectors: ['a[href="/contact"], a[href="contact.html"], a[href="../contact.html"]'], field: 'navContact' }
-    ];
-
-    navMappings.forEach(mapping => {
-      mapping.selectors.forEach(selector => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(el => {
-          if (ui[mapping.field]) {
-            console.log(`✅ Nav: "${el.textContent.trim()}" → "${ui[mapping.field]}"`);
-            el.textContent = ui[mapping.field];
-          }
-        });
-      });
-    });
-
-    // Also update nav link text in dropdown menus
-    const dropdownLinks = document.querySelectorAll('.dropdown-menu-text-link-block, .nav-link');
-    dropdownLinks.forEach(link => {
-      const href = link.getAttribute('href') || '';
-      if (href.includes('career') && ui.navCareerCenter) {
-        link.textContent = ui.navCareerCenter;
-      }
-    });
-  }
-
-  updateButtons(ui) {
-    console.log('🔘 Updating buttons...');
-    
-    const buttonMappings = [
-      { texts: ['Sign Up Today', 'sign up today'], field: 'btnSignUpToday' },
-      { texts: ['Learn More', 'learn more'], field: 'btnLearnMore' },
-      { texts: ['View All Courses', 'view all courses', 'Uncover All Courses'], field: 'btnViewAllCourses' },
-      { texts: ['Get Started', 'get started'], field: 'btnGetStarted' },
-      { texts: ['Contact Us', 'contact us', 'get in touch'], field: 'btnContactUs' },
-      { texts: ['Course Details', 'course details', 'View Details'], field: 'btnViewDetails' },
-      { texts: ['Enroll Now', 'enroll now'], field: 'btnEnrollNow' }
-    ];
-
-    const buttonSelectors = ['button', '.primary-button-text-block', '.secondary-button-text-block', '.button', '.btn', 'a.primary-button', 'a.secondary-button', '[class*="button"]'];
-    
-    buttonSelectors.forEach(selector => {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(button => {
-        const currentText = button.textContent.trim().toLowerCase();
-        
-        buttonMappings.forEach(mapping => {
-          if (mapping.texts.some(text => currentText.includes(text.toLowerCase())) && ui[mapping.field]) {
-            console.log(`✅ Button: "${button.textContent.trim()}" → "${ui[mapping.field]}"`);
-            button.textContent = ui[mapping.field];
-          }
-        });
-      });
-    });
-  }
-
-  updateForms(ui) {
-    console.log('📝 Updating forms...');
-    
-    // Update newsletter form label
-    const newsletterLabel = document.querySelector('.footer-details-form-text, label[for="email-2"]');
-    if (newsletterLabel && ui.formBtnSubscribe) {
-      if (newsletterLabel.textContent.includes('Subscribe') || newsletterLabel.textContent.includes('Newsletter')) {
-        console.log(`✅ Newsletter Label: "${newsletterLabel.textContent}" → "${ui.formBtnSubscribe}"`);
-        newsletterLabel.textContent = `Подписаться на рассылку`; // Hardcoded for now
-      }
-    }
-
-    // Update email placeholders
-    const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"]');
-    emailInputs.forEach(input => {
-      if (ui.formPlaceholderEmail && input.placeholder !== ui.formPlaceholderEmail) {
-        console.log(`✅ Email Placeholder: "${input.placeholder}" → "${ui.formPlaceholderEmail}"`);
-        input.placeholder = ui.formPlaceholderEmail;
-      }
-    });
-
-    // Update submit buttons
-    const submitButtons = document.querySelectorAll('input[type="submit"], .footer-details-form-submit-button');
-    submitButtons.forEach(btn => {
-      if (ui.formBtnSubscribe && (btn.value === '' || btn.value === 'Submit')) {
-        console.log(`✅ Submit Button: "${btn.value}" → "${ui.formBtnSubscribe}"`);
-        btn.value = ui.formBtnSubscribe;
-      }
-    });
-  }
-
-  updateSectionTitles(ui) {
-    console.log('📑 Updating section titles...');
-    
-    // Common section titles to translate
-    const titleMappings = [
-      { texts: ['Most Popular IT Courses', 'Featured Courses'], field: 'featuredCoursesTitle' },
-      { texts: ['FAQ & Answer', 'Frequently Asked Questions'], replacement: 'Часто задаваемые вопросы' },
-      { texts: ['Student Success Stories', 'Alumni Reviews'], replacement: 'Истории успеха студентов' },
-      { texts: ['Your Questions Answered Here'], replacement: 'Ответы на ваши вопросы' },
-      { texts: ['Expert-Led Learning'], replacement: 'Обучение от экспертов' },
-      { texts: ['Focus on Practice'], replacement: 'Фокус на практике' },
-      { texts: ['Core Skills'], replacement: 'Основные навыки' },
-      { texts: ['Online Learning'], replacement: 'Онлайн обучение' },
-      { texts: ['Unlock Potential With Proven Courses'], replacement: 'Раскройте потенциал с проверенными курсами' },
-      { texts: ['Learn From Anywhere, Anytime With Our Platform'], replacement: 'Учитесь где угодно и когда угодно на нашей платформе' }
-    ];
-
-    const headingSelectors = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', '.section-title', '.heading', '.title', '.banner-title', '.banner-subtitle'];
-    
-    headingSelectors.forEach(selector => {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(heading => {
-        const currentText = heading.textContent.trim();
-        
-        titleMappings.forEach(mapping => {
-          if (mapping.texts.some(text => currentText.includes(text))) {
-            const newText = mapping.field ? ui[mapping.field] : mapping.replacement;
-            if (newText && currentText !== newText) {
-              console.log(`✅ Section Title: "${currentText}" → "${newText}"`);
-              heading.textContent = newText;
-            }
-          }
-        });
-      });
-    });
-  }
-
-  updateMessages(ui) {
-    console.log('💬 Updating messages...');
-    
-    // Update form success messages
-    const successMessages = document.querySelectorAll('.w-form-done div');
-    successMessages.forEach(el => {
-      if (ui.msgFormSuccess && el.textContent.includes('Thank you')) {
-        console.log(`✅ Success Message: "${el.textContent}" → "${ui.msgFormSuccess}"`);
-        el.textContent = ui.msgFormSuccess;
-      }
-    });
-
-    // Update "Read more" links
-    const readMoreLinks = document.querySelectorAll('a');
-    readMoreLinks.forEach(link => {
-      if (link.textContent.toLowerCase().includes('read more') && ui.uiReadMore) {
-        console.log(`✅ Read More: "${link.textContent}" → "${ui.uiReadMore}"`);
-        link.textContent = ui.uiReadMore;
-      }
-    });
   }
 
   checkPreviewMode() {
@@ -278,8 +66,7 @@ class StrapiIntegration {
 
   getPageName() {
     const path = window.location.pathname;
-    // Handle dist/en/index.html and similar paths
-    if (path === '/' || path.includes('index.html') || path.includes('home.html')) {
+    if (path === '/' || path === '/index.html' || path === '/home.html') {
       return 'home-page';
     }
     if (path.includes('courses')) {
@@ -287,15 +74,6 @@ class StrapiIntegration {
     }
     if (path.includes('about')) {
       return 'about-page';
-    }
-    if (path.includes('teachers')) {
-      return 'teachers-page';
-    }
-    if (path.includes('career-center')) {
-      return 'career-center-page';
-    }
-    if (path.includes('career-orientation')) {
-      return 'career-orientation-page';
     }
     return 'home-page';
   }
@@ -324,42 +102,14 @@ class StrapiIntegration {
   }
 
   applyContent(content) {
-    console.log('📝 Applying content:', content);
-    console.log('📝 Content keys:', Object.keys(content));
-    
-    // Update site branding (fix Zohacous -> AI Studio)
-    this.updateSiteBranding(content);
-    
     // Apply hero section content
-    // Check if hero data is nested or flat
     if (content.hero) {
-      console.log('🎯 Applying nested hero content');
       this.applyHeroContent(content.hero);
-    } else if (content.heroTitle || content.heroSubtitle || content.heroDescription) {
-      // Handle flat structure from our custom API
-      console.log('🎯 Applying flat hero content from API');
-      this.applyHeroContent({
-        title: content.heroTitle,
-        subtitle: content.heroSubtitle,
-        description: content.heroDescription
-      });
-    } else {
-      console.warn('⚠️ No hero content found in response');
     }
     
-    // Apply featured courses - with better handling
+    // Apply featured courses
     if (content.featuredCourses) {
-      console.log('📚 Applying featured courses:', content.featuredCourses);
       this.applyFeaturedCoursesContent(content.featuredCourses);
-    } else if (content.featuredCoursesTitle) {
-      console.log('📚 Applying featured courses from flat structure');
-      // Handle flat structure from API
-      this.applyFeaturedCoursesContent({
-        sectionTitle: content.featuredCoursesTitle,
-        sectionDescription: content.featuredCoursesDescription
-      });
-    } else {
-      console.log('⚠️ No featured courses content found, available keys:', Object.keys(content));
     }
     
     // Apply focus on practice
@@ -379,33 +129,22 @@ class StrapiIntegration {
   }
 
   applyHeroContent(hero) {
-    console.log('🎨 Updating hero with:', hero);
-    
     // Update hero title
     const titleElement = document.querySelector('h1.banner-heading');
     if (titleElement && hero.title) {
-      console.log(`✅ Updating title from "${titleElement.textContent}" to "${hero.title}"`);
       titleElement.textContent = hero.title;
-    } else {
-      console.warn('❌ Title element not found or no title data');
     }
     
     // Update subtitle
     const subtitleElement = document.querySelector('.banner-subtitle');
     if (subtitleElement && hero.subtitle) {
-      console.log(`✅ Updating subtitle to "${hero.subtitle}"`);
       subtitleElement.textContent = hero.subtitle;
-    } else {
-      console.warn('❌ Subtitle element not found or no subtitle data');
     }
     
     // Update description
     const descriptionElement = document.querySelector('p.banner-description-text');
     if (descriptionElement && hero.description) {
-      console.log(`✅ Updating description to "${hero.description}"`);
       descriptionElement.textContent = hero.description;
-    } else {
-      console.warn('❌ Description element not found or no description data');
     }
     
     // Update primary button
@@ -418,47 +157,6 @@ class StrapiIntegration {
     const secondaryButton = document.querySelector('.banner-button-wrapper a:last-child .primary-button-text-block');
     if (secondaryButton && hero.secondaryButtonText) {
       secondaryButton.textContent = hero.secondaryButtonText;
-    }
-  }
-
-  updateSiteBranding(content) {
-    console.log('🏢 Updating site branding to AI Studio');
-    
-    // Update navbar brand
-    const navbarBrand = document.querySelector('.navbar-brand, .logo-text, a[href="/"].w-nav-brand');
-    if (navbarBrand) {
-      const brandText = content.siteName || 'AI Studio';
-      console.log(`✅ Updating brand from "${navbarBrand.textContent}" to "${brandText}"`);
-      navbarBrand.textContent = brandText;
-    }
-    
-    // Update any Zohacous references
-    const allTextNodes = document.evaluate(
-      "//text()[contains(., 'Zohacous')]",
-      document,
-      null,
-      XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
-      null
-    );
-    
-    for (let i = 0; i < allTextNodes.snapshotLength; i++) {
-      const node = allTextNodes.snapshotItem(i);
-      node.textContent = node.textContent.replace(/Zohacous/g, 'AI Studio');
-      console.log('✅ Replaced Zohacous reference');
-    }
-    
-    // Update page title
-    if (document.title.includes('Zohacous')) {
-      document.title = document.title.replace(/Zohacous/g, 'AI Studio');
-      console.log('✅ Updated page title');
-    }
-    
-    // Update footer email
-    const footerEmail = document.querySelector('a[href*="zohacous@email.com"]');
-    if (footerEmail) {
-      footerEmail.href = 'mailto:info@aistudio555.com';
-      footerEmail.textContent = 'info@aistudio555.com';
-      console.log('✅ Updated footer email');
     }
   }
 

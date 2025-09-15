@@ -26,13 +26,19 @@
       overlay.classList.remove('w--nav-menu-open');
     });
 
-    // Find all nav menus and hide them
+    // Find all nav menus and set their visibility based on screen size
     const menus = document.querySelectorAll('.w-nav-menu');
     menus.forEach(menu => {
       if (window.innerWidth <= 991) {
+        // Mobile/tablet - hide menu
         menu.style.display = 'none';
         menu.style.opacity = '0';
         menu.style.visibility = 'hidden';
+      } else {
+        // Desktop - ensure menu is visible
+        menu.style.display = 'flex';
+        menu.style.opacity = '1';
+        menu.style.visibility = 'visible';
       }
     });
 
@@ -171,21 +177,22 @@
     }, 250);
   });
 
-  // Prevent menu from auto-opening
+  // Prevent menu from auto-opening (less aggressive)
   const observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
       if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
         const target = mutation.target;
 
-        // If menu is being opened without user interaction
+        // Only intervene if menu opens without user interaction AND it's been a while since last click
         if (window.innerWidth <= 991 && !window.userClickedHamburger) {
-          if (target.classList.contains('w--nav-menu-open')) {
-            // Force close if not intentionally opened
+          if (target.classList.contains('w--nav-menu-open') && !window.recentMenuInteraction) {
+            // Wait longer before force closing to avoid interfering with legitimate opens
             setTimeout(function() {
-              if (!window.userClickedHamburger) {
+              if (!window.userClickedHamburger && !window.recentMenuInteraction) {
+                console.log('⚠️ Auto-closing menu (opened without user interaction)');
                 ensureMenuClosed();
               }
-            }, 0);
+            }, 100); // Increased delay
           }
         }
       }
