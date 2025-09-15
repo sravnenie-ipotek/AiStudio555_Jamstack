@@ -1,6 +1,24 @@
 /* Hebrew Menu Alignment Fix */
 /* Ensures proper RTL menu alignment and spacing */
 
+/* CRITICAL FIX: Override Webflow's menu hiding logic */
+html .navbar[dir="rtl"] .w-nav-menu,
+html .navbar[dir="rtl"] .nav-menu {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure Hebrew menus are always visible on desktop */
+@media screen and (min-width: 992px) {
+  html .navbar[dir="rtl"] .w-nav-menu,
+  html .navbar[dir="rtl"] .nav-menu {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
 /* RTL Navigation Menu Alignment */
 .navbar[dir="rtl"] .nav-menu {
   display: flex !important;

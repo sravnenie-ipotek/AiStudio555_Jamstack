@@ -207,6 +207,7 @@
   </style>
 
   <link href="../css/mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/hebrew-menu-alignment-fix.css" rel="stylesheet" type="text/css">
   <link href="../css/teachmeskills-career-orientation.css" rel="stylesheet" type="text/css">
   <link href="../css/career-orientation-cards.css" rel="stylesheet" type="text/css">
 </head>
@@ -292,9 +293,16 @@
           <h2 class="section-title featured-courses" style="color: white; margin-bottom: 24px;">מצאו את הקריירה המושלמת שלכם בעולם הטכנולוגיה</h2>
           <p class="hero-problem-statement">מרגישים אבודים בבחירת המקצוע? לא יודעים איך לעבור לתחום הטכנולוגיה? אנחנו כאן כדי לעזור לכם למצוא את הכיוון הנכון ולבנות קריירה מצליחה.</p>
 
-          <a href="#consultation-form" class="hero-main-cta">
-            📞 קבלו ייעוץ חינם עכשיו
-          </a>
+          <div class="hero-cta-wrapper">
+            <a href="#consultation-form" class="hero-main-cta-enhanced" onclick="window.showModal(); return false;">
+              <div class="cta-content">
+                <span class="cta-icon">🚀</span>
+                <span class="cta-text">קבלו ייעוץ חינם עכשיו</span>
+              </div>
+              <div class="cta-shine"></div>
+            </a>
+            <p class="cta-subtitle">תוך 24 שעות | ללא התחייבות | מייעץ מקצועי</p>
+          </div>
         </div>
       </div>
     </section>
@@ -662,8 +670,12 @@
 
         <div data-w-id="assessment-form-wrapper" style="opacity:1" class="simple-consultation-form">
           <div class="consultation-cta-wrapper" style="text-align: center;">
-            <button onclick="window.showModal(); return false;" class="primary-button consultation-modal-btn w-button" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; color: white !important; border: none !important; padding: 16px 32px; font-size: 18px; font-weight: 600; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
-              📞 קבלו ייעוץ חינם עכשיו
+            <button onclick="window.showModal(); return false;" class="hero-main-cta-enhanced consultation-modal-btn" style="display: inline-block; border: none; cursor: pointer;">
+              <div class="cta-content">
+                <span class="cta-icon">📞</span>
+                <span class="cta-text">קבלו ייעוץ חינם עכשיו</span>
+              </div>
+              <div class="cta-shine"></div>
             </button>
 
             <div style="margin-top: 20px; font-size: 14px; color: #6a7280; text-align: center;">
