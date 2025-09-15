@@ -9,6 +9,20 @@ html .navbar[dir="rtl"] .nav-menu {
   opacity: 1 !important;
 }
 
+/* FORCE HEBREW NAVBAR VISIBILITY - Override aggressive mobile hiding */
+.navbar[dir="rtl"],
+.navbar[dir="rtl"] .navbar-content,
+.navbar[dir="rtl"] .w-nav-brand,
+.navbar[dir="rtl"] .zohacous-logo-image {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+}
+
 /* Ensure Hebrew menus are always visible on desktop */
 @media screen and (min-width: 992px) {
   html .navbar[dir="rtl"] .w-nav-menu,
@@ -81,6 +95,29 @@ html .navbar[dir="rtl"] .nav-menu {
 .navbar[dir="rtl"] .w-nav-brand {
   order: 1 !important;
   flex-shrink: 0 !important;
+  max-width: 180px !important;
+  overflow: hidden !important;
+}
+
+/* Logo Image Sizing - CRITICAL: logoNew.png is 1920x544, needs heavy constraints */
+.navbar[dir="rtl"] .zohacous-logo-image,
+.navbar[dir="rtl"] .logo-image {
+  max-width: 140px !important;
+  max-height: 35px !important;
+  width: 140px !important;
+  height: auto !important;
+  object-fit: contain !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* Additional logo constraints for different contexts */
+img[src*="logoNew.png"] {
+  max-width: 140px !important;
+  max-height: 35px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
 }
 
 /* Navigation Menu */

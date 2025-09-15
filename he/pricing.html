@@ -313,7 +313,7 @@
       <div class="container">
         <div class="navbar-content">
           <a href="home.html" class="zohacous-logo-link w-nav-brand">
-            <img loading="lazy" src="../images/Logo.svg" alt="" class="zohacous-logo-image">
+            <img loading="lazy" src="../images/logoNew.png" alt="" class="zohacous-logo-image">
           </a>
           <nav role="navigation" class="nav-menu w-nav-menu">
             <a href="home.html" class="nav-link w-nav-link">בית</a>
@@ -405,7 +405,7 @@
                     <div class="w-layout-grid pricing-plan-grid">
                       <div class="pricing-plan-featured-name-wrapper">
                         <div class="pricing-plan-top-content">
-                          <div class="pricing-plan-logo-wrapper"><img loading="lazy" src="images/Logo.svg" alt="" class="pricing-plan-logo-image"></div>
+                          <div class="pricing-plan-logo-wrapper"><img loading="lazy" src="../images/logoNew.png" alt="" class="pricing-plan-logo-image"></div>
                           <div class="pricing-plan-man-image-wrap"><img loading="lazy" src="images/Pricing-Plan-Man-Image.png" alt="" class="pricing-plan-man-image"></div>
                         </div>
                         <div class="pricing-plan-featured-wrapper">
@@ -553,7 +553,7 @@
                     <div class="w-layout-grid pricing-plan-grid">
                       <div class="pricing-plan-featured-name-wrapper">
                         <div class="pricing-plan-top-content">
-                          <div class="pricing-plan-logo-wrapper"><img loading="lazy" src="images/Logo.svg" alt="" class="pricing-plan-logo-image"></div>
+                          <div class="pricing-plan-logo-wrapper"><img loading="lazy" src="../images/logoNew.png" alt="" class="pricing-plan-logo-image"></div>
                           <div class="pricing-plan-man-image-wrap"><img loading="lazy" src="images/Pricing-Plan-Man-Image.png" alt="" class="pricing-plan-man-image"></div>
                         </div>
                         <div class="pricing-plan-featured-wrapper">
@@ -1129,6 +1129,47 @@
 
     window.location.href = newUrl;
   }
+
+  // FORCE HEBREW NAVIGATION VISIBILITY
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔧 Force showing Hebrew navigation...');
+
+    function forceShowNavigation() {
+      const navbar = document.querySelector('.navbar[dir="rtl"]');
+      const navbarContent = document.querySelector('.navbar-content');
+      const brand = document.querySelector('.w-nav-brand');
+      const logo = document.querySelector('.zohacous-logo-image');
+      const navMenu = document.querySelector('.nav-menu');
+
+      [navbar, navbarContent, brand, logo, navMenu].forEach((el, i) => {
+        if (el) {
+          el.style.display = i === 3 ? 'block' : 'flex'; // logo should be block, others flex
+          el.style.visibility = 'visible';
+          el.style.opacity = '1';
+          el.style.position = 'static';
+          el.style.left = 'auto';
+          el.style.top = 'auto';
+          el.style.transform = 'none';
+
+          if (i === 3) { // logo specific sizing
+            el.style.maxWidth = '140px';
+            el.style.maxHeight = '35px';
+            el.style.width = 'auto';
+            el.style.height = 'auto';
+          }
+        }
+      });
+
+      console.log('✅ Hebrew navigation elements forced visible');
+    }
+
+    // Force repeatedly to override aggressive hiding
+    forceShowNavigation();
+    setTimeout(forceShowNavigation, 100);
+    setTimeout(forceShowNavigation, 500);
+    setTimeout(forceShowNavigation, 1000);
+    setTimeout(forceShowNavigation, 2000);
+  });
 </script>
 </body>
 </html>
