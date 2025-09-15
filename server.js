@@ -25,7 +25,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-app.use(express.static('.'));
+// Serve static files - main site and dist directory
+app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // Serve images from root for all language paths
 app.use('/en/images', express.static(path.join(__dirname, 'images')));
@@ -2490,7 +2492,18 @@ app.get('/admin', (req, res) => {
 
 // Serve main website
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  // Try index.html first, fallback to home.html
+  const indexPath = path.join(__dirname, 'index.html');
+  const homePath = path.join(__dirname, 'home.html');
+
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else if (fs.existsSync(homePath)) {
+    res.sendFile(homePath);
+  } else {
+    // Fallback to dist/index.html for language redirect
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  }
 });
 
 // Serve static assets for language routes
