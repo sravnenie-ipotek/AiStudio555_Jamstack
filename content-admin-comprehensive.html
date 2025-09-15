@@ -650,7 +650,7 @@
 
             <!-- Save Button for Home Page -->
             <div style="margin-top: 30px; text-align: center; padding: 20px; background: #f8f9fa; border-radius: 12px; border: 2px solid #28a745;">
-                <button type="button" id="saveHomePageBtn" class="btn btn-success" onclick="saveAllHomePage();" style="font-size: 18px; padding: 15px 30px;">
+                <button type="button" id="saveHomePageBtn" class="btn btn-success" style="font-size: 18px; padding: 15px 30px;">
                     💾 Save All Home Page Content
                 </button>
                 <p style="margin-top: 10px; color: #666; font-size: 14px;">
@@ -4035,28 +4035,63 @@
             // Create ID aliases for test compatibility
             createTestCompatibilityAliases();
 
-            // Add robust event listener for save button with click tracking
+            // Add SUPER AGGRESSIVE event listener for save button
             let saveClickCount = 0;
-            setTimeout(() => {
+
+            function attachSaveListener() {
                 const saveBtn = document.getElementById('saveHomePageBtn');
                 if (saveBtn) {
-                    saveBtn.addEventListener('click', function(e) {
+                    console.log('🔧 Attaching save button listeners...');
+
+                    // Remove any existing listeners
+                    saveBtn.replaceWith(saveBtn.cloneNode(true));
+                    const newBtn = document.getElementById('saveHomePageBtn');
+
+                    // Add click listener
+                    newBtn.addEventListener('click', function(e) {
                         e.preventDefault();
+                        e.stopPropagation();
                         saveClickCount++;
-                        console.log('='.repeat(50));
+                        console.log('='.repeat(80));
                         console.log(`🔘 SAVE BUTTON CLICKED #${saveClickCount} at ${new Date().toISOString()}`);
-                        console.log('='.repeat(50));
-                        console.log('🔘 Event type: click event listener');
+                        console.log('='.repeat(80));
+                        console.log('🔘 Event type: addEventListener click');
                         console.log('🔘 Button element:', this);
                         console.log('🔘 About to call saveAllHomePage()...');
-                        console.log('-'.repeat(30));
-                        saveAllHomePage();
+                        console.log('-'.repeat(40));
+
+                        try {
+                            saveAllHomePage();
+                        } catch (error) {
+                            console.error('❌ Error calling saveAllHomePage:', error);
+                        }
+                    }, { capture: true });
+
+                    // Also add mousedown listener as backup
+                    newBtn.addEventListener('mousedown', function(e) {
+                        console.log('🖱️ MOUSEDOWN detected on save button');
                     });
-                    console.log('✅ Save button event listener attached with click tracking');
+
+                    // Also add onclick property as backup
+                    newBtn.onclick = function(e) {
+                        console.log('🔘 ONCLICK property triggered');
+                        e.preventDefault();
+                        saveAllHomePage();
+                    };
+
+                    console.log('✅ Multiple save button listeners attached');
+                    console.log('✅ Click listener: addEventListener');
+                    console.log('✅ Mousedown listener: addEventListener');
+                    console.log('✅ Onclick property: direct assignment');
                 } else {
                     console.warn('⚠️ Save button not found for event listener');
                 }
-            }, 1000);
+            }
+
+            // Try multiple times to attach listener
+            setTimeout(attachSaveListener, 500);
+            setTimeout(attachSaveListener, 1500);
+            setTimeout(attachSaveListener, 3000);
 
             // Load initial data
             loadSectionData('home-page');
