@@ -650,7 +650,7 @@
 
             <!-- Save Button for Home Page -->
             <div style="margin-top: 30px; text-align: center; padding: 20px; background: #f8f9fa; border-radius: 12px; border: 2px solid #28a745;">
-                <button type="button" class="btn btn-success" onclick="console.log('🔘 Button clicked!'); alert('Save button clicked! Check console for logs.'); saveAllHomePage();" style="font-size: 18px; padding: 15px 30px;">
+                <button type="button" id="saveHomePageBtn" class="btn btn-success" onclick="saveAllHomePage();" style="font-size: 18px; padding: 15px 30px;">
                     💾 Save All Home Page Content
                 </button>
                 <p style="margin-top: 10px; color: #666; font-size: 14px;">
@@ -2847,6 +2847,9 @@
         async function saveAllHomePage() {
             console.log('🚀 saveAllHomePage function called!');
 
+            // Show immediate feedback
+            showMessage('🔄 Starting save operation...', 'info');
+
             // Debug: Check environment
             console.log('🌐 Current URL:', window.location.href);
             console.log('🌐 Hostname:', window.location.hostname);
@@ -3977,10 +3980,25 @@
             console.log('📊 ALL 123+ Home Page Fields Available');
             console.log('🔥 Complete CRUD Operations Ready');
             console.log('💾 Live Database Integration Active');
-            
+
             // Create ID aliases for test compatibility
             createTestCompatibilityAliases();
-            
+
+            // Add robust event listener for save button
+            setTimeout(() => {
+                const saveBtn = document.getElementById('saveHomePageBtn');
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log('🔘 Save button clicked via event listener!');
+                        saveAllHomePage();
+                    });
+                    console.log('✅ Save button event listener attached');
+                } else {
+                    console.warn('⚠️ Save button not found for event listener');
+                }
+            }, 1000);
+
             // Load initial data
             loadSectionData('home-page');
             loadCareerCenterData();
