@@ -1,6 +1,7 @@
-// Ultra-thin Shared Menu Component v2.6
+// Ultra-thin Shared Menu Component v2.7
 // Single source of truth for navigation across all pages
 // WEBFLOW COMPATIBLE VERSION
+// v2.7: Hebrew language selector position fix + flag icons
 
 (function() {
     'use strict';
@@ -161,19 +162,35 @@
                         <a href="${urls.pricing}" class="nav-link ${currentPage === 'pricing' ? 'w--current' : ''}">${t.pricing}</a>
                     </nav>
 
-                    <!-- Language Selector -->
-                    <div class="language-selector">
-                        <select class="language-nav-select" style="background: transparent !important; border: none !important; color: rgba(255, 255, 255, 0.9) !important; padding: 8px 12px !important; border-radius: 6px !important; cursor: pointer !important; outline: none !important; appearance: none !important; -webkit-appearance: none !important; -moz-appearance: none !important;">
-                            <option value="en" ${currentLang === 'en' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">English</option>
-                            <option value="ru" ${currentLang === 'ru' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">Русский</option>
-                            <option value="he" ${currentLang === 'he' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">עברית</option>
-                        </select>
-                    </div>
-
-                    <!-- Sign Up Button -->
+                    ${currentLang === 'he' ? `
+                    <!-- Sign Up Button (Hebrew: button first) -->
                     <div class="navbar-button-wrapper">
                         <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">${t.signUp}</a>
                     </div>
+
+                    <!-- Language Selector (Hebrew: selector last) -->
+                    <div class="language-selector">
+                        <select class="language-nav-select" style="background: transparent !important; border: none !important; color: rgba(255, 255, 255, 0.9) !important; padding: 8px 12px !important; border-radius: 6px !important; cursor: pointer !important; outline: none !important; appearance: none !important; -webkit-appearance: none !important; -moz-appearance: none !important;">
+                            <option value="en" ${currentLang === 'en' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇬🇧 English</option>
+                            <option value="ru" ${currentLang === 'ru' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇷🇺 Русский</option>
+                            <option value="he" ${currentLang === 'he' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇮🇱 עברית</option>
+                        </select>
+                    </div>
+                    ` : `
+                    <!-- Language Selector (Non-Hebrew: selector first) -->
+                    <div class="language-selector">
+                        <select class="language-nav-select" style="background: transparent !important; border: none !important; color: rgba(255, 255, 255, 0.9) !important; padding: 8px 12px !important; border-radius: 6px !important; cursor: pointer !important; outline: none !important; appearance: none !important; -webkit-appearance: none !important; -moz-appearance: none !important;">
+                            <option value="en" ${currentLang === 'en' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇬🇧 English</option>
+                            <option value="ru" ${currentLang === 'ru' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇷🇺 Русский</option>
+                            <option value="he" ${currentLang === 'he' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇮🇱 עברית</option>
+                        </select>
+                    </div>
+
+                    <!-- Sign Up Button (Non-Hebrew: button last) -->
+                    <div class="navbar-button-wrapper">
+                        <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">${t.signUp}</a>
+                    </div>
+                    `}
                 </div>
             </div>
             <!-- Mobile Menu Overlay -->

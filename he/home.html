@@ -100,7 +100,28 @@
       direction: rtl;
       text-align: right;
     }
-    
+
+    /* FAQ RTL Support */
+    .faq-section,
+    .faq-single-content,
+    .faq-accordion-wrapper,
+    .single-faq-accordion-wrap,
+    .faq-accordion-question-wrap,
+    .faq-accordion-answer-wrap {
+      direction: rtl;
+      text-align: right;
+    }
+
+    .faq-accordion-question-wrap {
+      flex-direction: row-reverse;
+    }
+
+    .faq-icon-wrapper {
+      margin-left: 20px;
+      margin-right: 0;
+      transform: rotate(180deg);
+    }
+
     .rtl .editable-highlight:hover::after {
       left: auto;
       right: 0;
@@ -1348,42 +1369,42 @@
             <div class="faq-image-shape"></div>
           </div>
           <div class="faq-single-content">
-            <div data-current="Tab 1" data-easing="ease" data-duration-in="300" data-duration-out="100" class="w-tabs">
+            <div data-easing="ease" data-duration-in="300" data-duration-out="100" class="w-tabs">
               <div class="faq-accordion-wrapper w-tab-menu">
-                <a data-w-tab="Tab 1" class="single-faq-accordion-wrap w-inline-block w-tab-link w--current">
+                <a data-w-tab="Tab 1" class="single-faq-accordion-wrap w-inline-block w-tab-link">
                   <div class="faq-accordion-question-wrap">
-                    <h3 class="faq-question">Q: What types of AI and IT courses are available?</h3>
+                    <h3 class="faq-question">ש: אילו סוגי קורסי AI ו-IT זמינים?</h3>
                     <div class="faq-icon-wrapper"><img src="images/Faq-Icon.svg" loading="lazy" alt="" class="faq-icon"></div>
                   </div>
                   <div class="faq-accordion-answer-wrap">
-                    <p class="faq-answer">We offer comprehensive courses in AI Development, Machine Learning, Data Science, Web Development, Mobile App Development, Cloud Computing, Cybersecurity, and more. All courses are designed with 85% practical work and real-world projects.</p>
+                    <p class="faq-answer">אנו מציעים קורסים מקיפים בפיתוח AI, למידת מכונה, מדע הנתונים, פיתוח אתרים, פיתוח אפליקציות, מחשוב ענן, אבטחת סייבר ועוד. כל הקורסים מתוכננים עם 85% עבודה מעשית ופרויקטים מהעולם האמיתי.</p>
                   </div>
                 </a>
                 <a data-w-tab="Tab 2" class="single-faq-accordion-wrap w-inline-block w-tab-link">
                   <div class="faq-accordion-question-wrap">
-                    <h3 class="faq-question">Q: How long does it take to complete a course?</h3>
+                    <h3 class="faq-question">ש: כמה זמן לוקח להשלים קורס?</h3>
                     <div class="faq-icon-wrapper"><img src="images/Faq-Icon.svg" loading="lazy" alt="" class="faq-icon"></div>
                   </div>
                   <div class="faq-accordion-answer-wrap">
-                    <p class="faq-answer">Course duration varies from 3 to 6 months depending on the program. You can learn at your own pace with lifetime access to course materials. Most students complete courses while working full-time.</p>
+                    <p class="faq-answer">משך הקורס נע בין 3 ל-6 חודשים בהתאם לתוכנית. תוכלו ללמוד בקצב שלכם עם גישה לכל החיים לחומרי הקורס. רוב הסטודנטים משלימים את הקורסים תוך כדי עבודה במשרה מלאה.</p>
                   </div>
                 </a>
                 <a data-w-tab="Tab 3" class="single-faq-accordion-wrap w-inline-block w-tab-link">
                   <div class="faq-accordion-question-wrap">
-                    <h3 class="faq-question">Q: What kind of support is provided during learning?</h3>
+                    <h3 class="faq-question">ש: איזה סוג תמיכה ניתנת במהלך הלמידה?</h3>
                     <div class="faq-icon-wrapper"><img src="images/Faq-Icon.svg" loading="lazy" alt="" class="faq-icon"></div>
                   </div>
                   <div class="faq-accordion-answer-wrap">
-                    <p class="faq-answer">Each student gets a dedicated account manager, 24/7 access to instructors, live Q&A sessions, code reviews, career guidance, and job placement assistance. Our support team responds within 24 hours.</p>
+                    <p class="faq-answer">כל סטודנט מקבל מנהל חשבון ייעודי, גישה 24/7 למדריכים, מפגשי שאלות ותשובות חיים, סקירות קוד, הדרכה קריירה וסיוע בהשמה. צוות התמיכה שלנו מגיב תוך 24 שעות.</p>
                   </div>
                 </a>
                 <a data-w-tab="Tab 4" class="single-faq-accordion-wrap w-inline-block w-tab-link">
                   <div class="faq-accordion-question-wrap">
-                    <h3 class="faq-question">Q: Do I need prior programming experience?</h3>
+                    <h3 class="faq-question">ש: האם אני צריך ניסיון קודם בתכנות?</h3>
                     <div class="faq-icon-wrapper"><img src="images/Faq-Icon.svg" loading="lazy" alt="" class="faq-icon"></div>
                   </div>
                   <div class="faq-accordion-answer-wrap">
-                    <p class="faq-answer">No prior experience required for beginner courses. We start from basics and gradually build up your skills. For advanced courses, we provide prerequisites and free prep materials to get you ready.</p>
+                    <p class="faq-answer">לא נדרש ניסיון קודם לקורסים למתחילים. אנו מתחילים מהבסיס ובונים את הכישורים שלכם בהדרגה. לקורסים מתקדמים, אנו מספקים דרישות מקדימות וחומרי הכנה חינם כדי להכין אתכם.</p>
                   </div>
                 </a>
                 <a data-w-tab="Tab 5" class="single-faq-accordion-wrap w-inline-block w-tab-link">
@@ -1701,7 +1722,7 @@
   <!-- Translation scripts disabled to prevent Hebrew content override -->
   <!-- <script src="../js/translations-config.js?v=1.1"></script> -->
   <!-- <script src="../js/enhanced-integration.js?v=1.1"></script> -->
-  <script src="../js/shared-menu-component.js?v=2.6"></script>
+  <script src="../js/shared-menu-component.js?v=2.7"></script>
   <script src="../js/ui-translator.js?v=1.1"></script>
 
   <!-- Language Switcher -->
