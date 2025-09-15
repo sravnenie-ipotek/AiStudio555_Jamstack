@@ -1,7 +1,7 @@
-// Ultra-thin Shared Menu Component v2.7
+// Ultra-thin Shared Menu Component v2.9
 // Single source of truth for navigation across all pages
 // WEBFLOW COMPATIBLE VERSION
-// v2.7: Hebrew language selector position fix + flag icons
+// v2.9: Aggressive Hebrew positioning fix + compact layout for Russian overflow
 
 (function() {
     'use strict';
@@ -336,28 +336,55 @@
             }
         });
 
-        // Fix language selector styling
-        const languageSelectors = document.querySelectorAll('.language-nav-select, .language-selector select');
-        languageSelectors.forEach(selector => {
-            // Apply transparent styling to match home.html
-            selector.style.cssText = `
-                background: transparent !important;
-                border: none !important;
-                color: rgba(255, 255, 255, 0.9) !important;
-                padding: 8px 12px !important;
-                border-radius: 6px !important;
-                cursor: pointer !important;
-                outline: none !important;
-                appearance: none !important;
-                -webkit-appearance: none !important;
-                -moz-appearance: none !important;
-            `;
+        // Replace old language selector with new one that has flags
+        const oldLanguageSelectors = document.querySelectorAll('.language-nav-select, .language-selector select');
+        oldLanguageSelectors.forEach(oldSelector => {
+            const parent = oldSelector.parentElement;
+            if (parent) {
+                // Create new language selector with flags
+                const newSelectorHTML = `
+                    <select class="language-nav-select" style="background: transparent !important; border: none !important; color: rgba(255, 255, 255, 0.9) !important; padding: 8px 12px !important; border-radius: 6px !important; cursor: pointer !important; outline: none !important; appearance: none !important; -webkit-appearance: none !important; -moz-appearance: none !important;">
+                        <option value="en" ${currentLang === 'en' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇬🇧 English</option>
+                        <option value="ru" ${currentLang === 'ru' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇷🇺 Русский</option>
+                        <option value="he" ${currentLang === 'he' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇮🇱 עברית</option>
+                    </select>
+                `;
 
-            // Style options
-            const options = selector.querySelectorAll('option');
-            options.forEach(option => {
-                option.style.cssText = 'background: #05051a !important; color: white !important;';
-            });
+                // Replace old selector
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = newSelectorHTML;
+                const newSelector = tempDiv.firstElementChild;
+
+                // Copy event listeners
+                newSelector.addEventListener('change', function(e) {
+                    const selectedLang = e.target.value;
+                    const currentPage = window.location.pathname.split('/').pop() || 'home.html';
+                    window.location.href = `/${selectedLang}/${currentPage}`;
+                });
+
+                parent.replaceChild(newSelector, oldSelector);
+                console.log('✅ Replaced language selector with flag version');
+
+                // For Hebrew, aggressively move language selector to the end
+                if (currentLang === 'he') {
+                    setTimeout(() => {
+                        const navbar = document.querySelector('.navbar-content, .w-nav-menu');
+                        const langSelectorContainer = newSelector.closest('.language-selector, .language-nav-wrapper, div');
+
+                        if (navbar && langSelectorContainer) {
+                            // Force move to absolute end
+                            navbar.appendChild(langSelectorContainer);
+
+                            // Also apply CSS to ensure it stays last
+                            langSelectorContainer.style.order = '999';
+                            langSelectorContainer.style.marginLeft = 'auto';
+                            langSelectorContainer.style.marginRight = '0';
+
+                            console.log('📍 Aggressively moved language selector to end for Hebrew');
+                        }
+                    }, 100);
+                }
+            }
         });
 
         // Update career dropdown position fix
