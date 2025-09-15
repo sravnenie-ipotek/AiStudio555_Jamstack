@@ -131,12 +131,7 @@
                         <img loading="lazy" src="${currentLang === 'en' ? 'images/Logo 2.svg' : '../images/Logo 2.svg'}" alt="" class="logo-image">
                     </a>
 
-                    <!-- Mobile Menu Button -->
-                    <div class="w-nav-button">
-                        <div class="w-icon-nav-menu">
-                            <span></span>
-                        </div>
-                    </div>
+                    <!-- Mobile Menu Button will be handled by universal-mobile-navigation-fix.js -->
 
                     <!-- Desktop Navigation -->
                     <nav class="nav-menu w-nav-menu">
@@ -202,8 +197,8 @@
         // Initialize dropdown functionality
         initDropdownFunctionality();
 
-        // Initialize mobile menu functionality
-        initMobileMenuFunctionality();
+        // Mobile menu functionality disabled - handled by universal-mobile-navigation-fix.js
+        // initMobileMenuFunctionality();
 
         console.log('✅ Complete navigation injected');
     }

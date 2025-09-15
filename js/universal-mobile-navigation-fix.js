@@ -45,6 +45,13 @@
     function initMobileNavigation() {
         debug('Initializing mobile navigation system');
 
+        // Prevent multiple initializations
+        if (window.mobileNavInitialized) {
+            debug('Mobile navigation already initialized, skipping');
+            return;
+        }
+        window.mobileNavInitialized = true;
+
         // Step 1: Remove duplicate hamburger buttons
         removeDuplicateHamburgers();
 
@@ -141,6 +148,12 @@
         // Remove any existing menu buttons
         const existingButtons = nav.querySelectorAll('.w-nav-button, .menu-button');
         existingButtons.forEach(btn => btn.remove());
+
+        // Check if our custom button already exists
+        if (document.querySelector('.mobile-menu-button')) {
+            debug('Custom menu button already exists, skipping creation');
+            return;
+        }
 
         // Create new menu button container
         const menuButton = document.createElement('div');
@@ -519,13 +532,13 @@
             }
         });
 
-        // Show overlay
-        if (overlay) {
-            overlay.style.display = 'block';
-            setTimeout(() => {
-                overlay.style.opacity = '1';
-            }, 10);
-        }
+        // Don't show overlay - it interferes with hamburger button clicks
+        // if (overlay) {
+        //     overlay.style.display = 'block';
+        //     setTimeout(() => {
+        //         overlay.style.opacity = '1';
+        //     }, 10);
+        // }
 
         // Transform hamburger to X
         if (menuButton) {
@@ -568,13 +581,13 @@
             `;
         }
 
-        // Hide overlay
-        if (overlay) {
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 300);
-        }
+        // Don't manipulate overlay
+        // if (overlay) {
+        //     overlay.style.opacity = '0';
+        //     setTimeout(() => {
+        //         overlay.style.display = 'none';
+        //     }, 300);
+        // }
 
         // Transform X back to hamburger
         if (menuButton) {
