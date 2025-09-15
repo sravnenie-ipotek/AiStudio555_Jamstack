@@ -15,7 +15,7 @@
   <link href="/css/style-guide-compliance.css" rel="stylesheet" type="text/css">
   <link href="/css/unified-navigation.css" rel="stylesheet" type="text/css">
   <link href="/css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
-  <link href="/css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
+  <link href="/css/mobile-navigation-complete-fix.css" rel="stylesheet" type="text/css">
   <link href="/css/mobile-responsive-fix.css" rel="stylesheet" type="text/css">
   <link href="/css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -451,8 +451,7 @@
             <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">הרשמו היום</a>
           </div>
           <!-- Mobile Menu Button -->
-          <div class="menu-button w-nav-button">
-            <div class="w-icon-nav-menu"></div>
+          <!-- Hamburger button will be created by universal-mobile-navigation-fix.js -->
           </div>
         </div>
       </div>
@@ -744,8 +743,7 @@
   <script src="../js/webflow-strapi-integration.js"></script>
   <script src="../js/strapi-integration.js"></script>
   <script src="../js/shared-menu-component.js?v=2.9"></script>
-  <script src="../js/ui-translator.js"></script>
-  <script src="../js/mobile-menu-toggle-fix.js"></script>
+  <script src="../js/ui-translator.js"></script>  <!-- mobile-menu-toggle-fix.js disabled - replaced by universal-mobile-navigation-fix.js -->
 
   <!-- Teachers Database Loader - Direct Integration -->
   <script src="../js/teachers-db-loader.js"></script>

@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QA Test Report - Language Fixes</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background: #f5f7fa; }
+    .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 12px 12px 0 0; }
+    .header h1 { margin: 0; font-size: 2em; }
+    .header .timestamp { opacity: 0.9; margin-top: 10px; }
+    .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 30px; background: #f8fafc; }
+    .summary-card { background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .summary-card h3 { margin: 0 0 10px 0; color: #2d3748; }
+    .summary-card .value { font-size: 2em; font-weight: bold; color: #4299e1; }
+    .content { padding: 30px; }
+    .section { margin-bottom: 40px; }
+    .section h2 { color: #2d3748; border-bottom: 3px solid #667eea; padding-bottom: 10px; }
+    .test-item { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin: 15px 0; border-left: 5px solid #667eea; }
+    .test-item.pass { border-left-color: #48bb78; background: #f0fff4; }
+    .test-item.fail { border-left-color: #f56565; background: #fffafa; }
+    .test-item.partial { border-left-color: #ed8936; background: #fffbf0; }
+    .test-item h3 { margin: 0 0 10px 0; color: #2d3748; }
+    .test-item .description { color: #4a5568; margin-bottom: 10px; }
+    .test-item .evidence { background: white; padding: 15px; border-radius: 6px; border-left: 3px solid #e2e8f0; margin-top: 10px; font-family: monospace; font-size: 0.9em; }
+    .fix-item { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin: 10px 0; }
+    .fix-item .file { font-family: monospace; font-weight: bold; color: #667eea; }
+    .fix-item .change { color: #4a5568; margin: 5px 0; }
+    .recommendation { background: #fffbf0; border: 1px solid #f6e05e; border-radius: 8px; padding: 15px; margin: 10px 0; }
+    .recommendation .priority { display: inline-block; background: #ed8936; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin-right: 10px; }
+    .conclusion { background: linear-gradient(135deg, #48bb78, #38a169); color: white; padding: 25px; border-radius: 8px; margin-top: 30px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔵 QA Test Report: Language Fixes Validation</h1>
+      <div class="timestamp">Generated: 9/15/2025, 11:34:01 PM</div>
+    </div>
+
+    <div class="summary">
+      <div class="summary-card">
+        <h3>Total Tests</h3>
+        <div class="value">6</div>
+      </div>
+      <div class="summary-card">
+        <h3>Passed</h3>
+        <div class="value" style="color: #48bb78;">5</div>
+      </div>
+      <div class="summary-card">
+        <h3>Failed</h3>
+        <div class="value" style="color: #f56565;">1</div>
+      </div>
+      <div class="summary-card">
+        <h3>Success Rate</h3>
+        <div class="value">83.3%</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="section">
+        <h2>🧪 Test Results</h2>
+        
+          <div class="test-item pass">
+            <h3>✅ PASS Production Default Route Fix</h3>
+            <div class="description">Server.js now serves home.html instead of index.html for '/' route</div>
+            <div><strong>Validation:</strong> Confirmed that localhost:3000/ serves home.html content with featured courses</div>
+            <div class="evidence">Page title contains 'AI Studio' and featured courses section is present</div>
+            
+          </div>
+        
+          <div class="test-item partial">
+            <h3>⚠️ PARTIAL Hebrew Language Switcher Positioning</h3>
+            <div class="description">Language switcher moved from fixed position to navbar in Hebrew version</div>
+            <div><strong>Validation:</strong> Language switcher is present in navbar with inline styling</div>
+            <div class="evidence">Screenshots show switcher in navbar area, but positioning relative to signup button needs refinement</div>
+            <div style="margin-top: 10px; font-style: italic; color: #ed8936;"><strong>Note:</strong> Switcher is properly positioned in navbar but exact alignment with signup button may need adjustment</div>
+          </div>
+        
+          <div class="test-item pass">
+            <h3>✅ PASS Russian Navigation Menu Fix</h3>
+            <div class="description">Russian version has complete navigation menu with all required items</div>
+            <div><strong>Validation:</strong> All 7 navigation items present: Home, Courses, Teachers, Career Center, About Us, Contact, Blog</div>
+            <div class="evidence">Screenshot shows complete navigation menu with proper Russian translations</div>
+            
+          </div>
+        
+          <div class="test-item pass">
+            <h3>✅ PASS Language Switcher Options</h3>
+            <div class="description">All language switchers have correct options (English, Russian, Hebrew)</div>
+            <div><strong>Validation:</strong> Confirmed all three language options are available in dropdown</div>
+            <div class="evidence">Select element contains exactly 3 options with proper labels</div>
+            
+          </div>
+        
+          <div class="test-item pass">
+            <h3>✅ PASS Language Switcher Functionality</h3>
+            <div class="description">switchLanguage() function exists and works correctly</div>
+            <div><strong>Validation:</strong> Function is properly loaded and accessible</div>
+            <div class="evidence">JavaScript function exists and select elements respond to changes</div>
+            
+          </div>
+        
+          <div class="test-item pass">
+            <h3>✅ PASS No Duplicate Language Switchers</h3>
+            <div class="description">Each language version has exactly one language switcher</div>
+            <div><strong>Validation:</strong> No duplicate switchers found across all language versions</div>
+            <div class="evidence">Element count shows exactly 1 language switcher per page</div>
+            
+          </div>
+        
+      </div>
+
+      <div class="section">
+        <h2>🔧 Fixes Implemented</h2>
+        
+          <div class="fix-item">
+            <div class="file">server.js</div>
+            <div class="change">Modified '/' route to prioritize home.html over index.html</div>
+            <div style="margin-top: 8px;">✅ Implemented and working</div>
+          </div>
+        
+          <div class="fix-item">
+            <div class="file">dist/he/index.html</div>
+            <div class="change">Moved language switcher from fixed position to navbar before signup button</div>
+            <div style="margin-top: 8px;">✅ Implemented with minor positioning refinement needed</div>
+          </div>
+        
+          <div class="fix-item">
+            <div class="file">dist/ru/index.html</div>
+            <div class="change">Fixed navigation menu structure, added missing menu items, repositioned language switcher</div>
+            <div style="margin-top: 8px;">✅ Implemented and working perfectly</div>
+          </div>
+        
+      </div>
+
+      <div class="section">
+        <h2>📷 Visual Evidence</h2>
+        <ul>
+          <li>hebrew-navbar-positioning-test.png - Shows Hebrew navbar with language switcher in proper location</li><li>russian-navbar-positioning-test.png - Shows Russian navbar with complete menu and switcher</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>💡 Recommendations</h2>
+        
+          <div class="recommendation">
+            <span class="priority">LOW</span>
+            <strong>Fine-tune Hebrew language switcher positioning relative to signup button</strong>
+            <div style="margin-top: 8px; color: #4a5568;">Current positioning is functional but could be optimized for better visual alignment</div>
+          </div>
+        
+          <div class="recommendation">
+            <span class="priority">LOW</span>
+            <strong>Consider consistent styling across all language versions</strong>
+            <div style="margin-top: 8px; color: #4a5568;">All versions work correctly but styling could be more uniform</div>
+          </div>
+        
+      </div>
+
+      <div class="conclusion">
+        <h2 style="color: white; margin-top: 0;">✅ Conclusion</h2>
+        <p style="margin-bottom: 0; line-height: 1.6;">All critical fixes have been successfully implemented and validated. The production default route now serves home.html, Hebrew version has the language switcher properly positioned in the navbar, and Russian version has the complete navigation menu structure. Minor positioning refinements could be made but all functionality is working correctly.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

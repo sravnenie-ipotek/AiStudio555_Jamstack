@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultra Mega E2E Test Report</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .summary-card h3 {
+            font-size: 2.5em;
+            margin: 10px 0;
+        }
+        .passed { color: #10b981; }
+        .failed { color: #ef4444; }
+        .skipped { color: #f59e0b; }
+        .category {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .category h2 {
+            color: #764ba2;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .test {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        .test:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .test.pass {
+            border-left: 5px solid #10b981;
+        }
+        .test.fail {
+            border-left: 5px solid #ef4444;
+        }
+        .test-name {
+            font-weight: 600;
+            flex: 1;
+        }
+        .test-details {
+            color: #6b7280;
+            font-size: 0.9em;
+            margin: 0 20px;
+            flex: 2;
+        }
+        .test-status {
+            font-size: 1.5em;
+        }
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e5e7eb;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Ultra Mega E2E Test Report</h1>
+            <p>Generated: 9/15/2025, 10:31:46 PM</p>
+
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 83.98%">
+                    83.98%
+                </div>
+            </div>
+
+            <div class="summary">
+                <div class="summary-card">
+                    <div>Total Tests</div>
+                    <h3>206</h3>
+                </div>
+                <div class="summary-card">
+                    <div>Passed</div>
+                    <h3 class="passed">173</h3>
+                </div>
+                <div class="summary-card">
+                    <div>Failed</div>
+                    <h3 class="failed">33</h3>
+                </div>
+                <div class="summary-card">
+                    <div>Pass Rate</div>
+                    <h3>83.98%</h3>
+                </div>
+            </div>
+        </div>
+
+        
+            <div class="category">
+                <h2>Navigation Tests</h2>
+                
+                    <div class="test pass">
+                        <span class="test-name">Navigation on home.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dropdowns on home.html</span>
+                        <span class="test-details">Found 1 dropdowns</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dropdown "Career Services▼" on home.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dark theme for "Career Services▼" dropdown</span>
+                        <span class="test-details">rgba(5, 5, 26, 0.98)</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Menu items on home.html</span>
+                        <span class="test-details">8 items</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Navigation on courses.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dropdowns on courses.html</span>
+                        <span class="test-details">Found 1 dropdowns</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Page courses.html</span>
+                        <span class="test-details">locator.hover: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('.w-dropdown-toggle, .dropdown-toggle, .menu-dropdown-wrapper .w-dropdown-toggle').first()[22m
+[2m    - locator resolved to <div tabindex="0" role="button" aria-haspopup="menu" aria-expanded="false" id="w-dropdown-toggle-0" aria-controls="w-dropdown-list-0" class="dropdown-toggle w-dropdown-toggle">…</div>[22m
+[2m  - attempting hover action[22m
+[2m    2 × waiting for element to be visible and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying hover action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying hover action[22m
+[2m      - waiting 100ms[22m
+[2m    56 × waiting for element to be visible and stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying hover action[22m
+[2m       - waiting 500ms[22m
+</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Navigation on teachers.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dropdowns on teachers.html</span>
+                        <span class="test-details">Found 1 dropdowns</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Page teachers.html</span>
+                        <span class="test-details">locator.hover: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('.w-dropdown-toggle, .dropdown-toggle, .menu-dropdown-wrapper .w-dropdown-toggle').first()[22m
+[2m    - locator resolved to <div tabindex="0" role="button" aria-haspopup="menu" aria-expanded="false" id="w-dropdown-toggle-0" aria-controls="w-dropdown-list-0" class="dropdown-toggle w-dropdown-toggle">…</div>[22m
+[2m  - attempting hover action[22m
+[2m    2 × waiting for element to be visible and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying hover action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying hover action[22m
+[2m      - waiting 100ms[22m
+[2m    56 × waiting for element to be visible and stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying hover action[22m
+[2m       - waiting 500ms[22m
+</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Navigation on career-center.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dropdowns on career-center.html</span>
+                        <span class="test-details">Found 1 dropdowns</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dropdown "
+                Career Services
+                ▼
+              " on career-center.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dark theme for "
+                Career Services
+                ▼
+              " dropdown</span>
+                        <span class="test-details">rgb(5, 5, 26)</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Menu items on career-center.html</span>
+                        <span class="test-details">8 items</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Navigation on career-orientation.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dropdowns on career-orientation.html</span>
+                        <span class="test-details">Found 1 dropdowns</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Page career-orientation.html</span>
+                        <span class="test-details">locator.hover: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('.w-dropdown-toggle, .dropdown-toggle, .menu-dropdown-wrapper .w-dropdown-toggle').first()[22m
+[2m    - locator resolved to <div tabindex="0" role="button" aria-haspopup="menu" aria-expanded="false" id="w-dropdown-toggle-0" aria-controls="w-dropdown-list-0" class="dropdown-toggle w-dropdown-toggle">…</div>[22m
+[2m  - attempting hover action[22m
+[2m    2 × waiting for element to be visible and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying hover action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying hover action[22m
+[2m      - waiting 100ms[22m
+[2m    56 × waiting for element to be visible and stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying hover action[22m
+[2m       - waiting 500ms[22m
+</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Navigation on dist/en/home.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dropdowns on dist/en/home.html</span>
+                        <span class="test-details">Found 1 dropdowns</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dropdown "Career Services▼" on dist/en/home.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dark theme for "Career Services▼" dropdown</span>
+                        <span class="test-details">rgba(5, 5, 26, 0.98)</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Menu items on dist/en/home.html</span>
+                        <span class="test-details">8 items</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Navigation on dist/ru/home.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dropdowns on dist/ru/home.html</span>
+                        <span class="test-details">Found 1 dropdowns</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dropdown "Карьерные услуги▼" on dist/ru/home.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dark theme for "Карьерные услуги▼" dropdown</span>
+                        <span class="test-details">rgba(5, 5, 26, 0.98)</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Menu items on dist/ru/home.html</span>
+                        <span class="test-details">8 items</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Navigation on dist/he/home.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dropdowns on dist/he/home.html</span>
+                        <span class="test-details">Found 1 dropdowns</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dropdown "שירותי קריירה▼" on dist/he/home.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Dark theme for "שירותי קריירה▼" dropdown</span>
+                        <span class="test-details">rgba(5, 5, 26, 0.98)</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Menu items on dist/he/home.html</span>
+                        <span class="test-details">8 items</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Footer Tests</h2>
+                
+                    <div class="test pass">
+                        <span class="test-name">Footer on home.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Footer links on home.html</span>
+                        <span class="test-details">9 links</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Social links on home.html</span>
+                        <span class="test-details">3 social links</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Footer on courses.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Footer links on courses.html</span>
+                        <span class="test-details">9 links</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Social links on courses.html</span>
+                        <span class="test-details">3 social links</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Footer on teachers.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Footer links on teachers.html</span>
+                        <span class="test-details">9 links</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Social links on teachers.html</span>
+                        <span class="test-details">3 social links</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Footer on career-center.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Footer links on career-center.html</span>
+                        <span class="test-details">20 links</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Social links on career-center.html</span>
+                        <span class="test-details">4 social links</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Language Tests</h2>
+                
+                    <div class="test pass">
+                        <span class="test-name">Language Switcher Present</span>
+                        <span class="test-details">Found 3 switchers</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Language Switching</span>
+                        <span class="test-details">locator.selectOption: Error: Element is not a <select> element
+Call log:
+[2m  - waiting for locator('#language-switcher-nav, .language-nav-select, select[onchange*="switchLanguage"], .language-selector').first()[22m
+[2m    - locator resolved to <div class="language-selector">…</div>[22m
+[2m  - attempting select option action[22m
+[2m    - waiting for element to be visible and enabled[22m
+</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Email Tests</h2>
+                
+                    <div class="test pass">
+                        <span class="test-name">EmailJS Library Loaded</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Contact Forms Present</span>
+                        <span class="test-details">Found 1 forms</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Email Field Present</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Name Field Present</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Submit Button Present</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Responsive Tests</h2>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html on iPhone SE</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">No horizontal scroll on iPhone SE</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Mobile menu on iPhone SE</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Touch targets on iPhone SE</span>
+                        <span class="test-details">1/5 meet 44px minimum</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Text readability on iPhone SE</span>
+                        <span class="test-details">15px</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html on iPhone 12</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">No horizontal scroll on iPhone 12</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Mobile menu on iPhone 12</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Touch targets on iPhone 12</span>
+                        <span class="test-details">1/5 meet 44px minimum</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Text readability on iPhone 12</span>
+                        <span class="test-details">15px</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html on iPad Mini</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">No horizontal scroll on iPad Mini</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Text readability on iPad Mini</span>
+                        <span class="test-details">16px</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html on iPad Pro</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">No horizontal scroll on iPad Pro</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Text readability on iPad Pro</span>
+                        <span class="test-details">16px</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html on Desktop HD</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">No horizontal scroll on Desktop HD</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Text readability on Desktop HD</span>
+                        <span class="test-details">16px</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html on Desktop 4K</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">No horizontal scroll on Desktop 4K</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Text readability on Desktop 4K</span>
+                        <span class="test-details">16px</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html on iPhone SE</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">No horizontal scroll on iPhone SE</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Mobile menu on iPhone SE</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Touch targets on iPhone SE</span>
+                        <span class="test-details">1/5 meet 44px minimum</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Text readability on iPhone SE</span>
+                        <span class="test-details">16px</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html on iPhone 12</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">No horizontal scroll on iPhone 12</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Mobile menu on iPhone 12</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Touch targets on iPhone 12</span>
+                        <span class="test-details">1/5 meet 44px minimum</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Text readability on iPhone 12</span>
+                        <span class="test-details">16px</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html on iPad Mini</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">No horizontal scroll on iPad Mini</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Text readability on iPad Mini</span>
+                        <span class="test-details">16px</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html on iPad Pro</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">No horizontal scroll on iPad Pro</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Text readability on iPad Pro</span>
+                        <span class="test-details">16px</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html on Desktop HD</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">No horizontal scroll on Desktop HD</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Text readability on Desktop HD</span>
+                        <span class="test-details">16px</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html on Desktop 4K</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">No horizontal scroll on Desktop 4K</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Text readability on Desktop 4K</span>
+                        <span class="test-details">16px</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Api Tests</h2>
+                
+                    <div class="test pass">
+                        <span class="test-name">Home Page API</span>
+                        <span class="test-details">Status: 200, Response Time: 604ms, Data Keys: 1</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Home Page API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Courses API</span>
+                        <span class="test-details">Status: 200, Response Time: 204ms, Data Keys: 1</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Courses API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Teachers API</span>
+                        <span class="test-details">Status: 200, Response Time: 156ms, Data Keys: 1</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Teachers API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Blog Posts API</span>
+                        <span class="test-details">Status: 200, Response Time: 197ms, Data Keys: 1</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Blog Posts API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">FAQs API</span>
+                        <span class="test-details">Status: 200, Response Time: 134ms, Data Keys: 1</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">FAQs API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Career Center API</span>
+                        <span class="test-details">Status: 200, Response Time: 209ms, Data Keys: 1</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Career Center API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Career Orientation API</span>
+                        <span class="test-details">Status: 200, Response Time: 289ms, Data Keys: 1</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Career Orientation API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Pricing Plans API</span>
+                        <span class="test-details">Status: 500</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Consultations API</span>
+                        <span class="test-details">Status: 200, Response Time: 210ms, Data Keys: 3</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Consultations API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Career Resources API</span>
+                        <span class="test-details">Status: 200, Response Time: 123ms, Data Keys: 1</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Career Resources API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Company Logos API</span>
+                        <span class="test-details">Status: 200, Response Time: 121ms, Data Keys: 12</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Company Logos API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Russian Home API</span>
+                        <span class="test-details">Status: 200, Response Time: 126ms, Data Keys: 1</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Russian Home API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Hebrew Home API</span>
+                        <span class="test-details">Status: 200, Response Time: 378ms, Data Keys: 1</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Hebrew Home API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Russian Courses API</span>
+                        <span class="test-details">Status: 200, Response Time: 143ms, Data Keys: 1</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Russian Courses API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Hebrew Courses API</span>
+                        <span class="test-details">Status: 200, Response Time: 179ms, Data Keys: 1</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Hebrew Courses API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Preview Mode API</span>
+                        <span class="test-details">Status: 200, Response Time: 155ms, Data Keys: 1</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Preview Mode API - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">API Status</span>
+                        <span class="test-details">Status: 200, Response Time: 202ms, Data Keys: 6</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">API Status - Data Integrity</span>
+                        <span class="test-details">Contains data</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Health Check</span>
+                        <span class="test-details">Status: 404</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Admin Tests</h2>
+                
+                    <div class="test pass">
+                        <span class="test-name">Admin Panel Loads</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Authentication System</span>
+                        <span class="test-details">Found 0 auth elements</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Admin Section: Home Page Content</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Admin Section: Courses Management</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Admin Section: Teachers Management</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Admin Section: Career Services</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Admin Section: Blog Posts</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Admin Section: FAQs</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Multi-language Admin Support</span>
+                        <span class="test-details">Found 10 language selectors</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>ContactForm Tests</h2>
+                
+                    <div class="test pass">
+                        <span class="test-name">Sign Up Buttons on home.html</span>
+                        <span class="test-details">Found 9 buttons</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Modal Opens on home.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Full Name Field in Modal</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Phone Field in Modal</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Email Field in Modal</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Course Selection in Modal</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Submit Button in Modal</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">EmailJS Integration</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Sign Up Buttons on courses.html</span>
+                        <span class="test-details">Found 9 buttons</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Modal Opens on courses.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Sign Up Buttons on teachers.html</span>
+                        <span class="test-details">Found 3 buttons</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Modal Opens on teachers.html</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Full Name Field in Modal</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Phone Field in Modal</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Email Field in Modal</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Course Selection in Modal</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Submit Button in Modal</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">EmailJS Integration</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Career Tests</h2>
+                
+                    <div class="test pass">
+                        <span class="test-name">Career Center Page Loads</span>
+                        <span class="test-details">Career Center - AI Studio Learning Platform</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Career Center - Assessment Form</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Career Center - Resources</span>
+                        <span class="test-details">Found 6 resources</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Career Center - Consultation Booking</span>
+                        <span class="test-details">Found 0 booking buttons</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Career Center</span>
+                        <span class="test-details">Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Career Orientation Page Loads</span>
+                        <span class="test-details">Career Orientation - AI Studio E-Learning Platform</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Career Orientation - Assessment Form</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Career Orientation - Resources</span>
+                        <span class="test-details">Found 0 resources</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Career Orientation - Consultation Booking</span>
+                        <span class="test-details">Found 0 booking buttons</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Career Orientation</span>
+                        <span class="test-details">Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Blog Tests</h2>
+                
+                    <div class="test pass">
+                        <span class="test-name">Blog Page Exists</span>
+                        <span class="test-details">https://www.aistudio555.com/blog.html</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Blog Posts Display</span>
+                        <span class="test-details">Found 6 blog posts</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Blog Categories/Tags</span>
+                        <span class="test-details">Found 14 categories/tags</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Blog Search Feature</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Blog Pagination</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">Blog API</span>
+                        <span class="test-details">0 posts from API</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Database Tests</h2>
+                
+                    <div class="test fail">
+                        <span class="test-name">Home Page Sync</span>
+                        <span class="test-details">Status: 404</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Courses Sync</span>
+                        <span class="test-details">Status: 404</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Teachers Sync</span>
+                        <span class="test-details">Status: 404</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Career Services Sync</span>
+                        <span class="test-details">Status: 404</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Migration Status</span>
+                        <span class="test-details">Status: 404</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">EN Data Consistency</span>
+                        <span class="test-details">Records: Object</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">RU Data Consistency</span>
+                        <span class="test-details">Records: Object</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">HE Data Consistency</span>
+                        <span class="test-details">Records: Object</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Integration Tests</h2>
+                
+                    <div class="test pass">
+                        <span class="test-name">Integration Scripts Loaded</span>
+                        <span class="test-details">Found 1 integration scripts</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Integration Class Available</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">API Connectivity from Frontend</span>
+                        <span class="test-details"></span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test fail">
+                        <span class="test-name">Dynamic Content Loading</span>
+                        <span class="test-details">Found 0 dynamic elements</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Performance Tests</h2>
+                
+                    <div class="test fail">
+                        <span class="test-name">home.html Load Time</span>
+                        <span class="test-details">8472ms</span>
+                        <span class="test-status">❌</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html Lazy Loading</span>
+                        <span class="test-details">69 lazy-loaded images</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html Total Size</span>
+                        <span class="test-details">0.01MB</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html JS Size</span>
+                        <span class="test-details">2.93KB</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html CSS Size</span>
+                        <span class="test-details">3.52KB</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html Load Time</span>
+                        <span class="test-details">1554ms</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html Lazy Loading</span>
+                        <span class="test-details">47 lazy-loaded images</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html Total Size</span>
+                        <span class="test-details">0.01MB</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html JS Size</span>
+                        <span class="test-details">1.46KB</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html CSS Size</span>
+                        <span class="test-details">2.64KB</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Accessibility Tests</h2>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html Image Alt Text</span>
+                        <span class="test-details">26/94 images have alt text</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html ARIA Labels</span>
+                        <span class="test-details">11 ARIA elements</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html Heading Hierarchy</span>
+                        <span class="test-details">H1: 1, H2: 7, H3: 64</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html Form Labels</span>
+                        <span class="test-details">4/7 inputs have labels</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">home.html Color Contrast</span>
+                        <span class="test-details">Text: rgba(255, 255, 255, 0.8), Background: rgba(0, 0, 0, 0)</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html Image Alt Text</span>
+                        <span class="test-details">1/47 images have alt text</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html ARIA Labels</span>
+                        <span class="test-details">10 ARIA elements</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html Heading Hierarchy</span>
+                        <span class="test-details">H1: 1, H2: 7, H3: 3</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html Form Labels</span>
+                        <span class="test-details">6/9 inputs have labels</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+                    <div class="test pass">
+                        <span class="test-name">courses.html Color Contrast</span>
+                        <span class="test-details">Text: rgb(107, 114, 128), Background: rgba(0, 0, 0, 0)</span>
+                        <span class="test-status">✅</span>
+                    </div>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Errors Tests</h2>
+                
+            </div>
+        
+            <div class="category">
+                <h2>Warnings Tests</h2>
+                
+            </div>
+        
+
+        <div class="footer">
+            <p>Ultra Mega E2E Testing Suite - AI Studio Platform</p>
+            <p>Comprehensive testing across 16 categories</p>
+        </div>
+    </div>
+</body>
+</html>

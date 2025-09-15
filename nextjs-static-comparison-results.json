@@ -1,0 +1,325 @@
+{
+  "timestamp": "2025-09-15T15:01:19.172Z",
+  "comparisons": [
+    {
+      "page": "Home - Hebrew",
+      "nextjsUrl": "http://localhost:3002/",
+      "staticUrl": "http://localhost:3005/he/home.html",
+      "language": "he",
+      "screenshots": {
+        "nextjs": "nextjs-home---hebrew.png",
+        "static": "static-home---hebrew.png"
+      },
+      "metrics": {
+        "nextjs": {
+          "title": "AI Studio - E-Learning Platform",
+          "hasNavigation": false,
+          "hasHero": false,
+          "hasFooter": false,
+          "cardCount": 0,
+          "buttonCount": 0,
+          "isRTL": false,
+          "bodyClass": "body",
+          "hasContactModal": false,
+          "imageCount": 0
+        },
+        "static": {
+          "title": "בית - AI Studio פלטפורמת למידה",
+          "hasNavigation": true,
+          "hasHero": true,
+          "hasFooter": true,
+          "cardCount": 0,
+          "buttonCount": 2,
+          "isRTL": true,
+          "bodyClass": "",
+          "hasContactModal": true,
+          "imageCount": 94
+        }
+      },
+      "differences": [
+        "hasNavigation: NextJS=false, Static=true",
+        "hasHero: NextJS=false, Static=true",
+        "hasFooter: NextJS=false, Static=true",
+        "isRTL: NextJS=false, Static=true",
+        "hasContactModal: NextJS=false, Static=true",
+        "imageCount: NextJS=0, Static=94 (diff: 94)",
+        "title: NextJS=\"AI Studio - E-Learning Platform\", Static=\"בית - AI Studio פלטפורמת למידה\""
+      ],
+      "similarityScore": 22
+    },
+    {
+      "page": "Home - English",
+      "nextjsUrl": "http://localhost:3002/en",
+      "staticUrl": "http://localhost:3005/en/home.html",
+      "language": "en",
+      "screenshots": {
+        "nextjs": "nextjs-home---english.png",
+        "static": "static-home---english.png"
+      },
+      "metrics": {
+        "nextjs": {
+          "title": "",
+          "hasNavigation": false,
+          "hasHero": false,
+          "hasFooter": false,
+          "cardCount": 0,
+          "buttonCount": 0,
+          "isRTL": false,
+          "bodyClass": "",
+          "hasContactModal": false,
+          "imageCount": 0
+        },
+        "static": {
+          "title": "Home - Zohacous - Webflow Ecommerce Website Template",
+          "hasNavigation": true,
+          "hasHero": true,
+          "hasFooter": true,
+          "cardCount": 0,
+          "buttonCount": 2,
+          "isRTL": false,
+          "bodyClass": "",
+          "hasContactModal": true,
+          "imageCount": 93
+        }
+      },
+      "differences": [
+        "hasNavigation: NextJS=false, Static=true",
+        "hasHero: NextJS=false, Static=true",
+        "hasFooter: NextJS=false, Static=true",
+        "hasContactModal: NextJS=false, Static=true",
+        "imageCount: NextJS=0, Static=93 (diff: 93)",
+        "title: NextJS=\"\", Static=\"Home - Zohacous - Webflow Ecommerce Website Template\""
+      ],
+      "similarityScore": 33
+    },
+    {
+      "page": "Home - Russian",
+      "nextjsUrl": "http://localhost:3002/ru",
+      "staticUrl": "http://localhost:3005/ru/home.html",
+      "language": "ru",
+      "screenshots": {
+        "nextjs": "nextjs-home---russian.png",
+        "static": "static-home---russian.png"
+      },
+      "metrics": {
+        "nextjs": {
+          "title": "",
+          "hasNavigation": false,
+          "hasHero": false,
+          "hasFooter": false,
+          "cardCount": 0,
+          "buttonCount": 0,
+          "isRTL": false,
+          "bodyClass": "",
+          "hasContactModal": false,
+          "imageCount": 0
+        },
+        "static": {
+          "title": "Главная - Zohacous - AI Studio Образовательная Платформа",
+          "hasNavigation": true,
+          "hasHero": true,
+          "hasFooter": true,
+          "cardCount": 0,
+          "buttonCount": 2,
+          "isRTL": false,
+          "bodyClass": "",
+          "hasContactModal": true,
+          "imageCount": 89
+        }
+      },
+      "differences": [
+        "hasNavigation: NextJS=false, Static=true",
+        "hasHero: NextJS=false, Static=true",
+        "hasFooter: NextJS=false, Static=true",
+        "hasContactModal: NextJS=false, Static=true",
+        "imageCount: NextJS=0, Static=89 (diff: 89)",
+        "title: NextJS=\"\", Static=\"Главная - Zohacous - AI Studio Образовательная Платформа\""
+      ],
+      "similarityScore": 33
+    },
+    {
+      "page": "Courses",
+      "nextjsUrl": "http://localhost:3002/courses",
+      "staticUrl": "http://localhost:3005/courses.html",
+      "language": "en",
+      "screenshots": {
+        "nextjs": "nextjs-courses.png",
+        "static": "static-courses.png"
+      },
+      "metrics": {
+        "nextjs": {
+          "title": "404: This page could not be found.",
+          "hasNavigation": false,
+          "hasHero": false,
+          "hasFooter": false,
+          "cardCount": 0,
+          "buttonCount": 0,
+          "isRTL": false,
+          "bodyClass": "body",
+          "hasContactModal": false,
+          "imageCount": 0
+        },
+        "static": {
+          "title": "Online Course Catalog - AI Studio Learning Platform",
+          "hasNavigation": true,
+          "hasHero": false,
+          "hasFooter": true,
+          "cardCount": 0,
+          "buttonCount": 3,
+          "isRTL": false,
+          "bodyClass": "",
+          "hasContactModal": true,
+          "imageCount": 43
+        }
+      },
+      "differences": [
+        "hasNavigation: NextJS=false, Static=true",
+        "hasFooter: NextJS=false, Static=true",
+        "hasContactModal: NextJS=false, Static=true",
+        "buttonCount: NextJS=0, Static=3 (diff: 3)",
+        "imageCount: NextJS=0, Static=43 (diff: 43)",
+        "title: NextJS=\"404: This page could not be found.\", Static=\"Online Course Catalog - AI Studio Learning Platform\""
+      ],
+      "similarityScore": 33
+    },
+    {
+      "page": "Career Orientation",
+      "nextjsUrl": "http://localhost:3002/career-orientation",
+      "staticUrl": "http://localhost:3005/career-orientation.html",
+      "language": "en",
+      "screenshots": {
+        "nextjs": "nextjs-career-orientation.png",
+        "static": "static-career-orientation.png"
+      },
+      "metrics": {
+        "nextjs": {
+          "title": "404: This page could not be found.",
+          "hasNavigation": false,
+          "hasHero": false,
+          "hasFooter": false,
+          "cardCount": 0,
+          "buttonCount": 0,
+          "isRTL": false,
+          "bodyClass": "body",
+          "hasContactModal": false,
+          "imageCount": 0
+        },
+        "static": {
+          "title": "Career Orientation - AI Studio E-Learning Platform",
+          "hasNavigation": true,
+          "hasHero": false,
+          "hasFooter": true,
+          "cardCount": 0,
+          "buttonCount": 3,
+          "isRTL": false,
+          "bodyClass": "",
+          "hasContactModal": true,
+          "imageCount": 2
+        }
+      },
+      "differences": [
+        "hasNavigation: NextJS=false, Static=true",
+        "hasFooter: NextJS=false, Static=true",
+        "hasContactModal: NextJS=false, Static=true",
+        "buttonCount: NextJS=0, Static=3 (diff: 3)",
+        "title: NextJS=\"404: This page could not be found.\", Static=\"Career Orientation - AI Studio E-Learning Platform\""
+      ],
+      "similarityScore": 44
+    },
+    {
+      "page": "Career Orientation - Hebrew",
+      "nextjsUrl": "http://localhost:3002/career-orientation",
+      "staticUrl": "http://localhost:3005/he/career-orientation.html",
+      "language": "he",
+      "screenshots": {
+        "nextjs": "nextjs-career-orientation---hebrew.png",
+        "static": "static-career-orientation---hebrew.png"
+      },
+      "metrics": {
+        "nextjs": {
+          "title": "404: This page could not be found.",
+          "hasNavigation": false,
+          "hasHero": false,
+          "hasFooter": false,
+          "cardCount": 0,
+          "buttonCount": 0,
+          "isRTL": false,
+          "bodyClass": "body",
+          "hasContactModal": false,
+          "imageCount": 0
+        },
+        "static": {
+          "title": "Career Orientation - AI Studio E-Learning Platform",
+          "hasNavigation": true,
+          "hasHero": false,
+          "hasFooter": true,
+          "cardCount": 0,
+          "buttonCount": 4,
+          "isRTL": true,
+          "bodyClass": "",
+          "hasContactModal": true,
+          "imageCount": 2
+        }
+      },
+      "differences": [
+        "hasNavigation: NextJS=false, Static=true",
+        "hasFooter: NextJS=false, Static=true",
+        "isRTL: NextJS=false, Static=true",
+        "hasContactModal: NextJS=false, Static=true",
+        "buttonCount: NextJS=0, Static=4 (diff: 4)",
+        "title: NextJS=\"404: This page could not be found.\", Static=\"Career Orientation - AI Studio E-Learning Platform\""
+      ],
+      "similarityScore": 33
+    },
+    {
+      "page": "Career Center",
+      "nextjsUrl": "http://localhost:3002/career-center",
+      "staticUrl": "http://localhost:3005/career-center.html",
+      "language": "en",
+      "screenshots": {
+        "nextjs": "nextjs-career-center.png",
+        "static": "static-career-center.png"
+      },
+      "metrics": {
+        "nextjs": {
+          "title": "404: This page could not be found.",
+          "hasNavigation": false,
+          "hasHero": false,
+          "hasFooter": false,
+          "cardCount": 0,
+          "buttonCount": 0,
+          "isRTL": false,
+          "bodyClass": "body",
+          "hasContactModal": false,
+          "imageCount": 0
+        },
+        "static": {
+          "title": "Career Center - AI Studio Learning Platform",
+          "hasNavigation": true,
+          "hasHero": false,
+          "hasFooter": true,
+          "cardCount": 0,
+          "buttonCount": 5,
+          "isRTL": true,
+          "bodyClass": "",
+          "hasContactModal": true,
+          "imageCount": 2
+        }
+      },
+      "differences": [
+        "hasNavigation: NextJS=false, Static=true",
+        "hasFooter: NextJS=false, Static=true",
+        "isRTL: NextJS=false, Static=true",
+        "hasContactModal: NextJS=false, Static=true",
+        "buttonCount: NextJS=0, Static=5 (diff: 5)",
+        "title: NextJS=\"404: This page could not be found.\", Static=\"Career Center - AI Studio Learning Platform\""
+      ],
+      "similarityScore": 33
+    }
+  ],
+  "summary": {
+    "totalPages": 7,
+    "similarPages": 0,
+    "differences": []
+  }
+}

@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "name": "משה כהן",
+    "email": "test@example.com",
+    "phone": "052-123-4567",
+    "interest": "ai-ml",
+    "experience": "beginner",
+    "locale": "he",
+    "created_at": "2025-09-15T05:57:54.522Z",
+    "updated_at": "2025-09-15T05:57:54.522Z"
+  },
+  {
+    "id": 2,
+    "name": "Test User",
+    "email": "test@example.com",
+    "phone": "123-456-7890",
+    "interest": "ai-ml",
+    "experience": "beginner",
+    "locale": "he",
+    "created_at": "2025-09-15T08:02:16.701Z",
+    "updated_at": "2025-09-15T08:02:16.701Z"
+  },
+  {
+    "id": 3,
+    "name": "דוד כהן",
+    "email": "david.test@example.com",
+    "phone": "050-123-4567",
+    "interest": "ai-ml",
+    "experience": "beginner",
+    "locale": "he",
+    "created_at": "2025-09-15T08:02:59.472Z",
+    "updated_at": "2025-09-15T08:02:59.472Z"
+  },
+  {
+    "id": 4,
+    "name": "fgfg",
+    "email": "sfsdf@asdad.com",
+    "phone": "0876687676",
+    "interest": "data-science",
+    "experience": "some",
+    "locale": "he",
+    "created_at": "2025-09-15T08:10:44.776Z",
+    "updated_at": "2025-09-15T08:10:44.776Z"
+  },
+  {
+    "id": 5,
+    "name": "sadasd",
+    "email": "dsd@asdasd.dsd",
+    "phone": "0766876876",
+    "interest": "data-science",
+    "experience": "some",
+    "locale": "he",
+    "created_at": "2025-09-15T08:17:05.649Z",
+    "updated_at": "2025-09-15T08:17:05.649Z"
+  },
+  {
+    "id": 6,
+    "name": "ss",
+    "email": "adas@sdsd.com",
+    "phone": "as",
+    "interest": "data-science",
+    "experience": "some",
+    "locale": "he",
+    "created_at": "2025-09-15T08:21:57.504Z",
+    "updated_at": "2025-09-15T08:21:57.504Z"
+  },
+  {
+    "id": 7,
+    "name": "aaa",
+    "email": "adsa@adasd.co",
+    "phone": "098098098",
+    "interest": "data-science",
+    "experience": "intermediate",
+    "locale": "he",
+    "created_at": "2025-09-15T08:22:34.394Z",
+    "updated_at": "2025-09-15T08:22:34.394Z"
+  },
+  {
+    "id": 8,
+    "name": "sdad",
+    "email": "asdfsd@sadasd.com",
+    "phone": "23213123",
+    "interest": "data-science",
+    "experience": "some",
+    "locale": "he",
+    "created_at": "2025-09-15T08:32:07.311Z",
+    "updated_at": "2025-09-15T08:32:07.311Z"
+  },
+  {
+    "id": 9,
+    "name": "asdad",
+    "email": "asdad@asdads.com",
+    "phone": "13123123",
+    "interest": "data-science",
+    "experience": "intermediate",
+    "locale": "he",
+    "created_at": "2025-09-15T08:34:55.139Z",
+    "updated_at": "2025-09-15T08:34:55.139Z"
+  },
+  {
+    "id": 10,
+    "name": "asd",
+    "email": "asd@asdasd.com",
+    "phone": "09890870978",
+    "interest": "data-science",
+    "experience": "some",
+    "locale": "he",
+    "created_at": "2025-09-15T08:39:41.108Z",
+    "updated_at": "2025-09-15T08:39:41.108Z"
+  }
+]

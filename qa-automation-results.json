@@ -1,0 +1,639 @@
+{
+  "summary": {
+    "total": 59,
+    "passed": 46,
+    "failed": 13,
+    "bugCount": 12,
+    "passRate": "77.97%"
+  },
+  "results": {
+    "navigation": [
+      {
+        "test": "Hero Section Loads",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:15.462Z"
+      },
+      {
+        "test": "Navigation to Courses Works",
+        "passed": false,
+        "details": "Online Course Catalog - AI Studio Learning Platform",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:17.715Z"
+      },
+      {
+        "test": "Course Cards Display",
+        "passed": true,
+        "details": "Found 152 courses",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:17.722Z"
+      },
+      {
+        "test": "Course Sign-up Buttons Present",
+        "passed": true,
+        "details": "Found 9 buttons",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:17.724Z"
+      },
+      {
+        "test": "Dropdown Styling on home.html",
+        "passed": true,
+        "details": "rgba(5, 5, 26, 0.98)",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:23.140Z"
+      },
+      {
+        "test": "Dropdown Styling on career-center.html",
+        "passed": true,
+        "details": "rgb(5, 5, 26)",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:47.284Z"
+      }
+    ],
+    "footer": [
+      {
+        "test": "Footer on home.html",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:23.142Z"
+      },
+      {
+        "test": "Footer on courses.html",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:30.320Z"
+      },
+      {
+        "test": "Footer on teachers.html",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:44.405Z"
+      },
+      {
+        "test": "Footer on career-center.html",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:47.285Z"
+      }
+    ],
+    "language": [
+      {
+        "test": "Language Switching Journey",
+        "passed": false,
+        "details": "locator.selectOption: Error: Element is not a <select> element\nCall log:\n\u001b[2m  - waiting for locator('#language-switcher-nav, .language-selector, select[onchange*=\"language\"]').first()\u001b[22m\n\u001b[2m    - locator resolved to <div class=\"language-selector\">…</div>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    - waiting for element to be visible and enabled\u001b[22m\n",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:20.272Z"
+      },
+      {
+        "test": "English Content",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:54.435Z"
+      },
+      {
+        "test": "English Navigation Links",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:54.443Z"
+      },
+      {
+        "test": "Russian Content",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:57.534Z"
+      },
+      {
+        "test": "Russian Navigation Links",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:57.539Z"
+      },
+      {
+        "test": "Hebrew Content",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:59.452Z"
+      },
+      {
+        "test": "Hebrew RTL Support",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:59.453Z"
+      },
+      {
+        "test": "Hebrew Navigation Links",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:07:59.458Z"
+      }
+    ],
+    "email": [],
+    "responsive": [
+      {
+        "test": "No Horizontal Scroll - home.html on iPhone SE",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:07.137Z"
+      },
+      {
+        "test": "Content Fits - home.html on iPhone SE",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:07.143Z"
+      },
+      {
+        "test": "Touch Target Size - home.html on iPhone SE",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:07.152Z"
+      },
+      {
+        "test": "No Horizontal Scroll - home.html on iPad",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:09.743Z"
+      },
+      {
+        "test": "Content Fits - home.html on iPad",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:09.749Z"
+      },
+      {
+        "test": "Touch Target Size - home.html on iPad",
+        "passed": false,
+        "details": "1 buttons too small",
+        "screenshot": {
+          "filename": "small-touch-targets-home.html-iPad-1757966889758.png",
+          "filepath": "qa-screenshots/small-touch-targets-home.html-iPad-1757966889758.png",
+          "description": "1 buttons below 44px minimum",
+          "timestamp": "2025-09-15T20:08:09.983Z"
+        },
+        "timestamp": "2025-09-15T20:08:09.983Z"
+      },
+      {
+        "test": "No Horizontal Scroll - home.html on Desktop",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:12.965Z"
+      },
+      {
+        "test": "Content Fits - home.html on Desktop",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:12.976Z"
+      },
+      {
+        "test": "No Horizontal Scroll - courses.html on iPhone SE",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:14.500Z"
+      },
+      {
+        "test": "Content Fits - courses.html on iPhone SE",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:14.511Z"
+      },
+      {
+        "test": "Touch Target Size - courses.html on iPhone SE",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:14.523Z"
+      },
+      {
+        "test": "No Horizontal Scroll - courses.html on iPad",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:16.069Z"
+      },
+      {
+        "test": "Content Fits - courses.html on iPad",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:16.078Z"
+      },
+      {
+        "test": "Touch Target Size - courses.html on iPad",
+        "passed": false,
+        "details": "1 buttons too small",
+        "screenshot": {
+          "filename": "small-touch-targets-courses.html-iPad-1757966896087.png",
+          "filepath": "qa-screenshots/small-touch-targets-courses.html-iPad-1757966896087.png",
+          "description": "1 buttons below 44px minimum",
+          "timestamp": "2025-09-15T20:08:16.306Z"
+        },
+        "timestamp": "2025-09-15T20:08:16.306Z"
+      },
+      {
+        "test": "No Horizontal Scroll - courses.html on Desktop",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:18.196Z"
+      },
+      {
+        "test": "Content Fits - courses.html on Desktop",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:18.202Z"
+      }
+    ],
+    "api": [
+      {
+        "test": "API Connection",
+        "passed": true,
+        "details": "✅ Operational",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:21.264Z"
+      },
+      {
+        "test": "Dynamic Content Loading",
+        "passed": false,
+        "details": "No dynamic content detected",
+        "screenshot": {
+          "filename": "dynamic-content-not-loading-1757966904275.png",
+          "filepath": "qa-screenshots/dynamic-content-not-loading-1757966904275.png",
+          "description": "Dynamic content not loading from API",
+          "timestamp": "2025-09-15T20:08:24.833Z"
+        },
+        "timestamp": "2025-09-15T20:08:24.833Z"
+      },
+      {
+        "test": "API Integration",
+        "passed": false,
+        "details": "Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:24.833Z"
+      }
+    ],
+    "contactForm": [
+      {
+        "test": "Contact Modal Opens",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:04.254Z"
+      },
+      {
+        "test": "Full Name Field",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:04.256Z"
+      },
+      {
+        "test": "Phone Number Field",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:04.257Z"
+      },
+      {
+        "test": "Email Field",
+        "passed": false,
+        "details": "Field not found",
+        "screenshot": {
+          "filename": "missing-field-email-1757966884258.png",
+          "filepath": "qa-screenshots/missing-field-email-1757966884258.png",
+          "description": "Email field missing in contact form",
+          "timestamp": "2025-09-15T20:08:04.741Z"
+        },
+        "timestamp": "2025-09-15T20:08:04.741Z"
+      },
+      {
+        "test": "EmailJS Integration",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:04.741Z"
+      },
+      {
+        "test": "Submit Button",
+        "passed": true,
+        "details": "",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:04.742Z"
+      }
+    ],
+    "bugs": [
+      {
+        "test": "navigation-Navigation-to-Courses-Works",
+        "error": "Online Course Catalog - AI Studio Learning Platform",
+        "screenshot": {
+          "filename": "bug-navigation-Navigation-to-Courses-Works-1757966837715.png",
+          "filepath": "qa-screenshots/bug-navigation-Navigation-to-Courses-Works-1757966837715.png",
+          "description": "Online Course Catalog - AI Studio Learning Platform",
+          "timestamp": "2025-09-15T20:07:18.321Z"
+        },
+        "severity": "high",
+        "timestamp": "2025-09-15T20:07:18.321Z"
+      },
+      {
+        "test": "language-Language-Switching-Journey",
+        "error": "locator.selectOption: Error: Element is not a <select> element\nCall log:\n\u001b[2m  - waiting for locator('#language-switcher-nav, .language-selector, select[onchange*=\"language\"]').first()\u001b[22m\n\u001b[2m    - locator resolved to <div class=\"language-selector\">…</div>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    - waiting for element to be visible and enabled\u001b[22m\n",
+        "screenshot": {
+          "filename": "bug-language-Language-Switching-Journey-1757966840272.png",
+          "filepath": "qa-screenshots/bug-language-Language-Switching-Journey-1757966840272.png",
+          "description": "locator.selectOption: Error: Element is not a <select> element\nCall log:\n\u001b[2m  - waiting for locator('#language-switcher-nav, .language-selector, select[onchange*=\"language\"]').first()\u001b[22m\n\u001b[2m    - locator resolved to <div class=\"language-selector\">…</div>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    - waiting for element to be visible and enabled\u001b[22m\n",
+          "timestamp": "2025-09-15T20:07:20.956Z"
+        },
+        "severity": "high",
+        "timestamp": "2025-09-15T20:07:20.956Z"
+      },
+      {
+        "test": "contactForm-Email-Field",
+        "error": "Field not found",
+        "screenshot": {
+          "filename": "bug-contactForm-Email-Field-1757966884741.png",
+          "filepath": "qa-screenshots/bug-contactForm-Email-Field-1757966884741.png",
+          "description": "Field not found",
+          "timestamp": "2025-09-15T20:08:05.076Z"
+        },
+        "severity": "high",
+        "timestamp": "2025-09-15T20:08:05.076Z"
+      },
+      {
+        "test": "responsive-Touch-Target-Size---home.html-on-iPad",
+        "error": "1 buttons too small",
+        "screenshot": {
+          "filename": "bug-responsive-Touch-Target-Size---home.html-on-iPad-1757966889983.png",
+          "filepath": "qa-screenshots/bug-responsive-Touch-Target-Size---home.html-on-iPad-1757966889983.png",
+          "description": "1 buttons too small",
+          "timestamp": "2025-09-15T20:08:10.700Z"
+        },
+        "severity": "high",
+        "timestamp": "2025-09-15T20:08:10.700Z"
+      },
+      {
+        "test": "responsive-Touch-Target-Size---courses.html-on-iPad",
+        "error": "1 buttons too small",
+        "screenshot": {
+          "filename": "bug-responsive-Touch-Target-Size---courses.html-on-iPad-1757966896306.png",
+          "filepath": "qa-screenshots/bug-responsive-Touch-Target-Size---courses.html-on-iPad-1757966896306.png",
+          "description": "1 buttons too small",
+          "timestamp": "2025-09-15T20:08:17.037Z"
+        },
+        "severity": "high",
+        "timestamp": "2025-09-15T20:08:17.037Z"
+      },
+      {
+        "test": "api-Dynamic-Content-Loading",
+        "error": "No dynamic content detected",
+        "screenshot": {
+          "filename": "bug-api-Dynamic-Content-Loading-1757966904833.png",
+          "filepath": "qa-screenshots/bug-api-Dynamic-Content-Loading-1757966904833.png",
+          "description": "No dynamic content detected",
+          "timestamp": "2025-09-15T20:08:25.743Z"
+        },
+        "severity": "high",
+        "timestamp": "2025-09-15T20:08:25.743Z"
+      },
+      {
+        "test": "api-API-Integration",
+        "error": "Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.",
+        "screenshot": {
+          "filename": "bug-api-API-Integration-1757966904833.png",
+          "filepath": "qa-screenshots/bug-api-API-Integration-1757966904833.png",
+          "description": "Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.",
+          "timestamp": "2025-09-15T20:08:26.632Z"
+        },
+        "severity": "high",
+        "timestamp": "2025-09-15T20:08:26.632Z"
+      },
+      {
+        "test": "performance-home.html-Render-blocking-Scripts",
+        "error": "17 blocking scripts",
+        "screenshot": {
+          "filename": "bug-performance-home.html-Render-blocking-Scripts-1757966907958.png",
+          "filepath": "qa-screenshots/bug-performance-home.html-Render-blocking-Scripts-1757966907958.png",
+          "description": "17 blocking scripts",
+          "timestamp": "2025-09-15T20:08:28.517Z"
+        },
+        "severity": "high",
+        "timestamp": "2025-09-15T20:08:28.517Z"
+      },
+      {
+        "test": "performance-courses.html-Render-blocking-Scripts",
+        "error": "14 blocking scripts",
+        "screenshot": {
+          "filename": "bug-performance-courses.html-Render-blocking-Scripts-1757966910607.png",
+          "filepath": "qa-screenshots/bug-performance-courses.html-Render-blocking-Scripts-1757966910607.png",
+          "description": "14 blocking scripts",
+          "timestamp": "2025-09-15T20:08:30.982Z"
+        },
+        "severity": "high",
+        "timestamp": "2025-09-15T20:08:30.982Z"
+      },
+      {
+        "test": "accessibility-home.html-Image-Alt-Text",
+        "error": "68 images missing alt text",
+        "screenshot": {
+          "filename": "bug-accessibility-home.html-Image-Alt-Text-1757966916062.png",
+          "filepath": "qa-screenshots/bug-accessibility-home.html-Image-Alt-Text-1757966916062.png",
+          "description": "68 images missing alt text",
+          "timestamp": "2025-09-15T20:08:36.619Z"
+        },
+        "severity": "high",
+        "timestamp": "2025-09-15T20:08:36.619Z"
+      },
+      {
+        "test": "accessibility-home.html-Form-1-Labels",
+        "error": "1 inputs without labels",
+        "screenshot": {
+          "filename": "bug-accessibility-home.html-Form-1-Labels-1757966917173.png",
+          "filepath": "qa-screenshots/bug-accessibility-home.html-Form-1-Labels-1757966917173.png",
+          "description": "1 inputs without labels",
+          "timestamp": "2025-09-15T20:08:37.792Z"
+        },
+        "severity": "high",
+        "timestamp": "2025-09-15T20:08:37.792Z"
+      },
+      {
+        "test": "accessibility-courses.html-Image-Alt-Text",
+        "error": "46 images missing alt text",
+        "screenshot": {
+          "filename": "bug-accessibility-courses.html-Image-Alt-Text-1757966919515.png",
+          "filepath": "qa-screenshots/bug-accessibility-courses.html-Image-Alt-Text-1757966919515.png",
+          "description": "46 images missing alt text",
+          "timestamp": "2025-09-15T20:08:39.840Z"
+        },
+        "severity": "high",
+        "timestamp": "2025-09-15T20:08:39.840Z"
+      }
+    ],
+    "performance": [
+      {
+        "test": "home.html Load Time",
+        "passed": true,
+        "details": "2581ms",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:27.414Z"
+      },
+      {
+        "test": "home.html Render-blocking Scripts",
+        "passed": false,
+        "details": "17 blocking scripts",
+        "screenshot": {
+          "filename": "render-blocking-scripts-home.html-1757966907415.png",
+          "filepath": "qa-screenshots/render-blocking-scripts-home.html-1757966907415.png",
+          "description": "17 render-blocking scripts",
+          "timestamp": "2025-09-15T20:08:27.958Z"
+        },
+        "timestamp": "2025-09-15T20:08:27.958Z"
+      },
+      {
+        "test": "home.html Image Lazy Loading",
+        "passed": true,
+        "details": "69/94 lazy",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:28.535Z"
+      },
+      {
+        "test": "courses.html Load Time",
+        "passed": true,
+        "details": "1750ms",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:30.285Z"
+      },
+      {
+        "test": "courses.html Render-blocking Scripts",
+        "passed": false,
+        "details": "14 blocking scripts",
+        "screenshot": {
+          "filename": "render-blocking-scripts-courses.html-1757966910286.png",
+          "filepath": "qa-screenshots/render-blocking-scripts-courses.html-1757966910286.png",
+          "description": "14 render-blocking scripts",
+          "timestamp": "2025-09-15T20:08:30.607Z"
+        },
+        "timestamp": "2025-09-15T20:08:30.607Z"
+      },
+      {
+        "test": "courses.html Image Lazy Loading",
+        "passed": true,
+        "details": "47/47 lazy",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:30.650Z"
+      }
+    ],
+    "accessibility": [
+      {
+        "test": "home.html Image Alt Text",
+        "passed": false,
+        "details": "68 images missing alt text",
+        "screenshot": {
+          "filename": "missing-alt-text-home.html-1757966915531.png",
+          "filepath": "qa-screenshots/missing-alt-text-home.html-1757966915531.png",
+          "description": "68 images without alt text",
+          "timestamp": "2025-09-15T20:08:36.062Z"
+        },
+        "timestamp": "2025-09-15T20:08:36.062Z"
+      },
+      {
+        "test": "home.html Heading Hierarchy",
+        "passed": true,
+        "details": "H1: 1, H2: 7",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:36.063Z"
+      },
+      {
+        "test": "home.html Form 1 Labels",
+        "passed": false,
+        "details": "1 inputs without labels",
+        "screenshot": {
+          "filename": "form-labels-home.html-form0-1757966916085.png",
+          "filepath": "qa-screenshots/form-labels-home.html-form0-1757966916085.png",
+          "description": "1 form inputs without labels",
+          "timestamp": "2025-09-15T20:08:37.173Z"
+        },
+        "timestamp": "2025-09-15T20:08:37.173Z"
+      },
+      {
+        "test": "home.html Form 2 Labels",
+        "passed": true,
+        "details": "All inputs have labels",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:37.204Z"
+      },
+      {
+        "test": "home.html Color Contrast",
+        "passed": true,
+        "details": "No obvious contrast issues",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:37.204Z"
+      },
+      {
+        "test": "courses.html Image Alt Text",
+        "passed": false,
+        "details": "46 images missing alt text",
+        "screenshot": {
+          "filename": "missing-alt-text-courses.html-1757966919199.png",
+          "filepath": "qa-screenshots/missing-alt-text-courses.html-1757966919199.png",
+          "description": "46 images without alt text",
+          "timestamp": "2025-09-15T20:08:39.514Z"
+        },
+        "timestamp": "2025-09-15T20:08:39.515Z"
+      },
+      {
+        "test": "courses.html Heading Hierarchy",
+        "passed": true,
+        "details": "H1: 1, H2: 7",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:39.516Z"
+      },
+      {
+        "test": "courses.html Form 1 Labels",
+        "passed": true,
+        "details": "All inputs have labels",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:39.545Z"
+      },
+      {
+        "test": "courses.html Form 2 Labels",
+        "passed": false,
+        "details": "1 inputs without labels",
+        "screenshot": {
+          "filename": "form-labels-courses.html-form1-1757966919549.png",
+          "filepath": "qa-screenshots/form-labels-courses.html-form1-1757966919549.png",
+          "description": "1 form inputs without labels",
+          "timestamp": "2025-09-15T20:08:40.151Z"
+        },
+        "timestamp": "2025-09-15T20:08:40.151Z"
+      },
+      {
+        "test": "courses.html Color Contrast",
+        "passed": true,
+        "details": "No obvious contrast issues",
+        "screenshot": null,
+        "timestamp": "2025-09-15T20:08:40.153Z"
+      }
+    ]
+  },
+  "timestamp": "2025-09-15T20:08:40.153Z",
+  "screenshots": "qa-screenshots"
+}

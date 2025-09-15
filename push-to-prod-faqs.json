@@ -1,0 +1,134 @@
+[
+  {
+    "id": 1,
+    "locale": "en",
+    "question": "How do I enroll in a course?",
+    "answer": "Simply browse our course catalog, select your desired course, and click \"Enroll Now\". You can pay securely with credit card or PayPal.",
+    "category": "General",
+    "order": 1,
+    "published_at": "2025-09-14T22:56:43.266Z",
+    "created_at": "2025-09-14T22:56:43.266Z",
+    "updated_at": "2025-09-14T22:56:43.266Z"
+  },
+  {
+    "id": 2,
+    "locale": "en",
+    "question": "What is included in the course fee?",
+    "answer": "Your course fee includes lifetime access to all course materials, video lessons, assignments, and community support.",
+    "category": "Courses",
+    "order": 2,
+    "published_at": "2025-09-14T22:56:43.267Z",
+    "created_at": "2025-09-14T22:56:43.267Z",
+    "updated_at": "2025-09-14T22:56:43.267Z"
+  },
+  {
+    "id": 3,
+    "locale": "en",
+    "question": "Do you offer certificates?",
+    "answer": "Yes! Upon successful completion of any course, you will receive an industry-recognized certificate that you can add to your LinkedIn profile.",
+    "category": "Courses",
+    "order": 3,
+    "published_at": "2025-09-14T22:56:43.267Z",
+    "created_at": "2025-09-14T22:56:43.267Z",
+    "updated_at": "2025-09-14T22:56:43.267Z"
+  },
+  {
+    "id": 4,
+    "locale": "en",
+    "question": "What payment methods do you accept?",
+    "answer": "We accept all major credit cards, PayPal, and offer installment plans for courses over $200.",
+    "category": "Payment",
+    "order": 4,
+    "published_at": "2025-09-14T22:56:43.267Z",
+    "created_at": "2025-09-14T22:56:43.267Z",
+    "updated_at": "2025-09-14T22:56:43.267Z"
+  },
+  {
+    "id": 5,
+    "locale": "ru",
+    "question": "Как записаться на курс?",
+    "answer": "Просто просмотрите каталог курсов, выберите желаемый курс и нажмите \"Записаться сейчас\". Вы можете безопасно оплатить картой или через PayPal.",
+    "category": "Общее",
+    "order": 1,
+    "published_at": "2025-09-14T22:56:43.267Z",
+    "created_at": "2025-09-14T22:56:43.267Z",
+    "updated_at": "2025-09-14T22:56:43.267Z"
+  },
+  {
+    "id": 6,
+    "locale": "ru",
+    "question": "Что включено в стоимость курса?",
+    "answer": "Стоимость курса включает пожизненный доступ ко всем материалам, видео урокам, заданиям и поддержке сообщества.",
+    "category": "Курсы",
+    "order": 2,
+    "published_at": "2025-09-14T22:56:43.267Z",
+    "created_at": "2025-09-14T22:56:43.267Z",
+    "updated_at": "2025-09-14T22:56:43.267Z"
+  },
+  {
+    "id": 7,
+    "locale": "ru",
+    "question": "Выдаете ли вы сертификаты?",
+    "answer": "Да! После успешного завершения любого курса вы получите признанный в индустрии сертификат.",
+    "category": "Курсы",
+    "order": 3,
+    "published_at": "2025-09-14T22:56:43.268Z",
+    "created_at": "2025-09-14T22:56:43.268Z",
+    "updated_at": "2025-09-14T22:56:43.268Z"
+  },
+  {
+    "id": 8,
+    "locale": "ru",
+    "question": "Какие способы оплаты вы принимаете?",
+    "answer": "Мы принимаем все основные кредитные карты, PayPal и предлагаем планы рассрочки для курсов свыше $200.",
+    "category": "Оплата",
+    "order": 4,
+    "published_at": "2025-09-14T22:56:43.268Z",
+    "created_at": "2025-09-14T22:56:43.268Z",
+    "updated_at": "2025-09-14T22:56:43.268Z"
+  },
+  {
+    "id": 9,
+    "locale": "he",
+    "question": "איך נרשמים לקורס?",
+    "answer": "פשוט עיינו בקטלוג הקורסים, בחרו את הקורס הרצוי ולחצו על \"הרשמה כעת\". תוכלו לשלם בבטחה בכרטיס אשראי או PayPal.",
+    "category": "כללי",
+    "order": 1,
+    "published_at": "2025-09-14T22:56:43.268Z",
+    "created_at": "2025-09-14T22:56:43.268Z",
+    "updated_at": "2025-09-14T22:56:43.268Z"
+  },
+  {
+    "id": 10,
+    "locale": "he",
+    "question": "מה כלול בעלות הקורס?",
+    "answer": "עלות הקורס כוללת גישה לכל החיים לכל חומרי הקורס, שיעורי וידאו, מ과assignments ותמיכת קהילה.",
+    "category": "קורסים",
+    "order": 2,
+    "published_at": "2025-09-14T22:56:43.268Z",
+    "created_at": "2025-09-14T22:56:43.268Z",
+    "updated_at": "2025-09-14T22:56:43.268Z"
+  },
+  {
+    "id": 11,
+    "locale": "he",
+    "question": "האם אתם נותנים תעודות?",
+    "answer": "כן! לאחר השלמת כל קורס בהצלחה, תקבלו תעודה מוכרת בתעשייה שניתן להוסיף לפרופיל LinkedIn.",
+    "category": "קורסים",
+    "order": 3,
+    "published_at": "2025-09-14T22:56:43.268Z",
+    "created_at": "2025-09-14T22:56:43.268Z",
+    "updated_at": "2025-09-14T22:56:43.268Z"
+  },
+  {
+    "id": 12,
+    "locale": "he",
+    "question": "אילו אמצעי תשלום אתם מקבלים?",
+    "answer": "אנו מקבלים את כל כרטיסי האשראי הגדולים, PayPal ומציעים תוכניות תשלומים לקורסים מעל $200.",
+    "category": "תשלום",
+    "order": 4,
+    "published_at": "2025-09-14T22:56:43.268Z",
+    "created_at": "2025-09-14T22:56:43.268Z",
+    "updated_at": "2025-09-14T22:56:43.268Z"
+  }
+]

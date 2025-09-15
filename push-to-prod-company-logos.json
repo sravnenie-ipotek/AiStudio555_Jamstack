@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "locale": "en",
+    "section_title": "Our Graduates Work At",
+    "company_1_name": "Google",
+    "company_1_logo": null,
+    "company_2_name": "Microsoft",
+    "company_2_logo": null,
+    "company_3_name": "Amazon",
+    "company_3_logo": null,
+    "company_4_name": "Meta",
+    "company_4_logo": null,
+    "created_at": "2025-09-14T22:25:55.273Z"
+  }
+]

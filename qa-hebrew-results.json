@@ -1,0 +1,52 @@
+{
+  "timestamp": "2025-09-15T19:35:22.350Z",
+  "hebrew_tests": {
+    "hebrew_home_static": {
+      "status": "SUCCESS",
+      "data": {
+        "direction": "rtl",
+        "lang": "he",
+        "rtlContent": 2,
+        "hebrewCharacters": 2276,
+        "sections": 8,
+        "courses": 178,
+        "title": "בית - AI Studio פלטפורמת למידה",
+        "hasContent": true
+      },
+      "url": "http://localhost:3005/he/home.html"
+    },
+    "hebrew_home_nextjs": {
+      "status": "FAILED",
+      "error": "HTTP 500",
+      "url": "http://localhost:3001/he"
+    },
+    "hebrew_courses_static": {
+      "status": "SUCCESS",
+      "data": {
+        "direction": "rtl",
+        "lang": "he",
+        "rtlContent": 3,
+        "hebrewCharacters": 3036,
+        "sections": 12,
+        "courses": 215,
+        "title": "קטלוג קורסים מקוון - פלטפורמת הלמידה AI Studio",
+        "hasContent": true
+      },
+      "url": "http://localhost:3005/he/courses.html"
+    },
+    "hebrew_courses_nextjs": {
+      "status": "SUCCESS",
+      "data": {
+        "direction": "ltr",
+        "lang": "unknown",
+        "rtlContent": 0,
+        "hebrewCharacters": 0,
+        "sections": 0,
+        "courses": 0,
+        "title": "AI Studio - E-Learning Platform",
+        "hasContent": true
+      },
+      "url": "http://localhost:3001/he/courses"
+    }
+  }
+}

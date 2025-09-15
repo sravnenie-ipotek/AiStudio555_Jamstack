@@ -540,6 +540,13 @@
         //     }, 10);
         // }
 
+        // Hide any Webflow overlay that might interfere
+        const webflowOverlay = document.querySelector('.w-nav-overlay');
+        if (webflowOverlay) {
+            webflowOverlay.style.display = 'none !important';
+            debug('Hidden Webflow overlay that was interfering with menu');
+        }
+
         // Transform hamburger to X
         if (menuButton) {
             const lines = menuButton.querySelectorAll('.hamburger-line');

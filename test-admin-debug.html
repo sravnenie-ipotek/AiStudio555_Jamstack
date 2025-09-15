@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Save Debug Test</title>
+</head>
+<body>
+    <h1>Admin Save Debug Test</h1>
+    <div id="results"></div>
+
+    <script>
+        // Copy the exact configuration from admin panel
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const LOCAL_API = 'http://localhost:3000/api';
+        const PROD_API = 'https://aistudio555jamstack-production.up.railway.app/api';
+        const API_URL_READ = isLocal ? LOCAL_API : PROD_API;
+        const API_URL_CRUD = isLocal ? LOCAL_API : PROD_API;
+        let currentLocale = 'en';
+
+        // Mock the functions from admin panel
+        function getFieldValue(fieldId) {
+            // Mock return some test data
+            const mockData = {
+                'homeTitle': 'Test Home Title',
+                'homeHeroTitle': 'Test Hero Title',
+                'homeHeroSubtitle': 'Test Hero Subtitle',
+                'homeHeroDescription': 'Test Hero Description',
+                'homeFeaturedTitle': 'Test Featured Title',
+                'homeFeaturedDescription': 'Test Featured Description'
+            };
+            return mockData[fieldId] || '';
+        }
+
+        function getCheckboxValue(fieldId) {
+            return true; // Mock checkboxes as checked
+        }
+
+        function showMessage(message, type) {
+            console.log(`${type}: ${message}`);
+            document.getElementById('results').innerHTML += `<p><strong>${type}:</strong> ${message}</p>`;
+        }
+
+        // Copy the exact saveAllHomePage function
+        async function saveAllHomePage() {
+            console.log('🚀 saveAllHomePage function called!');
+
+            // Debug: Check environment
+            console.log('🌐 Current URL:', window.location.href);
+            console.log('🌐 Hostname:', window.location.hostname);
+            console.log('🌐 isLocal detected:', (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+            console.log('🔗 API_URL_CRUD:', API_URL_CRUD);
+            console.log('🌍 currentLocale:', currentLocale);
+
+            try {
+                const homeData = {
+                    // Page Title
+                    title: getFieldValue('homeTitle'),
+
+                    // Hero Section
+                    heroTitle: getFieldValue('homeHeroTitle'),
+                    heroSubtitle: getFieldValue('homeHeroSubtitle'),
+                    heroDescription: getFieldValue('homeHeroDescription'),
+                    heroSectionVisible: getCheckboxValue('homeHeroVisible'),
+
+                    // Featured Courses Section
+                    featuredCoursesTitle: getFieldValue('homeFeaturedTitle'),
+                    featuredCoursesDescription: getFieldValue('homeFeaturedDescription'),
+                    featuredCoursesVisible: getCheckboxValue('homeFeaturedVisible'),
+
+                    // Mock data for other fields
+                    aboutTitle: 'Test About',
+                    aboutSubtitle: 'Test About Sub',
+                    aboutDescription: 'Test About Desc',
+                    aboutVisible: true,
+                    companiesTitle: 'Test Companies',
+                    companiesDescription: 'Test Companies Desc',
+                    companiesVisible: true,
+                    testimonialsTitle: 'Test Testimonials',
+                    testimonialsSubtitle: 'Test Testimonials Sub',
+                    testimonialsVisible: true
+                };
+
+                console.log('💾 Saving Complete Home Page Data:', homeData);
+                console.log('🌍 Current Locale:', currentLocale);
+                console.log('🔗 API URL:', API_URL_CRUD);
+
+                // Use correct ID based on locale
+                const localeIds = { 'en': 1, 'ru': 2, 'he': 3 };
+                const homePageId = localeIds[currentLocale] || 1;
+                console.log('🆔 Using Home Page ID:', homePageId);
+
+                const saveUrl = `${API_URL_CRUD}/home-page/${homePageId}`;
+                console.log('📡 Save URL:', saveUrl);
+                console.log('📤 Request body:', JSON.stringify(homeData, null, 2));
+
+                // Show loading message
+                showMessage('💾 Saving home page data...', 'info');
+
+                const response = await fetch(saveUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(homeData)
+                });
+
+                console.log('📊 Response status:', response.status);
+                console.log('📊 Response ok:', response.ok);
+                console.log('📊 Response headers:', Object.fromEntries(response.headers.entries()));
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ Error response body:', errorText);
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+
+                const result = await response.json();
+                console.log('✅ Home Page Save Result:', result);
+                showMessage('🎉 COMPLETE Home Page saved with ALL fields successfully!', 'success');
+
+            } catch (error) {
+                console.error('❌ Error saving home page:', error);
+                console.error('❌ Error details:', {
+                    message: error.message,
+                    stack: error.stack,
+                    name: error.name
+                });
+                showMessage('❌ Error saving home page: ' + error.message, 'error');
+            }
+        }
+
+        // Run the test
+        window.onload = function() {
+            console.log('🧪 Starting admin save debug test...');
+            showMessage('🧪 Starting admin save debug test...', 'info');
+
+            setTimeout(() => {
+                saveAllHomePage();
+            }, 1000);
+        };
+    </script>
+</body>
+</html>

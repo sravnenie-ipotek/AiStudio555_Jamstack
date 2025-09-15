@@ -10,7 +10,7 @@
   <link href="/css/aizeks-marvelous-site.webflow.css" rel="stylesheet" type="text/css">
   <link href="/css/unified-navigation.css" rel="stylesheet" type="text/css">
   <link href="/css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
-  <link href="/css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
+  <link href="/css/mobile-navigation-complete-fix.css" rel="stylesheet" type="text/css">
   <link href="/css/mobile-responsive-fix.css" rel="stylesheet" type="text/css">
   <link href="/css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
   <link href="/css/hebrew-menu-alignment-fix.css" rel="stylesheet" type="text/css">
@@ -908,8 +908,7 @@
             <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">הרשמו היום</a>
           </div>
           <!-- Mobile Menu Button -->
-          <div class="menu-button w-nav-button">
-            <div class="w-icon-nav-menu"></div>
+          <!-- Hamburger button will be created by universal-mobile-navigation-fix.js -->
           </div>
         </div>
       </div>
@@ -3216,8 +3215,7 @@
       }, 500);
     });
   </script>
-  <script src="../js/ui-translator.js?v=1.1"></script>
-  <script src="../js/mobile-menu-toggle-fix.js"></script>
+  <script src="../js/ui-translator.js?v=1.1"></script>  <!-- mobile-menu-toggle-fix.js disabled - replaced by universal-mobile-navigation-fix.js -->
 
   <!-- Master Footer Loader -->
   <script src="../js/master-footer-loader.js"></script>

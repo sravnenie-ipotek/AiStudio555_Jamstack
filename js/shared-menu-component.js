@@ -128,7 +128,7 @@
             <div class="container">
                 <div class="navbar-content">
                     <a href="${urls.home}" class="nav-brand">
-                        <img loading="lazy" src="${currentLang === 'en' ? 'images/Logo 2.svg' : '../images/Logo 2.svg'}" alt="" class="logo-image">
+                        <img loading="lazy" src="../images/logoNew.png" alt="" class="logo-image">
                     </a>
 
                     <!-- Mobile Menu Button will be handled by universal-mobile-navigation-fix.js -->
