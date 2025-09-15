@@ -7,6 +7,8 @@
     // Detect current language and page
     const currentPath = window.location.pathname;
     let currentLang = 'en';
+    console.log('Current path:', currentPath);
+
     if (currentPath.includes('/he/')) currentLang = 'he';
     else if (currentPath.includes('/ru/')) currentLang = 'ru';
     else if (currentPath.includes('/en/')) currentLang = 'en';
@@ -24,6 +26,7 @@
             careerOrientation: 'Career Orientation',
             careerCenter: 'Career Center',
             pricing: 'Pricing',
+            language: 'Language 🌐',
             signUp: 'Sign Up Today'
         },
         ru: {
@@ -41,62 +44,66 @@
             courses: 'קורסים',
             teachers: 'מורים',
             careerServices: 'שירותי קריירה',
-            careerOrientation: 'Career Orientation',
-            careerCenter: 'Career Center',
-            pricing: 'תמחור',
+            careerOrientation: 'כיוון קריירה',
+            careerCenter: 'מרכז קריירה',
+            pricing: 'תוכניות תמחור',
             signUp: 'הרשמו היום'
         }
     };
 
     // Get translations for current language
-    const t = menuText[currentLang];
+    const t = menuText[currentLang] || menuText['en']; // Fallback to English if language not found
 
-    // Build menu HTML
+    // Debug log
+    console.log('Current language detected:', currentLang);
+    console.log('Using translations:', t);
+
+    // Build menu HTML with explicit debug values for Hebrew
+    console.log('Building menu HTML...');
+    console.log('t.home =', t.home);
+    console.log('t.courses =', t.courses);
+    console.log('t.teachers =', t.teachers);
+    console.log('t.pricing =', t.pricing);
+
     const menuHTML = `
         <div data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
             <div class="container">
                 <div class="navbar-content">
-                    <a href="index.html" class="zohacous-logo-link w-nav-brand">
+                    <a href="home.html" class="zohacous-logo-link w-nav-brand">
                         <img loading="lazy" src="../images/Logo.svg" alt="" class="zohacous-logo-image">
                     </a>
                     <nav role="navigation" class="nav-menu w-nav-menu">
-                        <a href="home.html" class="nav-link w-nav-link ${currentPage === 'home' ? 'w--current' : ''}">${t.home}</a>
-                        <a href="courses.html" class="nav-link w-nav-link ${currentPage === 'courses' ? 'w--current' : ''}">${t.courses}</a>
-                        <a href="teachers.html" class="nav-link w-nav-link ${currentPage === 'teachers' ? 'w--current' : ''}">${t.teachers}</a>
-                        <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
-                            <div class="dropdown-toggle w-dropdown-toggle">
-                                <div class="dropdown-toggle-text-block">${t.careerServices}</div>
-                                <div class="dropdown-toggle-arrow-2">▼</div>
-                            </div>
-                            <nav class="dropdown-list w-dropdown-list">
-                                <a href="career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
-                                    <div>${t.careerOrientation}</div>
-                                </a>
-                                <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block">
-                                    <div>${t.careerCenter}</div>
-                                </a>
-                            </nav>
-                        </div>
-                        <a href="pricing.html" class="nav-link w-nav-link ${currentPage === 'pricing' ? 'w--current' : ''}">${t.pricing}</a>
-                        <a href="#" id="language-switcher" class="nav-link w-nav-link" onclick="toggleLanguageDropdown(); return false;">
-                            <span id="currentLanguage">${currentLang === 'en' ? 'EN 🌐' : currentLang === 'ru' ? 'RU 🌐' : 'HE 🌐'}</span>
-                            <div id="languageDropdown" style="
+                        <a href="home.html" class="nav-link w-nav-link ${currentPage === 'home' ? 'w--current' : ''}">${t.home || 'בית'}</a>
+                        <a href="courses.html" class="nav-link w-nav-link ${currentPage === 'courses' ? 'w--current' : ''}">${t.courses || 'קורסים'}</a>
+                        <a href="teachers.html" class="nav-link w-nav-link ${currentPage === 'teachers' ? 'w--current' : ''}">${t.teachers || 'מורים'}</a>
+                        <a href="#" id="career-dropdown" class="nav-link w-nav-link" onclick="toggleCareerDropdown(); return false;">
+                            <span>${t.careerServices}</span>
+                            <span style="font-size: 10px; margin-left: 5px;">▼</span>
+                            <div id="careerDropdownMenu" style="
                                 display: none;
                                 position: absolute;
                                 top: 100%;
-                                ${currentLang === 'he' ? 'left: 0' : 'right: 0'};
+                                left: 0;
                                 background: rgba(5, 5, 26, 0.98);
                                 backdrop-filter: blur(20px);
                                 border-radius: 4px;
                                 padding: 10px 0;
-                                min-width: 120px;
+                                min-width: 180px;
                                 z-index: 1000;
                             ">
-                                <div onclick="switchLanguage('en')" style="padding: 8px 16px; cursor: pointer; color: #fff; ${currentLang === 'en' ? 'background: rgba(255,255,255,0.1);' : ''}" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='${currentLang === 'en' ? 'rgba(255,255,255,0.1)' : 'transparent'}'">English</div>
-                                <div onclick="switchLanguage('ru')" style="padding: 8px 16px; cursor: pointer; color: #fff; ${currentLang === 'ru' ? 'background: rgba(255,255,255,0.1);' : ''}" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='${currentLang === 'ru' ? 'rgba(255,255,255,0.1)' : 'transparent'}'">Русский</div>
-                                <div onclick="switchLanguage('he')" style="padding: 8px 16px; cursor: pointer; color: #fff; ${currentLang === 'he' ? 'background: rgba(255,255,255,0.1);' : ''}" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='${currentLang === 'he' ? 'rgba(255,255,255,0.1)' : 'transparent'}'">עברית</div>
+                                <a href="career-orientation.html" style="display: block; padding: 8px 16px; color: #fff; text-decoration: none;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">${t.careerOrientation}</a>
+                                <a href="career-center.html" style="display: block; padding: 8px 16px; color: #fff; text-decoration: none;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">${t.careerCenter}</a>
                             </div>
                         </a>
+                        <a href="pricing.html" class="nav-link w-nav-link ${currentPage === 'pricing' ? 'w--current' : ''}">${t.pricing || 'תוכניות תמחור'}</a>
+                        <!-- Language Selector integrated as navigation item -->
+                        <div class="language-nav-item">
+                            <select id="language-switcher-nav" onchange="switchLanguageSelect(this.value)" class="language-nav-select">
+                                <option value="en" ${currentLang === 'en' ? 'selected' : ''}>EN</option>
+                                <option value="ru" ${currentLang === 'ru' ? 'selected' : ''}>RU</option>
+                                <option value="he" ${currentLang === 'he' ? 'selected' : ''}>HE</option>
+                            </select>
+                        </div>
                     </nav>
                     <div class="navbar-button-wrapper">
                         <div class="primary-button-wrapper desktop">
@@ -117,20 +124,17 @@
         </div>
     `;
 
-    // Language dropdown toggle function
-    window.toggleLanguageDropdown = function() {
-        const dropdown = document.getElementById('languageDropdown');
+    // Career dropdown toggle function
+    window.toggleCareerDropdown = function() {
+        const dropdown = document.getElementById('careerDropdownMenu');
         if (dropdown) {
             dropdown.style.display = dropdown.style.display === 'none' || dropdown.style.display === '' ? 'block' : 'none';
         }
     };
 
-    // Language switch function
-    window.switchLanguage = function(lang) {
-        const dropdown = document.getElementById('languageDropdown');
-        if (dropdown) {
-            dropdown.style.display = 'none';
-        }
+
+    // Language switch function for select dropdown
+    window.switchLanguageSelect = function(lang) {
         const currentPath = window.location.pathname;
         const currentFile = currentPath.split('/').pop() || 'home.html';
         const newPath = `/${lang}/${currentFile}`;
@@ -141,6 +145,10 @@
     function injectMenu() {
         const menuContainer = document.getElementById('shared-menu-container');
         if (menuContainer) {
+            console.log('📝 Menu HTML content check:');
+            console.log('Contains Hebrew home:', menuHTML.includes('בית'));
+            console.log('Contains Hebrew courses:', menuHTML.includes('קורסים'));
+            console.log('First 500 chars of menuHTML:', menuHTML.substring(0, 500));
             menuContainer.innerHTML = menuHTML;
 
             // Force visibility after injection (only on desktop)
@@ -168,7 +176,7 @@
             const link = document.createElement('link');
             link.id = 'menu-language-fix-css';
             link.rel = 'stylesheet';
-            link.href = '../css/menu-language-fix.css';
+            link.href = '../css/menu-language-fix.css?v=2.4';
             document.head.appendChild(link);
         }
 
@@ -241,16 +249,23 @@
                 @media screen and (max-width: 991px) {
                     .w-nav-button {
                         display: block !important;
-                        position: absolute !important;
+                        position: fixed !important;
                         top: 20px !important;
                         right: 20px !important;
                         z-index: 1001 !important;
-                        background: transparent !important;
+                        background: rgba(0, 0, 0, 0.5) !important;
                         border: none !important;
                         cursor: pointer !important;
                         padding: 10px !important;
                         width: 40px !important;
                         height: 40px !important;
+                        border-radius: 4px !important;
+                    }
+
+                    /* RTL Hebrew positioning */
+                    html[dir="rtl"] .w-nav-button {
+                        right: auto !important;
+                        left: 20px !important;
                     }
 
                     /* Hamburger icon styling */
@@ -334,10 +349,18 @@
                         overflow-y: auto !important;
                     }
 
+                    /* Show menu when open class is present - Ultra Specific */
+                    body.w--nav-menu-open #shared-menu-container .w-nav-menu,
+                    body.w--nav-menu-open .nav-menu.w-nav-menu,
+                    body.w--nav-menu-open .w-nav-menu,
+                    body.w--nav-menu-open .navbar .w-nav-menu {
+                        display: flex !important;
+                        visibility: visible !important;
+                        opacity: 1 !important;
+                    }
+
                     /* Mobile menu items styling */
-                    body.w--nav-menu-open .w-nav-menu > .nav-link,
-                    body.w--nav-menu-open .w-nav-menu > .menu-dropdown-wrapper,
-                    body.w--nav-menu-open .w-nav-menu > #language-switcher {
+                    body.w--nav-menu-open .w-nav-menu > .nav-link {
                         display: block !important;
                         width: 100% !important;
                         padding: 20px 30px !important;
@@ -353,89 +376,85 @@
                         transition: background 0.3s ease !important;
                         flex-shrink: 0 !important;
                         box-sizing: border-box !important;
+                        z-index: 1001 !important;
+                        position: relative !important;
+                        pointer-events: auto !important;
                     }
 
                     /* RTL support for Hebrew */
-                    body[dir="rtl"].w--nav-menu-open .w-nav-menu .nav-link,
-                    body[dir="rtl"].w--nav-menu-open .w-nav-menu .menu-dropdown-wrapper,
-                    body[dir="rtl"].w--nav-menu-open .w-nav-menu #language-switcher {
+                    body[dir="rtl"].w--nav-menu-open .w-nav-menu .nav-link {
                         text-align: right !important;
                         direction: rtl !important;
                     }
 
                     /* Mobile menu hover states */
-                    body.w--nav-menu-open .w-nav-menu .nav-link:hover,
-                    body.w--nav-menu-open .w-nav-menu .menu-dropdown-wrapper:hover {
+                    body.w--nav-menu-open .w-nav-menu .nav-link:hover {
                         background: rgba(255, 255, 255, 0.05) !important;
                     }
 
-                    /* Mobile dropdown styling */
-                    body.w--nav-menu-open .menu-dropdown-wrapper {
-                        flex-direction: column !important;
-                        align-items: stretch !important;
-                    }
-
-                    body.w--nav-menu-open .menu-dropdown-wrapper .dropdown-toggle {
-                        display: flex !important;
-                        justify-content: space-between !important;
-                        align-items: center !important;
-                        width: 100% !important;
-                        padding: 0 !important;
-                        height: auto !important;
-                        background: transparent !important;
-                        border: none !important;
-                        cursor: pointer !important;
-                    }
-
-                    body.w--nav-menu-open .dropdown-toggle-text-block {
-                        color: #fff !important;
-                        font-size: 18px !important;
-                    }
-
-                    body.w--nav-menu-open .dropdown-toggle-arrow-2 {
-                        color: #fff !important;
-                        transition: transform 0.3s ease !important;
-                    }
-
-                    body.w--nav-menu-open .dropdown-list {
-                        position: static !important;
-                        display: block !important;
-                        width: 100% !important;
-                        background: rgba(0, 0, 0, 0.3) !important;
-                        padding: 10px 0 !important;
-                        margin-top: 10px !important;
-                        max-height: none !important;
-                        overflow: visible !important;
-                    }
-
-                    body.w--nav-menu-open .dropdown-list a {
-                        display: block !important;
-                        padding: 15px 45px !important;
-                        color: rgba(255, 255, 255, 0.8) !important;
-                        font-size: 16px !important;
-                        border-bottom: none !important;
-                    }
-
-                    body.w--nav-menu-open .dropdown-list a:hover {
-                        background: rgba(255, 255, 255, 0.05) !important;
-                        color: #fff !important;
-                    }
-
-                    /* Mobile language switcher */
-                    body.w--nav-menu-open #language-switcher {
+                    /* Mobile dropdowns */
+                    body.w--nav-menu-open #language-switcher,
+                    body.w--nav-menu-open #career-dropdown {
                         border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
                     }
 
-                    body.w--nav-menu-open #currentLanguage {
-                        font-size: 18px !important;
-                        color: #fff !important;
+                    /* Explicit language switcher visibility - Override any conflicting rules */
+                    body.w--nav-menu-open #language-switcher {
+                        display: block !important;
+                        visibility: visible !important;
+                        opacity: 1 !important;
+                        z-index: 1001 !important;
+                        position: relative !important;
+                        pointer-events: auto !important;
                     }
 
-                    body.w--nav-menu-open #languageDropdown {
+
+                    body.w--nav-menu-open #languageDropdown,
+                    body.w--nav-menu-open #careerDropdownMenu {
                         position: static !important;
                         margin-top: 10px !important;
                         width: 100% !important;
                         background: rgba(0, 0, 0, 0.3) !important;
+                        border-radius: 4px !important;
+                        padding: 5px 0 !important;
+                        left: auto !important;
+                        right: auto !important;
+                        top: auto !important;
+                    }
+
+                    /* Make dropdown visible when shown in mobile */
+                    body.w--nav-menu-open #languageDropdown[style*="display: block"],
+                    body.w--nav-menu-open #careerDropdownMenu[style*="display: block"] {
+                        display: block !important;
+                    }
+
+                    /* External language dropdown (outside nav menu) for mobile */
+                    body.w--nav-menu-open #languageDropdown {
+                        position: fixed !important;
+                        top: 50% !important;
+                        left: 50% !important;
+                        transform: translate(-50%, -50%) !important;
+                        z-index: 1001 !important;
+                        min-width: 200px !important;
+                        background: rgba(5, 5, 26, 0.98) !important;
+                        border-radius: 8px !important;
+                        padding: 15px 0 !important;
+                        backdrop-filter: blur(20px) !important;
+                        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    }
+
+                    /* Language dropdown items on mobile */
+                    body.w--nav-menu-open #languageDropdown div {
+                        padding: 12px 20px !important;
+                        font-size: 16px !important;
+                        text-align: center !important;
+                        color: #fff !important;
+                        cursor: pointer !important;
+                        transition: background 0.3s ease !important;
+                    }
+
+                    body.w--nav-menu-open #languageDropdown div:hover {
+                        background: rgba(255, 255, 255, 0.1) !important;
                     }
 
                     /* Hide Sign Up button in mobile menu */
@@ -465,16 +484,6 @@
                         z-index: 1005 !important;
                     }
 
-                    /* Show menu when open class is present - Ultra Specific */
-                    body.w--nav-menu-open #shared-menu-container .w-nav-menu,
-                    body.w--nav-menu-open .nav-menu.w-nav-menu,
-                    body.w--nav-menu-open .w-nav-menu,
-                    .w--nav-menu-open .navbar .w-nav-menu {
-                        display: flex !important;
-                        visibility: visible !important;
-                        opacity: 1 !important;
-                    }
-
                     .w-nav-overlay {
                         display: none !important;
                         visibility: hidden !important;
@@ -499,60 +508,36 @@
                 #language-switcher {
                     position: relative !important;
                     transition: color 0.3s ease !important;
+                    top: 0 !important;
+                    transform: none !important;
+                    align-self: center !important;
+                    flex-shrink: 0 !important;
                 }
 
                 #language-switcher:hover {
                     color: rgba(255, 255, 255, 0.8) !important;
                 }
 
-                #currentLanguage {
-                    /* Inherit all font properties from nav-link */
-                    font-weight: 400 !important;
-                    line-height: 20px !important;
-                    height: 20px !important;
-                    display: flex !important;
-                    align-items: center !important;
-                    transition: color 0.3s ease !important;
+                #career-dropdown {
+                    position: relative !important;
+                    top: 0 !important;
+                    transform: none !important;
+                    align-self: center !important;
                 }
 
-                #currentLanguage:hover {
-                    color: rgba(255, 255, 255, 0.8) !important;
-                }
 
-                /* Perfect menu item alignment */
-                .nav-menu > .nav-link,
-                .nav-menu > .menu-dropdown-wrapper,
-                .nav-menu > #language-switcher {
+                /* Let Webflow handle alignment - only essential overrides */
+                .nav-menu > .nav-link {
+                    /* Remove ALL height/line-height constraints */
+                    /* Let Webflow's native nav-link class handle sizing */
                     margin: 0 !important;
                     padding: 0 !important;
                     position: relative !important;
-                    display: inline-flex !important;
-                    align-items: center !important;
-                    height: 24px !important;
-                    line-height: 24px !important;
-                    font-size: 16px !important;
-                    font-weight: 400 !important;
                     color: #fff !important;
                     text-decoration: none !important;
-                    vertical-align: middle !important;
-                }
-
-                /* Dropdown specific alignment */
-                .menu-dropdown-wrapper {
-                    position: relative !important;
-                }
-
-                .menu-dropdown-wrapper .dropdown-toggle {
-                    height: 24px !important;
-                    line-height: 24px !important;
-                    display: inline-flex !important;
-                    align-items: center !important;
-                    gap: 5px !important;
-                }
-
-                .dropdown-toggle-arrow-2 {
-                    font-size: 10px !important;
-                    line-height: 24px !important;
+                    top: 0 !important;
+                    transform: none !important;
+                    align-self: center !important;
                 }
 
                 .primary-button-wrapper {
@@ -571,6 +556,8 @@
 
     // Mobile menu toggle functionality
     function initMobileMenu() {
+        console.log('🔧 Initializing mobile menu...');
+
         // Ensure menu starts closed on mobile
         if (window.innerWidth <= 991) {
             document.body.classList.remove('w--nav-menu-open');
@@ -578,6 +565,7 @@
             // Remove problematic inline styles that override our CSS
             const menu = document.querySelector('.w-nav-menu');
             if (menu) {
+                console.log('📱 Mobile menu found, hiding...');
                 // Remove inline visibility and opacity that conflict with our mobile styles
                 menu.style.removeProperty('visibility');
                 menu.style.removeProperty('opacity');
@@ -586,6 +574,8 @@
                 menu.style.setProperty('display', 'none', 'important');
                 menu.style.setProperty('visibility', 'hidden', 'important');
                 menu.style.setProperty('opacity', '0', 'important');
+            } else {
+                console.log('⚠️ Mobile menu not found during init');
             }
         }
 
@@ -601,24 +591,102 @@
         // Add click handler to hamburger button
         const hamburger = document.querySelector('.w-nav-button');
         if (hamburger) {
+            console.log('🍔 Hamburger button found, adding click handler...');
+
+            // Ensure hamburger is visible
+            hamburger.style.setProperty('display', 'block', 'important');
+            hamburger.style.setProperty('visibility', 'visible', 'important');
+            hamburger.style.setProperty('opacity', '1', 'important');
+
             hamburger.addEventListener('click', function(e) {
+                console.log('🍔 Hamburger clicked!');
                 e.preventDefault();
                 e.stopPropagation();
 
                 const isOpen = document.body.classList.contains('w--nav-menu-open');
+                const menu = document.querySelector('.w-nav-menu');
 
                 if (isOpen) {
                     // Close menu
                     document.body.classList.remove('w--nav-menu-open');
+
+                    // Re-apply hidden styles for mobile
+                    if (menu && window.innerWidth <= 991) {
+                        menu.style.setProperty('display', 'none', 'important');
+                        menu.style.setProperty('visibility', 'hidden', 'important');
+                        menu.style.setProperty('opacity', '0', 'important');
+                    }
+
                     console.log('📱 Mobile menu closed');
                 } else {
                     // Open menu
                     document.body.classList.add('w--nav-menu-open');
+
+                    // Remove inline styles to let CSS take over
+                    if (menu) {
+                        menu.style.removeProperty('display');
+                        menu.style.removeProperty('visibility');
+                        menu.style.removeProperty('opacity');
+                    }
+
                     console.log('📱 Mobile menu opened');
                 }
             });
 
             console.log('✅ Mobile menu hamburger initialized');
+        } else {
+            console.log('❌ Hamburger button not found! Available buttons:');
+            const allButtons = document.querySelectorAll('button, .button, [role="button"]');
+            allButtons.forEach((btn, i) => {
+                console.log(`   ${i + 1}. ${btn.className} - ${btn.tagName}`);
+            });
+
+            // Create a fallback hamburger button if none exists
+            const navbar = document.querySelector('.navbar-content');
+            if (navbar && window.innerWidth <= 991) {
+                console.log('🔧 Creating fallback hamburger button...');
+                const fallbackHamburger = document.createElement('div');
+                fallbackHamburger.className = 'w-nav-button fallback-hamburger';
+                fallbackHamburger.innerHTML = '<div class="w-icon-nav-menu"><span></span></div>';
+                fallbackHamburger.style.cssText = `
+                    position: fixed !important;
+                    top: 20px !important;
+                    right: 20px !important;
+                    z-index: 1001 !important;
+                    background: rgba(0, 0, 0, 0.7) !important;
+                    border: none !important;
+                    cursor: pointer !important;
+                    padding: 10px !important;
+                    width: 40px !important;
+                    height: 40px !important;
+                    border-radius: 4px !important;
+                    display: block !important;
+                `;
+
+                // Add RTL positioning for Hebrew
+                if (document.documentElement.dir === 'rtl') {
+                    fallbackHamburger.style.right = 'auto';
+                    fallbackHamburger.style.left = '20px';
+                }
+
+                navbar.appendChild(fallbackHamburger);
+
+                // Add click handler to fallback
+                fallbackHamburger.addEventListener('click', function(e) {
+                    console.log('🍔 Fallback hamburger clicked!');
+                    e.preventDefault();
+                    const isOpen = document.body.classList.contains('w--nav-menu-open');
+                    if (isOpen) {
+                        document.body.classList.remove('w--nav-menu-open');
+                        console.log('📱 Mobile menu closed (fallback)');
+                    } else {
+                        document.body.classList.add('w--nav-menu-open');
+                        console.log('📱 Mobile menu opened (fallback)');
+                    }
+                });
+
+                console.log('✅ Fallback hamburger created');
+            }
         }
 
         // Close menu when clicking overlay or outside
@@ -634,7 +702,7 @@
                 }
             }
 
-            // Close language dropdown when clicking outside
+            // Close dropdowns when clicking outside
             const clickedLanguageSwitcher = e.target.closest('#language-switcher');
             if (!clickedLanguageSwitcher) {
                 const dropdown = document.getElementById('languageDropdown');
@@ -642,6 +710,15 @@
                     dropdown.style.display = 'none';
                 }
             }
+
+            const clickedCareerDropdown = e.target.closest('#career-dropdown');
+            if (!clickedCareerDropdown) {
+                const careerDropdown = document.getElementById('careerDropdownMenu');
+                if (careerDropdown) {
+                    careerDropdown.style.display = 'none';
+                }
+            }
+
         });
 
         // Handle escape key
@@ -662,6 +739,13 @@
 
     // Initialize
     function init() {
+        console.log('🚀 Shared menu component initializing... v2.3');
+        console.log('📱 Viewport width:', window.innerWidth);
+        console.log('🌐 Current language:', currentLang);
+        console.log('📄 Current page:', currentPage);
+        console.log('🔍 Translations being used:', JSON.stringify(t, null, 2));
+        console.log('🔍 Hebrew translations check:', menuText.he);
+
         injectMenu();
         applyMenuStyles();
 
@@ -669,6 +753,8 @@
         setTimeout(() => {
             initMobileMenu();
         }, 100);
+
+        console.log('✅ Shared menu component initialized');
     }
 
     // Run on DOM ready

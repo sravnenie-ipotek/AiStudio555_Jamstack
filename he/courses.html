@@ -417,12 +417,8 @@
       border-radius: 10px;
       font-size: 16px;
       transition: all 0.3s ease;
-    }
-    
-    .form-input:focus {
-      outline: none;
-      border-color: #0080ff;
-      box-shadow: 0 0 0 3px rgba(0,128,255,0.1);
+      color: #04193f; /* Set text color to black (site's main text color) */
+      background: white;
     }
     
     .form-select {
@@ -451,6 +447,41 @@
     .form-submit:hover {
       transform: scale(1.02);
       box-shadow: 0 10px 30px rgba(0,128,255,0.3);
+    }
+
+    .form-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Form error messages for RTL Hebrew */
+    .form-error {
+      display: none;
+      color: #ef4444;
+      font-size: 12px;
+      margin-top: 4px;
+      text-align: right;
+      direction: rtl;
+      font-weight: 500;
+    }
+
+    .form-error.active {
+      display: block;
+    }
+
+    /* Input error state */
+    .form-input.error,
+    .form-select.error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    /* Success state for inputs */
+    .form-input.success,
+    .form-select.success {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
     }
     
     /* Responsive Design */
@@ -820,46 +851,8 @@
   <link href="../css/mobile-fix.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
-      <select onchange="switchLanguage(this.value)" style="padding: 8px; border-radius: 4px;">
-        <option value="en">English</option><option value="ru">Russian</option><option value="he" selected="">Hebrew</option>
-      </select>
-    </div>
-    <script>
-      function switchLanguage(lang) {
-        const currentPath = window.location.pathname;
-        const pathParts = currentPath.split('/').filter(p => p);
-        
-        // Remove current language from path
-        if (['en', 'ru', 'he'].includes(pathParts[0])) {
-          pathParts.shift();
-        }
-        
-        // Navigate to new language
-        const newPath = '/' + lang + '/' + pathParts.join('/');
-        window.location.href = newPath;
-      }
-    </script>
-  
   <div class="page-wrapper">
     <div id="shared-menu-container"></div>
-                </div>
-              </div>
-            </div>
-            <div class="primary-button-wrapper desktop">
-              <a href="#" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
-                <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">הרשמו היום</div>
-                  <div class="primary-button-text-block is-text-absolute">הרשמו היום</div>
-                </div>
-              </a>
-            </div>
-            <div class="menu-button w-nav-button">
-              <div data-is-ix2-target="1" class="hamburger-menu-icon" data-w-id="9700d956-7e80-623a-3836-d267f1fdd0f6" data-animation-type="lottie" data-src="https://uploads-ssl.webflow.com/6649cc3a1ea038d81fed488f/665c6513c402f5112b50428d_Hamburger%20White.lottie" data-loop="0" data-direction="1" data-autoplay="0" data-renderer="svg" data-duration="0" data-ix2-initial-state="0"></div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
     <section class="section inner-banner">
       <div class="container">
@@ -1398,7 +1391,7 @@
       /* Modern FAQ Design Styles */
       .faq-modern {
         padding: 100px 0;
-        background: linear-gradient(180deg, rgba(5, 5, 26, 0) 0%, rgba(20, 20, 50, 0.05) 100%);
+        background: linear-gradient(180deg, rgba(5, 5, 26, 0) 0%, rgba(20,  20, 50, 0.05) 100%);
       }
 
       .faq-header-modern {
@@ -1632,54 +1625,86 @@
       </div>
     </section>
 
-    <!-- Consultation Section -->
-    <section class="consultation-section" id="consultation">
+    <!-- Static Consultation Form -->
+    <section class="consultation-section-static" id="consultation" style="padding: 80px 0; background: linear-gradient(135deg, #f8f9fb 0%, #e9ecef 100%);">
       <div class="container">
-        <div class="consultation-content">
-          <h2 class="consultation-title">Get Personalized Course Guidance</h2>
-          <p class="consultation-description">
-            Not sure which course is right for you? Our education advisors are here to help you choose the perfect learning path.
+        <div class="consultation-content" style="max-width: 600px; margin: 0 auto; text-align: center;">
+          <h2 style="font-size: 42px; font-weight: 700; color: #04193f; margin-bottom: 20px;">קבלו ייעוץ אישי לבחירת קורס</h2>
+          <p style="font-size: 18px; color: #6b7280; margin-bottom: 40px;">
+            מלאו את הטופס ונחזור אליכם תוך 24 שעות עם המלצה אישית לקורס המתאים לכם
           </p>
-          <div class="consultation-form">
-            <form id="consultation-form">
-              <div class="form-group">
-                <label class="form-label" for="name">שם מלא</label>
-                <input type="text" id="name" class="form-input" placeholder="הכנס את שמך המלא" required="">
+          <div style="background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <form id="static-consultation-form" data-no-animation="true">
+              <!-- Name Field -->
+              <div style="margin-bottom: 20px; text-align: right;">
+                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-name">שם מלא</label>
+                <input type="text" id="static-name" name="name"
+                       style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: rtl; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box;"
+                       placeholder="הכנס את שמך המלא" required>
               </div>
-              <div class="form-group">
-                <label class="form-label" for="email">כתובת אימייל</label>
-                <input type="email" id="email" class="form-input" placeholder="הכנס את האימייל שלך" required="">
+
+              <!-- Email Field -->
+              <div style="margin-bottom: 20px; text-align: right;">
+                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-email">כתובת אימייל</label>
+                <input type="email" id="static-email" name="email"
+                       style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: ltr; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box;"
+                       placeholder="your@email.com" required>
               </div>
-              <div class="form-group">
-                <label class="form-label" for="phone">מספר טלפון</label>
-                <input type="tel" id="phone" class="form-input" placeholder="הכנס את מספר הטלפון שלך" required="">
+
+              <!-- Phone Field -->
+              <div style="margin-bottom: 20px; text-align: right;">
+                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-phone">מספר טלפון</label>
+                <input type="tel" id="static-phone" name="phone"
+                       style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: ltr; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box;"
+                       placeholder="050-123-4567" required>
               </div>
-              <div class="form-group">
-                <label class="form-label" for="interest">תחום עניין</label>
-                <select id="interest" class="form-select" required="">
-                  <option value="">בחר את תחום העניין שלך</option>
-                  <option value="ai-ml">AI ולמידת מכונה</option>
+
+              <!-- Interest Field -->
+              <div style="margin-bottom: 20px; text-align: right;">
+                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-interest">תחום עניין</label>
+                <select id="static-interest" name="interest"
+                        style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: rtl; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box; cursor: pointer;" required>
+                  <option value="">בחר תחום עניין</option>
+                  <option value="ai-ml">בינה מלאכותית ולמידת מכונה</option>
                   <option value="data-science">מדע הנתונים</option>
                   <option value="web-dev">פיתוח אתרים</option>
                   <option value="cloud">מחשוב ענן</option>
-                  <option value="mobile">פיתוח מובייל</option>
-                  <option value="blockchain">Blockchain</option>
-                  <option value="cybersecurity">אבטחת סייבר</option>
-                  <option value="product">Product Management</option>
+                  <option value="mobile">פיתוח אפליקציות</option>
+                  <option value="blockchain">בלוקצ'יין</option>
+                  <option value="cybersecurity">אבטחת מידע</option>
+                  <option value="product">ניהול מוצר</option>
                 </select>
               </div>
-              <div class="form-group">
-                <label class="form-label" for="experience">רמת ניסיון נוכחית</label>
-                <select id="experience" class="form-select" required="">
-                  <option value="">בחר את רמת הניסיון שלך</option>
-                  <option value="beginner">מתחיל לחלוטין</option>
-                  <option value="some">ניסיון תכנות מסוים</option>
-                  <option value="intermediate">מפתח בינוני</option>
-                  <option value="advanced">מקצוען מתקדם</option>
+
+              <!-- Experience Field -->
+              <div style="margin-bottom: 30px; text-align: right;">
+                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-experience">רמת ניסיון</label>
+                <select id="static-experience" name="experience"
+                        style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: rtl; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box; cursor: pointer;" required>
+                  <option value="">בחר רמת ניסיון</option>
+                  <option value="beginner">מתחיל - אין לי ניסיון בתכנות</option>
+                  <option value="some">יש לי ניסיון בסיסי</option>
+                  <option value="intermediate">מפתח ברמה בינונית</option>
+                  <option value="advanced">מפתח מנוסה</option>
                 </select>
               </div>
-              <button type="submit" class="form-submit">קבל ייעוץ חינם</button>
+
+              <!-- Submit Button -->
+              <button type="submit"
+                      style="width: 100%; padding: 16px 32px; background: linear-gradient(135deg, #0080ff 0%, #00c6ff 100%); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: 600; cursor: pointer; transition: transform 0.2s;">
+                שלח בקשת ייעוץ
+              </button>
             </form>
+
+            <!-- Success Message (hidden by default) -->
+            <div id="static-form-success" style="display: none; margin-top: 20px; padding: 16px; background: #10b981; color: white; border-radius: 8px; text-align: center;">
+              ✅ הטופס נשלח בהצלחה! נחזור אליך בקרוב.
+            </div>
+
+            <!-- Error Message (hidden by default) -->
+            <div id="static-form-error" style="display: none; margin-top: 20px; padding: 16px; background: #ef4444; color: white; border-radius: 8px; text-align: center;">
+              ❌ אירעה שגיאה. אנא נסה שוב.
+            </div>
           </div>
         </div>
       </div>
@@ -1787,7 +1812,7 @@
             <p data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e987" class="cta-description-text">אל תחכו כדי לשנות את הקריירה שלכם ולפתוח את מלוא הפוטנציאל שלכם. הצטרפו לקהילת הלומדים הנלהבים שלנו וקבלו גישה למגוון רחב של קורסים.</p>
           </div>
           <div data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e989" class="cta-button-wrapper">
-            <a href="contact-us.html" data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e98a" class="primary-button w-inline-block">
+            <a href="#" data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e98a" class="primary-button w-inline-block">
               <div class="primary-button-text-wrap">
                 <div class="primary-button-text-block">צרו קשר</div>
                 <div class="primary-button-text-block is-text-absolute">צרו קשר</div>
@@ -1840,19 +1865,417 @@
         });
       });
       
-      // Consultation form handler
+      // Enhanced Consultation form handler with API integration
       const consultationForm = document.getElementById('consultation-form');
       if (consultationForm) {
-        consultationForm.addEventListener('submit', function(e) {
-          e.preventDefault();
-          // Here you would normally send the form data to your server
-          alert('תודה על התעניינותך! יועץ הלימודים שלנו יצור איתך קשר תוך 24 שעות.');
-          consultationForm.reset();
+        // Preserve Hebrew placeholders and labels - prevent any script from overwriting them
+        const preserveHebrewContent = () => {
+          const nameInput = consultationForm.querySelector('#name');
+          const emailInput = consultationForm.querySelector('#email');
+          const phoneInput = consultationForm.querySelector('#phone');
+          const submitBtn = consultationForm.querySelector('.form-submit');
+
+          if (nameInput && nameInput.placeholder !== 'הכנס את שמך המלא') {
+            nameInput.placeholder = 'הכנס את שמך המלא';
+          }
+          if (emailInput && emailInput.placeholder !== 'הכנס את האימייל שלך') {
+            emailInput.placeholder = 'הכנס את האימייל שלך';
+          }
+          if (phoneInput && phoneInput.placeholder !== 'הכנס את מספר הטלפון שלך') {
+            phoneInput.placeholder = 'הכנס את מספר הטלפון שלך';
+          }
+          if (submitBtn && submitBtn.textContent !== 'קבל ייעוץ חינם') {
+            submitBtn.textContent = 'קבל ייעוץ חינם';
+          }
+        };
+
+        // Run immediately and after a delay to catch any late modifications
+        preserveHebrewContent();
+        setTimeout(preserveHebrewContent, 100);
+        setTimeout(preserveHebrewContent, 500);
+        setTimeout(preserveHebrewContent, 1000);
+        setTimeout(preserveHebrewContent, 1500);
+
+        // Form validation patterns
+        const validators = {
+          name: (value) => {
+            if (!value.trim()) return 'שם מלא נדרש';
+            if (value.trim().length < 2) return 'השם חייב להכיל לפחות 2 תווים';
+            return '';
+          },
+          email: (value) => {
+            if (!value.trim()) return 'כתובת אימייל נדרשת';
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) return 'כתובת אימייל לא תקינה';
+            return '';
+          },
+          phone: (value) => {
+            if (!value.trim()) return 'מספר טלפון נדרש';
+            const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/;
+            if (!phoneRegex.test(value)) return 'מספר טלפון לא תקין';
+            return '';
+          },
+          interest: (value) => {
+            if (!value) return 'יש לבחור תחום עניין';
+            return '';
+          },
+          experience: (value) => {
+            if (!value) return 'יש לבחור רמת ניסיון';
+            return '';
+          }
+        };
+
+        // Add error message containers if they don't exist
+        const formInputs = consultationForm.querySelectorAll('input, select');
+        formInputs.forEach(input => {
+          if (!input.parentNode.querySelector('.form-error')) {
+            const errorSpan = document.createElement('span');
+            errorSpan.className = 'form-error';
+            errorSpan.id = input.id + 'Error';
+            errorSpan.style.cssText = 'display: none; color: #ef4444; font-size: 12px; margin-top: 4px; text-align: right; direction: rtl; font-weight: 500;';
+            input.parentNode.appendChild(errorSpan);
+          }
         });
+
+        // Validate individual field
+        function validateField(field) {
+          const errorElement = document.getElementById(field.id + 'Error');
+          if (!errorElement) return true;
+
+          const validator = validators[field.id];
+          if (!validator) return true;
+
+          const errorMessage = validator(field.value);
+
+          if (errorMessage) {
+            errorElement.textContent = errorMessage;
+            errorElement.classList.add('active');
+            field.classList.add('error');
+            field.classList.remove('success');
+            return false;
+          } else {
+            errorElement.textContent = '';
+            errorElement.classList.remove('active');
+            field.classList.remove('error');
+            field.classList.add('success');
+            return true;
+          }
+        }
+
+        // Add real-time validation
+        formInputs.forEach(input => {
+          input.addEventListener('blur', () => validateField(input));
+        });
+
+        // Show notification function
+        function showNotification(message, type = 'success') {
+          // Remove existing notifications
+          const existingNotification = document.querySelector('.consultation-notification');
+          if (existingNotification) {
+            existingNotification.remove();
+          }
+
+          const notification = document.createElement('div');
+          notification.className = `consultation-notification ${type}`;
+          notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideInLeft 0.3s ease;
+            max-width: 400px;
+            direction: rtl;
+            text-align: right;
+            ${type === 'success'
+              ? 'background: linear-gradient(135deg, #10b981 0%, #059669 100%);'
+              : 'background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);'
+            }
+          `;
+          notification.textContent = message;
+
+          // Add animation styles if not already present
+          if (!document.querySelector('#consultation-notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'consultation-notification-styles';
+            style.textContent = `
+              @keyframes slideInLeft {
+                from { transform: translateX(-100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+              }
+              @keyframes slideOutLeft {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(-100%); opacity: 0; }
+              }
+            `;
+            document.head.appendChild(style);
+          }
+
+          document.body.appendChild(notification);
+
+          // Auto remove after 5 seconds
+          setTimeout(() => {
+            notification.style.animation = 'slideOutLeft 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+          }, 5000);
+        }
+
+        // Initialize EmailJS for fallback
+        function initializeEmailJS() {
+          if (typeof emailjs !== 'undefined') {
+            try {
+              emailjs.init('TgAbmI0ROiUaACG34');
+              window.emailJSReady = true;
+              console.log('EmailJS initialized for consultation form');
+              return true;
+            } catch (e) {
+              console.error('EmailJS initialization failed:', e);
+              window.emailJSReady = false;
+              return false;
+            }
+          }
+          return false;
+        }
+
+        // Send via EmailJS as fallback/additional notification (don't throw on failure)
+        async function sendViaEmailJS(formData) {
+          if (!window.emailJSReady && !initializeEmailJS()) {
+            throw new Error('EmailJS not available');
+          }
+
+          const templateParams = {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            interest: formData.interest,
+            experience: formData.experience,
+            title: 'בקשת ייעוץ חדשה - AI Studio',
+            message: `תחום עניין: ${formData.interest}\nרמת ניסיון: ${formData.experience}`
+          };
+
+          return await emailjs.send(
+            'service_t2uqbxs',       // EmailJS service ID
+            'template_ux5c6f5',      // Template ID
+            templateParams
+          );
+        }
+
+        consultationForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+
+          // Validate all fields
+          const fields = consultationForm.querySelectorAll('input, select');
+          let isValid = true;
+
+          fields.forEach(field => {
+            if (!validateField(field)) {
+              isValid = false;
+            }
+          });
+
+          if (!isValid) {
+            showNotification('אנא תקן את השגיאות בטופס', 'error');
+            return;
+          }
+
+          // Get form data
+          const formData = {
+            name: consultationForm.querySelector('#name').value.trim(),
+            email: consultationForm.querySelector('#email').value.trim(),
+            phone: consultationForm.querySelector('#phone').value.trim(),
+            interest: consultationForm.querySelector('#interest').value,
+            experience: consultationForm.querySelector('#experience').value
+          };
+
+          // Show loading state
+          const submitBtn = consultationForm.querySelector('.form-submit');
+          const originalText = submitBtn.textContent;
+          submitBtn.textContent = 'שולח...';
+          submitBtn.disabled = true;
+          submitBtn.style.opacity = '0.7';
+
+          try {
+            // Try API first
+            const apiUrl = 'https://aistudio555jamstack-production.up.railway.app/api/consultations';
+
+            const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(formData)
+            });
+
+            let apiSuccess = false;
+
+            if (response.ok) {
+              const result = await response.json();
+              if (result.success) {
+                apiSuccess = true;
+                console.log('Consultation submitted successfully via API');
+                showNotification('תודה! בקשת הייעוץ נשלחה בהצלחה. נחזור אליך תוך 24 שעות.');
+              } else {
+                throw new Error(result.message || 'API request failed');
+              }
+            } else {
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            // Try EmailJS as backup/additional notification (don't throw on failure)
+            try {
+              if (!apiSuccess) {
+                // Only use EmailJS as primary if API failed
+                await sendViaEmailJS(formData);
+                showNotification('תודה! בקשת הייעוץ נשלחה בהצלחה. נחזור אליך תוך 24 שעות.');
+              } else {
+                // Send as backup notification
+                await sendViaEmailJS(formData);
+              }
+            } catch (emailError) {
+              console.error('EmailJS backup failed:', emailError);
+              // Don't show error if API succeeded
+              if (!apiSuccess) {
+                throw emailError;
+              }
+            }
+
+            // Reset form on success
+            consultationForm.reset();
+
+          } catch (error) {
+            console.error('Consultation form submission failed:', error);
+            showNotification(
+              'אירעה שגיאה בשליחת הטופס. אנא נסה שוב או צור קשר ישירות.',
+              'error'
+            );
+          } finally {
+            // Reset button state
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+          }
+        });
+
+        // Initialize EmailJS on page load
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initializeEmailJS);
+        } else {
+          initializeEmailJS();
+        }
       }
     });
   </script>
 
+  <!-- Static Consultation Form Handler -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Static Form Handler (Alternative form without animations)
+      const staticForm = document.getElementById('static-consultation-form');
+      if (staticForm) {
+        console.log('✅ Static consultation form found, initializing...');
+
+        staticForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          console.log('📝 Static form submitted');
+
+          // Get form data
+          const formData = {
+            name: staticForm.querySelector('#static-name').value.trim(),
+            email: staticForm.querySelector('#static-email').value.trim(),
+            phone: staticForm.querySelector('#static-phone').value.trim(),
+            interest: staticForm.querySelector('#static-interest').value,
+            experience: staticForm.querySelector('#static-experience').value
+          };
+
+          console.log('📊 Form data:', formData);
+
+          // Hide messages
+          document.getElementById('static-form-success').style.display = 'none';
+          document.getElementById('static-form-error').style.display = 'none';
+
+          // Update button
+          const submitBtn = staticForm.querySelector('button[type="submit"]');
+          const originalText = submitBtn.textContent;
+          submitBtn.textContent = 'שולח...';
+          submitBtn.disabled = true;
+          submitBtn.style.opacity = '0.7';
+
+          try {
+            // Send to API
+            const response = await fetch('https://aistudio555jamstack-production.up.railway.app/api/consultations', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              console.log('✅ Success:', result);
+
+              // Show success message
+              document.getElementById('static-form-success').style.display = 'block';
+
+              // Reset form
+              staticForm.reset();
+
+              // Hide success message after 5 seconds
+              setTimeout(() => {
+                document.getElementById('static-form-success').style.display = 'none';
+              }, 5000);
+            } else {
+              throw new Error(`API request failed: ${response.status}`);
+            }
+          } catch (error) {
+            console.error('❌ Error submitting form:', error);
+
+            // Show error message
+            document.getElementById('static-form-error').style.display = 'block';
+
+            // Hide error message after 5 seconds
+            setTimeout(() => {
+              document.getElementById('static-form-error').style.display = 'none';
+            }, 5000);
+          } finally {
+            // Reset button
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+          }
+        });
+
+        // Prevent any script from modifying the static form
+        const observer = new MutationObserver(() => {
+          // Ensure Hebrew content stays intact
+          const nameLabel = staticForm.querySelector('label[for="static-name"]');
+          const emailLabel = staticForm.querySelector('label[for="static-email"]');
+          const phoneLabel = staticForm.querySelector('label[for="static-phone"]');
+          const submitBtn = staticForm.querySelector('button[type="submit"]');
+
+          if (nameLabel && nameLabel.textContent !== 'שם מלא') {
+            nameLabel.textContent = 'שם מלא';
+          }
+          if (emailLabel && emailLabel.textContent !== 'כתובת אימייל') {
+            emailLabel.textContent = 'כתובת אימייל';
+          }
+          if (phoneLabel && phoneLabel.textContent !== 'מספר טלפון') {
+            phoneLabel.textContent = 'מספר טלפון';
+          }
+          if (submitBtn && !submitBtn.disabled && submitBtn.textContent !== 'שלח בקשת ייעוץ') {
+            submitBtn.textContent = 'שלח בקשת ייעוץ';
+          }
+        });
+
+        // Observe changes to the form
+        observer.observe(staticForm, { childList: true, subtree: true, characterData: true });
+      }
+    });
+  </script>
 
     <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -1977,12 +2400,17 @@
 
   <script src="../js/navigation-responsive-fix.js"></script>
 
-  <!-- Hebrew Translations Fix - Must load before API integration -->
-  <script src="../js/hebrew-translations-fix.js"></script>
+  <!-- API Configuration - Load First -->
+  <script src="../js/api-config.js?v=1.1"></script>
+  <!-- Enhanced Integration for Translation Support -->
+  <script src="../js/translations-config.js?v=1.1"></script>
+
   <!-- API Integration Scripts -->
   <script src="../js/webflow-strapi-integration.js"></script>
   <script src="../js/strapi-integration.js"></script>
-  <script src="../js/ui-translator.js"></script>
+  <script src="../js/enhanced-integration.js?v=1.1"></script>
+  <script src="../js/shared-menu-component.js?v=2.3"></script>
+  <script src="../js/ui-translator.js?v=1.1"></script>
   <script src="../js/mobile-menu-toggle-fix.js"></script>
 
   <!-- Master Footer Loader -->
@@ -1995,5 +2423,15 @@
       }
     });
   </script>
-    <script src="../js/shared-menu-component.js"></script>
+
+  <!-- EmailJS -->
+  <script
+    type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+  </script>
+
+  <!-- Shared Menu Component now loads before ui-translator above -->
+
+  <!-- Contact Form Modal -->
+  <script src="../js/contact-form-modal.js"></script>
 </body></html>

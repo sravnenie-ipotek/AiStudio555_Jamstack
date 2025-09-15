@@ -1,18 +1,36 @@
-/* Minimal Language Selector Styling - Use Webflow Defaults */
+/* Language Selector Styling - Match Navigation Items */
 
-/* Only add subtle highlight background - no layout changes at all */
-a#language-switcher.nav-link {
-    background: rgba(139, 92, 246, 0.08);
-    border-radius: 8px;
-    padding-left: 10px;
-    padding-right: 10px;
+/* Style the language selector to match nav-link appearance */
+.language-nav-select {
+    background: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
 }
 
-a#language-switcher.nav-link:hover {
-    background: rgba(139, 92, 246, 0.15);
+.language-nav-select:focus {
+    outline: none !important;
+    color: #ffffff !important;
 }
 
-/* Dropdown positioning only */
+.language-nav-select option {
+    background: rgba(5, 5, 26, 0.98) !important;
+    color: #ffffff !important;
+}
+
+.language-nav-item {
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Only style the dropdown itself, not the button */
 #languageDropdown {
     margin-top: 8px;
 }
@@ -22,5 +40,9 @@ a#language-switcher.nav-link:hover {
     a#language-switcher.nav-link {
         background: transparent;
         border-radius: 0;
+    }
+
+    .language-nav-select {
+        color: #ffffff !important;
     }
 }
