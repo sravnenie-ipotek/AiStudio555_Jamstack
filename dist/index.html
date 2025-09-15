@@ -1,22 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>AI Studio - Redirecting...</title>
-  <script>
-    // Detect browser language and redirect
-    const userLang = navigator.language.slice(0, 2);
-    const supportedLangs = ['en', 'ru', 'he'];
-    const defaultLang = 'en';
-    
-    const redirectLang = supportedLangs.includes(userLang) ? userLang : defaultLang;
-    window.location.replace('/' + redirectLang + '/');
-  </script>
-  <noscript>
-    <meta http-equiv="refresh" content="0; url=/en/">
-  </noscript>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Studio - Redirecting...</title>
+    <script src="/js/language-preference-detector.js"></script>
+    <script>
+        // Immediate redirect based on user preference
+        (function() {
+            const SUPPORTED_LANGUAGES = ['en', 'he', 'ru'];
+            const DEFAULT_LANGUAGE = 'en';
+
+            // Check saved preference
+            const savedLang = localStorage.getItem('preferred_language');
+            let targetLang = DEFAULT_LANGUAGE;
+
+            if (savedLang && SUPPORTED_LANGUAGES.includes(savedLang)) {
+                targetLang = savedLang;
+            } else {
+                // Check browser language
+                const browserLang = (navigator.language || navigator.userLanguage || '').split('-')[0].toLowerCase();
+                const langMap = {
+                    'en': 'en',
+                    'he': 'he',
+                    'iw': 'he',
+                    'ru': 'ru',
+                    'uk': 'ru',
+                    'be': 'ru'
+                };
+
+                if (langMap[browserLang]) {
+                    targetLang = langMap[browserLang];
+                }
+            }
+
+            // Redirect to language-specific home
+            window.location.replace('/' + targetLang + '/');
+        })();
+    </script>
 </head>
 <body>
-  <p>Redirecting to <a href="/en/">AI Studio</a>...</p>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial, sans-serif;">
+        <div>
+            <h1>Welcome to AI Studio</h1>
+            <p>Redirecting to your preferred language...</p>
+            <p>If you are not redirected, <a href="/en/">click here</a>.</p>
+        </div>
+    </div>
 </body>
 </html>
