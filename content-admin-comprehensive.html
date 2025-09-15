@@ -2846,6 +2846,10 @@
 
         async function saveAllHomePage() {
             const timestamp = new Date().toISOString();
+
+            // Alert for immediate feedback
+            alert(`🚀 SAVE OPERATION STARTED AT: ${timestamp}`);
+
             console.log('='.repeat(80));
             console.log(`🚀 SAVE OPERATION STARTED AT: ${timestamp}`);
             console.log('='.repeat(80));
@@ -4052,6 +4056,10 @@
                         e.preventDefault();
                         e.stopPropagation();
                         saveClickCount++;
+
+                        // Add alert for immediate feedback
+                        alert('🔘 SAVE BUTTON CLICKED! Check console for details.');
+
                         console.log('='.repeat(80));
                         console.log(`🔘 SAVE BUTTON CLICKED #${saveClickCount} at ${new Date().toISOString()}`);
                         console.log('='.repeat(80));
@@ -4064,6 +4072,7 @@
                             saveAllHomePage();
                         } catch (error) {
                             console.error('❌ Error calling saveAllHomePage:', error);
+                            alert('❌ Error: ' + error.message);
                         }
                     }, { capture: true });
 
@@ -4074,6 +4083,7 @@
 
                     // Also add onclick property as backup
                     newBtn.onclick = function(e) {
+                        alert('🔘 ONCLICK backup triggered! Check console.');
                         console.log('🔘 ONCLICK property triggered');
                         e.preventDefault();
                         saveAllHomePage();
