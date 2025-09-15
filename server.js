@@ -2987,6 +2987,210 @@ app.get('/api/sync-logo-batch', async (req, res) => {
   }
 });
 
+// ==================== SMALL BATCH SYNC ENDPOINTS ====================
+
+// Batch 1: Fix consultations table structure
+app.get('/api/sync-fix-consultations', async (req, res) => {
+  const secretKey = req.query.key;
+  if (secretKey !== 'sync-2025-secure-key') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    // Drop incorrect consultations table
+    await queryDatabase('DROP TABLE IF EXISTS consultations CASCADE');
+
+    // Create correct consultations table for contact forms
+    await queryDatabase(`
+      CREATE TABLE consultations (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        phone VARCHAR(50),
+        interest VARCHAR(100) NOT NULL,
+        experience VARCHAR(50) NOT NULL,
+        locale VARCHAR(10) DEFAULT 'en',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Add indexes
+    await queryDatabase('CREATE INDEX idx_consultations_email ON consultations(email)');
+    await queryDatabase('CREATE INDEX idx_consultations_interest ON consultations(interest)');
+    await queryDatabase('CREATE INDEX idx_consultations_created_at ON consultations(created_at)');
+
+    res.json({ success: true, message: 'Consultations table fixed' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Batch 2: Add consultation services table
+app.get('/api/sync-add-consultation-services', async (req, res) => {
+  const secretKey = req.query.key;
+  if (secretKey !== 'sync-2025-secure-key') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    // Create consultation services table
+    await queryDatabase(`
+      CREATE TABLE IF NOT EXISTS consultation_services (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255),
+        description TEXT,
+        duration VARCHAR(100),
+        price DECIMAL(10,2),
+        features JSONB,
+        locale VARCHAR(10) DEFAULT 'en',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Insert sample services
+    const services = [
+      ['Career Strategy Session', 'One-on-one career planning and guidance', '60 minutes', 150, '{"personalPlan": true, "followUp": true, "resources": true}'],
+      ['Technical Interview Prep', 'Mock interviews and coding practice', '90 minutes', 200, '{"mockInterview": true, "feedback": true, "tips": true}'],
+      ['Portfolio Review', 'Professional review of your AI/ML projects', '45 minutes', 100, '{"detailed_feedback": true, "improvement_tips": true}']
+    ];
+
+    let inserted = 0;
+    for (const service of services) {
+      await queryDatabase(
+        'INSERT INTO consultation_services (title, description, duration, price, features) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING',
+        service
+      );
+      inserted++;
+    }
+
+    res.json({ success: true, message: `Consultation services table created, ${inserted} services added` });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Batch 3: Add multilingual FAQs (Russian batch)
+app.get('/api/sync-add-russian-faqs', async (req, res) => {
+  const secretKey = req.query.key;
+  if (secretKey !== 'sync-2025-secure-key') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const russianFaqs = [
+      ['Как записаться на курс?', 'Нажмите кнопку "Записаться" на любой курс и заполните форму регистрации.', 'Общее', 5, 'ru'],
+      ['Что включено в стоимость курса?', 'В стоимость включены все учебные материалы, практические задания и сертификат.', 'Курсы', 6, 'ru'],
+      ['Выдаете ли вы сертификаты?', 'Да, все выпускники получают сертификат о прохождении курса.', 'Курсы', 7, 'ru'],
+      ['Какие способы оплаты вы принимаете?', 'Мы принимаем банковские карты, PayPal и банковские переводы.', 'Оплата', 8, 'ru']
+    ];
+
+    let inserted = 0;
+    for (const faq of russianFaqs) {
+      await queryDatabase(
+        'INSERT INTO faqs (question, answer, category, order_index, locale, visible) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT DO NOTHING',
+        [...faq, true]
+      );
+      inserted++;
+    }
+
+    res.json({ success: true, message: `${inserted} Russian FAQs added` });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Batch 4: Add multilingual FAQs (Hebrew batch)
+app.get('/api/sync-add-hebrew-faqs', async (req, res) => {
+  const secretKey = req.query.key;
+  if (secretKey !== 'sync-2025-secure-key') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const hebrewFaqs = [
+      ['איך נרשמים לקורס?', 'לחצו על כפתור "הרשמה" בכל קורס ומלאו את טופס ההרשמה.', 'כללי', 9, 'he'],
+      ['מה כלול בעלות הקורס?', 'בעלות כלולים כל חומרי הלימוד, משימות מעשיות ותעודה.', 'קורסים', 10, 'he'],
+      ['האם אתם נותנים תעודות?', 'כן, כל הבוגרים מקבלים תעודת סיום קורס.', 'קורסים', 11, 'he'],
+      ['אילו אמצעי תשלום אתם מקבלים?', 'אנחנו מקבלים כרטיסי אשראי, PayPal והעברות בנקאיות.', 'תשלום', 12, 'he']
+    ];
+
+    let inserted = 0;
+    for (const faq of hebrewFaqs) {
+      await queryDatabase(
+        'INSERT INTO faqs (question, answer, category, order_index, locale, visible) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT DO NOTHING',
+        [...faq, true]
+      );
+      inserted++;
+    }
+
+    res.json({ success: true, message: `${inserted} Hebrew FAQs added` });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Batch 5: Add multilingual career resources (Russian batch)
+app.get('/api/sync-add-russian-resources', async (req, res) => {
+  const secretKey = req.query.key;
+  if (secretKey !== 'sync-2025-secure-key') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const russianResources = [
+      ['Шаблон резюме для ИИ', 'Профессиональный шаблон резюме для специалистов по ИИ', 'Шаблон', '/resources/resume-ru', 'document', 5, 'ru'],
+      ['Руководство по подготовке к интервью', 'Полное руководство по подготовке к техническим интервью', 'Руководство', '/resources/interview-ru', 'chat', 6, 'ru'],
+      ['Справочник по переговорам о зарплате', 'Стратегии эффективных переговоров о зарплате в сфере ИИ', 'Справочник', '/resources/salary-ru', 'chart', 7, 'ru'],
+      ['Идеи портфолио проектов', '50+ идей проектов для портфолио в области ИИ', 'Список', '/resources/projects-ru', 'bulb', 8, 'ru']
+    ];
+
+    let inserted = 0;
+    for (const resource of russianResources) {
+      await queryDatabase(
+        'INSERT INTO career_resources (title, description, type, url, icon, order_index, locale) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT DO NOTHING',
+        resource
+      );
+      inserted++;
+    }
+
+    res.json({ success: true, message: `${inserted} Russian career resources added` });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Batch 6: Add multilingual career resources (Hebrew batch)
+app.get('/api/sync-add-hebrew-resources', async (req, res) => {
+  const secretKey = req.query.key;
+  if (secretKey !== 'sync-2025-secure-key') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const hebrewResources = [
+      ['תבנית קורות חיים לבינה מלאכותית', 'תבנית מקצועית לקורות חיים למומחי בינה מלאכותית', 'תבנית', '/resources/resume-he', 'document', 9, 'he'],
+      ['מדריך הכנה לראיון עבודה', 'מדריך מלא להכנה לראיונות עבודה טכניים', 'מדריך', '/resources/interview-he', 'chat', 10, 'he'],
+      ['מדריך משא ומתן על שכר', 'אסטרטגיות למשא ומתן יעיל על שכר בתחום הבינה המלאכותית', 'מדריך', '/resources/salary-he', 'chart', 11, 'he'],
+      ['רעיונות לפרויקטים בפורטפוליו', '50+ רעיונות לפרויקטים בפורטפוליו בתחום הבינה המלאכותית', 'רשימה', '/resources/projects-he', 'bulb', 12, 'he']
+    ];
+
+    let inserted = 0;
+    for (const resource of hebrewResources) {
+      await queryDatabase(
+        'INSERT INTO career_resources (title, description, type, url, icon, order_index, locale) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT DO NOTHING',
+        resource
+      );
+      inserted++;
+    }
+
+    res.json({ success: true, message: `${inserted} Hebrew career resources added` });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // ==================== STATIC FILE SERVING ====================
 
 // Serve admin panel

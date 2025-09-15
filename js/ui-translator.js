@@ -378,11 +378,8 @@ class UITranslator {
   updateFAQTitles(ui) {
     console.log('❓ Updating FAQ titles...');
 
-    // Skip FAQ translation on courses page - it already has correct Hebrew content
-    if (window.location.pathname.includes('/courses.html')) {
-      console.log('📍 Skipping FAQ translation on courses page - already has correct Hebrew content');
-      return;
-    }
+    // Don't skip FAQ translation on courses page - it needs the correct Hebrew titles
+    // Previously this was skipped but the page actually has placeholder text
 
     // FAQ title mappings - look for FAQ elements and update their titles
     const faqMappings = [
@@ -717,11 +714,7 @@ function initHebrewPlaceholderReplacement() {
   const isHebrew = window.location.pathname.includes('/he/');
   if (!isHebrew) return;
 
-  // Skip global replacement on courses page - it already has correct Hebrew FAQ content
-  if (window.location.pathname.includes('/courses.html')) {
-    console.log('📍 Skipping global Hebrew placeholder replacement on courses page');
-    return;
-  }
+  // Don't skip courses page - it needs the replacement too
 
   console.log('🔥 Global Hebrew placeholder replacement activated');
 
