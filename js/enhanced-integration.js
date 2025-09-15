@@ -69,33 +69,37 @@ class EnhancedIntegration {
     }
 
     applyStaticTranslations() {
-        // Apply static translations immediately for better UX
+        // Apply static translations as fallback only
         const lang = this.currentLanguage;
 
-        // Banner section
+        // Mark elements as having static translations (will be overridden by API)
         const bannerSubtitle = document.querySelector('.banner-subtitle');
         const bannerHeading = document.querySelector('.banner-heading');
         const bannerDescription = document.querySelector('.banner-description-text');
 
         if (typeof TRANSLATIONS !== 'undefined') {
-            // Apply banner translations
+            // Apply banner translations ONLY as placeholder
+            // These will be overridden by API content when available
             if (bannerSubtitle) {
+                bannerSubtitle.setAttribute('data-static-translation', 'true');
                 bannerSubtitle.textContent = TRANSLATIONS.banner.subtitle[lang] || TRANSLATIONS.banner.subtitle.en;
             }
             if (bannerHeading) {
+                bannerHeading.setAttribute('data-static-translation', 'true');
                 bannerHeading.textContent = TRANSLATIONS.banner.title[lang] || TRANSLATIONS.banner.title.en;
             }
             if (bannerDescription) {
+                bannerDescription.setAttribute('data-static-translation', 'true');
                 bannerDescription.textContent = TRANSLATIONS.banner.description[lang] || TRANSLATIONS.banner.description.en;
             }
 
-            // Apply navigation translations
+            // Apply navigation translations (keep these as they're not from database)
             this.applyNavigationTranslations(lang);
 
             // Apply button translations
             this.applyButtonTranslations(lang);
 
-            console.log(`✅ Static translations applied for ${lang}`);
+            console.log(`⚠️ Static translations applied as FALLBACK for ${lang} (will be overridden by API)`);
         }
     }
 
@@ -226,9 +230,13 @@ class EnhancedIntegration {
             if (data.data && data.data.attributes) {
                 const attributes = data.data.attributes;
 
-                // Update hero section
-                if (data.hero) {
-                    this.updateHomeHero(data.hero);
+                // Update hero section with correct API structure
+                if (attributes.heroTitle || attributes.heroSubtitle || attributes.heroDescription) {
+                    this.updateHomeHero({
+                        title: attributes.heroTitle,
+                        subtitle: attributes.heroSubtitle || attributes.heroExpertLed,
+                        description: attributes.heroDescription
+                    });
                 }
 
                 // Update practice section
@@ -261,19 +269,23 @@ class EnhancedIntegration {
         const bannerHeading = document.querySelector('.banner-heading, h1.banner-heading');
         const bannerDescription = document.querySelector('.banner-description-text, p.banner-description-text');
 
+        // Priority: Always use API content when available
         if (bannerSubtitle && heroData.subtitle) {
             bannerSubtitle.textContent = heroData.subtitle;
+            console.log(`📝 Updated subtitle from API: "${heroData.subtitle}"`);
         }
 
         if (bannerHeading && heroData.title) {
             bannerHeading.textContent = heroData.title;
+            console.log(`📝 Updated title from API: "${heroData.title}"`);
         }
 
         if (bannerDescription && heroData.description) {
             bannerDescription.textContent = heroData.description;
+            console.log(`📝 Updated description from API: "${heroData.description}"`);
         }
 
-        console.log('✅ Hero section updated from API');
+        console.log('✅ Hero section updated from API (overriding static translations)');
     }
 
     updatePracticeSection(attributes) {

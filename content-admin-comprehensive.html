@@ -8,7 +8,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f7; line-height: 1.6; }
         .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 0; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.1); position: relative; }
-        .language-switcher { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; }
+        #admin-language-switcher { position: absolute; top: 20px; right: 200px; display: flex !important; gap: 8px; z-index: 1001; }
         .lang-btn { padding: 8px 16px; background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.3); border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; }
         .lang-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
         .lang-btn.active { background: rgba(255,255,255,0.9); color: #667eea; border-color: white; }
@@ -65,13 +65,26 @@
         .save-all-btn { position: fixed; top: 20px; right: 20px; z-index: 1000; background: #28a745; font-size: 18px; padding: 15px 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
         .save-all-btn:hover { background: #218838; }
         .field-count { background: #007aff; color: white; padding: 5px 10px; border-radius: 20px; font-size: 12px; margin-left: 10px; }
+
+        /* Search Feature Styles */
+        .search-container { margin: 20px 0; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .search-box { display: flex; gap: 10px; margin-bottom: 15px; }
+        .search-box input { flex: 1; padding: 12px 20px; border: 2px solid #e1e1e1; border-radius: 8px; font-size: 16px; }
+        .search-box input:focus { border-color: #007aff; outline: none; box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1); }
+        .search-results { max-height: 400px; overflow-y: auto; }
+        .search-result-item { background: #f8f9fa; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid #007aff; cursor: pointer; transition: all 0.2s; }
+        .search-result-item:hover { background: #e8f4fd; transform: translateX(5px); }
+        .search-result-section { font-size: 12px; color: #666; text-transform: uppercase; margin-bottom: 5px; }
+        .search-result-field { font-weight: 600; color: #333; margin-bottom: 5px; }
+        .search-result-value { color: #666; }
+        .search-highlight { background: yellow; font-weight: bold; padding: 2px 4px; border-radius: 3px; }
+        .no-results { text-align: center; padding: 40px; color: #999; }
     </style>
   <link href="css/mobile-fix.css" rel="stylesheet" type="text/css">
-  <link href="/css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
 </head>
 <body>
     <div class="header">
-        <div class="language-switcher">
+        <div class="language-switcher" id="admin-language-switcher">
             <button class="lang-btn active" onclick="switchLanguage('en')">🇬🇧 English</button>
             <button class="lang-btn" onclick="switchLanguage('ru')">🇷🇺 Русский</button>
             <button class="lang-btn" onclick="switchLanguage('he')">🇮🇱 עברית</button>
@@ -85,6 +98,15 @@
     <div class="container">
         <div class="status" id="status">
             ✅ CLEAN ADMIN: 11 tabs matching your 11 website pages exactly - No duplicate or unnecessary tabs
+        </div>
+
+        <!-- Search Feature -->
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="adminSearch" placeholder="🔍 Search for any content, field, or value across all sections..." />
+                <button class="btn btn-secondary" onclick="clearSearch()">Clear</button>
+            </div>
+            <div id="searchResults" class="search-results"></div>
         </div>
 
         <div class="tabs">
@@ -628,7 +650,7 @@
 
             <!-- Save Button for Home Page -->
             <div style="margin-top: 30px; text-align: center; padding: 20px; background: #f8f9fa; border-radius: 12px; border: 2px solid #28a745;">
-                <button type="button" class="btn btn-success" onclick="saveAllHomePage()" style="font-size: 18px; padding: 15px 30px;">
+                <button type="button" class="btn btn-success" onclick="console.log('🔘 Button clicked!'); saveAllHomePage();" style="font-size: 18px; padding: 15px 30px;">
                     💾 Save All Home Page Content
                 </button>
                 <p style="margin-top: 10px; color: #666; font-size: 14px;">
@@ -2382,12 +2404,12 @@
         // Production API URLs - Updated to use correct production endpoint
         // Smart API URL detection with automatic fallback to production
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const LOCAL_API = 'http://localhost:3000/api';
+        const LOCAL_API = 'http://localhost:1337/api';
         const PROD_API = 'https://aistudio555jamstack-production.up.railway.app/api';
         
         // For local development, try local first then fallback to production if error
         const API_URL_READ = isLocal ? LOCAL_API : PROD_API;
-        const API_URL_CRUD = PROD_API; // Always save to production for consistency
+        const API_URL_CRUD = isLocal ? LOCAL_API : PROD_API; // Use local API when local
         const FALLBACK_API = PROD_API;
         let currentEditingId = null;
         let currentEditingType = null;
@@ -2414,6 +2436,18 @@
                     }
                 }
                 throw error;
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type = 'success') {
+            const statusEl = document.getElementById('status');
+            if (statusEl) {
+                statusEl.textContent = message;
+                statusEl.className = type === 'error' ? 'status error-message' : 'status success-message';
+                setTimeout(() => {
+                    statusEl.className = 'status';
+                }, 3000);
             }
         }
 
@@ -2459,6 +2493,188 @@
             showStatus(`Switched to ${languageNames[locale]} - Content will be loaded for this language`);
         }
 
+        // Search functionality
+        let searchIndex = [];
+        let searchTimeout;
+
+        function buildSearchIndex() {
+            searchIndex = [];
+
+            // Index all input, textarea, and select fields
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                const sectionId = section.id;
+                const sectionTitle = section.querySelector('h2')?.textContent || sectionId;
+
+                // Index all form fields
+                const inputs = section.querySelectorAll('input[type="text"], input[type="email"], input[type="url"], textarea, select');
+                inputs.forEach(field => {
+                    const label = field.previousElementSibling?.textContent ||
+                                 field.parentElement.querySelector('label')?.textContent ||
+                                 field.placeholder ||
+                                 field.name ||
+                                 field.id ||
+                                 'Unknown Field';
+
+                    searchIndex.push({
+                        section: String(sectionTitle || ''),
+                        sectionId: String(sectionId || ''),
+                        field: String(label || ''),
+                        value: String(field.value || ''),
+                        element: field,
+                        type: field.tagName.toLowerCase()
+                    });
+                });
+
+                // Also index any static text content in subsections
+                const subsections = section.querySelectorAll('.subsection');
+                subsections.forEach(subsection => {
+                    const title = subsection.querySelector('h3, h4')?.textContent;
+                    if (title) {
+                        searchIndex.push({
+                            section: String(sectionTitle || ''),
+                            sectionId: String(sectionId || ''),
+                            field: String(title || ''),
+                            value: String(subsection.textContent || ''),
+                            element: subsection,
+                            type: 'subsection'
+                        });
+                    }
+                });
+            });
+
+            console.log(`Search index built with ${searchIndex.length} items`);
+        }
+
+        function performSearch(query) {
+            if (!query || query.length < 2) {
+                document.getElementById('searchResults').innerHTML = '';
+                return;
+            }
+
+            const lowerQuery = query.toLowerCase();
+            const results = searchIndex.filter(item => {
+                const fieldMatch = item.field && item.field.toLowerCase().includes(lowerQuery);
+                const valueMatch = item.value && item.value.toLowerCase().includes(lowerQuery);
+                const sectionMatch = item.section && item.section.toLowerCase().includes(lowerQuery);
+                return fieldMatch || valueMatch || sectionMatch;
+            });
+
+            displaySearchResults(results, query);
+        }
+
+        function displaySearchResults(results, query) {
+            const resultsContainer = document.getElementById('searchResults');
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '<div class="no-results">No results found. Try different keywords.</div>';
+                return;
+            }
+
+            let html = `<div style="margin-bottom: 10px; color: #666;">Found ${results.length} result${results.length !== 1 ? 's' : ''}</div>`;
+
+            results.slice(0, 50).forEach(result => {
+                const highlightedField = highlightText(result.field, query);
+                const highlightedValue = highlightText(result.value.substring(0, 200), query);
+
+                html += `
+                    <div class="search-result-item" onclick="goToResult('${result.sectionId}', '${result.field}')">
+                        <div class="search-result-section">${result.section}</div>
+                        <div class="search-result-field">${highlightedField}</div>
+                        <div class="search-result-value">${highlightedValue}${result.value.length > 200 ? '...' : ''}</div>
+                    </div>
+                `;
+            });
+
+            if (results.length > 50) {
+                html += `<div style="text-align: center; padding: 10px; color: #666;">Showing first 50 results of ${results.length}</div>`;
+            }
+
+            resultsContainer.innerHTML = html;
+        }
+
+        function highlightText(text, query) {
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+
+        function goToResult(sectionId, fieldLabel) {
+            // Show the section
+            showSection(sectionId);
+
+            // Try to find and highlight the field
+            setTimeout(() => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    // Try to find the field by label text
+                    const labels = section.querySelectorAll('label');
+                    for (let label of labels) {
+                        if (label.textContent.includes(fieldLabel)) {
+                            const field = label.nextElementSibling || label.parentElement.querySelector('input, textarea, select');
+                            if (field) {
+                                field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                field.style.border = '3px solid #007aff';
+                                field.style.boxShadow = '0 0 10px rgba(0, 122, 255, 0.5)';
+                                setTimeout(() => {
+                                    field.style.border = '';
+                                    field.style.boxShadow = '';
+                                    field.focus();
+                                }, 3000);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }, 300);
+        }
+
+        function clearSearch() {
+            document.getElementById('adminSearch').value = '';
+            document.getElementById('searchResults').innerHTML = '';
+        }
+
+        // Initialize search when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Build initial search index after data loads
+            setTimeout(() => {
+                // Load initial data for home page (default tab)
+                loadCompleteHomePage();
+                // Then build search index
+                setTimeout(buildSearchIndex, 2000);
+            }, 500);
+
+            // Add search event listener
+            const searchInput = document.getElementById('adminSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        performSearch(e.target.value);
+                    }, 300);
+                });
+
+                // Allow Enter key to search immediately
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        clearTimeout(searchTimeout);
+                        performSearch(e.target.value);
+                    }
+                });
+            }
+
+            // Rebuild index when content changes
+            const observer = new MutationObserver(() => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(buildSearchIndex, 1000);
+            });
+
+            observer.observe(document.querySelector('.container'), {
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+        });
+
         // Tab switching functionality
         function showSection(sectionName) {
             // Hide all sections
@@ -2489,6 +2705,8 @@
             
             // Load data for the section
             loadSectionData(sectionName);
+            // Rebuild search index after loading new section data
+            setTimeout(buildSearchIndex, 1500);
         }
 
         // Load data based on section
@@ -2627,6 +2845,7 @@
         }
 
         async function saveAllHomePage() {
+            console.log('🚀 saveAllHomePage function called!');
             try {
                 const homeData = {
                     // Page Title
@@ -2667,12 +2886,19 @@
                 };
 
                 console.log('💾 Saving Complete Home Page Data:', homeData);
+                console.log('🌍 Current Locale:', currentLocale);
+                console.log('🔗 API URL:', API_URL_CRUD);
 
                 // Save to database via API
                 // Use correct ID based on locale: 1 for English, 2 for Russian, 3 for Hebrew
                 const localeIds = { 'en': 1, 'ru': 2, 'he': 3 };
                 const homePageId = localeIds[currentLocale] || 1;
-                const response = await fetch(`${API_URL_CRUD}/home-page/${homePageId}`, {
+                console.log('🆔 Using Home Page ID:', homePageId);
+
+                const saveUrl = `${API_URL_CRUD}/home-page/${homePageId}`;
+                console.log('📡 Save URL:', saveUrl);
+
+                const response = await fetch(saveUrl, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -3723,7 +3949,13 @@
 
             const container = document.querySelector('.container');
             const status = document.getElementById('status');
-            container.insertBefore(messageDiv, status.nextSibling);
+            if (status && status.nextSibling) {
+                container.insertBefore(messageDiv, status.nextSibling);
+            } else if (status) {
+                status.parentNode.insertBefore(messageDiv, status.nextElementSibling);
+            } else {
+                container.prepend(messageDiv);
+            }
 
             // Auto-remove after 5 seconds
             setTimeout(() => {
@@ -4860,7 +5092,6 @@
   </script>
 
   <!-- Footer Admin Panel Integration -->
-  <script src="footer-migration/admin/footer-admin-panel.js"></script>
   <script>
     // Initialize Footer Admin Panel
     document.addEventListener('DOMContentLoaded', function() {
