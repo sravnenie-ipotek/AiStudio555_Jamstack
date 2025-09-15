@@ -650,7 +650,7 @@
 
             <!-- Save Button for Home Page -->
             <div style="margin-top: 30px; text-align: center; padding: 20px; background: #f8f9fa; border-radius: 12px; border: 2px solid #28a745;">
-                <button type="button" class="btn btn-success" onclick="console.log('🔘 Button clicked!'); saveAllHomePage();" style="font-size: 18px; padding: 15px 30px;">
+                <button type="button" class="btn btn-success" onclick="console.log('🔘 Button clicked!'); alert('Save button clicked! Check console for logs.'); saveAllHomePage();" style="font-size: 18px; padding: 15px 30px;">
                     💾 Save All Home Page Content
                 </button>
                 <p style="margin-top: 10px; color: #666; font-size: 14px;">
@@ -2404,9 +2404,9 @@
         // Production API URLs - Updated to use correct production endpoint
         // Smart API URL detection with automatic fallback to production
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const LOCAL_API = 'http://localhost:1337/api';
+        const LOCAL_API = 'http://localhost:3000/api';
         const PROD_API = 'https://aistudio555jamstack-production.up.railway.app/api';
-        
+
         // For local development, try local first then fallback to production if error
         const API_URL_READ = isLocal ? LOCAL_API : PROD_API;
         const API_URL_CRUD = isLocal ? LOCAL_API : PROD_API; // Use local API when local
@@ -2846,11 +2846,19 @@
 
         async function saveAllHomePage() {
             console.log('🚀 saveAllHomePage function called!');
+
+            // Debug: Check environment
+            console.log('🌐 Current URL:', window.location.href);
+            console.log('🌐 Hostname:', window.location.hostname);
+            console.log('🌐 isLocal detected:', (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+            console.log('🔗 API_URL_CRUD:', API_URL_CRUD);
+            console.log('🌍 currentLocale:', currentLocale);
+
             try {
                 const homeData = {
                     // Page Title
                     title: getFieldValue('homeTitle'),
-                    
+
                     // Hero Section
                     heroTitle: getFieldValue('homeHeroTitle'),
                     heroSubtitle: getFieldValue('homeHeroSubtitle'),

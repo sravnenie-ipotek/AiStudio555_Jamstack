@@ -3302,17 +3302,14 @@ app.get('/admin', (req, res) => {
 
 // Serve main website
 app.get('/', (req, res) => {
-  // Try index.html first, fallback to home.html
-  const indexPath = path.join(__dirname, 'index.html');
+  // Always use home.html for better UX, never index.html
   const homePath = path.join(__dirname, 'home.html');
 
-  if (fs.existsSync(indexPath)) {
-    res.sendFile(indexPath);
-  } else if (fs.existsSync(homePath)) {
+  if (fs.existsSync(homePath)) {
     res.sendFile(homePath);
   } else {
-    // Fallback to dist/index.html for language redirect
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    // Fallback to dist/home.html for language redirect
+    res.sendFile(path.join(__dirname, 'dist', 'home.html'));
   }
 });
 
