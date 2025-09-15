@@ -137,10 +137,12 @@ class CustomAPIIntegration {
     async loadCoursesContent() {
         try {
             console.log('📚 Loading courses content...');
-            
+
             const courses = await this.fetchAPI('/courses?populate=*');
             if (courses?.data) {
+                // Update both the main courses grid and featured courses section
                 this.updateCoursesGrid(courses.data);
+                this.updateFeaturedCoursesFromAPI(courses.data);
                 console.log(`✅ Loaded ${courses.data.length} courses`);
             }
         } catch (error) {

@@ -217,8 +217,19 @@ class EnhancedIntegration {
 
             const data = await response.json();
 
-            if (data.hero) {
-                this.updateHomeHero(data.hero);
+            if (data.data && data.data.attributes) {
+                const attributes = data.data.attributes;
+
+                // Update hero section
+                if (data.hero) {
+                    this.updateHomeHero(data.hero);
+                }
+
+                // Update practice section
+                this.updatePracticeSection(attributes);
+
+                // Update learning features
+                this.updateLearningFeatures(attributes);
             }
 
             console.log('✅ Dynamic home content loaded');
@@ -248,6 +259,46 @@ class EnhancedIntegration {
         }
 
         console.log('✅ Hero section updated from API');
+    }
+
+    updatePracticeSection(attributes) {
+        if (!attributes.practiceDescription) return;
+
+        // Find the practice section description element
+        const practiceDescElement = document.querySelector('.section-description-text.why-choose-us');
+
+        if (practiceDescElement) {
+            practiceDescElement.textContent = attributes.practiceDescription;
+            console.log('✅ Practice section updated from API');
+        }
+    }
+
+    updateLearningFeatures(attributes) {
+        // Array of feature data
+        const features = [
+            { title: attributes.feature1Title, description: attributes.feature1Description },
+            { title: attributes.feature2Title, description: attributes.feature2Description },
+            { title: attributes.feature3Title, description: attributes.feature3Description },
+            { title: attributes.feature4Title, description: attributes.feature4Description },
+            { title: attributes.feature5Title, description: attributes.feature5Description },
+            { title: attributes.feature6Title, description: attributes.feature6Description }
+        ];
+
+        // Update each feature
+        features.forEach((feature, index) => {
+            if (feature.title && feature.description) {
+                // Find title and description elements for this feature
+                const titleElements = document.querySelectorAll('.course-categories-single-title');
+                const descElements = document.querySelectorAll('.course-categories-single-description');
+
+                if (titleElements[index] && descElements[index]) {
+                    titleElements[index].textContent = feature.title;
+                    descElements[index].textContent = feature.description;
+                }
+            }
+        });
+
+        console.log('✅ Learning features updated from API');
     }
 
     async loadCoursesContent() {

@@ -97,6 +97,54 @@ All fields use **snake_case** naming (PostgreSQL convention):
 | Years | `stats_years_label` | Лет опыта | ✅ Active |
 | Success Rate | `stats_success_rate_label` | Успеха | ✅ Active |
 
+### Career Orientation Page Elements (`career_orientation_pages` table)
+
+#### 4-Step Process Cards
+
+| UI Element | Database Column | Russian Translation | Hebrew Translation | Status |
+|------------|-----------------|-------------------|-------------------|---------|
+| Step 1 Title | `step_1_title` | Подайте заявку на сайт | השאירו בקשה באתר | ✅ Active |
+| Step 1 Description | `step_1_desc` | Заполните краткую форму с вашими данными и мы свяжемся с вами в течение 24 часов | מלאו טופס קצר עם הפרטים שלכם ונחזור אליכם תוך 24 שעות | ✅ Active |
+| Step 1 Duration | `step_1_duration` | Время: 3 минуты | משך זמן: 3 דקות | ✅ Active |
+| Step 2 Title | `step_2_title` | Бесплатная первичная консультация | ייעוץ ראשוני חינם | ✅ Active |
+| Step 2 Description | `step_2_desc` | Консультационная беседа до 20 минут для понимания ваших потребностей и целей | שיחת ייעוץ של עד 20 דקות להבנת הצרכים והמטרות שלכם | ✅ Active |
+| Step 2 Duration | `step_2_duration` | Время: до 20 минут | משך זמן: עד 20 דקות | ✅ Active |
+| Step 3 Title | `step_3_title` | Работа с карьерным консультантом | עבודה עם יועץ קריירה | ✅ Active |
+| Step 3 Description | `step_3_desc` | Глубокие консультационные сессии для построения персональной стратегии | פגישות ייעוץ מעמיקות לבניית אסטרטגיה אישית | ✅ Active |
+| Step 3 Duration | `step_3_duration` | Время: индивидуально | משך זמן: מותאם אישית | ✅ Active |
+| Step 4 Title | `step_4_title` | Составление карьерного плана | בניית תכנית קריירה | ✅ Active |
+| Step 4 Description | `step_4_desc` | Подробный план действий с четкими целями и временными рамками | תכנית פעולה מפורטת עם יעדים ברורים ולוחות זמנים | ✅ Active |
+| Step 4 Duration | `step_4_duration` | Время: в течение 48 часов | משך זמן: תוך 48 שעות | ✅ Active |
+
+#### AI/Tech Career Specializations Cards
+
+| UI Element | Database Column | Russian Translation | Hebrew Translation | Status |
+|------------|-----------------|-------------------|-------------------|---------|
+| ML Engineer Title | `career_ml_engineer_title` | Инженер машинного обучения | מהנדס למידת מכונה | ✅ Active |
+| ML Engineer Desc | `career_ml_engineer_desc` | Создание и развертывание ML-моделей для интеллектуальных приложений и систем | פיתוח ופריסת מודלי למידת מכונה למערכות ויישומים חכמים | ✅ Active |
+| ML Engineer Salary | `career_ml_engineer_salary` | Средняя зарплата: $130,000/год | שכר ממוצע: $130,000 לשנה | ✅ Active |
+| Data Scientist Title | `career_data_scientist_title` | Специалист по данным | מדען נתונים | ✅ Active |
+| Data Scientist Desc | `career_data_scientist_desc` | Извлечение инсайтов из сложных данных для принятия бизнес-решений | הפקת תובנות מנתונים מורכבים לקבלת החלטות עסקיות | ✅ Active |
+| Data Scientist Salary | `career_data_scientist_salary` | Средняя зарплата: $120,000/год | שכר ממוצע: $120,000 לשנה | ✅ Active |
+| AI Researcher Title | `career_ai_researcher_title` | Исследователь ИИ | חוקר בינה מלאכותית | ✅ Active |
+| AI Researcher Desc | `career_ai_researcher_desc` | Пионеры новых технологий ИИ и продвижение области через передовые исследования | פיתוח טכנולוגיות AI חדשניות וקידום התחום באמצעות מחקר מתקדם | ✅ Active |
+| AI Researcher Salary | `career_ai_researcher_salary` | Средняя зарплата: $150,000/год | שכר ממוצע: $150,000 לשנה | ✅ Active |
+| Computer Vision Title | `career_cv_specialist_title` | Специалист по компьютерному зрению | מומחה ראיית מחשב | ✅ Active |
+| Computer Vision Desc | `career_cv_specialist_desc` | Разработка ИИ систем для анализа и понимания визуальной информации | פיתוח מערכות AI לניתוח והבנת מידע ויזואלי | ✅ Active |
+| Computer Vision Salary | `career_cv_specialist_salary` | Средняя зарплата: $135,000/год | שכר ממוצע: $135,000 לשנה | ✅ Active |
+| NLP Engineer Title | `career_nlp_engineer_title` | Инженер NLP | מהנדס עיבוד שפה טבעית | ✅ Active |
+| NLP Engineer Desc | `career_nlp_engineer_desc` | Создание ИИ систем для понимания и генерации человеческого языка | יצירת מערכות AI להבנת וייצור שפה אנושית | ✅ Active |
+| NLP Engineer Salary | `career_nlp_engineer_salary` | Средняя зарплата: $125,000/год | שכר ממוצע: $125,000 לשנה | ✅ Active |
+| MLOps Engineer Title | `career_mlops_engineer_title` | Инженер MLOps | מהנדס MLOps | ✅ Active |
+| MLOps Engineer Desc | `career_mlops_engineer_desc` | Построение инфраструктуры и пайплайнов для развертывания ML-моделей в масштабе | בניית תשתית וצינורות לפריסת מודלי למידת מכונה בקנה מידה | ✅ Active |
+| MLOps Engineer Salary | `career_mlops_engineer_salary` | Средняя зарплата: $140,000/год | שכר ממוצע: $140,000 לשנה | ✅ Active |
+| AI Product Manager Title | `career_ai_pm_title` | Продакт-менеджер ИИ | מנהל מוצר AI | ✅ Active |
+| AI Product Manager Desc | `career_ai_pm_desc` | Руководство разработкой продуктов и функций на базе ИИ | ניהול פיתוח מוצרים ותכונות מבוססי AI | ✅ Active |
+| AI Product Manager Salary | `career_ai_pm_salary` | Средняя зарплата: $145,000/год | שכר ממוצע: $145,000 לשנה | ✅ Active |
+| Robotics Engineer Title | `career_robotics_title` | Инженер робототехники | מהנדס רובוטיקה | ✅ Active |
+| Robotics Engineer Desc | `career_robotics_desc` | Проектирование интеллектуальных робототехнических систем для взаимодействия с физическим миром | תכנון מערכות רובוטיקה חכמות לאינטראקציה עם העולם הפיזי | ✅ Active |
+| Robotics Engineer Salary | `career_robotics_salary` | Средняя зарплата: $110,000/год | שכר ממוצע: $110,000 לשנה | ✅ Active |
+
 ## Footer Component (⚠️ NEEDS IMPLEMENTATION)
 
 ### Recommended Footer Fields for `home_pages` table:

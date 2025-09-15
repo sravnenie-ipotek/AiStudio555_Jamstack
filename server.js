@@ -397,6 +397,21 @@ app.get('/api/home-page', async (req, res) => {
           practicalWork: homeData.practical_work || 'Practical Work',
           theoryOnly: homeData.theory_only || 'Theory Only',
           jobSupport: homeData.job_support || 'Job Support',
+          practiceDescription: homeData.practice_description,
+
+          // Learning Features
+          feature1Title: homeData.feature_1_title,
+          feature1Description: homeData.feature_1_description,
+          feature2Title: homeData.feature_2_title,
+          feature2Description: homeData.feature_2_description,
+          feature3Title: homeData.feature_3_title,
+          feature3Description: homeData.feature_3_description,
+          feature4Title: homeData.feature_4_title,
+          feature4Description: homeData.feature_4_description,
+          feature5Title: homeData.feature_5_title,
+          feature5Description: homeData.feature_5_description,
+          feature6Title: homeData.feature_6_title,
+          feature6Description: homeData.feature_6_description,
           
           // Skills List
           skill1: homeData.skill_1,

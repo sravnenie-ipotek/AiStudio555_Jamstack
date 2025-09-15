@@ -17,51 +17,51 @@
 
           <div class="contact-modal-header">
             <h2 class="contact-modal-title">שלטו ב-AI וטכנולוגיה</h2>
-            <p class="contact-modal-subtitle">Fill out the form and we'll contact you via WhatsApp</p>
+            <p class="contact-modal-subtitle">מלאו את הטופס ונחזור אליכם בהקדם דרך וואטסאפ</p>
           </div>
 
           <form id="contactForm" class="contact-form">
             <div class="form-group">
-              <label for="fullName" class="form-label">Full Name</label>
+              <label for="fullName" class="form-label">שם מלא</label>
               <input
                 type="text"
                 id="fullName"
                 name="fullName"
                 class="form-input"
-                placeholder="Enter your name"
+                placeholder="הכניסו את שמכם"
                 required
               />
               <span class="form-error" id="nameError"></span>
             </div>
 
             <div class="form-group">
-              <label for="phoneNumber" class="form-label">Phone Number</label>
+              <label for="phoneNumber" class="form-label">מספר טלפון</label>
               <input
                 type="tel"
                 id="phoneNumber"
                 name="phoneNumber"
                 class="form-input"
-                placeholder="Enter your phone"
+                placeholder="הכניסו מספר טלפון"
                 required
               />
               <span class="form-error" id="phoneError"></span>
             </div>
 
             <div class="form-group">
-              <label for="message" class="form-label">Message</label>
+              <label for="message" class="form-label">הודעה</label>
               <textarea
                 id="message"
                 name="message"
                 class="form-textarea"
                 rows="4"
-                placeholder="Enter your message"
+                placeholder="הכניסו את הודעתכם"
                 required
               ></textarea>
               <span class="form-error" id="messageError"></span>
             </div>
 
             <button type="submit" class="form-submit-btn">
-              <span class="btn-text">Submit</span>
+              <span class="btn-text">שלח</span>
               <span class="btn-loader" style="display: none;">
                 <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
                   <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50" stroke-dashoffset="10">
@@ -83,7 +83,7 @@
         <svg class="toast-icon success-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
           <path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm-1 15l-5-5 1.5-1.5L9 12l7-7 1.5 1.5L9 15z" fill="currentColor"/>
         </svg>
-        <span class="toast-message">Message sent successfully!</span>
+        <span class="toast-message">ההודעה נשלחה בהצלחה!</span>
       </div>
     </div>
   `;
@@ -323,42 +323,146 @@
         to { transform: rotate(360deg); }
       }
       
-      /* Toast Styles */
+      /* Toast Styles - Enhanced Design */
       .toast {
         position: fixed;
-        bottom: -100px;
+        bottom: -150px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 10001;
-        transition: bottom 0.4s ease;
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        pointer-events: none;
       }
-      
+
       .toast.active {
         bottom: 30px;
+        pointer-events: auto;
       }
-      
+
       .toast-content {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 16px 24px;
+        gap: 16px;
+        padding: 20px 32px;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 50px;
-        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+        border-radius: 16px;
+        box-shadow:
+          0 20px 60px rgba(102, 126, 234, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+          0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
         color: #ffffff;
-        font-size: 14px;
-        font-weight: 500;
+        font-size: 15px;
+        font-weight: 600;
         font-family: "Plus Jakarta Sans", sans-serif;
-        animation: slideUp 0.4s ease;
+        animation: slideUp 0.5s ease;
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+        min-width: 300px;
       }
-      
+
+      .toast-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        animation: shimmer 2s infinite;
+      }
+
+      @keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+      }
+
+      .toast.success .toast-content {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        box-shadow:
+          0 20px 60px rgba(72, 187, 120, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+          0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
+      }
+
       .toast.error .toast-content {
-        background: linear-gradient(135deg, #f56565 0%, #c53030 100%);
-        box-shadow: 0 10px 40px rgba(245, 101, 101, 0.4);
+        background: linear-gradient(135deg, #fc5c65 0%, #eb3b5a 100%);
+        box-shadow:
+          0 20px 60px rgba(252, 92, 101, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+          0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
       }
-      
+
       .toast-icon {
         flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        padding: 4px;
+      }
+
+      .toast-icon svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .toast-message {
+        flex-grow: 1;
+        line-height: 1.4;
+        letter-spacing: 0.3px;
+      }
+
+      /* Mobile-specific toast styles */
+      @media (max-width: 640px) {
+        .toast {
+          bottom: -150px;
+          left: 20px;
+          right: 20px;
+          transform: none;
+          width: auto;
+        }
+
+        .toast.active {
+          bottom: 20px;
+        }
+
+        .toast-content {
+          padding: 16px 24px;
+          font-size: 14px;
+          min-width: auto;
+          flex-direction: row;
+          gap: 12px;
+          border-radius: 12px;
+          box-shadow:
+            0 10px 30px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+        }
+
+        .toast-icon {
+          width: 20px;
+          height: 20px;
+        }
+
+        .toast-message {
+          font-size: 14px;
+        }
+      }
+
+      /* Smaller mobile devices */
+      @media (max-width: 375px) {
+        .toast {
+          left: 10px;
+          right: 10px;
+        }
+
+        .toast-content {
+          padding: 14px 20px;
+          font-size: 13px;
+        }
       }
       
       /* Animations */
@@ -482,19 +586,19 @@
     // Form validation patterns
     const validators = {
       fullName: (value) => {
-        if (!value.trim()) return 'Full name is required';
-        if (value.trim().length < 2) return 'Name must be at least 2 characters';
+        if (!value.trim()) return 'שם מלא הוא שדה חובה';
+        if (value.trim().length < 2) return 'השם חייב לכלול לפחות 2 אותיות';
         return '';
       },
       phoneNumber: (value) => {
-        if (!value.trim()) return 'Phone number is required';
+        if (!value.trim()) return 'מספר טלפון הוא שדה חובה';
         const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/;
-        if (!phoneRegex.test(value)) return 'Please enter a valid phone number';
+        if (!phoneRegex.test(value)) return 'אנא הכניסו מספר טלפון חוקי';
         return '';
       },
       message: (value) => {
-        if (!value.trim()) return 'Message is required';
-        if (value.trim().length < 10) return 'Message must be at least 10 characters';
+        if (!value.trim()) return 'הודעה היא שדה חובה';
+        if (value.trim().length < 10) return 'ההודעה חייבת לכלול לפחות 10 תווים';
         return '';
       }
     };
@@ -642,24 +746,25 @@
                 message: `New contact form submission from ${fullName}\n\nPhone: ${phoneNumber}\n\nMessage: ${message}`
               };
 
-              await emailjs.send('service_t2uqbxs', 'template_consultation', templateParams, 'YOUR_USER_ID');
+              await emailjs.send('service_kw2tzof', 'template_ux5c6f5', templateParams);
               console.log('Email notification sent successfully');
             }
           } catch (emailError) {
             console.error('EmailJS error (non-critical):', emailError);
           }
 
-          // Always show error toaster as requested
-          showToast('Mail NOT SENT', 'error');
+          // Show success toaster for demonstration
+          // You can change this to 'error' if you want to show error instead
+          showToast('ההודעה נשלחה בהצלחה! ✨', 'success');
+
+          // For error demonstration, uncomment the line below:
+          // showToast('Mail NOT SENT', 'error');
 
           // Reset form
           form.reset();
 
-          // Don't close modal immediately - let user see the error message
-          setTimeout(() => {
-            // Optionally show WhatsApp option
-            showSuccessWithWhatsApp(fullName, phoneNumber, message);
-          }, 2000);
+          // Don't close modal or navigate - keep form open
+          // User can manually close with X button if they want
 
         } else {
           throw new Error('Failed to save consultation');
@@ -669,12 +774,9 @@
         console.error('Form submission error:', error);
 
         // Show error toaster
-        showToast('Mail NOT SENT', 'error');
+        showToast('שליחת המייל נכשלה', 'error');
 
-        // Still provide WhatsApp fallback option
-        setTimeout(() => {
-          showSuccessWithWhatsApp(fullName, phoneNumber, message);
-        }, 2000);
+        // Don't navigate away or show WhatsApp - keep form open
       } finally {
         // Reset loading state
         submitBtn.classList.remove('loading');
@@ -747,7 +849,7 @@
       window.openWhatsApp = openWhatsApp;
       
       // Show success toast
-      showToast('Message sent successfully!');
+      showToast('ההודעה נשלחה בהצלחה!');
     }
 
     // Close modal handlers
@@ -776,12 +878,12 @@
           
           <div class="contact-modal-header">
             <h2 class="contact-modal-title">Get Started Today</h2>
-            <p class="contact-modal-subtitle">Fill out the form and we'll contact you via WhatsApp</p>
+            <p class="contact-modal-subtitle">מלאו את הטופס ונחזור אליכם בהקדם דרך וואטסאפ</p>
           </div>
           
           <form id="contactForm" class="contact-form">
             <div class="form-group">
-              <label for="fullName" class="form-label">Full Name</label>
+              <label for="fullName" class="form-label">שם מלא</label>
               <input 
                 type="text" 
                 id="fullName" 
@@ -794,7 +896,7 @@
             </div>
             
             <div class="form-group">
-              <label for="phoneNumber" class="form-label">Phone Number</label>
+              <label for="phoneNumber" class="form-label">מספר טלפון</label>
               <input 
                 type="tel" 
                 id="phoneNumber" 
@@ -807,7 +909,7 @@
             </div>
             
             <div class="form-group">
-              <label for="message" class="form-label">Message</label>
+              <label for="message" class="form-label">הודעה</label>
               <textarea 
                 id="message" 
                 name="message" 
@@ -876,12 +978,12 @@
         
         <div class="contact-modal-header">
           <h2 class="contact-modal-title">Get Started Today</h2>
-          <p class="contact-modal-subtitle">Fill out the form and we'll contact you via WhatsApp</p>
+          <p class="contact-modal-subtitle">מלאו את הטופס ונחזור אליכם בהקדם דרך וואטסאפ</p>
         </div>
         
         <form id="contactForm" class="contact-form">
           <div class="form-group">
-            <label for="fullName" class="form-label">Full Name</label>
+            <label for="fullName" class="form-label">שם מלא</label>
             <input 
               type="text" 
               id="fullName" 
@@ -894,7 +996,7 @@
           </div>
           
           <div class="form-group">
-            <label for="phoneNumber" class="form-label">Phone Number</label>
+            <label for="phoneNumber" class="form-label">מספר טלפון</label>
             <input 
               type="tel" 
               id="phoneNumber" 
@@ -907,7 +1009,7 @@
           </div>
           
           <div class="form-group">
-            <label for="message" class="form-label">Message</label>
+            <label for="message" class="form-label">הודעה</label>
             <textarea 
               id="message" 
               name="message" 

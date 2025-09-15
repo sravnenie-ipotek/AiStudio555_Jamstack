@@ -355,6 +355,19 @@
         const html = document.documentElement;
         body.classList.remove('w--nav-menu-open');
         html.classList.remove('w--nav-menu-open');
+
+        // AGGRESSIVE MOBILE MENU HIDING - Force styles directly
+        const menu = document.querySelector('.w-nav-menu');
+        if (menu && window.innerWidth <= 991) {
+            menu.style.setProperty('display', 'none', 'important');
+            menu.style.setProperty('visibility', 'hidden', 'important');
+            menu.style.setProperty('opacity', '0', 'important');
+            menu.style.setProperty('transform', 'translateX(-100%)', 'important');
+            menu.style.setProperty('left', '-9999px', 'important');
+            menu.style.setProperty('top', '-9999px', 'important');
+            console.log('📱 Menu forcefully hidden with inline styles');
+        }
+
         console.log('📱 Menu initialized in closed state');
 
         // Add global toggle function
@@ -376,6 +389,18 @@
         window.closeMobileMenu = function() {
             body.classList.remove('w--nav-menu-open');
             html.classList.remove('w--nav-menu-open');
+
+            // Force hide with inline styles
+            const menu = document.querySelector('.w-nav-menu');
+            if (menu && window.innerWidth <= 991) {
+                menu.style.setProperty('display', 'none', 'important');
+                menu.style.setProperty('visibility', 'hidden', 'important');
+                menu.style.setProperty('opacity', '0', 'important');
+                menu.style.setProperty('transform', 'translateX(-100%)', 'important');
+                menu.style.setProperty('left', '-9999px', 'important');
+                menu.style.setProperty('top', '-9999px', 'important');
+            }
+
             console.log('📱 Mobile menu force closed');
         };
 
@@ -384,6 +409,18 @@
             // Ensure menu is still closed after other scripts run
             body.classList.remove('w--nav-menu-open');
             html.classList.remove('w--nav-menu-open');
+
+            // Force hide menu again after other scripts
+            const menu = document.querySelector('.w-nav-menu');
+            if (menu && window.innerWidth <= 991) {
+                menu.style.setProperty('display', 'none', 'important');
+                menu.style.setProperty('visibility', 'hidden', 'important');
+                menu.style.setProperty('opacity', '0', 'important');
+                menu.style.setProperty('transform', 'translateX(-100%)', 'important');
+                menu.style.setProperty('left', '-9999px', 'important');
+                menu.style.setProperty('top', '-9999px', 'important');
+                console.log('📱 Menu forcefully hidden again after scripts');
+            }
 
             const hamburgerButton = document.querySelector('.w-nav-button');
             if (hamburgerButton) {
@@ -520,6 +557,18 @@
             const html = document.documentElement;
             body.classList.remove('w--nav-menu-open');
             html.classList.remove('w--nav-menu-open');
+
+            // Force hide with inline styles
+            const menu = document.querySelector('.w-nav-menu');
+            if (menu && window.innerWidth <= 991) {
+                menu.style.setProperty('display', 'none', 'important');
+                menu.style.setProperty('visibility', 'hidden', 'important');
+                menu.style.setProperty('opacity', '0', 'important');
+                menu.style.setProperty('transform', 'translateX(-100%)', 'important');
+                menu.style.setProperty('left', '-9999px', 'important');
+                menu.style.setProperty('top', '-9999px', 'important');
+            }
+
             console.log('🔒 Ensured mobile menu is closed after all initialization');
         }, 200);
 
@@ -529,6 +578,18 @@
             const html = document.documentElement;
             body.classList.remove('w--nav-menu-open');
             html.classList.remove('w--nav-menu-open');
+
+            // Final force hide
+            const menu = document.querySelector('.w-nav-menu');
+            if (menu && window.innerWidth <= 991) {
+                menu.style.setProperty('display', 'none', 'important');
+                menu.style.setProperty('visibility', 'hidden', 'important');
+                menu.style.setProperty('opacity', '0', 'important');
+                menu.style.setProperty('transform', 'translateX(-100%)', 'important');
+                menu.style.setProperty('left', '-9999px', 'important');
+                menu.style.setProperty('top', '-9999px', 'important');
+            }
+
             console.log('🔒 Final safety check - mobile menu forced closed');
         }, 1000);
     });
