@@ -1,19 +1,17 @@
-<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Tue Sep 02 2025 21:54:44 GMT+0000 (Coordinated Universal Time)  -->
-<html data-wf-page="career-center-page" data-wf-site="68b7601d918996218465c4a6" lang="he" dir="rtl">
-<head>
+<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Tue Sep 02 2025 21:54:44 GMT+0000 (Coordinated Universal Time)  --><html data-wf-page="career-center-page" data-wf-site="68b7601d918996218465c4a6" lang="he" dir="rtl"><head>
   <meta charset="utf-8">
-  <title>Career Center - AI Studio Learning Platform</title>
+  <title>Career Center - סטודיו AI Learning Platform</title>
   <meta content="Master the Art of Landing Your Dream AI/ML Role with AI Studio Career Center. Get personalized career consultation, resume optimization, and job placement assistance." property="og:title">
   <meta content="Master the Art of Landing Your Dream AI/ML Role with AI Studio Career Center. Get personalized career consultation, resume optimization, and job placement assistance." property="twitter:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
-  <link href="/css/normalize.css" rel="stylesheet" type="text/css">
-  <link href="/css/webflow.css" rel="stylesheet" type="text/css">
-  <link href="/css/aizeks-marvelous-site.webflow.css" rel="stylesheet" type="text/css">
-  <link href="/css/card-height-fix.css" rel="stylesheet" type="text/css">
-  <link href="/css/unified-navigation.css" rel="stylesheet" type="text/css">
-  <link href="/css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
-  <link href="/css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="../css/webflow.css" rel="stylesheet" type="text/css">
+  <link href="../css/aizeks-marvelous-site.webflow.css" rel="stylesheet" type="text/css">
+  <link href="../css/card-height-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/unified-navigation.css" rel="stylesheet" type="text/css">
+  <link href="css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
   <link href="/css/mobile-responsive-fix.css" rel="stylesheet" type="text/css">
   <link href="/css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -1740,15 +1738,69 @@
     }
   </style>
 
-  <link href="../css/mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="css/mobile-fix.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+    <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+      <select onchange="switchLanguage(this.value)" style="padding: 8px; border-radius: 4px;">
+        <option value="en">English</option><option value="ru">Russian</option><option value="he" selected="">Hebrew</option>
+      </select>
+    </div>
+    <script>
+      function switchLanguage(lang) {
+        const currentPath = window.location.pathname;
+        const pathParts = currentPath.split('/').filter(p => p);
+        
+        // Remove current language from path
+        if (['en', 'ru', 'he'].includes(pathParts[0])) {
+          pathParts.shift();
+        }
+        
+        // Navigate to new language
+        const newPath = '/' + lang + '/' + pathParts.join('/');
+        window.location.href = newPath;
+      }
+    </script>
+  
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
   
   <div class="page-wrapper">
     <!-- Navigation -->
-    <div id="shared-menu-container"></div>
+    <div class="navbar w-nav">
+      <div class="container">
+        <div class="navbar-content">
+          <a href="home.html" class="zohacous-logo-link w-nav-brand">
+            <img loading="lazy" src="images/Logo.svg" alt="AI Studio" class="zohacous-logo-image">
+          </a>
+          <nav role="navigation" class="nav-menu w-nav-menu">
+            <a href="home.html" class="nav-link w-nav-link">Home</a>
+            <a href="courses.html" class="nav-link w-nav-link">Courses</a>
+            <a href="teachers.html" class="nav-link w-nav-link">Teachers</a>
+            <div class="menu-dropdown-wrapper w-dropdown" data-hover="true" data-delay="0">
+              <div class="dropdown-toggle w-dropdown-toggle">
+                <div class="dropdown-toggle-text-block">Career Services</div>
+                <div class="dropdown-toggle-arrow-2">▼</div>
+              </div>
+              <nav class="dropdown-column-wrapper-3 w-dropdown-list" style="display: none;">
+                <div class="dropdown-pd pd-60px">
+                  <div class="dropdown-menu-wrapper">
+                    <a href="career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
+                      <div>Career Orientation</div>
+                    </a>
+                    <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block w--current">
+                      <div>Career Center</div>
+                    </a>
+                  </div>
+                </div>
+              </nav>
+            </div>
+            <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
+          </nav>
+          <a href="#" class="primary-button">Get Started</a>
+        </div>
+      </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="career-hero-section">
@@ -1802,7 +1854,7 @@
 
           <div class="service-card">
             <div class="service-icon">📄</div>
-            <h3 class="service-title">Resume & Portfolio Analysis</h3>
+            <h3 class="service-title">Resume &amp; Portfolio Analysis</h3>
             <p class="service-description">
               Professional review and optimization of your resume, portfolio, and LinkedIn profile to stand out to AI employers.
             </p>
@@ -1941,7 +1993,7 @@
               </div>
             </div>
             
-            <a href="#contact" class="consultation-button">הרשם עכשיו</a>
+            <a href="#contact" class="consultation-button">Enroll Now</a>
           </div>
         </div>
       </div>
@@ -2055,14 +2107,14 @@
           <form class="yellow-contact-form" action="#" method="POST">
             <div class="yellow-form-grid">
               <div class="yellow-form-field">
-                <input class="yellow-form-input" type="text" name="name" placeholder="Your Name" required>
+                <input class="yellow-form-input" type="text" name="name" placeholder="Your Name" required="">
               </div>
               <div class="yellow-form-field">
-                <input class="yellow-form-input" type="tel" name="phone" placeholder="Phone Number" required>
+                <input class="yellow-form-input" type="tel" name="phone" placeholder="Phone Number" required="">
               </div>
             </div>
             <div class="yellow-form-field full-width">
-              <textarea class="yellow-form-textarea" name="message" placeholder="Tell us about your career goals and how we can help..." required></textarea>
+              <textarea class="yellow-form-textarea" name="message" placeholder="Tell us about your career goals and how we can help..." required=""></textarea>
             </div>
             <button class="yellow-form-submit" type="submit">Send Message</button>
           </form>
@@ -2083,10 +2135,10 @@
           <form class="individual-consultation-form" action="#" method="POST">
             <div class="individual-form-grid">
               <div class="individual-form-field">
-                <input class="individual-form-input" type="text" name="fullName" placeholder="Full Name" required>
+                <input class="individual-form-input" type="text" name="fullName" placeholder="Full Name" required="">
               </div>
               <div class="individual-form-field">
-                <input class="individual-form-input" type="tel" name="phoneNumber" placeholder="Phone Number" required>
+                <input class="individual-form-input" type="tel" name="phoneNumber" placeholder="Phone Number" required="">
               </div>
             </div>
             <button class="individual-form-submit" type="submit">Book Free Consultation</button>
@@ -2255,18 +2307,18 @@
           <div class="form-grid">
             <div class="form-field">
               <label class="form-label" for="firstName">First Name</label>
-              <input class="form-input" type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
+              <input class="form-input" type="text" id="firstName" name="firstName" placeholder="Enter your first name" required="">
             </div>
             <div class="form-field">
               <label class="form-label" for="lastName">Last Name</label>
-              <input class="form-input" type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
+              <input class="form-input" type="text" id="lastName" name="lastName" placeholder="Enter your last name" required="">
             </div>
           </div>
           
           <div class="form-grid">
             <div class="form-field">
               <label class="form-label" for="email">Email Address</label>
-              <input class="form-input" type="email" id="email" name="email" placeholder="Enter your email" required>
+              <input class="form-input" type="email" id="email" name="email" placeholder="Enter your email" required="">
             </div>
             <div class="form-field">
               <label class="form-label" for="phone">Phone Number</label>
@@ -2281,7 +2333,7 @@
           
           <div class="form-field full-width">
             <label class="form-label" for="message">Tell us about your career goals</label>
-            <textarea class="form-textarea" id="message" name="message" placeholder="What AI/ML role are you targeting? What's your timeline? Any specific challenges you're facing?" required></textarea>
+            <textarea class="form-textarea" id="message" name="message" placeholder="What AI/ML role are you targeting? What's your timeline? Any specific challenges you're facing?" required=""></textarea>
           </div>
           
           <button class="form-submit" type="submit">Send Message</button>
@@ -2308,16 +2360,16 @@
           </div>
           
           <div class="footer-column">
-            <h3>קורסים</h3>
+            <h3>Courses</h3>
             <a href="courses.html" class="footer-link">All Courses</a>
             <a href="detail_courses.html" class="footer-link">Machine Learning</a>
             <a href="detail_courses.html" class="footer-link">Deep Learning</a>
-            <a href="detail_courses.html" class="footer-link">מדע הנתונים</a>
+            <a href="detail_courses.html" class="footer-link">Data Science</a>
             <a href="detail_courses.html" class="footer-link">AI Engineering</a>
           </div>
           
           <div class="footer-column">
-            <h3>שירותי קריירה</h3>
+            <h3>Career Services</h3>
             <a href="career-center.html" class="footer-link">Career Center</a>
             <a href="career-orientation.html" class="footer-link">Career Orientation</a>
             <a href="#" class="footer-link">Job Placement</a>
@@ -2328,15 +2380,15 @@
           <div class="footer-column">
             <h3>Support</h3>
             <a href="#" class="footer-link">Help Center</a>
-            <a href="#" class="footer-link">צור קשר</a>
+            <a href="#" class="footer-link">Contact Us</a>
             <a href="#" class="footer-link">Community</a>
-            <a href="#" class="footer-link">מדיניות פרטיות</a>
-            <a href="#" class="footer-link">תנאי שירות</a>
+            <a href="#" class="footer-link">Privacy Policy</a>
+            <a href="#" class="footer-link">Terms of Service</a>
           </div>
         </div>
         
         <div class="footer-bottom">
-          <p>&copy; 2025 AI Studio Learning Platform. All rights reserved. Empowering the next generation of AI professionals.</p>
+          <p>© 2025 AI Studio Learning Platform. All rights reserved. Empowering the next generation of AI professionals.</p>
         </div>
       </div>
     </footer>
@@ -2899,15 +2951,159 @@
     })();
   </script>
 
-  <script src="../js/navigation-responsive-fix.js"></script>
+  <script src="js/navigation-responsive-fix.js"></script>
+  <script src="js/emergency-fix.js"></script>
+  <script src="js/mobile-menu-toggle-fix.js"></script>
 
-  <!-- Hebrew Translations Fix - Must load before API integration -->
-  <script src="../js/hebrew-translations-fix.js"></script>
-  <!-- API Integration Scripts -->
-  <script src="../js/webflow-strapi-integration.js"></script>
-  <script src="../js/strapi-integration.js"></script>
-  <script src="../js/ui-translator.js"></script>
-  <script src="../js/mobile-menu-toggle-fix.js"></script>
-    <script src="../js/shared-menu-component.js?v=2.2"></script>
-</body>
-</html>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Handle all lead forms
+        const forms = document.querySelectorAll('form[data-name="lead-form"], form[id*="lead"], form[action*="leads"]');
+        
+        forms.forEach(form => {
+          form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const data = {
+              data: {
+                name: formData.get('name') || formData.get('Name'),
+                email: formData.get('email') || formData.get('Email'),
+                phone: formData.get('phone') || formData.get('Phone'),
+                message: formData.get('message') || formData.get('Message'),
+                language: document.documentElement.lang,
+                source: window.location.pathname
+              }
+            };
+            
+            try {
+              // Try HTTPS first, fallback to HTTP if SSL issues
+              let response = await fetch('https://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+              });
+              
+              // If HTTPS fails, try HTTP fallback
+              if (!response.ok && response.status === 0) {
+                console.log('HTTPS failed, trying HTTP fallback...');
+                response = await fetch('http://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(data)
+                });
+              }
+              
+              if (response.ok) {
+                // Show success message
+                alert('Thank you! We will contact you soon.');
+                form.reset();
+                
+                // Optional: redirect to thank you page
+                // window.location.href = '/thank-you.html';
+              } else {
+                throw new Error('Submission failed');
+              }
+            } catch (error) {
+              console.error('Form submission error:', error);
+              alert('Sorry, there was an error. Please try again or contact us directly.');
+            }
+          });
+        });
+      });
+    </script>
+  
+      <!-- Hebrew Database Integration Script -->
+      <script>
+        (async function loadHebrewCareerCenterContent() {
+          console.log('Loading Hebrew Career Center content...');
+          
+          const API_BASE = 'https://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api';
+          
+          try {
+            const response = await fetch(`${API_BASE}/career-center-page?locale=he`);
+            console.log('Hebrew API response status:', response.status);
+            
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            console.log('Hebrew Career Center data received:', data);
+            
+            if (data && data.data && data.data.attributes) {
+              const content = data.data.attributes;
+              updateCareerCenterContent(content);
+            } else {
+              console.log('Hebrew content structure not as expected:', data);
+            }
+          } catch (error) {
+            console.error('Error loading Hebrew career center content:', error);
+          }
+          
+          function updateCareerCenterContent(content) {
+            console.log('Updating Hebrew Career Center content...');
+            
+            // Update main hero title - multiple selectors for robustness
+            const heroTitle = document.querySelector('.section-title.featured-courses, .hero-heading, h1, .career-hero-title');
+            if (heroTitle && content.title) {
+              console.log('Updating hero title to:', content.title);
+              heroTitle.textContent = content.title;
+            }
+            
+            // Update hero subtitle
+            const heroSubtitle = document.querySelector('.section-subtitle, .hero-subtitle, .subtitle');
+            if (heroSubtitle && content.subtitle) {
+              console.log('Updating hero subtitle to:', content.subtitle);
+              heroSubtitle.textContent = content.subtitle;
+            }
+            
+            // Update hero description
+            const heroDesc = document.querySelector('.section-description-text.featured-courses, .hero-description, .description, .career-hero-description');
+            if (heroDesc && content.description) {
+              console.log('Updating hero description to:', content.description);
+              heroDesc.innerHTML = content.description;
+            }
+            
+            // Update stats if available
+            if (content.stats && Array.isArray(content.stats)) {
+              console.log('Updating stats section...');
+              content.stats.forEach((stat, index) => {
+                const statValue = document.querySelector(`.stat-item:nth-child(${index + 1}) .stat-value, .metric-item:nth-child(${index + 1}) .metric-value`);
+                const statLabel = document.querySelector(`.stat-item:nth-child(${index + 1}) .stat-label, .metric-item:nth-child(${index + 1}) .metric-label`);
+                
+                if (statValue && stat.value) {
+                  statValue.textContent = stat.value;
+                }
+                if (statLabel && stat.label) {
+                  statLabel.textContent = stat.label;
+                }
+              });
+            }
+            
+            // Update services if available
+            if (content.services && Array.isArray(content.services)) {
+              console.log('Updating services section...');
+              content.services.forEach((service, index) => {
+                const serviceTitle = document.querySelector(`.service-item:nth-child(${index + 1}) .service-title, .feature-item:nth-child(${index + 1}) .feature-title`);
+                const serviceDesc = document.querySelector(`.service-item:nth-child(${index + 1}) .service-description, .feature-item:nth-child(${index + 1}) .feature-description`);
+                
+                if (serviceTitle && service.title) {
+                  serviceTitle.textContent = service.title;
+                }
+                if (serviceDesc && service.description) {
+                  serviceDesc.textContent = service.description;
+                }
+              });
+            }
+            
+            console.log('Hebrew Career Center content update completed');
+          }
+        })();
+      </script>
+    </body></html>

@@ -1,0 +1,470 @@
+/**
+ * Teachers Tabbed Minimal Design CSS
+ * TeachMeSkills.by-inspired tabbed interface with AI Studio design system
+ *
+ * Colors: AI Studio Blue (#0080ff), Dark Backgrounds (#05051a)
+ * Typography: Manrope (headings), Plus Jakarta Sans (body)
+ */
+
+/* ==========================================================================
+   Tab Navigation Styling
+   ========================================================================== */
+
+.teacher-tabs-navigation {
+  background: #ffffff;
+  padding: 60px 0;
+}
+
+.teacher-tabs-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin: 40px 0 0;
+  padding: 0;
+}
+
+.teacher-tab-btn {
+  background: transparent;
+  border: 2px solid #e2e8f0;
+  border-radius: 30px;
+  padding: 12px 24px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.teacher-tab-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 128, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.teacher-tab-btn:hover {
+  border-color: #0080ff;
+  color: #0080ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 128, 255, 0.15);
+}
+
+.teacher-tab-btn:hover::before {
+  left: 100%;
+}
+
+.teacher-tab-btn.active {
+  background: #0080ff;
+  border-color: #0080ff;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 128, 255, 0.25);
+}
+
+.teacher-tab-btn.active::before {
+  display: none;
+}
+
+/* ==========================================================================
+   Teachers Grid - Minimal Cards
+   ========================================================================== */
+
+.teachers-showcase {
+  background: #f8fafc;
+  padding: 80px 0;
+}
+
+.teachers-grid-minimal {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Teacher Card - TeachMeSkills.by Minimal Style */
+.teacher-card-minimal {
+  background: white;
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.teacher-card-minimal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #0080ff, #667eea);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.teacher-card-minimal:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border-color: rgba(0, 128, 255, 0.1);
+}
+
+.teacher-card-minimal:hover::before {
+  opacity: 1;
+}
+
+/* Teacher Avatar - Clean Circular */
+.teacher-avatar-minimal {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #f1f5f9;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.teacher-avatar-minimal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.teacher-card-minimal:hover .teacher-avatar-minimal {
+  border-color: #0080ff;
+  transform: scale(1.05);
+}
+
+.teacher-card-minimal:hover .teacher-avatar-minimal img {
+  transform: scale(1.1);
+}
+
+/* Teacher Information - Minimal Typography */
+.teacher-name-minimal {
+  font-family: "Manrope", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 8px;
+  line-height: 1.3;
+}
+
+.teacher-role-minimal {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0080ff;
+  margin: 0 0 6px;
+  line-height: 1.4;
+}
+
+.teacher-experience-minimal {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  margin: 0 0 20px;
+  line-height: 1.4;
+}
+
+/* Social Links - Minimal Icons */
+.teacher-social-minimal {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.social-link-minimal {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.social-link-minimal::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: #0080ff;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.social-link-minimal:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+.social-link-minimal:hover {
+  transform: translateY(-2px);
+  color: white;
+  z-index: 2;
+  position: relative;
+}
+
+.social-link-minimal.linkedin:hover {
+  box-shadow: 0 4px 15px rgba(0, 123, 191, 0.3);
+}
+
+.social-link-minimal.github:hover {
+  box-shadow: 0 4px 15px rgba(51, 51, 51, 0.3);
+}
+
+/* Contact Teacher Button - Primary CTA */
+.contact-teacher-btn {
+  background: linear-gradient(135deg, #0080ff, #667eea);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-teacher-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.contact-teacher-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 128, 255, 0.3);
+  background: linear-gradient(135deg, #0066cc, #5a67d8);
+}
+
+.contact-teacher-btn:hover::before {
+  left: 100%;
+}
+
+.contact-teacher-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(0, 128, 255, 0.2);
+}
+
+/* ==========================================================================
+   Tab Filtering Logic - Show/Hide Cards
+   ========================================================================== */
+
+/* Hide all cards by default */
+.teacher-card-minimal {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.4s ease;
+}
+
+.teacher-card-minimal.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+/* Animation for showing cards */
+.teacher-card-minimal.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered animation delays for cards appearing */
+.teachers-grid-minimal .teacher-card-minimal:nth-child(1).show { transition-delay: 0.1s; }
+.teachers-grid-minimal .teacher-card-minimal:nth-child(2).show { transition-delay: 0.15s; }
+.teachers-grid-minimal .teacher-card-minimal:nth-child(3).show { transition-delay: 0.2s; }
+.teachers-grid-minimal .teacher-card-minimal:nth-child(4).show { transition-delay: 0.25s; }
+.teachers-grid-minimal .teacher-card-minimal:nth-child(5).show { transition-delay: 0.3s; }
+.teachers-grid-minimal .teacher-card-minimal:nth-child(6).show { transition-delay: 0.35s; }
+.teachers-grid-minimal .teacher-card-minimal:nth-child(7).show { transition-delay: 0.4s; }
+.teachers-grid-minimal .teacher-card-minimal:nth-child(8).show { transition-delay: 0.45s; }
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 991px) {
+  .teacher-tabs-wrapper {
+    gap: 12px;
+  }
+
+  .teacher-tab-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+
+  .teachers-grid-minimal {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 24px;
+  }
+
+  .teacher-card-minimal {
+    padding: 28px 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .teacher-tabs-wrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .teacher-tab-btn {
+    width: 100%;
+    max-width: 280px;
+    text-align: center;
+  }
+
+  .teachers-grid-minimal {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .teacher-name-minimal {
+    font-size: 18px;
+  }
+
+  .teacher-avatar-minimal {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+@media (max-width: 479px) {
+  .teachers-showcase {
+    padding: 60px 0;
+  }
+
+  .teachers-grid-minimal {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .teacher-card-minimal {
+    padding: 24px 16px;
+  }
+
+  .teacher-avatar-minimal {
+    width: 80px;
+    height: 80px;
+  }
+
+  .teacher-name-minimal {
+    font-size: 16px;
+  }
+
+  .social-link-minimal {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .contact-teacher-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+/* ==========================================================================
+   Loading and Animation States
+   ========================================================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.teacher-card-minimal.animate-in {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Focus states for accessibility */
+.teacher-tab-btn:focus,
+.contact-teacher-btn:focus,
+.social-link-minimal:focus {
+  outline: 2px solid #0080ff;
+  outline-offset: 2px;
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+  .teachers-showcase {
+    background: #0f172a;
+  }
+
+  .teacher-card-minimal {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
+  .teacher-name-minimal {
+    color: #f1f5f9;
+  }
+
+  .teacher-experience-minimal {
+    color: #94a3b8;
+  }
+}
+
+/* Print styles */
+@media print {
+  .teacher-tabs-wrapper {
+    display: none;
+  }
+
+  .teacher-card-minimal {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
+  }
+
+  .contact-teacher-btn {
+    display: none;
+  }
+}

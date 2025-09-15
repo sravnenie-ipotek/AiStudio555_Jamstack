@@ -100,6 +100,12 @@ class EnhancedIntegration {
     }
 
     applyNavigationTranslations(lang) {
+        // Skip navigation translation for Hebrew pages - they already have correct Hebrew text
+        if (lang === 'he') {
+            console.log('📌 Skipping navigation translation - Hebrew page already has correct Hebrew text');
+            return;
+        }
+
         // Navigation links
         const navMappings = {
             'Home': TRANSLATIONS.nav.home[lang],

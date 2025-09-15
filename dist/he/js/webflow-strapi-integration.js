@@ -6,8 +6,23 @@
 
 class CustomAPIIntegration {
     constructor() {
-        // Production API URL
-        this.API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+        // Detect API endpoint based on current port
+        const currentPort = window.location.port;
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+        if (currentPort === '3005') {
+            // Frontend on Python server (3005), API on Express (4005)
+            this.API_BASE = 'http://localhost:4005/api';
+        } else if (currentPort === '4005') {
+            // Accessing directly via Express server
+            this.API_BASE = 'http://localhost:4005/api';
+        } else if (isLocal) {
+            // Default local setup
+            this.API_BASE = 'http://localhost:4005/api';
+        } else {
+            // Production
+            this.API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+        }
         this.isInitialized = false;
         this.currentLanguage = this.detectLocale();
         this.cache = {};
@@ -122,10 +137,12 @@ class CustomAPIIntegration {
     async loadCoursesContent() {
         try {
             console.log('📚 Loading courses content...');
-            
+
             const courses = await this.fetchAPI('/courses?populate=*');
             if (courses?.data) {
+                // Update both the main courses grid and featured courses section
                 this.updateCoursesGrid(courses.data);
+                this.updateFeaturedCoursesFromAPI(courses.data);
                 console.log(`✅ Loaded ${courses.data.length} courses`);
             }
         } catch (error) {
@@ -136,8 +153,8 @@ class CustomAPIIntegration {
     async loadTeachersContent() {
         try {
             console.log('👨‍🏫 Loading teachers content...');
-            
-            const teachers = await this.fetchAPI('/teachers?populate=*');
+
+            const teachers = await this.fetchAPI(`/teachers?locale=${this.currentLanguage}`);
             if (teachers?.data) {
                 this.updateTeachersGrid(teachers.data);
                 console.log(`✅ Loaded ${teachers.data.length} teachers`);
@@ -266,7 +283,15 @@ class CustomAPIIntegration {
 
     updateNavigation(ui) {
         console.log('🧭 Updating navigation...');
-        
+
+        // Skip updating navigation if shared menu component already handled it
+        // The shared menu component properly handles Hebrew translations
+        const sharedMenuContainer = document.getElementById('shared-menu-container');
+        if (sharedMenuContainer && sharedMenuContainer.innerHTML.trim()) {
+            console.log('📌 Navigation already handled by shared menu component, skipping webflow-strapi navigation update');
+            return;
+        }
+
         // Navigation menu items
         const navItems = [
             { selector: 'a[href="/home"], a[href="home.html"], a[href="../home.html"], a[href="index.html"]', field: 'navHome' },
@@ -282,9 +307,15 @@ class CustomAPIIntegration {
         navItems.forEach(item => {
             const elements = document.querySelectorAll(item.selector);
             elements.forEach(el => {
-                if (ui[item.field] && el.textContent.trim() !== ui[item.field]) {
-                    console.log(`✅ Nav: "${el.textContent.trim()}" → "${ui[item.field]}"`);
+                const currentText = el.textContent.trim();
+                // Check if current text is already in Hebrew (preserve it!)
+                const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+
+                if (ui[item.field] && currentText !== ui[item.field] && !isHebrewText) {
+                    console.log(`✅ Nav: "${currentText}" → "${ui[item.field]}"`);
                     el.textContent = ui[item.field];
+                } else if (isHebrewText) {
+                    console.log(`✅ [webflow-strapi] Preserving Hebrew text: "${currentText}"`);
                 }
             });
         });
@@ -293,8 +324,15 @@ class CustomAPIIntegration {
         const dropdownItems = document.querySelectorAll('.dropdown-menu-text-link-block, .nav-link, .dropdown-list a');
         dropdownItems.forEach(item => {
             const href = item.getAttribute('href') || '';
-            if (href.includes('career') && ui.navCareerCenter) {
+            const currentText = item.textContent.trim();
+            const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+
+            // Only update if NOT already Hebrew
+            if (href.includes('career') && ui.navCareerCenter && !isHebrewText) {
+                console.log(`🔄 [webflow-strapi] Updating dropdown: "${currentText}" → "${ui.navCareerCenter}"`);
                 item.textContent = ui.navCareerCenter;
+            } else if (href.includes('career') && isHebrewText) {
+                console.log(`✅ [webflow-strapi] Preserving Hebrew dropdown text: "${currentText}"`);
             }
         });
     }
@@ -573,65 +611,83 @@ class CustomAPIIntegration {
     updateTeachersGrid(teachersData) {
         console.log('👨‍🏫 Updating teachers grid...');
 
-        const teachersContainer = document.querySelector('#instructors-grid');
+        const teachersContainer = document.querySelector('.teachers-grid, [data-teachers-grid], .instructor-grid-enhanced, #instructors-grid');
         if (!teachersContainer) {
-            console.error('❌ Teachers grid container #instructors-grid not found');
+            console.log('❌ No teachers container found');
             return;
         }
 
         teachersContainer.innerHTML = '';
-
+        
         teachersData.forEach(teacher => {
             const teacherCard = this.createTeacherCard(teacher);
             teachersContainer.appendChild(teacherCard);
         });
 
-        console.log(`✅ Updated teachers grid with ${teachersData.length} teachers`);
+        // Make container visible after updating content
+        teachersContainer.style.opacity = '1';
+        teachersContainer.style.visibility = 'visible';
+
+        console.log(`✅ Updated teachers grid with ${teachersData.length} teachers and made it visible`);
     }
 
     createTeacherCard(teacherData) {
-        // Handle both API response format and direct data
         const teacher = teacherData.attributes || teacherData;
 
         const teacherCard = document.createElement('div');
-        teacherCard.className = 'instructor-card-enhanced';
-        teacherCard.setAttribute('data-category', teacher.categories || 'all');
 
-        // Extract specializations for display
-        let specializations = [];
-        if (teacher.specializations) {
-            if (Array.isArray(teacher.specializations)) {
-                specializations = teacher.specializations;
-            } else if (typeof teacher.specializations === 'string') {
-                specializations = teacher.specializations.split(',').map(s => s.trim());
-            }
+        // Check if we're on Hebrew teachers page with enhanced design
+        const isHebrewTeachersPage = document.querySelector('.instructor-grid-enhanced, #instructors-grid');
+
+        if (isHebrewTeachersPage) {
+            teacherCard.className = 'instructor-card-enhanced';
+            teacherCard.setAttribute('data-category', 'all');
+
+            teacherCard.innerHTML = `
+                <div class="instructor-category-badge">מומחה</div>
+                <div class="instructor-avatar-enhanced">
+                    <img src="${teacher.image_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face'}"
+                         alt="${teacher.name}"
+                         onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face'">
+                </div>
+                <h3 class="instructor-name">${teacher.name}</h3>
+                <p class="instructor-title">מומחה בתחום הטכנולוגיה</p>
+                <p class="instructor-experience">ניסיון מקצועי רב</p>
+                <p class="instructor-bio">${teacher.bio || 'מומחה מקצועי עם ניסיון עשיר בתחום הטכנולוגיה והחדשנות'}</p>
+                <div class="instructor-specialties">
+                    <span class="specialty-tag">AI/ML</span>
+                    <span class="specialty-tag">Python</span>
+                    <span class="specialty-tag">Data Science</span>
+                </div>
+                <div class="instructor-social">
+                    <a href="#" class="instructor-social-link">💼</a>
+                    <a href="#" class="instructor-social-link">🐦</a>
+                </div>
+            `;
+        } else {
+            // Original design for other pages
+            teacherCard.className = 'teacher-item w-dyn-item';
+
+            teacherCard.innerHTML = `
+                <div class="teacher-card">
+                    <div class="teacher-image">
+                        <img src="${teacher.image_url || '/images/teacher-placeholder.jpg'}"
+                             alt="${teacher.name}"
+                             class="teacher-img" />
+                    </div>
+                    <div class="teacher-info">
+                        <h3 class="teacher-name">${teacher.name}</h3>
+                        <p class="teacher-title">${teacher.title || ''}</p>
+                        <p class="teacher-bio">${teacher.bio || ''}</p>
+                        <div class="teacher-expertise">
+                            ${teacher.expertise ? teacher.expertise.split(',').map(skill =>
+                                `<span class="skill-tag">${skill.trim()}</span>`
+                            ).join('') : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
         }
-
-        // Create category badge text
-        const categoryText = teacher.categories || 'General Development';
-
-        teacherCard.innerHTML = `
-            <div class="instructor-category-badge">${categoryText}</div>
-            <div class="instructor-avatar-enhanced">
-                <img src="${teacher.image_url || teacher.image || 'https://images.unsplash.com/photo-1494790108755-2616b612b1ac?w=300&h=300&fit=crop&crop=face'}"
-                     alt="${teacher.name}"
-                     onerror="this.src='https://images.unsplash.com/photo-1494790108755-2616b612b1ac?w=300&h=300&fit=crop&crop=face'">
-            </div>
-            <h3 class="instructor-name">${teacher.name}</h3>
-            <p class="instructor-title">${teacher.position || teacher.role || teacher.title || ''}</p>
-            <p class="instructor-experience">${teacher.experience_years ? teacher.experience_years + '+ years experience' : (teacher.experience || '')}</p>
-            <p class="instructor-bio">${teacher.description || teacher.bio || ''}</p>
-            <div class="instructor-specialties">
-                ${specializations.slice(0, 4).map(skill =>
-                    `<span class="specialty-tag">${skill}</span>`
-                ).join('')}
-            </div>
-            <div class="instructor-social">
-                ${teacher.linkedin ? `<a href="${teacher.linkedin}" class="instructor-social-link">💼</a>` : ''}
-                ${teacher.twitter ? `<a href="${teacher.twitter}" class="instructor-social-link">🐦</a>` : ''}
-                ${teacher.company ? `<span class="instructor-company">${teacher.company}</span>` : ''}
-            </div>
-        `;
 
         return teacherCard;
     }

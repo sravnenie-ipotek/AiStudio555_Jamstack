@@ -1698,10 +1698,11 @@
   <!-- API Configuration - Load First -->
   <script src="../js/api-config.js?v=1.1"></script>
   <!-- Enhanced Integration for Translation Support -->
-  <script src="../js/translations-config.js?v=1.1"></script>
-  <script src="../js/enhanced-integration.js?v=1.1"></script>
+  <!-- Translation scripts disabled to prevent Hebrew content override -->
+  <!-- <script src="../js/translations-config.js?v=1.1"></script> -->
+  <!-- <script src="../js/enhanced-integration.js?v=1.1"></script> -->
   <script src="../js/shared-menu-component.js?v=2.6"></script>
-  <script src="../js/ui-translator.js?v=1.1"></script>
+  <!-- <script src="../js/ui-translator.js?v=1.1"></script> -->
 
   <!-- Language Switcher -->
   <script>
@@ -1722,7 +1723,7 @@
         const storedLang = localStorage.getItem(STORAGE_KEY);
         if (storedLang && LANGUAGES[storedLang]) return storedLang;
 
-        return 'en';
+        return 'he'; // Default to Hebrew for Hebrew pages
       }
 
       function createLanguageSwitcher() {

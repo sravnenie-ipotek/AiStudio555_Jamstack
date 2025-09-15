@@ -1,26 +1,38 @@
 <!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Tue Sep 02 2025 21:54:44 GMT+0000 (Coordinated Universal Time)  --><html data-wf-page="68b7601f918996218465c55a" data-wf-site="68b7601d918996218465c4a6" lang="he" dir="rtl"><head>
   <meta charset="utf-8">
-  <title>קטלוג קורסים מקוון - פלטפורמת הלמידה AI Studio</title>
-  <meta content="חקרו את הקטלוג המקיף שלנו של קורסי AI וטכנולוגיה. הצטרפו ליותר מ-12,000 בוגרים ששינו את הקריירה שלהם עם AI Studio." property="og:title">
-  <meta content="חקרו את הקטלוג המקיף שלנו של קורסי AI וטכנולוגיה. הצטרפו ליותר מ-12,000 בוגרים ששינו את הקריירה שלהם עם AI Studio." property="twitter:title">
+  <title>Online Course Catalog - סטודיו AI Learning Platform</title>
+  <meta content="Explore our comprehensive catalog of AI and technology courses. Join over 12,000 graduates who have transformed their careers with AI Studio." property="og:title">
+  <meta content="Explore our comprehensive catalog of AI and technology courses. Join over 12,000 graduates who have transformed their careers with AI Studio." property="twitter:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
-  <link href="../css/normalize.css" rel="stylesheet" type="text/css">
-  <link href="../css/webflow.css" rel="stylesheet" type="text/css">
-  <link href="../css/aizeks-marvelous-site.webflow.css" rel="stylesheet" type="text/css">
-  <link href="../css/unified-navigation.css" rel="stylesheet" type="text/css">
-  <link href="../css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
-  <link href="../css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
-  <link href="../css/mobile-responsive-fix.css" rel="stylesheet" type="text/css">
-  <link href="../css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
+  <link href="css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="css/webflow.css" rel="stylesheet" type="text/css">
+  <link href="css/aizeks-marvelous-site.webflow.css" rel="stylesheet" type="text/css">
+  <link href="css/unified-navigation.css" rel="stylesheet" type="text/css">
+  <link href="css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
+  <link href="/css/mobile-responsive-fix.css" rel="stylesheet" type="text/css">
+  <link href="/css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
   <script type="text/javascript">WebFont.load({  google: {    families: ["Manrope:200,300,regular,500,600,700,800","Plus Jakarta Sans:200,300,regular,500,600,700,800"]  }});</script>
   <script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script>
-  <link href="../images/favicon.svg" rel="shortcut icon" type="image/x-icon">
-  <link href="../images/webclip.svg" rel="apple-touch-icon">
+  <link href="images/favicon.svg" rel="shortcut icon" type="image/x-icon">
+  <link href="images/webclip.svg" rel="apple-touch-icon">
   <style>
+    /* CRITICAL NAVIGATION FIX - Force visibility */
+    .nav-menu { display: flex !important; align-items: center !important; gap: 20px !important; }
+    .nav-link, .menu-dropdown-wrapper { display: inline-block !important; visibility: visible !important; opacity: 1 !important; }
+    .dropdown-toggle { display: flex !important; align-items: center !important; gap: 5px !important; cursor: pointer !important; color: rgba(255,255,255,0.9) !important; padding: 8px 0 !important; }
+    .dropdown-list { position: absolute !important; top: 100% !important; left: 0 !important; background: #05051a !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 8px !important; padding: 10px 0 !important; min-width: 200px !important; z-index: 1000 !important; opacity: 0 !important; visibility: hidden !important; transform: translateY(-10px) !important; transition: all 0.2s ease !important; }
+    .menu-dropdown-wrapper:hover .dropdown-list, .dropdown-list.w--open { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; }
+    .dropdown-menu-text-link-block { display: block !important; padding: 10px 20px !important; color: rgba(255,255,255,0.9) !important; text-decoration: none !important; }
+    .dropdown-menu-text-link-block:hover { background: rgba(255,255,255,0.05) !important; color: #ffd659 !important; }
+    .navbar-button-wrapper { margin-left: auto !important; display: flex !important; align-items: center !important; gap: 20px !important; }
+    .primary-button-wrapper.mobile { display: none !important; }
+    @media (max-width: 991px) { .primary-button-wrapper.desktop { display: none !important; } .primary-button-wrapper.mobile { display: block !important; } }
+
     /* Custom styles for TeachMeSkills sections */
     .category-cards-section {
       padding: 80px 0;
@@ -417,8 +429,12 @@
       border-radius: 10px;
       font-size: 16px;
       transition: all 0.3s ease;
-      color: #04193f; /* Set text color to black (site's main text color) */
-      background: white;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #0080ff;
+      box-shadow: 0 0 0 3px rgba(0,128,255,0.1);
     }
     
     .form-select {
@@ -447,41 +463,6 @@
     .form-submit:hover {
       transform: scale(1.02);
       box-shadow: 0 10px 30px rgba(0,128,255,0.3);
-    }
-
-    .form-submit:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    /* Form error messages for RTL Hebrew */
-    .form-error {
-      display: none;
-      color: #ef4444;
-      font-size: 12px;
-      margin-top: 4px;
-      text-align: right;
-      direction: rtl;
-      font-weight: 500;
-    }
-
-    .form-error.active {
-      display: block;
-    }
-
-    /* Input error state */
-    .form-input.error,
-    .form-select.error {
-      border-color: #ef4444;
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-    }
-
-    /* Success state for inputs */
-    .form-input.success,
-    .form-select.success {
-      border-color: #10b981;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
     }
     
     /* Responsive Design */
@@ -666,6 +647,58 @@
       background: transparent !important;
       display: block !important;
     }
+  
+    /* Hide unwanted elements */
+    .w-commerce-commercecartwrapper,
+    .navbar-cart,
+    .pages-dropdown,
+    .navbar-menu-button-cart-quantity,
+    .navbar-menu-button-cart-wrapper {
+      display: none !important;
+    }
+    
+    /* Fix dropdown styling */
+    .w-dropdown {
+      position: relative;
+    }
+    
+    .w-dropdown-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: rgba(5, 5, 26, 0.98);
+      border: 1px solid rgba(0, 128, 255, 0.2);
+      border-radius: 12px;
+      padding: 10px 0;
+      min-width: 200px;
+      z-index: 1000;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      margin-top: 10px;
+    }
+    
+    .w-dropdown-list a {
+      display: block;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .w-dropdown-list a:hover,
+    .w-dropdown-list a.w--current {
+      background: rgba(0, 128, 255, 0.1);
+      color: #ffd659;
+    }
+    
+    .dropdown-toggle-arrow-2 {
+      margin-left: 5px;
+      transition: transform 0.3s ease;
+      font-size: 12px;
+    }
+    
+    .w-dropdown.w--open .dropdown-toggle-arrow-2 {
+      transform: rotate(180deg);
+    }
   </style>
 
   <style id="universal-career-dropdown-fix">
@@ -848,21 +881,73 @@
     }
   </style>
 
-  <link href="../css/mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="css/mobile-fix.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+    <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+      <select onchange="switchLanguage(this.value)" style="padding: 8px; border-radius: 4px;">
+        <option value="en">English</option><option value="ru">Russian</option><option value="he" selected="">Hebrew</option>
+      </select>
+    </div>
+    <script>
+      function switchLanguage(lang) {
+        const currentPath = window.location.pathname;
+        const pathParts = currentPath.split('/').filter(p => p);
+        
+        // Remove current language from path
+        if (['en', 'ru', 'he'].includes(pathParts[0])) {
+          pathParts.shift();
+        }
+        
+        // Navigate to new language
+        const newPath = '/' + lang + '/' + pathParts.join('/');
+        window.location.href = newPath;
+      }
+    </script>
+  
   <div class="page-wrapper">
-    <div id="shared-menu-container"></div>
+    <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
+      <div class="container">
+        <div class="navbar-content">
+          <a href="home.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
+          <nav role="navigation" class="nav-menu w-nav-menu">
+            <a href="home.html" class="nav-link w-nav-link">Home</a>
+            <a href="courses.html" aria-current="page" class="nav-link w-nav-link w--current">Courses</a>
+            <a href="teachers.html" class="nav-link w-nav-link">Teachers</a>
+            <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
+              <div class="dropdown-toggle w-dropdown-toggle">
+                <div class="dropdown-toggle-text-block">Career Services</div>
+                <div class="dropdown-toggle-arrow-2">▼</div>
+              </div>
+              <nav class="dropdown-list w-dropdown-list">
+                <a href="career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
+                  <div>Career Orientation</div>
+                </a>
+                <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block">
+                  <div>Career Center</div>
+                </a>
+              </nav>
+            </div>
+            <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
+          </nav>
+          <div class="navbar-button-wrapper">
+<div class="menu-button w-nav-button">
+              <div data-is-ix2-target="1" class="hamburger-menu-icon" data-w-id="9700d956-7e80-623a-3836-d267f1fdd0f6" data-animation-type="lottie" data-src="https://uploads-ssl.webflow.com/6649cc3a1ea038d81fed488f/665c6513c402f5112b50428d_Hamburger%20White.lottie" data-loop="0" data-direction="1" data-autoplay="0" data-renderer="svg" data-duration="0" data-ix2-initial-state="0"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <section class="section inner-banner">
       <div class="container">
         <div class="inner-banner-content">
           <div class="inner-banner-title-wrapper">
-            <h1 class="inner-banner-title">קורסים</h1>
+            <h1 class="inner-banner-title">Courses</h1>
           </div>
           <div class="inner-banner-text-link-wrapper">
-            <a href="home.html" class="inner-banner-text-link">בית</a>
+            <a href="home.html" class="inner-banner-text-link">Home</a>
             <div class="inner-banner-text-link-arrow">|</div>
-            <a href="courses.html" aria-current="page" class="inner-banner-text-link w--current">קורסים</a>
+            <a href="courses.html" aria-current="page" class="inner-banner-text-link w--current">Courses</a>
           </div>
         </div>
       </div>
@@ -874,19 +959,19 @@
         <div class="category-cards-grid">
           <div class="category-card">
             <div class="category-card-icon">ONLINE</div>
-            <h3 class="category-card-title">קורסי AI מקוונים</h3>
+            <h3 class="category-card-title">AI Courses Online</h3>
             <p class="category-card-description">
-              למדו AI ולמידת מכונה מתקדמים מכל מקום בעולם. מפגשים חיים עם מומחים מהתעשייה.
+              Learn cutting-edge AI and machine learning from anywhere in the world. Live sessions with industry experts.
             </p>
-            <a href="#featured-courses" class="category-card-button">עיין בקטלוג</a>
+            <a href="#featured-courses" class="category-card-button">Browse Catalog</a>
           </div>
           <div class="category-card">
             <div class="category-card-icon">NEW</div>
-            <h3 class="category-card-title">התחלות חודשיות</h3>
+            <h3 class="category-card-title">Monthly Starts</h3>
             <p class="category-card-description">
-              קבוצות חדשות מתחילות כל חודש. הצטרפו למחזורים הקרובים שלנו והאיצו את השינוי הקריירה שלכם.
+              New cohorts starting every month. Join our upcoming batches and accelerate your career transformation.
             </p>
-            <a href="#consultation" class="category-card-button">צפה בלוח זמנים</a>
+            <a href="#consultation" class="category-card-button">View Schedule</a>
           </div>
         </div>
       </div>
@@ -897,58 +982,58 @@
       <div class="container">
         <div class="career-content">
           <div class="career-text">
-            <h2 class="career-title">מי תהיה</h2>
+            <h2 class="career-title">Who You'll Become</h2>
             <p class="career-description">
-              שוק העבודה של AI וטכנולוגיה מלא בהזדמנויות מרגשות. חברות מסוימות מושכות עם אפשרויות לפיתוח עצמי, אחרות עם רכישת מיומנויות מהירה בתחומים מבוקשים, וחלק מציעות הזדמנויות לשנות קריירה או למצוא תחביבים מרתקים.
+              The AI and technology job market is filled with exciting opportunities. Some companies attract with self-development possibilities, others with rapid skill acquisition in in-demand areas, and some offer chances to change careers or find engaging hobbies.
             </p>
             <p class="career-description">
-              AI Studio מכסה את כל הצרכים החיוניים. במשך 8 שנות פעילות בשוק החינוך המקוון, הצוות שלנו הכשיר מעל 11,500 בוגרים, כאשר כל סטודנט מצא את דרכו בחברות הטכנולוגיה הבינלאומיות המובילות.
+              AI Studio covers all essential needs. Over 8 years of operation in the online education market, our team has prepared over 11,500 graduates, with each student finding their path in top international tech companies.
             </p>
             <div class="career-paths-grid">
               <div class="career-path-item">
                 <div class="career-path-icon"></div>
-                <span class="career-path-text">מהנדסי AI/ML</span>
+                <span class="career-path-text">AI/ML Engineers</span>
               </div>
               <div class="career-path-item">
                 <div class="career-path-icon"></div>
-                <span class="career-path-text">מדעני נתונים</span>
+                <span class="career-path-text">Data Scientists</span>
               </div>
               <div class="career-path-item">
                 <div class="career-path-icon"></div>
-                <span class="career-path-text">מפתחי Full-Stack</span>
+                <span class="career-path-text">Full-Stack Developers</span>
               </div>
               <div class="career-path-item">
                 <div class="career-path-icon"></div>
-                <span class="career-path-text">ארכיטקטי ענן</span>
+                <span class="career-path-text">Cloud Architects</span>
               </div>
               <div class="career-path-item">
                 <div class="career-path-icon"></div>
-                <span class="career-path-text">מהנדסי DevOps</span>
+                <span class="career-path-text">DevOps Engineers</span>
               </div>
               <div class="career-path-item">
                 <div class="career-path-icon"></div>
-                <span class="career-path-text">מנהלי מוצר</span>
+                <span class="career-path-text">Product Managers</span>
               </div>
               <div class="career-path-item">
                 <div class="career-path-icon"></div>
-                <span class="career-path-text">מעצבי UX/UI</span>
+                <span class="career-path-text">UX/UI Designers</span>
               </div>
               <div class="career-path-item">
                 <div class="career-path-icon"></div>
-                <span class="career-path-text">מפתחי Blockchain</span>
+                <span class="career-path-text">Blockchain Developers</span>
               </div>
             </div>
             <a href="#consultation" class="primary-button w-inline-block">
               <div class="primary-button-text-wrap">
-                <div class="primary-button-text-block">למד עוד</div>
-                <div class="primary-button-text-block is-text-absolute">למד עוד</div>
+                <div class="primary-button-text-block">Learn More</div>
+                <div class="primary-button-text-block is-text-absolute">Learn More</div>
               </div>
             </a>
           </div>
           <div class="career-image">
             <div class="career-image-content">
-              <h3 style="font-size: 36px; margin-bottom: 20px;">שנו את הקריירה שלכם</h3>
-              <p style="font-size: 18px;">הצטרפו לאלפי בוגרים מצליחים שעובדים בחברות טכנולוגיה מובילות ברחבי העולם</p>
+              <h3 style="font-size: 36px; margin-bottom: 20px;">Transform Your Career</h3>
+              <p style="font-size: 18px;">Join thousands of successful graduates working at leading tech companies worldwide</p>
             </div>
           </div>
         </div>
@@ -960,29 +1045,29 @@
         <div data-w-id="913a495c-adfe-7cdd-7de3-549e8feb0b17" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">קורסים מובחרים</div>
+            <div class="section-subtitle">Featured Courses</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses">שפרו את הכישורים שלכם עם קורסים מובחרים.</h2>
-          <p class="section-description-text featured-courses">צללו לתוך מבחר הקורסים המובחרים שלנו, שנאספו בקפידה על ידי מומחים ומעוצבים כדי להעניק לכם את הכישורים והידע הדרושים להצטיינות.</p>
+          <h2 class="section-title featured-courses">Enhance Your Skills With Curated Courses.</h2>
+          <p class="section-description-text featured-courses">Dive into our expertly curated selection of featured courses, designed to equip you with the skills and knowledge needed to excel.</p>
         </div>
         <div data-w-id="913a495c-adfe-7cdd-7de3-549e8feb0b21" style="opacity:0" class="featured-courses-content">
           <div data-current="Tab 1" data-easing="ease" data-duration-in="300" data-duration-out="100" class="featured-courses-tabs w-tabs">
             <div class="featured-courses-tab-menu w-tab-menu">
               <a data-w-tab="Tab 1" class="featured-courses-tab-link w-inline-block w-tab-link w--current">
-                <div>הכל</div>
+                <div>All</div>
               </a>
               <a data-w-tab="Tab 2" class="featured-courses-tab-link w-inline-block w-tab-link">
-                <div>AI ולמידת מכונה</div>
+                <div>AI &amp; Machine Learning</div>
               </a>
               <a data-w-tab="Tab 3" class="featured-courses-tab-link w-inline-block w-tab-link">
-                <div>מדע הנתונים</div>
+                <div>Data Science</div>
               </a>
               <a data-w-tab="Tab 4" class="featured-courses-tab-link w-inline-block w-tab-link">
-                <div>פיתוח אתרים</div>
+                <div>Web Development</div>
               </a>
               <a data-w-tab="Tab 5" class="featured-courses-tab-link w-inline-block w-tab-link">
-                <div>מחשוב ענן</div>
+                <div>Cloud Computing</div>
               </a>
             </div>
             <div class="featured-courses-tab-content w-tab-content">
@@ -997,22 +1082,22 @@
                             <div class="featured-courses-name-wrap">
                               <a href="#" class="featured-courses-name"></a>
                               <div class="featured-courses-rating">
-                                <div class="featured-courses-rating-icon-wrapper"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"></div>
+                                <div class="featured-courses-rating-icon-wrapper"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"></div>
                                 <div class="featured-courses-rating-text w-dyn-bind-empty"></div>
                               </div>
                               <div class="courses-video-session-time-wrap">
-                                <div class="courses-video-session-time"><img loading="lazy" src="../images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
+                                <div class="courses-video-session-time"><img loading="lazy" src="images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
                                   <div class="courses-video-session-time-text w-dyn-bind-empty"></div>
                                 </div>
-                                <div class="courses-video-session-time"><img loading="lazy" src="../images/Courses-Video-Session--Time-Icon2.svg" alt="" class="courses-video-session-time-icon">
+                                <div class="courses-video-session-time"><img loading="lazy" src="images/Courses-Video-Session--Time-Icon2.svg" alt="" class="courses-video-session-time-icon">
                                   <div class="courses-video-session-time-text w-dyn-bind-empty"></div>
                                 </div>
                               </div>
                               <div class="featured-courses-button-wrapper">
                                 <a href="#" data-w-id="9a38fb30-592a-8bf2-d570-7c0c036c302d" style="background-color:rgba(255,255,255,0);color:rgb(255,255,255)" class="primary-button secondary w-inline-block">
                                   <div class="primary-button-text-wrap">
-                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">פרטי הקורס</div>
-                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">פרטי הקורס</div>
+                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">Course Details</div>
+                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Course Details</div>
                                   </div>
                                 </a>
                               </div>
@@ -1039,22 +1124,22 @@
                             <div class="featured-courses-name-wrap">
                               <a href="#" class="featured-courses-name"></a>
                               <div class="featured-courses-rating">
-                                <div class="featured-courses-rating-icon-wrapper"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"></div>
+                                <div class="featured-courses-rating-icon-wrapper"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"></div>
                                 <div class="featured-courses-rating-text w-dyn-bind-empty"></div>
                               </div>
                               <div class="courses-video-session-time-wrap">
-                                <div class="courses-video-session-time"><img loading="lazy" src="../images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
+                                <div class="courses-video-session-time"><img loading="lazy" src="images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
                                   <div class="courses-video-session-time-text w-dyn-bind-empty"></div>
                                 </div>
-                                <div class="courses-video-session-time"><img loading="lazy" src="../images/Courses-Video-Session--Time-Icon2.svg" alt="" class="courses-video-session-time-icon">
+                                <div class="courses-video-session-time"><img loading="lazy" src="images/Courses-Video-Session--Time-Icon2.svg" alt="" class="courses-video-session-time-icon">
                                   <div class="courses-video-session-time-text w-dyn-bind-empty"></div>
                                 </div>
                               </div>
                               <div class="featured-courses-button-wrapper">
                                 <a href="#" data-w-id="9a38fb30-592a-8bf2-d570-7c0c036c3052" style="background-color:rgba(255,255,255,0);color:rgb(255,255,255)" class="primary-button secondary w-inline-block">
                                   <div class="primary-button-text-wrap">
-                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">פרטי הקורס</div>
-                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">פרטי הקורס</div>
+                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">Course Details</div>
+                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Course Details</div>
                                   </div>
                                 </a>
                               </div>
@@ -1081,22 +1166,22 @@
                             <div class="featured-courses-name-wrap">
                               <a href="#" class="featured-courses-name"></a>
                               <div class="featured-courses-rating">
-                                <div class="featured-courses-rating-icon-wrapper"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"></div>
+                                <div class="featured-courses-rating-icon-wrapper"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"></div>
                                 <div class="featured-courses-rating-text w-dyn-bind-empty"></div>
                               </div>
                               <div class="courses-video-session-time-wrap">
-                                <div class="courses-video-session-time"><img loading="lazy" src="../images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
+                                <div class="courses-video-session-time"><img loading="lazy" src="images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
                                   <div class="courses-video-session-time-text w-dyn-bind-empty"></div>
                                 </div>
-                                <div class="courses-video-session-time"><img loading="lazy" src="../images/Courses-Video-Session--Time-Icon2.svg" alt="" class="courses-video-session-time-icon">
+                                <div class="courses-video-session-time"><img loading="lazy" src="images/Courses-Video-Session--Time-Icon2.svg" alt="" class="courses-video-session-time-icon">
                                   <div class="courses-video-session-time-text w-dyn-bind-empty"></div>
                                 </div>
                               </div>
                               <div class="featured-courses-button-wrapper">
                                 <a href="#" data-w-id="9a38fb30-592a-8bf2-d570-7c0c036c3077" style="background-color:rgba(255,255,255,0);color:rgb(255,255,255)" class="primary-button secondary w-inline-block">
                                   <div class="primary-button-text-wrap">
-                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">פרטי הקורס</div>
-                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">פרטי הקורס</div>
+                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">Course Details</div>
+                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Course Details</div>
                                   </div>
                                 </a>
                               </div>
@@ -1123,22 +1208,22 @@
                             <div class="featured-courses-name-wrap">
                               <a href="#" class="featured-courses-name"></a>
                               <div class="featured-courses-rating">
-                                <div class="featured-courses-rating-icon-wrapper"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"></div>
+                                <div class="featured-courses-rating-icon-wrapper"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"></div>
                                 <div class="featured-courses-rating-text w-dyn-bind-empty"></div>
                               </div>
                               <div class="courses-video-session-time-wrap">
-                                <div class="courses-video-session-time"><img loading="lazy" src="../images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
+                                <div class="courses-video-session-time"><img loading="lazy" src="images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
                                   <div class="courses-video-session-time-text w-dyn-bind-empty"></div>
                                 </div>
-                                <div class="courses-video-session-time"><img loading="lazy" src="../images/Courses-Video-Session--Time-Icon2.svg" alt="" class="courses-video-session-time-icon">
+                                <div class="courses-video-session-time"><img loading="lazy" src="images/Courses-Video-Session--Time-Icon2.svg" alt="" class="courses-video-session-time-icon">
                                   <div class="courses-video-session-time-text w-dyn-bind-empty"></div>
                                 </div>
                               </div>
                               <div class="featured-courses-button-wrapper">
                                 <a href="#" data-w-id="9a38fb30-592a-8bf2-d570-7c0c036c309c" style="background-color:rgba(255,255,255,0);color:rgb(255,255,255)" class="primary-button secondary w-inline-block">
                                   <div class="primary-button-text-wrap">
-                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">פרטי הקורס</div>
-                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">פרטי הקורס</div>
+                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">Course Details</div>
+                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Course Details</div>
                                   </div>
                                 </a>
                               </div>
@@ -1165,22 +1250,22 @@
                             <div class="featured-courses-name-wrap">
                               <a href="#" class="featured-courses-name"></a>
                               <div class="featured-courses-rating">
-                                <div class="featured-courses-rating-icon-wrapper"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="../images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"></div>
+                                <div class="featured-courses-rating-icon-wrapper"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"><img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon"></div>
                                 <div class="featured-courses-rating-text w-dyn-bind-empty"></div>
                               </div>
                               <div class="courses-video-session-time-wrap">
-                                <div class="courses-video-session-time"><img loading="lazy" src="../images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
+                                <div class="courses-video-session-time"><img loading="lazy" src="images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
                                   <div class="courses-video-session-time-text w-dyn-bind-empty"></div>
                                 </div>
-                                <div class="courses-video-session-time"><img loading="lazy" src="../images/Courses-Video-Session--Time-Icon2.svg" alt="" class="courses-video-session-time-icon">
+                                <div class="courses-video-session-time"><img loading="lazy" src="images/Courses-Video-Session--Time-Icon2.svg" alt="" class="courses-video-session-time-icon">
                                   <div class="courses-video-session-time-text w-dyn-bind-empty"></div>
                                 </div>
                               </div>
                               <div class="featured-courses-button-wrapper">
                                 <a href="#" data-w-id="9a38fb30-592a-8bf2-d570-7c0c036c30c1" style="background-color:rgba(255,255,255,0);color:rgb(255,255,255)" class="primary-button secondary w-inline-block">
                                   <div class="primary-button-text-wrap">
-                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">פרטי הקורס</div>
-                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">פרטי הקורס</div>
+                                    <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block">Course Details</div>
+                                    <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Course Details</div>
                                   </div>
                                 </a>
                               </div>
@@ -1208,7 +1293,7 @@
         <div class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">סיפורי הצלחה של סטודנטים</div>
+            <div class="section-subtitle">Student Success Stories</div>
             <div class="banner-subtitle-line right"></div>
           </div>
           <h2 class="section-title" style="color: #04193f;">What Our Graduates Say</h2>
@@ -1276,306 +1361,75 @@
       </div>
     </section>
 
-
-<!-- Modern FAQ Section with Cards Design -->
-    <section class="section faq-modern">
+    <!-- FAQ Section -->
+    <section class="faq-section">
       <div class="container">
-        <div class="faq-header-modern">
-          <span class="faq-label">שאלות נפוצות</span>
-          <h2 class="faq-title-modern">כל מה שצריך לדעת</h2>
-          <p class="faq-subtitle-modern">מצאו תשובות לשאלות הנפוצות ביותר על הקורסים שלנו</p>
+        <div class="section-title-wrapper align-center">
+          <div class="section-subtitle-wrapper center-align">
+            <div class="banner-subtitle-line left"></div>
+            <div class="section-subtitle">Frequently Asked Questions</div>
+            <div class="banner-subtitle-line right"></div>
+          </div>
+          <h2 class="section-title" style="color: #04193f;">Got Questions? We've Got Answers</h2>
         </div>
-
-        <div class="faq-grid-modern">
-          <!-- FAQ Card 1 -->
-          <div class="faq-card" data-faq="1">
-            <div class="faq-card-header">
-              <div class="faq-number">01</div>
-              <h3 class="faq-card-question">האם אוכל להתחיל ללמוד מאפס ללא ניסיון קודם?</h3>
-              <div class="faq-toggle">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-              </div>
+        <div class="faq-container">
+          <div class="faq-item active">
+            <div class="faq-question">
+              Can I start learning from scratch with no prior experience?
+              <div class="faq-arrow">▼</div>
             </div>
-            <div class="faq-card-content">
-              <p>בהחלט! הקורסים שלנו מתוכננים להתאים ללומדים בכל הרמות. אנו מציעים תוכניות ידידותיות למתחילים שמתחילות מהיסודות ובונות בהדרגה למושגים מתקדמים.</p>
+            <div class="faq-answer">
+              <p>Absolutely! Our courses are designed to accommodate learners at all levels. We offer beginner-friendly programs that start with the fundamentals and gradually build up to advanced concepts. Each course includes prerequisite information, so you can choose the right starting point for your journey.</p>
             </div>
           </div>
-
-          <!-- FAQ Card 2 -->
-          <div class="faq-card" data-faq="2">
-            <div class="faq-card-header">
-              <div class="faq-number">02</div>
-              <h3 class="faq-card-question">האם יש הגבלות גיל להרשמה?</h3>
-              <div class="faq-toggle">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-              </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              Are there any age restrictions for enrollment?
+              <div class="faq-arrow">▼</div>
             </div>
-            <div class="faq-card-content">
-              <p>אין הגבלות גיל עליונות לקורסים שלנו. אנו מקבלים בברכה לומדים בכל הגילאים שנלהבים מטכנולוגיה ובינה מלאכותית. לסטודנטים צעירים, אנו ממליצים להיות בני 16 לפחות.</p>
+            <div class="faq-answer">
+              <p>There are no upper age limits for our courses. We welcome learners of all ages who are passionate about technology and AI. For younger students, we recommend being at least 16 years old to fully benefit from our curriculum, though exceptional younger students may be considered on a case-by-case basis.</p>
             </div>
           </div>
-
-          <!-- FAQ Card 3 -->
-          <div class="faq-card" data-faq="3">
-            <div class="faq-card-header">
-              <div class="faq-number">03</div>
-              <h3 class="faq-card-question">אילו מסלולי קריירה אוכל לפתח לאחר השלמת הקורסים?</h3>
-              <div class="faq-toggle">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-              </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              What career paths can I pursue after completing the courses?
+              <div class="faq-arrow">▼</div>
             </div>
-            <div class="faq-card-content">
-              <p>הבוגרים שלנו פונים למסלולי קריירה מגוונים כולל מהנדס AI/ML, מדען נתונים, מפתח Full-Stack, ארכיטקט ענן, מהנדס DevOps, מנהל מוצר ועוד.</p>
+            <div class="faq-answer">
+              <p>Our graduates pursue diverse career paths including AI/ML Engineer, Data Scientist, Full-Stack Developer, Cloud Architect, DevOps Engineer, Product Manager, and more. We provide career guidance and job placement assistance to help you transition into your desired role in the tech industry.</p>
             </div>
           </div>
-
-          <!-- FAQ Card 4 -->
-          <div class="faq-card" data-faq="4">
-            <div class="faq-card-header">
-              <div class="faq-number">04</div>
-              <h3 class="faq-card-question">האם פורמט הלמידה מקוון לחלוטין?</h3>
-              <div class="faq-toggle">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-              </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              Is the learning format completely online or are there offline components?
+              <div class="faq-arrow">▼</div>
             </div>
-            <div class="faq-card-content">
-              <p>אנו מציעים אפשרויות למידה גמישות. רוב הקורסים זמינים 100% אונליין עם מפגשים חיים, הרצאות מוקלטות ומעבדות אינטראקטיביות. יש גם סדנאות פרונטליות אופציונליות.</p>
+            <div class="faq-answer">
+              <p>We offer flexible learning options to suit your needs. Most courses are available 100% online with live sessions, recorded lectures, and interactive labs. Some programs also offer optional in-person workshops and networking events in select cities for those who prefer blended learning.</p>
             </div>
           </div>
-
-          <!-- FAQ Card 5 -->
-          <div class="faq-card" data-faq="5">
-            <div class="faq-card-header">
-              <div class="faq-number">05</div>
-              <h3 class="faq-card-question">האם אתם מספקים סיוע בהשמה לעבודה?</h3>
-              <div class="faq-toggle">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-              </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              Do you provide job placement assistance after course completion?
+              <div class="faq-arrow">▼</div>
             </div>
-            <div class="faq-card-content">
-              <p>כן! יש לנו צוות שירותי קריירה ייעודי שמספק תמיכה מקיפה כולל סקירת קורות חיים, הכנה לראיונות, פיתוח פורטפוליו וחיבורים עם 500+ שותפי גיוס.</p>
+            <div class="faq-answer">
+              <p>Yes! We have a dedicated career services team that provides comprehensive job placement support including resume reviews, interview preparation, portfolio development, and direct connections with our network of 500+ hiring partners. Our 95% placement rate speaks to the effectiveness of our career support.</p>
             </div>
           </div>
-
-          <!-- FAQ Card 6 -->
-          <div class="faq-card" data-faq="6">
-            <div class="faq-card-header">
-              <div class="faq-number">06</div>
-              <h3 class="faq-card-question">מהן אפשרויות התשלום והאם קיים סיוע כספי?</h3>
-              <div class="faq-toggle">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-              </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              What are the payment options and is financial aid available?
+              <div class="faq-arrow">▼</div>
             </div>
-            <div class="faq-card-content">
-              <p>אנו מציעים אפשרויות תשלום מרובות כולל תשלומים, מימון גמיש ומלגות לסטודנטים מצטיינים. צרו קשר לפרטים נוספים על תוכניות סיוע כספי.</p>
+            <div class="faq-answer">
+              <p>We offer multiple payment options including upfront payment, monthly installments, and income share agreements (ISA). Financial aid and scholarships are available for qualified students. We also partner with various lending institutions to provide educational loans at competitive rates.</p>
             </div>
           </div>
         </div>
       </div>
     </section>
-
-    <style>
-      /* Modern FAQ Design Styles */
-      .faq-modern {
-        padding: 100px 0;
-        background: linear-gradient(180deg, rgba(5, 5, 26, 0) 0%, rgba(20,  20, 50, 0.05) 100%);
-      }
-
-      .faq-header-modern {
-        text-align: center;
-        margin-bottom: 60px;
-      }
-
-      .faq-label {
-        display: inline-block;
-        padding: 8px 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 100px;
-        color: white;
-        font-size: 14px;
-        font-weight: 600;
-        letter-spacing: 1px;
-        margin-bottom: 20px;
-      }
-
-      .faq-title-modern {
-        font-size: 48px;
-        font-weight: 700;
-        color: #fff;
-        margin-bottom: 16px;
-        line-height: 1.2;
-      }
-
-      .faq-subtitle-modern {
-        font-size: 18px;
-        color: rgba(255, 255, 255, 0.7);
-        max-width: 600px;
-        margin: 0 auto;
-      }
-
-      .faq-grid-modern {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-        gap: 30px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .faq-card {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        padding: 0;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-      }
-
-      .faq-card:hover {
-        background: rgba(255, 255, 255, 0.05);
-        border-color: rgba(102, 126, 234, 0.5);
-        transform: translateY(-5px);
-        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.1);
-      }
-
-      .faq-card-header {
-        padding: 30px;
-        cursor: pointer;
-        display: flex;
-        align-items: flex-start;
-        gap: 20px;
-        position: relative;
-      }
-
-      .faq-number {
-        font-size: 14px;
-        font-weight: 700;
-        color: rgba(102, 126, 234, 0.8);
-        background: rgba(102, 126, 234, 0.1);
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-      }
-
-      .faq-card-question {
-        flex: 1;
-        font-size: 20px;
-        font-weight: 600;
-        color: #fff;
-        line-height: 1.4;
-        margin: 0;
-        padding-right: 40px;
-      }
-
-      .faq-toggle {
-        position: absolute;
-        right: 30px;
-        top: 35px;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgba(255, 255, 255, 0.5);
-        transition: transform 0.3s ease;
-      }
-
-      .faq-card.active .faq-toggle {
-        transform: rotate(45deg);
-        color: #667eea;
-      }
-
-      .faq-card-content {
-        padding: 0 30px;
-        max-height: 0;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        opacity: 0;
-      }
-
-      .faq-card.active .faq-card-content {
-        max-height: 300px;
-        padding: 0 30px 30px;
-        opacity: 1;
-      }
-
-      .faq-card-content p {
-        font-size: 16px;
-        line-height: 1.8;
-        color: rgba(255, 255, 255, 0.7);
-        margin: 0;
-      }
-
-      /* RTL Support for Hebrew */
-      [dir="rtl"] .faq-card-question {
-        padding-right: 0;
-        padding-left: 40px;
-      }
-
-      [dir="rtl"] .faq-toggle {
-        right: auto;
-        left: 30px;
-      }
-
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        .faq-grid-modern {
-          grid-template-columns: 1fr;
-          gap: 20px;
-        }
-
-        .faq-title-modern {
-          font-size: 36px;
-        }
-
-        .faq-card-header {
-          padding: 20px;
-        }
-
-        .faq-card-question {
-          font-size: 18px;
-        }
-      }
-    </style>
-
-    <script>
-      // Modern FAQ Interaction Script
-      document.addEventListener('DOMContentLoaded', function() {
-        const faqCards = document.querySelectorAll('.faq-card');
-
-        faqCards.forEach(card => {
-          const header = card.querySelector('.faq-card-header');
-
-          header.addEventListener('click', () => {
-            // Close all other cards
-            faqCards.forEach(otherCard => {
-              if (otherCard !== card && otherCard.classList.contains('active')) {
-                otherCard.classList.remove('active');
-              }
-            });
-
-            // Toggle current card
-            card.classList.toggle('active');
-          });
-        });
-      });
-    </script>
 
     <!-- Graduate Companies Section -->
     <section class="companies-section">
@@ -1583,10 +1437,10 @@
         <div class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">הצלחה בקריירה</div>
+            <div class="section-subtitle">Career Success</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title" style="color: #04193f;">הבוגרים שלנו עובדים ב</h2>
+          <h2 class="section-title" style="color: #04193f;">Our Graduates Work At</h2>
           <p class="section-description-text" style="color: #6b7280;">Join alumni at the world's leading technology companies</p>
         </div>
         <div class="companies-grid">
@@ -1624,630 +1478,58 @@
       </div>
     </section>
 
-    <!-- Static Consultation Form -->
-    <section class="consultation-section-static" id="consultation" style="padding: 80px 0; background: linear-gradient(135deg, #f8f9fb 0%, #e9ecef 100%);">
+    <!-- Consultation Section -->
+    <section class="consultation-section" id="consultation">
       <div class="container">
-        <div class="consultation-content" style="max-width: 600px; margin: 0 auto; text-align: center;">
-          <h2 style="font-size: 42px; font-weight: 700; color: #04193f; margin-bottom: 20px;">קבלו ייעוץ אישי לבחירת קורס</h2>
-          <p style="font-size: 18px; color: #6b7280; margin-bottom: 40px;">
-            מלאו את הטופס ונחזור אליכם תוך 24 שעות עם המלצה אישית לקורס המתאים לכם
+        <div class="consultation-content">
+          <h2 class="consultation-title">Get Personalized Course Guidance</h2>
+          <p class="consultation-description">
+            Not sure which course is right for you? Our education advisors are here to help you choose the perfect learning path.
           </p>
-          <div style="background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-            <form id="static-consultation-form" data-no-animation="true">
-              <!-- Name Field -->
-              <div style="margin-bottom: 20px; text-align: right;">
-                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-name">שם מלא</label>
-                <input type="text" id="static-name" name="name"
-                       style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: rtl; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box;"
-                       placeholder="הכנס את שמך המלא" required>
+          <div class="consultation-form">
+            <form id="consultation-form">
+              <div class="form-group">
+                <label class="form-label" for="name">Full Name</label>
+                <input type="text" id="name" class="form-input" placeholder="Enter your full name" required="">
               </div>
-
-              <!-- Email Field -->
-              <div style="margin-bottom: 20px; text-align: right;">
-                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-email">כתובת אימייל</label>
-                <input type="email" id="static-email" name="email"
-                       style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: ltr; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box;"
-                       placeholder="your@email.com" required>
+              <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <input type="email" id="email" class="form-input" placeholder="Enter your email" required="">
               </div>
-
-              <!-- Phone Field -->
-              <div style="margin-bottom: 20px; text-align: right;">
-                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-phone">מספר טלפון</label>
-                <input type="tel" id="static-phone" name="phone"
-                       style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: ltr; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box;"
-                       placeholder="מספר טלפון" required>
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone Number</label>
+                <input type="tel" id="phone" class="form-input" placeholder="Enter your phone number" required="">
               </div>
-
-              <!-- Interest Field -->
-              <div style="margin-bottom: 20px; text-align: right;">
-                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-interest">תחום עניין</label>
-                <select id="static-interest" name="interest"
-                        style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: rtl; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box; cursor: pointer;" required>
-                  <option value="">בחר תחום עניין</option>
-                  <option value="ai-ml">בינה מלאכותית ולמידת מכונה</option>
-                  <option value="data-science">מדע הנתונים</option>
-                  <option value="web-dev">פיתוח אתרים</option>
-                  <option value="cloud">מחשוב ענן</option>
-                  <option value="mobile">פיתוח אפליקציות</option>
-                  <option value="blockchain">בלוקצ'יין</option>
-                  <option value="cybersecurity">אבטחת מידע</option>
-                  <option value="product">ניהול מוצר</option>
+              <div class="form-group">
+                <label class="form-label" for="interest">Area of Interest</label>
+                <select id="interest" class="form-select" required="">
+                  <option value="">Select your area of interest</option>
+                  <option value="ai-ml">AI &amp; Machine Learning</option>
+                  <option value="data-science">Data Science</option>
+                  <option value="web-dev">Web Development</option>
+                  <option value="cloud">Cloud Computing</option>
+                  <option value="mobile">Mobile Development</option>
+                  <option value="blockchain">Blockchain</option>
+                  <option value="cybersecurity">Cybersecurity</option>
+                  <option value="product">Product Management</option>
                 </select>
               </div>
-
-              <!-- Experience Field -->
-              <div style="margin-bottom: 30px; text-align: right;">
-                <label style="display: block; margin-bottom: 8px; color: #04193f; font-weight: 600;" for="static-experience">רמת ניסיון</label>
-                <select id="static-experience" name="experience"
-                        style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; direction: rtl; background: white; z-index: 10; position: relative; outline: none; box-sizing: border-box; cursor: pointer;" required>
-                  <option value="">בחר רמת ניסיון</option>
-                  <option value="beginner">מתחיל - אין לי ניסיון בתכנות</option>
-                  <option value="some">יש לי ניסיון בסיסי</option>
-                  <option value="intermediate">מפתח ברמה בינונית</option>
-                  <option value="advanced">מפתח מנוסה</option>
+              <div class="form-group">
+                <label class="form-label" for="experience">Current Experience Level</label>
+                <select id="experience" class="form-select" required="">
+                  <option value="">Select your experience level</option>
+                  <option value="beginner">Complete Beginner</option>
+                  <option value="some">Some Programming Experience</option>
+                  <option value="intermediate">Intermediate Developer</option>
+                  <option value="advanced">Advanced Professional</option>
                 </select>
               </div>
-
-              <!-- Submit Button -->
-              <button type="submit"
-                      style="width: 100%; padding: 16px 32px; background: linear-gradient(135deg, #0080ff 0%, #00c6ff 100%); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: 600; cursor: pointer; transition: transform 0.2s;">
-                שלח בקשת ייעוץ
-              </button>
+              <button type="submit" class="form-submit">Get Free Consultation</button>
             </form>
-
-            <!-- Success Message (hidden by default) -->
-            <div id="static-form-success" style="display: none; margin-top: 20px; padding: 16px; background: #10b981; color: white; border-radius: 8px; text-align: center;">
-              ✅ הטופס נשלח בהצלחה! נחזור אליך בקרוב.
-            </div>
-
-            <!-- Error Message (hidden by default) -->
-            <div id="static-form-error" style="display: none; margin-top: 20px; padding: 16px; background: #ef4444; color: white; border-radius: 8px; text-align: center;">
-              ❌ אירעה שגיאה. אנא נסה שוב.
-            </div>
           </div>
         </div>
       </div>
     </section>
-
-    <!-- Modern Shadcn-UI Style Consultation Form -->
-    <section style="padding: 80px 0; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); position: relative; z-index: 1;">
-      <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
-          <h2 style="font-size: 36px; font-weight: 800; color: #0f172a; margin-bottom: 16px; line-height: 1.2;">
-            טופס ייעוץ חדשני - עובד 100%
-          </h2>
-          <p style="font-size: 18px; color: #64748b; margin-bottom: 48px; line-height: 1.6;">
-            מלאו את הפרטים וקבלו ייעוץ אישי מיועץ החינוך שלנו תוך 24 שעות
-          </p>
-
-          <!-- Modern Form Card -->
-          <div style="background: white; border-radius: 24px; padding: 48px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid #e2e8f0; position: relative; z-index: 10;">
-            <form id="modern-consultation-form" style="position: relative; z-index: 20;">
-
-              <!-- Name Field with Modern Design -->
-              <div style="margin-bottom: 24px; text-align: right;">
-                <label for="modern-name" style="display: block; margin-bottom: 8px; color: #0f172a !important; font-weight: 600; font-size: 14px; text-align: right;">
-                  שם מלא *
-                </label>
-                <div style="position: relative;">
-                  <input
-                    type="text"
-                    id="modern-name"
-                    name="name"
-                    required
-                    style="
-                      width: 100% !important;
-                      height: 48px !important;
-                      padding: 12px 16px !important;
-                      border: 2px solid #e2e8f0 !important;
-                      border-radius: 12px !important;
-                      font-size: 16px !important;
-                      color: #0f172a !important;
-                      background: #ffffff !important;
-                      direction: rtl !important;
-                      text-align: right !important;
-                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-                      box-sizing: border-box !important;
-                      outline: none !important;
-                      transition: all 0.2s ease !important;
-                      position: relative !important;
-                      z-index: 30 !important;
-                    "
-                    placeholder="שם מלא"
-                    onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.1)'"
-                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'"
-                  >
-                </div>
-              </div>
-
-              <!-- Email Field -->
-              <div style="margin-bottom: 24px; text-align: right;">
-                <label for="modern-email" style="display: block; margin-bottom: 8px; color: #0f172a !important; font-weight: 600; font-size: 14px; text-align: right;">
-                  כתובת אימייל *
-                </label>
-                <div style="position: relative;">
-                  <input
-                    type="email"
-                    id="modern-email"
-                    name="email"
-                    required
-                    style="
-                      width: 100% !important;
-                      height: 48px !important;
-                      padding: 12px 16px !important;
-                      border: 2px solid #e2e8f0 !important;
-                      border-radius: 12px !important;
-                      font-size: 16px !important;
-                      color: #0f172a !important;
-                      background: #ffffff !important;
-                      direction: ltr !important;
-                      text-align: left !important;
-                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-                      box-sizing: border-box !important;
-                      outline: none !important;
-                      transition: all 0.2s ease !important;
-                      position: relative !important;
-                      z-index: 30 !important;
-                    "
-                    placeholder="כתובת דוא״ל"
-                    onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.1)'"
-                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'"
-                  >
-                </div>
-              </div>
-
-              <!-- Phone Field -->
-              <div style="margin-bottom: 24px; text-align: right;">
-                <label for="modern-phone" style="display: block; margin-bottom: 8px; color: #0f172a !important; font-weight: 600; font-size: 14px; text-align: right;">
-                  מספר טלפון *
-                </label>
-                <div style="position: relative;">
-                  <input
-                    type="tel"
-                    id="modern-phone"
-                    name="phone"
-                    required
-                    style="
-                      width: 100% !important;
-                      height: 48px !important;
-                      padding: 12px 16px !important;
-                      border: 2px solid #e2e8f0 !important;
-                      border-radius: 12px !important;
-                      font-size: 16px !important;
-                      color: #0f172a !important;
-                      background: #ffffff !important;
-                      direction: ltr !important;
-                      text-align: left !important;
-                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-                      box-sizing: border-box !important;
-                      outline: none !important;
-                      transition: all 0.2s ease !important;
-                      position: relative !important;
-                      z-index: 30 !important;
-                    "
-                    placeholder="מספר טלפון"
-                    onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.1)'"
-                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'"
-                  >
-                </div>
-              </div>
-
-              <!-- Interest Select -->
-              <div style="margin-bottom: 24px; text-align: right;">
-                <label for="modern-interest" style="display: block; margin-bottom: 8px; color: #0f172a !important; font-weight: 600; font-size: 14px; text-align: right;">
-                  תחום עניין *
-                </label>
-                <div style="position: relative;">
-                  <select
-                    id="modern-interest"
-                    name="interest"
-                    required
-                    style="
-                      width: 100% !important;
-                      height: 48px !important;
-                      padding: 12px 16px !important;
-                      border: 2px solid #e2e8f0 !important;
-                      border-radius: 12px !important;
-                      font-size: 16px !important;
-                      color: #0f172a !important;
-                      background: #ffffff !important;
-                      direction: rtl !important;
-                      text-align: right !important;
-                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-                      box-sizing: border-box !important;
-                      outline: none !important;
-                      cursor: pointer !important;
-                      position: relative !important;
-                      z-index: 30 !important;
-                      appearance: none !important;
-                      -webkit-appearance: none !important;
-                      -moz-appearance: none !important;
-                      background-image: url('data:image/svg+xml;charset=US-ASCII,<svg viewBox=\"0 0 4 5\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M2 0L0 2h4zm0 5L0 3h4z\" fill=\"%23666\"/></svg>') !important;
-                      background-repeat: no-repeat !important;
-                      background-position: left 12px center !important;
-                      background-size: 12px !important;
-                    "
-                    onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.1)'"
-                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'"
-                  >
-                    <option value="">בחרו תחום עניין</option>
-                    <option value="ai-ml">בינה מלאכותית ולמידת מכונה</option>
-                    <option value="data-science">מדע הנתונים ואנליטיקה</option>
-                    <option value="web-dev">פיתוח אתרים ואפליקציות</option>
-                    <option value="cloud">טכנולוגיות ענן</option>
-                    <option value="mobile">פיתוח אפליקציות נייד</option>
-                    <option value="blockchain">בלוקצ'יין וקריפטו</option>
-                    <option value="cybersecurity">אבטחת מידע</option>
-                    <option value="product">ניהול מוצר טכנולוגי</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Experience Select -->
-              <div style="margin-bottom: 32px; text-align: right;">
-                <label for="modern-experience" style="display: block; margin-bottom: 8px; color: #0f172a !important; font-weight: 600; font-size: 14px; text-align: right;">
-                  רמת ניסיון נוכחית *
-                </label>
-                <div style="position: relative;">
-                  <select
-                    id="modern-experience"
-                    name="experience"
-                    required
-                    style="
-                      width: 100% !important;
-                      height: 48px !important;
-                      padding: 12px 16px !important;
-                      border: 2px solid #e2e8f0 !important;
-                      border-radius: 12px !important;
-                      font-size: 16px !important;
-                      color: #0f172a !important;
-                      background: #ffffff !important;
-                      direction: rtl !important;
-                      text-align: right !important;
-                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-                      box-sizing: border-box !important;
-                      outline: none !important;
-                      cursor: pointer !important;
-                      position: relative !important;
-                      z-index: 30 !important;
-                      appearance: none !important;
-                      -webkit-appearance: none !important;
-                      -moz-appearance: none !important;
-                      background-image: url('data:image/svg+xml;charset=US-ASCII,<svg viewBox=\"0 0 4 5\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M2 0L0 2h4zm0 5L0 3h4z\" fill=\"%23666\"/></svg>') !important;
-                      background-repeat: no-repeat !important;
-                      background-position: left 12px center !important;
-                      background-size: 12px !important;
-                    "
-                    onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.1)'"
-                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'"
-                  >
-                    <option value="">בחרו את רמת הניסיון שלכם</option>
-                    <option value="beginner">מתחיל לחלוטין - ללא ניסיון קודם</option>
-                    <option value="some">ניסיון בסיסי - מכיר מושגי יסוד</option>
-                    <option value="intermediate">רמה בינונית - יש לי ניסיון מעשי</option>
-                    <option value="advanced">רמה מתקדמת - מפתח מנוסה</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Submit Button -->
-              <button
-                type="submit"
-                id="modern-submit-btn"
-                style="
-                  width: 100% !important;
-                  height: 56px !important;
-                  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
-                  color: #ffffff !important;
-                  border: none !important;
-                  border-radius: 14px !important;
-                  font-size: 18px !important;
-                  font-weight: 600 !important;
-                  cursor: pointer !important;
-                  transition: all 0.3s ease !important;
-                  position: relative !important;
-                  z-index: 30 !important;
-                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-                  box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.4) !important;
-                "
-                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px 0 rgba(59, 130, 246, 0.5)'"
-                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 14px 0 rgba(59, 130, 246, 0.4)'"
-              >
-                שלח
-              </button>
-            </form>
-
-            <!-- Success Message -->
-            <div
-              id="modern-form-success"
-              style="
-                display: none;
-                margin-top: 24px;
-                padding: 16px 20px;
-                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                color: white;
-                border-radius: 12px;
-                text-align: center;
-                font-weight: 600;
-                position: relative;
-                z-index: 30;
-              "
-            >
-              ✅ הבקשה נשלחה בהצלחה! נחזור אליכם תוך 24 שעות.
-            </div>
-
-            <!-- Error Message -->
-            <div
-              id="modern-form-error"
-              style="
-                display: none;
-                margin-top: 24px;
-                padding: 16px 20px;
-                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-                color: white;
-                border-radius: 12px;
-                text-align: center;
-                font-weight: 600;
-                position: relative;
-                z-index: 30;
-              "
-            >
-              ❌ אירעה שגיאה בשליחה. אנא נסו שוב או צרו קשר ישירות.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Shadcn-UI Style Toaster Container -->
-    <div id="toaster-container" style="position: fixed; bottom: 0; right: 0; z-index: 9999; pointer-events: none; display: flex; flex-direction: column; gap: 16px; padding: 16px; max-width: 420px; width: 100%;"></div>
-
-    <style>
-      @keyframes slideInRight {
-        from {
-          transform: translateX(100%);
-          opacity: 0;
-        }
-        to {
-          transform: translateX(0);
-          opacity: 1;
-        }
-      }
-      @keyframes slideOutRight {
-        from {
-          transform: translateX(0);
-          opacity: 1;
-        }
-        to {
-          transform: translateX(100%);
-          opacity: 0;
-        }
-      }
-      @media (max-width: 640px) {
-        #toaster-container {
-          max-width: 100%;
-          padding: 12px;
-        }
-      }
-    </style>
-
-    <script>
-    // Shadcn-UI Style Toaster System
-    const toaster = {
-      container: null,
-      init() {
-        this.container = document.getElementById('toaster-container');
-      },
-      show(message, type = 'default', duration = 4000) {
-        if (!this.container) this.init();
-
-        const toast = document.createElement('div');
-        toast.style.cssText = `
-          pointer-events: auto;
-          position: relative;
-          display: flex;
-          width: 100%;
-          align-items: center;
-          justify-content: space-between;
-          gap: 12px;
-          padding: 16px;
-          background: ${type === 'success' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' :
-                       type === 'error' ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' :
-                       'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)'};
-          color: white;
-          border-radius: 8px;
-          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-          animation: slideInRight 0.3s ease-out;
-          transform-origin: right center;
-          font-family: system-ui, -apple-system, sans-serif;
-        `;
-
-        // Create content wrapper
-        const contentWrapper = document.createElement('div');
-        contentWrapper.style.cssText = 'display: flex; align-items: center; gap: 12px; flex: 1;';
-
-        // Add icon
-        const icon = document.createElement('div');
-        icon.innerHTML = type === 'success' ?
-          '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm-1 15l-5-5 1.5-1.5L9 12l7-7 1.5 1.5L9 15z" fill="currentColor"/></svg>' :
-          type === 'error' ?
-          '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm5 13.59L13.59 15 10 11.41 6.41 15 5 13.59 8.59 10 5 6.41 6.41 5 10 8.59 13.59 5 15 6.41 11.41 10 15 13.59z" fill="currentColor"/></svg>' :
-          '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm1 15h-2v-2h2v2zm0-4h-2V5h2v6z" fill="currentColor"/></svg>';
-        icon.style.cssText = 'flex-shrink: 0; width: 20px; height: 20px;';
-
-        // Add message
-        const messageEl = document.createElement('div');
-        messageEl.textContent = message;
-        messageEl.style.cssText = 'font-size: 14px; line-height: 1.5; font-weight: 500; text-align: right; direction: rtl;';
-
-        // Add close button
-        const closeBtn = document.createElement('button');
-        closeBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
-        closeBtn.style.cssText = `
-          flex-shrink: 0;
-          width: 24px;
-          height: 24px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(255, 255, 255, 0.1);
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: background 0.2s;
-          color: white;
-        `;
-        closeBtn.onmouseover = () => closeBtn.style.background = 'rgba(255, 255, 255, 0.2)';
-        closeBtn.onmouseout = () => closeBtn.style.background = 'rgba(255, 255, 255, 0.1)';
-        closeBtn.onclick = () => this.remove(toast);
-
-        contentWrapper.appendChild(icon);
-        contentWrapper.appendChild(messageEl);
-        toast.appendChild(contentWrapper);
-        toast.appendChild(closeBtn);
-
-        this.container.appendChild(toast);
-
-        // Auto remove after duration
-        setTimeout(() => this.remove(toast), duration);
-      },
-      remove(toast) {
-        if (!toast) return;
-        toast.style.animation = 'slideOutRight 0.3s ease-in';
-        setTimeout(() => {
-          if (toast.parentNode) {
-            toast.parentNode.removeChild(toast);
-          }
-        }, 300);
-      }
-    };
-
-    // Modern Consultation Form Handler
-    document.addEventListener('DOMContentLoaded', function() {
-      const modernForm = document.getElementById('modern-consultation-form');
-      const submitBtn = document.getElementById('modern-submit-btn');
-
-      if (modernForm) {
-        modernForm.addEventListener('submit', async function(e) {
-          e.preventDefault();
-
-          // Get form data
-          const formData = {
-            name: document.getElementById('modern-name').value.trim(),
-            email: document.getElementById('modern-email').value.trim(),
-            phone: document.getElementById('modern-phone').value.trim(),
-            interest: document.getElementById('modern-interest').value,
-            experience: document.getElementById('modern-experience').value
-          };
-
-          // Basic validation
-          if (!formData.name || !formData.email || !formData.phone) {
-            toaster.show('אנא מלא את כל השדות הנדרשים', 'error');
-            return;
-          }
-
-          // Email validation
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(formData.email)) {
-            toaster.show('אנא הזן כתובת אימייל תקינה', 'error');
-            return;
-          }
-
-          // Update button state
-          submitBtn.disabled = true;
-          submitBtn.textContent = 'שולח...';
-
-          try {
-            // Send to database
-            const apiUrl = window.location.hostname === 'localhost'
-              ? 'http://localhost:3000/api/consultations'
-              : 'https://aistudio555jamstack-production.up.railway.app/api/consultations';
-
-            const response = await fetch(apiUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(formData)
-            });
-
-            if (response.ok) {
-              // Send email via EmailJS
-              await sendEmailNotification(formData);
-
-              // Success feedback
-              toaster.show('תודה! הבקשה שלך נשלחה בהצלחה. נחזור אליך בקרוב.', 'success');
-              modernForm.reset();
-              // Prevent any navigation
-              e.stopPropagation();
-              return false;
-            } else {
-              throw new Error('Failed to save consultation');
-            }
-
-          } catch (error) {
-            console.error('Error submitting form:', error);
-            toaster.show('אירעה שגיאה בשליחת הטופס. אנא נסה שוב.', 'error');
-          } finally {
-            // Reset button state
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'שלח בקשה';
-          }
-        });
-      }
-
-      // EmailJS email sending function
-      async function sendEmailNotification(formData) {
-        try {
-          // Initialize EmailJS if not already done
-          if (typeof emailjs === 'undefined') {
-            await loadEmailJS();
-          }
-
-          if (typeof emailjs !== 'undefined') {
-            const templateParams = {
-              to_name: 'AI Studio Team',
-              from_name: formData.name,
-              from_email: formData.email,
-              phone: formData.phone,
-              interest: formData.interest,
-              experience: formData.experience,
-              message: `בקשה חדשה לייעוץ מ-${formData.name}\n\nתחום עניין: ${formData.interest}\nרמת ניסיון: ${formData.experience}\nטלפון: ${formData.phone}\nאימייל: ${formData.email}`
-            };
-
-            await emailjs.send('service_kw2tzof', 'template_ux5c6f5', templateParams);
-            console.log('Email sent successfully via EmailJS');
-          } else {
-            // EmailJS not available - log error but don't navigate
-            console.error('EmailJS not available');
-          }
-        } catch (error) {
-          console.error('EmailJS error:', error);
-          // Log error but don't navigate to WhatsApp
-          console.log('Email sending failed, but form data was saved to database');
-        }
-      }
-
-      // Load EmailJS dynamically
-      function loadEmailJS() {
-        return new Promise((resolve, reject) => {
-          if (typeof emailjs !== 'undefined') {
-            resolve();
-            return;
-          }
-
-          const script = document.createElement('script');
-          script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
-          script.onload = () => {
-            emailjs.init('TgAbmI0ROiUaACG34');
-            resolve();
-          };
-          script.onerror = reject;
-          document.head.appendChild(script);
-        });
-      }
-    });
-    </script>
 
     <section class="section track">
       <div class="track-main">
@@ -2256,7 +1538,7 @@
             <div class="inner-track-wrapper">
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">התחל ללמוד</p>
+                  <p class="track-title-tag">Start Learning</p>
                 </div>
               </div>
               <div class="single-track-wrap">
@@ -2266,7 +1548,7 @@
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">התחל ללמוד</p>
+                  <p class="track-title-tag">Start Learning</p>
                 </div>
               </div>
               <div class="single-track-wrap">
@@ -2276,14 +1558,14 @@
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">התחל ללמוד</p>
+                  <p class="track-title-tag">Start Learning</p>
                 </div>
               </div>
             </div>
             <div class="inner-track-wrapper">
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">התחל ללמוד</p>
+                  <p class="track-title-tag">Start Learning</p>
                 </div>
               </div>
               <div class="single-track-wrap">
@@ -2293,7 +1575,7 @@
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">התחל ללמוד</p>
+                  <p class="track-title-tag">Start Learning</p>
                 </div>
               </div>
               <div class="single-track-wrap">
@@ -2303,14 +1585,14 @@
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">התחל ללמוד</p>
+                  <p class="track-title-tag">Start Learning</p>
                 </div>
               </div>
             </div>
             <div class="inner-track-wrapper">
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">התחל ללמוד</p>
+                  <p class="track-title-tag">Start Learning</p>
                 </div>
               </div>
               <div class="single-track-wrap">
@@ -2320,7 +1602,7 @@
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">התחל ללמוד</p>
+                  <p class="track-title-tag">Start Learning</p>
                 </div>
               </div>
               <div class="single-track-wrap">
@@ -2330,7 +1612,7 @@
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">התחל ללמוד</p>
+                  <p class="track-title-tag">Start Learning</p>
                 </div>
               </div>
             </div>
@@ -2344,32 +1626,32 @@
           <div class="cta-title-description">
             <div data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e980" class="section-subtitle-wrapper center-align">
               <div class="banner-subtitle-line left"></div>
-              <div class="section-subtitle">התחילו ללמוד היום</div>
+              <div class="section-subtitle">Start Learning Today</div>
               <div class="banner-subtitle-line right"></div>
             </div>
-            <h2 data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e985" class="cta-title">גלו עולם של הזדמנויות למידה.</h2>
-            <p data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e987" class="cta-description-text">אל תחכו כדי לשנות את הקריירה שלכם ולפתוח את מלוא הפוטנציאל שלכם. הצטרפו לקהילת הלומדים הנלהבים שלנו וקבלו גישה למגוון רחב של קורסים.</p>
+            <h2 data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e985" class="cta-title">Discover A World Of Learning Opportunities.</h2>
+            <p data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e987" class="cta-description-text">Don't wait to transform career and unlock your full potential. join our community of passionate learners and gain access to a wide range of courses.</p>
           </div>
           <div data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e989" class="cta-button-wrapper">
-            <a href="#" data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e98a" class="primary-button w-inline-block">
+            <a href="contact-us.html" data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e98a" class="primary-button w-inline-block">
               <div class="primary-button-text-wrap">
-                <div class="primary-button-text-block">צרו קשר</div>
-                <div class="primary-button-text-block is-text-absolute">צרו קשר</div>
+                <div class="primary-button-text-block">get in touch</div>
+                <div class="primary-button-text-block is-text-absolute">get in touch</div>
               </div>
             </a>
             <a href="courses.html" data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e990" aria-current="page" class="primary-button secondary w-inline-block w--current">
               <div class="primary-button-text-wrap">
-                <div class="primary-button-text-block">בדוק את הקורסים</div>
-                <div class="primary-button-text-block is-text-absolute">בדוק את הקורסים</div>
+                <div class="primary-button-text-block">Check Out Courses</div>
+                <div class="primary-button-text-block is-text-absolute">Check Out Courses</div>
               </div>
             </a>
-          </div><img data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e996" loading="lazy" alt="" src="../images/CTA-Man-Image1.png" class="cta-man-image one"><img data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e997" loading="lazy" alt="" src="../images/CTA-Man-Image2_1CTA-Man-Image2.png" class="cta-man-image-two">
+          </div><img data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e996" loading="lazy" alt="" src="images/CTA-Man-Image1.png" class="cta-man-image one"><img data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e997" loading="lazy" alt="" src="images/CTA-Man-Image2_1CTA-Man-Image2.png" class="cta-man-image-two">
         </div>
       </div>
     </section>
-    <section class="section footer">
+    <section class="section footer" id="secure-footer-container">
       <div class="container">
-        <div class="footer-content" id="dynamic-footer-container">
+        <div class="footer-content">
           <!-- Database-driven footer content will be loaded here by MasterFooterLoader -->
             <div class="loading-state" style="padding: 40px; text-align: center; color: #666;">
               <div class="loading-spinner"></div>
@@ -2377,12 +1659,11 @@
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  </div>
+      </section></div>
+    
+  
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=68b7601d918996218465c4a6" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-  <!-- Webflow scripts re-enabled for proper layout -->
-  <script src="../js/webflow.js" type="text/javascript"></script>
+  <script src="js/webflow.js" type="text/javascript"></script>
   
   <!-- FAQ Accordion Script -->
   <script>
@@ -2405,480 +1686,223 @@
         });
       });
       
-      // Enhanced Consultation form handler with API integration
+      // Consultation form handler
       const consultationForm = document.getElementById('consultation-form');
       if (consultationForm) {
-        // Preserve Hebrew placeholders and labels - prevent any script from overwriting them
-        const preserveHebrewContent = () => {
-          const nameInput = consultationForm.querySelector('#name');
-          const emailInput = consultationForm.querySelector('#email');
-          const phoneInput = consultationForm.querySelector('#phone');
-          const submitBtn = consultationForm.querySelector('.form-submit');
-
-          if (nameInput && nameInput.placeholder !== 'הכנס את שמך המלא') {
-            nameInput.placeholder = 'הכנס את שמך המלא';
-          }
-          if (emailInput && emailInput.placeholder !== 'הכנס את האימייל שלך') {
-            emailInput.placeholder = 'הכנס את האימייל שלך';
-          }
-          if (phoneInput && phoneInput.placeholder !== 'הכנס את מספר הטלפון שלך') {
-            phoneInput.placeholder = 'הכנס את מספר הטלפון שלך';
-          }
-          if (submitBtn && submitBtn.textContent !== 'קבל ייעוץ חינם') {
-            submitBtn.textContent = 'קבל ייעוץ חינם';
-          }
-        };
-
-        // Run immediately and after a delay to catch any late modifications
-        preserveHebrewContent();
-        setTimeout(preserveHebrewContent, 100);
-        setTimeout(preserveHebrewContent, 500);
-        setTimeout(preserveHebrewContent, 1000);
-        setTimeout(preserveHebrewContent, 1500);
-
-        // Form validation patterns
-        const validators = {
-          name: (value) => {
-            if (!value.trim()) return 'שם מלא נדרש';
-            if (value.trim().length < 2) return 'השם חייב להכיל לפחות 2 תווים';
-            return '';
-          },
-          email: (value) => {
-            if (!value.trim()) return 'כתובת אימייל נדרשת';
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(value)) return 'כתובת אימייל לא תקינה';
-            return '';
-          },
-          phone: (value) => {
-            if (!value.trim()) return 'מספר טלפון נדרש';
-            const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/;
-            if (!phoneRegex.test(value)) return 'מספר טלפון לא תקין';
-            return '';
-          },
-          interest: (value) => {
-            if (!value) return 'יש לבחור תחום עניין';
-            return '';
-          },
-          experience: (value) => {
-            if (!value) return 'יש לבחור רמת ניסיון';
-            return '';
-          }
-        };
-
-        // Add error message containers if they don't exist
-        const formInputs = consultationForm.querySelectorAll('input, select');
-        formInputs.forEach(input => {
-          if (!input.parentNode.querySelector('.form-error')) {
-            const errorSpan = document.createElement('span');
-            errorSpan.className = 'form-error';
-            errorSpan.id = input.id + 'Error';
-            errorSpan.style.cssText = 'display: none; color: #ef4444; font-size: 12px; margin-top: 4px; text-align: right; direction: rtl; font-weight: 500;';
-            input.parentNode.appendChild(errorSpan);
-          }
-        });
-
-        // Validate individual field
-        function validateField(field) {
-          const errorElement = document.getElementById(field.id + 'Error');
-          if (!errorElement) return true;
-
-          const validator = validators[field.id];
-          if (!validator) return true;
-
-          const errorMessage = validator(field.value);
-
-          if (errorMessage) {
-            errorElement.textContent = errorMessage;
-            errorElement.classList.add('active');
-            field.classList.add('error');
-            field.classList.remove('success');
-            return false;
-          } else {
-            errorElement.textContent = '';
-            errorElement.classList.remove('active');
-            field.classList.remove('error');
-            field.classList.add('success');
-            return true;
-          }
-        }
-
-        // Add real-time validation
-        formInputs.forEach(input => {
-          input.addEventListener('blur', () => validateField(input));
-        });
-
-        // Show notification function
-        function showNotification(message, type = 'success') {
-          // Remove existing notifications
-          const existingNotification = document.querySelector('.consultation-notification');
-          if (existingNotification) {
-            existingNotification.remove();
-          }
-
-          const notification = document.createElement('div');
-          notification.className = `consultation-notification ${type}`;
-          notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            padding: 16px 24px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            z-index: 10000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            animation: slideInLeft 0.3s ease;
-            max-width: 400px;
-            direction: rtl;
-            text-align: right;
-            ${type === 'success'
-              ? 'background: linear-gradient(135deg, #10b981 0%, #059669 100%);'
-              : 'background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);'
-            }
-          `;
-          notification.textContent = message;
-
-          // Add animation styles if not already present
-          if (!document.querySelector('#consultation-notification-styles')) {
-            const style = document.createElement('style');
-            style.id = 'consultation-notification-styles';
-            style.textContent = `
-              @keyframes slideInLeft {
-                from { transform: translateX(-100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-              }
-              @keyframes slideOutLeft {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(-100%); opacity: 0; }
-              }
-            `;
-            document.head.appendChild(style);
-          }
-
-          document.body.appendChild(notification);
-
-          // Auto remove after 5 seconds
-          setTimeout(() => {
-            notification.style.animation = 'slideOutLeft 0.3s ease';
-            setTimeout(() => notification.remove(), 300);
-          }, 5000);
-        }
-
-        // Initialize EmailJS for fallback
-        function initializeEmailJS() {
-          if (typeof emailjs !== 'undefined') {
-            try {
-              emailjs.init('TgAbmI0ROiUaACG34');
-              window.emailJSReady = true;
-              console.log('EmailJS initialized for consultation form');
-              return true;
-            } catch (e) {
-              console.error('EmailJS initialization failed:', e);
-              window.emailJSReady = false;
-              return false;
-            }
-          }
-          return false;
-        }
-
-        // Send via EmailJS as fallback/additional notification (don't throw on failure)
-        async function sendViaEmailJS(formData) {
-          if (!window.emailJSReady && !initializeEmailJS()) {
-            throw new Error('EmailJS not available');
-          }
-
-          const templateParams = {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            interest: formData.interest,
-            experience: formData.experience,
-            title: 'בקשת ייעוץ חדשה - AI Studio',
-            message: `תחום עניין: ${formData.interest}\nרמת ניסיון: ${formData.experience}`
-          };
-
-          return await emailjs.send(
-            'service_t2uqbxs',       // EmailJS service ID
-            'template_ux5c6f5',      // Template ID
-            templateParams
-          );
-        }
-
-        consultationForm.addEventListener('submit', async function(e) {
+        consultationForm.addEventListener('submit', function(e) {
           e.preventDefault();
-
-          // Validate all fields
-          const fields = consultationForm.querySelectorAll('input, select');
-          let isValid = true;
-
-          fields.forEach(field => {
-            if (!validateField(field)) {
-              isValid = false;
-            }
-          });
-
-          if (!isValid) {
-            showNotification('אנא תקן את השגיאות בטופס', 'error');
-            return;
-          }
-
-          // Get form data
-          const formData = {
-            name: consultationForm.querySelector('#name').value.trim(),
-            email: consultationForm.querySelector('#email').value.trim(),
-            phone: consultationForm.querySelector('#phone').value.trim(),
-            interest: consultationForm.querySelector('#interest').value,
-            experience: consultationForm.querySelector('#experience').value
-          };
-
-          // Show loading state
-          const submitBtn = consultationForm.querySelector('.form-submit');
-          const originalText = submitBtn.textContent;
-          submitBtn.textContent = 'שולח...';
-          submitBtn.disabled = true;
-          submitBtn.style.opacity = '0.7';
-
-          try {
-            // Try API first
-            const apiUrl = 'https://aistudio555jamstack-production.up.railway.app/api/consultations';
-
-            const response = await fetch(apiUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(formData)
-            });
-
-            let apiSuccess = false;
-
-            if (response.ok) {
-              const result = await response.json();
-              if (result.success) {
-                apiSuccess = true;
-                console.log('Consultation submitted successfully via API');
-                showNotification('תודה! בקשת הייעוץ נשלחה בהצלחה. נחזור אליך תוך 24 שעות.');
-              } else {
-                throw new Error(result.message || 'API request failed');
-              }
-            } else {
-              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            // Try EmailJS as backup/additional notification (don't throw on failure)
-            try {
-              if (!apiSuccess) {
-                // Only use EmailJS as primary if API failed
-                await sendViaEmailJS(formData);
-                showNotification('תודה! בקשת הייעוץ נשלחה בהצלחה. נחזור אליך תוך 24 שעות.');
-              } else {
-                // Send as backup notification
-                await sendViaEmailJS(formData);
-              }
-            } catch (emailError) {
-              console.error('EmailJS backup failed:', emailError);
-              // Don't show error if API succeeded
-              if (!apiSuccess) {
-                throw emailError;
-              }
-            }
-
-            // Reset form on success
-            consultationForm.reset();
-
-          } catch (error) {
-            console.error('Consultation form submission failed:', error);
-            showNotification(
-              'אירעה שגיאה בשליחת הטופס. אנא נסה שוב או צור קשר ישירות.',
-              'error'
-            );
-          } finally {
-            // Reset button state
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = '1';
-          }
+          // Here you would normally send the form data to your server
+          alert('Thank you for your interest! Our education advisor will contact you within 24 hours.');
+          consultationForm.reset();
         });
-
-        // Initialize EmailJS on page load
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', initializeEmailJS);
-        } else {
-          initializeEmailJS();
-        }
       }
     });
   </script>
 
-  <!-- Static Consultation Form Handler -->
+  <script>
+    // Fix Career Services dropdown
+    document.addEventListener('DOMContentLoaded', function() {
+      const dropdown = document.querySelector('.w-dropdown');
+      const dropdownToggle = document.querySelector('.w-dropdown-toggle');
+      const dropdownList = document.querySelector('.w-dropdown-list');
+      
+      if (dropdown && dropdownToggle && dropdownList) {
+        // Add hover functionality
+        dropdown.addEventListener('mouseenter', function() {
+          dropdownList.style.display = 'block';
+          dropdown.classList.add('w--open');
+          dropdownToggle.classList.add('w--open');
+        });
+        
+        dropdown.addEventListener('mouseleave', function() {
+          dropdownList.style.display = 'none';
+          dropdown.classList.remove('w--open');
+          dropdownToggle.classList.remove('w--open');
+        });
+        
+        // Add click functionality as backup
+        dropdownToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          const isOpen = dropdownList.style.display === 'block';
+          dropdownList.style.display = isOpen ? 'none' : 'block';
+          dropdown.classList.toggle('w--open');
+          dropdownToggle.classList.toggle('w--open');
+        });
+      }
+    });
+  </script>
+  <!-- Navigation Fix Script -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Static Form Handler (Alternative form without animations)
-      const staticForm = document.getElementById('static-consultation-form');
-      if (staticForm) {
-        console.log('✅ Static consultation form found, initializing...');
-
-        staticForm.addEventListener('submit', async function(e) {
+      console.log('Navigation fix initializing...');
+      
+      // Fix dropdowns
+      const dropdowns = document.querySelectorAll('.menu-dropdown-wrapper');
+      dropdowns.forEach(dropdown => {
+        const toggle = dropdown.querySelector('.dropdown-toggle');
+        const list = dropdown.querySelector('.dropdown-list');
+        if (toggle && list) {
+          toggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            list.classList.toggle('w--open');
+          });
+        }
+      });
+      
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', function() {
+        document.querySelectorAll('.dropdown-list').forEach(list => {
+          list.classList.remove('w--open');
+        });
+      });
+      
+      // Prevent browser extension errors
+      window.addEventListener('error', function(e) {
+        if (e.filename && e.filename.includes('content.js')) {
           e.preventDefault();
-          console.log('📝 Static form submitted');
-
-          // Get form data
-          const formData = {
-            name: staticForm.querySelector('#static-name').value.trim(),
-            email: staticForm.querySelector('#static-email').value.trim(),
-            phone: staticForm.querySelector('#static-phone').value.trim(),
-            interest: staticForm.querySelector('#static-interest').value,
-            experience: staticForm.querySelector('#static-experience').value
-          };
-
-          console.log('📊 Form data:', formData);
-
-          // Hide messages
-          document.getElementById('static-form-success').style.display = 'none';
-          document.getElementById('static-form-error').style.display = 'none';
-
-          // Update button
-          const submitBtn = staticForm.querySelector('button[type="submit"]');
-          const originalText = submitBtn.textContent;
-          submitBtn.textContent = 'שולח...';
-          submitBtn.disabled = true;
-          submitBtn.style.opacity = '0.7';
-
-          try {
-            // Send to API
-            const response = await fetch('https://aistudio555jamstack-production.up.railway.app/api/consultations', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(formData)
-            });
-
-            if (response.ok) {
-              const result = await response.json();
-              console.log('✅ Success:', result);
-
-              // Show success message
-              document.getElementById('static-form-success').style.display = 'block';
-
-              // Reset form
-              staticForm.reset();
-
-              // Hide success message after 5 seconds
-              setTimeout(() => {
-                document.getElementById('static-form-success').style.display = 'none';
-              }, 5000);
-            } else {
-              throw new Error(`API request failed: ${response.status}`);
-            }
-          } catch (error) {
-            console.error('❌ Error submitting form:', error);
-
-            // Show error message
-            document.getElementById('static-form-error').style.display = 'block';
-
-            // Hide error message after 5 seconds
-            setTimeout(() => {
-              document.getElementById('static-form-error').style.display = 'none';
-            }, 5000);
-          } finally {
-            // Reset button
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = '1';
-          }
-        });
-
-        // Prevent any script from modifying the static form
-        const observer = new MutationObserver(() => {
-          // Ensure Hebrew content stays intact
-          const nameLabel = staticForm.querySelector('label[for="static-name"]');
-          const emailLabel = staticForm.querySelector('label[for="static-email"]');
-          const phoneLabel = staticForm.querySelector('label[for="static-phone"]');
-          const submitBtn = staticForm.querySelector('button[type="submit"]');
-
-          if (nameLabel && nameLabel.textContent !== 'שם מלא') {
-            nameLabel.textContent = 'שם מלא';
-          }
-          if (emailLabel && emailLabel.textContent !== 'כתובת אימייל') {
-            emailLabel.textContent = 'כתובת אימייל';
-          }
-          if (phoneLabel && phoneLabel.textContent !== 'מספר טלפון') {
-            phoneLabel.textContent = 'מספר טלפון';
-          }
-          if (submitBtn && !submitBtn.disabled && submitBtn.textContent !== 'שלח בקשת ייעוץ') {
-            submitBtn.textContent = 'שלח בקשת ייעוץ';
-          }
-        });
-
-        // Observe changes to the form
-        observer.observe(staticForm, { childList: true, subtree: true, characterData: true });
-      }
+          return true;
+        }
+      });
+      
+      console.log('Navigation fix complete');
     });
   </script>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Handle all lead forms
-        const forms = document.querySelectorAll('form[data-name="lead-form"], form[id*="lead"], form[action*="leads"]');
+  <!-- Language Switcher -->
+  <script>
+    // Inline Language Switcher for AI Studio
+    (function() {
+      'use strict';
+      
+      const LANGUAGES = {
+        en: { name: 'English', flag: '🇬🇧', dir: 'ltr', label: 'EN' },
+        ru: { name: 'Русский', flag: '🇷🇺', dir: 'ltr', label: 'RU' },
+        he: { name: 'עברית', flag: '🇮🇱', dir: 'rtl', label: 'HE' }
+      };
+      
+      const STORAGE_KEY = 'aistudio_language';
+      
+      function detectCurrentLanguage() {
+        const pathParts = window.location.pathname.split('/');
+        const urlLang = pathParts.find(part => LANGUAGES[part]);
+        if (urlLang) return urlLang;
         
-        forms.forEach(form => {
-          form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(form);
-            const data = {
-              data: {
-                name: formData.get('name') || formData.get('Name'),
-                email: formData.get('email') || formData.get('Email'),
-                phone: formData.get('phone') || formData.get('Phone'),
-                message: formData.get('message') || formData.get('Message'),
-                language: document.documentElement.lang,
-                source: window.location.pathname
-              }
-            };
-            
-            try {
-              // Try HTTPS first, fallback to HTTP if SSL issues
-              let response = await fetch('https://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-              });
-              
-              // If HTTPS fails, try HTTP fallback
-              if (!response.ok && response.status === 0) {
-                console.log('HTTPS failed, trying HTTP fallback...');
-                response = await fetch('http://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify(data)
-                });
-              }
-              
-              if (response.ok) {
-                // Show success message
-                alert('תודה! ניצור איתך קשר בקרוב.');
-                form.reset();
-                
-                // Optional: redirect to thank you page
-                // window.location.href = '/thank-you.html';
-              } else {
-                throw new Error('Submission failed');
-              }
-            } catch (error) {
-              console.error('Form submission error:', error);
-              alert('סליחה, הייתה שגיאה. אנא נסה שוב או צור איתנו קשר ישירות.');
+        const storedLang = localStorage.getItem(STORAGE_KEY);
+        if (storedLang && LANGUAGES[storedLang]) return storedLang;
+        
+        return 'en';
+      }
+      
+      function createLanguageSwitcher() {
+        if (document.getElementById('language-switcher')) return;
+        
+        const currentLang = detectCurrentLanguage();
+        const switcher = document.createElement('div');
+        switcher.id = 'language-switcher';
+        // Let CSS handle positioning via desktop-language-selector-fix.css
+        
+        switcher.innerHTML = `
+          <style>
+            #language-switcher select {
+              padding: 10px 16px;
+              background: rgba(5, 5, 26, 0.95);
+              border: 1px solid rgba(255, 255, 255, 0.2);
+              border-radius: 12px;
+              color: white;
+              font-family: "Plus Jakarta Sans", sans-serif;
+              font-size: 14px;
+              font-weight: 500;
+              cursor: pointer;
+              backdrop-filter: blur(10px);
+              outline: none;
+              transition: all 0.3s ease;
             }
-          });
-        });
-      });
-    </script>
-  
+            #language-switcher select:hover {
+              background: rgba(0, 128, 255, 0.1);
+              border-color: rgba(0, 128, 255, 0.3);
+              transform: translateY(-2px);
+            }
+            #language-switcher select option {
+              background: #05051a;
+              color: white;
+              padding: 8px;
+            }
+            html[dir="rtl"] #language-switcher {
+              right: auto;
+              left: 20px;
+            }
+            @media (max-width: 768px) {
+              #language-switcher {
+                top: 10px;
+                right: 10px;
+              }
+              #language-switcher select {
+                padding: 8px 12px;
+                font-size: 13px;
+              }
+            }
+          </style>
+          <select onchange="switchLanguage(this.value)" id="languageSelect">
+            ${Object.entries(LANGUAGES).map(([code, lang]) => 
+              `<option value="${code}" ${code === currentLang ? 'selected' : ''}>${lang.flag} ${lang.name}</option>`
+            ).join('')}
+          </select>
+        `;
+        
+        const navbar = document.querySelector(".navbar-content") || document.querySelector(".navbar") || document.body; navbar.appendChild(switcher);
+        
+        // Apply language settings
+        document.documentElement.lang = currentLang;
+        document.documentElement.dir = LANGUAGES[currentLang].dir;
+        localStorage.setItem(STORAGE_KEY, currentLang);
+      }
+      
+      window.switchLanguage = function(newLang) {
+        if (!LANGUAGES[newLang]) return;
+        
+        localStorage.setItem(STORAGE_KEY, newLang);
+        
+        // Determine new path
+        const currentPath = window.location.pathname;
+        const pathParts = currentPath.split('/').filter(part => part);
+        
+        // Handle different URL structures
+        if (pathParts[0] === 'dist' && LANGUAGES[pathParts[1]]) {
+          // Fix home.html to index.html issue
+          if (pathParts[pathParts.length - 1] === 'home.html') {
+            pathParts[pathParts.length - 1] = 'index.html';
+          }
+          pathParts[1] = newLang;
+        } else if (pathParts[0] === 'dist') {
+          pathParts.splice(1, 0, newLang);
+        } else if (LANGUAGES[pathParts[0]]) {
+          pathParts[0] = newLang;
+        } else {
+          // For production, construct language-specific path
+          let fileName = currentPath.split('/').pop() || 'index.html';
+          // FIX: Normalize home.html to index.html
+          if (fileName === 'home.html' || fileName === '') {
+            fileName = 'index.html';
+          }
+          window.location.href = '/dist/' + newLang + '/' + fileName;
+          return;
+        }
+        
+        window.location.href = '/' + pathParts.join('/');
+      };;
+      
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', createLanguageSwitcher);
+      } else {
+        createLanguageSwitcher();
+      }
+    })();
+  </script>
+  <!-- Contact Form Modal -->
+  <!-- EmailJS SDK -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script src="js/contact-form-modal.js"></script>
   <script id="career-dropdown-fix-js">
     // Career Services Dropdown Consistency Fix
     (function() {
@@ -2938,62 +1962,101 @@
     })();
   </script>
 
-  <script src="../js/navigation-responsive-fix.js"></script>
 
-  <!-- API Configuration - Load First -->
-  <script src="../js/api-config.js?v=1.1"></script>
-  <!-- Enhanced Integration for Translation Support -->
-  <script src="../js/translations-config.js?v=1.1"></script>
+  <!-- API Integration - CRITICAL FOR DYNAMIC CONTENT -->
+  <script src="js/webflow-strapi-integration.js"></script>
+  
+  <!-- Visibility Controller -->
+  <script src="js/visibility-controller.js"></script>
 
-  <!-- API Integration Scripts -->
-  <script src="../js/webflow-strapi-integration.js"></script>
-  <script src="../js/strapi-integration.js"></script>
-  <script src="../js/enhanced-integration.js?v=1.1"></script>
-  <script src="../js/shared-menu-component.js?v=2.6"></script>
-
-  <!-- Fix duplicate menu after all scripts load -->
+  <!-- Secure Footer Loader - Emergency Security Fix -->
   <script>
+    // Initialize secure footer loading
     document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(function() {
-        // Remove any duplicate navigation elements
-        const navbars = document.querySelectorAll('.navbar');
-        if (navbars.length > 1) {
-          // Keep only the first navbar, remove others
-          for (let i = 1; i < navbars.length; i++) {
-            navbars[i].remove();
-          }
-        }
-
-        // Fix career dropdown positioning
-        const careerDropdown = document.getElementById('career-dropdown');
-        if (careerDropdown) {
-          careerDropdown.style.position = 'relative';
-        }
-      }, 500);
-    });
-  </script>
-  <script src="../js/ui-translator.js?v=1.1"></script>
-  <script src="../js/mobile-menu-toggle-fix.js"></script>
-
-  <!-- Master Footer Loader -->
-  <script src="../js/master-footer-loader.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      if (typeof window.MasterFooterLoader !== 'undefined') {
-        const footerLoader = new window.MasterFooterLoader();
-        footerLoader.loadFooter('he', 'dynamic-footer-container');
+      if (window.SecureFooterLoader) {
+        const footerLoader = new window.SecureFooterLoader({
+          containerId: 'secure-footer-container',
+          debug: false,
+          fallbackEnabled: true
+        });
+        footerLoader.loadFooter();
       }
     });
   </script>
 
-  <!-- EmailJS -->
-  <script
-    type="text/javascript"
-    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+  <script src="js/navigation-responsive-fix.js"></script>
+  <script src="js/emergency-fix.js"></script>
+  <script src="js/mobile-menu-toggle-fix.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof window.MasterFooterLoader !== 'undefined') {
+        const footerLoader = new window.MasterFooterLoader();
+        footerLoader.loadFooter();
+      }
+    });
   </script>
 
-  <!-- Shared Menu Component now loads before ui-translator above -->
 
-  <!-- Contact Form Modal -->
-  <script src="../js/contact-form-modal.js"></script>
-</body></html>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Handle all lead forms
+        const forms = document.querySelectorAll('form[data-name="lead-form"], form[id*="lead"], form[action*="leads"]');
+        
+        forms.forEach(form => {
+          form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const data = {
+              data: {
+                name: formData.get('name') || formData.get('Name'),
+                email: formData.get('email') || formData.get('Email'),
+                phone: formData.get('phone') || formData.get('Phone'),
+                message: formData.get('message') || formData.get('Message'),
+                language: document.documentElement.lang,
+                source: window.location.pathname
+              }
+            };
+            
+            try {
+              // Try HTTPS first, fallback to HTTP if SSL issues
+              let response = await fetch('https://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+              });
+              
+              // If HTTPS fails, try HTTP fallback
+              if (!response.ok && response.status === 0) {
+                console.log('HTTPS failed, trying HTTP fallback...');
+                response = await fetch('http://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(data)
+                });
+              }
+              
+              if (response.ok) {
+                // Show success message
+                alert('Thank you! We will contact you soon.');
+                form.reset();
+                
+                // Optional: redirect to thank you page
+                // window.location.href = '/thank-you.html';
+              } else {
+                throw new Error('Submission failed');
+              }
+            } catch (error) {
+              console.error('Form submission error:', error);
+              alert('Sorry, there was an error. Please try again or contact us directly.');
+            }
+          });
+        });
+      });
+    </script>
+  </body></html>

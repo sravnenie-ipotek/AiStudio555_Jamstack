@@ -148,15 +148,19 @@
     initializeHamburgerButton();
   }
 
-  // Also run after a short delay to override any async scripts
+  // Also run after a short delay to override any async scripts (but not if menu is actively being used)
   setTimeout(function() {
-    ensureMenuClosed();
+    if (!document.body.classList.contains('w--nav-menu-open')) {
+      ensureMenuClosed();
+    }
     repositionLanguageSelector();
   }, 100);
 
-  // Run again after Webflow initializes
+  // Run again after Webflow initializes (but not if menu is actively being used)
   setTimeout(function() {
-    ensureMenuClosed();
+    if (!document.body.classList.contains('w--nav-menu-open')) {
+      ensureMenuClosed();
+    }
     repositionLanguageSelector();
   }, 500);
 
@@ -177,33 +181,11 @@
     }, 250);
   });
 
-  // Prevent menu from auto-opening (less aggressive)
-  const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-        const target = mutation.target;
-
-        // Only intervene if menu opens without user interaction AND it's been a while since last click
-        if (window.innerWidth <= 991 && !window.userClickedHamburger) {
-          if (target.classList.contains('w--nav-menu-open') && !window.recentMenuInteraction) {
-            // Wait longer before force closing to avoid interfering with legitimate opens
-            setTimeout(function() {
-              if (!window.userClickedHamburger && !window.recentMenuInteraction) {
-                console.log('⚠️ Auto-closing menu (opened without user interaction)');
-                ensureMenuClosed();
-              }
-            }, 100); // Increased delay
-          }
-        }
-      }
-    });
-  });
-
-  // Start observing
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['class']
-  });
+  // Disabled aggressive MutationObserver to prevent interference with user interactions
+  // The mobile-menu-toggle-fix.js script will handle menu state management
+  //
+  // Original observer caused menu to close immediately after user clicked to open it
+  // Keeping this commented out to allow proper menu functionality
 
   // Track hamburger clicks
   document.addEventListener('click', function(e) {

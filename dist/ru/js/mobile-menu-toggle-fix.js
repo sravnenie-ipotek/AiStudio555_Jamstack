@@ -10,8 +10,18 @@
   function initMobileMenu() {
     console.log('🔧 Initializing mobile menu system...');
 
-    // Ensure menu starts closed
-    closeMenu();
+    // Ensure menu starts in correct state based on screen size
+    if (window.innerWidth <= 991) {
+      closeMenu();
+    } else {
+      // On desktop, ensure menu is visible
+      const menu = document.querySelector('.w-nav-menu');
+      if (menu) {
+        menu.style.display = 'flex';
+        menu.style.opacity = '1';
+        menu.style.visibility = 'visible';
+      }
+    }
 
     // Find or create hamburger button
     let hamburger = document.querySelector('.w-nav-button');
@@ -152,12 +162,12 @@
   // Ensure menu visibility on resize
   function handleResize() {
     if (window.innerWidth > 991) {
-      // Desktop - show menu normally
+      // Desktop - explicitly show menu
       const menu = document.querySelector('.w-nav-menu');
       if (menu) {
-        menu.style.display = '';
-        menu.style.opacity = '';
-        menu.style.visibility = '';
+        menu.style.display = 'flex';
+        menu.style.opacity = '1';
+        menu.style.visibility = 'visible';
       }
 
       // Remove mobile menu classes
@@ -199,10 +209,10 @@
       console.log('✅ Menu element found');
     }
 
-    // Add language selector to mobile menu if not present
-    if (menu && !menu.querySelector('.mobile-language-selector')) {
-      addLanguageSelector(menu);
-    }
+    // Skip mobile language selector - using inline desktop switcher instead
+    // if (menu && !menu.querySelector('.mobile-language-selector')) {
+    //   addLanguageSelector(menu);
+    // }
   }
 
   // Add language selector to mobile menu
@@ -298,6 +308,7 @@
   setTimeout(function() {
     checkMenuExists();
     initMobileMenu();
+    handleResize();
   }, 500);
 
   // Export functions for debugging

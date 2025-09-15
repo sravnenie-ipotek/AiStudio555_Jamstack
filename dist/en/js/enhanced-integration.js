@@ -8,9 +8,22 @@ class EnhancedIntegration {
     constructor() {
         // Environment detection
         this.isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        this.API_BASE = this.isLocal
-            ? 'http://localhost:3000/api'
-            : 'https://aistudio555jamstack-production.up.railway.app/api';
+
+        // Detect API endpoint based on current port
+        const currentPort = window.location.port;
+        if (currentPort === '3005') {
+            // Frontend on Python server (3005), API on Express (4005)
+            this.API_BASE = 'http://localhost:4005/api';
+        } else if (currentPort === '4005') {
+            // Accessing directly via Express server
+            this.API_BASE = 'http://localhost:4005/api';
+        } else if (this.isLocal) {
+            // Default local setup
+            this.API_BASE = 'http://localhost:4005/api';
+        } else {
+            // Production
+            this.API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+        }
 
         // Language detection
         this.currentLanguage = this.detectLanguage();
@@ -70,7 +83,7 @@ class EnhancedIntegration {
                 bannerSubtitle.textContent = TRANSLATIONS.banner.subtitle[lang] || TRANSLATIONS.banner.subtitle.en;
             }
             if (bannerHeading) {
-                bannerHeading.textContent = TRANSLATIONS.banner.heading[lang] || TRANSLATIONS.banner.heading.en;
+                bannerHeading.textContent = TRANSLATIONS.banner.title[lang] || TRANSLATIONS.banner.title.en;
             }
             if (bannerDescription) {
                 bannerDescription.textContent = TRANSLATIONS.banner.description[lang] || TRANSLATIONS.banner.description.en;
@@ -87,16 +100,22 @@ class EnhancedIntegration {
     }
 
     applyNavigationTranslations(lang) {
+        // Skip navigation translation for Hebrew pages - they already have correct Hebrew text
+        if (lang === 'he') {
+            console.log('📌 Skipping navigation translation - Hebrew page already has correct Hebrew text');
+            return;
+        }
+
         // Navigation links
         const navMappings = {
-            'Home': TRANSLATIONS.navigation.home[lang],
-            'Courses': TRANSLATIONS.navigation.courses[lang],
-            'Teachers': TRANSLATIONS.navigation.teachers[lang],
-            'Career Services': TRANSLATIONS.navigation.careerServices[lang],
-            'Career Orientation': TRANSLATIONS.navigation.careerOrientation[lang],
-            'Career Center': TRANSLATIONS.navigation.careerCenter[lang],
-            'Pricing': TRANSLATIONS.navigation.pricing[lang],
-            'Blog': TRANSLATIONS.navigation.blog[lang]
+            'Home': TRANSLATIONS.nav.home[lang],
+            'Courses': TRANSLATIONS.nav.courses[lang],
+            'Teachers': TRANSLATIONS.nav.teachers[lang],
+            'Career Services': TRANSLATIONS.nav.careerServices[lang],
+            'Career Orientation': TRANSLATIONS.nav.careerOrientation[lang],
+            'Career Center': TRANSLATIONS.nav.careerCenter[lang],
+            'Pricing': TRANSLATIONS.nav.pricing[lang],
+            'Blog': TRANSLATIONS.nav.blog ? TRANSLATIONS.nav.blog[lang] : 'Blog'
         };
 
         // Update nav links
@@ -190,13 +209,33 @@ class EnhancedIntegration {
 
     async loadHomeContent() {
         try {
-            const response = await fetch(`${this.API_BASE}/home-page?locale=${this.currentLanguage}`);
-            if (!response.ok) throw new Error('Failed to fetch home content');
+            let response = await fetch(`${this.API_BASE}/home-page?locale=${this.currentLanguage}`);
+
+            if (!response.ok) {
+                // Try fallback without locale parameter
+                console.log('⚠️ Locale-specific API failed, trying fallback...');
+                response = await fetch(`${this.API_BASE}/home-page`);
+
+                if (!response.ok) {
+                    throw new Error('Both API endpoints failed');
+                }
+            }
 
             const data = await response.json();
 
-            if (data.hero) {
-                this.updateHomeHero(data.hero);
+            if (data.data && data.data.attributes) {
+                const attributes = data.data.attributes;
+
+                // Update hero section
+                if (data.hero) {
+                    this.updateHomeHero(data.hero);
+                }
+
+                // Update practice section
+                this.updatePracticeSection(attributes);
+
+                // Update learning features
+                this.updateLearningFeatures(attributes);
             }
 
             console.log('✅ Dynamic home content loaded');
@@ -226,6 +265,46 @@ class EnhancedIntegration {
         }
 
         console.log('✅ Hero section updated from API');
+    }
+
+    updatePracticeSection(attributes) {
+        if (!attributes.practiceDescription) return;
+
+        // Find the practice section description element
+        const practiceDescElement = document.querySelector('.section-description-text.why-choose-us');
+
+        if (practiceDescElement) {
+            practiceDescElement.textContent = attributes.practiceDescription;
+            console.log('✅ Practice section updated from API');
+        }
+    }
+
+    updateLearningFeatures(attributes) {
+        // Array of feature data
+        const features = [
+            { title: attributes.feature1Title, description: attributes.feature1Description },
+            { title: attributes.feature2Title, description: attributes.feature2Description },
+            { title: attributes.feature3Title, description: attributes.feature3Description },
+            { title: attributes.feature4Title, description: attributes.feature4Description },
+            { title: attributes.feature5Title, description: attributes.feature5Description },
+            { title: attributes.feature6Title, description: attributes.feature6Description }
+        ];
+
+        // Update each feature
+        features.forEach((feature, index) => {
+            if (feature.title && feature.description) {
+                // Find title and description elements for this feature
+                const titleElements = document.querySelectorAll('.course-categories-single-title');
+                const descElements = document.querySelectorAll('.course-categories-single-description');
+
+                if (titleElements[index] && descElements[index]) {
+                    titleElements[index].textContent = feature.title;
+                    descElements[index].textContent = feature.description;
+                }
+            }
+        });
+
+        console.log('✅ Learning features updated from API');
     }
 
     async loadCoursesContent() {

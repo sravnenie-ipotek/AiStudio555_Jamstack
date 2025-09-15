@@ -2,7 +2,7 @@
 (function() {
   'use strict';
 
-  // Create modal HTML structure
+  // Create modal HTML structure with Hebrew support
   const modalHTML = `
     <div id="contactModal" class="contact-modal">
       <div class="contact-modal-overlay"></div>
@@ -14,54 +14,54 @@
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
           </button>
-          
+
           <div class="contact-modal-header">
-            <h2 class="contact-modal-title">Get Started Today</h2>
-            <p class="contact-modal-subtitle">Fill out the form and we'll contact you via WhatsApp</p>
+            <h2 class="contact-modal-title">שלטו ב-AI וטכנולוגיה</h2>
+            <p class="contact-modal-subtitle">מלאו את הטופס ונחזור אליכם בהקדם דרך וואטסאפ</p>
           </div>
-          
+
           <form id="contactForm" class="contact-form">
             <div class="form-group">
-              <label for="fullName" class="form-label">Full Name</label>
-              <input 
-                type="text" 
-                id="fullName" 
-                name="fullName" 
-                class="form-input" 
-                placeholder="Enter your full name"
+              <label for="fullName" class="form-label">שם מלא</label>
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                class="form-input"
+                placeholder="הכניסו את שמכם"
                 required
               />
               <span class="form-error" id="nameError"></span>
             </div>
-            
+
             <div class="form-group">
-              <label for="phoneNumber" class="form-label">Phone Number</label>
-              <input 
-                type="tel" 
-                id="phoneNumber" 
-                name="phoneNumber" 
-                class="form-input" 
-                placeholder="+1 234 567 8900"
+              <label for="phoneNumber" class="form-label">מספר טלפון</label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                class="form-input"
+                placeholder="הכניסו מספר טלפון"
                 required
               />
               <span class="form-error" id="phoneError"></span>
             </div>
-            
+
             <div class="form-group">
-              <label for="message" class="form-label">Message</label>
-              <textarea 
-                id="message" 
-                name="message" 
-                class="form-textarea" 
-                rows="4" 
-                placeholder="Tell us about your learning goals..."
+              <label for="message" class="form-label">הודעה</label>
+              <textarea
+                id="message"
+                name="message"
+                class="form-textarea"
+                rows="4"
+                placeholder="הכניסו את הודעתכם"
                 required
               ></textarea>
               <span class="form-error" id="messageError"></span>
             </div>
-            
+
             <button type="submit" class="form-submit-btn">
-              <span class="btn-text">Send Message</span>
+              <span class="btn-text">שלח</span>
               <span class="btn-loader" style="display: none;">
                 <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
                   <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50" stroke-dashoffset="10">
@@ -74,13 +74,16 @@
         </div>
       </div>
     </div>
-    
+
     <div id="toast" class="toast">
       <div class="toast-content">
-        <svg class="toast-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <svg class="toast-icon error-icon" style="display:none;" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm5 13.59L13.59 15 10 11.41 6.41 15 5 13.59 8.59 10 5 6.41 6.41 5 10 8.59 13.59 5 15 6.41 11.41 10 15 13.59z" fill="currentColor"/>
+        </svg>
+        <svg class="toast-icon success-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
           <path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm-1 15l-5-5 1.5-1.5L9 12l7-7 1.5 1.5L9 15z" fill="currentColor"/>
         </svg>
-        <span class="toast-message">Message sent successfully!</span>
+        <span class="toast-message">ההודעה נשלחה בהצלחה!</span>
       </div>
     </div>
   `;
@@ -320,42 +323,146 @@
         to { transform: rotate(360deg); }
       }
       
-      /* Toast Styles */
+      /* Toast Styles - Enhanced Design */
       .toast {
         position: fixed;
-        bottom: -100px;
+        bottom: -150px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 10001;
-        transition: bottom 0.4s ease;
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        pointer-events: none;
       }
-      
+
       .toast.active {
         bottom: 30px;
+        pointer-events: auto;
       }
-      
+
       .toast-content {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 16px 24px;
+        gap: 16px;
+        padding: 20px 32px;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 50px;
-        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+        border-radius: 16px;
+        box-shadow:
+          0 20px 60px rgba(102, 126, 234, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+          0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
         color: #ffffff;
-        font-size: 14px;
-        font-weight: 500;
+        font-size: 15px;
+        font-weight: 600;
         font-family: "Plus Jakarta Sans", sans-serif;
-        animation: slideUp 0.4s ease;
+        animation: slideUp 0.5s ease;
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+        min-width: 300px;
       }
-      
+
+      .toast-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        animation: shimmer 2s infinite;
+      }
+
+      @keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+      }
+
+      .toast.success .toast-content {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        box-shadow:
+          0 20px 60px rgba(72, 187, 120, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+          0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
+      }
+
       .toast.error .toast-content {
-        background: linear-gradient(135deg, #f56565 0%, #c53030 100%);
-        box-shadow: 0 10px 40px rgba(245, 101, 101, 0.4);
+        background: linear-gradient(135deg, #fc5c65 0%, #eb3b5a 100%);
+        box-shadow:
+          0 20px 60px rgba(252, 92, 101, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+          0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
       }
-      
+
       .toast-icon {
         flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        padding: 4px;
+      }
+
+      .toast-icon svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .toast-message {
+        flex-grow: 1;
+        line-height: 1.4;
+        letter-spacing: 0.3px;
+      }
+
+      /* Mobile-specific toast styles */
+      @media (max-width: 640px) {
+        .toast {
+          bottom: -150px;
+          left: 20px;
+          right: 20px;
+          transform: none;
+          width: auto;
+        }
+
+        .toast.active {
+          bottom: 20px;
+        }
+
+        .toast-content {
+          padding: 16px 24px;
+          font-size: 14px;
+          min-width: auto;
+          flex-direction: row;
+          gap: 12px;
+          border-radius: 12px;
+          box-shadow:
+            0 10px 30px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+        }
+
+        .toast-icon {
+          width: 20px;
+          height: 20px;
+        }
+
+        .toast-message {
+          font-size: 14px;
+        }
+      }
+
+      /* Smaller mobile devices */
+      @media (max-width: 375px) {
+        .toast {
+          left: 10px;
+          right: 10px;
+        }
+
+        .toast-content {
+          padding: 14px 20px;
+          font-size: 13px;
+        }
       }
       
       /* Animations */
@@ -479,19 +586,19 @@
     // Form validation patterns
     const validators = {
       fullName: (value) => {
-        if (!value.trim()) return 'Full name is required';
-        if (value.trim().length < 2) return 'Name must be at least 2 characters';
+        if (!value.trim()) return 'שם מלא הוא שדה חובה';
+        if (value.trim().length < 2) return 'השם חייב לכלול לפחות 2 אותיות';
         return '';
       },
       phoneNumber: (value) => {
-        if (!value.trim()) return 'Phone number is required';
+        if (!value.trim()) return 'מספר טלפון הוא שדה חובה';
         const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/;
-        if (!phoneRegex.test(value)) return 'Please enter a valid phone number';
+        if (!phoneRegex.test(value)) return 'אנא הכניסו מספר טלפון חוקי';
         return '';
       },
       message: (value) => {
-        if (!value.trim()) return 'Message is required';
-        if (value.trim().length < 10) return 'Message must be at least 10 characters';
+        if (!value.trim()) return 'הודעה היא שדה חובה';
+        if (value.trim().length < 10) return 'ההודעה חייבת לכלול לפחות 10 תווים';
         return '';
       }
     };
@@ -511,16 +618,28 @@
       document.body.style.overflow = '';
     }
 
-    // Show toast notification
+    // Show toast notification with proper icons
     function showToast(message, type = 'success') {
       const toastMessage = toast.querySelector('.toast-message');
+      const errorIcon = toast.querySelector('.error-icon');
+      const successIcon = toast.querySelector('.success-icon');
+
       toastMessage.textContent = message;
       toast.classList.remove('success', 'error');
       toast.classList.add('active', type);
-      
+
+      // Show appropriate icon
+      if (type === 'error') {
+        errorIcon.style.display = 'block';
+        successIcon.style.display = 'none';
+      } else {
+        errorIcon.style.display = 'none';
+        successIcon.style.display = 'block';
+      }
+
       // Error messages stay longer
       const duration = type === 'error' ? 4000 : 3000;
-      
+
       setTimeout(() => {
         toast.classList.remove('active');
       }, duration);
@@ -562,105 +681,102 @@
     if (form.phoneNumber) form.phoneNumber.addEventListener('blur', () => validateField(form.phoneNumber));
     if (form.message) form.message.addEventListener('blur', () => validateField(form.message));
 
-    // Form submission
+    // Form submission handler with consultation API integration
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       // Validate all fields
       const isNameValid = validateField(form.fullName);
       const isPhoneValid = validateField(form.phoneNumber);
       const isMessageValid = validateField(form.message);
-      
+
       if (!isNameValid || !isPhoneValid || !isMessageValid) {
         return;
       }
-      
+
       // Get form data
       const fullName = form.fullName.value.trim();
       const phoneNumber = form.phoneNumber.value.trim();
       const message = form.message.value.trim();
-      
+
       // Show loading state
       const submitBtn = form.querySelector('.form-submit-btn');
       const btnText = submitBtn.querySelector('.btn-text');
       const btnLoader = submitBtn.querySelector('.btn-loader');
-      
+
       submitBtn.classList.add('loading');
       btnText.style.display = 'none';
       btnLoader.style.display = 'inline-flex';
-      
-      // Prepare email data to match your template variables
-      const templateParams = {
+
+      // Prepare consultation data for API
+      const consultationData = {
         name: fullName,
-        email: phoneNumber, // Phone number goes in email field for template
-        message: message,
-        title: 'New Contact Form Submission'
+        email: 'not-provided@example.com', // Default email since form doesn't have email field
+        phone: phoneNumber,
+        interest: 'general', // Default interest
+        experience: 'unknown', // Default experience
+        message: message // Include message in API data
       };
-      
+
       try {
-        // Send email via EmailJS - check if it's available and initialized
-        if (typeof emailjs !== 'undefined') {
-          // Try to initialize EmailJS if not already done
-          if (!window.emailJSReady) {
-            try {
-              emailjs.init('TgAbmI0ROiUaACG34');
-              window.emailJSReady = true;
-              console.log('EmailJS initialized during form submission');
-            } catch (e) {
-              console.error('Failed to initialize EmailJS during submission:', e);
-              window.emailJSReady = false;
+        // Send to consultation API first (same as consultation form)
+        const apiUrl = window.location.hostname === 'localhost'
+          ? 'http://localhost:3000/api/consultations'
+          : 'https://aistudio555jamstack-production.up.railway.app/api/consultations';
+
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(consultationData)
+        });
+
+        if (response.ok) {
+          console.log('Consultation submitted to database successfully');
+
+          // Try to send email notification via EmailJS
+          try {
+            if (typeof emailjs !== 'undefined' && window.emailJSReady) {
+              const templateParams = {
+                to_name: 'AI Studio Team',
+                from_name: fullName,
+                from_email: phoneNumber, // Using phone as email field
+                phone: phoneNumber,
+                message: `New contact form submission from ${fullName}\n\nPhone: ${phoneNumber}\n\nMessage: ${message}`
+              };
+
+              await emailjs.send('service_kw2tzof', 'template_ux5c6f5', templateParams);
+              console.log('Email notification sent successfully');
             }
+          } catch (emailError) {
+            console.error('EmailJS error (non-critical):', emailError);
           }
-          
-          // Only proceed with email if EmailJS is properly initialized
-          if (window.emailJSReady) {
-            console.log('Sending email with params:', templateParams);
-            const response = await emailjs.send(
-              'service_kw2tzof',      // Service ID
-              'template_ux5c6f5',     // Template ID
-              templateParams
-            );
-            console.log('EmailJS response:', response);
-            
-            // Email sent successfully
-            console.log('Email sent successfully!');
-            showToast('Message sent successfully!');
-          } else {
-            // EmailJS initialization failed
-            console.error('EmailJS failed to initialize');
-            showToast('Email service unavailable, but you can still contact us via WhatsApp.', 'error');
-          }
-          
-          // Show success with WhatsApp option regardless of email status
-          showSuccessWithWhatsApp(fullName, phoneNumber, message);
-          
+
+          // Show success toaster for demonstration
+          // You can change this to 'error' if you want to show error instead
+          showToast('ההודעה נשלחה בהצלחה! ✨', 'success');
+
+          // For error demonstration, uncomment the line below:
+          // showToast('Mail NOT SENT', 'error');
+
           // Reset form
           form.reset();
-          
-          // Close modal after delay
-          setTimeout(() => {
-            hideModal();
-          }, 5000); // Give user time to click WhatsApp if they want
+
+          // Don't close modal or navigate - keep form open
+          // User can manually close with X button if they want
+
         } else {
-          // EmailJS not loaded - show error but still provide WhatsApp option
-          console.error('EmailJS library not available');
-          showToast('Email service unavailable, but you can still contact us via WhatsApp.', 'error');
-          // Still show success screen with WhatsApp option
-          showSuccessWithWhatsApp(fullName, phoneNumber, message);
+          throw new Error('Failed to save consultation');
         }
+
       } catch (error) {
-        console.error('Email sending failed:', error);
-        console.error('Error details:', {
-          message: error.message,
-          status: error.status,
-          text: error.text,
-          name: error.name
-        });
-        // Show error message but don't open WhatsApp automatically
-        const errorMsg = error.text || error.message || 'Email sending failed. Please try again or use WhatsApp.';
-        showToast(errorMsg, 'error');
-        // Still show success screen with WhatsApp option (user can click if they want)
-        showSuccessWithWhatsApp(fullName, phoneNumber, message);
+        console.error('Form submission error:', error);
+
+        // Show error toaster
+        showToast('שליחת המייל נכשלה', 'error');
+
+        // Don't navigate away or show WhatsApp - keep form open
       } finally {
         // Reset loading state
         submitBtn.classList.remove('loading');
@@ -733,7 +849,7 @@
       window.openWhatsApp = openWhatsApp;
       
       // Show success toast
-      showToast('Message sent successfully!');
+      showToast('ההודעה נשלחה בהצלחה!');
     }
 
     // Close modal handlers
@@ -762,12 +878,12 @@
           
           <div class="contact-modal-header">
             <h2 class="contact-modal-title">Get Started Today</h2>
-            <p class="contact-modal-subtitle">Fill out the form and we'll contact you via WhatsApp</p>
+            <p class="contact-modal-subtitle">מלאו את הטופס ונחזור אליכם בהקדם דרך וואטסאפ</p>
           </div>
           
           <form id="contactForm" class="contact-form">
             <div class="form-group">
-              <label for="fullName" class="form-label">Full Name</label>
+              <label for="fullName" class="form-label">שם מלא</label>
               <input 
                 type="text" 
                 id="fullName" 
@@ -780,7 +896,7 @@
             </div>
             
             <div class="form-group">
-              <label for="phoneNumber" class="form-label">Phone Number</label>
+              <label for="phoneNumber" class="form-label">מספר טלפון</label>
               <input 
                 type="tel" 
                 id="phoneNumber" 
@@ -793,7 +909,7 @@
             </div>
             
             <div class="form-group">
-              <label for="message" class="form-label">Message</label>
+              <label for="message" class="form-label">הודעה</label>
               <textarea 
                 id="message" 
                 name="message" 
@@ -862,12 +978,12 @@
         
         <div class="contact-modal-header">
           <h2 class="contact-modal-title">Get Started Today</h2>
-          <p class="contact-modal-subtitle">Fill out the form and we'll contact you via WhatsApp</p>
+          <p class="contact-modal-subtitle">מלאו את הטופס ונחזור אליכם בהקדם דרך וואטסאפ</p>
         </div>
         
         <form id="contactForm" class="contact-form">
           <div class="form-group">
-            <label for="fullName" class="form-label">Full Name</label>
+            <label for="fullName" class="form-label">שם מלא</label>
             <input 
               type="text" 
               id="fullName" 
@@ -880,7 +996,7 @@
           </div>
           
           <div class="form-group">
-            <label for="phoneNumber" class="form-label">Phone Number</label>
+            <label for="phoneNumber" class="form-label">מספר טלפון</label>
             <input 
               type="tel" 
               id="phoneNumber" 
@@ -893,7 +1009,7 @@
           </div>
           
           <div class="form-group">
-            <label for="message" class="form-label">Message</label>
+            <label for="message" class="form-label">הודעה</label>
             <textarea 
               id="message" 
               name="message" 
@@ -1005,13 +1121,16 @@
       }
       
       // Check if it's a sign up/sign in link
-      if (href.includes('sign-up') || 
-          href.includes('sign-in') || 
+      if (href.includes('sign-up') ||
+          href.includes('sign-in') ||
           href.includes('authentication-pages') ||
           target.classList.contains('primary-button') ||
           text.includes('Sign Up') ||
           text.includes('Sign In') ||
-          text.includes('Get Started')) {
+          text.includes('Get Started') ||
+          text.includes('הרשמו היום') || // Hebrew: Sign up today
+          text.includes('הרשמה') || // Hebrew: Registration
+          text.includes('התחילו היום')) { // Hebrew: Start today
         
         e.preventDefault();
         e.stopPropagation();

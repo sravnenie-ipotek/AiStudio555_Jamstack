@@ -64,3 +64,49 @@ Docs/access/
 test-api-token.js
 *api-token*
 *credentials*
+
+# Test and Debug Files
+test-*.js
+debug-*.js
+analyze-*.js
+verify-*.js
+inspect-*.js
+check-*.js
+compare-*.js
+populate-*.js
+sync-*.js
+push-*.js
+add-*.js
+final-*.js
+quick-*.js
+browser-*.js
+detailed-*.js
+dropdown-*.js
+qa-*.js
+
+# Screenshots and Images (except /images folder)
+*.png
+!images/*.png
+!public/images/*.png
+!dist/*/images/*.png
+
+# JSON test data
+*_content.json
+*-test-results.json
+
+# Backup files
+*.backup
+index.html.backup
+
+# Temporary CSS test files
+css/career-orientation-cards.css
+css/custom-mobile-menu.css
+css/hebrew-dropdown-emergency-fix.css
+css/teachers-teachmeskills-style.css
+
+# Temporary JS files
+js/teachers-teachmeskills-tabs.js
+
+# NextJS test directory
+public/
+Docs/nextJs/

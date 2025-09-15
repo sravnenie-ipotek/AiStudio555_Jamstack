@@ -128,9 +128,15 @@ class StrapiIntegration {
       mapping.selectors.forEach(selector => {
         const elements = document.querySelectorAll(selector);
         elements.forEach(el => {
-          if (ui[mapping.field]) {
-            console.log(`✅ Nav: "${el.textContent.trim()}" → "${ui[mapping.field]}"`);
+          const currentText = el.textContent.trim();
+          // Check if current text is already in Hebrew (preserve it!)
+          const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+
+          if (ui[mapping.field] && !isHebrewText) {
+            console.log(`✅ Nav: "${currentText}" → "${ui[mapping.field]}"`);
             el.textContent = ui[mapping.field];
+          } else if (isHebrewText) {
+            console.log(`✅ [strapi-integration] Preserving Hebrew text: "${currentText}"`);
           }
         });
       });
@@ -140,8 +146,15 @@ class StrapiIntegration {
     const dropdownLinks = document.querySelectorAll('.dropdown-menu-text-link-block, .nav-link');
     dropdownLinks.forEach(link => {
       const href = link.getAttribute('href') || '';
-      if (href.includes('career') && ui.navCareerCenter) {
+      const currentText = link.textContent.trim();
+      const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+
+      // Only update if NOT already Hebrew
+      if (href.includes('career') && ui.navCareerCenter && !isHebrewText) {
+        console.log(`🔄 [strapi-integration] Updating dropdown: "${currentText}" → "${ui.navCareerCenter}"`);
         link.textContent = ui.navCareerCenter;
+      } else if (href.includes('career') && isHebrewText) {
+        console.log(`✅ [strapi-integration] Preserving Hebrew dropdown text: "${currentText}"`);
       }
     });
   }

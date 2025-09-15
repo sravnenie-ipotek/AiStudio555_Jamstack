@@ -1,0 +1,137 @@
+/* Language Navigation Integration - Align language selector as proper nav item */
+
+/* Base language navigation item styling */
+.language-nav-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: auto !important;
+}
+
+.language-nav-select {
+  /* Match nav-link styling */
+  background: transparent !important;
+  border: none !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  font-family: inherit !important;
+  cursor: pointer !important;
+  padding: 8px 0 !important;
+  margin: 0 !important;
+  outline: none !important;
+  transition: color 0.2s ease !important;
+
+  /* Remove default select styling */
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+
+  /* Custom arrow */
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23fff' opacity='0.7' d='m0 0 2 2 2-2z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: calc(100% - 8px) center !important;
+  background-size: 8px !important;
+  padding-right: 20px !important;
+}
+
+.language-nav-select:hover,
+.language-nav-select:focus {
+  color: #ffd659 !important;
+  background-color: transparent !important;
+}
+
+/* Option styling */
+.language-nav-select option {
+  background: rgba(5, 5, 26, 0.98) !important;
+  color: white !important;
+  padding: 8px !important;
+}
+
+/* Desktop Responsive */
+@media screen and (min-width: 992px) {
+  .language-nav-item {
+    margin: 0 20px 0 20px !important;
+  }
+
+  .language-nav-select {
+    min-width: 40px !important;
+  }
+}
+
+/* Tablet */
+@media screen and (max-width: 991px) and (min-width: 768px) {
+  .language-nav-item {
+    margin: 0 15px !important;
+  }
+}
+
+/* Mobile - integrate into mobile menu */
+@media screen and (max-width: 767px) {
+  .language-nav-item {
+    display: block !important;
+    width: 100% !important;
+    margin: 10px 0 !important;
+    padding: 0 20px !important;
+  }
+
+  .language-nav-select {
+    width: 100% !important;
+    padding: 12px 20px 12px 0 !important;
+    background-color: rgba(5, 5, 26, 0.1) !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    font-size: 16px !important;
+  }
+
+  .language-nav-select:hover,
+  .language-nav-select:focus {
+    background-color: rgba(5, 5, 26, 0.2) !important;
+  }
+}
+
+/* RTL (Hebrew) Support */
+[dir="rtl"] .language-nav-select {
+  background-position: 8px center !important;
+  padding-left: 20px !important;
+  padding-right: 0 !important;
+}
+
+/* Current language indicator */
+.language-nav-select[data-current="true"] {
+  color: #ffd659 !important;
+  font-weight: 500 !important;
+}
+
+/* Focus states for accessibility */
+.language-nav-select:focus {
+  outline: 2px solid rgba(255, 214, 89, 0.5) !important;
+  outline-offset: 2px !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .language-nav-select {
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  }
+
+  .language-nav-select:hover,
+  .language-nav-select:focus {
+    border-color: #ffd659 !important;
+  }
+}
+
+/* Remove conflicting styles from desktop-language-selector-fix.css */
+#language-switcher {
+  display: none !important;
+}
+
+/* Ensure nav-menu doesn't have the margin that was added for the old absolute positioned selector */
+@media screen and (min-width: 992px) {
+  .nav-menu {
+    margin-right: 0 !important;
+  }
+
+  [dir="rtl"] .nav-menu {
+    margin-left: 0 !important;
+  }
+}

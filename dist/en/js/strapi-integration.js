@@ -105,7 +105,15 @@ class StrapiIntegration {
 
   updateNavigation(ui) {
     console.log('🧭 Updating navigation...');
-    
+
+    // Skip updating navigation if shared menu component already handled it
+    // The shared menu component properly handles Hebrew translations
+    const sharedMenuContainer = document.getElementById('shared-menu-container');
+    if (sharedMenuContainer && sharedMenuContainer.innerHTML.trim()) {
+      console.log('📌 Navigation already handled by shared menu component, skipping strapi-integration navigation update');
+      return;
+    }
+
     const navMappings = [
       { selectors: ['a[href="/home"], a[href="home.html"], a[href="../home.html"], a[href="index.html"]'], field: 'navHome' },
       { selectors: ['a[href="/courses"], a[href="courses.html"], a[href="../courses.html"]'], field: 'navCourses' },
@@ -120,9 +128,15 @@ class StrapiIntegration {
       mapping.selectors.forEach(selector => {
         const elements = document.querySelectorAll(selector);
         elements.forEach(el => {
-          if (ui[mapping.field]) {
-            console.log(`✅ Nav: "${el.textContent.trim()}" → "${ui[mapping.field]}"`);
+          const currentText = el.textContent.trim();
+          // Check if current text is already in Hebrew (preserve it!)
+          const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+
+          if (ui[mapping.field] && !isHebrewText) {
+            console.log(`✅ Nav: "${currentText}" → "${ui[mapping.field]}"`);
             el.textContent = ui[mapping.field];
+          } else if (isHebrewText) {
+            console.log(`✅ [strapi-integration] Preserving Hebrew text: "${currentText}"`);
           }
         });
       });
@@ -132,8 +146,15 @@ class StrapiIntegration {
     const dropdownLinks = document.querySelectorAll('.dropdown-menu-text-link-block, .nav-link');
     dropdownLinks.forEach(link => {
       const href = link.getAttribute('href') || '';
-      if (href.includes('career') && ui.navCareerCenter) {
+      const currentText = link.textContent.trim();
+      const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+
+      // Only update if NOT already Hebrew
+      if (href.includes('career') && ui.navCareerCenter && !isHebrewText) {
+        console.log(`🔄 [strapi-integration] Updating dropdown: "${currentText}" → "${ui.navCareerCenter}"`);
         link.textContent = ui.navCareerCenter;
+      } else if (href.includes('career') && isHebrewText) {
+        console.log(`✅ [strapi-integration] Preserving Hebrew dropdown text: "${currentText}"`);
       }
     });
   }
@@ -266,8 +287,15 @@ class StrapiIntegration {
   async loadPageContent() {
     try {
       const pageName = this.getPageName();
+
+      // Skip API call for teachers page (static content only)
+      if (!pageName) {
+        console.log('📄 Using static content only (no API endpoint needed)');
+        return;
+      }
+
       const content = await this.fetchPageContent(pageName);
-      
+
       if (content) {
         this.applyContent(content);
       }
@@ -283,13 +311,13 @@ class StrapiIntegration {
       return 'home-page';
     }
     if (path.includes('courses')) {
-      return 'courses-page';
+      return 'courses';
     }
     if (path.includes('about')) {
       return 'about-page';
     }
     if (path.includes('teachers')) {
-      return 'teachers-page';
+      return null; // Teachers page uses static content only
     }
     if (path.includes('career-center')) {
       return 'career-center-page';
@@ -302,6 +330,31 @@ class StrapiIntegration {
 
   async fetchPageContent(pageName) {
     try {
+      // Special handling for courses page - it returns an array, not page content
+      if (pageName === 'courses') {
+        console.log('📚 Loading courses data...');
+        const response = await fetch(
+          `${this.strapiUrl}/api/courses?locale=${this.currentLocale}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${this.apiToken}`
+            }
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        // For courses page, we'll handle the data differently
+        if (data.data && Array.isArray(data.data)) {
+          this.renderCoursesPage(data.data);
+        }
+        return null; // Return null since we handled it directly
+      }
+
+      // Regular page content handling
       const response = await fetch(
         `${this.strapiUrl}/api/${pageName}?locale=${this.currentLocale}&populate=deep`,
         {
@@ -310,11 +363,11 @@ class StrapiIntegration {
           }
         }
       );
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
       return data.data?.attributes;
     } catch (error) {
@@ -579,9 +632,77 @@ class StrapiIntegration {
     }
   }
 
+  renderCoursesPage(courses) {
+    console.log(`📚 Rendering ${courses.length} courses for locale: ${this.currentLocale}`);
+
+    // Update course cards in the featured courses section
+    const courseCards = document.querySelectorAll('.featured-courses-collection-item');
+
+    if (courseCards.length > 0) {
+      this.updateCourseCards(courseCards, courses);
+    }
+
+    // Also update any course grid if present
+    const courseGrid = document.querySelector('.courses-grid');
+    if (courseGrid && courses.length > 0) {
+      // Could implement dynamic grid population here if needed
+      console.log('✅ Course data loaded successfully');
+    }
+  }
+
+  updateCourseCards(courseCards, courses) {
+    courses.slice(0, courseCards.length).forEach((course, index) => {
+      const card = courseCards[index];
+      if (!card) return;
+
+      const attributes = course.attributes;
+
+      // Update course name
+      const nameElement = card.querySelector('.featured-courses-name');
+      if (nameElement && attributes.title) {
+        nameElement.textContent = attributes.title;
+      }
+
+      // Update description
+      const descElement = card.querySelector('.featured-courses-description');
+      if (descElement && attributes.description) {
+        descElement.textContent = attributes.description;
+      }
+
+      // Update price
+      const priceElement = card.querySelector('.featured-courses-price');
+      if (priceElement && attributes.price) {
+        priceElement.textContent = `$${attributes.price}`;
+      }
+
+      // Update duration
+      const durationElement = card.querySelector('.courses-video-session-time-text');
+      if (durationElement && attributes.duration) {
+        durationElement.textContent = attributes.duration;
+      }
+
+      // Update lessons
+      const lessonsElements = card.querySelectorAll('.courses-video-session-time-text');
+      if (lessonsElements[1] && attributes.lessons) {
+        lessonsElements[1].textContent = attributes.lessons;
+      }
+
+      // Update category
+      const categoryElement = card.querySelector('.featured-courses-categories-tag');
+      if (categoryElement && attributes.category) {
+        categoryElement.textContent = attributes.category;
+      }
+
+      // Update rating
+      const ratingElement = card.querySelector('.featured-courses-rating-text');
+      if (ratingElement && attributes.rating) {
+        ratingElement.textContent = attributes.rating;
+      }
+    });
+  }
+
   async renderCourses(courses) {
-    // This would render the course cards dynamically
-    // For now, we'll just update the existing course cards with data
+    // Keep old method for compatibility
     const courseCards = document.querySelectorAll('.featured-courses-collection-item');
     
     courses.slice(0, courseCards.length).forEach((course, index) => {

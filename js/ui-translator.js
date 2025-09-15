@@ -103,9 +103,19 @@ class UITranslator {
     navItems.forEach(item => {
       const elements = document.querySelectorAll(item.selector);
       elements.forEach(el => {
-        if (ui[item.field] && el.textContent.trim() !== ui[item.field]) {
-          console.log(`✅ Nav: "${el.textContent.trim()}" → "${ui[item.field]}"`);
+        const currentText = el.textContent.trim();
+
+        // Check if current text is already in Hebrew (preserve it!)
+        const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+
+        // Only update if we have valid translations AND current text isn't already Hebrew
+        if (ui[item.field] && currentText !== ui[item.field] && !isHebrewText) {
+          console.log(`✅ Nav: "${currentText}" → "${ui[item.field]}"`);
           el.textContent = ui[item.field];
+        } else if (isHebrewText) {
+          console.log(`✅ Preserving Hebrew nav text: "${currentText}"`);
+        } else if (!ui[item.field]) {
+          console.log(`⚠️ No translation for ${item.field}, preserving: "${currentText}"`);
         }
       });
     });
@@ -117,9 +127,21 @@ class UITranslator {
       if (item.closest('#shared-menu-container')) {
         return;
       }
+
       const href = item.getAttribute('href') || '';
-      if (href.includes('career') && ui.navCareerCenter) {
+      const currentText = item.textContent.trim();
+
+      // Check if current text is already in Hebrew (preserve it!)
+      const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+
+      // Only update if we have valid translations AND current text isn't already Hebrew
+      if (href.includes('career') && ui.navCareerCenter && !isHebrewText) {
+        console.log(`🔄 Updating dropdown item: "${currentText}" → "${ui.navCareerCenter}"`);
         item.textContent = ui.navCareerCenter;
+      } else if (href.includes('career') && isHebrewText) {
+        console.log(`✅ Preserving existing Hebrew text: "${currentText}"`);
+      } else if (href.includes('career') && !ui.navCareerCenter) {
+        console.log(`⚠️ No translation available for career link, preserving existing text: "${currentText}"`);
       }
     });
   }

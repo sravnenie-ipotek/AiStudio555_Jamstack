@@ -1,21 +1,19 @@
-<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Enhanced for AI Studio E-Learning Platform  -->
-<html data-wf-page="career-orientation-page" data-wf-site="68b7601d918996218465c4a6" lang="he" dir="rtl">
-<head>
+<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Enhanced for AI Studio E-Learning Platform  --><html data-wf-page="career-orientation-page" data-wf-site="68b7601d918996218465c4a6" lang="he" dir="rtl"><head>
   <meta charset="utf-8">
-  <title>Career Orientation - AI Studio E-Learning Platform</title>
+  <title>Career Orientation - סטודיו AI E-Learning Platform</title>
   <meta content="Discover your perfect AI/ML career path with personalized guidance and comprehensive skills assessment" name="description">
   <meta content="Career Orientation - AI Studio E-Learning Platform" property="og:title">
   <meta content="Career Orientation - AI Studio E-Learning Platform" property="twitter:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
-  <link href="/css/normalize.css" rel="stylesheet" type="text/css">
-  <link href="/css/webflow.css" rel="stylesheet" type="text/css">
-  <link href="/css/aizeks-marvelous-site.webflow.css" rel="stylesheet" type="text/css">
-  <link href="/css/enhanced-sections.css" rel="stylesheet" type="text/css">
-  <link href="/css/style-guide-compliance.css" rel="stylesheet" type="text/css">
-  <link href="/css/unified-navigation.css" rel="stylesheet" type="text/css">
-  <link href="/css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
-  <link href="/css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="../css/webflow.css" rel="stylesheet" type="text/css">
+  <link href="../css/aizeks-marvelous-site.webflow.css" rel="stylesheet" type="text/css">
+  <link href="../css/enhanced-sections.css" rel="stylesheet" type="text/css">
+  <link href="../css/style-guide-compliance.css" rel="stylesheet" type="text/css">
+  <link href="../css/unified-navigation.css" rel="stylesheet" type="text/css">
+  <link href="css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
   <link href="/css/mobile-responsive-fix.css" rel="stylesheet" type="text/css">
   <link href="/css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -206,13 +204,357 @@
     }
   </style>
 
-  <link href="../css/mobile-fix.css" rel="stylesheet" type="text/css">
-  <link href="../css/teachmeskills-career-orientation.css" rel="stylesheet" type="text/css">
+  <link href="css/mobile-fix.css" rel="stylesheet" type="text/css">
+
+  <!-- Enhanced Career Orientation Styles -->
+  <style>
+    /* Hero Section Enhancement */
+    .hero-value-proposition {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 40px;
+      margin: 40px auto;
+      max-width: 800px;
+      text-align: center;
+    }
+
+    .hero-problem-statement {
+      font-size: 18px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.9);
+      margin: 24px 0;
+    }
+
+    .hero-main-cta {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 16px 32px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+      margin-top: 24px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hero-main-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      color: white;
+    }
+
+    /* Challenge Cards Enhancement */
+    .challenge-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .challenge-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+    }
+
+    .challenge-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+    }
+
+    .challenge-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Work Algorithm Steps */
+    .work-algorithm-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    .algorithm-step {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .algorithm-step:hover {
+      transform: translateY(-4px);
+    }
+
+    .algorithm-step::before {
+      content: attr(data-step);
+      position: absolute;
+      top: -15px;
+      left: 32px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    /* Expected Outcomes Section */
+    .expected-outcomes {
+      background: #f8f9fa;
+      padding: 80px 0;
+    }
+
+    .outcomes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    .outcome-item {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      transition: transform 0.3s ease;
+    }
+
+    .outcome-item:hover {
+      transform: translateY(-4px);
+    }
+
+    .outcome-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .outcome-text {
+      font-weight: 600;
+      color: #04193f;
+    }
+
+    /* Expert Profile Enhancement */
+    .expert-profile-enhanced {
+      background: white;
+      border-radius: 20px;
+      padding: 48px;
+      box-shadow: 0 16px 64px rgba(0, 0, 0, 0.1);
+      margin-top: 40px;
+    }
+
+    .expert-header {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      margin-bottom: 24px;
+    }
+
+    .expert-photo img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .expert-info h3 {
+      margin: 0 0 8px 0;
+      font-size: 28px;
+      color: #04193f;
+    }
+
+    .expert-title {
+      font-size: 18px;
+      color: #6a7280;
+      margin: 0 0 16px 0;
+    }
+
+    .expert-stats {
+      display: flex;
+      gap: 24px;
+    }
+
+    .expert-stat {
+      text-align: center;
+    }
+
+    .expert-stat-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .expert-stat-label {
+      font-size: 14px;
+      color: #6a7280;
+      margin-top: 4px;
+    }
+
+    .expert-bio {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4a5568;
+    }
+
+    /* Form Enhancement */
+    .simple-consultation-form {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 16px 64px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      margin: 40px auto;
+    }
+
+    .form-field {
+      margin-bottom: 24px;
+    }
+
+    .form-field label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #04193f;
+    }
+
+    .form-field input {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .form-field input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .submit-button {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 16px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .submit-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .hero-value-proposition {
+        padding: 24px;
+        margin: 20px;
+      }
+
+      .challenge-cards-grid,
+      .work-algorithm-steps,
+      .outcomes-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .expert-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .expert-stats {
+        justify-content: center;
+      }
+
+      .simple-consultation-form {
+        margin: 20px;
+        padding: 24px;
+      }
+    }
+  </style>
 </head>
 <body>
+    <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+      <select onchange="switchLanguage(this.value)" style="padding: 8px; border-radius: 4px;">
+        <option value="en">English</option><option value="ru">Russian</option><option value="he" selected="">Hebrew</option>
+      </select>
+    </div>
+    <script>
+      function switchLanguage(lang) {
+        const currentPath = window.location.pathname;
+        const pathParts = currentPath.split('/').filter(p => p);
+        
+        // Remove current language from path
+        if (['en', 'ru', 'he'].includes(pathParts[0])) {
+          pathParts.shift();
+        }
+        
+        // Navigate to new language
+        const newPath = '/' + lang + '/' + pathParts.join('/');
+        window.location.href = newPath;
+      }
+    </script>
+  
   <div class="page-wrapper">
     <!-- Navigation (Updated with Career Services dropdown) -->
-    <div id="shared-menu-container"></div>
+    <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
+      <div class="container">
+        <div class="navbar-content">
+          <a href="home.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
+          <nav role="navigation" class="nav-menu w-nav-menu">
+            <a href="home.html" class="nav-link w-nav-link">Home</a>
+            <a href="courses.html" class="nav-link w-nav-link">Courses</a>
+            <a href="teachers.html" class="nav-link w-nav-link">Teachers</a>
+            <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
+              <div class="dropdown-toggle w-dropdown-toggle">
+                <div class="dropdown-toggle-text-block">Career Services</div>
+                <div class="dropdown-toggle-arrow-2">▼</div>
+              </div>
+              <nav class="dropdown-list w-dropdown-list">
+                <a href="career-orientation.html" aria-current="page" class="dropdown-menu-text-link-block w-inline-block w--current">
+                  <div>Career Orientation</div>
+                </a>
+                <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block">
+                  <div>Career Center</div>
+                </a>
+              </nav>
+            </div>
+            <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
+          </nav>
+          <div class="navbar-button-wrapper">
+            <div class="menu-button w-nav-button">
+              <div data-is-ix2-target="1" class="hamburger-menu-icon" data-w-id="9700d956-7e80-623a-3836-d267f1fdd0f6" data-animation-type="lottie" data-src="https://uploads-ssl.webflow.com/6649cc3a1ea038d81fed488f/665c6513c402f5112b50428d_Hamburger%20White.lottie" data-loop="0" data-direction="1" data-autoplay="0" data-renderer="svg" data-duration="0" data-ix2-initial-state="0"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -222,12 +564,12 @@
       <div class="container">
         <div class="inner-banner-content">
           <div class="inner-banner-title-wrapper">
-            <h1 class="inner-banner-title">כיוון קריירה</h1>
+            <h1 class="inner-banner-title">Career Orientation</h1>
           </div>
           <div class="inner-banner-text-link-wrapper">
-            <a href="home.html" class="inner-banner-text-link">בית</a>
+            <a href="home.html" class="inner-banner-text-link">Home</a>
             <div class="inner-banner-text-link-arrow">|</div>
-            <a href="career-orientation.html" aria-current="page" class="inner-banner-text-link w--current">כיוון קריירה</a>
+            <a href="career-orientation.html" aria-current="page" class="inner-banner-text-link w--current">Career Orientation</a>
           </div>
         </div>
       </div>
@@ -239,14 +581,14 @@
         <div data-w-id="orientation-hero" class="hero-value-proposition">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle" style="color: rgba(255,255,255,0.9);">ייעוץ קריירה מקצועי</div>
+            <div class="section-subtitle" style="color: rgba(255,255,255,0.9);">Professional Career Guidance</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color: white; margin-bottom: 24px;">מצאו את הקריירה המושלמת שלכם בעולם הטכנולוגיה</h2>
-          <p class="hero-problem-statement">מרגישים אבודים בבחירת המקצוע? לא יודעים איך לעבור לתחום הטכנולוגיה? אנחנו כאן כדי לעזור לכם למצוא את הכיוון הנכון ולבנות קריירה מצליחה.</p>
+          <h2 class="section-title featured-courses" style="color: white; margin-bottom: 24px;">Find Your Perfect Career Path in Technology</h2>
+          <p class="hero-problem-statement">Feeling lost in choosing your career? Don't know how to transition to the tech field? We're here to help you find the right direction and build a successful career.</p>
 
           <a href="#consultation-form" class="hero-main-cta">
-            📞 קבלו ייעוץ חינם עכשיו
+            📞 Get Free Consultation Now
           </a>
         </div>
       </div>
@@ -258,33 +600,33 @@
         <div data-w-id="problem-title" style="opacity:1" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle" style="color: #0080ff;">האתגרים הנפוצים</div>
+            <div class="section-subtitle" style="color: #0080ff;">Common Career Challenges</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color: #04193f;">מתלבטים בבחירת הקריירה שלכם?</h2>
-          <p class="section-description-text featured-courses" style="color: #6a7280;">אתם לא לבד. רבים מתמודדים עם האתגרים הבאים בדרך למציאת הקריירה המתאימה.</p>
+          <h2 class="section-title featured-courses" style="color: #04193f;">Struggling with Your Career Path?</h2>
+          <p class="section-description-text featured-courses" style="color: #6a7280;">You're not alone. Many professionals face these challenges when trying to find fulfillment and growth in their careers.</p>
         </div>
-
+        
         <div data-w-id="problem-grid" style="opacity:1" class="challenge-cards-grid">
           <div class="challenge-card">
             <div class="challenge-icon">😓</div>
-            <h3>שחיקה ועייפות מהעבודה הנוכחית</h3>
-            <p>מרגישים תקועים בעבודה שלא מספקת אתכם ולא רואים אפשרויות להתקדמות או לשינוי משמעותי.</p>
+            <h3>Work Burnout and Fatigue</h3>
+            <p>Feeling stuck in a job that doesn't fulfill you and seeing no opportunities for meaningful advancement or change.</p>
           </div>
           <div class="challenge-card">
             <div class="challenge-icon">😰</div>
-            <h3>חוסר ביטחון תעסוקתי</h3>
-            <p>חשש מפיטורים, אוטומציה או שינויים בשוק העבודה שעלולים לפגוע בביטחון הכלכלי שלכם.</p>
+            <h3>Job Insecurity</h3>
+            <p>Fear of layoffs, automation, or market changes that could impact your financial stability.</p>
           </div>
           <div class="challenge-card">
             <div class="challenge-icon">📈</div>
-            <h3>היעדר הזדמנויות צמיחה</h3>
-            <p>תחושה שהגעתם לתקרת זכוכית במקצוע הנוכחי וחסרות אפשרויות להתפתחות מקצועית.</p>
+            <h3>Lack of Growth Opportunities</h3>
+            <p>Feeling like you've hit a glass ceiling in your current profession with no opportunities for professional development.</p>
           </div>
           <div class="challenge-card">
             <div class="challenge-icon">🤔</div>
-            <h3>רצון לשינוי אך חוסר כיוון</h3>
-            <p>יודעים שרוצים לשנות כיוון מקצועי אבל לא בטוחים לאיזה תחום לעבור ואיך להתחיל.</p>
+            <h3>Want Change But Lack Direction</h3>
+            <p>You know you want to change career direction but unsure which field to transition to and how to start.</p>
           </div>
         </div>
       </div>
@@ -296,29 +638,29 @@
         <div data-w-id="solution-title" style="opacity:1" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">אלגוריתם העבודה שלנו</div>
+            <div class="section-subtitle">Our Work Algorithm</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">4 שלבים לקריירה מצליחה</h2>
-          <p class="section-description-text featured-courses" style="color:#04193f;">התהליך המקצועי שלנו יוביל אתכם צעד אחר צעד למציאת הקריירה המתאימה.</p>
+          <h2 class="section-title featured-courses" style="color:#04193f;">4 Steps to a Successful Career</h2>
+          <p class="section-description-text featured-courses" style="color:#04193f;">Our professional process will guide you step by step to finding the right career path.</p>
         </div>
 
         <div data-w-id="solution-features" style="opacity:1" class="work-algorithm-steps">
           <div class="algorithm-step" data-step="1">
-            <h3>השאירו בקשה באתר</h3>
-            <p>מילוי פרטים בסיסיים ותיאום פגישת ייעוץ ראשונית. התהליך לא לוקח יותר מ-3 דקות.</p>
+            <h3>Submit Request on Website</h3>
+            <p>Fill out basic details and schedule an initial consultation. The process takes no more than 3 minutes.</p>
           </div>
           <div class="algorithm-step" data-step="2">
-            <h3>ייעוץ ראשוני חינם (עד 20 דקות)</h3>
-            <p>שיחת ייעוץ אישית עם יועץ קריירה מקצועי להכרת המצב הנוכחי והמטרות שלכם.</p>
+            <h3>Free Initial Consultation (up to 20 minutes)</h3>
+            <p>Personal consultation session with a professional career advisor to understand your current situation and goals.</p>
           </div>
           <div class="algorithm-step" data-step="3">
-            <h3>עבודה עם יועץ קריירה</h3>
-            <p>ליווי מקצועי מותאם אישית, בדיקת כישורים קיימים וזיהוי נקודות חוזק ותחומי התמחות.</p>
+            <h3>Work with Career Consultant</h3>
+            <p>Professional guidance tailored personally, skills assessment and identification of strengths and areas of expertise.</p>
           </div>
           <div class="algorithm-step" data-step="4">
-            <h3>בניית תכנית קריירה ישימה</h3>
-            <p>קבלת תוכנית עבודה מפורטת עם לוחות זמנים, המלצות ללימודים ואסטרטגיית חיפוש עבודה.</p>
+            <h3>Build Actionable Career Plan</h3>
+            <p>Receive a detailed work plan with timelines, study recommendations and job search strategy.</p>
           </div>
         </div>
       </div>
@@ -330,29 +672,29 @@
         <div data-w-id="outcomes-title" style="opacity:1" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">מה תקבלו מהתהליך</div>
+            <div class="section-subtitle">What You'll Get from the Process</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">התוצאות הצפויות</h2>
-          <p class="section-description-text featured-courses" style="color:#04193f;">בסיום התהליך תהיו מצוידים בכל הכלים הדרושים להצלחה מקצועית.</p>
+          <h2 class="section-title featured-courses" style="color:#04193f;">Expected Results</h2>
+          <p class="section-description-text featured-courses" style="color:#04193f;">Upon completion of the process, you'll be equipped with all the tools needed for professional success.</p>
         </div>
 
         <div data-w-id="outcomes-grid" style="opacity:1" class="outcomes-grid">
           <div class="outcome-item">
             <div class="outcome-icon">🎯</div>
-            <div class="outcome-text">ניתוח נקודות החוזק שלכם</div>
+            <div class="outcome-text">Analysis of your strengths</div>
           </div>
           <div class="outcome-item">
             <div class="outcome-icon">💼</div>
-            <div class="outcome-text">הכנה לראיונות עבודה</div>
+            <div class="outcome-text">Job interview preparation</div>
           </div>
           <div class="outcome-item">
             <div class="outcome-icon">💻</div>
-            <div class="outcome-text">המלצות למקצועות IT מתאימים</div>
+            <div class="outcome-text">Recommendations for suitable IT careers</div>
           </div>
           <div class="outcome-item">
             <div class="outcome-icon">📊</div>
-            <div class="outcome-text">פרופיל פסיכולוגי והתאמה</div>
+            <div class="outcome-text">Psychological profile and matching</div>
           </div>
         </div>
       </div>
@@ -364,47 +706,47 @@
         <div data-w-id="process-title-main" style="opacity:1" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">תהליך בן 4 שלבים</div>
+            <div class="section-subtitle" id="process-subtitle">4-Step Process</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">4 שלבים לקריירה מצליחה</h2>
-          <p class="section-description-text featured-courses" style="color:#04193f;">התהליך המוכח שלנו לבניית קריירה מצליחה בטכנולוגיה</p>
+          <h2 class="section-title featured-courses" style="color:#04193f;" id="process-title">4 Steps to a Successful Career</h2>
+          <p class="section-description-text featured-courses" style="color:#04193f;" id="process-description">Our proven process for building a successful career in technology</p>
         </div>
-        
+
         <div data-w-id="process-steps-timeline" style="opacity:1" class="process-steps-timeline">
           <div class="process-step-item">
             <div class="process-step-number-large">1</div>
             <div class="process-step-content-large">
-              <h3>השאירו בקשה באתר</h3>
-              <p>מלאו טופס קצר עם הפרטים שלכם ונחזור אליכם תוך 24 שעות</p>
-              <div class="process-step-duration">משך זמן: 3 דקות</div>
+              <h3 id="step-1-title">Submit Request on Website</h3>
+              <p id="step-1-desc">Fill out a short form with your details and we'll get back to you within 24 hours</p>
+              <div class="process-step-duration" id="step-1-duration">Duration: 3 minutes</div>
             </div>
           </div>
-          
+
           <div class="process-step-item">
             <div class="process-step-number-large">2</div>
             <div class="process-step-content-large">
-              <h3>ייעוץ ראשוני חינם</h3>
-              <p>שיחת ייעוץ של עד 20 דקות להבנת הצרכים והמטרות שלכם</p>
-              <div class="process-step-duration">משך זמן: עד 20 דקות</div>
+              <h3 id="step-2-title">Free Initial Consultation</h3>
+              <p id="step-2-desc">Consultation call up to 20 minutes to understand your needs and goals</p>
+              <div class="process-step-duration" id="step-2-duration">Duration: up to 20 minutes</div>
             </div>
           </div>
-          
+
           <div class="process-step-item">
             <div class="process-step-number-large">3</div>
             <div class="process-step-content-large">
-              <h3>עבודה עם יועץ קריירה</h3>
-              <p>פגישות ייעוץ מעמיקות לבניית אסטרטגיה אישית</p>
-              <div class="process-step-duration">משך זמן: מותאם אישית</div>
+              <h3 id="step-3-title">Work with Career Consultant</h3>
+              <p id="step-3-desc">In-depth consultation sessions to build a personalized strategy</p>
+              <div class="process-step-duration" id="step-3-duration">Duration: customized</div>
             </div>
           </div>
-          
+
           <div class="process-step-item">
             <div class="process-step-number-large">4</div>
             <div class="process-step-content-large">
-              <h3>בניית תכנית קריירה</h3>
-              <p>תכנית פעולה מפורטת עם יעדים ברורים ולוחות זמנים</p>
-              <div class="process-step-duration">משך זמן: תוך 48 שעות</div>
+              <h3 id="step-4-title">Build Career Plan</h3>
+              <p id="step-4-desc">Detailed action plan with clear goals and timelines</p>
+              <div class="process-step-duration" id="step-4-duration">Duration: within 48 hours</div>
             </div>
           </div>
         </div>
@@ -414,7 +756,7 @@
     <!-- AI/ML Career Paths Section -->
     <section class="section ai-career-paths">
       <div class="container">
-        <div data-w-id="career-paths-title" style="opacity:1" class="section-title-wrapper align-center">
+        <div data-w-id="career-paths-title" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
             <div class="section-subtitle">Career Specializations</div>
@@ -424,61 +766,61 @@
           <p class="section-description-text featured-courses" style="color:#04193f;">Explore the most in-demand AI specializations and discover which path aligns with your interests and skills.</p>
         </div>
         
-        <div data-w-id="career-paths-grid" style="opacity:1" class="career-paths-grid">
+        <div data-w-id="career-paths-grid" style="opacity:0" class="career-paths-grid">
           <div class="career-path-card">
             <div class="career-path-icon">🤖</div>
-            <h3>Machine Learning Engineer</h3>
-            <p>Build and deploy ML models that power intelligent applications and systems.</p>
-            <div class="career-path-salary">Average: $130,000/year</div>
+            <h3 id="career-ml-engineer-title">Machine Learning Engineer</h3>
+            <p id="career-ml-engineer-desc">Build and deploy ML models that power intelligent applications and systems.</p>
+            <div class="career-path-salary" id="career-ml-engineer-salary">Average: $130,000/year</div>
           </div>
-          
+
           <div class="career-path-card">
             <div class="career-path-icon">📊</div>
-            <h3>Data Scientist</h3>
-            <p>Extract insights from complex data to drive business decisions and strategy.</p>
-            <div class="career-path-salary">Average: $120,000/year</div>
+            <h3 id="career-data-scientist-title">Data Scientist</h3>
+            <p id="career-data-scientist-desc">Extract insights from complex data to drive business decisions and strategy.</p>
+            <div class="career-path-salary" id="career-data-scientist-salary">Average: $120,000/year</div>
           </div>
-          
+
           <div class="career-path-card">
             <div class="career-path-icon">🔬</div>
-            <h3>AI Research Scientist</h3>
-            <p>Pioneer new AI technologies and advance the field through cutting-edge research.</p>
-            <div class="career-path-salary">Average: $150,000/year</div>
+            <h3 id="career-ai-researcher-title">AI Research Scientist</h3>
+            <p id="career-ai-researcher-desc">Pioneer new AI technologies and advance the field through cutting-edge research.</p>
+            <div class="career-path-salary" id="career-ai-researcher-salary">Average: $150,000/year</div>
           </div>
-          
+
           <div class="career-path-card">
             <div class="career-path-icon">👁️</div>
-            <h3>Computer Vision Specialist</h3>
-            <p>Develop AI systems that can analyze and understand visual information.</p>
-            <div class="career-path-salary">Average: $135,000/year</div>
+            <h3 id="career-cv-specialist-title">Computer Vision Specialist</h3>
+            <p id="career-cv-specialist-desc">Develop AI systems that can analyze and understand visual information.</p>
+            <div class="career-path-salary" id="career-cv-specialist-salary">Average: $135,000/year</div>
           </div>
-          
+
           <div class="career-path-card">
             <div class="career-path-icon">💬</div>
-            <h3>NLP Engineer</h3>
-            <p>Create AI systems that understand and generate human language.</p>
-            <div class="career-path-salary">Average: $125,000/year</div>
+            <h3 id="career-nlp-engineer-title">NLP Engineer</h3>
+            <p id="career-nlp-engineer-desc">Create AI systems that understand and generate human language.</p>
+            <div class="career-path-salary" id="career-nlp-engineer-salary">Average: $125,000/year</div>
           </div>
-          
+
           <div class="career-path-card">
             <div class="career-path-icon">⚙️</div>
-            <h3>MLOps Engineer</h3>
-            <p>Build infrastructure and pipelines for deploying ML models at scale.</p>
-            <div class="career-path-salary">Average: $140,000/year</div>
+            <h3 id="career-mlops-engineer-title">MLOps Engineer</h3>
+            <p id="career-mlops-engineer-desc">Build infrastructure and pipelines for deploying ML models at scale.</p>
+            <div class="career-path-salary" id="career-mlops-engineer-salary">Average: $140,000/year</div>
           </div>
-          
+
           <div class="career-path-card">
             <div class="career-path-icon">📱</div>
-            <h3>AI Product Manager</h3>
-            <p>Guide the development of AI-powered products and features.</p>
-            <div class="career-path-salary">Average: $145,000/year</div>
+            <h3 id="career-ai-pm-title">AI Product Manager</h3>
+            <p id="career-ai-pm-desc">Guide the development of AI-powered products and features.</p>
+            <div class="career-path-salary" id="career-ai-pm-salary">Average: $145,000/year</div>
           </div>
-          
+
           <div class="career-path-card">
             <div class="career-path-icon">🤖</div>
-            <h3>Robotics Engineer</h3>
-            <p>Design intelligent robotic systems that interact with the physical world.</p>
-            <div class="career-path-salary">Average: $110,000/year</div>
+            <h3 id="career-robotics-title">Robotics Engineer</h3>
+            <p id="career-robotics-desc">Design intelligent robotic systems that interact with the physical world.</p>
+            <div class="career-path-salary" id="career-robotics-salary">Average: $110,000/year</div>
           </div>
         </div>
       </div>
@@ -487,36 +829,36 @@
     <!-- Expert Profile Section -->
     <section class="section expert-profile">
       <div class="container">
-        <div data-w-id="expert-title" style="opacity:1" class="section-title-wrapper align-center">
+        <div data-w-id="expert-title" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
             <div class="section-subtitle">Meet Your Guide</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">AI Career Guidance Specialist</h2>
+          <h2 class="section-title featured-courses" style="color:#04193f;">Career Guidance Specialist</h2>
         </div>
         
         <div data-w-id="expert-profile-card" style="opacity:1" class="expert-profile-enhanced">
           <div class="expert-header">
             <div class="expert-photo">
-              <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop&crop=face" alt="יוליה רז'בובה">
+              <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&amp;h=300&amp;fit=crop&amp;crop=face" alt="Julia Razhbova">
             </div>
             <div class="expert-info">
-              <h3>יוליה רז'בובה</h3>
-              <p class="expert-title">HR Business Partner ויועצת קריירה</p>
+              <h3>Julia Razhbova</h3>
+              <p class="expert-title">HR Business Partner &amp; Career Consultant</p>
               <div class="expert-stats">
                 <div class="expert-stat">
                   <div class="expert-stat-number">500+</div>
-                  <div class="expert-stat-label">ייעוצים אישיים</div>
+                  <div class="expert-stat-label">Personal Consultations</div>
                 </div>
                 <div class="expert-stat">
                   <div class="expert-stat-number">2000+</div>
-                  <div class="expert-stat-label">בוגרים</div>
+                  <div class="expert-stat-label">Graduates</div>
                 </div>
               </div>
             </div>
           </div>
-          <p class="expert-bio">יוליה בעלת ניסיון עשיר בתחום משאבי האנוש וייעוץ קריירה. היא עוזרת לאנשים למצוא את הכיוון המקצועי הנכון ולהשיג את המטרות הקריירה שלהם. יוליה מתמחה בליווי אנשים המעוניינים לעבור לתחום הטכנולוגיה והיי-טק.</p>
+          <p class="expert-bio">Julia has extensive experience in human resources and career consulting. She helps people find the right professional direction and achieve their career goals. Julia specializes in guiding people who want to transition to the technology and high-tech field.</p>
         </div>
       </div>
     </section>
@@ -524,7 +866,7 @@
     <!-- Partner Companies Section -->
     <section class="section partner-companies">
       <div class="container">
-        <div data-w-id="companies-title" style="opacity:1" class="section-title-wrapper align-center">
+        <div data-w-id="companies-title" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
             <div class="section-subtitle">Success Stories</div>
@@ -534,7 +876,7 @@
           <p class="section-description-text featured-courses" style="color:#04193f;">Our career guidance has helped professionals secure positions at leading AI companies worldwide.</p>
         </div>
         
-        <div data-w-id="companies-logos" style="opacity:1" class="w-layout-grid included-grid">
+        <div data-w-id="companies-logos" style="opacity:0" class="w-layout-grid included-grid">
           <div class="included-single">
             <div class="included-icon-wrapper">
               <div style="width: 80px; height: 40px; background: #4285F4; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">Google</div>
@@ -619,36 +961,36 @@
     </section>
 
     <!-- Application Form Section -->
-    <section class="section career-assessment-form" id="consultation-form">
+    <section class="section career-assessment-form" id="assessment-form">
       <div class="container">
-        <div data-w-id="form-title" style="opacity:1" class="section-title-wrapper align-center">
+        <div data-w-id="form-title" style="opacity:0" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">התחל עכשיו</div>
+            <div class="section-subtitle">Get Started</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color:#04193f;">קבלו ייעוץ חינם</h2>
-          <p class="section-description-text featured-courses" style="color:#010b1c;">השאירו פרטים ונחזור אליכם תוך 24 שעות לתיאום פגישת ייעוץ ללא עלות.</p>
+          <h2 class="section-title featured-courses" style="color:#04193f;">Career Assessment Application</h2>
+          <p class="section-description-text featured-courses" style="color:#010b1c;">Complete this form to begin your AI career discovery journey. We'll schedule your free consultation within 24 hours.</p>
         </div>
-
-        <div data-w-id="assessment-form-wrapper" style="opacity:1" class="simple-consultation-form">
+        
+        <div data-w-id="assessment-form-wrapper" style="opacity:0" class="simple-consultation-form">
           <form id="career-consultation-form">
             <div class="form-field">
-              <label for="full-name">שם מלא *</label>
-              <input type="text" name="name" id="full-name" required placeholder="הכניסו את השם המלא שלכם">
+              <label for="full-name">Full Name *</label>
+              <input type="text" name="name" id="full-name" required="" placeholder="Enter your full name">
             </div>
 
             <div class="form-field">
-              <label for="phone">טלפון *</label>
-              <input type="tel" name="phone" id="phone" required placeholder="+972-XX-XXXXXXX">
+              <label for="phone">Phone *</label>
+              <input type="tel" name="phone" id="phone" required="" placeholder="+1 (555) 123-4567">
             </div>
 
             <button type="submit" class="submit-button">
-              להשאיר בקשה
+              Submit Request
             </button>
 
             <div style="margin-top: 16px; font-size: 14px; color: #6a7280; text-align: center;">
-              <p>במילוי הטופס אתם מסכימים לקבל תוכן שיווקי. אנחנו מכבדים את הפרטיות שלכם.</p>
+              <p>By filling out this form you agree to receive marketing content. We respect your privacy.</p>
             </div>
           </form>
         </div>
@@ -666,11 +1008,11 @@
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  </div>
+      </section></div>
+    
+  
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=68b7601d918996218465c4a6" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-  <script src="../js/webflow.js" type="text/javascript"></script>
+  <script src="js/webflow.js" type="text/javascript"></script>
 
   <!-- Language Switcher -->
   <script>
@@ -864,66 +1206,176 @@
     })();
   </script>
 
-  <!-- Hebrew Database Integration Script - DISABLED for static content -->
-  <!-- <script>
-    // Database integration disabled to preserve static Hebrew content
-    // Remove this comment block to re-enable dynamic content loading
-  </script> -->
-
-  <script src="../js/navigation-responsive-fix.js"></script>
-
-  <!-- Hebrew Translations Fix - Must load before API integration -->
-  <!-- Disabled for static career orientation page -->
-  <!-- <script src="../js/hebrew-translations-fix.js"></script> -->
-  <!-- API Integration Scripts -->
-  <!-- <script src="../js/webflow-strapi-integration.js"></script> -->
-  <!-- <script src="../js/strapi-integration.js"></script> -->
-  <!-- <script src="../js/ui-translator.js"></script> -->
-  <script src="../js/mobile-menu-toggle-fix.js"></script>
-
+  <!-- Career Orientation Dynamic Content Script -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      if (typeof window.MasterFooterLoader !== 'undefined') {
-        const footerLoader = new window.MasterFooterLoader();
-        footerLoader.loadFooter();
+    (async function loadCareerOrientationContent() {
+      console.log('Loading Career Orientation content...');
+
+      // Detect current language from URL path
+      const pathParts = window.location.pathname.split('/');
+      const currentLang = pathParts.find(part => ['en', 'ru', 'he'].includes(part)) || 'en';
+
+      const API_BASE = window.location.hostname === 'localhost'
+        ? 'http://localhost:3000/api'
+        : 'https://aistudio555jamstack-production.up.railway.app/api';
+
+      try {
+        const response = await fetch(`${API_BASE}/career-orientation-page?locale=${currentLang}`);
+        console.log(`${currentLang} API response status:`, response.status);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(`${currentLang} Career Orientation data received:`, data);
+
+        if (data && data.data && data.data.attributes) {
+          const content = data.data.attributes;
+          updateCareerOrientationContent(content, currentLang);
+        } else {
+          console.log(`${currentLang} content structure not as expected:`, data);
+        }
+      } catch (error) {
+        console.error('Error loading career orientation content:', error);
+        // Fallback to English if locale-specific content fails
+        if (currentLang !== 'en') {
+          try {
+            const fallbackResponse = await fetch(`${API_BASE}/career-orientation-page?locale=en`);
+            if (fallbackResponse.ok) {
+              const fallbackData = await fallbackResponse.json();
+              if (fallbackData && fallbackData.data && fallbackData.data.attributes) {
+                updateCareerOrientationContent(fallbackData.data.attributes, 'en');
+              }
+            }
+          } catch (fallbackError) {
+            console.error('Fallback to English also failed:', fallbackError);
+          }
+        }
       }
-    });
+
+      function updateCareerOrientationContent(content, language) {
+        console.log(`Updating ${language} Career Orientation content...`);
+
+        // Update 4-Step Process Cards
+        updateElementText('#process-title', content.processTitle || '4 Steps to a Successful Career');
+        updateElementText('#process-subtitle', content.processSubtitle || '4-Step Process');
+        updateElementText('#process-description', content.processDescription || 'Our proven process for building a successful career in technology');
+
+        // Step 1
+        updateElementText('#step-1-title', content.step1Title || content.step_1_title);
+        updateElementText('#step-1-desc', content.step1Desc || content.step_1_desc);
+        updateElementText('#step-1-duration', content.step1Duration || content.step_1_duration);
+
+        // Step 2
+        updateElementText('#step-2-title', content.step2Title || content.step_2_title);
+        updateElementText('#step-2-desc', content.step2Desc || content.step_2_desc);
+        updateElementText('#step-2-duration', content.step2Duration || content.step_2_duration);
+
+        // Step 3
+        updateElementText('#step-3-title', content.step3Title || content.step_3_title);
+        updateElementText('#step-3-desc', content.step3Desc || content.step_3_desc);
+        updateElementText('#step-3-duration', content.step3Duration || content.step_3_duration);
+
+        // Step 4
+        updateElementText('#step-4-title', content.step4Title || content.step_4_title);
+        updateElementText('#step-4-desc', content.step4Desc || content.step_4_desc);
+        updateElementText('#step-4-duration', content.step4Duration || content.step_4_duration);
+
+        // Update AI/Tech Career Specializations Cards
+        // Machine Learning Engineer
+        updateElementText('#career-ml-engineer-title', content.careerMlEngineerTitle || content.career_ml_engineer_title);
+        updateElementText('#career-ml-engineer-desc', content.careerMlEngineerDesc || content.career_ml_engineer_desc);
+        updateElementText('#career-ml-engineer-salary', content.careerMlEngineerSalary || content.career_ml_engineer_salary);
+
+        // Data Scientist
+        updateElementText('#career-data-scientist-title', content.careerDataScientistTitle || content.career_data_scientist_title);
+        updateElementText('#career-data-scientist-desc', content.careerDataScientistDesc || content.career_data_scientist_desc);
+        updateElementText('#career-data-scientist-salary', content.careerDataScientistSalary || content.career_data_scientist_salary);
+
+        // AI Researcher
+        updateElementText('#career-ai-researcher-title', content.careerAiResearcherTitle || content.career_ai_researcher_title);
+        updateElementText('#career-ai-researcher-desc', content.careerAiResearcherDesc || content.career_ai_researcher_desc);
+        updateElementText('#career-ai-researcher-salary', content.careerAiResearcherSalary || content.career_ai_researcher_salary);
+
+        // Computer Vision Specialist
+        updateElementText('#career-cv-specialist-title', content.careerCvSpecialistTitle || content.career_cv_specialist_title);
+        updateElementText('#career-cv-specialist-desc', content.careerCvSpecialistDesc || content.career_cv_specialist_desc);
+        updateElementText('#career-cv-specialist-salary', content.careerCvSpecialistSalary || content.career_cv_specialist_salary);
+
+        // NLP Engineer
+        updateElementText('#career-nlp-engineer-title', content.careerNlpEngineerTitle || content.career_nlp_engineer_title);
+        updateElementText('#career-nlp-engineer-desc', content.careerNlpEngineerDesc || content.career_nlp_engineer_desc);
+        updateElementText('#career-nlp-engineer-salary', content.careerNlpEngineerSalary || content.career_nlp_engineer_salary);
+
+        // MLOps Engineer
+        updateElementText('#career-mlops-engineer-title', content.careerMlopsEngineerTitle || content.career_mlops_engineer_title);
+        updateElementText('#career-mlops-engineer-desc', content.careerMlopsEngineerDesc || content.career_mlops_engineer_desc);
+        updateElementText('#career-mlops-engineer-salary', content.careerMlopsEngineerSalary || content.career_mlops_engineer_salary);
+
+        // AI Product Manager
+        updateElementText('#career-ai-pm-title', content.careerAiPmTitle || content.career_ai_pm_title);
+        updateElementText('#career-ai-pm-desc', content.careerAiPmDesc || content.career_ai_pm_desc);
+        updateElementText('#career-ai-pm-salary', content.careerAiPmSalary || content.career_ai_pm_salary);
+
+        // Robotics Engineer
+        updateElementText('#career-robotics-title', content.careerRoboticsTitle || content.career_robotics_title);
+        updateElementText('#career-robotics-desc', content.careerRoboticsDesc || content.career_robotics_desc);
+        updateElementText('#career-robotics-salary', content.careerRoboticsSalary || content.career_robotics_salary);
+
+        // Set appropriate language and direction
+        document.documentElement.lang = language;
+        document.documentElement.dir = language === 'he' ? 'rtl' : 'ltr';
+
+        console.log(`${language} Career Orientation content update completed`);
+      }
+
+      function updateElementText(selector, text) {
+        if (!text) return;
+        const element = document.querySelector(selector);
+        if (element) {
+          element.textContent = text;
+          console.log(`Updated ${selector}:`, text);
+        }
+      }
+    })();
   </script>
-    <script src="../js/shared-menu-component.js?v=2.2"></script>
+
+  <script src="js/navigation-responsive-fix.js"></script>
+  <script src="js/emergency-fix.js"></script>
+  <script src="js/mobile-menu-toggle-fix.js"></script>
 
   <!-- Phone Number Mask and Form Enhancement -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Phone number mask for +972 (Israel)
+      // Phone number mask for international format
       const phoneInput = document.getElementById('phone');
       if (phoneInput) {
         phoneInput.addEventListener('input', function(e) {
           let value = e.target.value.replace(/\D/g, '');
 
-          // Add +972 prefix if not present
-          if (!value.startsWith('972') && value.length > 0) {
-            if (value.startsWith('0')) {
-              value = '972' + value.substring(1);
-            } else {
-              value = '972' + value;
+          // Format as +1 (XXX) XXX-XXXX for US numbers
+          if (value.length >= 1) {
+            if (!value.startsWith('1') && value.length <= 10) {
+              value = '1' + value;
             }
-          }
 
-          // Format as +972-XX-XXXXXXX
-          if (value.length >= 3) {
-            let formatted = '+972';
-            if (value.length > 3) {
-              formatted += '-' + value.substring(3, 5);
+            let formatted = '+1';
+            if (value.length > 1) {
+              formatted += ' (' + value.substring(1, 4);
             }
-            if (value.length > 5) {
-              formatted += '-' + value.substring(5, 12);
+            if (value.length > 4) {
+              formatted += ') ' + value.substring(4, 7);
+            }
+            if (value.length > 7) {
+              formatted += '-' + value.substring(7, 11);
             }
             e.target.value = formatted;
           }
         });
 
         // Set placeholder and initial focus
-        phoneInput.placeholder = '+972-XX-XXXXXXX';
+        phoneInput.placeholder = '+1 (555) 123-4567';
       }
 
       // Form submission handling
@@ -936,19 +1388,170 @@
           const phone = document.getElementById('phone').value;
 
           if (!name || !phone) {
-            alert('אנא מלאו את כל השדות הנדרשים');
+            alert('Please fill out all required fields');
             return;
           }
 
-          // Here you can add your form submission logic
-          // For now, we'll show a success message
-          alert('תודה! נחזור אליכם בקרוב לתיאום פגישת ייעוץ חינם');
+          // Enhanced validation
+          if (name.length < 2) {
+            alert('Please enter a valid name');
+            return;
+          }
+
+          if (phone.length < 10) {
+            alert('Please enter a valid phone number');
+            return;
+          }
+
+          // Success message
+          alert('Thank you! We\'ll get back to you soon to schedule your free consultation');
 
           // Reset form
           consultationForm.reset();
         });
       }
+
+      // Master Footer Loader
+      if (typeof window.MasterFooterLoader !== 'undefined') {
+        const footerLoader = new window.MasterFooterLoader();
+        footerLoader.loadFooter();
+      }
     });
   </script>
-</body>
-</html>
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Handle all lead forms
+        const forms = document.querySelectorAll('form[data-name="lead-form"], form[id*="lead"], form[action*="leads"]');
+        
+        forms.forEach(form => {
+          form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const data = {
+              data: {
+                name: formData.get('name') || formData.get('Name'),
+                email: formData.get('email') || formData.get('Email'),
+                phone: formData.get('phone') || formData.get('Phone'),
+                message: formData.get('message') || formData.get('Message'),
+                language: document.documentElement.lang,
+                source: window.location.pathname
+              }
+            };
+            
+            try {
+              // Try HTTPS first, fallback to HTTP if SSL issues
+              let response = await fetch('https://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+              });
+              
+              // If HTTPS fails, try HTTP fallback
+              if (!response.ok && response.status === 0) {
+                console.log('HTTPS failed, trying HTTP fallback...');
+                response = await fetch('http://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(data)
+                });
+              }
+              
+              if (response.ok) {
+                // Show success message
+                alert('Thank you! We will contact you soon.');
+                form.reset();
+                
+                // Optional: redirect to thank you page
+                // window.location.href = '/thank-you.html';
+              } else {
+                throw new Error('Submission failed');
+              }
+            } catch (error) {
+              console.error('Form submission error:', error);
+              alert('Sorry, there was an error. Please try again or contact us directly.');
+            }
+          });
+        });
+      });
+    </script>
+  
+      <!-- Hebrew Database Integration Script -->
+      <script>
+        (async function loadHebrewCareerOrientationContent() {
+          console.log('Loading Hebrew Career Orientation content...');
+          
+          const API_BASE = 'https://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api';
+          
+          try {
+            const response = await fetch(`${API_BASE}/career-orientation-page?locale=he`);
+            console.log('Hebrew API response status:', response.status);
+            
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            console.log('Hebrew Career Orientation data received:', data);
+            
+            if (data && data.data && data.data.attributes) {
+              const content = data.data.attributes;
+              updateCareerOrientationContent(content);
+            } else {
+              console.log('Hebrew content structure not as expected:', data);
+            }
+          } catch (error) {
+            console.error('Error loading Hebrew career orientation content:', error);
+          }
+          
+          function updateCareerOrientationContent(content) {
+            console.log('Updating Hebrew Career Orientation content...');
+            
+            // Update main hero title - multiple selectors for robustness
+            const heroTitle = document.querySelector('.section-title.featured-courses, .hero-heading, h1, .career-orientation-title');
+            if (heroTitle && content.title) {
+              console.log('Updating hero title to:', content.title);
+              heroTitle.textContent = content.title;
+            }
+            
+            // Update hero subtitle
+            const heroSubtitle = document.querySelector('.section-subtitle, .hero-subtitle, .subtitle');
+            if (heroSubtitle && content.subtitle) {
+              console.log('Updating hero subtitle to:', content.subtitle);
+              heroSubtitle.textContent = content.subtitle;
+            }
+            
+            // Update hero description
+            const heroDesc = document.querySelector('.section-description-text.featured-courses, .hero-description, .description, .career-orientation-description');
+            if (heroDesc && content.description) {
+              console.log('Updating hero description to:', content.description);
+              heroDesc.innerHTML = content.description;
+            }
+            
+            // Update services if available
+            if (content.services && Array.isArray(content.services)) {
+              console.log('Updating services section...');
+              content.services.forEach((service, index) => {
+                const serviceTitle = document.querySelector(`.service-item:nth-child(${index + 1}) .service-title, .feature-item:nth-child(${index + 1}) .feature-title`);
+                const serviceDesc = document.querySelector(`.service-item:nth-child(${index + 1}) .service-description, .feature-item:nth-child(${index + 1}) .feature-description`);
+                
+                if (serviceTitle && service.title) {
+                  serviceTitle.textContent = service.title;
+                }
+                if (serviceDesc && service.description) {
+                  serviceDesc.textContent = service.description;
+                }
+              });
+            }
+            
+            console.log('Hebrew Career Orientation content update completed');
+          }
+        })();
+      </script>
+    </body></html>

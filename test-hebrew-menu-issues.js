@@ -22,176 +22,82 @@ const playwright = require('playwright');
         console.log('=====================================');
         
         // Check for multiple navigation elements
-        const navElements = await page.$$eval('nav', navs => 
-            navs.map((nav, index) => ({
-                index,
-                id: nav.id || 'no-id',
-                className: nav.className || 'no-class',
-                visible: nav.offsetHeight > 0,
-                innerHTML: nav.innerHTML.substring(0, 100) + '...'
-            }))
-        );
+        const navCount = await page.$$eval('nav', navs => navs.length);
+        console.log(`Found ${navCount} <nav> elements`);
         
-        console.log(`Found ${navElements.length} <nav> elements:`);
-        navElements.forEach(nav => {
-            console.log(`  Nav ${nav.index}: id="${nav.id}", class="${nav.className}", visible=${nav.visible}`);
-        });
+        if (navCount > 1) {
+            const navElements = await page.$$eval('nav', navs => 
+                navs.map((nav, i) => ({
+                    index: i,
+                    id: nav.id || 'no-id',
+                    className: nav.className || 'no-class',
+                    visible: nav.offsetHeight > 0,
+                    top: nav.offsetTop,
+                    height: nav.offsetHeight
+                }))
+            );
+            
+            navElements.forEach(nav => {
+                console.log(`  Nav ${nav.index}: id="${nav.id}", visible=${nav.visible}, top=${nav.top}px`);
+            });
+        }
         
-        // Check for multiple menu containers
-        const menuContainers = await page.$$eval('[class*="menu"], [class*="nav"], [id*="menu"], [id*="nav"]', elements =>
-            elements.map((el, index) => ({
-                index,
-                tag: el.tagName.toLowerCase(),
-                id: el.id || 'no-id',
-                className: el.className || 'no-class',
-                visible: el.offsetHeight > 0,
-                position: {
-                    top: el.offsetTop,
-                    height: el.offsetHeight
-                }
-            }))
-        );
-        
-        console.log(`\nFound ${menuContainers.length} menu-related elements:`);
-        menuContainers.forEach(container => {
-            if (container.visible) {
-                console.log(`  ${container.tag}: id="${container.id}", class="${container.className}"`);
-                console.log(`    Position: top=${container.position.top}px, height=${container.position.height}px`);
-            }
-        });
-        
-        // Check for duplicate shared-menu-container content
-        const sharedMenuContent = await page.$eval('#shared-menu-container', el => ({
-            innerHTML: el.innerHTML.length,
+        // Check shared menu container content
+        const menuInfo = await page.$eval('#shared-menu-container', el => ({
             childCount: el.children.length,
-            hasMultipleNavs: el.querySelectorAll('nav').length > 1
+            hasMultipleNavs: el.querySelectorAll('nav').length > 1,
+            innerHTML: el.innerHTML.substring(0, 200)
         }));
         
         console.log(`\nShared Menu Container Analysis:`);
-        console.log(`  HTML Length: ${sharedMenuContent.innerHTML} characters`);
-        console.log(`  Child Elements: ${sharedMenuContent.childCount}`);
-        console.log(`  Multiple Navs Inside: ${sharedMenuContent.hasMultipleNavs}`);
+        console.log(`  Child Elements: ${menuInfo.childCount}`);
+        console.log(`  Multiple Navs Inside: ${menuInfo.hasMultipleNavs}`);
         
         console.log('\n🔍 ISSUE 2: Career Dropdown Positioning Diagnosis');
         console.log('==================================================');
         
-        // Find the Career Services button
-        const careerButton = await page.$('[class*="dropdown"]:has-text("שירותי קריירה"), a:has-text("שירותי קריירה")');
-        if (!careerButton) {
+        // Look for Career Services text in Hebrew
+        const careerText = 'שירותי קריירה';
+        const careerElements = await page.$$(`text=${careerText}`);
+        
+        if (careerElements.length === 0) {
             console.log('❌ Career Services button not found');
         } else {
-            console.log('✅ Career Services button found');
+            console.log(`✅ Found ${careerElements.length} Career Services elements`);
             
-            // Get button position before click
-            const buttonPosition = await careerButton.boundingBox();
-            console.log(`Button position: x=${buttonPosition.x}, y=${buttonPosition.y}, width=${buttonPosition.width}, height=${buttonPosition.height}`);
+            // Test the first one
+            const careerButton = careerElements[0];
+            const buttonBox = await careerButton.boundingBox();
+            console.log(`Button position: x=${buttonBox.x}, y=${buttonBox.y}`);
             
-            // Click the button to open dropdown
+            // Click and check dropdown
             await careerButton.click();
             await page.waitForTimeout(500);
             
-            // Find the dropdown menu
-            const dropdown = await page.$('.dropdown-list, [class*="dropdown-list"], [class*="dropdown-menu"]');
-            if (!dropdown) {
-                console.log('❌ Dropdown menu not found after click');
+            // Look for dropdown
+            const dropdown = await page.$('.dropdown-list');
+            if (dropdown) {
+                const dropdownBox = await dropdown.boundingBox();
+                console.log(`Dropdown position: x=${dropdownBox.x}, y=${dropdownBox.y}`);
                 
-                // Check for any new elements that appeared
-                const newElements = await page.$$eval('[style*="display: block"], [style*="visibility: visible"]', elements =>
-                    elements.map(el => ({
-                        tag: el.tagName.toLowerCase(),
-                        className: el.className,
-                        position: el.getBoundingClientRect()
-                    }))
-                );
-                console.log('Elements that became visible after click:', newElements);
+                const horizontalGap = Math.abs(dropdownBox.x - buttonBox.x);
+                const verticalGap = dropdownBox.y - (buttonBox.y + buttonBox.height);
+                
+                console.log(`Gap Analysis: horizontal=${horizontalGap}px, vertical=${verticalGap}px`);
+                
+                if (horizontalGap > 100) console.log('⚠️  Horizontal misalignment detected');
+                if (verticalGap > 20) console.log('⚠️  Vertical gap too large');
             } else {
-                console.log('✅ Dropdown menu found');
-                
-                const dropdownPosition = await dropdown.boundingBox();
-                console.log(`Dropdown position: x=${dropdownPosition.x}, y=${dropdownPosition.y}, width=${dropdownPosition.width}, height=${dropdownPosition.height}`);
-                
-                // Calculate the distance between button and dropdown
-                const horizontalDistance = Math.abs(dropdownPosition.x - buttonPosition.x);
-                const verticalDistance = dropdownPosition.y - (buttonPosition.y + buttonPosition.height);
-                
-                console.log(`Distance Analysis:`);
-                console.log(`  Horizontal offset: ${horizontalDistance}px`);
-                console.log(`  Vertical gap: ${verticalDistance}px`);
-                
-                if (horizontalDistance > 50) {
-                    console.log('⚠️  ISSUE: Dropdown is horizontally misaligned (should be <50px offset)');
-                }
-                if (verticalDistance > 10) {
-                    console.log('⚠️  ISSUE: Dropdown is too far vertically (should be <10px gap)');
-                }
-                
-                // Check CSS styles affecting positioning
-                const dropdownStyles = await dropdown.evaluate(el => {
-                    const styles = window.getComputedStyle(el);
-                    return {
-                        position: styles.position,
-                        top: styles.top,
-                        left: styles.left,
-                        right: styles.right,
-                        transform: styles.transform,
-                        zIndex: styles.zIndex
-                    };
-                });
-                
-                console.log('Dropdown CSS styles:', dropdownStyles);
+                console.log('❌ Dropdown not found after click');
             }
         }
         
-        console.log('\n🔍 JavaScript Console Errors Check');
-        console.log('===================================');
-        
-        // Check for JavaScript errors
-        const errors = [];
-        page.on('console', msg => {
-            if (msg.type() === 'error') {
-                errors.push(msg.text());
-            }
-        });
-        
-        // Reload to catch any initialization errors
-        await page.reload();
-        await page.waitForTimeout(3000);
-        
-        if (errors.length > 0) {
-            console.log('❌ JavaScript errors found:');
-            errors.forEach((error, index) => {
-                console.log(`  ${index + 1}. ${error}`);
-            });
-        } else {
-            console.log('✅ No JavaScript errors detected');
-        }
-        
-        console.log('\n🔍 Script Loading Analysis');
-        console.log('===========================');
-        
-        // Check which scripts are loaded
-        const scripts = await page.$$eval('script[src]', scripts =>
-            scripts.map(script => ({
-                src: script.src,
-                loaded: script.complete !== false
-            }))
-        );
-        
-        const menuScripts = scripts.filter(script => 
-            script.src.includes('menu') || script.src.includes('nav')
-        );
-        
-        console.log('Menu-related scripts:');
-        menuScripts.forEach(script => {
-            console.log(`  ${script.loaded ? '✅' : '❌'} ${script.src}`);
-        });
-        
-        // Take a screenshot for visual inspection
+        // Take screenshot
         await page.screenshot({ 
-            path: '/Users/michaelmishayev/Desktop/newCode/hebrew-menu-issues-diagnosis.png',
+            path: '/Users/michaelmishayev/Desktop/newCode/hebrew-menu-diagnosis.png',
             fullPage: true 
         });
-        console.log('\n📸 Screenshot saved: hebrew-menu-issues-diagnosis.png');
+        console.log('\n📸 Screenshot saved: hebrew-menu-diagnosis.png');
         
     } catch (error) {
         console.error('❌ Test failed:', error.message);

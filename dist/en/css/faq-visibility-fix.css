@@ -1,0 +1,87 @@
+/* FAQ Visibility Fix - Ensure FAQ questions are visible on dark background */
+
+/* Main FAQ Question Styles - MAXIMUM specificity to override Webflow CSS */
+body .section .faq-accordion-question-wrap .faq-question,
+body .section .single-faq-accordion-wrap .faq-question,
+body .section h3.faq-question,
+body .section .single-faq-accordion-wrap.w--current .faq-question,
+body .faq-question {
+  color: #ffffff !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Ensure visibility in active/current state */
+.w--current .faq-question {
+  color: #ffffff !important;
+}
+
+/* FAQ Answer text */
+.faq-answer {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+}
+
+/* FAQ Section Title */
+.faq-section-title,
+.faq-main-title {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* FAQ Icon */
+.faq-icon-wrapper {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+}
+
+/* Hover states */
+.single-faq-accordion-wrap:hover .faq-question {
+  color: #ffffff !important;
+  opacity: 0.95 !important;
+}
+
+/* Mobile responsive adjustments */
+@media screen and (max-width: 991px) {
+  .faq-accordion-question-wrap .faq-question,
+  h3.faq-question {
+    font-size: 22px !important;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .faq-accordion-question-wrap .faq-question,
+  h3.faq-question {
+    font-size: 20px !important;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .faq-accordion-question-wrap .faq-question,
+  h3.faq-question {
+    font-size: 18px !important;
+  }
+
+  .faq-answer {
+    font-size: 14px !important;
+  }
+}
+
+/* Ensure proper contrast on dark backgrounds */
+.faq-section {
+  background-color: transparent;
+}
+
+.faq-accordion-question-wrap {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.faq-accordion-question-wrap:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}

@@ -3,11 +3,25 @@
 
 class UITranslator {
   constructor() {
-    this.apiBase = window.location.hostname.includes('localhost') 
-      ? 'http://localhost:3000' 
-      : 'https://aistudio555jamstack-production.up.railway.app';
+    // Detect API endpoint based on current port
+    const currentPort = window.location.port;
+    if (currentPort === '3005') {
+      // Frontend on Python server (3005), API on Express (4005)
+      this.apiBase = 'http://localhost:4005';
+    } else if (currentPort === '4005') {
+      // Accessing directly via Express server
+      this.apiBase = 'http://localhost:4005';
+    } else if (window.location.hostname.includes('localhost')) {
+      // Default local setup
+      this.apiBase = 'http://localhost:4005';
+    } else {
+      // Production
+      this.apiBase = 'https://aistudio555jamstack-production.up.railway.app';
+    }
+
     this.currentLocale = this.detectLocale();
     console.log('🌍 UI Translator initialized for locale:', this.currentLocale);
+    console.log('🔗 API Base:', this.apiBase);
   }
 
   detectLocale() {
@@ -27,23 +41,54 @@ class UITranslator {
     try {
       console.log('📡 Loading UI translations...');
       const response = await fetch(`${this.apiBase}/api/home-page?locale=${this.currentLocale}`);
+
+      if (!response.ok) {
+        // If API returns an error, try without locale parameter as fallback
+        console.log('⚠️  Locale-specific API failed, trying fallback...');
+        const fallbackResponse = await fetch(`${this.apiBase}/api/home-page`);
+
+        if (!fallbackResponse.ok) {
+          // If both fail, return empty object but don't break the page
+          console.log('⚠️  API unavailable, using default translations');
+          return {};
+        }
+
+        const fallbackData = await fallbackResponse.json();
+        if (fallbackData.data && fallbackData.data.attributes) {
+          console.log('✅ UI translations loaded (fallback):', Object.keys(fallbackData.data.attributes).length, 'fields');
+          return fallbackData.data.attributes;
+        }
+      }
+
       const data = await response.json();
-      
+
       if (data.data && data.data.attributes) {
         console.log('✅ UI translations loaded:', Object.keys(data.data.attributes).length, 'fields');
         return data.data.attributes;
       }
-      throw new Error('Invalid API response');
+
+      // If we get here, API returned something but not in expected format
+      console.log('⚠️  API returned unexpected format, using defaults');
+      return {};
     } catch (error) {
       console.error('❌ Failed to load UI translations:', error);
-      return null;
+      // Return empty object instead of null to prevent page breaking
+      return {};
     }
   }
 
   updateNavigation(ui) {
     console.log('🧭 Updating navigation...');
-    
-    // Navigation menu items
+
+    // Skip updating navigation if shared menu component already handled it
+    // The shared menu component properly handles Hebrew translations
+    const sharedMenuContainer = document.getElementById('shared-menu-container');
+    if (sharedMenuContainer && sharedMenuContainer.innerHTML.trim()) {
+      console.log('📌 Navigation already handled by shared menu component, skipping UI translator navigation update');
+      return;
+    }
+
+    // Navigation menu items (fallback for pages without shared menu)
     const navItems = [
       { selector: 'a[href="/home"], a[href="home.html"], a[href="../home.html"], a[href="index.html"]', field: 'navHome' },
       { selector: 'a[href="/courses"], a[href="courses.html"], a[href="../courses.html"]', field: 'navCourses' },
@@ -58,19 +103,45 @@ class UITranslator {
     navItems.forEach(item => {
       const elements = document.querySelectorAll(item.selector);
       elements.forEach(el => {
-        if (ui[item.field] && el.textContent.trim() !== ui[item.field]) {
-          console.log(`✅ Nav: "${el.textContent.trim()}" → "${ui[item.field]}"`);
+        const currentText = el.textContent.trim();
+
+        // Check if current text is already in Hebrew (preserve it!)
+        const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+
+        // Only update if we have valid translations AND current text isn't already Hebrew
+        if (ui[item.field] && currentText !== ui[item.field] && !isHebrewText) {
+          console.log(`✅ Nav: "${currentText}" → "${ui[item.field]}"`);
           el.textContent = ui[item.field];
+        } else if (isHebrewText) {
+          console.log(`✅ Preserving Hebrew nav text: "${currentText}"`);
+        } else if (!ui[item.field]) {
+          console.log(`⚠️ No translation for ${item.field}, preserving: "${currentText}"`);
         }
       });
     });
 
-    // Update dropdown menu text
-    const dropdownItems = document.querySelectorAll('.dropdown-menu-text-link-block, .nav-link, .dropdown-list a');
+    // Update dropdown menu text (but skip if inside shared menu)
+    const dropdownItems = document.querySelectorAll('.dropdown-menu-text-link-block, .dropdown-list a');
     dropdownItems.forEach(item => {
+      // Skip items inside shared menu container
+      if (item.closest('#shared-menu-container')) {
+        return;
+      }
+
       const href = item.getAttribute('href') || '';
-      if (href.includes('career') && ui.navCareerCenter) {
+      const currentText = item.textContent.trim();
+
+      // Check if current text is already in Hebrew (preserve it!)
+      const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+
+      // Only update if we have valid translations AND current text isn't already Hebrew
+      if (href.includes('career') && ui.navCareerCenter && !isHebrewText) {
+        console.log(`🔄 Updating dropdown item: "${currentText}" → "${ui.navCareerCenter}"`);
         item.textContent = ui.navCareerCenter;
+      } else if (href.includes('career') && isHebrewText) {
+        console.log(`✅ Preserving existing Hebrew text: "${currentText}"`);
+      } else if (href.includes('career') && !ui.navCareerCenter) {
+        console.log(`⚠️ No translation available for career link, preserving existing text: "${currentText}"`);
       }
     });
   }
@@ -118,7 +189,17 @@ class UITranslator {
 
   updateForms(ui) {
     console.log('📝 Updating forms...');
-    
+
+    // Skip updating consultation forms on Hebrew pages
+    const isHebrewPage = window.location.pathname.includes('/he/');
+    const consultationForm = document.getElementById('consultation-form');
+    const staticForm = document.getElementById('static-consultation-form');
+
+    if (isHebrewPage && (consultationForm || staticForm)) {
+      console.log('📌 Skipping consultation forms update on Hebrew page - forms already have Hebrew content');
+      return;
+    }
+
     // Form label mappings
     const formMappings = [
       { selectors: ['label[for*="email"]', 'label:contains("Email")', 'input[type="email"] + label'], field: 'formLabelEmail' },
@@ -132,8 +213,8 @@ class UITranslator {
         // Handle :contains() pseudo-selector manually
         if (selector.includes(':contains(')) {
           const containsText = selector.match(/:contains\("([^"]+)"\)/)[1];
-          const elements = Array.from(document.querySelectorAll('label')).filter(el => 
-            el.textContent.includes(containsText)
+          const elements = Array.from(document.querySelectorAll('label')).filter(el =>
+            el.textContent.includes(containsText) && !el.closest('#consultation-form')
           );
           elements.forEach(el => {
             if (ui[mapping.field]) {
@@ -144,6 +225,11 @@ class UITranslator {
         } else {
           const elements = document.querySelectorAll(selector);
           elements.forEach(el => {
+            // Skip if element is inside consultation forms
+            if (el.closest('#consultation-form') || el.closest('#static-consultation-form')) {
+              console.log(`⏭️ Skipping consultation form element: ${el.textContent}`);
+              return;
+            }
             if (ui[mapping.field]) {
               console.log(`✅ Form Label: "${el.textContent}" → "${ui[mapping.field]}"`);
               el.textContent = ui[mapping.field];
@@ -164,6 +250,11 @@ class UITranslator {
     placeholderMappings.forEach(mapping => {
       const elements = document.querySelectorAll(mapping.selector);
       elements.forEach(input => {
+        // Skip if element is inside consultation forms
+        if (input.closest('#consultation-form') || input.closest('#static-consultation-form')) {
+          console.log(`⏭️ Skipping consultation form placeholder: ${input.placeholder}`);
+          return;
+        }
         if (ui[mapping.field] && input.placeholder !== ui[mapping.field]) {
           console.log(`✅ Placeholder: "${input.placeholder}" → "${ui[mapping.field]}"`);
           input.placeholder = ui[mapping.field];
@@ -174,6 +265,11 @@ class UITranslator {
     // Update submit buttons
     const submitButtons = document.querySelectorAll('input[type="submit"], button[type="submit"], .form-submit-button');
     submitButtons.forEach(btn => {
+      // Skip if button is inside consultation forms
+      if (btn.closest('#consultation-form') || btn.closest('#static-consultation-form')) {
+        console.log(`⏭️ Skipping consultation form submit button: ${btn.textContent || btn.value}`);
+        return;
+      }
       if (ui.formBtnSubmit && btn.value !== ui.formBtnSubmit) {
         console.log(`✅ Submit Button: "${btn.value || btn.textContent}" → "${ui.formBtnSubmit}"`);
         if (btn.tagName === 'INPUT') {
@@ -243,7 +339,7 @@ class UITranslator {
       const elements = document.querySelectorAll(selector);
       elements.forEach(heading => {
         const currentText = heading.textContent.trim();
-        
+
         titleMappings.forEach(mapping => {
           if (mapping.text.some(text => currentText.includes(text))) {
             const newText = mapping.field ? ui[mapping.field] : mapping.replacement;
@@ -282,6 +378,12 @@ class UITranslator {
   updateFAQTitles(ui) {
     console.log('❓ Updating FAQ titles...');
 
+    // Skip FAQ translation on courses page - it already has correct Hebrew content
+    if (window.location.pathname.includes('/courses.html')) {
+      console.log('📍 Skipping FAQ translation on courses page - already has correct Hebrew content');
+      return;
+    }
+
     // FAQ title mappings - look for FAQ elements and update their titles
     const faqMappings = [
       { field: 'faq1Title', fallback: 'faq_1_title' },
@@ -303,6 +405,9 @@ class UITranslator {
       const titleText = ui[mapping.field] || ui[mapping.fallback];
 
       if (titleText && faqQuestionElements[index]) {
+        // Skip elements with data-no-translate attribute
+        if (faqQuestionElements[index].hasAttribute('data-no-translate')) return;
+
         const currentText = faqQuestionElements[index].textContent.trim();
         console.log(`✅ FAQ ${faqNumber} Question: "${currentText}" → "${titleText}"`);
         faqQuestionElements[index].textContent = titleText;
@@ -436,10 +541,81 @@ class UITranslator {
       // Fix: Use valid CSS selectors and check content with JavaScript
       const faqSectionTitles = document.querySelectorAll('.faq-section-title, .faq-main-title, h2, h3');
       faqSectionTitles.forEach(title => {
+        // Skip elements with data-no-translate attribute
+        if (title.hasAttribute('data-no-translate')) return;
+
         if (title.textContent.includes('FAQ') || title.textContent === 'שלטו ב-AI וטכנולוגיה') {
           console.log(`✅ Main FAQ Title: "${title.textContent}" → "${mainTitle}"`);
           title.textContent = mainTitle;
         }
+      });
+    }
+  }
+
+  updateFAQAnswers(ui) {
+    console.log('📝 Updating FAQ answers...');
+
+    // FAQ answer mappings
+    const faqAnswerMappings = [
+      { field: 'faq1Answer', fallback: 'faq_1_answer' },
+      { field: 'faq2Answer', fallback: 'faq_2_answer' },
+      { field: 'faq3Answer', fallback: 'faq_3_answer' },
+      { field: 'faq4Answer', fallback: 'faq_4_answer' },
+      { field: 'faq5Answer', fallback: 'faq_5_answer' },
+      { field: 'faq6Answer', fallback: 'faq_6_answer' }
+    ];
+
+    // Debug: Log available FAQ answer fields
+    console.log('🔍 Available FAQ answers in UI data:');
+    faqAnswerMappings.forEach((mapping, index) => {
+      const answerText = ui[mapping.field] || ui[mapping.fallback];
+      console.log(`${mapping.field}: ${answerText ? answerText.substring(0, 40) + '...' : 'NOT FOUND'}`);
+    });
+
+    // Find all FAQ answer elements
+    const faqAnswerElements = document.querySelectorAll('.faq-answer');
+    console.log(`🔍 Found ${faqAnswerElements.length} .faq-answer elements`);
+
+    faqAnswerElements.forEach((element, index) => {
+      if (index < faqAnswerMappings.length) {
+        const mapping = faqAnswerMappings[index];
+        const answerText = ui[mapping.field] || ui[mapping.fallback];
+
+        if (answerText) {
+          const currentText = element.textContent.trim();
+          console.log(`✅ FAQ ${index + 1} Answer: Updating from "${currentText.substring(0, 30)}..." to "${answerText.substring(0, 30)}..."`);
+          element.textContent = answerText;
+        } else {
+          console.log(`⚠️ FAQ ${index + 1} Answer: No translation found for ${mapping.field} or ${mapping.fallback}`);
+        }
+      }
+    });
+
+    // Also update FAQ CTA if available
+    if (ui.faqCtaTitle || ui.faq_cta_title) {
+      const ctaTitle = ui.faqCtaTitle || ui.faq_cta_title;
+      const ctaTitleElements = document.querySelectorAll('.faq-cta-title, [class*="faq-cta"] h3');
+      ctaTitleElements.forEach(el => {
+        console.log(`✅ FAQ CTA Title: "${el.textContent}" → "${ctaTitle}"`);
+        el.textContent = ctaTitle;
+      });
+    }
+
+    if (ui.faqCtaDescription || ui.faq_cta_description) {
+      const ctaDesc = ui.faqCtaDescription || ui.faq_cta_description;
+      const ctaDescElements = document.querySelectorAll('.faq-cta-description, [class*="faq-cta"] p');
+      ctaDescElements.forEach(el => {
+        console.log(`✅ FAQ CTA Description: "${el.textContent}" → "${ctaDesc}"`);
+        el.textContent = ctaDesc;
+      });
+    }
+
+    if (ui.faqCtaButton || ui.faq_cta_button) {
+      const ctaButton = ui.faqCtaButton || ui.faq_cta_button;
+      const ctaButtonElements = document.querySelectorAll('.faq-cta-button, [class*="faq-cta"] a, [class*="faq-cta"] button');
+      ctaButtonElements.forEach(el => {
+        console.log(`✅ FAQ CTA Button: "${el.textContent}" → "${ctaButton}"`);
+        el.textContent = ctaButton;
       });
     }
   }
@@ -482,6 +658,20 @@ class UITranslator {
       this.updateForms(ui);
       this.updateSectionTitles(ui);
       this.updateFAQTitles(ui);
+
+      // Delay FAQ answers loading to avoid conflict with hebrew-translations-fix.js
+      // Hebrew fix runs at 1500ms, so we load FAQ at 1700ms to ensure it's finished
+      if (this.currentLocale === 'he') {
+        console.log('🔷 Delaying FAQ answers for Hebrew to avoid timing conflict...');
+        setTimeout(() => {
+          console.log('📝 Loading FAQ answers after Hebrew fix completion');
+          this.updateFAQAnswers(ui);
+        }, 1700); // 1.7 seconds - after hebrew-translations-fix.js completes
+      } else {
+        // For other languages, load FAQ immediately
+        this.updateFAQAnswers(ui);
+      }
+
       this.updateMessages(ui);
       this.updateUIElements(ui);
 
@@ -501,6 +691,7 @@ class UITranslator {
       console.error('❌ Translation failed:', error);
     }
   }
+
 }
 
 // Auto-initialize when DOM is ready
@@ -525,6 +716,12 @@ function initHebrewPlaceholderReplacement() {
   // Only run for Hebrew pages
   const isHebrew = window.location.pathname.includes('/he/');
   if (!isHebrew) return;
+
+  // Skip global replacement on courses page - it already has correct Hebrew FAQ content
+  if (window.location.pathname.includes('/courses.html')) {
+    console.log('📍 Skipping global Hebrew placeholder replacement on courses page');
+    return;
+  }
 
   console.log('🔥 Global Hebrew placeholder replacement activated');
 

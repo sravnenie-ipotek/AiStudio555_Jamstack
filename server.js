@@ -4192,21 +4192,26 @@ app.post('/api/run-missing-fields-migration', async (req, res) => {
 app.get('/api/pricing-plans', async (req, res) => {
   try {
     const locale = getLocale(req);
-    
+
     const query = `
-      SELECT * FROM pricing_plans 
-      WHERE locale = $1 
-      ORDER BY display_order, id DESC LIMIT 1
+      SELECT * FROM pricing_plans
+      WHERE locale = $1 AND published_at IS NOT NULL
+      ORDER BY "order", id
     `;
-    
+
     const result = await queryDatabase(query, [locale]);
-    
+
     if (result.length === 0) {
       // Fallback to English if locale not found
-      const fallbackResult = await queryDatabase(query, ['en']);
-      res.json(fallbackResult[0] || {});
+      const fallbackQuery = `
+        SELECT * FROM pricing_plans
+        WHERE locale = 'en' AND published_at IS NOT NULL
+        ORDER BY "order", id
+      `;
+      const fallbackResult = await queryDatabase(fallbackQuery);
+      res.json(fallbackResult);
     } else {
-      res.json(result[0]);
+      res.json(result);
     }
   } catch (error) {
     console.error('Error fetching pricing plans:', error);
@@ -4214,55 +4219,149 @@ app.get('/api/pricing-plans', async (req, res) => {
   }
 });
 
-// Update pricing plans
-app.put('/api/pricing-plans', async (req, res) => {
+// Get pricing page content (headers, descriptions, etc.)
+app.get('/api/pricing-page-content', async (req, res) => {
   try {
     const locale = getLocale(req);
-    const data = req.body;
-    
-    // Check if record exists
-    const checkQuery = `SELECT id FROM pricing_plans WHERE locale = $1`;
-    const existing = await queryDatabase(checkQuery, [locale]);
-    
-    if (existing.length > 0) {
-      // Update existing
-      const filteredData = Object.keys(data)
-        .filter(key => !['id', 'created_at', 'locale'].includes(key))
-        .reduce((obj, key) => {
-          obj[key] = data[key];
-          return obj;
-        }, {});
-      
-      const setClause = Object.keys(filteredData).map((key, index) => `${key} = $${index + 2}`).join(', ');
-      const values = [existing[0].id, ...Object.values(filteredData)];
-      
-      const updateQuery = `
-        UPDATE pricing_plans 
-        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
-        WHERE id = $1 
-        RETURNING *
+
+    const query = `
+      SELECT * FROM pricing_page_content
+      WHERE locale = $1
+      ORDER BY id DESC LIMIT 1
+    `;
+
+    const result = await queryDatabase(query, [locale]);
+
+    if (result.length === 0) {
+      // Fallback to English if locale not found
+      const fallbackQuery = `
+        SELECT * FROM pricing_page_content
+        WHERE locale = 'en'
+        ORDER BY id DESC LIMIT 1
       `;
-      
-      const result = await queryDatabase(updateQuery, values);
-      res.json(result[0]);
+      const fallbackResult = await queryDatabase(fallbackQuery);
+
+      if (fallbackResult.length > 0) {
+        res.json(fallbackResult[0]);
+      } else {
+        // Return default content structure
+        res.json({
+          page_title: 'Pricing Plans',
+          hero_title: 'Choose Your Plan',
+          hero_subtitle: 'Invest in your future with our subscription plans',
+          hero_description: 'Dive into a world of learning with our comprehensive range of courses.',
+          monthly_tab: 'Monthly',
+          yearly_tab: 'Yearly',
+          currency_symbol: '$',
+          per_month: 'per month',
+          per_year: 'per year',
+          most_popular: 'Most Popular',
+          best_value: 'Best Value'
+        });
+      }
     } else {
-      // Insert new
-      const fields = ['locale', ...Object.keys(data)];
-      const values = [locale, ...Object.values(data)];
-      const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
-      
-      const insertQuery = `
-        INSERT INTO pricing_plans (${fields.join(', ')}) 
-        VALUES (${placeholders}) 
-        RETURNING *
-      `;
-      
-      const result = await queryDatabase(insertQuery, values);
       res.json(result[0]);
     }
   } catch (error) {
-    console.error('Error saving pricing plans:', error);
-    res.status(500).json({ error: 'Failed to save pricing plans' });
+    console.error('Error fetching pricing page content:', error);
+    res.status(500).json({ error: 'Failed to fetch pricing page content' });
+  }
+});
+
+// Create new pricing plan
+app.post('/api/pricing-plans', async (req, res) => {
+  try {
+    const locale = getLocale(req);
+    const data = req.body;
+
+    // Add locale and published_at if not provided
+    const planData = {
+      locale: locale,
+      published_at: new Date(),
+      created_at: new Date(),
+      updated_at: new Date(),
+      ...data
+    };
+
+    const fields = Object.keys(planData);
+    const values = Object.values(planData);
+    const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+
+    const insertQuery = `
+      INSERT INTO pricing_plans (${fields.join(', ')})
+      VALUES (${placeholders})
+      RETURNING *
+    `;
+
+    const result = await queryDatabase(insertQuery, values);
+    res.json(result[0]);
+  } catch (error) {
+    console.error('Error creating pricing plan:', error);
+    res.status(500).json({ error: 'Failed to create pricing plan' });
+  }
+});
+
+// Update existing pricing plan
+app.put('/api/pricing-plans/:id', async (req, res) => {
+  try {
+    const planId = req.params.id;
+    const data = req.body;
+
+    // Remove fields that shouldn't be updated
+    const filteredData = Object.keys(data)
+      .filter(key => !['id', 'created_at', 'locale'].includes(key))
+      .reduce((obj, key) => {
+        obj[key] = data[key];
+        return obj;
+      }, {});
+
+    // Add updated_at
+    filteredData.updated_at = new Date();
+
+    const setClause = Object.keys(filteredData).map((key, index) => `${key} = $${index + 2}`).join(', ');
+    const values = [planId, ...Object.values(filteredData)];
+
+    const updateQuery = `
+      UPDATE pricing_plans
+      SET ${setClause}
+      WHERE id = $1
+      RETURNING *
+    `;
+
+    const result = await queryDatabase(updateQuery, values);
+
+    if (result.length === 0) {
+      return res.status(404).json({ error: 'Pricing plan not found' });
+    }
+
+    res.json(result[0]);
+  } catch (error) {
+    console.error('Error updating pricing plan:', error);
+    res.status(500).json({ error: 'Failed to update pricing plan' });
+  }
+});
+
+// Delete pricing plan
+app.delete('/api/pricing-plans/:id', async (req, res) => {
+  try {
+    const planId = req.params.id;
+
+    const deleteQuery = `
+      DELETE FROM pricing_plans
+      WHERE id = $1
+      RETURNING *
+    `;
+
+    const result = await queryDatabase(deleteQuery, [planId]);
+
+    if (result.length === 0) {
+      return res.status(404).json({ error: 'Pricing plan not found' });
+    }
+
+    res.json({ success: true, message: 'Pricing plan deleted successfully', deleted: result[0] });
+  } catch (error) {
+    console.error('Error deleting pricing plan:', error);
+    res.status(500).json({ error: 'Failed to delete pricing plan' });
   }
 });
 

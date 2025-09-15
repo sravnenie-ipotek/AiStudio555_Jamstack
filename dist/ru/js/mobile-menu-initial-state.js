@@ -26,13 +26,19 @@
       overlay.classList.remove('w--nav-menu-open');
     });
 
-    // Find all nav menus and hide them
+    // Find all nav menus and set their visibility based on screen size
     const menus = document.querySelectorAll('.w-nav-menu');
     menus.forEach(menu => {
       if (window.innerWidth <= 991) {
+        // Mobile/tablet - hide menu
         menu.style.display = 'none';
         menu.style.opacity = '0';
         menu.style.visibility = 'hidden';
+      } else {
+        // Desktop - ensure menu is visible
+        menu.style.display = 'flex';
+        menu.style.opacity = '1';
+        menu.style.visibility = 'visible';
       }
     });
 
@@ -142,15 +148,19 @@
     initializeHamburgerButton();
   }
 
-  // Also run after a short delay to override any async scripts
+  // Also run after a short delay to override any async scripts (but not if menu is actively being used)
   setTimeout(function() {
-    ensureMenuClosed();
+    if (!document.body.classList.contains('w--nav-menu-open')) {
+      ensureMenuClosed();
+    }
     repositionLanguageSelector();
   }, 100);
 
-  // Run again after Webflow initializes
+  // Run again after Webflow initializes (but not if menu is actively being used)
   setTimeout(function() {
-    ensureMenuClosed();
+    if (!document.body.classList.contains('w--nav-menu-open')) {
+      ensureMenuClosed();
+    }
     repositionLanguageSelector();
   }, 500);
 
@@ -171,32 +181,11 @@
     }, 250);
   });
 
-  // Prevent menu from auto-opening
-  const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-        const target = mutation.target;
-
-        // If menu is being opened without user interaction
-        if (window.innerWidth <= 991 && !window.userClickedHamburger) {
-          if (target.classList.contains('w--nav-menu-open')) {
-            // Force close if not intentionally opened
-            setTimeout(function() {
-              if (!window.userClickedHamburger) {
-                ensureMenuClosed();
-              }
-            }, 0);
-          }
-        }
-      }
-    });
-  });
-
-  // Start observing
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['class']
-  });
+  // Disabled aggressive MutationObserver to prevent interference with user interactions
+  // The mobile-menu-toggle-fix.js script will handle menu state management
+  //
+  // Original observer caused menu to close immediately after user clicked to open it
+  // Keeping this commented out to allow proper menu functionality
 
   // Track hamburger clicks
   document.addEventListener('click', function(e) {
