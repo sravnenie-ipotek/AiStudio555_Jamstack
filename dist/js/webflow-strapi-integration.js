@@ -137,10 +137,12 @@ class CustomAPIIntegration {
     async loadCoursesContent() {
         try {
             console.log('📚 Loading courses content...');
-            
+
             const courses = await this.fetchAPI('/courses?populate=*');
             if (courses?.data) {
+                // Update both the main courses grid and featured courses section
                 this.updateCoursesGrid(courses.data);
+                this.updateFeaturedCoursesFromAPI(courses.data);
                 console.log(`✅ Loaded ${courses.data.length} courses`);
             }
         } catch (error) {
@@ -305,9 +307,15 @@ class CustomAPIIntegration {
         navItems.forEach(item => {
             const elements = document.querySelectorAll(item.selector);
             elements.forEach(el => {
-                if (ui[item.field] && el.textContent.trim() !== ui[item.field]) {
-                    console.log(`✅ Nav: "${el.textContent.trim()}" → "${ui[item.field]}"`);
+                const currentText = el.textContent.trim();
+                // Check if current text is already in Hebrew (preserve it!)
+                const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+
+                if (ui[item.field] && currentText !== ui[item.field] && !isHebrewText) {
+                    console.log(`✅ Nav: "${currentText}" → "${ui[item.field]}"`);
                     el.textContent = ui[item.field];
+                } else if (isHebrewText) {
+                    console.log(`✅ [webflow-strapi] Preserving Hebrew text: "${currentText}"`);
                 }
             });
         });
@@ -316,8 +324,15 @@ class CustomAPIIntegration {
         const dropdownItems = document.querySelectorAll('.dropdown-menu-text-link-block, .nav-link, .dropdown-list a');
         dropdownItems.forEach(item => {
             const href = item.getAttribute('href') || '';
-            if (href.includes('career') && ui.navCareerCenter) {
+            const currentText = item.textContent.trim();
+            const isHebrewText = /[\u0590-\u05FF]/.test(currentText);
+
+            // Only update if NOT already Hebrew
+            if (href.includes('career') && ui.navCareerCenter && !isHebrewText) {
+                console.log(`🔄 [webflow-strapi] Updating dropdown: "${currentText}" → "${ui.navCareerCenter}"`);
                 item.textContent = ui.navCareerCenter;
+            } else if (href.includes('career') && isHebrewText) {
+                console.log(`✅ [webflow-strapi] Preserving Hebrew dropdown text: "${currentText}"`);
             }
         });
     }

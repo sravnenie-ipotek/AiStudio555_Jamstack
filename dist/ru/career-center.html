@@ -1,8 +1,10 @@
-<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Tue Sep 02 2025 21:54:44 GMT+0000 (Coordinated Universal Time)  --><html data-wf-page="career-center-page" data-wf-site="68b7601d918996218465c4a6" lang="ru" dir="ltr"><head>
+<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Tue Sep 02 2025 21:54:44 GMT+0000 (Coordinated Universal Time)  -->
+<html data-wf-page="career-center-page" data-wf-site="68b7601d918996218465c4a6" lang="ru">
+<head>
   <meta charset="utf-8">
-  <title>Career Center - AI Студия Learning Platform</title>
-  <meta content="Master the Art of Landing Your Dream AI/ML Role with AI Studio Career Center. Get personalized career consultation, resume optimization, and job placement assistance." property="og:title">
-  <meta content="Master the Art of Landing Your Dream AI/ML Role with AI Studio Career Center. Get personalized career consultation, resume optimization, and job placement assistance." property="twitter:title">
+  <title>Карьерный центр - AI Studio Learning Platform</title>
+  <meta content="Освойте искусство получения работы мечты в сфере AI/ML с Карьерным центром AI Studio. Получите персональную карьерную консультацию, оптимизацию резюме и помощь в трудоустройстве." property="og:title">
+  <meta content="Освойте искусство получения работы мечты в сфере AI/ML с Карьерным центром AI Studio. Получите персональную карьерную консультацию, оптимизацию резюме и помощь в трудоустройстве." property="twitter:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
   <link href="../css/normalize.css" rel="stylesheet" type="text/css">
@@ -10,8 +12,8 @@
   <link href="../css/aizeks-marvelous-site.webflow.css" rel="stylesheet" type="text/css">
   <link href="../css/card-height-fix.css" rel="stylesheet" type="text/css">
   <link href="../css/unified-navigation.css" rel="stylesheet" type="text/css">
-  <link href="css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
-  <link href="css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
   <link href="/css/mobile-responsive-fix.css" rel="stylesheet" type="text/css">
   <link href="/css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -1738,82 +1740,28 @@
     }
   </style>
 
-  <link href="css/mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/mobile-fix.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
-      <select onchange="switchLanguage(this.value)" style="padding: 8px; border-radius: 4px;">
-        <option value="en">English</option><option value="ru" selected="">Russian</option><option value="he">Hebrew</option>
-      </select>
-    </div>
-    <script>
-      function switchLanguage(lang) {
-        const currentPath = window.location.pathname;
-        const pathParts = currentPath.split('/').filter(p => p);
-        
-        // Remove current language from path
-        if (['en', 'ru', 'he'].includes(pathParts[0])) {
-          pathParts.shift();
-        }
-        
-        // Navigate to new language
-        const newPath = '/' + lang + '/' + pathParts.join('/');
-        window.location.href = newPath;
-      }
-    </script>
-  
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
   
   <div class="page-wrapper">
     <!-- Navigation -->
-    <div class="navbar w-nav">
-      <div class="container">
-        <div class="navbar-content">
-          <a href="home.html" class="zohacous-logo-link w-nav-brand">
-            <img loading="lazy" src="images/Logo.svg" alt="AI Studio" class="zohacous-logo-image">
-          </a>
-          <nav role="navigation" class="nav-menu w-nav-menu">
-            <a href="home.html" class="nav-link w-nav-link">Home</a>
-            <a href="courses.html" class="nav-link w-nav-link">Courses</a>
-            <a href="teachers.html" class="nav-link w-nav-link">Teachers</a>
-            <div class="menu-dropdown-wrapper w-dropdown" data-hover="true" data-delay="0">
-              <div class="dropdown-toggle w-dropdown-toggle">
-                <div class="dropdown-toggle-text-block">Career Services</div>
-                <div class="dropdown-toggle-arrow-2">▼</div>
-              </div>
-              <nav class="dropdown-column-wrapper-3 w-dropdown-list" style="display: none;">
-                <div class="dropdown-pd pd-60px">
-                  <div class="dropdown-menu-wrapper">
-                    <a href="career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
-                      <div>Career Orientation</div>
-                    </a>
-                    <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block w--current">
-                      <div>Career Center</div>
-                    </a>
-                  </div>
-                </div>
-              </nav>
-            </div>
-            <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
-          </nav>
-          <a href="#" class="primary-button">Get Started</a>
-        </div>
-      </div>
-    </div>
+    <div id="shared-menu-container"></div>
 
     <!-- Hero Section -->
     <section class="career-hero-section">
       <div class="career-hero-content">
-        <h1 class="career-hero-title">AI Studio Career Center</h1>
-        <h2 class="career-hero-subtitle">Master the Art of Landing Your Dream AI/ML Role</h2>
+        <h1 class="career-hero-title">Карьерный центр AI Studio</h1>
+        <h2 class="career-hero-subtitle">Освойте искусство получения работы мечты в сфере AI/ML</h2>
         <p class="career-hero-description">
           Transform your career with personalized guidance, expert-optimized resumes, and proven job placement strategies. Join thousands of successful AI professionals who launched their careers with AI Studio.
         </p>
         <div class="career-hero-stats">
           <div class="career-stat-item">
             <span class="career-stat-number">92%</span>
-            <span class="career-stat-label">Job Placement Rate</span>
+            <span class="career-stat-label">Уровень трудоустройства</span>
           </div>
           <div class="career-stat-item">
             <span class="career-stat-number">$85K</span>
@@ -1830,7 +1778,7 @@
     <!-- Core Services Section -->
     <section class="core-services-section">
       <div class="core-services-container">
-        <h2 class="section-title">Three Core Services</h2>
+        <h2 class="section-title">Три основных сервиса</h2>
         <p class="section-subtitle">
           Comprehensive career support designed to accelerate your journey into the AI/ML industry
         </p>
@@ -1854,9 +1802,9 @@
 
           <div class="service-card">
             <div class="service-icon">📄</div>
-            <h3 class="service-title">Resume &amp; Portfolio Analysis</h3>
+            <h3 class="service-title">Анализ резюме и портфолио</h3>
             <p class="service-description">
-              Professional review and optimization of your resume, portfolio, and LinkedIn profile to stand out to AI employers.
+              Профессиональный обзор и оптимизация вашего резюме, портфолио и LinkedIn профиля для выделения среди работодателей в сфере AI.
             </p>
             <ul class="service-features">
               <li>ATS-optimized resume writing</li>
@@ -1870,7 +1818,7 @@
 
           <div class="service-card">
             <div class="service-icon">🚀</div>
-            <h3 class="service-title">Job Placement Assistance</h3>
+            <h3 class="service-title">Помощь в трудоустройстве</h3>
             <p class="service-description">
               Direct connections with our hiring partner network and ongoing support throughout your job search process.
             </p>
@@ -1890,7 +1838,7 @@
     <!-- Why Choose Us Section -->
     <section class="benefits-section">
       <div class="core-services-container">
-        <h2 class="section-title">Why Choose AI Studio Career Services</h2>
+        <h2 class="section-title">Почему стоит выбрать Карьерные сервисы AI Studio</h2>
         <p class="section-subtitle">
           Six key advantages that set our career support apart from the competition
         </p>
@@ -1898,7 +1846,7 @@
         <div class="benefits-grid">
           <div class="benefit-item">
             <div class="benefit-icon">🤖</div>
-            <h3 class="benefit-title">AI-Optimized Resume Creation</h3>
+            <h3 class="benefit-title">Создание резюме оптимизированного под AI</h3>
             <p class="benefit-description">
               Our resumes are crafted using AI insights and tested against Applicant Tracking Systems to ensure maximum visibility.
             </p>
@@ -1930,9 +1878,9 @@
 
           <div class="benefit-item">
             <div class="benefit-icon">🎤</div>
-            <h3 class="benefit-title">Interview Preparation</h3>
+            <h3 class="benefit-title">Подготовка к собеседованию</h3>
             <p class="benefit-description">
-              Comprehensive interview training including technical questions, behavioral scenarios, and salary negotiation tactics.
+              Комплексная подготовка к собеседованию, включая технические вопросы, поведенческие сценарии и тактики переговоров о зарплате.
             </p>
           </div>
 
@@ -2099,7 +2047,7 @@
     <section class="yellow-contact-section">
       <div class="yellow-contact-container">
         <div class="yellow-contact-content">
-          <h2 class="yellow-contact-title">Ask Our AI Career Center Team</h2>
+          <h2 class="yellow-contact-title">Обратитесь к команде AI Карьерного центра</h2>
           <p class="yellow-contact-subtitle">
             Get personalized guidance from our career experts. We're here to help you navigate your AI career journey.
           </p>
@@ -2107,14 +2055,14 @@
           <form class="yellow-contact-form" action="#" method="POST">
             <div class="yellow-form-grid">
               <div class="yellow-form-field">
-                <input class="yellow-form-input" type="text" name="name" placeholder="Your Name" required="">
+                <input class="yellow-form-input" type="text" name="name" placeholder="Your Name" required>
               </div>
               <div class="yellow-form-field">
-                <input class="yellow-form-input" type="tel" name="phone" placeholder="Phone Number" required="">
+                <input class="yellow-form-input" type="tel" name="phone" placeholder="Phone Number" required>
               </div>
             </div>
             <div class="yellow-form-field full-width">
-              <textarea class="yellow-form-textarea" name="message" placeholder="Tell us about your career goals and how we can help..." required=""></textarea>
+              <textarea class="yellow-form-textarea" name="message" placeholder="Tell us about your career goals and how we can help..." required></textarea>
             </div>
             <button class="yellow-form-submit" type="submit">Send Message</button>
           </form>
@@ -2135,10 +2083,10 @@
           <form class="individual-consultation-form" action="#" method="POST">
             <div class="individual-form-grid">
               <div class="individual-form-field">
-                <input class="individual-form-input" type="text" name="fullName" placeholder="Full Name" required="">
+                <input class="individual-form-input" type="text" name="fullName" placeholder="Full Name" required>
               </div>
               <div class="individual-form-field">
-                <input class="individual-form-input" type="tel" name="phoneNumber" placeholder="Phone Number" required="">
+                <input class="individual-form-input" type="tel" name="phoneNumber" placeholder="Phone Number" required>
               </div>
             </div>
             <button class="individual-form-submit" type="submit">Book Free Consultation</button>
@@ -2159,8 +2107,8 @@
           <div class="metric-card">
             <div class="metric-number" data-target="95">0</div>
             <div class="metric-symbol">%</div>
-            <div class="metric-label">Job Placement Rate</div>
-            <div class="metric-description">Within 6 months of program completion</div>
+            <div class="metric-label">Уровень трудоустройства</div>
+            <div class="metric-description">В течение 6 месяцев после завершения программы</div>
           </div>
           
           <div class="metric-card">
@@ -2201,12 +2149,12 @@
               <div class="resource-icon">💡</div>
             </div>
             <div class="resource-content">
-              <h3 class="resource-title">AI Interview Prep Guide</h3>
+              <h3 class="resource-title">Руководство по подготовке к AI собеседованию</h3>
               <p class="resource-description">
                 Master technical interviews with our comprehensive guide covering algorithms, system design, and ML concepts.
               </p>
               <div class="resource-meta">
-                <span class="resource-category">Interview Prep</span>
+                <span class="resource-category">Подготовка к собеседованию</span>
                 <span class="resource-time">15 min read</span>
               </div>
             </div>
@@ -2217,7 +2165,7 @@
               <div class="resource-icon">📄</div>
             </div>
             <div class="resource-content">
-              <h3 class="resource-title">Resume Templates for AI Roles</h3>
+              <h3 class="resource-title">Шаблоны резюме для AI ролей</h3>
               <p class="resource-description">
                 Download ATS-optimized resume templates specifically designed for AI and ML positions.
               </p>
@@ -2298,7 +2246,7 @@
     <!-- Contact Form Section -->
     <section id="contact" class="contact-form-section">
       <div class="contact-form-container">
-        <h2 class="section-title">Get Started Today</h2>
+        <h2 class="section-title">Начать сегодня</h2>
         <p class="section-subtitle">
           Ready to accelerate your AI career? Get in touch with our career experts for a free consultation.
         </p>
@@ -2307,18 +2255,18 @@
           <div class="form-grid">
             <div class="form-field">
               <label class="form-label" for="firstName">First Name</label>
-              <input class="form-input" type="text" id="firstName" name="firstName" placeholder="Enter your first name" required="">
+              <input class="form-input" type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
             </div>
             <div class="form-field">
               <label class="form-label" for="lastName">Last Name</label>
-              <input class="form-input" type="text" id="lastName" name="lastName" placeholder="Enter your last name" required="">
+              <input class="form-input" type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
             </div>
           </div>
           
           <div class="form-grid">
             <div class="form-field">
               <label class="form-label" for="email">Email Address</label>
-              <input class="form-input" type="email" id="email" name="email" placeholder="Enter your email" required="">
+              <input class="form-input" type="email" id="email" name="email" placeholder="Enter your email" required>
             </div>
             <div class="form-field">
               <label class="form-label" for="phone">Phone Number</label>
@@ -2333,7 +2281,7 @@
           
           <div class="form-field full-width">
             <label class="form-label" for="message">Tell us about your career goals</label>
-            <textarea class="form-textarea" id="message" name="message" placeholder="What AI/ML role are you targeting? What's your timeline? Any specific challenges you're facing?" required=""></textarea>
+            <textarea class="form-textarea" id="message" name="message" placeholder="What AI/ML role are you targeting? What's your timeline? Any specific challenges you're facing?" required></textarea>
           </div>
           
           <button class="form-submit" type="submit">Send Message</button>
@@ -2369,12 +2317,12 @@
           </div>
           
           <div class="footer-column">
-            <h3>Career Services</h3>
-            <a href="career-center.html" class="footer-link">Career Center</a>
+            <h3>Карьерные сервисы</h3>
+            <a href="career-center.html" class="footer-link">Карьерный центр</a>
             <a href="career-orientation.html" class="footer-link">Career Orientation</a>
-            <a href="#" class="footer-link">Job Placement</a>
-            <a href="#" class="footer-link">Resume Review</a>
-            <a href="#" class="footer-link">Interview Prep</a>
+            <a href="#" class="footer-link">Трудоустройство</a>
+            <a href="#" class="footer-link">Обзор резюме</a>
+            <a href="#" class="footer-link">Подготовка к собеседованию</a>
           </div>
           
           <div class="footer-column">
@@ -2388,7 +2336,7 @@
         </div>
         
         <div class="footer-bottom">
-          <p>© 2025 AI Studio Learning Platform. All rights reserved. Empowering the next generation of AI professionals.</p>
+          <p>&copy; 2025 AI Studio Learning Platform. All rights reserved. Empowering the next generation of AI professionals.</p>
         </div>
       </div>
     </footer>
@@ -2842,179 +2790,199 @@
     })();
   </script>
 
-  <!-- Hebrew Database Integration Script -->
+  <!-- Dynamic Content Integration -->
+  <script src="../js/webflow-strapi-integration.js"></script>
   <script>
-    (async function loadHebrewCareerCenterContent() {
-      console.log('Loading Hebrew Career Center content...');
-      
-      const API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+    // Initialize dynamic content loading for Russian career-center page
+    document.addEventListener('DOMContentLoaded', async function() {
+      console.log('🚀 Initializing Russian career-center page integration...');
       
       try {
-        const response = await fetch(`${API_BASE}/career-center-page?locale=he`);
-        console.log('Hebrew API response status:', response.status);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
+        // Fetch career-center data from API with Russian locale
+        const API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';
+        const response = await fetch(`${API_BASE}/career-center-page?locale=ru`);
         const data = await response.json();
-        console.log('Hebrew Career Center data received:', data);
+        
+        console.log('💼 Fetched Russian career-center data:', data);
         
         if (data && data.data && data.data.attributes) {
           const content = data.data.attributes;
           updateCareerCenterContent(content);
-        } else {
-          console.log('Hebrew content structure not as expected:', data);
         }
+        
+        console.log('✅ Russian career-center content loaded successfully');
+        
       } catch (error) {
-        console.error('Error loading Hebrew career center content:', error);
+        console.error('❌ Failed to load Russian career-center content:', error);
       }
       
       function updateCareerCenterContent(content) {
-        console.log('Updating Hebrew Career Center content...');
-        
-        // Update main hero title - multiple selectors for robustness
-        const heroTitle = document.querySelector('.section-title.featured-courses, .hero-heading, h1, .career-hero-title');
-        if (heroTitle && content.title) {
-          console.log('Updating hero title to:', content.title);
-          heroTitle.textContent = content.title;
-        }
-        
-        // Update hero subtitle
-        const heroSubtitle = document.querySelector('.section-subtitle, .hero-subtitle, .subtitle');
-        if (heroSubtitle && content.subtitle) {
-          console.log('Updating hero subtitle to:', content.subtitle);
-          heroSubtitle.textContent = content.subtitle;
-        }
-        
-        // Update hero description
-        const heroDesc = document.querySelector('.section-description-text.featured-courses, .hero-description, .description, .career-hero-description');
-        if (heroDesc && content.description) {
-          console.log('Updating hero description to:', content.description);
-          heroDesc.innerHTML = content.description;
-        }
-        
-        // Update stats if available
-        if (content.stats && Array.isArray(content.stats)) {
-          console.log('Updating stats section...');
-          content.stats.forEach((stat, index) => {
-            const statValue = document.querySelector(`.stat-item:nth-child(${index + 1}) .stat-value, .metric-item:nth-child(${index + 1}) .metric-value`);
-            const statLabel = document.querySelector(`.stat-item:nth-child(${index + 1}) .stat-label, .metric-item:nth-child(${index + 1}) .metric-label`);
-            
-            if (statValue && stat.value) {
-              statValue.textContent = stat.value;
+        // Update hero section - target actual HTML elements
+        const heroSection = document.querySelector('.career-hero-section');
+        if (heroSection) {
+          // Main hero title
+          const heroTitle = heroSection.querySelector('.career-hero-title');
+          if (heroTitle && content.heroTitle) {
+            heroTitle.textContent = content.heroTitle;
+          }
+          
+          // Hero subtitle
+          const heroSubtitle = heroSection.querySelector('.career-hero-subtitle');
+          if (heroSubtitle && content.heroSubtitle) {
+            heroSubtitle.textContent = content.heroSubtitle;
+          }
+          
+          // Hero description
+          const heroDescription = heroSection.querySelector('.career-hero-description');
+          if (heroDescription && content.heroDescription) {
+            heroDescription.textContent = content.heroDescription;
+          }
+          
+          // Update hero stats
+          const statNumbers = heroSection.querySelectorAll('.career-stat-number');
+          const statLabels = heroSection.querySelectorAll('.career-stat-label');
+          
+          // Update stats from database content
+          if (content.heroStats && Array.isArray(content.heroStats) && content.heroStats.length >= 3) {
+            for (let i = 0; i < Math.min(3, content.heroStats.length); i++) {
+              if (statNumbers[i] && content.heroStats[i].number) {
+                statNumbers[i].textContent = content.heroStats[i].number;
+              }
+              if (statLabels[i] && content.heroStats[i].label) {
+                statLabels[i].textContent = content.heroStats[i].label;
+              }
             }
-            if (statLabel && stat.label) {
-              statLabel.textContent = stat.label;
-            }
-          });
+          }
         }
         
-        // Update services if available
+        // Update main page title and descriptions if they exist as separate elements
+        const pageTitle = document.querySelector('h1:not(.career-hero-title)');
+        if (pageTitle && content.title && content.title !== content.heroTitle) {
+          pageTitle.textContent = content.title;
+        }
+        
+        // Update services section title
+        const servicesTitle = document.querySelector('.core-services-section .section-title');
+        if (servicesTitle && content.servicesTitle) {
+          servicesTitle.textContent = content.servicesTitle;
+        }
+        
+        // Update services section
         if (content.services && Array.isArray(content.services)) {
-          console.log('Updating services section...');
-          content.services.forEach((service, index) => {
-            const serviceTitle = document.querySelector(`.service-item:nth-child(${index + 1}) .service-title, .feature-item:nth-child(${index + 1}) .feature-title`);
-            const serviceDesc = document.querySelector(`.service-item:nth-child(${index + 1}) .service-description, .feature-item:nth-child(${index + 1}) .feature-description`);
-            
-            if (serviceTitle && service.title) {
-              serviceTitle.textContent = service.title;
-            }
-            if (serviceDesc && service.description) {
-              serviceDesc.textContent = service.description;
-            }
-          });
+          updateServicesSection(content.services);
         }
         
-        // Update advantages if available
+        // Update advantages section  
         if (content.advantages && Array.isArray(content.advantages)) {
-          console.log('Updating advantages section...');
-          content.advantages.forEach((advantage, index) => {
-            const advantageTitle = document.querySelector(`.advantage-item:nth-child(${index + 1}) .advantage-title, .benefit-item:nth-child(${index + 1}) .benefit-title`);
-            const advantageDesc = document.querySelector(`.advantage-item:nth-child(${index + 1}) .advantage-description, .benefit-item:nth-child(${index + 1}) .benefit-description`);
-            
-            if (advantageTitle && advantage.title) {
-              advantageTitle.textContent = advantage.title;
-            }
-            if (advantageDesc && advantage.description) {
-              advantageDesc.textContent = advantage.description;
+          updateAdvantagesSection(content.advantages);
+        }
+        
+        // Update package information
+        if (content.package) {
+          const packageTitle = document.querySelector('.consultation-card h3, .package-title');
+          const packagePrice = document.querySelector('.consultation-price, .package-price');
+          const packageDescription = document.querySelector('.consultation-card p, .package-description');
+          
+          if (packageTitle && content.package.title) {
+            packageTitle.textContent = content.package.title;
+          }
+          if (packagePrice && content.package.price) {
+            packagePrice.textContent = content.package.price;
+          }
+          if (packageDescription && content.package.description) {
+            packageDescription.textContent = content.package.description;
+          }
+        }
+        
+        console.log('✅ Career center content updated with Russian text');
+      }
+      
+      function updateServicesSection(services) {
+        const servicesContainer = document.querySelector('[data-services-container]');
+        if (!servicesContainer || services.length === 0) return;
+        
+        // Clear existing content
+        servicesContainer.innerHTML = '';
+        
+        // Add new services
+        services.forEach(service => {
+          const serviceElement = createServiceElement(service);
+          servicesContainer.appendChild(serviceElement);
+        });
+      }
+      
+      function createServiceElement(service) {
+        const serviceEl = document.createElement('div');
+        serviceEl.className = 'service-item';
+        serviceEl.innerHTML = `
+          <div class="service-icon">${service.icon || '💼'}</div>
+          <div class="service-content">
+            <h3 class="service-title">${service.title}</h3>
+            <p class="service-description">${service.description}</p>
+          </div>
+        `;
+        return serviceEl;
+      }
+      
+      function updateAdvantagesSection(advantages) {
+        const advantagesContainer = document.querySelector('[data-advantages-container]');
+        if (!advantagesContainer || advantages.length === 0) return;
+        
+        advantagesContainer.innerHTML = '';
+        
+        advantages.forEach(advantage => {
+          const advantageElement = createAdvantageElement(advantage);
+          advantagesContainer.appendChild(advantageElement);
+        });
+      }
+      
+      function createAdvantageElement(advantage) {
+        const advantageEl = document.createElement('div');
+        advantageEl.className = 'advantage-item';
+        advantageEl.innerHTML = `
+          <div class="advantage-icon">${advantage.icon || '✓'}</div>
+          <div class="advantage-content">
+            <h4 class="advantage-title">${advantage.title}</h4>
+            <p class="advantage-description">${advantage.description}</p>
+          </div>
+        `;
+        return advantageEl;
+      }
+      
+      function updateElement(selector, value) {
+        if (!value) return;
+        
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+          if (el) {
+            el.textContent = value;
+          }
+        });
+        
+        // Also try generic selectors for hero content
+        if (selector === '[data-title]') {
+          const titles = document.querySelectorAll('h1, .main-title, .page-title');
+          titles.forEach(el => {
+            if (el.textContent.includes('Career') || el.textContent.includes('Центр') || el.textContent.includes('карьер')) {
+              el.textContent = value;
             }
           });
         }
         
-        // Set HTML language to Hebrew and RTL direction
-        document.documentElement.lang = 'he';
-        document.documentElement.dir = 'rtl';
-        
-        console.log('Hebrew Career Center content update completed');
+        if (selector === '[data-hero-title]') {
+          const heroTitles = document.querySelectorAll('.hero-title, h1, h2');
+          heroTitles.forEach(el => {
+            if (el.textContent.includes('Career') || el.textContent.includes('центр') || el.textContent.includes('Карьер')) {
+              el.textContent = value;
+            }
+          });
+        }
       }
-    })();
+    });
   </script>
 
-  <script src="js/navigation-responsive-fix.js"></script>
-  <script src="js/emergency-fix.js"></script>
-  <script src="js/mobile-menu-toggle-fix.js"></script>
-
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Handle all lead forms
-        const forms = document.querySelectorAll('form[data-name="lead-form"], form[id*="lead"], form[action*="leads"]');
-        
-        forms.forEach(form => {
-          form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(form);
-            const data = {
-              data: {
-                name: formData.get('name') || formData.get('Name'),
-                email: formData.get('email') || formData.get('Email'),
-                phone: formData.get('phone') || formData.get('Phone'),
-                message: formData.get('message') || formData.get('Message'),
-                language: document.documentElement.lang,
-                source: window.location.pathname
-              }
-            };
-            
-            try {
-              // Try HTTPS first, fallback to HTTP if SSL issues
-              let response = await fetch('https://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-              });
-              
-              // If HTTPS fails, try HTTP fallback
-              if (!response.ok && response.status === 0) {
-                console.log('HTTPS failed, trying HTTP fallback...');
-                response = await fetch('http://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/api/leads', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify(data)
-                });
-              }
-              
-              if (response.ok) {
-                // Show success message
-                alert('Thank you! We will contact you soon.');
-                form.reset();
-                
-                // Optional: redirect to thank you page
-                // window.location.href = '/thank-you.html';
-              } else {
-                throw new Error('Submission failed');
-              }
-            } catch (error) {
-              console.error('Form submission error:', error);
-              alert('Sorry, there was an error. Please try again or contact us directly.');
-            }
-          });
-        });
-      });
-    </script>
-  </body></html>
+  <script src="../js/ui-translator.js"></script>  <script src="../js/navigation-responsive-fix.js"></script>
+  <script src="../js/mobile-menu-toggle-fix.js"></script>
+    <script src="../js/shared-menu-component.js"></script>
+</body>
+</html>

@@ -1,10 +1,10 @@
 /* ULTRA-AGGRESSIVE Desktop Menu Visibility Fix */
 /* This CSS forces the menu to be visible on desktop regardless of JavaScript interference */
 
-/* Desktop menu - STRONGEST possible overrides */
+/* Desktop menu - STRONGEST possible overrides - DESKTOP ONLY */
 @media screen and (min-width: 992px) {
 
-  /* Force navigation menu to be visible with maximum specificity */
+  /* Force navigation menu to be visible with maximum specificity - DESKTOP ONLY */
   .w-nav-menu,
   .nav-menu.w-nav-menu,
   nav .w-nav-menu,
@@ -129,5 +129,76 @@
   
   .w-nav-menu[style*="display:none"] {
     display: flex !important;
+  }
+}
+
+/* MOBILE: Force menu to be hidden when not open */
+@media screen and (max-width: 991px) {
+  /* Strongest possible mobile menu hiding with ultra-high specificity */
+  body:not(.w--nav-menu-open) .w-nav-menu,
+  html:not(.w--nav-menu-open) .w-nav-menu,
+  body:not(.w--nav-menu-open) .nav-menu.w-nav-menu,
+  html:not(.w--nav-menu-open) .nav-menu.w-nav-menu,
+  body:not(.w--nav-menu-open) nav .w-nav-menu,
+  html:not(.w--nav-menu-open) nav .w-nav-menu,
+  body:not(.w--nav-menu-open) .navbar .w-nav-menu,
+  html:not(.w--nav-menu-open) .navbar .w-nav-menu,
+  body:not(.w--nav-menu-open) .w-nav .w-nav-menu,
+  html:not(.w--nav-menu-open) .w-nav .w-nav-menu {
+    display: none !important;
+    position: fixed !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    transform: translateX(-100%) !important;
+    left: -9999px !important;
+    top: -9999px !important;
+  }
+
+  /* Force visible only when open class is present */
+  body.w--nav-menu-open .w-nav-menu,
+  html.w--nav-menu-open .w-nav-menu,
+  body.w--nav-menu-open .nav-menu.w-nav-menu,
+  html.w--nav-menu-open .nav-menu.w-nav-menu {
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    background: rgba(5, 5, 26, 0.98) !important;
+    z-index: 9998 !important;
+    padding: 80px 20px 20px !important;
+  }
+
+  /* Override any inline styles on mobile */
+  .w-nav-menu[style*="display: flex"],
+  .w-nav-menu[style*="display:flex"] {
+    display: none !important;
+  }
+
+  /* CRITICAL: Override RTL-specific rule that's causing the issue */
+  html:not(.w--nav-menu-open) .navbar[dir="rtl"] .w-nav-menu,
+  html:not(.w--nav-menu-open) .navbar[dir="rtl"] .nav-menu,
+  html:not(.w--nav-menu-open) .w-nav[dir="rtl"] .w-nav-menu,
+  html:not(.w--nav-menu-open) [dir="rtl"] .w-nav-menu,
+  html:not(.w--nav-menu-open) [dir="rtl"] .nav-menu.w-nav-menu {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    transform: translateX(-100%) !important;
+    left: -9999px !important;
+    top: -9999px !important;
+  }
+
+  body.w--nav-menu-open .w-nav-menu[style*="display: flex"],
+  body.w--nav-menu-open .w-nav-menu[style*="display:flex"],
+  html.w--nav-menu-open .w-nav-menu[style*="display: flex"],
+  html.w--nav-menu-open .w-nav-menu[style*="display:flex"] {
+    display: block !important;
   }
 }

@@ -33,14 +33,24 @@
 
     if (hamburger) {
       // Remove existing listeners
-      hamburger.replaceWith(hamburger.cloneNode(true));
-      hamburger = document.querySelector('.w-nav-button');
+      const newHamburger = hamburger.cloneNode(true);
+      hamburger.parentNode.replaceChild(newHamburger, hamburger);
+      hamburger = newHamburger;
 
-      // Add click handler
+      // Add click handler with debounce
+      let isToggling = false;
       hamburger.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
+
+        if (isToggling) return;
+        isToggling = true;
+
         toggleMenu();
+
+        setTimeout(() => {
+          isToggling = false;
+        }, 300);
       });
 
       console.log('✅ Hamburger button initialized');

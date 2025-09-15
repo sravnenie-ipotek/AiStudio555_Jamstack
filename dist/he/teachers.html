@@ -406,11 +406,58 @@
   </style>
 
   <link href="../css/mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/hebrew-menu-alignment-fix.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <div class="page-wrapper">
     <!-- Navigation (Same as courses.html) -->
-    <div id="shared-menu-container"></div>
+    <div role="banner" class="navbar w-nav" dir="rtl">
+      <div class="container">
+        <div class="navbar-content">
+          <a href="home.html" class="zohacous-logo-link w-nav-brand">
+            <img loading="lazy" src="../images/Logo.svg" alt="" class="zohacous-logo-image">
+          </a>
+          <nav role="navigation" class="nav-menu w-nav-menu">
+            <a href="home.html" class="nav-link w-nav-link">בית</a>
+            <a href="courses.html" class="nav-link w-nav-link">קורסים</a>
+            <a href="teachers.html" aria-current="page" class="nav-link w-nav-link w--current">מורים</a>
+            <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
+              <div class="dropdown-toggle w-dropdown-toggle">
+                <div class="dropdown-toggle-text-block">שירותי קריירה</div>
+                <div class="dropdown-toggle-arrow-2">▼</div>
+              </div>
+              <nav class="dropdown-list w-dropdown-list" style="background: rgba(5, 5, 26, 0.98) !important; backdrop-filter: blur(20px) !important;">
+                <a href="career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
+                  <div>כיוון קריירה</div>
+                </a>
+                <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block">
+                  <div>מרכז קריירה</div>
+                </a>
+              </nav>
+            </div>
+            <!-- Language Selector -->
+            <div class="language-nav-item">
+              <select id="language-switcher-nav" onchange="switchLanguage(this.value)" class="language-nav-select" style="background: transparent !important; border: none !important; color: rgba(255, 255, 255, 0.9) !important;">
+                <option value="en" style="background: #05051a !important; color: white !important;">English</option>
+                <option value="ru" style="background: #05051a !important; color: white !important;">Русский</option>
+                <option value="he" selected style="background: #05051a !important; color: white !important;">עברית</option>
+              </select>
+            </div>
+            <a href="pricing.html" class="nav-link w-nav-link">תוכניות תמחור</a>
+          </nav>
+          <!-- Sign Up Button -->
+          <div class="navbar-button-wrapper">
+            <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">הרשמו היום</a>
+          </div>
+          <!-- Mobile Menu Button -->
+          <div class="menu-button w-nav-button">
+            <div class="w-icon-nav-menu"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile Menu Overlay -->
+      <div class="w-nav-overlay"></div>
+    </div>
 
     <!-- Hero Section -->
     <section class="section hero-enhanced">
@@ -626,137 +673,7 @@
     });
   </script>
 
-  <!-- Language Switcher -->
-  <script>
-    // Inline Language Switcher for AI Studio
-    (function() {
-      'use strict';
-      
-      const LANGUAGES = {
-        en: { name: 'English', flag: '🇬🇧', dir: 'ltr', label: 'EN' },
-        ru: { name: 'Русский', flag: '🇷🇺', dir: 'ltr', label: 'RU' },
-        he: { name: 'עברית', flag: '🇮🇱', dir: 'rtl', label: 'HE' }
-      };
-      
-      const STORAGE_KEY = 'aistudio_language';
-      
-      function detectCurrentLanguage() {
-        const pathParts = window.location.pathname.split('/');
-        const urlLang = pathParts.find(part => LANGUAGES[part]);
-        if (urlLang) return urlLang;
-        
-        const storedLang = localStorage.getItem(STORAGE_KEY);
-        if (storedLang && LANGUAGES[storedLang]) return storedLang;
-        
-        return 'en';
-      }
-      
-      function createLanguageSwitcher() {
-        if (document.getElementById('language-switcher')) return;
-        
-        const currentLang = detectCurrentLanguage();
-        const switcher = document.createElement('div');
-        switcher.id = 'language-switcher';
-        // Let CSS handle positioning via desktop-language-selector-fix.css
-        
-        switcher.innerHTML = `
-          <style>
-            #language-switcher select {
-              padding: 10px 16px;
-              background: rgba(5, 5, 26, 0.95);
-              border: 1px solid rgba(255, 255, 255, 0.2);
-              border-radius: 12px;
-              color: white;
-              font-family: "Plus Jakarta Sans", sans-serif;
-              font-size: 14px;
-              font-weight: 500;
-              cursor: pointer;
-              backdrop-filter: blur(10px);
-              outline: none;
-              transition: all 0.3s ease;
-            }
-            #language-switcher select:hover {
-              background: rgba(0, 128, 255, 0.1);
-              border-color: rgba(0, 128, 255, 0.3);
-              transform: translateY(-2px);
-            }
-            #language-switcher select option {
-              background: #05051a;
-              color: white;
-              padding: 8px;
-            }
-            html[dir="rtl"] #language-switcher {
-              right: auto;
-              left: 20px;
-            }
-            @media (max-width: 768px) {
-              #language-switcher {
-                top: 10px;
-                right: 10px;
-              }
-              #language-switcher select {
-                padding: 8px 12px;
-                font-size: 13px;
-              }
-            }
-          </style>
-          <select onchange="switchLanguage(this.value)" id="languageSelect">
-            ${Object.entries(LANGUAGES).map(([code, lang]) => 
-              `<option value="${code}" ${code === currentLang ? 'selected' : ''}>${lang.flag} ${lang.name}</option>`
-            ).join('')}
-          </select>
-        `;
-        
-        const navbar = document.querySelector(".navbar-content") || document.querySelector(".navbar") || document.body; navbar.appendChild(switcher);
-        
-        // Apply language settings
-        document.documentElement.lang = currentLang;
-        document.documentElement.dir = LANGUAGES[currentLang].dir;
-        localStorage.setItem(STORAGE_KEY, currentLang);
-      }
-      
-      window.switchLanguage = function(newLang) {
-        if (!LANGUAGES[newLang]) return;
-        
-        localStorage.setItem(STORAGE_KEY, newLang);
-        
-        // Determine new path
-        const currentPath = window.location.pathname;
-        const pathParts = currentPath.split('/').filter(part => part);
-        
-        // Handle different URL structures
-        if (pathParts[0] === 'dist' && LANGUAGES[pathParts[1]]) {
-          // Fix home.html to index.html issue
-          if (pathParts[pathParts.length - 1] === 'home.html') {
-            pathParts[pathParts.length - 1] = 'index.html';
-          }
-          pathParts[1] = newLang;
-        } else if (pathParts[0] === 'dist') {
-          pathParts.splice(1, 0, newLang);
-        } else if (LANGUAGES[pathParts[0]]) {
-          pathParts[0] = newLang;
-        } else {
-          // For production, construct language-specific path
-          let fileName = currentPath.split('/').pop() || 'index.html';
-          // FIX: Normalize home.html to index.html
-          if (fileName === 'home.html' || fileName === '') {
-            fileName = 'index.html';
-          }
-          window.location.href = '/dist/' + newLang + '/' + fileName;
-          return;
-        }
-        
-        window.location.href = '/' + pathParts.join('/');
-      };;
-      
-      // Initialize when DOM is ready
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', createLanguageSwitcher);
-      } else {
-        createLanguageSwitcher();
-      }
-    })();
-  </script>
+  <!-- Removed duplicate language switcher script - using direct HTML implementation -->
   <!-- Contact Form Modal -->
   <script src="../js/contact-form-modal.js"></script>
   <script id="career-dropdown-fix-js">
@@ -825,7 +742,7 @@
   <!-- API Integration Scripts -->
   <script src="../js/webflow-strapi-integration.js"></script>
   <script src="../js/strapi-integration.js"></script>
-  <script src="../js/shared-menu-component.js?v=2.6"></script>
+  <script src="../js/shared-menu-component.js?v=2.6.5"></script>
   <script src="../js/ui-translator.js"></script>
   <script src="../js/mobile-menu-toggle-fix.js"></script>
 
@@ -1113,5 +1030,20 @@
     });
   </script>
     <!-- shared-menu-component.js now loads before ui-translator above -->
+
+<script>
+  function switchLanguage(selectedLang) {
+    const currentPage = 'teachers';
+    let newUrl;
+
+    if (selectedLang === 'en') {
+      newUrl = `/${currentPage}.html`;
+    } else {
+      newUrl = `/${selectedLang}/${currentPage}.html`;
+    }
+
+    window.location.href = newUrl;
+  }
+</script>
 </body>
 </html>

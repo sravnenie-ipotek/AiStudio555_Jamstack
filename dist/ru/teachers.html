@@ -14,6 +14,10 @@
   <link href="../css/enhanced-sections.css" rel="stylesheet" type="text/css">
   <link href="../css/style-guide-compliance.css" rel="stylesheet" type="text/css">
   <link href="../css/unified-navigation.css" rel="stylesheet" type="text/css">
+  <link href="../css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
+  <link href="/css/mobile-responsive-fix.css" rel="stylesheet" type="text/css">
+  <link href="/css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
@@ -406,51 +410,7 @@
 <body>
   <div class="page-wrapper">
     <!-- Navigation (Same as courses.html) -->
-    <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
-      <div class="container">
-        <div class="navbar-content">
-          <a href="home.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
-          <nav role="navigation" class="nav-menu w-nav-menu">
-            <a href="home.html" class="nav-link w-nav-link">Home</a>
-            <a href="courses.html" class="nav-link w-nav-link">Курсы</a>
-            <a href="teachers.html" aria-current="page" class="nav-link w-nav-link w--current">Преподаватели</a>
-            <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
-              <div class="dropdown-toggle w-dropdown-toggle">
-                <div class="dropdown-toggle-text-block">Career Services</div>
-                <div class="dropdown-toggle-arrow-2">▼</div>
-              </div>
-              <nav class="dropdown-list w-dropdown-list">
-                <a href="career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
-                  <div>Career Orientation</div>
-                </a>
-                <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block">
-                  <div>Career Center</div>
-                </a>
-              </nav>
-            </div>
-            <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
-            <div class="primary-button-wrapper mobile">
-              <a href="authentication-pages/sign-up.html" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block">
-                <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">Записаться</div>
-                  <div class="primary-button-text-block is-text-absolute">Записаться</div>
-                </div>
-              </a>
-            </div>
-          </nav>
-          <div class="navbar-button-wrapper">
-            <div class="primary-button-wrapper desktop">
-              <a href="authentication-pages/sign-up.html" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
-                <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">Записаться</div>
-                  <div class="primary-button-text-block is-text-absolute">Записаться</div>
-                </div>
-              </a>
-            </div>
-            <div class="menu-button w-nav-button">
-              <div data-is-ix2-target="1" class="hamburger-menu-icon" data-w-id="9700d956-7e80-623a-3836-d267f1fdd0f6" data-animation-type="lottie" data-src="https://uploads-ssl.webflow.com/6649cc3a1ea038d81fed488f/665c6513c402f5112b50428d_Hamburger%20White.lottie" data-loop="0" data-direction="1" data-autoplay="0" data-renderer="svg" data-duration="0" data-ix2-initial-state="0"></div>
-            </div>
-          </div>
+    <div id="shared-menu-container"></div>
         </div>
       </div>
     </div>
@@ -929,7 +889,7 @@
     </section>
   </div>
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=68b7601d918996218465c4a6" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-  <script src="../../js/webflow.js" type="text/javascript"></script>
+  <script src="../js/webflow.js" type="text/javascript"></script>
 
   <script>
     // Fix Career Services dropdown
@@ -1031,7 +991,7 @@
         const currentLang = detectCurrentLanguage();
         const switcher = document.createElement('div');
         switcher.id = 'language-switcher';
-        switcher.style.cssText = 'position:fixed;top:20px;right:20px;z-index:10000;';
+        // Let CSS handle positioning via desktop-language-selector-fix.css
         
         switcher.innerHTML = `
           <style>
@@ -1208,7 +1168,7 @@
           </select>
         `;
         
-        document.body.appendChild(switcher);
+        const navbar = document.querySelector(".navbar-content") || document.querySelector(".navbar") || document.body; navbar.appendChild(switcher);
         
         // Apply language settings
         document.documentElement.lang = currentLang;
@@ -1319,8 +1279,71 @@
     })();
   </script>
 
+  <!-- API Integration Scripts -->
+  <script src="../js/webflow-strapi-integration.js"></script>
+  <script src="../js/strapi-integration.js"></script>
+  <script src="../js/ui-translator.js"></script>
   <script src="../js/navigation-responsive-fix.js"></script>
-  <script src="../js/emergency-fix.js"></script>
+  <script src="../js/mobile-menu-toggle-fix.js"></script>
+
+  <!-- Teachers Database Loader - Direct Integration -->
+  <script src="../js/teachers-db-loader.js"></script>
+
+  <!-- Force Integration Initialization -->
+  <script>
+    // Force CustomAPIIntegration initialization for debugging
+    setTimeout(() => {
+      console.log('🔧 RU FORCE INIT: Checking integration...');
+      console.log('- window.CustomAPIIntegration exists:', !!window.CustomAPIIntegration);
+      console.log('- URL hostname:', window.location.hostname);
+      console.log('- URL pathname:', window.location.pathname);
+      
+      if (!window.CustomAPIIntegration) {
+        console.log('🔧 RU FORCE INIT: Creating CustomAPIIntegration manually...');
+        if (typeof CustomAPIIntegration !== 'undefined') {
+          const integration = new CustomAPIIntegration();
+          window.CustomAPIIntegration = integration;
+          
+          integration.initialize().then(success => {
+            console.log('🔧 RU FORCE INIT: Manual initialization result:', success);
+            if (success) {
+              console.log('🔧 RU FORCE INIT: Loading teachers content...');
+              integration.loadTeachersContent();
+            }
+          });
+        } else {
+          console.error('🔧 RU FORCE INIT: CustomAPIIntegration class not found!');
+        }
+      } else {
+        console.log('🔧 RU FORCE INIT: Integration already exists, calling loadTeachersContent...');
+        window.CustomAPIIntegration.loadTeachersContent();
+      }
+    }, 2000);
+  </script>
+
+  <!-- Manual Container Visibility Fix -->
+  <script>
+    // Force container visibility after everything loads
+    setTimeout(() => {
+      console.log('🔧 RU MANUAL VISIBILITY FIX: Making container visible...');
+      const container = document.querySelector('#instructors-grid');
+      if (container) {
+        container.style.opacity = '1';
+        container.style.visibility = 'visible';
+        container.style.display = 'block';
+        console.log('🔧 RU MANUAL VISIBILITY FIX: Container made visible');
+        console.log('- HTML content length:', container.innerHTML.length);
+        console.log('- Children count:', container.children.length);
+        
+        if (container.children.length === 0) {
+          console.log('🔧 RU MANUAL VISIBILITY FIX: No children found, adding test content...');
+          container.innerHTML = '<div style="padding: 20px; color: red;">DEBUG: Container is empty - teachers not loaded</div>';
+        }
+      } else {
+        console.error('🔧 RU MANUAL VISIBILITY FIX: Container not found!');
+      }
+    }, 5000);
+  </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -1330,5 +1353,6 @@
       }
     });
   </script>
+    <script src="../js/shared-menu-component.js"></script>
 </body>
 </html>

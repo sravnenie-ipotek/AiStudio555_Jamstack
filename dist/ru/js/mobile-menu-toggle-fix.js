@@ -209,10 +209,10 @@
       console.log('✅ Menu element found');
     }
 
-    // Skip mobile language selector - using inline desktop switcher instead
-    // if (menu && !menu.querySelector('.mobile-language-selector')) {
-    //   addLanguageSelector(menu);
-    // }
+    // Add language selector to mobile menu if not present
+    if (menu && !menu.querySelector('.mobile-language-selector')) {
+      addLanguageSelector(menu);
+    }
   }
 
   // Add language selector to mobile menu
