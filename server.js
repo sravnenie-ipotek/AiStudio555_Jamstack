@@ -2493,14 +2493,12 @@ app.get('/api/sync-missing-data', async (req, res) => {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
-  const client = await pool.connect();
-
   try {
     console.log('Starting data sync...');
     const results = [];
 
     // Create missing tables if they don't exist
-    await client.query(`
+    await queryDatabase(`
       CREATE TABLE IF NOT EXISTS faqs (
         id SERIAL PRIMARY KEY,
         question TEXT,
@@ -2513,7 +2511,7 @@ app.get('/api/sync-missing-data', async (req, res) => {
       );
     `);
 
-    await client.query(`
+    await queryDatabase(`
       CREATE TABLE IF NOT EXISTS consultations (
         id SERIAL PRIMARY KEY,
         title VARCHAR(255),
@@ -2526,7 +2524,7 @@ app.get('/api/sync-missing-data', async (req, res) => {
       );
     `);
 
-    await client.query(`
+    await queryDatabase(`
       CREATE TABLE IF NOT EXISTS career_resources (
         id SERIAL PRIMARY KEY,
         title VARCHAR(255),
@@ -2540,7 +2538,7 @@ app.get('/api/sync-missing-data', async (req, res) => {
       );
     `);
 
-    await client.query(`
+    await queryDatabase(`
       CREATE TABLE IF NOT EXISTS company_logos (
         id SERIAL PRIMARY KEY,
         company_name VARCHAR(255),
@@ -2569,7 +2567,7 @@ app.get('/api/sync-missing-data', async (req, res) => {
     ];
 
     for (const faq of faqsData) {
-      await client.query(
+      await queryDatabase(
         `INSERT INTO faqs (question, answer, category, order_index, visible)
          VALUES ($1, $2, $3, $4, $5)
          ON CONFLICT DO NOTHING`,
@@ -2604,7 +2602,7 @@ app.get('/api/sync-missing-data', async (req, res) => {
     ];
 
     for (const consultation of consultationsData) {
-      await client.query(
+      await queryDatabase(
         `INSERT INTO consultations (title, description, duration, price, features)
          VALUES ($1, $2, $3, $4, $5)
          ON CONFLICT DO NOTHING`,
@@ -2624,7 +2622,7 @@ app.get('/api/sync-missing-data', async (req, res) => {
     ];
 
     for (const resource of careerResourcesData) {
-      await client.query(
+      await queryDatabase(
         `INSERT INTO career_resources (title, description, type, url, icon, order_index)
          VALUES ($1, $2, $3, $4, $5, $6)
          ON CONFLICT DO NOTHING`,
@@ -2634,7 +2632,7 @@ app.get('/api/sync-missing-data', async (req, res) => {
     results.push(`${careerResourcesData.length} Career resources inserted`);
 
     // Insert company logo
-    await client.query(
+    await queryDatabase(
       `INSERT INTO company_logos (company_name, logo_url, website_url, order_index, visible, locale)
        VALUES ($1, $2, $3, $4, $5, $6)
        ON CONFLICT DO NOTHING`,
@@ -2651,23 +2649,19 @@ app.get('/api/sync-missing-data', async (req, res) => {
   } catch (error) {
     console.error('Sync error:', error);
     res.status(500).json({ error: error.message });
-  } finally {
-    client.release();
   }
 });
 
 // Check data status endpoint
 app.get('/api/check-data-status', async (req, res) => {
-  const client = await pool.connect();
-
   try {
     const tables = ['faqs', 'consultations', 'career_resources', 'company_logos'];
     const status = {};
 
     for (const table of tables) {
       try {
-        const result = await client.query(`SELECT COUNT(*) FROM ${table}`);
-        status[table] = parseInt(result.rows[0].count);
+        const result = await queryDatabase(`SELECT COUNT(*) FROM ${table}`);
+        status[table] = parseInt(result[0].count);
       } catch (err) {
         status[table] = 'table not found';
       }
@@ -2676,8 +2670,6 @@ app.get('/api/check-data-status', async (req, res) => {
     res.json({ status });
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } finally {
-    client.release();
   }
 });
 
