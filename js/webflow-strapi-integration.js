@@ -850,6 +850,59 @@ class CustomAPIIntegration {
         }
     }
 
+    // Teacher filtering setup
+    setupTeacherFiltering() {
+        const filterButtons = document.querySelectorAll('.teacher-tab-btn');
+        const teachersContainer = document.querySelector('.teachers-grid-minimal, #teachers-grid');
+
+        if (!filterButtons.length || !teachersContainer) {
+            console.log('❌ Teacher filtering elements not found');
+            return;
+        }
+
+        // Remove existing event listeners to prevent duplicates
+        filterButtons.forEach(btn => {
+            btn.replaceWith(btn.cloneNode(true));
+        });
+
+        // Get updated buttons after cloning
+        const newFilterButtons = document.querySelectorAll('.teacher-tab-btn');
+
+        newFilterButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // Update active state
+                newFilterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                // Get category to filter
+                const category = button.getAttribute('data-category');
+                this.filterTeachersByCategory(category);
+            });
+        });
+
+        console.log('🔘 Teacher filtering setup complete');
+    }
+
+    filterTeachersByCategory(category) {
+        const teacherCards = document.querySelectorAll('.teacher-card-minimal');
+
+        teacherCards.forEach(card => {
+            const cardCategory = card.getAttribute('data-category');
+
+            if (category === 'all' || cardCategory === category) {
+                card.style.display = 'block';
+                card.style.opacity = '1';
+            } else {
+                card.style.display = 'none';
+                card.style.opacity = '0';
+            }
+        });
+
+        console.log(`🔍 Filtered teachers by category: ${category}`);
+    }
+
     // Language switching support
     async switchLanguage(lang) {
         this.currentLanguage = lang;

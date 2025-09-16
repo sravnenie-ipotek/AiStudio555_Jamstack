@@ -4001,6 +4001,7 @@ app.get('/api/run-migration', async (req, res) => {
     
     // List of all columns needed
     const columns = [
+      'subtitle TEXT',
       'hero_title TEXT',
       'hero_subtitle TEXT',
       'hero_description TEXT',
@@ -4132,7 +4133,21 @@ app.get('/api/run-migration', async (req, res) => {
       'meta_keywords TEXT',
       'og_title TEXT',
       'og_description TEXT',
-      'og_image TEXT'
+      'og_image TEXT',
+      // Additional fields for Hebrew career orientation content
+      'solutions_description TEXT',
+      'outcomes_main_title TEXT',
+      'outcomes_subtitle TEXT',
+      'outcomes_description TEXT',
+      'outcome1_text TEXT',
+      'outcome2_text TEXT',
+      'outcome3_text TEXT',
+      'outcome4_text TEXT',
+      'expert_stat1_number TEXT',
+      'expert_stat1_label TEXT',
+      'expert_stat2_number TEXT',
+      'expert_stat2_label TEXT',
+      'cta_privacy_text TEXT'
     ];
     
     let addedColumns = 0;
