@@ -1,0 +1,91 @@
+/* Enable Video Background on Mobile Devices */
+
+/* Ensure video is visible on all screen sizes */
+.banner-video,
+.w-background-video {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Make sure video element plays on mobile */
+.banner-video video,
+.w-background-video video {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    -webkit-transform: translateZ(0) !important; /* Hardware acceleration */
+    transform: translateZ(0) !important;
+}
+
+/* Mobile-specific adjustments */
+@media screen and (max-width: 991px) {
+    .banner-video,
+    .w-background-video {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 350px !important; /* Ensure minimum height on mobile */
+        z-index: -1 !important;
+    }
+
+    .banner-video video,
+    .w-background-video video {
+        min-width: 100% !important;
+        min-height: 100% !important;
+        width: auto !important;
+        height: auto !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        -webkit-transform: translate(-50%, -50%) !important;
+    }
+}
+
+/* Smaller mobile screens */
+@media screen and (max-width: 767px) {
+    .banner-video,
+    .w-background-video {
+        min-height: 300px !important;
+    }
+}
+
+/* Smallest mobile screens */
+@media screen and (max-width: 479px) {
+    .banner-video,
+    .w-background-video {
+        min-height: 260px !important;
+    }
+}
+
+/* Ensure video controls are hidden */
+.banner-video video::-webkit-media-controls,
+.w-background-video video::-webkit-media-controls {
+    display: none !important;
+}
+
+.banner-video video::-webkit-media-controls-enclosure,
+.w-background-video video::-webkit-media-controls-enclosure {
+    display: none !important;
+}
+
+/* Ensure autoplay works on iOS */
+.banner-video video[autoplay],
+.w-background-video video[autoplay] {
+    -webkit-playsinline: true !important;
+    playsinline: true !important;
+}
+
+/* Fix for video overlay shapes */
+.banner-video-shape {
+    pointer-events: none !important;
+    z-index: 1 !important;
+}
