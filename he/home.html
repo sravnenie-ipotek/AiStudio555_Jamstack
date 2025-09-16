@@ -42,8 +42,23 @@
     .dropdown-menu-text-link-block:hover { background: rgba(255,255,255,0.05) !important; color: #ffd659 !important; }
     .navbar-button-wrapper { margin-left: auto !important; display: flex !important; align-items: center !important; gap: 20px !important; }
     .primary-button-wrapper.mobile { display: none !important; }
-    @media (max-width: 991px) { .primary-button-wrapper.desktop { display: none !important; } .primary-button-wrapper.mobile { display: block !important; } }
-    
+    @media (max-width: 991px) {
+      .primary-button-wrapper.desktop { display: none !important; }
+      .primary-button-wrapper.mobile { display: block !important; }
+      .navbar-button-wrapper { display: none !important; } /* Hide desktop Sign Up button on mobile */
+    }
+
+    /* Additional mobile hide rules */
+    @media (max-width: 767px) {
+      .navbar-button-wrapper,
+      .navbar-button-wrapper .primary-button,
+      .navbar-button-wrapper .w-button {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+      }
+    }
+
     /* Live preview mode styles */
     .editable-highlight {
       position: relative;

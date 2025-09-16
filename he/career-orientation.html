@@ -234,7 +234,7 @@
               </div>
               <nav class="dropdown-list w-dropdown-list" style="background: rgba(5, 5, 26, 0.98) !important; backdrop-filter: blur(20px) !important;">
                 <a href="career-orientation.html" aria-current="page" class="dropdown-menu-text-link-block w-inline-block w--current">
-                  <div>כיוון קריירה</div>
+                  <div data-career-field="navTitle">Loading...</div>
                 </a>
                 <a href="career-center.html" class="dropdown-menu-text-link-block w-inline-block">
                   <div>מרכז קריירה</div>
@@ -273,12 +273,12 @@
       <div class="container">
         <div class="inner-banner-content">
           <div class="inner-banner-title-wrapper">
-            <h1 class="inner-banner-title">כיוון קריירה</h1>
+            <h1 class="inner-banner-title" data-career-field="pageTitle">Loading...</h1>
           </div>
           <div class="inner-banner-text-link-wrapper">
             <a href="home.html" class="inner-banner-text-link">בית</a>
             <div class="inner-banner-text-link-arrow">|</div>
-            <a href="career-orientation.html" aria-current="page" class="inner-banner-text-link w--current">כיוון קריירה</a>
+            <a href="career-orientation.html" aria-current="page" class="inner-banner-text-link w--current" data-career-field="breadcrumb">Loading...</a>
           </div>
         </div>
       </div>
@@ -290,11 +290,11 @@
         <div data-w-id="orientation-hero" class="hero-value-proposition">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle" style="color: rgba(255,255,255,0.9);" data-career-field="heroSubtitle">ייעוץ קריירה מקצועי</div>
+            <div class="section-subtitle" style="color: rgba(255,255,255,0.9);" data-career-field="heroSubtitle">Loading...</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title featured-courses" style="color: white; margin-bottom: 24px;" data-career-field="heroMainTitle">מצאו את הקריירה המושלמת שלכם בעולם הטכנולוגיה</h2>
-          <p class="hero-problem-statement" data-career-field="heroDescription">מרגישים אבודים בבחירת המקצוע? לא יודעים איך לעבור לתחום הטכנולוגיה? אנחנו כאן כדי לעזור לכם למצוא את הכיוון הנכון ולבנות קריירה מצליחה.</p>
+          <h2 class="section-title featured-courses" style="color: white; margin-bottom: 24px;" data-career-field="heroMainTitle">Loading...</h2>
+          <p class="hero-problem-statement" data-career-field="heroDescription">Loading content from database...</p>
 
           <div style="text-align: center;">
             <button onclick="window.showModal(); return false;" class="hero-main-cta-enhanced consultation-modal-btn" style="display: inline-block; border: none; cursor: pointer;">
@@ -794,53 +794,8 @@
   <!-- Disabled for static career orientation page -->
   <!-- <script src="../js/hebrew-translations-fix.js"></script> -->
   <!-- API Integration Scripts -->
-  <!-- Career Orientation Dynamic Loading -->
-  <script>
-    // Custom career orientation dynamic content loader
-    (async function() {
-      try {
-        console.log('🚀 Loading Hebrew career orientation content from database...');
 
-        // Detect API endpoint
-        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const API_BASE = isLocal ? 'http://localhost:3000/api' : 'https://aistudio555jamstack-production.up.railway.app/api';
-
-        // Fetch Hebrew career orientation content
-        const response = await fetch(`${API_BASE}/career-orientation?locale=he`);
-        const data = await response.json();
-
-        if (data?.hero) {
-          console.log('✅ Loaded career data:', data);
-
-          // Update hero title
-          const heroTitle = document.querySelector('.section-title.featured-courses');
-          if (heroTitle && data.hero.title) {
-            heroTitle.textContent = data.hero.title;
-            console.log('📝 Updated hero title');
-          }
-
-          // Update hero subtitle
-          const heroSubtitle = document.querySelector('.hero-problem-statement');
-          if (heroSubtitle && data.hero.subtitle) {
-            heroSubtitle.textContent = data.hero.subtitle;
-            console.log('📝 Updated hero subtitle');
-          }
-
-          console.log('✅ Database integration active - content loaded dynamically');
-
-          console.log('🎉 Successfully loaded dynamic Hebrew content!');
-        } else {
-          console.warn('⚠️ No career data received from API');
-        }
-
-      } catch (error) {
-        console.error('❌ Failed to load dynamic content:', error);
-        console.log('📄 Falling back to static content');
-      }
-    })();
-  </script>
-
-  <!-- <script src="../js/webflow-strapi-integration.js"></script> -->
+  <script src="../js/webflow-strapi-integration.js"></script>
   <!-- <script src="../js/strapi-integration.js"></script> -->
   <!-- <script src="../js/ui-translator.js"></script> -->
   <script src="../js/universal-mobile-navigation-fix.js"></script>
