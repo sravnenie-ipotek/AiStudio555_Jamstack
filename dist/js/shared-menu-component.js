@@ -162,9 +162,9 @@
                     border-radius: 8px !important;
                 }
 
-                /* Logo comes second */
+                /* Hide logo on mobile */
                 .nav-brand {
-                    order: 0 !important;
+                    display: none !important;
                 }
 
                 /* Hide desktop button on mobile */

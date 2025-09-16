@@ -217,18 +217,18 @@
 
         <div class="tabs">
             <!-- CORE PAGES (matching your website pages) -->
-            <button class="tab active" onclick="showSection('home-page')">🏠 Home Page <span class="field-count">123 Fields</span></button>
-            <button class="tab" onclick="showSection('courses')">📚 Courses Page <span class="field-count">30+ Fields</span></button>
-            <button class="tab" onclick="showSection('teachers')">👨‍🏫 Teachers Page <span class="field-count">25+ Fields</span></button>
-            <button class="tab" onclick="showSection('career-services')">🎯 Career Center <span class="field-count">40+ Fields</span></button>
-            <button class="tab" onclick="showSection('career-orientation')">🧭 Career Orientation <span class="field-count">50+ Fields</span></button>
-            <button class="tab" onclick="showSection('pricing-plans')">💰 Pricing Page <span class="field-count">20+ Fields</span></button>
-            <button class="tab" onclick="showSection('blog-posts')">📝 Blog Page <span class="field-count">15+ Fields</span></button>
-            <button class="tab" onclick="showSection('about-page')">ℹ️ About Page <span class="field-count">35+ Fields</span></button>
-            <button class="tab" onclick="showSection('contact-page')">📞 Contact Page <span class="field-count">25+ Fields</span></button>
-            <button class="tab" onclick="showSection('courses')">📖 Course Detail <span class="field-count">15+ Fields</span></button>
-            <button class="tab" onclick="showSection('blog-posts')">📰 Blog Detail <span class="field-count">12+ Fields</span></button>
-            <button class="tab" onclick="showSection('footer-management')">🦶 Footer <span class="field-count">20+ Fields</span></button>
+            <button class="tab active" onclick="showSection('home-page')" data-key="home_page">🏠 Home Page <span class="field-count">123 Fields</span></button>
+            <button class="tab" onclick="showSection('courses')" data-key="courses_page">📚 Courses Page <span class="field-count">30+ Fields</span></button>
+            <button class="tab" onclick="showSection('teachers')" data-key="teachers_page">👨‍🏫 Teachers Page <span class="field-count">25+ Fields</span></button>
+            <button class="tab" onclick="showSection('career-services')" data-key="career_center">🎯 Career Center <span class="field-count">40+ Fields</span></button>
+            <button class="tab" onclick="showSection('career-orientation')" data-key="career_orientation">🧭 Career Orientation <span class="field-count">50+ Fields</span></button>
+            <button class="tab" onclick="showSection('pricing-plans')" data-key="pricing_page">💰 Pricing Page <span class="field-count">20+ Fields</span></button>
+            <button class="tab" onclick="showSection('blog-posts')" data-key="blog_page">📝 Blog Page <span class="field-count">15+ Fields</span></button>
+            <button class="tab" onclick="showSection('about-page')" data-key="about_page">ℹ️ About Page <span class="field-count">35+ Fields</span></button>
+            <button class="tab" onclick="showSection('contact-page')" data-key="contact_page">📞 Contact Page <span class="field-count">25+ Fields</span></button>
+            <button class="tab" onclick="showSection('courses')" data-key="course_detail">📖 Course Detail <span class="field-count">15+ Fields</span></button>
+            <button class="tab" onclick="showSection('blog-posts')" data-key="blog_detail">📰 Blog Detail <span class="field-count">12+ Fields</span></button>
+            <button class="tab" onclick="showSection('footer-management')" data-key="footer">🦶 Footer <span class="field-count">20+ Fields</span></button>
         </div>
 
         <!-- COMPREHENSIVE HOME PAGE Section -->
@@ -2563,26 +2563,164 @@
         }
 
         // Language switching functionality
+        // Translation dictionary for admin panel
+        const adminTranslations = {
+            en: {
+                // Page titles
+                'home_page': 'Home Page',
+                'courses_page': 'Courses Page',
+                'teachers_page': 'Teachers Page',
+                'career_center': 'Career Center',
+                'career_orientation': 'Career Orientation',
+                'pricing_page': 'Pricing Page',
+                'blog_page': 'Blog Page',
+                'about_page': 'About Page',
+                'contact_page': 'Contact Page',
+                'course_detail': 'Course Detail',
+                'blog_detail': 'Blog Detail',
+                'footer': 'Footer',
+                // Field count
+                'fields': 'Fields',
+                // Main header
+                'admin_title': 'AI Studio - Content Manager (CLEAN)',
+                // Section headers
+                'career_orientation_management': 'Career Orientation Management',
+                'comprehensive_assessment': 'Comprehensive AI Career Assessment & Guidance System'
+            },
+            ru: {
+                // Page titles
+                'home_page': 'Главная страница',
+                'courses_page': 'Страница курсов',
+                'teachers_page': 'Страница преподавателей',
+                'career_center': 'Карьерный центр',
+                'career_orientation': 'Профориентация',
+                'pricing_page': 'Страница цен',
+                'blog_page': 'Страница блога',
+                'about_page': 'О нас',
+                'contact_page': 'Контакты',
+                'course_detail': 'Детали курса',
+                'blog_detail': 'Детали блога',
+                'footer': 'Подвал',
+                // Field count
+                'fields': 'полей',
+                // Main header
+                'admin_title': 'AI Studio - Менеджер контента',
+                // Section headers
+                'career_orientation_management': 'Управление профориентацией',
+                'comprehensive_assessment': 'Комплексная система оценки и профориентации AI'
+            },
+            he: {
+                // Page titles
+                'home_page': 'דף הבית',
+                'courses_page': 'דף קורסים',
+                'teachers_page': 'דף מורים',
+                'career_center': 'מרכז קריירה',
+                'career_orientation': 'הכוונה תעסוקתית',
+                'pricing_page': 'דף מחירים',
+                'blog_page': 'דף בלוג',
+                'about_page': 'אודות',
+                'contact_page': 'צור קשר',
+                'course_detail': 'פרטי קורס',
+                'blog_detail': 'פרטי בלוג',
+                'footer': 'כותרת תחתונה',
+                // Field count
+                'fields': 'שדות',
+                // Main header
+                'admin_title': 'AI Studio - מנהל תוכן',
+                // Section headers
+                'career_orientation_management': 'ניהול הכוונה תעסוקתית',
+                'comprehensive_assessment': 'מערכת הערכה והכוונה תעסוקתית מקיפה עם AI'
+            }
+        };
+
+        function getTranslation(key) {
+            return adminTranslations[currentLocale]?.[key] || adminTranslations['en'][key] || key;
+        }
+
+        function updateTabTranslations() {
+            // Update all tabs with translations using data-key attributes
+            const tabs = document.querySelectorAll('.tab[data-key]');
+            tabs.forEach(tab => {
+                const key = tab.getAttribute('data-key');
+                const fieldCount = tab.querySelector('.field-count')?.textContent.match(/[\d+]+/)?.[0] || '0';
+                const emoji = tab.textContent.match(/^[^\s]+/)?.[0] || '';
+
+                if (key) {
+                    const translation = getTranslation(key);
+                    const fieldsText = getTranslation('fields');
+                    tab.innerHTML = `${emoji} ${translation} <span class="field-count">${fieldCount} ${fieldsText}</span>`;
+                }
+            });
+
+            // Also handle tabs without data-key for backward compatibility
+            const tabMapping = {
+                'showSection(\'pricing-page\')': { key: 'pricing_page', emoji: '💰', fields: '20+' }
+            };
+
+            document.querySelectorAll('.tab:not([data-key])').forEach(tab => {
+                const onclick = tab.getAttribute('onclick');
+                if (tabMapping[onclick]) {
+                    const { key, emoji, fields } = tabMapping[onclick];
+                    const translation = getTranslation(key);
+                    const fieldsText = getTranslation('fields');
+                    tab.innerHTML = `${emoji} ${translation} <span class="field-count">${fields} ${fieldsText}</span>`;
+                }
+            });
+
+            // Update main header
+            const header = document.querySelector('.header h1');
+            if (header) {
+                header.textContent = '🎓 ' + getTranslation('admin_title');
+            }
+
+            // Update section headers
+            const sectionHeaders = {
+                '#career-orientation-comprehensive h2': 'career_orientation_management',
+                '#career-orientation h2': 'career_orientation_management'
+            };
+
+            Object.entries(sectionHeaders).forEach(([selector, key]) => {
+                const element = document.querySelector(selector);
+                if (element && element.textContent.includes('Career Orientation')) {
+                    const emoji = element.textContent.match(/^[^\s]+/)?.[0] || '🧭';
+                    element.textContent = `${emoji} ${getTranslation(key)}`;
+                }
+            });
+
+            // Update description text
+            const careerDesc = document.querySelector('#career-orientation-comprehensive h3');
+            if (careerDesc) {
+                careerDesc.textContent = getTranslation('comprehensive_assessment') + ' (215+ ' + getTranslation('fields') + ')';
+            }
+        }
+
         function switchLanguage(locale) {
             // Update current locale
             currentLocale = locale;
-            
+
             // Update active button
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
+
             // Update display
             const languageNames = { 'en': 'English', 'ru': 'Русский', 'he': 'עברית' };
             document.getElementById('current-language').textContent = languageNames[locale];
-            
+
             // Apply RTL for Hebrew
             if (locale === 'he') {
                 document.body.style.direction = 'rtl';
                 document.body.style.textAlign = 'right';
+                // Adjust tabs container for RTL
+                document.querySelector('.tabs').style.flexDirection = 'row-reverse';
             } else {
                 document.body.style.direction = 'ltr';
                 document.body.style.textAlign = 'left';
+                // Reset tabs container
+                document.querySelector('.tabs').style.flexDirection = 'row';
             }
+
+            // Update all translations
+            updateTabTranslations();
             
             // Reload current section data for the new language
             const activeTab = document.querySelector('.tab.active');
@@ -4277,6 +4415,9 @@
             console.log('📊 ALL 123+ Home Page Fields Available');
             console.log('🔥 Complete CRUD Operations Ready');
             console.log('💾 Live Database Integration Active');
+
+            // Apply initial translations based on default locale
+            updateTabTranslations();
 
             // Create ID aliases for test compatibility
             createTestCompatibilityAliases();
