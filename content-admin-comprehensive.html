@@ -37,6 +37,112 @@
         .btn-secondary:hover { background: #5a6268; }
         .btn-success { background: #28a745; }
         .btn-success:hover { background: #218838; }
+
+        /* Toaster Styles */
+        .toaster-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+        }
+
+        .toaster {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            border-left: 4px solid #007aff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out;
+            opacity: 1;
+            transform: translateX(0);
+            transition: all 0.3s ease;
+        }
+
+        .toaster.success { border-left-color: #28a745; }
+        .toaster.error { border-left-color: #dc3545; }
+        .toaster.warning { border-left-color: #ffc107; }
+
+        .toaster.hiding {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+
+        .toaster-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .toaster-message {
+            flex: 1;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .toaster-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toaster-close:hover {
+            color: #666;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Small Save Button Styles */
+        .section-save-btn {
+            background: #007aff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .section-save-btn:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .section-save-btn:active {
+            transform: translateY(0);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
         .items-list { margin-top: 30px; }
         .item { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #007aff; }
         .item h4 { color: #333; margin-bottom: 10px; }
@@ -128,8 +234,13 @@
         <!-- COMPREHENSIVE HOME PAGE Section -->
         <div id="home-page" class="content-section active">
             <div class="section-header">
-                <h2>🏠 Complete Home Page Content Management</h2>
-                <p>ALL 123 fields editable - Every section, every course, every testimonial - Complete control!</p>
+                <div>
+                    <h2>🏠 Complete Home Page Content Management</h2>
+                    <p>ALL 123 fields editable - Every section, every course, every testimonial - Complete control!</p>
+                </div>
+                <button class="section-save-btn" onclick="saveAllHomePage()">
+                    💾 Quick Save
+                </button>
             </div>
 
             <!-- Page Title -->
@@ -143,7 +254,7 @@
 
             <!-- Hero Section -->
             <div class="subsection">
-                <h4>🎯 Hero Section</h4>
+                <h4>🎯 Hero Section <button class="section-save-btn" onclick="saveHeroSection()">💾 Save</button></h4>
                 <div class="grid">
                     <div class="form-group">
                         <label>Hero Title</label>
@@ -166,7 +277,7 @@
 
             <!-- Featured Courses Section -->
             <div class="subsection">
-                <h4>📚 Featured Courses Section</h4>
+                <h4>📚 Featured Courses Section <button class="section-save-btn" onclick="saveFeaturedCourses()">💾 Save</button></h4>
                 <div class="grid">
                     <div class="form-group">
                         <label>Section Title</label>
@@ -2847,8 +2958,8 @@
         async function saveAllHomePage() {
             const timestamp = new Date().toISOString();
 
-            // Alert for immediate feedback
-            alert(`🚀 SAVE OPERATION STARTED AT: ${timestamp}`);
+            // Show toaster notification
+            showToaster('🚀 Save operation started...', 'info');
 
             console.log('='.repeat(80));
             console.log(`🚀 SAVE OPERATION STARTED AT: ${timestamp}`);
@@ -2985,6 +3096,84 @@
                         saveBtn.disabled = false;
                     }, 3000);
                 }
+            }
+        }
+
+        // SECTION-SPECIFIC SAVE FUNCTIONS
+        async function saveHeroSection() {
+            try {
+                const heroData = {
+                    heroTitle: getFieldValue('homeHeroTitle'),
+                    heroSubtitle: getFieldValue('homeHeroSubtitle'),
+                    heroDescription: getFieldValue('homeHeroDescription'),
+                    heroSectionVisible: getCheckboxValue('homeHeroVisible')
+                };
+
+                // Save only hero section data
+                const localeIds = { 'en': 1, 'ru': 2, 'he': 3 };
+                const homePageId = localeIds[currentLocale] || 1;
+
+                const response = await fetch(`${API_URL_CRUD}/home-page/${homePageId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(heroData)
+                });
+
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                showToaster('✅ Hero Section saved successfully!', 'success');
+            } catch (error) {
+                showToaster('❌ Failed to save Hero Section: ' + error.message, 'error');
+            }
+        }
+
+        async function saveFeaturedCourses() {
+            try {
+                const featuredData = {
+                    featuredCoursesTitle: getFieldValue('homeFeaturedTitle'),
+                    featuredCoursesDescription: getFieldValue('homeFeaturedDescription'),
+                    featuredCoursesVisible: getCheckboxValue('homeFeaturedVisible')
+                };
+
+                const localeIds = { 'en': 1, 'ru': 2, 'he': 3 };
+                const homePageId = localeIds[currentLocale] || 1;
+
+                const response = await fetch(`${API_URL_CRUD}/home-page/${homePageId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(featuredData)
+                });
+
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                showToaster('✅ Featured Courses section saved successfully!', 'success');
+            } catch (error) {
+                showToaster('❌ Failed to save Featured Courses: ' + error.message, 'error');
+            }
+        }
+
+        async function saveTestimonials() {
+            try {
+                const testimonialsData = {
+                    testimonialsTitle: getFieldValue('homeTestimonialsTitle'),
+                    testimonialsSubtitle: getFieldValue('homeTestimonialsSubtitle'),
+                    testimonialsVisible: getCheckboxValue('homeTestimonialsVisible')
+                };
+
+                const localeIds = { 'en': 1, 'ru': 2, 'he': 3 };
+                const homePageId = localeIds[currentLocale] || 1;
+
+                const response = await fetch(`${API_URL_CRUD}/home-page/${homePageId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testimonialsData)
+                });
+
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                showToaster('✅ Testimonials section saved successfully!', 'success');
+            } catch (error) {
+                showToaster('❌ Failed to save Testimonials: ' + error.message, 'error');
             }
         }
 
@@ -4003,7 +4192,60 @@
             }
         }
 
+        // Enhanced Toaster System
+        function showToaster(message, type = 'info', duration = 4000) {
+            // Create toaster container if it doesn't exist
+            let toasterContainer = document.querySelector('.toaster-container');
+            if (!toasterContainer) {
+                toasterContainer = document.createElement('div');
+                toasterContainer.className = 'toaster-container';
+                document.body.appendChild(toasterContainer);
+            }
+
+            // Create toaster element
+            const toaster = document.createElement('div');
+            toaster.className = `toaster ${type}`;
+
+            // Icon based on type
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+
+            toaster.innerHTML = `
+                <span class="toaster-icon">${icons[type] || icons.info}</span>
+                <span class="toaster-message">${message}</span>
+                <button class="toaster-close" onclick="closeToaster(this.parentElement)">×</button>
+            `;
+
+            // Add to container
+            toasterContainer.appendChild(toaster);
+
+            // Auto-remove after duration
+            setTimeout(() => {
+                if (toaster.parentElement) {
+                    closeToaster(toaster);
+                }
+            }, duration);
+
+            return toaster;
+        }
+
+        function closeToaster(toaster) {
+            toaster.classList.add('hiding');
+            setTimeout(() => {
+                if (toaster.parentElement) {
+                    toaster.parentElement.removeChild(toaster);
+                }
+            }, 300);
+        }
+
         function showMessage(message, type = 'success') {
+            // Legacy function now uses toaster
+            showToaster(message, type);
+
             const existingMessage = document.querySelector('.success-message, .error-message');
             if (existingMessage) {
                 existingMessage.remove();
@@ -4057,8 +4299,8 @@
                         e.stopPropagation();
                         saveClickCount++;
 
-                        // Add alert for immediate feedback
-                        alert('🔘 SAVE BUTTON CLICKED! Check console for details.');
+                        // Show toaster notification
+                        showToaster('💾 Saving changes...', 'info');
 
                         console.log('='.repeat(80));
                         console.log(`🔘 SAVE BUTTON CLICKED #${saveClickCount} at ${new Date().toISOString()}`);
@@ -4072,7 +4314,7 @@
                             saveAllHomePage();
                         } catch (error) {
                             console.error('❌ Error calling saveAllHomePage:', error);
-                            alert('❌ Error: ' + error.message);
+                            showToaster('❌ Error: ' + error.message, 'error');
                         }
                     }, { capture: true });
 
@@ -4083,7 +4325,7 @@
 
                     // Also add onclick property as backup
                     newBtn.onclick = function(e) {
-                        alert('🔘 ONCLICK backup triggered! Check console.');
+                        showToaster('💾 Save triggered...', 'info');
                         console.log('🔘 ONCLICK property triggered');
                         e.preventDefault();
                         saveAllHomePage();
@@ -5198,10 +5440,10 @@
 
                 if (!response.ok) throw new Error('Failed to save');
                 
-                alert(`✅ Footer saved for ${currentFooterLocale.toUpperCase()}!`);
+                showToaster(`✅ Footer saved for ${currentFooterLocale.toUpperCase()}!`, 'success');
             } catch (error) {
                 console.error('Error saving footer:', error);
-                alert('❌ Failed to save footer: ' + error.message);
+                showToaster('❌ Failed to save footer: ' + error.message, 'error');
             }
         }
     </script>

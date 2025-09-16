@@ -1,0 +1,188 @@
+/* ========================================
+   CRITICAL MENU FIXES - HIGHEST PRIORITY
+   ========================================
+
+   1. Logo visibility fix (file case mismatch)
+   2. Navigation spacing optimization
+   3. Remove duplicate language selectors
+   ======================================== */
+
+/* HIGHEST PRIORITY: Override all other styles */
+
+/* TEST: Make navbar red to verify CSS is loading */
+.navbar {
+  border: 5px solid red !important;
+  background: yellow !important;
+}
+
+/* ===== LOGO VISIBILITY FIX ===== */
+/* Target both static and dynamic logo classes */
+.zohacous-logo-link,
+.nav-brand,
+.w-nav-brand {
+  display: flex !important;
+  align-items: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+}
+
+/* ULTRA HIGH SPECIFICITY LOGO FIX */
+html body .navbar .navbar-content .nav-brand .logo-image,
+html body .navbar .navbar-content .nav-brand img,
+html body .navbar .navbar-content .w-nav-brand .logo-image,
+html body .navbar .navbar-content .w-nav-brand img,
+html body .navbar .navbar-content .zohacous-logo-link .zohacous-logo-image,
+html body .navbar .navbar-content .zohacous-logo-link img,
+.zohacous-logo-image,
+.logo-image,
+.nav-brand img,
+.w-nav-brand img,
+img[src*="logo"],
+img[src*="Logo"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: 40px !important;
+  width: auto !important;
+  min-width: 120px !important;
+  max-height: 40px !important;
+  max-width: 200px !important;
+  object-fit: contain !important;
+  flex-shrink: 0 !important;
+}
+
+/* AGGRESSIVE FALLBACK FIX FOR ANY LOGO IMAGE */
+img[src*="logoNew.png"],
+img[src*="logo.svg"],
+img[src*="Logo.svg"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: 40px !important;
+  width: 120px !important; /* Force specific width */
+  min-width: 120px !important;
+  max-width: 200px !important;
+  object-fit: contain !important;
+}
+
+/* FORCE DIMENSIONS FOR ANY LOGO */
+.navbar .logo-image,
+.navbar img[src*="logo"] {
+  width: 120px !important;
+  height: 40px !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* FIX FOR WEBFLOW HIDING IMAGES WITH ZERO WIDTH */
+.navbar img[width="0"],
+.navbar img[style*="width: 0"],
+.navbar img[style*="width:0"] {
+  width: auto !important;
+  min-width: 120px !important;
+}
+
+/* Force logo container visibility */
+.nav-brand,
+.w-nav-brand {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* ===== NAVIGATION SPACING OPTIMIZATION ===== */
+.nav-menu {
+  display: flex !important;
+  align-items: center !important;
+  gap: 20px !important; /* Consistent spacing between nav items */
+}
+
+.nav-link {
+  margin: 0 !important;
+  padding: 8px 16px !important; /* Reduced padding for tighter spacing */
+  white-space: nowrap !important;
+}
+
+/* Language selector spacing fix */
+.language-nav-item {
+  margin: 0 !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+.language-nav-select {
+  margin: 0 !important;
+  padding: 8px 12px !important;
+  height: auto !important;
+  line-height: normal !important;
+}
+
+/* Dropdown wrapper spacing */
+.menu-dropdown-wrapper {
+  margin: 0 !important;
+}
+
+.dropdown-toggle {
+  padding: 8px 16px !important; /* Match nav-link padding */
+}
+
+/* ===== REMOVE DUPLICATE LANGUAGE SELECTORS ===== */
+/* Hide the duplicate #languageSelect created by JavaScript */
+#languageSelect,
+#language-switcher select[id="languageSelect"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+/* Hide the container div too if it exists */
+#language-switcher {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+/* ===== RESPONSIVE BEHAVIOR ===== */
+@media (max-width: 991px) {
+  .nav-menu {
+    gap: 10px !important; /* Tighter spacing on mobile */
+  }
+
+  .nav-link {
+    padding: 6px 12px !important; /* Smaller padding on mobile */
+  }
+
+  .language-nav-select {
+    padding: 6px 10px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* ===== FORCE VISIBILITY ON ALL LANGUAGE VERSIONS ===== */
+/* Hebrew RTL fixes */
+.navbar[dir="rtl"] .zohacous-logo-link,
+.navbar[dir="rtl"] .zohacous-logo-image,
+.navbar[dir="rtl"] .w-nav-brand {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure logo image loads properly */
+.zohacous-logo-image[src*="Logo.svg"] {
+  /* This will help with case-sensitive file systems */
+  content: url('../images/logo.svg') !important;
+}
+
+/* Additional fallback for Hebrew pages using logoNew.png */
+.zohacous-logo-image[src*="logoNew.png"] {
+  max-width: 140px !important;
+  max-height: 35px !important;
+  object-fit: contain !important;
+}

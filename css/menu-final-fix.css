@@ -1,0 +1,257 @@
+/* Final Menu Fix - Blue button last, logo positioning */
+
+/* ========================================
+   DESKTOP: Blue button inline as last item
+   ======================================== */
+
+/* Make navbar content flex container with proper alignment */
+@media screen and (min-width: 992px) {
+    .navbar-content {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+    }
+
+    /* Logo first - ensure it's visible */
+    .nav-brand {
+        order: 1 !important;
+        flex-shrink: 0 !important;
+        display: block !important;
+        visibility: visible !important;
+    }
+
+    .nav-brand .logo-image {
+        display: block !important;
+        visibility: visible !important;
+        height: 50px !important;
+        width: auto !important;
+    }
+
+    /* Navigation menu in middle with even spacing */
+    .nav-menu {
+        order: 2 !important;
+        display: flex !important;
+        align-items: center !important;
+        flex: 1 !important;
+        justify-content: center !important;
+        margin: 0 40px !important;
+        gap: 0 !important; /* Remove default gap */
+    }
+
+    /* Even spacing for all menu items */
+    .nav-menu .nav-link,
+    .nav-menu .menu-dropdown-wrapper {
+        padding: 0 20px !important;
+        margin: 0 !important;
+    }
+
+    /* Language selector */
+    .language-selector.desktop-only {
+        order: 3 !important;
+        flex-shrink: 0 !important;
+        margin-right: 20px !important;
+    }
+
+    /* Sign up button LAST */
+    .navbar-button-wrapper {
+        order: 4 !important;
+        flex-shrink: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    /* Ensure button stays on same line */
+    .navbar-button-wrapper .primary-button {
+        white-space: nowrap !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        padding: 12px 24px !important;
+    }
+
+    /* For Hebrew RTL layout */
+    [dir="rtl"] .navbar-content {
+        direction: rtl !important;
+    }
+
+    [dir="rtl"] .language-selector.desktop-only {
+        margin-right: 0 !important;
+        margin-left: 20px !important;
+    }
+
+    /* Ensure all items stay on one line */
+    .navbar {
+        min-height: 80px !important;
+    }
+
+    .navbar-content > * {
+        display: flex !important;
+        align-items: center !important;
+    }
+}
+
+/* ========================================
+   MOBILE: Logo visibility and positioning
+   ======================================== */
+
+/* Hide logo when mobile menu is CLOSED */
+@media screen and (max-width: 991px) {
+    /* Keep logo visible but adjust position for mobile */
+    .navbar .nav-brand {
+        display: block !important;
+        position: absolute !important;
+        left: 20px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+    }
+
+    /* Keep logo image visible */
+    .navbar .logo-image {
+        display: block !important;
+        height: 40px !important;
+        width: auto !important;
+    }
+
+    /* Show hamburger button */
+    .hamburger-button {
+        display: block !important;
+        position: absolute !important;
+        right: 20px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+    }
+
+    /* For RTL languages */
+    [dir="rtl"] .hamburger-button {
+        right: auto !important;
+        left: 20px !important;
+    }
+}
+
+/* ========================================
+   MOBILE MENU OPEN: Logo under language
+   ======================================== */
+
+/* When mobile menu is open */
+@media screen and (max-width: 991px) {
+    .w-nav-menu.w--nav-menu-open {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    /* Language selector at top of menu */
+    .w-nav-menu.w--nav-menu-open .mobile-language-selector {
+        order: 1 !important;
+        padding: 20px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        width: 100% !important;
+    }
+
+    /* Logo UNDER language selector in menu */
+    .w-nav-menu.w--nav-menu-open .mobile-logo {
+        order: 2 !important;
+        padding: 20px !important;
+        text-align: center !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .w-nav-menu.w--nav-menu-open .mobile-logo img {
+        max-width: 150px !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+
+    /* Menu items after logo */
+    .w-nav-menu.w--nav-menu-open .nav-link {
+        order: 3 !important;
+    }
+
+    .w-nav-menu.w--nav-menu-open .menu-dropdown-wrapper {
+        order: 4 !important;
+    }
+
+    /* Sign up button last in mobile menu */
+    .w-nav-menu.w--nav-menu-open .mobile-sign-up-button {
+        order: 99 !important;
+        margin-top: auto !important;
+        padding: 20px !important;
+        background: rgba(0, 0, 0, 0.2) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .w-nav-menu.w--nav-menu-open .mobile-sign-up-button a {
+        width: 100% !important;
+        text-align: center !important;
+        padding: 16px !important;
+        background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        text-decoration: none !important;
+        display: block !important;
+        font-weight: 600 !important;
+    }
+}
+
+/* ========================================
+   MOBILE: Hide desktop elements in menu
+   ======================================== */
+
+@media screen and (max-width: 991px) {
+    /* Hide desktop language selector in mobile */
+    .w-nav-menu .language-selector.desktop-only {
+        display: none !important;
+    }
+
+    /* Hide desktop button wrapper in mobile menu */
+    .w-nav-menu .navbar-button-wrapper {
+        display: none !important;
+    }
+
+    /* Hide desktop nav brand in mobile menu */
+    .w-nav-menu .nav-brand {
+        display: none !important;
+    }
+}
+
+/* ========================================
+   ENSURE BUTTON STAYS ON SAME LINE
+   ======================================== */
+
+/* Prevent wrapping */
+@media screen and (min-width: 992px) {
+    .navbar-content {
+        flex-wrap: nowrap !important;
+    }
+
+    /* Minimum width for navbar */
+    .navbar .container {
+        min-width: 100% !important;
+        padding: 0 20px !important;
+    }
+
+    /* Consistent spacing already set above */
+
+    /* Ensure button doesn't wrap */
+    .navbar-button-wrapper {
+        white-space: nowrap !important;
+    }
+}
+
+/* ========================================
+   HEBREW SPECIFIC FIXES
+   ======================================== */
+
+[dir="rtl"] .navbar-content {
+    flex-direction: row-reverse !important;
+}
+
+[dir="rtl"] .nav-menu {
+    direction: rtl !important;
+}
+
+/* In Hebrew, button should be leftmost (last in RTL) */
+[dir="rtl"] .navbar-button-wrapper {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}

@@ -1,0 +1,41 @@
+/* Hide Mobile Language Selector on Desktop */
+
+/* Hide the mobile language selector on desktop screens */
+@media screen and (min-width: 992px) {
+    .mobile-language-selector,
+    .nav-menu .mobile-language-selector,
+    .w-nav-menu .mobile-language-selector,
+    body > div.page-wrapper > div.navbar.w-nav > div.container > div > nav > div.mobile-language-selector {
+        display: none !important;
+        visibility: hidden !important;
+    }
+}
+
+/* Only show mobile language selector on mobile */
+@media screen and (max-width: 991px) {
+    .mobile-language-selector {
+        display: block !important;
+    }
+
+    /* But only when menu is open */
+    .w-nav-menu:not(.w--nav-menu-open) .mobile-language-selector {
+        display: none !important;
+    }
+}
+
+/* Also hide any language selector that's outside the menu on mobile */
+@media screen and (max-width: 991px) {
+    /* Hide desktop language selectors on mobile */
+    .navbar-content > .language-selector,
+    .navbar-content > div > select.language-nav-select,
+    .container > .language-selector:not(.mobile-language-selector),
+    .navbar .language-selector:not(.mobile-language-selector) {
+        display: none !important;
+    }
+
+    /* Hide the one shown in the screenshot */
+    body > .language-selector,
+    .navbar > .container > div > select#language-switcher-nav {
+        display: none !important;
+    }
+}

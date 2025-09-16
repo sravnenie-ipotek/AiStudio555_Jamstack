@@ -1,6 +1,7 @@
-// Ultra-thin Shared Menu Component v2.6
+// Ultra-thin Shared Menu Component v2.9
 // Single source of truth for navigation across all pages
 // WEBFLOW COMPATIBLE VERSION
+// v2.9: Aggressive Hebrew positioning fix + compact layout for Russian overflow
 
 (function() {
     'use strict';
@@ -123,19 +124,79 @@
     // Inject complete navigation structure
     function injectCompleteNavigation(container) {
         const navigationHTML = `
+        <style>
+            /* Hide desktop language selector on mobile */
+            @media (max-width: 991px) {
+                .language-selector.desktop-only {
+                    display: none !important;
+                }
+            }
+            /* Show desktop language selector on desktop */
+            @media (min-width: 992px) {
+                .language-selector.desktop-only {
+                    display: block !important;
+                }
+            }
+
+            /* Mobile-specific layout for button above logo */
+            @media (max-width: 767px) {
+                .navbar-content {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    align-items: flex-start !important;
+                }
+
+                /* Move Sign Up button to top on mobile */
+                .navbar-button-wrapper.mobile-top {
+                    order: -1 !important;
+                    width: 100% !important;
+                    margin-bottom: 10px !important;
+                    display: block !important;
+                }
+
+                .navbar-button-wrapper.mobile-top .primary-button {
+                    display: block !important;
+                    width: auto !important;
+                    text-align: center !important;
+                    padding: 10px 20px !important;
+                    border-radius: 8px !important;
+                }
+
+                /* Logo comes second */
+                .nav-brand {
+                    order: 0 !important;
+                }
+
+                /* Hide desktop button on mobile */
+                .navbar-button-wrapper:not(.mobile-top) {
+                    display: none !important;
+                }
+            }
+
+            /* Desktop layout */
+            @media (min-width: 768px) {
+                .navbar-button-wrapper.mobile-top {
+                    display: none !important;
+                }
+
+                .navbar-content {
+                    flex-direction: row !important;
+                }
+            }
+        </style>
         <div role="banner" class="navbar w-nav">
             <div class="container">
                 <div class="navbar-content">
+                    <!-- Mobile Sign Up Button (Shows above logo on mobile) -->
+                    <div class="navbar-button-wrapper mobile-top">
+                        <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">${t.signUp}</a>
+                    </div>
+
                     <a href="${urls.home}" class="nav-brand">
-                        <img loading="lazy" src="${currentLang === 'en' ? 'images/Logo 2.svg' : '../images/Logo 2.svg'}" alt="" class="logo-image">
+                        <img loading="lazy" src="../images/logoNew.png" alt="" class="logo-image">
                     </a>
 
-                    <!-- Mobile Menu Button -->
-                    <div class="w-nav-button">
-                        <div class="w-icon-nav-menu">
-                            <span></span>
-                        </div>
-                    </div>
+                    <!-- Mobile Menu Button will be handled by universal-mobile-navigation-fix.js -->
 
                     <!-- Desktop Navigation -->
                     <nav class="nav-menu w-nav-menu">
@@ -161,16 +222,16 @@
                         <a href="${urls.pricing}" class="nav-link ${currentPage === 'pricing' ? 'w--current' : ''}">${t.pricing}</a>
                     </nav>
 
-                    <!-- Language Selector -->
-                    <div class="language-selector">
+                    <!-- Language Selector - Desktop Only -->
+                    <div class="language-selector desktop-only" style="display: none !important;">
                         <select class="language-nav-select" style="background: transparent !important; border: none !important; color: rgba(255, 255, 255, 0.9) !important; padding: 8px 12px !important; border-radius: 6px !important; cursor: pointer !important; outline: none !important; appearance: none !important; -webkit-appearance: none !important; -moz-appearance: none !important;">
-                            <option value="en" ${currentLang === 'en' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">English</option>
-                            <option value="ru" ${currentLang === 'ru' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">Русский</option>
-                            <option value="he" ${currentLang === 'he' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">עברית</option>
+                            <option value="en" ${currentLang === 'en' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇬🇧 English</option>
+                            <option value="ru" ${currentLang === 'ru' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇷🇺 Русский</option>
+                            <option value="he" ${currentLang === 'he' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇮🇱 עברית</option>
                         </select>
                     </div>
 
-                    <!-- Sign Up Button -->
+                    <!-- Sign Up Button (Always Last for All Languages) -->
                     <div class="navbar-button-wrapper">
                         <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">${t.signUp}</a>
                     </div>
@@ -185,8 +246,8 @@
         // Initialize dropdown functionality
         initDropdownFunctionality();
 
-        // Initialize mobile menu functionality
-        initMobileMenuFunctionality();
+        // Mobile menu functionality disabled - handled by universal-mobile-navigation-fix.js
+        // initMobileMenuFunctionality();
 
         console.log('✅ Complete navigation injected');
     }
@@ -319,28 +380,55 @@
             }
         });
 
-        // Fix language selector styling
-        const languageSelectors = document.querySelectorAll('.language-nav-select, .language-selector select');
-        languageSelectors.forEach(selector => {
-            // Apply transparent styling to match home.html
-            selector.style.cssText = `
-                background: transparent !important;
-                border: none !important;
-                color: rgba(255, 255, 255, 0.9) !important;
-                padding: 8px 12px !important;
-                border-radius: 6px !important;
-                cursor: pointer !important;
-                outline: none !important;
-                appearance: none !important;
-                -webkit-appearance: none !important;
-                -moz-appearance: none !important;
-            `;
+        // Replace old language selector with new one that has flags
+        const oldLanguageSelectors = document.querySelectorAll('.language-nav-select, .language-selector select');
+        oldLanguageSelectors.forEach(oldSelector => {
+            const parent = oldSelector.parentElement;
+            if (parent) {
+                // Create new language selector with flags
+                const newSelectorHTML = `
+                    <select class="language-nav-select" style="background: transparent !important; border: none !important; color: rgba(255, 255, 255, 0.9) !important; padding: 8px 12px !important; border-radius: 6px !important; cursor: pointer !important; outline: none !important; appearance: none !important; -webkit-appearance: none !important; -moz-appearance: none !important;">
+                        <option value="en" ${currentLang === 'en' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇬🇧 English</option>
+                        <option value="ru" ${currentLang === 'ru' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇷🇺 Русский</option>
+                        <option value="he" ${currentLang === 'he' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇮🇱 עברית</option>
+                    </select>
+                `;
 
-            // Style options
-            const options = selector.querySelectorAll('option');
-            options.forEach(option => {
-                option.style.cssText = 'background: #05051a !important; color: white !important;';
-            });
+                // Replace old selector
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = newSelectorHTML;
+                const newSelector = tempDiv.firstElementChild;
+
+                // Copy event listeners
+                newSelector.addEventListener('change', function(e) {
+                    const selectedLang = e.target.value;
+                    const currentPage = window.location.pathname.split('/').pop() || 'home.html';
+                    window.location.href = `/${selectedLang}/${currentPage}`;
+                });
+
+                parent.replaceChild(newSelector, oldSelector);
+                console.log('✅ Replaced language selector with flag version');
+
+                // For Hebrew, aggressively move language selector to the end
+                if (currentLang === 'he') {
+                    setTimeout(() => {
+                        const navbar = document.querySelector('.navbar-content, .w-nav-menu');
+                        const langSelectorContainer = newSelector.closest('.language-selector, .language-nav-wrapper, div');
+
+                        if (navbar && langSelectorContainer) {
+                            // Force move to absolute end
+                            navbar.appendChild(langSelectorContainer);
+
+                            // Also apply CSS to ensure it stays last
+                            langSelectorContainer.style.order = '999';
+                            langSelectorContainer.style.marginLeft = 'auto';
+                            langSelectorContainer.style.marginRight = '0';
+
+                            console.log('📍 Aggressively moved language selector to end for Hebrew');
+                        }
+                    }, 100);
+                }
+            }
         });
 
         // Update career dropdown position fix

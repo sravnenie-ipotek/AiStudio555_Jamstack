@@ -1,0 +1,191 @@
+/* Hebrew Navigation Button Alignment Fix */
+/* Fixes the "הרשמו היום" button alignment issue in Hebrew RTL navigation */
+
+/* CRITICAL FIX: Ensure Hebrew navigation has proper layout */
+.navbar[dir="rtl"] .navbar-content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  gap: 20px !important;
+}
+
+/* Logo positioning */
+.navbar[dir="rtl"] .w-nav-brand {
+  order: 1 !important;
+  flex-shrink: 0 !important;
+}
+
+/* Navigation menu - center aligned */
+.navbar[dir="rtl"] .nav-menu {
+  order: 2 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 1 !important;
+  gap: 24px !important;
+  margin: 0 20px !important;
+}
+
+/* Sign up button - align with nav items */
+.navbar[dir="rtl"] .navbar-button-wrapper {
+  order: 3 !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+}
+
+/* Mobile menu button */
+.navbar[dir="rtl"] .menu-button {
+  order: 4 !important;
+  flex-shrink: 0 !important;
+}
+
+/* Ensure all navigation items are on same line */
+.navbar[dir="rtl"] .nav-menu > *,
+.navbar[dir="rtl"] .navbar-button-wrapper {
+  height: auto !important;
+  line-height: normal !important;
+  vertical-align: middle !important;
+}
+
+/* Fix sign up button styling to match nav items */
+.navbar[dir="rtl"] .primary-button.w-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 10px 20px !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+  border-radius: 6px !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Ensure consistent vertical alignment */
+.navbar[dir="rtl"] .nav-link,
+.navbar[dir="rtl"] .dropdown-toggle,
+.navbar[dir="rtl"] .language-nav-select,
+.navbar[dir="rtl"] .primary-button.w-button {
+  height: auto !important;
+  line-height: 1.4 !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Language selector alignment within nav menu */
+.navbar[dir="rtl"] .language-nav-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.navbar[dir="rtl"] .language-nav-select {
+  padding: 8px 12px !important;
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 6px !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 14px !important;
+  min-width: 90px !important;
+}
+
+/* Desktop specific fixes */
+@media screen and (min-width: 992px) {
+  .navbar[dir="rtl"] .navbar-content {
+    min-height: 70px !important;
+    padding: 0 20px !important;
+  }
+
+  .navbar[dir="rtl"] .nav-menu {
+    position: static !important;
+    background: transparent !important;
+    flex-direction: row !important;
+    width: auto !important;
+    margin: 0 40px !important;
+  }
+
+  /* Ensure button stays on same line as menu items */
+  .navbar[dir="rtl"] .navbar-button-wrapper {
+    position: static !important;
+    transform: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* Tablet/Medium screen adjustments */
+@media screen and (max-width: 1200px) and (min-width: 992px) {
+  .navbar[dir="rtl"] .nav-menu {
+    gap: 16px !important;
+    margin: 0 20px !important;
+  }
+
+  .navbar[dir="rtl"] .nav-link,
+  .navbar[dir="rtl"] .dropdown-toggle {
+    padding: 8px 12px !important;
+    font-size: 15px !important;
+  }
+
+  .navbar[dir="rtl"] .primary-button.w-button {
+    padding: 8px 16px !important;
+    font-size: 15px !important;
+  }
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 991px) {
+  .navbar[dir="rtl"] .nav-menu {
+    flex-direction: column !important;
+    gap: 15px !important;
+    align-items: flex-end !important;
+    text-align: right !important;
+    padding: 20px 0 !important;
+  }
+
+  .navbar[dir="rtl"] .navbar-button-wrapper {
+    order: 0 !important;
+    margin-bottom: 20px !important;
+    width: 100% !important;
+    justify-content: flex-end !important;
+  }
+
+  .navbar[dir="rtl"] .primary-button.w-button {
+    width: auto !important;
+    min-width: 150px !important;
+  }
+}
+
+/* Force all items to baseline alignment */
+.navbar[dir="rtl"] .navbar-content > * {
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Override any conflicting Webflow styles */
+.navbar[dir="rtl"].w-nav .navbar-button-wrapper {
+  position: static !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  transform: none !important;
+}
+
+/* Ensure no floating or absolute positioning interferes */
+.navbar[dir="rtl"] * {
+  float: none !important;
+}
+
+.navbar[dir="rtl"] .navbar-content,
+.navbar[dir="rtl"] .nav-menu,
+.navbar[dir="rtl"] .navbar-button-wrapper {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+}

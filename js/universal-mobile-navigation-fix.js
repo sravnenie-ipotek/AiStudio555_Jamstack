@@ -308,14 +308,15 @@
                 existingSelector.remove();
             }
 
-            // Create language selector for mobile menu
+            // Create language selector for mobile menu (at top)
             const languageSection = document.createElement('div');
-            languageSection.className = 'mobile-language-selector';
+            languageSection.className = 'mobile-language-selector mobile-only';
             languageSection.style.cssText = `
                 padding: 20px !important;
-                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-                margin-top: auto !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
                 background: rgba(0, 0, 0, 0.2) !important;
+                display: block !important;
+                order: 1 !important;
             `;
 
             // Create language selector
@@ -366,8 +367,15 @@
 
             languageSection.appendChild(languageSelect);
 
-            // Add to mobile menu (make it the last item)
-            menu.appendChild(languageSection);
+            // Add language selector to mobile menu (first)
+            menu.insertBefore(languageSection, menu.firstChild);
+
+            // Remove any existing broken mobile logo
+            const existingLogo = menu.querySelector('.mobile-logo');
+            if (existingLogo) {
+                existingLogo.remove();
+                debug('Removed existing mobile logo');
+            }
 
             debug('Language selector added to mobile menu');
         }, 200);

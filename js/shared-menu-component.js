@@ -137,10 +137,61 @@
                     display: block !important;
                 }
             }
+
+            /* Mobile-specific layout for button above logo */
+            @media (max-width: 767px) {
+                .navbar-content {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    align-items: flex-start !important;
+                }
+
+                /* Move Sign Up button to top on mobile */
+                .navbar-button-wrapper.mobile-top {
+                    order: -1 !important;
+                    width: 100% !important;
+                    margin-bottom: 10px !important;
+                    display: block !important;
+                }
+
+                .navbar-button-wrapper.mobile-top .primary-button {
+                    display: block !important;
+                    width: auto !important;
+                    text-align: center !important;
+                    padding: 10px 20px !important;
+                    border-radius: 8px !important;
+                }
+
+                /* Logo comes second */
+                .nav-brand {
+                    order: 0 !important;
+                }
+
+                /* Hide desktop button on mobile */
+                .navbar-button-wrapper:not(.mobile-top) {
+                    display: none !important;
+                }
+            }
+
+            /* Desktop layout */
+            @media (min-width: 768px) {
+                .navbar-button-wrapper.mobile-top {
+                    display: none !important;
+                }
+
+                .navbar-content {
+                    flex-direction: row !important;
+                }
+            }
         </style>
         <div role="banner" class="navbar w-nav">
             <div class="container">
                 <div class="navbar-content">
+                    <!-- Mobile Sign Up Button (Shows above logo on mobile) -->
+                    <div class="navbar-button-wrapper mobile-top">
+                        <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">${t.signUp}</a>
+                    </div>
+
                     <a href="${urls.home}" class="nav-brand">
                         <img loading="lazy" src="../images/logoNew.png" alt="" class="logo-image">
                     </a>
@@ -171,22 +222,7 @@
                         <a href="${urls.pricing}" class="nav-link ${currentPage === 'pricing' ? 'w--current' : ''}">${t.pricing}</a>
                     </nav>
 
-                    ${currentLang === 'he' ? `
-                    <!-- Sign Up Button (Hebrew: button first) -->
-                    <div class="navbar-button-wrapper">
-                        <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">${t.signUp}</a>
-                    </div>
-
-                    <!-- Language Selector (Hebrew: selector last) - Desktop Only -->
-                    <div class="language-selector desktop-only" style="display: none !important;">
-                        <select class="language-nav-select" style="background: transparent !important; border: none !important; color: rgba(255, 255, 255, 0.9) !important; padding: 8px 12px !important; border-radius: 6px !important; cursor: pointer !important; outline: none !important; appearance: none !important; -webkit-appearance: none !important; -moz-appearance: none !important;">
-                            <option value="en" ${currentLang === 'en' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇬🇧 English</option>
-                            <option value="ru" ${currentLang === 'ru' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇷🇺 Русский</option>
-                            <option value="he" ${currentLang === 'he' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇮🇱 עברית</option>
-                        </select>
-                    </div>
-                    ` : `
-                    <!-- Language Selector (Non-Hebrew: selector first) - Desktop Only -->
+                    <!-- Language Selector - Desktop Only -->
                     <div class="language-selector desktop-only" style="display: none !important;">
                         <select class="language-nav-select" style="background: transparent !important; border: none !important; color: rgba(255, 255, 255, 0.9) !important; padding: 8px 12px !important; border-radius: 6px !important; cursor: pointer !important; outline: none !important; appearance: none !important; -webkit-appearance: none !important; -moz-appearance: none !important;">
                             <option value="en" ${currentLang === 'en' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇬🇧 English</option>
@@ -195,11 +231,10 @@
                         </select>
                     </div>
 
-                    <!-- Sign Up Button (Non-Hebrew: button last) -->
+                    <!-- Sign Up Button (Always Last for All Languages) -->
                     <div class="navbar-button-wrapper">
                         <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">${t.signUp}</a>
                     </div>
-                    `}
                 </div>
             </div>
             <!-- Mobile Menu Overlay -->

@@ -478,6 +478,129 @@
     }
   </style>
   <link href="css/faq-visibility-fix.css" rel="stylesheet" type="text/css">
+  <link href="css/menu-critical-fixes.css" rel="stylesheet" type="text/css">
+
+  <!-- CRITICAL INLINE MENU FIXES -->
+  <style>
+    /* FORCE LOGO VISIBILITY - INLINE CRITICAL STYLES */
+    .navbar .logo-image,
+    .navbar img[src*="logo"],
+    .navbar img[src*="Logo"],
+    img[src*="logoNew.png"],
+    img[src*="logo.svg"],
+    img[src*="Logo.svg"] {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      width: 120px !important;
+      height: 40px !important;
+      min-width: 120px !important;
+      max-width: 200px !important;
+      object-fit: contain !important;
+    }
+
+    /* Force logo container visibility */
+    .nav-brand,
+    .w-nav-brand,
+    .zohacous-logo-link {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      align-items: center !important;
+    }
+
+    /* Remove duplicate language selectors */
+    #languageSelect,
+    #language-switcher {
+      display: none !important;
+    }
+
+    /* Navigation spacing */
+    .nav-menu {
+      display: flex !important;
+      align-items: center !important;
+      gap: 20px !important;
+    }
+
+    .nav-link {
+      margin: 0 !important;
+      padding: 8px 16px !important;
+    }
+  </style>
+
+  <!-- CRITICAL JAVASCRIPT LOGO FIX -->
+  <script>
+    (function() {
+      'use strict';
+
+      function forceLogoVisible() {
+        const logoImages = document.querySelectorAll('.logo-image, img[src*="logo"], img[src*="Logo"]');
+        let fixed = 0;
+
+        logoImages.forEach(img => {
+          if (img.getBoundingClientRect().width === 0) {
+            img.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 120px !important; height: 40px !important; object-fit: contain !important;';
+            fixed++;
+          }
+        });
+
+        if (fixed > 0) {
+          console.log(`🔧 Fixed ${fixed} logo(s) with zero width`);
+        }
+
+        return fixed;
+      }
+
+      // Run immediately
+      forceLogoVisible();
+
+      // Run after DOM loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', forceLogoVisible);
+      } else {
+        forceLogoVisible();
+      }
+
+      // Run continuously for first 5 seconds
+      let attempts = 0;
+      const maxAttempts = 50; // 5 seconds
+      const interval = setInterval(() => {
+        const fixed = forceLogoVisible();
+        attempts++;
+
+        if (attempts >= maxAttempts || (fixed === 0 && attempts > 10)) {
+          clearInterval(interval);
+          console.log('✅ Logo fix monitoring stopped');
+        }
+      }, 100);
+
+      // Watch for DOM changes that might hide the logo
+      if (window.MutationObserver) {
+        const observer = new MutationObserver((mutations) => {
+          let shouldCheck = false;
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' || mutation.type === 'childList') {
+              shouldCheck = true;
+            }
+          });
+
+          if (shouldCheck) {
+            setTimeout(forceLogoVisible, 0);
+          }
+        });
+
+        // Start observing
+        setTimeout(() => {
+          observer.observe(document.body, {
+            attributes: true,
+            childList: true,
+            subtree: true,
+            attributeFilter: ['style', 'class']
+          });
+        }, 1000);
+      }
+    })();
+  </script>
 </head>
 <body>
   <script>
@@ -516,7 +639,7 @@
     <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
       <div class="container">
         <div class="navbar-content">
-          <a href="index.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
+          <a href="index.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/logo.svg" alt="AI Studio" class="zohacous-logo-image"></a>
           <nav role="navigation" class="nav-menu w-nav-menu">
             <a href="home.html" aria-current="page" class="nav-link w-nav-link w--current">Home</a>
             <a href="courses.html" class="nav-link w-nav-link">Courses</a>

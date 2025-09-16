@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Mobile Language Selector Fix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/mobile-language-selector-hide-desktop.css" rel="stylesheet" type="text/css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .navbar {
+            background: #333;
+            color: white;
+            padding: 10px;
+        }
+        .w-nav-menu {
+            background: #555;
+            padding: 20px;
+            margin-top: 10px;
+        }
+        .mobile-language-selector {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+        @media (max-width: 991px) {
+            .desktop-only {
+                display: none !important;
+            }
+        }
+        @media (min-width: 992px) {
+            .mobile-only {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Mobile Language Selector Test</h1>
+
+        <div class="status">
+            <h3>Test Status:</h3>
+            <p>If the CSS is working correctly:</p>
+            <ul>
+                <li>On Desktop (≥992px): You should NOT see the blue "Mobile Language Selector" boxes</li>
+                <li>On Mobile (<992px): You SHOULD see the blue "Mobile Language Selector" boxes</li>
+            </ul>
+            <p>Current viewport width: <span id="viewport-width"></span>px</p>
+        </div>
+
+        <div class="page-wrapper">
+            <div class="navbar w-nav">
+                <div class="container">
+                    <div>
+                        <nav>
+                            <h3>Navbar Navigation</h3>
+                            <!-- This should be hidden on desktop -->
+                            <div class="mobile-language-selector">
+                                <select>
+                                    <option>English</option>
+                                    <option>עברית</option>
+                                    <option>Русский</option>
+                                </select>
+                                <p>Mobile Language Selector (should be hidden on desktop)</p>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-nav-menu">
+                <h3>Mobile Menu</h3>
+                <!-- This should also be hidden on desktop -->
+                <div class="mobile-language-selector">
+                    <select>
+                        <option>English</option>
+                        <option>עברית</option>
+                        <option>Русский</option>
+                    </select>
+                    <p>Mobile Language Selector in Menu (should be hidden on desktop)</p>
+                </div>
+            </div>
+
+            <div class="nav-menu">
+                <h3>Nav Menu</h3>
+                <!-- This should also be hidden on desktop -->
+                <div class="mobile-language-selector mobile-only">
+                    <select>
+                        <option>English</option>
+                        <option>עברית</option>
+                        <option>Русский</option>
+                    </select>
+                    <p>Mobile Language Selector with mobile-only class (should be hidden on desktop)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update viewport width display
+        function updateViewportWidth() {
+            document.getElementById('viewport-width').textContent = window.innerWidth;
+        }
+        updateViewportWidth();
+        window.addEventListener('resize', updateViewportWidth);
+
+        // Check if selectors are visible
+        function checkVisibility() {
+            const selectors = document.querySelectorAll('.mobile-language-selector');
+            console.log('Mobile Language Selectors found:', selectors.length);
+
+            selectors.forEach((selector, index) => {
+                const styles = window.getComputedStyle(selector);
+                console.log(`Selector ${index + 1}:`, {
+                    display: styles.display,
+                    visibility: styles.visibility,
+                    classes: selector.className
+                });
+            });
+        }
+
+        // Check visibility on load and resize
+        checkVisibility();
+        window.addEventListener('resize', checkVisibility);
+    </script>
+</body>
+</html>

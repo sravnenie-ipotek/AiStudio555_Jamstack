@@ -482,31 +482,111 @@ app.get('/api/home-page', async (req, res) => {
             }
           ],
           
-          // Individual Testimonials (4 testimonials)
+          // Individual Testimonials (4 testimonials with enhanced metadata)
           testimonials: [
             {
               text: homeData.testimonial_1_text,
               author: homeData.testimonial_1_author,
               rating: homeData.testimonial_1_rating,
-              visible: Boolean(homeData.testimonial_1_visible)
+              visible: Boolean(homeData.testimonial_1_visible),
+              date: homeData.testimonial_1_date || "September 15",
+              platform: homeData.testimonial_1_platform || "Google",
+              avatar_initial: homeData.testimonial_1_avatar_initial || (homeData.testimonial_1_author ? homeData.testimonial_1_author.charAt(0).toUpperCase() : "A"),
+              course_taken: homeData.testimonial_1_course_taken || "AI & Machine Learning Fundamentals"
             },
             {
               text: homeData.testimonial_2_text,
               author: homeData.testimonial_2_author,
               rating: homeData.testimonial_2_rating,
-              visible: Boolean(homeData.testimonial_2_visible)
+              visible: Boolean(homeData.testimonial_2_visible),
+              date: homeData.testimonial_2_date || "August 28",
+              platform: homeData.testimonial_2_platform || "Yandex",
+              avatar_initial: homeData.testimonial_2_avatar_initial || (homeData.testimonial_2_author ? homeData.testimonial_2_author.charAt(0).toUpperCase() : "B"),
+              course_taken: homeData.testimonial_2_course_taken || "Full-Stack Web Development"
             },
             {
               text: homeData.testimonial_3_text,
               author: homeData.testimonial_3_author,
               rating: homeData.testimonial_3_rating,
-              visible: Boolean(homeData.testimonial_3_visible)
+              visible: Boolean(homeData.testimonial_3_visible),
+              date: homeData.testimonial_3_date || "September 5",
+              platform: homeData.testimonial_3_platform || "Trustpilot",
+              avatar_initial: homeData.testimonial_3_avatar_initial || (homeData.testimonial_3_author ? homeData.testimonial_3_author.charAt(0).toUpperCase() : "C"),
+              course_taken: homeData.testimonial_3_course_taken || "Data Science & Analytics"
             },
             {
               text: homeData.testimonial_4_text,
               author: homeData.testimonial_4_author,
               rating: homeData.testimonial_4_rating,
-              visible: Boolean(homeData.testimonial_4_visible)
+              visible: Boolean(homeData.testimonial_4_visible),
+              date: homeData.testimonial_4_date || "August 20",
+              platform: homeData.testimonial_4_platform || "Google",
+              avatar_initial: homeData.testimonial_4_avatar_initial || (homeData.testimonial_4_author ? homeData.testimonial_4_author.charAt(0).toUpperCase() : "D"),
+              course_taken: homeData.testimonial_4_course_taken || "Cybersecurity Essentials"
+            }
+          ],
+
+          // Companies Section Array (10 major tech companies)
+          companies: [
+            {
+              name: 'Google',
+              color: '#4285F4',
+              logo_url: '/images/companies/google-logo.svg',
+              visible: true
+            },
+            {
+              name: 'Microsoft',
+              color: '#00A4EF',
+              logo_url: '/images/companies/microsoft-logo.svg',
+              visible: true
+            },
+            {
+              name: 'Meta',
+              color: '#1877F2',
+              logo_url: '/images/companies/meta-logo.svg',
+              visible: true
+            },
+            {
+              name: 'Amazon',
+              color: '#FF9900',
+              logo_url: '/images/companies/amazon-logo.svg',
+              visible: true
+            },
+            {
+              name: 'Apple',
+              color: '#007AFF',
+              logo_url: '/images/companies/apple-logo.svg',
+              visible: true
+            },
+            {
+              name: 'OpenAI',
+              color: '#412991',
+              logo_url: '/images/companies/openai-logo.svg',
+              visible: true
+            },
+            {
+              name: 'Tesla',
+              color: '#CC0000',
+              logo_url: '/images/companies/tesla-logo.svg',
+              visible: true
+            },
+            {
+              name: 'Stripe',
+              color: '#635BFF',
+              logo_url: '/images/companies/stripe-logo.svg',
+              visible: true
+            },
+            {
+              name: 'X (Twitter)',
+              color: '#000000',
+              logo_url: '/images/companies/x-logo.svg',
+              visible: true
+            },
+            {
+              name: 'Slack',
+              color: '#4A154B',
+              logo_url: '/images/companies/slack-logo.svg',
+              visible: true
             }
           ]
         }
@@ -3694,25 +3774,105 @@ app.get('/api/home-page-live', async (req, res) => {
             text: homeData.testimonial_1_text,
             author: homeData.testimonial_1_author,
             rating: homeData.testimonial_1_rating,
-            visible: Boolean(homeData.testimonial_1_visible)
+            visible: Boolean(homeData.testimonial_1_visible),
+            date: homeData.testimonial_1_date || "September 15",
+            platform: homeData.testimonial_1_platform || "Google",
+            avatar_initial: homeData.testimonial_1_avatar_initial || (homeData.testimonial_1_author ? homeData.testimonial_1_author.charAt(0).toUpperCase() : "A"),
+            course_taken: homeData.testimonial_1_course_taken || "AI & Machine Learning Fundamentals"
           },
           {
             text: homeData.testimonial_2_text,
             author: homeData.testimonial_2_author,
             rating: homeData.testimonial_2_rating,
-            visible: Boolean(homeData.testimonial_2_visible)
+            visible: Boolean(homeData.testimonial_2_visible),
+            date: homeData.testimonial_2_date || "August 28",
+            platform: homeData.testimonial_2_platform || "Yandex",
+            avatar_initial: homeData.testimonial_2_avatar_initial || (homeData.testimonial_2_author ? homeData.testimonial_2_author.charAt(0).toUpperCase() : "B"),
+            course_taken: homeData.testimonial_2_course_taken || "Full-Stack Web Development"
           },
           {
             text: homeData.testimonial_3_text,
             author: homeData.testimonial_3_author,
             rating: homeData.testimonial_3_rating,
-            visible: Boolean(homeData.testimonial_3_visible)
+            visible: Boolean(homeData.testimonial_3_visible),
+            date: homeData.testimonial_3_date || "September 5",
+            platform: homeData.testimonial_3_platform || "Trustpilot",
+            avatar_initial: homeData.testimonial_3_avatar_initial || (homeData.testimonial_3_author ? homeData.testimonial_3_author.charAt(0).toUpperCase() : "C"),
+            course_taken: homeData.testimonial_3_course_taken || "Data Science & Analytics"
           },
           {
             text: homeData.testimonial_4_text,
             author: homeData.testimonial_4_author,
             rating: homeData.testimonial_4_rating,
-            visible: Boolean(homeData.testimonial_4_visible)
+            visible: Boolean(homeData.testimonial_4_visible),
+            date: homeData.testimonial_4_date || "August 20",
+            platform: homeData.testimonial_4_platform || "Google",
+            avatar_initial: homeData.testimonial_4_avatar_initial || (homeData.testimonial_4_author ? homeData.testimonial_4_author.charAt(0).toUpperCase() : "D"),
+            course_taken: homeData.testimonial_4_course_taken || "Cybersecurity Essentials"
+          }
+        ],
+
+        // Companies Section Array (10 major tech companies)
+        companies: [
+          {
+            name: 'Google',
+            color: '#4285F4',
+            logo_url: '/images/companies/google-logo.svg',
+            visible: true
+          },
+          {
+            name: 'Microsoft',
+            color: '#00A4EF',
+            logo_url: '/images/companies/microsoft-logo.svg',
+            visible: true
+          },
+          {
+            name: 'Meta',
+            color: '#1877F2',
+            logo_url: '/images/companies/meta-logo.svg',
+            visible: true
+          },
+          {
+            name: 'Amazon',
+            color: '#FF9900',
+            logo_url: '/images/companies/amazon-logo.svg',
+            visible: true
+          },
+          {
+            name: 'Apple',
+            color: '#007AFF',
+            logo_url: '/images/companies/apple-logo.svg',
+            visible: true
+          },
+          {
+            name: 'OpenAI',
+            color: '#412991',
+            logo_url: '/images/companies/openai-logo.svg',
+            visible: true
+          },
+          {
+            name: 'Tesla',
+            color: '#CC0000',
+            logo_url: '/images/companies/tesla-logo.svg',
+            visible: true
+          },
+          {
+            name: 'Stripe',
+            color: '#635BFF',
+            logo_url: '/images/companies/stripe-logo.svg',
+            visible: true
+          },
+          {
+            name: 'X (Twitter)',
+            color: '#000000',
+            logo_url: '/images/companies/x-logo.svg',
+            visible: true
+          },
+          {
+            name: 'Slack',
+            color: '#4A154B',
+            logo_url: '/images/companies/slack-logo.svg',
+            visible: true
           }
         ]
       }

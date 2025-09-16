@@ -884,13 +884,14 @@
   </style>
 
   <link href="css/mobile-fix.css" rel="stylesheet" type="text/css">
+  <link href="css/menu-critical-fixes.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <div class="page-wrapper">
     <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
       <div class="container">
         <div class="navbar-content">
-          <a href="home.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
+          <a href="home.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/logo.svg" alt="" class="zohacous-logo-image"></a>
           <nav role="navigation" class="nav-menu w-nav-menu">
             <a href="home.html" class="nav-link w-nav-link">Home</a>
             <a href="courses.html" aria-current="page" class="nav-link w-nav-link w--current">Courses</a>
@@ -1773,69 +1774,7 @@
         return 'en';
       }
       
-      function createLanguageSwitcher() {
-        if (document.getElementById('language-switcher')) return;
-        
-        const currentLang = detectCurrentLanguage();
-        const switcher = document.createElement('div');
-        switcher.id = 'language-switcher';
-        // Let CSS handle positioning via desktop-language-selector-fix.css
-        
-        switcher.innerHTML = `
-          <style>
-            #language-switcher select {
-              padding: 10px 16px;
-              background: rgba(5, 5, 26, 0.95);
-              border: 1px solid rgba(255, 255, 255, 0.2);
-              border-radius: 12px;
-              color: white;
-              font-family: "Plus Jakarta Sans", sans-serif;
-              font-size: 14px;
-              font-weight: 500;
-              cursor: pointer;
-              backdrop-filter: blur(10px);
-              outline: none;
-              transition: all 0.3s ease;
-            }
-            #language-switcher select:hover {
-              background: rgba(0, 128, 255, 0.1);
-              border-color: rgba(0, 128, 255, 0.3);
-              transform: translateY(-2px);
-            }
-            #language-switcher select option {
-              background: #05051a;
-              color: white;
-              padding: 8px;
-            }
-            html[dir="rtl"] #language-switcher {
-              right: auto;
-              left: 20px;
-            }
-            @media (max-width: 768px) {
-              #language-switcher {
-                top: 10px;
-                right: 10px;
-              }
-              #language-switcher select {
-                padding: 8px 12px;
-                font-size: 13px;
-              }
-            }
-          </style>
-          <select onchange="switchLanguage(this.value)" id="languageSelect">
-            ${Object.entries(LANGUAGES).map(([code, lang]) => 
-              `<option value="${code}" ${code === currentLang ? 'selected' : ''}>${lang.flag} ${lang.name}</option>`
-            ).join('')}
-          </select>
-        `;
-        
-        const navbar = document.querySelector(".navbar-content") || document.querySelector(".navbar") || document.body; navbar.appendChild(switcher);
-        
-        // Apply language settings
-        document.documentElement.lang = currentLang;
-        document.documentElement.dir = LANGUAGES[currentLang].dir;
-        localStorage.setItem(STORAGE_KEY, currentLang);
-      }
+      // REMOVED: createLanguageSwitcher function - using integrated nav selector instead
       
       window.switchLanguage = function(newLang) {
         if (!LANGUAGES[newLang]) return;
@@ -1873,9 +1812,9 @@
       
       // Initialize when DOM is ready
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', createLanguageSwitcher);
+        // REMOVED: createLanguageSwitcher call
       } else {
-        createLanguageSwitcher();
+        // REMOVED: createLanguageSwitcher call
       }
     })();
   </script>

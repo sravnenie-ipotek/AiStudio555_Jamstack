@@ -1,0 +1,94 @@
+/* Mobile Signup Button Fix - Show signup button on mobile when menu is closed */
+
+/* Hide desktop button on mobile */
+@media screen and (max-width: 991px) {
+    .navbar-button-wrapper {
+        display: none !important;
+    }
+}
+
+/* Show mobile signup button when menu is closed */
+@media screen and (max-width: 991px) {
+    .mobile-signup-button-closed {
+        display: block !important;
+        position: absolute !important;
+        right: 70px !important; /* Position it left of hamburger */
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        z-index: 1000 !important;
+    }
+
+    /* For RTL (Hebrew) - button on left side */
+    [dir="rtl"] .mobile-signup-button-closed {
+        right: auto !important;
+        left: 70px !important; /* Position it right of hamburger in RTL */
+    }
+
+    .mobile-signup-button-closed .primary-button {
+        display: inline-block !important;
+        padding: 8px 16px !important;
+        font-size: 14px !important;
+        white-space: nowrap !important;
+    }
+
+    /* Hide when menu is open */
+    .w--nav-menu-open ~ .mobile-signup-button-closed {
+        display: none !important;
+    }
+}
+
+/* Ensure button is hidden on desktop */
+@media screen and (min-width: 992px) {
+    .mobile-signup-button-closed {
+        display: none !important;
+    }
+
+    /* Show desktop button */
+    .navbar-button-wrapper {
+        display: flex !important;
+    }
+}
+
+/* Adjust hamburger position to make room */
+@media screen and (max-width: 991px) {
+    .hamburger-button {
+        right: 20px !important;
+    }
+
+    [dir="rtl"] .hamburger-button {
+        right: auto !important;
+        left: 20px !important;
+    }
+}
+
+/* Ensure proper navbar height on mobile */
+@media screen and (max-width: 991px) {
+    .navbar {
+        min-height: 70px !important;
+    }
+
+    .navbar-content {
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        position: relative !important;
+    }
+}
+
+/* Style adjustments for mobile button */
+@media screen and (max-width: 991px) {
+    .mobile-signup-button-closed .primary-button {
+        background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 6px !important;
+        font-weight: 600 !important;
+        text-decoration: none !important;
+        cursor: pointer !important;
+        transition: transform 0.2s ease !important;
+    }
+
+    .mobile-signup-button-closed .primary-button:hover {
+        transform: scale(1.05) !important;
+    }
+}

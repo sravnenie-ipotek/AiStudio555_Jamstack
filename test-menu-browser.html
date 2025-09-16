@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menu Test</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-frame {
+            width: 100%;
+            height: 150px;
+            border: 2px solid #333;
+            margin: 20px 0;
+            background: white;
+        }
+        .results {
+            background: white;
+            padding: 15px;
+            border: 1px solid #ccc;
+            white-space: pre-wrap;
+        }
+        h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Menu Test Results</h1>
+
+    <h2>Hebrew Page</h2>
+    <iframe id="hebrew-frame" class="test-frame" src="http://localhost:3005/he/home.html"></iframe>
+    <div id="hebrew-results" class="results">Loading...</div>
+
+    <h2>English Page</h2>
+    <iframe id="english-frame" class="test-frame" src="http://localhost:3005/en/home.html"></iframe>
+    <div id="english-results" class="results">Loading...</div>
+
+    <script>
+        function analyzeMenu(frameId, resultsId) {
+            const iframe = document.getElementById(frameId);
+            const results = document.getElementById(resultsId);
+
+            iframe.onload = function() {
+                try {
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+                    const navbar = doc.querySelector('.navbar');
+
+                    let output = '';
+
+                    // Check logo
+                    const logo = navbar?.querySelector('.nav-brand img, .logo-image, .zohacous-logo-image');
+                    if (logo) {
+                        const rect = logo.getBoundingClientRect();
+                        output += `✅ Logo found: ${logo.src.split('/').pop()}\n`;
+                        output += `   Visible: ${rect.width > 0 && rect.height > 0}\n`;
+                        output += `   Size: ${Math.round(rect.width)}x${Math.round(rect.height)}px\n\n`;
+                    } else {
+                        output += '❌ NO LOGO FOUND!\n\n';
+                    }
+
+                    // Check menu items
+                    const navMenu = navbar?.querySelector('.nav-menu');
+                    if (navMenu) {
+                        const items = navMenu.querySelectorAll('.nav-link, .menu-dropdown-wrapper');
+                        output += `Menu items: ${items.length}\n`;
+
+                        let prevX = 0, prevWidth = 0;
+                        items.forEach((item, i) => {
+                            const rect = item.getBoundingClientRect();
+                            const text = item.textContent.trim();
+
+                            if (i > 0) {
+                                const gap = rect.x - (prevX + prevWidth);
+                                output += `   Gap: ${Math.round(gap)}px\n`;
+                            }
+
+                            output += `${i+1}. "${text}" (x=${Math.round(rect.x)})\n`;
+                            prevX = rect.x;
+                            prevWidth = rect.width;
+                        });
+                    }
+
+                    // Check button
+                    const button = navbar?.querySelector('.primary-button, .navbar-button-wrapper a');
+                    if (button) {
+                        const rect = button.getBoundingClientRect();
+                        output += `\n🔵 Button: "${button.textContent.trim()}"\n`;
+                        output += `   Position: x=${Math.round(rect.x)}, y=${Math.round(rect.y)}\n`;
+                    }
+
+                    results.textContent = output;
+                } catch (e) {
+                    results.textContent = `Error: ${e.message}\nNote: Cross-origin access may be blocked`;
+                }
+            };
+        }
+
+        // Analyze both pages
+        analyzeMenu('hebrew-frame', 'hebrew-results');
+        analyzeMenu('english-frame', 'english-results');
+
+        // Refresh button
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'r' || e.key === 'R') {
+                location.reload();
+            }
+        });
+    </script>
+
+    <p>Press 'R' to refresh the test</p>
+</body>
+</html>
