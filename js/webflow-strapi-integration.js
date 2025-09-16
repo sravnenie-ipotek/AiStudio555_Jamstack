@@ -635,6 +635,9 @@ class CustomAPIIntegration {
         teachersContainer.style.opacity = '1';
         teachersContainer.style.visibility = 'visible';
 
+        // Setup filtering after teachers are loaded
+        this.setupTeacherFiltering();
+
         console.log(`✅ Updated teachers grid with ${teachersData.length} teachers and made it visible`);
     }
 

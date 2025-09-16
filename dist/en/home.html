@@ -13,10 +13,11 @@
   <link href="../css/card-height-fix.css" rel="stylesheet" type="text/css">
   <link href="../css/unified-navigation.css" rel="stylesheet" type="text/css">
   <link href="../css/language-selector-mobile-fix.css" rel="stylesheet" type="text/css">
-  <link href="../css/mobile-menu-proper-fix.css" rel="stylesheet" type="text/css">
+  <link href="../css/mobile-navigation-complete-fix.css" rel="stylesheet" type="text/css">
   <link href="../css/mobile-responsive-fix.css" rel="stylesheet" type="text/css">
   <link href="../css/desktop-language-selector-fix.css" rel="stylesheet" type="text/css">
   <link href="../css/desktop-menu-force-visible.css" rel="stylesheet" type="text/css">
+  <link href="../css/mobile-video-fix.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
@@ -700,7 +701,7 @@
   <link href="../css/mobile-fix.css" rel="stylesheet" type="text/css">
   <link href="../css/faq-visibility-fix.css" rel="stylesheet" type="text/css">
   <link href="../css/menu-button-position-fix.css" rel="stylesheet" type="text/css">
-</head>
+  <link href="../css/mobile-signup-button-fix.css" rel="stylesheet" type="text/css">  <link href="../css/menu-final-fix.css" rel="stylesheet" type="text/css"></head>
 <body>
   <div class="page-wrapper">
     <div id="shared-menu-container"></div>
@@ -1578,8 +1579,8 @@
   <script src="../js/translations-config.js"></script>
   <script src="../js/enhanced-integration.js"></script>
   <!-- Mobile Menu and Language Selector Scripts -->
-  <script src="../js/mobile-menu-initial-state.js"></script>
-  <script src="../js/mobile-menu-toggle-fix.js"></script>
+  <script src="../js/mobile-menu-initial-state.js"></script>  <!-- mobile-menu-toggle-fix.js disabled - replaced by universal-mobile-navigation-fix.js -->
+  <script src="../js/universal-mobile-navigation-fix.js"></script>
 
   <!-- Language Switcher -->
   <script>
@@ -1603,86 +1604,7 @@
         return 'en';
       }
 
-      function createLanguageSwitcher() {
-        if (document.getElementById('language-switcher')) return;
-
-        const currentLang = detectCurrentLanguage();
-        const switcher = document.createElement('div');
-        switcher.id = 'language-switcher';
-        // Let CSS handle positioning via desktop-language-selector-fix.css
-
-        switcher.innerHTML = `
-          <style>
-            #language-switcher {
-              display: inline-block;
-              margin: 0;
-              padding: 0;
-            }
-            #language-switcher select {
-              padding: 8px 12px;
-              background: transparent;
-              border: 1px solid rgba(255, 255, 255, 0.3);
-              border-radius: 6px;
-              color: rgba(255, 255, 255, 0.9);
-              font-size: 14px;
-              font-weight: 400;
-              min-width: 120px;
-              cursor: pointer;
-              outline: none;
-              transition: all 0.2s ease;
-              appearance: none;
-              -webkit-appearance: none;
-              -moz-appearance: none;
-            }
-            #language-switcher select:hover {
-              color: #ffd659;
-              border-color: rgba(255, 214, 89, 0.5);
-              background: rgba(255, 214, 89, 0.1);
-            }
-            #language-switcher select option {
-              background: #05051a;
-              color: white;
-              padding: 8px;
-            }
-            /* Responsive adjustments - keep visible on mobile now */
-            @media (max-width: 991px) {
-              #language-switcher select {
-                min-width: 100px;
-                font-size: 13px;
-                padding: 6px 10px;
-              }
-            }
-          </style>
-          <select onchange="switchLanguage(this.value)" id="languageSelect">
-            ${Object.entries(LANGUAGES).map(([code, lang]) =>
-              `<option value="${code}" ${code === currentLang ? 'selected' : ''}>${lang.flag} ${lang.name}</option>`
-            ).join('')}
-          </select>
-        `;
-
-        // Insert into nav-menu as an inline element
-        const navMenu = document.querySelector(".nav-menu");
-        const mobileButtonWrapper = navMenu ? navMenu.querySelector(".primary-button-wrapper.mobile") : null;
-
-        if (navMenu) {
-          if (mobileButtonWrapper) {
-            // Insert before mobile button wrapper
-            navMenu.insertBefore(switcher, mobileButtonWrapper);
-          } else {
-            // Append to nav menu
-            navMenu.appendChild(switcher);
-          }
-        } else {
-          // Fallback to navbar-content
-          const navbar = document.querySelector(".navbar-content") || document.querySelector(".navbar") || document.body;
-          navbar.appendChild(switcher);
-        }
-
-        // Apply language settings
-        document.documentElement.lang = currentLang;
-        document.documentElement.dir = LANGUAGES[currentLang].dir;
-        localStorage.setItem(STORAGE_KEY, currentLang);
-      }
+      // REMOVED: createLanguageSwitcher function - using integrated nav selector instead
 
       window.switchLanguage = function(newLang) {
         if (!LANGUAGES[newLang]) return;
@@ -1709,14 +1631,12 @@
         window.location.href = newPath;
       };
 
-      // Initialize when DOM is ready
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', createLanguageSwitcher);
-      } else {
-        createLanguageSwitcher();
-      }
+      // REMOVED: createLanguageSwitcher initialization - using integrated nav selector instead
     })();
   </script>
     <script src="../js/shared-menu-component.js?v=2.9"></script>
+
+  <!-- Mobile Video Enabler -->
+  <script src="../js/mobile-video-enabler.js"></script>
 </body>
 </html>
