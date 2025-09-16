@@ -500,23 +500,66 @@
             `;
         });
 
-        // Style dropdowns in mobile
+        // Style dropdowns in mobile - START COLLAPSED
         const dropdowns = menu.querySelectorAll('.menu-dropdown-wrapper');
         dropdowns.forEach(dropdown => {
             dropdown.style.width = '100%';
 
+            // Make dropdown toggle clickable
+            const dropdownToggle = dropdown.querySelector('.dropdown-toggle');
             const dropdownList = dropdown.querySelector('.dropdown-list');
-            if (dropdownList) {
+
+            if (dropdownToggle && dropdownList) {
+                // Initially hide the dropdown list
                 dropdownList.style.cssText = `
                     position: static !important;
-                    display: block !important;
+                    display: none !important;
                     background: transparent !important;
                     border: none !important;
                     padding: 0 !important;
                     opacity: 1 !important;
                     visibility: visible !important;
                     transform: none !important;
+                    max-height: 0 !important;
+                    overflow: hidden !important;
+                    transition: max-height 0.3s ease !important;
                 `;
+
+                // Style the toggle button
+                dropdownToggle.style.cssText = `
+                    display: block !important;
+                    padding: 15px 20px !important;
+                    color: white !important;
+                    font-size: 18px !important;
+                    text-align: center !important;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    cursor: pointer !important;
+                    position: relative !important;
+                `;
+
+                // Add click handler to toggle dropdown
+                dropdownToggle.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Check current state more reliably
+                    const computedStyle = window.getComputedStyle(dropdownList);
+                    const isOpen = computedStyle.display !== 'none';
+
+                    if (isOpen) {
+                        // Close dropdown
+                        dropdownList.style.display = 'none';
+                        dropdownList.style.maxHeight = '0';
+                        const arrow = dropdownToggle.querySelector('.dropdown-toggle-arrow-2');
+                        if (arrow) arrow.textContent = '▼';
+                    } else {
+                        // Open dropdown
+                        dropdownList.style.display = 'block';
+                        dropdownList.style.maxHeight = '500px';
+                        const arrow = dropdownToggle.querySelector('.dropdown-toggle-arrow-2');
+                        if (arrow) arrow.textContent = '▲';
+                    }
+                });
 
                 const dropdownLinks = dropdownList.querySelectorAll('.dropdown-menu-text-link-block');
                 dropdownLinks.forEach(link => {
@@ -573,6 +616,19 @@
         const menu = document.querySelector('.w-nav-menu, .nav-menu');
         const overlay = document.querySelector('.mobile-menu-overlay');
         const menuButton = document.querySelector('.mobile-menu-button');
+
+        // Reset any open dropdowns
+        const dropdownLists = menu ? menu.querySelectorAll('.dropdown-list') : [];
+        dropdownLists.forEach(list => {
+            list.style.display = 'none';
+            list.style.maxHeight = '0';
+        });
+
+        // Reset dropdown arrows
+        const dropdownArrows = menu ? menu.querySelectorAll('.dropdown-toggle-arrow-2') : [];
+        dropdownArrows.forEach(arrow => {
+            arrow.textContent = '▼';
+        });
 
         // Remove open classes
         document.body.classList.remove('w--nav-menu-open', 'mobile-menu-open');
