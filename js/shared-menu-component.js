@@ -124,6 +124,20 @@
     // Inject complete navigation structure
     function injectCompleteNavigation(container) {
         const navigationHTML = `
+        <style>
+            /* Hide desktop language selector on mobile */
+            @media (max-width: 991px) {
+                .language-selector.desktop-only {
+                    display: none !important;
+                }
+            }
+            /* Show desktop language selector on desktop */
+            @media (min-width: 992px) {
+                .language-selector.desktop-only {
+                    display: block !important;
+                }
+            }
+        </style>
         <div role="banner" class="navbar w-nav">
             <div class="container">
                 <div class="navbar-content">
@@ -163,8 +177,8 @@
                         <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">${t.signUp}</a>
                     </div>
 
-                    <!-- Language Selector (Hebrew: selector last) -->
-                    <div class="language-selector">
+                    <!-- Language Selector (Hebrew: selector last) - Desktop Only -->
+                    <div class="language-selector desktop-only" style="display: none !important;">
                         <select class="language-nav-select" style="background: transparent !important; border: none !important; color: rgba(255, 255, 255, 0.9) !important; padding: 8px 12px !important; border-radius: 6px !important; cursor: pointer !important; outline: none !important; appearance: none !important; -webkit-appearance: none !important; -moz-appearance: none !important;">
                             <option value="en" ${currentLang === 'en' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇬🇧 English</option>
                             <option value="ru" ${currentLang === 'ru' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇷🇺 Русский</option>
@@ -172,8 +186,8 @@
                         </select>
                     </div>
                     ` : `
-                    <!-- Language Selector (Non-Hebrew: selector first) -->
-                    <div class="language-selector">
+                    <!-- Language Selector (Non-Hebrew: selector first) - Desktop Only -->
+                    <div class="language-selector desktop-only" style="display: none !important;">
                         <select class="language-nav-select" style="background: transparent !important; border: none !important; color: rgba(255, 255, 255, 0.9) !important; padding: 8px 12px !important; border-radius: 6px !important; cursor: pointer !important; outline: none !important; appearance: none !important; -webkit-appearance: none !important; -moz-appearance: none !important;">
                             <option value="en" ${currentLang === 'en' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇬🇧 English</option>
                             <option value="ru" ${currentLang === 'ru' ? 'selected' : ''} style="background: #05051a !important; color: white !important;">🇷🇺 Русский</option>
