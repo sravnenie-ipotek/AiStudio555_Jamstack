@@ -24,6 +24,33 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
+// Serve language-specific routes BEFORE static middleware - serve home.html directly for proper menu
+app.get('/en', (req, res) => {
+  const homePath = path.join(__dirname, 'dist/en/home.html');
+  if (require('fs').existsSync(homePath)) {
+    res.sendFile(homePath);
+  } else {
+    res.sendFile(path.join(__dirname, 'home.html'));
+  }
+});
+
+app.get('/he', (req, res) => {
+  const homePath = path.join(__dirname, 'dist/he/home.html');
+  if (require('fs').existsSync(homePath)) {
+    res.sendFile(homePath);
+  } else {
+    res.sendFile(path.join(__dirname, 'dist/he/index.html'));
+  }
+});
+
+app.get('/ru', (req, res) => {
+  const homePath = path.join(__dirname, 'dist/ru/home.html');
+  if (require('fs').existsSync(homePath)) {
+    res.sendFile(homePath);
+  } else {
+    res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
+  }
+});
 
 // Serve static files - main site and dist directory
 app.use(express.static(path.join(__dirname)));
@@ -3471,22 +3498,16 @@ app.get('/ru/strapi-content-loader.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
 });
 
-// Serve language-specific routes
-app.get('/en', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/en/index.html'));
-});
 
-app.get('/he', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/he/index.html'));
-});
-
-app.get('/ru', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
-});
-
-// Redirect home.html to index.html for all languages and dist paths
+// Serve home.html properly for all languages
 app.get(['/dist/en/home.html', '/en/home.html'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/en/index.html'));
+  const homePath = path.join(__dirname, 'dist/en/home.html');
+  if (require('fs').existsSync(homePath)) {
+    res.sendFile(homePath);
+  } else {
+    // Fallback to root home.html if dist version doesn't exist
+    res.sendFile(path.join(__dirname, 'home.html'));
+  }
 });
 
 app.get(['/dist/ru/home.html', '/ru/home.html'], (req, res) => {

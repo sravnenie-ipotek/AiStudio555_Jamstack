@@ -1005,6 +1005,20 @@
       }
     });
   </script>
+
+  <!-- Webflow Strapi Integration for Dynamic Teachers Loading -->
+  <script src="../js/webflow-strapi-integration.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize dynamic content loader for teachers page
+      if (typeof WebflowStrapiIntegration !== 'undefined') {
+        const integration = new WebflowStrapiIntegration();
+        integration.init('teachers'); // Load teachers content
+        console.log('🚀 Teachers page dynamic loading initialized');
+      }
+    });
+  </script>
+
     <script src="../js/shared-menu-component.js?v=2.9"></script>
 </body>
 </html>

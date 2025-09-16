@@ -138,28 +138,42 @@
                 }
             }
 
-            /* Mobile-specific layout for button above logo */
+            /* Mobile-specific layout - button beneath hamburger */
             @media (max-width: 767px) {
                 .navbar-content {
                     display: flex !important;
-                    flex-direction: column !important;
+                    flex-direction: row !important;
+                    justify-content: space-between !important;
                     align-items: flex-start !important;
+                    flex-wrap: wrap !important;
                 }
 
-                /* Move Sign Up button to top on mobile */
-                .navbar-button-wrapper.mobile-top {
-                    order: -1 !important;
-                    width: 100% !important;
+                /* Position hamburger menu at top right */
+                .w-nav-button {
+                    order: 1 !important;
+                    margin-left: auto !important;
                     margin-bottom: 10px !important;
+                }
+
+                /* Position Sign Up button beneath hamburger */
+                .navbar-button-wrapper.mobile-top {
+                    order: 2 !important;
+                    position: absolute !important;
+                    top: 60px !important;
+                    right: 20px !important;
+                    width: auto !important;
                     display: block !important;
+                    z-index: 1000 !important;
                 }
 
                 .navbar-button-wrapper.mobile-top .primary-button {
                     display: block !important;
                     width: auto !important;
                     text-align: center !important;
-                    padding: 10px 20px !important;
-                    border-radius: 8px !important;
+                    padding: 8px 16px !important;
+                    border-radius: 6px !important;
+                    font-size: 14px !important;
+                    white-space: nowrap !important;
                 }
 
                 /* Hide logo on mobile */

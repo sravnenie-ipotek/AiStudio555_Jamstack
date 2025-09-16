@@ -217,15 +217,15 @@
 
         <div class="tabs">
             <!-- CORE PAGES (matching your website pages) -->
-            <button class="tab active" onclick="showSection('home-page')" data-key="home_page">🏠 Home Page <span class="field-count">123 Fields</span></button>
-            <button class="tab" onclick="showSection('courses')" data-key="courses_page">📚 Courses Page <span class="field-count">30+ Fields</span></button>
-            <button class="tab" onclick="showSection('teachers')" data-key="teachers_page">👨‍🏫 Teachers Page <span class="field-count">25+ Fields</span></button>
+            <button class="tab active" onclick="showSection('home-page')" data-key="home_page">🏠 Home <span class="field-count">123 Fields</span></button>
+            <button class="tab" onclick="showSection('courses')" data-key="courses_page">📚 Courses <span class="field-count">30+ Fields</span></button>
+            <button class="tab" onclick="showSection('teachers')" data-key="teachers_page">👨‍🏫 Teachers <span class="field-count">25+ Fields</span></button>
             <button class="tab" onclick="showSection('career-services')" data-key="career_center">🎯 Career Center <span class="field-count">40+ Fields</span></button>
             <button class="tab" onclick="showSection('career-orientation')" data-key="career_orientation">🧭 Career Orientation <span class="field-count">50+ Fields</span></button>
-            <button class="tab" onclick="showSection('pricing-plans')" data-key="pricing_page">💰 Pricing Page <span class="field-count">20+ Fields</span></button>
-            <button class="tab" onclick="showSection('blog-posts')" data-key="blog_page">📝 Blog Page <span class="field-count">15+ Fields</span></button>
-            <button class="tab" onclick="showSection('about-page')" data-key="about_page">ℹ️ About Page <span class="field-count">35+ Fields</span></button>
-            <button class="tab" onclick="showSection('contact-page')" data-key="contact_page">📞 Contact Page <span class="field-count">25+ Fields</span></button>
+            <button class="tab" onclick="showSection('pricing-plans')" data-key="pricing_page">💰 Pricing <span class="field-count">20+ Fields</span></button>
+            <button class="tab" onclick="showSection('blog-posts')" data-key="blog_page">📝 Blog <span class="field-count">15+ Fields</span></button>
+            <button class="tab" onclick="showSection('about-page')" data-key="about_page">ℹ️ About Us <span class="field-count">35+ Fields</span></button>
+            <button class="tab" onclick="showSection('contact-page')" data-key="contact_page">📞 Contact Us <span class="field-count">25+ Fields</span></button>
             <button class="tab" onclick="showSection('course-detail')" data-key="course_detail">📖 Course Detail <span class="field-count">15+ Fields</span></button>
             <button class="tab" onclick="showSection('blog-detail')" data-key="blog_detail">📰 Blog Detail <span class="field-count">12+ Fields</span></button>
             <button class="tab" onclick="showSection('footer-management')" data-key="footer">🦶 Footer <span class="field-count">20+ Fields</span></button>
@@ -2691,7 +2691,7 @@
         // Production API URLs - Updated to use correct production endpoint
         // Smart API URL detection with automatic fallback to production
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const LOCAL_API = 'http://localhost:3000/api';
+        const LOCAL_API = 'http://localhost:1337/api';
         const PROD_API = 'https://aistudio555jamstack-production.up.railway.app/api';
 
         // For local development, try local first then fallback to production if error
@@ -2743,15 +2743,15 @@
         const adminTranslations = {
             en: {
                 // Page titles
-                'home_page': 'Home Page',
-                'courses_page': 'Courses Page',
-                'teachers_page': 'Teachers Page',
+                'home_page': 'Home',
+                'courses_page': 'Courses',
+                'teachers_page': 'Teachers',
                 'career_center': 'Career Center',
                 'career_orientation': 'Career Orientation',
-                'pricing_page': 'Pricing Page',
-                'blog_page': 'Blog Page',
-                'about_page': 'About Page',
-                'contact_page': 'Contact Page',
+                'pricing_page': 'Pricing',
+                'blog_page': 'Blog',
+                'about_page': 'About Us',
+                'contact_page': 'Contact Us',
                 'course_detail': 'Course Detail',
                 'blog_detail': 'Blog Detail',
                 'footer': 'Footer',
@@ -2765,13 +2765,13 @@
             },
             ru: {
                 // Page titles
-                'home_page': 'Главная страница',
-                'courses_page': 'Страница курсов',
-                'teachers_page': 'Страница преподавателей',
+                'home_page': 'Главная',
+                'courses_page': 'Курсы',
+                'teachers_page': 'Преподаватели',
                 'career_center': 'Карьерный центр',
                 'career_orientation': 'Профориентация',
-                'pricing_page': 'Страница цен',
-                'blog_page': 'Страница блога',
+                'pricing_page': 'Цены',
+                'blog_page': 'Блог',
                 'about_page': 'О нас',
                 'contact_page': 'Контакты',
                 'course_detail': 'Детали курса',
@@ -2787,13 +2787,13 @@
             },
             he: {
                 // Page titles
-                'home_page': 'דף הבית',
-                'courses_page': 'דף קורסים',
-                'teachers_page': 'דף מורים',
+                'home_page': 'בית',
+                'courses_page': 'קורסים',
+                'teachers_page': 'מורים',
                 'career_center': 'מרכז קריירה',
                 'career_orientation': 'הכוונה תעסוקתית',
-                'pricing_page': 'דף מחירים',
-                'blog_page': 'דף בלוג',
+                'pricing_page': 'מחירים',
+                'blog_page': 'בלוג',
                 'about_page': 'אודות',
                 'contact_page': 'צור קשר',
                 'course_detail': 'פרטי קורס',
@@ -4728,8 +4728,8 @@
         }
 
         // API Configuration - Use existing isLocal variable from above
-        const API_BASE = isLocal 
-            ? 'http://localhost:3000'
+        const API_BASE = isLocal
+            ? 'http://localhost:1337'
             : 'https://aistudio555jamstack-production.up.railway.app';
         
         // Helper function to get current language

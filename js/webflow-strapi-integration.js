@@ -617,9 +617,10 @@ class CustomAPIIntegration {
     updateTeachersGrid(teachersData) {
         console.log('👨‍🏫 Updating teachers grid...');
 
-        const teachersContainer = document.querySelector('.teachers-grid, [data-teachers-grid], .instructor-grid-enhanced, #instructors-grid');
+        const teachersContainer = document.querySelector('.teachers-grid-minimal, #teachers-grid, .teachers-grid, [data-teachers-grid], .instructor-grid-enhanced, #instructors-grid');
         if (!teachersContainer) {
             console.log('❌ No teachers container found');
+            console.log('🔍 Available containers:', document.querySelectorAll('[class*="teacher"], [id*="teacher"], [class*="instructor"], [id*="instructor"]').length);
             return;
         }
 
@@ -671,27 +672,25 @@ class CustomAPIIntegration {
                 </div>
             `;
         } else {
-            // Original design for other pages
-            teacherCard.className = 'teacher-item w-dyn-item';
+            // Use the exact teacher-card-minimal structure from the HTML
+            teacherCard.className = 'teacher-card-minimal';
+            teacherCard.setAttribute('data-category', teacher.category || 'all');
+            teacherCard.setAttribute('data-tab', teacher.category || 'all');
 
             teacherCard.innerHTML = `
-                <div class="teacher-card">
-                    <div class="teacher-image">
-                        <img src="${teacher.image_url || '/images/teacher-placeholder.jpg'}"
-                             alt="${teacher.name}"
-                             class="teacher-img" />
-                    </div>
-                    <div class="teacher-info">
-                        <h3 class="teacher-name">${teacher.name}</h3>
-                        <p class="teacher-title">${teacher.title || ''}</p>
-                        <p class="teacher-bio">${teacher.bio || ''}</p>
-                        <div class="teacher-expertise">
-                            ${teacher.expertise ? teacher.expertise.split(',').map(skill =>
-                                `<span class="skill-tag">${skill.trim()}</span>`
-                            ).join('') : ''}
-                        </div>
-                    </div>
+                <div class="teacher-avatar-minimal">
+                    <img src="${teacher.image_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face'}"
+                         alt="${teacher.name}"
+                         onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face'">
                 </div>
+                <h3 class="teacher-name-minimal">${teacher.name}</h3>
+                <p class="teacher-role-minimal">${teacher.title}${teacher.company ? ' | ' + teacher.company : ''}</p>
+                <p class="teacher-experience-minimal">${teacher.experience || 'Experienced professional'}</p>
+                <div class="teacher-social-minimal">
+                    <a href="${teacher.linkedin_url || '#'}" class="social-link-minimal linkedin" title="LinkedIn">💼</a>
+                    <a href="${teacher.github_url || '#'}" class="social-link-minimal github" title="GitHub">🐱</a>
+                </div>
+                <button class="contact-teacher-btn">Contact Teacher</button>
             `;
         }
 
