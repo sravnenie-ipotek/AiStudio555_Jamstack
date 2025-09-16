@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Design Admin - AI Studio</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .header h1 { font-size: 28px; margin-bottom: 5px; }
+        .header p { opacity: 0.9; font-size: 14px; }
+
+        /* Language Switcher */
+        #admin-language-switcher {
+            position: absolute;
+            top: 20px;
+            right: 200px;
+            display: flex !important;
+            gap: 8px;
+            z-index: 1001;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .lang-btn.active {
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+            border-color: white;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Main Card */
+        .admin-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid #e1e1e1;
+            background: #f8f9fa;
+            padding: 0 20px;
+        }
+
+        .tab {
+            padding: 15px 24px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+            position: relative;
+            color: #666;
+        }
+
+        .tab.active {
+            color: #667eea;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #667eea;
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            padding: 30px;
+        }
+
+        .content-section.active { display: block; }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e1e1e1;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s;
+            font-family: inherit;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Visibility Toggle */
+        .visibility-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .visibility-toggle {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+
+        .visibility-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .visibility-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 26px;
+        }
+
+        .visibility-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        .visibility-toggle input:checked + .visibility-slider {
+            background-color: #667eea;
+        }
+
+        .visibility-toggle input:checked + .visibility-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Dynamic List Manager */
+        .list-manager {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .list-item {
+            background: white;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .list-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .list-item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: #5569d3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-danger { background: #ff3b30; }
+        .btn-danger:hover { background: #d12b20; }
+
+        .btn-secondary { background: #6c757d; }
+        .btn-secondary:hover { background: #5a6268; }
+
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #218838; }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        /* Preview Mode Banner */
+        .preview-banner {
+            background: #ffc107;
+            color: #000;
+            padding: 10px;
+            text-align: center;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: none;
+        }
+
+        .preview-banner.active {
+            display: block;
+        }
+
+        /* Toaster */
+        .toaster-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+        }
+
+        .toaster {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            border-left: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .toaster.success { border-left-color: #28a745; }
+        .toaster.error { border-left-color: #dc3545; }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Section Headers */
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Loading States */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preview Banner -->
+    <div id="previewBanner" class="preview-banner">
+        🔍 Preview Mode - Changes are not saved until you click Save
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div id="admin-language-switcher">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="ru">RU</button>
+            <button class="lang-btn" data-lang="he">HE</button>
+        </div>
+        <h1>🎨 New Design Content Manager</h1>
+        <p>Manage content for the new design with visibility controls and multi-language support</p>
+    </div>
+
+    <!-- Container -->
+    <div class="container">
+        <div class="admin-card">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="home">Home Page</button>
+                <button class="tab" data-tab="courses">Courses</button>
+                <button class="tab" data-tab="blog">Blog</button>
+                <button class="tab" data-tab="menu">Navigation</button>
+                <button class="tab" data-tab="footer">Footer</button>
+                <button class="tab" data-tab="settings">Settings</button>
+            </div>
+
+            <!-- Home Page Section -->
+            <div class="content-section active" id="home">
+                <div class="section-header">
+                    <div class="section-title">Home Page Sections</div>
+                    <button class="btn btn-small" onclick="previewChanges()">👁️ Preview</button>
+                </div>
+
+                <!-- Hero Section -->
+                <div class="form-group">
+                    <label>🦸 Hero Section</label>
+
+                    <div class="visibility-group">
+                        <label class="visibility-toggle">
+                            <input type="checkbox" id="hero_visible" checked>
+                            <span class="visibility-slider"></span>
+                        </label>
+                        <span>Section Visible</span>
+                    </div>
+
+                    <input type="text" id="hero_title" placeholder="Hero Title" class="mb-10">
+                    <input type="text" id="hero_subtitle" placeholder="Hero Subtitle" class="mb-10">
+                    <textarea id="hero_description" placeholder="Hero Description"></textarea>
+
+                    <!-- Hero Buttons -->
+                    <div class="list-manager mt-20">
+                        <div class="list-item-header">
+                            <strong>Buttons</strong>
+                            <button class="btn btn-small btn-success" onclick="addHeroButton()">+ Add Button</button>
+                        </div>
+                        <div id="heroButtons"></div>
+                    </div>
+                </div>
+
+                <!-- Features Section -->
+                <div class="form-group">
+                    <label>✨ Features Section</label>
+
+                    <div class="visibility-group">
+                        <label class="visibility-toggle">
+                            <input type="checkbox" id="features_visible" checked>
+                            <span class="visibility-slider"></span>
+                        </label>
+                        <span>Section Visible</span>
+                    </div>
+
+                    <input type="text" id="features_title" placeholder="Features Title" class="mb-10">
+                    <input type="text" id="features_subtitle" placeholder="Features Subtitle" class="mb-10">
+
+                    <div class="list-manager mt-20">
+                        <div class="list-item-header">
+                            <strong>Feature Items</strong>
+                            <button class="btn btn-small btn-success" onclick="addFeatureItem()">+ Add Feature</button>
+                        </div>
+                        <div id="featureItems"></div>
+                    </div>
+                </div>
+
+                <!-- Courses Section -->
+                <div class="form-group">
+                    <label>📚 Courses Section</label>
+
+                    <div class="visibility-group">
+                        <label class="visibility-toggle">
+                            <input type="checkbox" id="courses_visible" checked>
+                            <span class="visibility-slider"></span>
+                        </label>
+                        <span>Section Visible</span>
+                    </div>
+
+                    <input type="text" id="courses_title" placeholder="Courses Title" class="mb-10">
+                    <input type="text" id="courses_subtitle" placeholder="Courses Subtitle" class="mb-10">
+
+                    <div class="list-manager mt-20">
+                        <div class="list-item-header">
+                            <strong>Course Cards</strong>
+                            <button class="btn btn-small btn-success" onclick="addCourseCard()">+ Add Course</button>
+                        </div>
+                        <div id="courseCards"></div>
+                    </div>
+                </div>
+
+                <!-- Testimonials Section -->
+                <div class="form-group">
+                    <label>💬 Testimonials Section</label>
+
+                    <div class="visibility-group">
+                        <label class="visibility-toggle">
+                            <input type="checkbox" id="testimonials_visible" checked>
+                            <span class="visibility-slider"></span>
+                        </label>
+                        <span>Section Visible</span>
+                    </div>
+
+                    <input type="text" id="testimonials_title" placeholder="Testimonials Title" class="mb-10">
+                    <input type="text" id="testimonials_subtitle" placeholder="Testimonials Subtitle" class="mb-10">
+
+                    <div class="list-manager mt-20">
+                        <div class="list-item-header">
+                            <strong>Testimonial Items</strong>
+                            <button class="btn btn-small btn-success" onclick="addTestimonial()">+ Add Testimonial</button>
+                        </div>
+                        <div id="testimonialItems"></div>
+                    </div>
+                </div>
+
+                <!-- CTA Section -->
+                <div class="form-group">
+                    <label>📢 Call to Action</label>
+
+                    <div class="visibility-group">
+                        <label class="visibility-toggle">
+                            <input type="checkbox" id="cta_visible" checked>
+                            <span class="visibility-slider"></span>
+                        </label>
+                        <span>Section Visible</span>
+                    </div>
+
+                    <input type="text" id="cta_title" placeholder="CTA Title" class="mb-10">
+                    <textarea id="cta_description" placeholder="CTA Description"></textarea>
+                    <input type="text" id="cta_button_text" placeholder="Button Text" class="mb-10">
+                    <input type="text" id="cta_button_url" placeholder="Button URL" class="mb-10">
+                </div>
+
+                <!-- Save Buttons -->
+                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                    <button class="btn" onclick="saveHomeContent()">💾 Save Changes</button>
+                    <button class="btn btn-secondary" onclick="loadHomeContent()">🔄 Reload Content</button>
+                    <button class="btn btn-secondary" onclick="exportContent()">📥 Export JSON</button>
+                    <button class="btn btn-secondary" onclick="importContent()">📤 Import JSON</button>
+                </div>
+            </div>
+
+            <!-- Other Sections (Placeholder) -->
+            <div class="content-section" id="courses">
+                <div class="section-header">
+                    <div class="section-title">Courses Management</div>
+                </div>
+                <p>Course management coming soon...</p>
+            </div>
+
+            <div class="content-section" id="blog">
+                <div class="section-header">
+                    <div class="section-title">Blog Management</div>
+                </div>
+                <p>Blog management coming soon...</p>
+            </div>
+
+            <div class="content-section" id="menu">
+                <div class="section-header">
+                    <div class="section-title">Navigation Menu</div>
+                </div>
+                <p>Menu management coming soon...</p>
+            </div>
+
+            <div class="content-section" id="footer">
+                <div class="section-header">
+                    <div class="section-title">Footer Content</div>
+                </div>
+                <p>Footer management coming soon...</p>
+            </div>
+
+            <div class="content-section" id="settings">
+                <div class="section-header">
+                    <div class="section-title">Global Settings</div>
+                </div>
+
+                <div class="form-group">
+                    <label>🎬 Animation Settings</label>
+                    <div class="visibility-group">
+                        <label class="visibility-toggle">
+                            <input type="checkbox" id="animations_enabled" checked>
+                            <span class="visibility-slider"></span>
+                        </label>
+                        <span>Enable Animations Globally</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>🌍 Default Language</label>
+                    <select id="default_language">
+                        <option value="en">English</option>
+                        <option value="ru">Russian</option>
+                        <option value="he">Hebrew</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="saveSettings()">💾 Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Toaster Container -->
+    <div class="toaster-container" id="toasterContainer"></div>
+
+    <script>
+        // API Configuration
+        const API_BASE = window.location.hostname === 'localhost'
+            ? 'http://localhost:3001/api/nd'
+            : '/api/nd';
+
+        // Current language
+        let currentLang = 'en';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTabs();
+            initializeLanguageSwitcher();
+            loadHomeContent();
+        });
+
+        // Tab Management
+        function initializeTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active from all
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+
+                    // Add active to clicked
+                    tab.classList.add('active');
+                    const tabId = tab.dataset.tab;
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        // Language Switcher
+        function initializeLanguageSwitcher() {
+            const langBtns = document.querySelectorAll('.lang-btn');
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    langBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentLang = btn.dataset.lang;
+                    loadHomeContent();
+                });
+            });
+        }
+
+        // Load Home Content
+        async function loadHomeContent() {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE}/home-page?locale=${currentLang}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    populateHomeForm(data.data);
+                    showToast('Content loaded successfully', 'success');
+                }
+            } catch (error) {
+                showToast('Failed to load content', 'error');
+                console.error(error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Populate Form
+        function populateHomeForm(data) {
+            // Hero Section
+            if (data.hero) {
+                document.getElementById('hero_visible').checked = data.hero.visible;
+                document.getElementById('hero_title').value = data.hero.content?.title || '';
+                document.getElementById('hero_subtitle').value = data.hero.content?.subtitle || '';
+                document.getElementById('hero_description').value = data.hero.content?.description || '';
+
+                // Hero Buttons
+                const buttonsContainer = document.getElementById('heroButtons');
+                buttonsContainer.innerHTML = '';
+                (data.hero.content?.buttons || []).forEach(btn => {
+                    addHeroButton(btn);
+                });
+            }
+
+            // Features Section
+            if (data.features) {
+                document.getElementById('features_visible').checked = data.features.visible;
+                document.getElementById('features_title').value = data.features.content?.title || '';
+                document.getElementById('features_subtitle').value = data.features.content?.subtitle || '';
+
+                // Feature Items
+                const featuresContainer = document.getElementById('featureItems');
+                featuresContainer.innerHTML = '';
+                (data.features.content?.items || []).forEach(item => {
+                    addFeatureItem(item);
+                });
+            }
+
+            // Courses Section
+            if (data.courses) {
+                document.getElementById('courses_visible').checked = data.courses.visible;
+                document.getElementById('courses_title').value = data.courses.content?.title || '';
+                document.getElementById('courses_subtitle').value = data.courses.content?.subtitle || '';
+            }
+
+            // Testimonials Section
+            if (data.testimonials) {
+                document.getElementById('testimonials_visible').checked = data.testimonials.visible;
+                document.getElementById('testimonials_title').value = data.testimonials.content?.title || '';
+                document.getElementById('testimonials_subtitle').value = data.testimonials.content?.subtitle || '';
+            }
+
+            // CTA Section
+            if (data.cta_1) {
+                document.getElementById('cta_visible').checked = data.cta_1.visible;
+                document.getElementById('cta_title').value = data.cta_1.content?.title || '';
+                document.getElementById('cta_description').value = data.cta_1.content?.description || '';
+                document.getElementById('cta_button_text').value = data.cta_1.content?.buttonText || '';
+                document.getElementById('cta_button_url').value = data.cta_1.content?.buttonUrl || '';
+            }
+        }
+
+        // Save Home Content
+        async function saveHomeContent() {
+            showLoading();
+
+            const sections = {
+                hero: {
+                    visible: document.getElementById('hero_visible').checked,
+                    content: {
+                        title: document.getElementById('hero_title').value,
+                        subtitle: document.getElementById('hero_subtitle').value,
+                        description: document.getElementById('hero_description').value,
+                        buttons: getHeroButtons()
+                    }
+                },
+                features: {
+                    visible: document.getElementById('features_visible').checked,
+                    content: {
+                        title: document.getElementById('features_title').value,
+                        subtitle: document.getElementById('features_subtitle').value,
+                        items: getFeatureItems()
+                    }
+                },
+                courses: {
+                    visible: document.getElementById('courses_visible').checked,
+                    content: {
+                        title: document.getElementById('courses_title').value,
+                        subtitle: document.getElementById('courses_subtitle').value
+                    }
+                },
+                testimonials: {
+                    visible: document.getElementById('testimonials_visible').checked,
+                    content: {
+                        title: document.getElementById('testimonials_title').value,
+                        subtitle: document.getElementById('testimonials_subtitle').value
+                    }
+                },
+                cta_1: {
+                    visible: document.getElementById('cta_visible').checked,
+                    content: {
+                        title: document.getElementById('cta_title').value,
+                        description: document.getElementById('cta_description').value,
+                        buttonText: document.getElementById('cta_button_text').value,
+                        buttonUrl: document.getElementById('cta_button_url').value
+                    }
+                }
+            };
+
+            try {
+                // Save each section
+                for (const [key, data] of Object.entries(sections)) {
+                    const payload = {};
+                    payload[`content_${currentLang}`] = data.content;
+                    payload.visible = data.visible;
+
+                    await fetch(`${API_BASE}/home-page/${key}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                showToast('Content saved successfully', 'success');
+            } catch (error) {
+                showToast('Failed to save content', 'error');
+                console.error(error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Dynamic List Management
+        function addHeroButton(data = {}) {
+            const container = document.getElementById('heroButtons');
+            const id = Date.now();
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            item.innerHTML = `
+                <input type="text" placeholder="Button Text" value="${data.text || ''}" class="mb-10" data-field="text">
+                <input type="text" placeholder="Button URL" value="${data.url || ''}" class="mb-10" data-field="url">
+                <select data-field="style">
+                    <option value="primary" ${data.style === 'primary' ? 'selected' : ''}>Primary</option>
+                    <option value="secondary" ${data.style === 'secondary' ? 'selected' : ''}>Secondary</option>
+                </select>
+                <button class="btn btn-small btn-danger" onclick="this.parentElement.remove()">Remove</button>
+            `;
+            container.appendChild(item);
+        }
+
+        function addFeatureItem(data = {}) {
+            const container = document.getElementById('featureItems');
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            item.innerHTML = `
+                <input type="text" placeholder="Feature Title" value="${data.title || ''}" class="mb-10" data-field="title">
+                <textarea placeholder="Feature Description" data-field="description">${data.description || ''}</textarea>
+                <input type="text" placeholder="Icon Class" value="${data.icon || ''}" class="mb-10" data-field="icon">
+                <button class="btn btn-small btn-danger" onclick="this.parentElement.remove()">Remove</button>
+            `;
+            container.appendChild(item);
+        }
+
+        function getHeroButtons() {
+            const buttons = [];
+            document.querySelectorAll('#heroButtons .list-item').forEach(item => {
+                buttons.push({
+                    text: item.querySelector('[data-field="text"]').value,
+                    url: item.querySelector('[data-field="url"]').value,
+                    style: item.querySelector('[data-field="style"]').value
+                });
+            });
+            return buttons;
+        }
+
+        function getFeatureItems() {
+            const items = [];
+            document.querySelectorAll('#featureItems .list-item').forEach(item => {
+                items.push({
+                    title: item.querySelector('[data-field="title"]').value,
+                    description: item.querySelector('[data-field="description"]').value,
+                    icon: item.querySelector('[data-field="icon"]').value,
+                    visible: true
+                });
+            });
+            return items;
+        }
+
+        // Preview Changes
+        function previewChanges() {
+            const url = `/nd/home.html?preview=true`;
+            window.open(url, '_blank');
+        }
+
+        // Export/Import
+        function exportContent() {
+            // Implement export functionality
+            showToast('Export feature coming soon', 'info');
+        }
+
+        function importContent() {
+            // Implement import functionality
+            showToast('Import feature coming soon', 'info');
+        }
+
+        // Settings
+        async function saveSettings() {
+            const enabled = document.getElementById('animations_enabled').checked;
+
+            try {
+                await fetch(`${API_BASE}/settings/animations`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ page: 'home', enabled })
+                });
+                showToast('Settings saved successfully', 'success');
+            } catch (error) {
+                showToast('Failed to save settings', 'error');
+            }
+        }
+
+        // UI Helpers
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toasterContainer');
+            const toast = document.createElement('div');
+            toast.className = `toaster ${type}`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()" style="background: none; border: none; cursor: pointer;">✕</button>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 5000);
+        }
+
+        // Utility Classes
+        const style = document.createElement('style');
+        style.textContent = `
+            .mb-10 { margin-bottom: 10px; }
+            .mb-20 { margin-bottom: 20px; }
+            .mt-20 { margin-top: 20px; }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

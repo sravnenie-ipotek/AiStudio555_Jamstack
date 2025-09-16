@@ -35,6 +35,41 @@
             video.style.visibility = 'visible';
             video.style.opacity = '1';
 
+            // On mobile, fix positioning and z-index
+            if (window.innerWidth <= 991) {
+                video.style.setProperty('position', 'absolute', 'important');
+                video.style.setProperty('top', '0', 'important');
+                video.style.setProperty('left', '0', 'important');
+                video.style.setProperty('width', '100%', 'important');
+                video.style.setProperty('height', '100%', 'important');
+                video.style.setProperty('object-fit', 'cover', 'important');
+                video.style.setProperty('z-index', '1', 'important');
+                video.style.setProperty('background-image', 'none', 'important');
+
+                // Fix parent container
+                const parent = video.closest('.banner-video, .w-background-video');
+                if (parent) {
+                    parent.style.setProperty('position', 'absolute', 'important');
+                    parent.style.setProperty('top', '0', 'important');
+                    parent.style.setProperty('left', '0', 'important');
+                    parent.style.setProperty('width', '100%', 'important');
+                    parent.style.setProperty('height', '100%', 'important');
+                    parent.style.setProperty('z-index', '0', 'important');
+                }
+
+                // Fix banner section
+                const bannerSection = video.closest('.section.banner');
+                if (bannerSection) {
+                    bannerSection.style.setProperty('position', 'relative', 'important');
+                    bannerSection.style.setProperty('min-height', '100vh', 'important');
+                    const bannerDiv = bannerSection.querySelector(':scope > div');
+                    if (bannerDiv) {
+                        bannerDiv.style.setProperty('position', 'relative', 'important');
+                        bannerDiv.style.setProperty('min-height', '100vh', 'important');
+                    }
+                }
+            }
+
             // Force video to load and play
             video.load();
 
@@ -78,13 +113,19 @@
                         (mutation.attributeName === 'style' ||
                          mutation.attributeName === 'class')) {
 
-                        // Ensure video remains visible
+                        // Ensure video remains visible and properly positioned on mobile
                         if (video.style.display === 'none' ||
                             video.style.visibility === 'hidden') {
                             video.style.display = 'block';
                             video.style.visibility = 'visible';
                             video.style.opacity = '1';
                             console.log(`🔧 Fixed video ${index + 1} visibility`);
+                        }
+
+                        // On mobile, maintain z-index
+                        if (window.innerWidth <= 991 && video.style.zIndex !== '1') {
+                            video.style.setProperty('z-index', '1', 'important');
+                            console.log(`🔧 Fixed video ${index + 1} z-index`);
                         }
                     }
                 });

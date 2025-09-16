@@ -6878,6 +6878,328 @@ app.get('/api/sync-add-hebrew-resources-fixed', async (req, res) => {
   }
 });
 
+// ==========================================
+// NEW DESIGN (ND) API ENDPOINTS
+// ==========================================
+
+// Get home page content for new design
+app.get('/api/nd/home-page', async (req, res) => {
+  try {
+    const { locale = 'en', preview = false } = req.query;
+
+    // Build query based on locale columns existence
+    let query;
+    if (locale === 'ru' || locale === 'he') {
+      query = `
+        SELECT
+          section_key,
+          section_type,
+          visible,
+          COALESCE(content_${locale}, content_en) as content,
+          animations_enabled,
+          order_index
+        FROM nd_home
+        ${!preview ? 'WHERE visible = true' : ''}
+        ORDER BY order_index
+      `;
+    } else {
+      query = `
+        SELECT
+          section_key,
+          section_type,
+          visible,
+          content_en as content,
+          animations_enabled,
+          order_index
+        FROM nd_home
+        ${!preview ? 'WHERE visible = true' : ''}
+        ORDER BY order_index
+      `;
+    }
+
+    const rows = await queryDatabase(query);
+
+    // Format response
+    const response = {
+      success: true,
+      data: {},
+      meta: {
+        locale,
+        cache_key: `home_${locale}_v1`,
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    // Process each section
+    rows.forEach(row => {
+      const content = row.content || {};
+
+      response.data[row.section_key] = {
+        visible: row.visible,
+        type: row.section_type,
+        content: content,
+        animations_enabled: row.animations_enabled !== false
+      };
+    });
+
+    res.json(response);
+  } catch (error) {
+    console.error('Error fetching ND home page:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch home page content',
+      message: error.message
+    });
+  }
+});
+
+// Get menu for new design
+app.get('/api/nd/menu', async (req, res) => {
+  try {
+    const { locale = 'en' } = req.query;
+
+    const rows = await queryDatabase(`
+      SELECT
+        id,
+        parent_id,
+        order_index,
+        visible,
+        label_${locale} as label,
+        label_en,
+        label_ru,
+        label_he,
+        url,
+        icon_class,
+        target,
+        is_dropdown
+      FROM nd_menu
+      WHERE visible = true
+      ORDER BY order_index ASC
+    `);
+
+    res.json({
+      success: true,
+      data: rows.map(item => ({
+        ...item,
+        label: item.label || item.label_en // Fallback to English if locale not available
+      }))
+    });
+  } catch (error) {
+    console.error('Error fetching ND menu:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch menu',
+      message: error.message
+    });
+  }
+});
+
+// Get footer for new design
+app.get('/api/nd/footer', async (req, res) => {
+  try {
+    const { locale = 'en' } = req.query;
+
+    const rows = await queryDatabase(`
+      SELECT
+        id,
+        section_type,
+        column_number,
+        item_type,
+        content_${locale} as content,
+        content_en,
+        content_ru,
+        content_he,
+        url,
+        icon_class,
+        placeholder_${locale} as placeholder,
+        button_text_${locale} as button_text,
+        order_index,
+        visible
+      FROM nd_footer
+      WHERE visible = true
+      ORDER BY section_type, column_number, order_index
+    `);
+
+    // Organize footer data by section type
+    const footerData = {
+      columns: {},
+      social: [],
+      copyright: null,
+      newsletter: null
+    };
+
+    rows.forEach(item => {
+      // Use fallback to English if locale content not available
+      const content = item.content || item.content_en;
+
+      switch(item.section_type) {
+        case 'column':
+          if (!footerData.columns[item.column_number]) {
+            footerData.columns[item.column_number] = {
+              heading: null,
+              items: []
+            };
+          }
+          if (item.item_type === 'heading') {
+            footerData.columns[item.column_number].heading = content;
+          } else {
+            footerData.columns[item.column_number].items.push({
+              type: item.item_type,
+              content: content,
+              url: item.url
+            });
+          }
+          break;
+
+        case 'social':
+          footerData.social.push({
+            name: content,
+            url: item.url,
+            icon_class: item.icon_class
+          });
+          break;
+
+        case 'copyright':
+          footerData.copyright = content;
+          break;
+
+        case 'newsletter':
+          footerData.newsletter = {
+            placeholder: item.placeholder || item.placeholder_en,
+            button_text: item.button_text || item.button_text_en
+          };
+          break;
+      }
+    });
+
+    res.json({
+      success: true,
+      data: footerData
+    });
+  } catch (error) {
+    console.error('Error fetching ND footer:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch footer',
+      message: error.message
+    });
+  }
+});
+
+// Update section visibility
+app.patch('/api/nd/home-page/:section_key/visibility', async (req, res) => {
+  try {
+    const { section_key } = req.params;
+    const { visible } = req.body;
+
+    await queryDatabase(
+      'UPDATE nd_home SET visible = $1, updated_at = CURRENT_TIMESTAMP WHERE section_key = $2',
+      [visible, section_key]
+    );
+
+    res.json({
+      success: true,
+      message: `Section ${section_key} visibility updated to ${visible}`
+    });
+  } catch (error) {
+    console.error('Error updating visibility:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update visibility',
+      message: error.message
+    });
+  }
+});
+
+// Update animation settings
+app.patch('/api/nd/settings/animations', async (req, res) => {
+  try {
+    const { page, enabled } = req.body;
+
+    if (page === 'home') {
+      await queryDatabase(
+        'UPDATE nd_home SET animations_enabled = $1, updated_at = CURRENT_TIMESTAMP',
+        [enabled]
+      );
+    }
+
+    res.json({
+      success: true,
+      message: `Animations ${enabled ? 'enabled' : 'disabled'} for ${page}`
+    });
+  } catch (error) {
+    console.error('Error updating animations:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update animation settings',
+      message: error.message
+    });
+  }
+});
+
+// Update home page section content
+app.put('/api/nd/home-page/:section_key', async (req, res) => {
+  try {
+    const { section_key } = req.params;
+    const { content_en, content_ru, content_he, visible, animations_enabled } = req.body;
+
+    const updates = [];
+    const values = [];
+    let valueIndex = 1;
+
+    if (content_en !== undefined) {
+      updates.push(`content_en = $${valueIndex++}`);
+      values.push(JSON.stringify(content_en));
+    }
+    if (content_ru !== undefined) {
+      updates.push(`content_ru = $${valueIndex++}`);
+      values.push(JSON.stringify(content_ru));
+    }
+    if (content_he !== undefined) {
+      updates.push(`content_he = $${valueIndex++}`);
+      values.push(JSON.stringify(content_he));
+    }
+    if (visible !== undefined) {
+      updates.push(`visible = $${valueIndex++}`);
+      values.push(visible);
+    }
+    if (animations_enabled !== undefined) {
+      updates.push(`animations_enabled = $${valueIndex++}`);
+      values.push(animations_enabled);
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'No fields to update'
+      });
+    }
+
+    updates.push(`updated_at = CURRENT_TIMESTAMP`);
+    values.push(section_key);
+
+    const query = `
+      UPDATE nd_home
+      SET ${updates.join(', ')}
+      WHERE section_key = $${valueIndex}
+    `;
+
+    await queryDatabase(query, values);
+
+    res.json({
+      success: true,
+      message: `Section ${section_key} updated successfully`
+    });
+  } catch (error) {
+    console.error('Error updating ND home section:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update section',
+      message: error.message
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════════╗
