@@ -748,28 +748,70 @@ class CustomAPIIntegration {
 
     updateCareerPage(careerData, pageType) {
         console.log(`💼 Updating ${pageType} page...`);
-        
+
         if (!careerData) return;
 
         // Update page content based on API data
         const career = careerData.attributes || careerData;
-        
+
+        // Update all elements with data-career-field attributes
+        this.updateCareerFields(career);
+
         // Update hero section with special handling for stats
         if (career.hero) {
             this.updateCareerHero(career.hero);
         }
-        
+
         // Update problems section
         if (career.problems) {
             this.updatePageSection('.career-problems', career.problems);
         }
-        
+
         // Update solutions section
         if (career.solutions) {
             this.updatePageSection('.career-solutions', career.solutions);
         }
 
         console.log(`✅ Updated ${pageType} page content`);
+    }
+
+    // Update career orientation content fields
+    updateCareerFields(careerData) {
+        console.log('🔄 Updating career orientation fields...');
+
+        // Find all elements with data-career-field attribute
+        const careerFields = document.querySelectorAll('[data-career-field]');
+
+        careerFields.forEach(element => {
+            const fieldName = element.getAttribute('data-career-field');
+            let value = careerData[fieldName];
+
+            if (value) {
+                // Handle different field name mappings
+                if (fieldName === 'heroMainTitle' && !value) {
+                    value = careerData.hero_main_title;
+                }
+                if (fieldName === 'heroSubtitle' && !value) {
+                    value = careerData.hero_subtitle;
+                }
+                if (fieldName === 'heroDescription' && !value) {
+                    value = careerData.hero_description;
+                }
+
+                // Update text content
+                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    element.value = value;
+                } else {
+                    element.textContent = value;
+                }
+
+                console.log(`✅ Updated ${fieldName}: ${value.substring(0, 50)}${value.length > 50 ? '...' : ''}`);
+            } else {
+                console.log(`⚠️ No data for field: ${fieldName}`);
+            }
+        });
+
+        console.log(`🔄 Updated ${careerFields.length} career orientation fields`);
     }
 
     updateCareerHero(heroData) {

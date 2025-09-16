@@ -138,28 +138,42 @@
                 }
             }
 
-            /* Mobile-specific layout for button above logo */
+            /* Mobile-specific layout - button beneath hamburger */
             @media (max-width: 767px) {
                 .navbar-content {
                     display: flex !important;
-                    flex-direction: column !important;
+                    flex-direction: row !important;
+                    justify-content: space-between !important;
                     align-items: flex-start !important;
+                    flex-wrap: wrap !important;
                 }
 
-                /* Move Sign Up button to top on mobile */
-                .navbar-button-wrapper.mobile-top {
-                    order: -1 !important;
-                    width: 100% !important;
+                /* Position hamburger menu at top right */
+                .w-nav-button {
+                    order: 1 !important;
+                    margin-left: auto !important;
                     margin-bottom: 10px !important;
+                }
+
+                /* Position Sign Up button beneath hamburger */
+                .navbar-button-wrapper.mobile-top {
+                    order: 2 !important;
+                    position: absolute !important;
+                    top: 60px !important;
+                    right: 20px !important;
+                    width: auto !important;
                     display: block !important;
+                    z-index: 1000 !important;
                 }
 
                 .navbar-button-wrapper.mobile-top .primary-button {
                     display: block !important;
                     width: auto !important;
                     text-align: center !important;
-                    padding: 10px 20px !important;
-                    border-radius: 8px !important;
+                    padding: 8px 16px !important;
+                    border-radius: 6px !important;
+                    font-size: 14px !important;
+                    white-space: nowrap !important;
                 }
 
                 /* Hide logo on mobile */
@@ -211,6 +225,55 @@
                 .navbar-content {
                     flex-direction: row !important;
                 }
+
+                /* Hide mobile nav signup on desktop */
+                .mobile-nav-signup-wrapper {
+                    display: none !important;
+                }
+            }
+
+            /* Mobile Navigation Button Styling */
+            @media (max-width: 767px) {
+                .mobile-nav-signup-wrapper {
+                    order: 999 !important;
+                    width: 100% !important;
+                    padding: 20px !important;
+                    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    margin-top: auto !important;
+                    display: block !important;
+                }
+
+                .mobile-nav-button {
+                    display: block !important;
+                    width: 100% !important;
+                    text-align: center !important;
+                    background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important;
+                    color: white !important;
+                    padding: 12px 20px !important;
+                    border-radius: 8px !important;
+                    text-decoration: none !important;
+                    font-weight: 600 !important;
+                    border: none !important;
+                    box-shadow: 0 4px 15px rgba(0, 128, 255, 0.3) !important;
+                }
+
+                .mobile-nav-button:hover {
+                    background: linear-gradient(135deg, rgb(0, 100, 200), rgb(0, 150, 255)) !important;
+                }
+
+                /* Ensure mobile menu has proper height and flex layout */
+                .w-nav-menu {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    min-height: calc(100vh - 80px) !important;
+                }
+            }
+
+            /* Hide mobile nav signup on desktop */
+            @media (min-width: 768px) {
+                .mobile-nav-signup-wrapper {
+                    display: none !important;
+                }
             }
         </style>
         <div role="banner" class="navbar w-nav" ${currentLang === 'he' ? 'dir="rtl" lang="he"' : ''}>
@@ -249,6 +312,11 @@
                         </div>
 
                         <a href="${urls.pricing}" class="nav-link ${currentPage === 'pricing' ? 'w--current' : ''}">${t.pricing}</a>
+
+                        <!-- Mobile Sign Up Button - Inside Navigation Menu -->
+                        <div class="mobile-nav-signup-wrapper">
+                            <a href="#" class="primary-button mobile-nav-button" onclick="window.showModal(); return false;">${t.signUp}</a>
+                        </div>
                     </nav>
 
                     <!-- Language Selector - Desktop Only -->

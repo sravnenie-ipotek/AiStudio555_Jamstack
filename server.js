@@ -2200,8 +2200,6 @@ app.put('/api/career-orientation-page', async (req, res) => {
     // Build the update/insert data from admin panel fields
     const updateData = {
       title: data.title || 'Career Orientation',
-      subtitle: data.subtitle || 'Find Your Path',
-      description: data.description || '',
       
       // Hero Section - Map from admin panel field names
       hero_main_title: data.heroMainTitle || data.heroTitle || '',
