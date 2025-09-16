@@ -173,6 +173,35 @@
                 }
             }
 
+            /* Hebrew RTL Support */
+            html[dir="rtl"] .navbar-content,
+            body.rtl .navbar-content,
+            [lang="he"] .navbar-content {
+                direction: rtl !important;
+            }
+
+            @media (max-width: 767px) {
+                html[dir="rtl"] .navbar-content,
+                body.rtl .navbar-content,
+                [lang="he"] .navbar-content {
+                    align-items: flex-end !important;
+                }
+
+                html[dir="rtl"] .navbar-button-wrapper.mobile-top,
+                body.rtl .navbar-button-wrapper.mobile-top,
+                [lang="he"] .navbar-button-wrapper.mobile-top {
+                    text-align: right !important;
+                    direction: rtl !important;
+                }
+
+                html[dir="rtl"] .navbar-button-wrapper.mobile-top .primary-button,
+                body.rtl .navbar-button-wrapper.mobile-top .primary-button,
+                [lang="he"] .navbar-button-wrapper.mobile-top .primary-button {
+                    text-align: center !important;
+                    direction: rtl !important;
+                }
+            }
+
             /* Desktop layout */
             @media (min-width: 768px) {
                 .navbar-button-wrapper.mobile-top {
@@ -184,9 +213,9 @@
                 }
             }
         </style>
-        <div role="banner" class="navbar w-nav">
+        <div role="banner" class="navbar w-nav" ${currentLang === 'he' ? 'dir="rtl" lang="he"' : ''}>
             <div class="container">
-                <div class="navbar-content">
+                <div class="navbar-content" ${currentLang === 'he' ? 'dir="rtl"' : ''}>
                     <!-- Mobile Sign Up Button (Shows above logo on mobile) -->
                     <div class="navbar-button-wrapper mobile-top">
                         <a href="#" class="primary-button w-button" onclick="window.showModal(); return false;" style="background: linear-gradient(135deg, rgb(0, 128, 255), rgb(0, 198, 255)) !important; color: rgb(255, 255, 255) !important; border: none !important;">${t.signUp}</a>

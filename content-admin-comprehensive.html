@@ -226,8 +226,8 @@
             <button class="tab" onclick="showSection('blog-posts')" data-key="blog_page">📝 Blog Page <span class="field-count">15+ Fields</span></button>
             <button class="tab" onclick="showSection('about-page')" data-key="about_page">ℹ️ About Page <span class="field-count">35+ Fields</span></button>
             <button class="tab" onclick="showSection('contact-page')" data-key="contact_page">📞 Contact Page <span class="field-count">25+ Fields</span></button>
-            <button class="tab" onclick="showSection('courses')" data-key="course_detail">📖 Course Detail <span class="field-count">15+ Fields</span></button>
-            <button class="tab" onclick="showSection('blog-posts')" data-key="blog_detail">📰 Blog Detail <span class="field-count">12+ Fields</span></button>
+            <button class="tab" onclick="showSection('course-detail')" data-key="course_detail">📖 Course Detail <span class="field-count">15+ Fields</span></button>
+            <button class="tab" onclick="showSection('blog-detail')" data-key="blog_detail">📰 Blog Detail <span class="field-count">12+ Fields</span></button>
             <button class="tab" onclick="showSection('footer-management')" data-key="footer">🦶 Footer <span class="field-count">20+ Fields</span></button>
         </div>
 
@@ -2018,6 +2018,182 @@
         </div>
 
         <!-- CAREER ORIENTATION Section - Comprehensive 215+ Fields -->
+        <div id="footer-management" class="content-section">
+            <div class="section-container">
+                <h2>🦶 Footer Management</h2>
+                <p>Manage footer content, links, and contact information</p>
+
+                <div class="form-container">
+                    <h3>Footer Content</h3>
+                    <form id="footerForm">
+                        <div class="form-group">
+                            <label for="footer_copyright">Copyright Text</label>
+                            <input type="text" id="footer_copyright" placeholder="© 2024 AI Studio. All rights reserved.">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="footer_description">Footer Description</label>
+                            <textarea id="footer_description" rows="3" placeholder="Brief company description for footer"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="footer_contact_email">Contact Email</label>
+                            <input type="email" id="footer_contact_email" placeholder="contact@aistudio.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="footer_contact_phone">Contact Phone</label>
+                            <input type="tel" id="footer_contact_phone" placeholder="+1 (555) 123-4567">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="footer_address">Address</label>
+                            <textarea id="footer_address" rows="2" placeholder="Company address"></textarea>
+                        </div>
+
+                        <h4>Social Media Links</h4>
+                        <div class="form-group">
+                            <label for="footer_facebook">Facebook URL</label>
+                            <input type="url" id="footer_facebook" placeholder="https://facebook.com/aistudio">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="footer_twitter">Twitter URL</label>
+                            <input type="url" id="footer_twitter" placeholder="https://twitter.com/aistudio">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="footer_linkedin">LinkedIn URL</label>
+                            <input type="url" id="footer_linkedin" placeholder="https://linkedin.com/company/aistudio">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="footer_instagram">Instagram URL</label>
+                            <input type="url" id="footer_instagram" placeholder="https://instagram.com/aistudio">
+                        </div>
+
+                        <h4>Footer Links</h4>
+                        <div class="form-group">
+                            <label for="footer_privacy_policy">Privacy Policy URL</label>
+                            <input type="url" id="footer_privacy_policy" placeholder="/privacy-policy">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="footer_terms_service">Terms of Service URL</label>
+                            <input type="url" id="footer_terms_service" placeholder="/terms-of-service">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="footer_sitemap">Sitemap URL</label>
+                            <input type="url" id="footer_sitemap" placeholder="/sitemap">
+                        </div>
+                    </form>
+
+                    <button class="btn" onclick="saveFooterManagement()">💾 Save Footer Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Course Detail Section -->
+        <div id="course-detail" class="content-section">
+            <div class="section-container">
+                <h2>📖 Course Detail Management</h2>
+                <p>Manage individual course page templates and content</p>
+
+                <div class="form-container">
+                    <h3>Course Detail Template</h3>
+                    <form id="courseDetailForm">
+                        <div class="form-group">
+                            <label for="course_detail_title_template">Title Template</label>
+                            <input type="text" id="course_detail_title_template" placeholder="{course_name} - AI Studio">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="course_detail_breadcrumb">Breadcrumb Template</label>
+                            <input type="text" id="course_detail_breadcrumb" placeholder="Home > Courses > {course_name}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="course_detail_cta_text">CTA Button Text</label>
+                            <input type="text" id="course_detail_cta_text" placeholder="Enroll Now">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="course_detail_prerequisites_label">Prerequisites Label</label>
+                            <input type="text" id="course_detail_prerequisites_label" placeholder="Prerequisites">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="course_detail_curriculum_label">Curriculum Label</label>
+                            <input type="text" id="course_detail_curriculum_label" placeholder="Course Curriculum">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="course_detail_instructor_label">Instructor Label</label>
+                            <input type="text" id="course_detail_instructor_label" placeholder="Your Instructor">
+                        </div>
+                    </form>
+
+                    <button class="btn" onclick="saveCourseDetail()">💾 Save Course Detail Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blog Detail Section -->
+        <div id="blog-detail" class="content-section">
+            <div class="section-container">
+                <h2>📰 Blog Detail Management</h2>
+                <p>Manage blog post detail page templates and content</p>
+
+                <div class="form-container">
+                    <h3>Blog Detail Template</h3>
+                    <form id="blogDetailForm">
+                        <div class="form-group">
+                            <label for="blog_detail_title_template">Title Template</label>
+                            <input type="text" id="blog_detail_title_template" placeholder="{post_title} - AI Studio Blog">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="blog_detail_breadcrumb">Breadcrumb Template</label>
+                            <input type="text" id="blog_detail_breadcrumb" placeholder="Home > Blog > {post_title}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="blog_detail_author_label">Author Label</label>
+                            <input type="text" id="blog_detail_author_label" placeholder="Written by">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="blog_detail_date_format">Date Format</label>
+                            <select id="blog_detail_date_format">
+                                <option value="long">January 15, 2024</option>
+                                <option value="medium">Jan 15, 2024</option>
+                                <option value="short">1/15/2024</option>
+                                <option value="iso">2024-01-15</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="blog_detail_reading_time_label">Reading Time Label</label>
+                            <input type="text" id="blog_detail_reading_time_label" placeholder="min read">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="blog_detail_share_text">Share Text</label>
+                            <input type="text" id="blog_detail_share_text" placeholder="Share this post">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="blog_detail_related_posts_label">Related Posts Label</label>
+                            <input type="text" id="blog_detail_related_posts_label" placeholder="Related Posts">
+                        </div>
+                    </form>
+
+                    <button class="btn" onclick="saveBlogDetail()">💾 Save Blog Detail Settings</button>
+                </div>
+            </div>
+        </div>
+
         <div id="career-orientation" class="content-section">
             <div class="section-header">
                 <h2>🧭 Career Orientation Management</h2>
@@ -5512,6 +5688,100 @@
 
         // Footer Management Functions
         let currentFooterLocale = 'en';
+
+        async function saveFooterManagement() {
+            try {
+                const locale = getCurrentLanguage();
+                const data = {
+                    copyright: document.getElementById('footer_copyright').value,
+                    description: document.getElementById('footer_description').value,
+                    contact_email: document.getElementById('footer_contact_email').value,
+                    contact_phone: document.getElementById('footer_contact_phone').value,
+                    address: document.getElementById('footer_address').value,
+                    facebook_url: document.getElementById('footer_facebook').value,
+                    twitter_url: document.getElementById('footer_twitter').value,
+                    linkedin_url: document.getElementById('footer_linkedin').value,
+                    instagram_url: document.getElementById('footer_instagram').value,
+                    privacy_policy_url: document.getElementById('footer_privacy_policy').value,
+                    terms_service_url: document.getElementById('footer_terms_service').value,
+                    sitemap_url: document.getElementById('footer_sitemap').value
+                };
+
+                const response = await fetch(`${API_BASE}/api/footer-settings?locale=${locale}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+
+                showToaster(`✅ Footer settings saved for ${locale.toUpperCase()}!`, 'success');
+            } catch (error) {
+                console.error('Error saving footer settings:', error);
+                showToaster(`❌ Failed to save footer settings: ${error.message}`, 'error');
+            }
+        }
+
+        async function saveCourseDetail() {
+            try {
+                const locale = getCurrentLanguage();
+                const data = {
+                    title_template: document.getElementById('course_detail_title_template').value,
+                    breadcrumb_template: document.getElementById('course_detail_breadcrumb').value,
+                    cta_text: document.getElementById('course_detail_cta_text').value,
+                    prerequisites_label: document.getElementById('course_detail_prerequisites_label').value,
+                    curriculum_label: document.getElementById('course_detail_curriculum_label').value,
+                    instructor_label: document.getElementById('course_detail_instructor_label').value
+                };
+
+                const response = await fetch(`${API_BASE}/api/course-detail-settings?locale=${locale}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+
+                showToaster(`✅ Course detail settings saved for ${locale.toUpperCase()}!`, 'success');
+            } catch (error) {
+                console.error('Error saving course detail settings:', error);
+                showToaster(`❌ Failed to save course detail settings: ${error.message}`, 'error');
+            }
+        }
+
+        async function saveBlogDetail() {
+            try {
+                const locale = getCurrentLanguage();
+                const data = {
+                    title_template: document.getElementById('blog_detail_title_template').value,
+                    breadcrumb_template: document.getElementById('blog_detail_breadcrumb').value,
+                    author_label: document.getElementById('blog_detail_author_label').value,
+                    date_format: document.getElementById('blog_detail_date_format').value,
+                    reading_time_label: document.getElementById('blog_detail_reading_time_label').value,
+                    share_text: document.getElementById('blog_detail_share_text').value,
+                    related_posts_label: document.getElementById('blog_detail_related_posts_label').value
+                };
+
+                const response = await fetch(`${API_BASE}/api/blog-detail-settings?locale=${locale}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+
+                showToaster(`✅ Blog detail settings saved for ${locale.toUpperCase()}!`, 'success');
+            } catch (error) {
+                console.error('Error saving blog detail settings:', error);
+                showToaster(`❌ Failed to save blog detail settings: ${error.message}`, 'error');
+            }
+        }
 
         async function loadFooterContent(locale) {
             currentFooterLocale = locale;
