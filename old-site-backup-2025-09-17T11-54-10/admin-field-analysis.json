@@ -1,0 +1,36 @@
+{
+  "timestamp": "2025-09-10T06:50:31.995Z",
+  "totalFields": 0,
+  "sections": {
+    "home-page": {
+      "found": true,
+      "totalFields": 0,
+      "fieldGroups": {},
+      "sampleFields": []
+    },
+    "courses": {
+      "found": true,
+      "totalFields": 0,
+      "fieldGroups": {},
+      "sampleFields": []
+    },
+    "teachers": {
+      "found": true,
+      "totalFields": 0,
+      "fieldGroups": {},
+      "sampleFields": []
+    },
+    "career-services": {
+      "found": true,
+      "totalFields": 0,
+      "fieldGroups": {},
+      "sampleFields": []
+    },
+    "career-orientation": {
+      "found": true,
+      "totalFields": 0,
+      "fieldGroups": {},
+      "sampleFields": []
+    }
+  }
+}

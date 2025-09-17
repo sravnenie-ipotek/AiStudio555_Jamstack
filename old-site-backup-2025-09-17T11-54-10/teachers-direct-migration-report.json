@@ -1,0 +1,87 @@
+{
+  "timestamp": "2025-09-12T07:09:39.147Z",
+  "target": "local SQLite database",
+  "totalTeachers": 16,
+  "teachers": [
+    {
+      "name": "Sarah Chen",
+      "title": "Senior ML Engineer at Google",
+      "expertise": "Machine Learning, NLP, AutoML"
+    },
+    {
+      "name": "Michael Rodriguez",
+      "title": "AI Research Scientist at OpenAI",
+      "expertise": "Large Language Models, Reinforcement Learning"
+    },
+    {
+      "name": "James Wilson",
+      "title": "Principal Data Scientist at Amazon",
+      "expertise": "Statistical Modeling, Time Series Analysis, Business Intelligence"
+    },
+    {
+      "name": "Maria Santos",
+      "title": "Data Analytics Lead at Stripe",
+      "expertise": "Payment Analytics, Fraud Detection, Feature Engineering"
+    },
+    {
+      "name": "Alex Thompson",
+      "title": "Senior Backend Engineer at Slack",
+      "expertise": "Backend Engineering, Microservices, API Design"
+    },
+    {
+      "name": "Lisa Zhang",
+      "title": "Python Architect at Twitter",
+      "expertise": "Python Architecture, Performance Optimization, Distributed Systems"
+    },
+    {
+      "name": "Robert Johnson",
+      "title": "Full Stack Lead at Apple",
+      "expertise": "Full Stack Development, React, Node.js"
+    },
+    {
+      "name": "Sofia Andersson",
+      "title": "Frontend Architect at Spotify",
+      "expertise": "Frontend Architecture, React, Vue.js, Performance"
+    },
+    {
+      "name": "Raj Patel",
+      "title": "Cloud Solutions Architect at AWS",
+      "expertise": "Cloud Architecture, Serverless, Container Orchestration"
+    },
+    {
+      "name": "Jennifer Wu",
+      "title": "DevOps Principal at GitHub",
+      "expertise": "DevOps, Kubernetes, Docker, CI/CD"
+    },
+    {
+      "name": "Marcus Brown",
+      "title": "BI Director at Salesforce",
+      "expertise": "Business Intelligence, Data Visualization, Tableau"
+    },
+    {
+      "name": "Sarah Kim",
+      "title": "Senior Product Manager at Airbnb",
+      "expertise": "Product Management, User Research, A/B Testing"
+    },
+    {
+      "name": "Emma Davis",
+      "title": "Principal Designer at Adobe",
+      "expertise": "Design Systems, UI Patterns, Accessibility"
+    },
+    {
+      "name": "Elena Petrov",
+      "title": "Head of Data Science at Meta",
+      "expertise": "User Behavior Modeling, Content Recommendation"
+    },
+    {
+      "name": "David Kim",
+      "title": "Computer Vision Engineer at Tesla",
+      "expertise": "Computer Vision, Object Detection, Autonomous Driving"
+    },
+    {
+      "name": "Anna Kowalski",
+      "title": "NLP Engineer at Microsoft",
+      "expertise": "NLP, Transformer Architectures, Conversational AI"
+    }
+  ]
+}

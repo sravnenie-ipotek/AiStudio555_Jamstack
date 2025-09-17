@@ -1,0 +1,27 @@
+{
+  "name": "playwright-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP Server for Playwright Web Automation (Nightmare.js alternative)",
+  "main": "playwright-mcp-server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node playwright-mcp-server.js",
+    "test": "node test-mcp-server.js"
+  },
+  "keywords": [
+    "mcp",
+    "playwright",
+    "nightmare",
+    "web-automation",
+    "browser-automation"
+  ],
+  "author": "AI Studio",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "latest",
+    "playwright": "^1.55.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

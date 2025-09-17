@@ -1,0 +1,191 @@
+{
+  "Home Page": {
+    "url": "http://localhost:9090/dist/en/index.html",
+    "data": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "color": "rgba(255, 255, 255, 0.9)",
+      "border": "0px none rgba(255, 255, 255, 0.9)",
+      "borderColor": "rgba(255, 255, 255, 0.9)",
+      "borderRadius": "0px",
+      "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "display": "flex",
+      "alignItems": "center",
+      "padding": "8px 0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "transform": "none",
+      "filter": "none",
+      "hasCurrentClass": false,
+      "classList": [
+        "dropdown-toggle",
+        "w-dropdown-toggle"
+      ],
+      "pageId": "68b7601f918996218465c555",
+      "hasNuclearCSS": true
+    }
+  },
+  "Courses Page": {
+    "url": "http://localhost:9090/dist/en/courses.html",
+    "data": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "color": "rgba(255, 255, 255, 0.9)",
+      "border": "0px none rgba(255, 255, 255, 0.9)",
+      "borderColor": "rgba(255, 255, 255, 0.9)",
+      "borderRadius": "0px",
+      "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "display": "flex",
+      "alignItems": "center",
+      "padding": "8px 0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "transform": "none",
+      "filter": "none",
+      "hasCurrentClass": false,
+      "classList": [
+        "dropdown-toggle",
+        "w-dropdown-toggle"
+      ],
+      "pageId": "68b7601f918996218465c55a",
+      "hasNuclearCSS": true
+    }
+  },
+  "Teachers Page": {
+    "url": "http://localhost:9090/dist/en/teachers.html",
+    "data": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "color": "rgba(255, 255, 255, 0.9)",
+      "border": "0px none rgba(255, 255, 255, 0.9)",
+      "borderColor": "rgba(255, 255, 255, 0.9)",
+      "borderRadius": "0px",
+      "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "display": "flex",
+      "alignItems": "center",
+      "padding": "8px 0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "transform": "none",
+      "filter": "none",
+      "hasCurrentClass": false,
+      "classList": [
+        "dropdown-toggle",
+        "w-dropdown-toggle"
+      ],
+      "pageId": "teachers-page",
+      "hasNuclearCSS": false
+    }
+  },
+  "Career Center Page": {
+    "url": "http://localhost:9090/dist/en/career-center.html",
+    "data": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "color": "rgba(255, 255, 255, 0.9)",
+      "border": "0px none rgba(255, 255, 255, 0.9)",
+      "borderColor": "rgba(255, 255, 255, 0.9)",
+      "borderRadius": "0px",
+      "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "display": "flex",
+      "alignItems": "center",
+      "padding": "8px 0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "transform": "none",
+      "filter": "none",
+      "hasCurrentClass": false,
+      "classList": [
+        "dropdown-toggle",
+        "w-dropdown-toggle"
+      ],
+      "pageId": "career-center-page",
+      "hasNuclearCSS": true
+    }
+  },
+  "Career Orientation Page": {
+    "url": "http://localhost:9090/dist/en/career-orientation.html",
+    "data": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "color": "rgba(255, 255, 255, 0.9)",
+      "border": "0px none rgba(255, 255, 255, 0.9)",
+      "borderColor": "rgba(255, 255, 255, 0.9)",
+      "borderRadius": "0px",
+      "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "display": "flex",
+      "alignItems": "center",
+      "padding": "8px 0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "transform": "none",
+      "filter": "none",
+      "hasCurrentClass": false,
+      "classList": [
+        "dropdown-toggle",
+        "w-dropdown-toggle"
+      ],
+      "pageId": "career-orientation-page",
+      "hasNuclearCSS": false
+    }
+  },
+  "Course Details Page": {
+    "url": "http://localhost:9090/dist/en/detail_courses.html",
+    "data": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "color": "rgba(255, 255, 255, 0.9)",
+      "border": "0px none rgba(255, 255, 255, 0.9)",
+      "borderColor": "rgba(255, 255, 255, 0.9)",
+      "borderRadius": "0px",
+      "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "display": "flex",
+      "alignItems": "center",
+      "padding": "8px 0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "transform": "none",
+      "filter": "none",
+      "hasCurrentClass": false,
+      "classList": [
+        "dropdown-toggle",
+        "w-dropdown-toggle"
+      ],
+      "pageId": "68b7601f918996218465c557",
+      "hasNuclearCSS": true
+    }
+  },
+  "About Page": {
+    "url": "http://localhost:9090/dist/en/about.html",
+    "data": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "color": "rgba(255, 255, 255, 0.9)",
+      "border": "0px none rgba(255, 255, 255, 0.9)",
+      "borderColor": "rgba(255, 255, 255, 0.9)",
+      "borderRadius": "0px",
+      "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "display": "flex",
+      "alignItems": "center",
+      "padding": "8px 0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "transform": "none",
+      "filter": "none",
+      "hasCurrentClass": false,
+      "classList": [
+        "dropdown-toggle",
+        "w-dropdown-toggle"
+      ],
+      "pageId": "68b7601f918996218465c559",
+      "hasNuclearCSS": false
+    }
+  }
+}

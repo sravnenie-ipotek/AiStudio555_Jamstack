@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-09-10T07:32:51.929Z",
+  "api": {
+    "total": 5,
+    "passed": 4,
+    "failed": 1,
+    "endpoints": {
+      "/home-page": {
+        "status": "success",
+        "hasData": true,
+        "fields": 1
+      },
+      "/courses": {
+        "status": "success",
+        "hasData": true,
+        "fields": 1
+      },
+      "/teachers": {
+        "status": "success",
+        "hasData": true,
+        "fields": 1
+      },
+      "/career-center-page": {
+        "status": "failed",
+        "error": "HTTP 500"
+      },
+      "/career-orientation-page": {
+        "status": "success",
+        "hasData": true,
+        "fields": 1
+      }
+    }
+  },
+  "fields": {
+    "totalFields": 26,
+    "foundFields": 26,
+    "missingFields": [],
+    "coverage": 100
+  },
+  "dataFlow": {
+    "success": true,
+    "hasRequiredFields": false
+  },
+  "overallSuccess": false
+}

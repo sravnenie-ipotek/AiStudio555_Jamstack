@@ -1,0 +1,371 @@
+{
+  "timestamp": "2025-09-15T20:51:54.904Z",
+  "issues": [],
+  "findings": {
+    "russianNavStructure": {
+      "outerHTML": "<div data-w-id=\"102c5b61-ca91-3c28-1e26-0f7381b431a4\" data-animation=\"default\" data-collapse=\"medium\" data-duration=\"400\" data-easing=\"ease\" data-easing2=\"ease\" role=\"banner\" class=\"navbar w-nav\" style=\"will-change: background; background-color: rgba(5, 5, 26, 0);\">\n      <div class=\"container\">\n        <div class=\"navbar-content\">\n          <a href=\"index.html\" class=\"zohacous-logo-link w-nav-brand w--current\">Home</a>\n          <nav role=\"navigation\" class=\"nav-menu w-nav-menu\" style=\"display: flex; visibility: visible; opacity: 1; position: static; width: auto; height: auto; overflow: visible !important; transform: none; inset: auto; background: transparent; z-index: auto; pointer-events: auto; clip: auto; clip-path: none; flex-direction: row; align-items: center; gap: 20px;\">\n            <a href=\"home.html\" aria-current=\"page\" class=\"nav-link w-nav-link\" style=\"display: inline-block !important; visibility: visible !important; opacity: 1 !important;\">Home</a>\n            <a href=\"courses.html\" class=\"nav-link w-nav-link\" style=\"display: inline-block !important; visibility: visible !important; opacity: 1 !important;\">Courses</a>\n            <a href=\"teachers.html\" class=\"nav-link w-nav-link\" style=\"display: inline-block !important; visibility: visible !important; opacity: 1 !important;\">Teachers</a>\n            <a href=\"career-center.html\" class=\"nav-link w-nav-link\" style=\"display: inline-block !important; visibility: visible !important; opacity: 1 !important;\">Career Center</a>\n            <a href=\"about.html\" class=\"nav-link w-nav-link\" style=\"display: inline-block !important; visibility: visible !important; opacity: 1 !important;\">About Us</a>\n            <a href=\"contact.html\" class=\"nav-link w-nav-link\" style=\"display: inline-block !important; visibility: visible !important; opacity: 1 !important;\">Contact</a>\n            <a href=\"blog.html\" class=\"nav-link w-nav-link\" style=\"display: inline-block !important; visibility: visible !important; opacity: 1 !impor",
+      "classList": [
+        "navbar",
+        "w-nav"
+      ],
+      "boundingRect": {
+        "x": 0,
+        "y": 0,
+        "width": 1920,
+        "height": 89,
+        "top": 0,
+        "right": 1920,
+        "bottom": 89,
+        "left": 0
+      },
+      "computedStyle": {
+        "display": "block",
+        "position": "fixed",
+        "zIndex": "990",
+        "background": "rgba(5, 5, 26, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+        "width": "1920px",
+        "height": "89px"
+      }
+    },
+    "russianMenuItems": [
+      {
+        "selector": ".nav-link",
+        "index": 0,
+        "text": "Home",
+        "href": "http://localhost:3005/dist/ru/home.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      },
+      {
+        "selector": ".nav-link",
+        "index": 1,
+        "text": "Courses",
+        "href": "http://localhost:3005/dist/ru/courses.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      },
+      {
+        "selector": ".nav-link",
+        "index": 2,
+        "text": "Teachers",
+        "href": "http://localhost:3005/dist/ru/teachers.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      },
+      {
+        "selector": ".nav-link",
+        "index": 3,
+        "text": "Career Center",
+        "href": "http://localhost:3005/dist/ru/career-center.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      },
+      {
+        "selector": ".nav-link",
+        "index": 4,
+        "text": "About Us",
+        "href": "http://localhost:3005/dist/ru/about.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      },
+      {
+        "selector": ".nav-link",
+        "index": 5,
+        "text": "Contact",
+        "href": "http://localhost:3005/dist/ru/contact.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      },
+      {
+        "selector": ".nav-link",
+        "index": 6,
+        "text": "Blog",
+        "href": "http://localhost:3005/dist/ru/blog.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      },
+      {
+        "selector": "nav a",
+        "index": 0,
+        "text": "Home",
+        "href": "http://localhost:3005/dist/ru/home.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      },
+      {
+        "selector": "nav a",
+        "index": 1,
+        "text": "Courses",
+        "href": "http://localhost:3005/dist/ru/courses.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      },
+      {
+        "selector": "nav a",
+        "index": 2,
+        "text": "Teachers",
+        "href": "http://localhost:3005/dist/ru/teachers.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      },
+      {
+        "selector": "nav a",
+        "index": 3,
+        "text": "Career Center",
+        "href": "http://localhost:3005/dist/ru/career-center.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      },
+      {
+        "selector": "nav a",
+        "index": 4,
+        "text": "About Us",
+        "href": "http://localhost:3005/dist/ru/about.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      },
+      {
+        "selector": "nav a",
+        "index": 5,
+        "text": "Contact",
+        "href": "http://localhost:3005/dist/ru/contact.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      },
+      {
+        "selector": "nav a",
+        "index": 6,
+        "text": "Blog",
+        "href": "http://localhost:3005/dist/ru/blog.html",
+        "visible": false,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "styles": {
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "transform": "none",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      }
+    ]
+  },
+  "recommendations": [],
+  "error": "page.evaluate: SyntaxError: Failed to execute 'querySelector' on 'Document': '.dropdown-toggle:contains(\"RU\")' is not a valid selector.\n    at eval (eval at evaluate (:291:30), <anonymous>:11:34)\n    at UtilityScript.evaluate (<anonymous>:293:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
+}

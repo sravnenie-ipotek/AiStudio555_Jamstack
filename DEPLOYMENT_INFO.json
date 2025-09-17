@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-09-17T11:54:10.804Z",
+  "backupDirectory": "old-site-backup-2025-09-17T11-54-10",
+  "deploymentSteps": [
+    "Backed up current site to old-site-backup-2025-09-17T11-54-10",
+    "Copied 18 NewDesign files to root",
+    "Updated 1 server routes",
+    "Updated package.json scripts"
+  ],
+  "preservedFiles": [
+    "server.js",
+    "migrate-to-railway.js",
+    "package.json",
+    "package-lock.json",
+    ".env",
+    ".env.railway",
+    ".gitignore",
+    ".git",
+    "node_modules",
+    "backups",
+    "old-project",
+    "api"
+  ],
+  "copiedFiles": [
+    "home.html",
+    "about-us.html",
+    "courses.html",
+    "pricing.html",
+    "blog.html",
+    "contact-us.html",
+    "teachers.html",
+    "career-orientation.html",
+    "career-center.html",
+    "404.html",
+    "401.html",
+    "css",
+    "js",
+    "images",
+    "fonts",
+    "shared",
+    "authentication-pages",
+    "template-pages"
+  ],
+  "notes": [
+    "NewDesign is now the main site",
+    "Old site backed up to old-site-backup-2025-09-17T11-54-10",
+    "All APIs and database connections preserved",
+    "Ready for Railway deployment"
+  ]
+}

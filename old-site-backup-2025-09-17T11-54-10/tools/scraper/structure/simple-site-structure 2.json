@@ -1,0 +1,86 @@
+{
+  "root": "https://teachmeskills.by",
+  "pages": [
+    {
+      "url": "https://teachmeskills.by",
+      "title": "Курсы it программирования в Минске, обучение айти с нуля",
+      "depth": 0,
+      "sections": [
+        "hero",
+        "footer"
+      ],
+      "linkCount": 110
+    },
+    {
+      "url": "https://teachmeskills.by/#t-main-content",
+      "title": "Курсы it программирования в Минске, обучение айти с нуля",
+      "depth": 1,
+      "sections": [
+        "hero",
+        "footer"
+      ],
+      "linkCount": 110
+    },
+    {
+      "url": "https://teachmeskills.by/",
+      "title": "Новое сообщение",
+      "depth": 2,
+      "sections": [
+        "hero",
+        "footer"
+      ],
+      "linkCount": 110
+    },
+    {
+      "url": "https://teachmeskills.by/kursy",
+      "title": "Курсы онлайн обучения в Минске, обучение востребованным профессиям",
+      "depth": 2,
+      "sections": [
+        "hero",
+        "footer"
+      ],
+      "linkCount": 73
+    },
+    {
+      "url": "https://teachmeskills.by/teachers",
+      "title": "Преподаватели школы программирования TeachMeSkills",
+      "depth": 2,
+      "sections": [
+        "hero",
+        "footer"
+      ],
+      "linkCount": 115
+    },
+    {
+      "url": "https://teachmeskills.by/blog",
+      "title": "Блог | IT школа TeachMeSkills",
+      "depth": 2,
+      "sections": [
+        "hero",
+        "footer"
+      ],
+      "linkCount": 254
+    },
+    {
+      "url": "https://teachmeskills.by/proforientation",
+      "title": "Профориентация в TeachMeSkills",
+      "depth": 2,
+      "sections": [
+        "hero",
+        "footer"
+      ],
+      "linkCount": 60
+    },
+    {
+      "url": "https://teachmeskills.by/career-center",
+      "title": "Карьерный центр TeachMeSkills | IT школа TeachMeSkills",
+      "depth": 2,
+      "sections": [
+        "hero",
+        "footer"
+      ],
+      "linkCount": 65
+    }
+  ],
+  "hierarchy": {}
+}

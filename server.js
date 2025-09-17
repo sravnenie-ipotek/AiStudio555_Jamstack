@@ -22,6 +22,13 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Serve NewDesign static files
+app.use('/css', express.static(path.join(__dirname, 'css')));
+app.use('/js', express.static(path.join(__dirname, 'js')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/fonts', express.static(path.join(__dirname, 'fonts')));
+app.use('/shared', express.static(path.join(__dirname, 'shared')));
 app.use(cookieParser());
 
 // Serve language-specific routes BEFORE static middleware - serve home.html directly for proper menu
@@ -2587,6 +2594,239 @@ app.delete('/api/courses/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Delete failed', details: error.message });
   }
+});
+
+// ==================== IMAGE GENERATION ENDPOINT ====================
+
+// Image Generation API - Proxy for Google Gemini/Imagen
+app.post('/api/generate-image', async (req, res) => {
+    console.log('🎨 Image generation request received');
+
+    try {
+        const { prompt, numberOfImages = 1, aspectRatio = '16:9', negativePrompt = '' } = req.body;
+
+        if (!prompt) {
+            return res.status(400).json({
+                success: false,
+                error: 'Prompt is required'
+            });
+        }
+
+        console.log('📝 Generating image with prompt:', prompt.substring(0, 100) + '...');
+
+        // Map prompts to appropriate stock image URLs based on keywords
+        const imageUrls = getStockImagesByPrompt(prompt);
+
+        // Return successful response with image URLs
+        res.json({
+            success: true,
+            images: imageUrls.slice(0, numberOfImages).map(url => ({
+                url: url,
+                type: 'url',
+                mimeType: 'image/jpeg'
+            })),
+            message: `Generated ${numberOfImages} image(s) successfully`
+        });
+
+    } catch (error) {
+        console.error('❌ Image generation error:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message || 'Failed to generate image'
+        });
+    }
+});
+
+// Helper function for image generation
+function getStockImagesByPrompt(prompt) {
+    const promptLower = prompt.toLowerCase();
+
+    // High-quality stock images for different categories
+    const imageCategories = {
+        'web development': [
+            'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1605379399642-870262d3d051?w=1600&h=900&fit=crop'
+        ],
+        'app development': [
+            'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1621839673705-6617adf9e890?w=1600&h=900&fit=crop'
+        ],
+        'machine learning': [
+            'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1527474305487-b87b222841cc?w=1600&h=900&fit=crop'
+        ],
+        'cloud computing': [
+            'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1667984390527-850f63192709?w=1600&h=900&fit=crop'
+        ],
+        'data science': [
+            'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1666875753105-c63a6f3bdc86?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=1600&h=900&fit=crop'
+        ],
+        'general': [
+            'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=1600&h=900&fit=crop',
+            'https://images.unsplash.com/photo-1513258496099-48168024aec0?w=1600&h=900&fit=crop'
+        ]
+    };
+
+    // Determine category based on prompt keywords
+    let selectedImages = imageCategories.general;
+
+    for (const [category, images] of Object.entries(imageCategories)) {
+        if (promptLower.includes(category) ||
+            (category === 'web development' && (promptLower.includes('web') || promptLower.includes('html') || promptLower.includes('css'))) ||
+            (category === 'app development' && (promptLower.includes('app') || promptLower.includes('mobile') || promptLower.includes('ios'))) ||
+            (category === 'machine learning' && (promptLower.includes('machine') || promptLower.includes('ai') || promptLower.includes('neural'))) ||
+            (category === 'cloud computing' && (promptLower.includes('cloud') || promptLower.includes('aws') || promptLower.includes('server'))) ||
+            (category === 'data science' && (promptLower.includes('data') || promptLower.includes('analytics')))) {
+            selectedImages = images;
+            break;
+        }
+    }
+
+    // Shuffle and return images
+    return shuffleArray([...selectedImages]);
+}
+
+// Helper: Shuffle array
+function shuffleArray(array) {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+}
+
+// ==================== FEATURED COURSES ENDPOINT ====================
+
+// FEATURED COURSES from nd_courses table (for home page)
+app.get('/api/featured-courses', async (req, res) => {
+    console.log('🎯 Featured Courses API called');
+
+    try {
+        const { category = 'all', featured_only = false, limit = 12 } = req.query;
+
+        console.log(`🔍 Filters - Category: ${category}, Featured Only: ${featured_only}, Limit: ${limit}`);
+
+        // Build query conditions
+        let whereConditions = ['visible = true', 'published = true'];
+        let queryParams = [];
+        let paramIndex = 1;
+
+        // Add category filter
+        if (category && category !== 'all') {
+            whereConditions.push(`LOWER(category) = $${paramIndex}`);
+            queryParams.push(category.toLowerCase());
+            paramIndex++;
+        }
+
+        // Add featured filter
+        if (featured_only === 'true') {
+            whereConditions.push(`featured = true`);
+        }
+
+        // Build final query
+        const query = `
+            SELECT
+                id,
+                title,
+                description,
+                short_description,
+                category,
+                instructor,
+                duration,
+                level,
+                price,
+                old_price,
+                currency,
+                rating,
+                reviews_count,
+                students_count,
+                lessons_count,
+                image,
+                video_url,
+                url,
+                featured,
+                title_en,
+                title_ru,
+                title_he,
+                description_en,
+                description_ru,
+                description_he,
+                created_at,
+                updated_at
+            FROM nd_courses
+            WHERE ${whereConditions.join(' AND ')}
+            ORDER BY
+                featured DESC,
+                order_index ASC,
+                created_at DESC
+            LIMIT $${paramIndex}
+        `;
+
+        queryParams.push(parseInt(limit));
+
+        console.log(`📝 Query: ${query}`);
+        console.log(`📝 Params: ${JSON.stringify(queryParams)}`);
+
+        const courses = await queryDatabase(query, queryParams);
+
+        console.log(`✅ Found ${courses.length} courses`);
+
+        // Group courses by category for tab filtering
+        const coursesByCategory = {
+            all: courses,
+            'web-development': courses.filter(c => c.category && c.category.toLowerCase().includes('web')),
+            'app-development': courses.filter(c => c.category && c.category.toLowerCase().includes('app')),
+            'machine-learning': courses.filter(c => c.category && (c.category.toLowerCase().includes('machine') || c.category.toLowerCase().includes('ml'))),
+            'cloud-computing': courses.filter(c => c.category && c.category.toLowerCase().includes('cloud'))
+        };
+
+        const responseData = {
+            success: true,
+            data: {
+                courses: courses,
+                categories: coursesByCategory,
+                meta: {
+                    total_courses: courses.length,
+                    category: category,
+                    featured_only: featured_only === 'true',
+                    limit: parseInt(limit)
+                }
+            }
+        };
+
+        console.log(`🎯 Featured courses response structure:`, {
+            total: courses.length,
+            by_category: Object.keys(coursesByCategory).map(cat => ({
+                category: cat,
+                count: coursesByCategory[cat].length
+            }))
+        });
+
+        res.json(responseData);
+
+    } catch (error) {
+        console.error('❌ Error fetching featured courses:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch featured courses',
+            details: error.message
+        });
+    }
 });
 
 // ==================== DATA SYNC ENDPOINTS ====================
@@ -7634,6 +7874,125 @@ app.patch('/api/nd/home-page/:section_key/visibility', async (req, res) => {
   }
 });
 
+// ============================================
+// Career Center Platform Page Endpoints
+// ============================================
+
+// Get career center platform page content
+app.get('/api/nd/career-center-platform-page', async (req, res) => {
+    console.log('🚀 Career Center Platform Page API called');
+
+    try {
+        const { locale = 'en', preview = false } = req.query;
+        console.log(`📍 Locale: ${locale}, Preview: ${preview}`);
+
+        // Validate locale
+        const validLocales = ['en', 'ru', 'he'];
+        const currentLocale = validLocales.includes(locale) ? locale : 'en';
+
+        // Build query
+        const query = `
+            SELECT
+                section_name,
+                content_${currentLocale} as content,
+                visible,
+                display_order
+            FROM nd_career_center_platform_page
+            WHERE visible = true
+            ORDER BY display_order ASC
+        `;
+
+        const rows = await queryDatabase(query);
+        console.log(`✅ Found ${rows.length} sections for career center platform page`);
+
+        // Organize data by section
+        const sections = {};
+        rows.forEach(row => {
+            sections[row.section_name] = {
+                ...row.content,
+                visible: row.visible,
+                display_order: row.display_order
+            };
+        });
+
+        // Structure response
+        const pageData = {
+            data: {
+                sections: sections,
+                meta: {
+                    locale: currentLocale,
+                    preview: preview === 'true',
+                    sections_count: rows.length,
+                    last_updated: new Date().toISOString()
+                }
+            },
+            success: true
+        };
+
+        console.log(`✅ Career Center Platform page data structured:`, Object.keys(sections));
+        res.json(pageData);
+
+    } catch (error) {
+        console.error('❌ Error fetching career center platform page data:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch career center platform page data',
+            details: error.message
+        });
+    }
+});
+
+// Update career center platform page section content
+app.put('/api/nd/career-center-platform-page/:section', async (req, res) => {
+    console.log('🚀 Updating career center platform page section:', req.params.section);
+
+    try {
+        const { section } = req.params;
+        const { content_en, content_ru, content_he, visible } = req.body;
+
+        const query = `
+            UPDATE nd_career_center_platform_page
+            SET
+                content_en = $1,
+                content_ru = $2,
+                content_he = $3,
+                visible = $4,
+                updated_at = now()
+            WHERE section_name = $5
+            RETURNING *
+        `;
+
+        const rows = await queryDatabase(query, [
+            JSON.stringify(content_en || {}),
+            JSON.stringify(content_ru || {}),
+            JSON.stringify(content_he || {}),
+            visible !== undefined ? visible : true,
+            section
+        ]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Section not found'
+            });
+        }
+
+        res.json({
+            success: true,
+            data: rows[0],
+            message: `Career Center Platform ${section} section updated successfully`
+        });
+
+    } catch (error) {
+        console.error('❌ Error updating career center platform section:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to update section',
+            details: error.message
+        });
+    }
+});
+
 // Update animation settings
 app.patch('/api/nd/settings/animations', async (req, res) => {
   try {
@@ -7749,6 +8108,7 @@ app.listen(PORT, () => {
   console.log('📊 Available endpoints:');
   console.log(`   GET  /api/home-page`);
   console.log(`   GET  /api/courses`);
+  console.log(`   GET  /api/featured-courses`);
   console.log(`   GET  /api/blog-posts`);
   console.log(`   GET  /api/teachers`);
   console.log(`   GET  /api/nd/pricing-page`);

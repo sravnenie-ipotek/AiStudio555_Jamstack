@@ -1,0 +1,353 @@
+{
+  "timestamp": "2025-09-15T20:54:02.226Z",
+  "russianMenu": {
+    "menuExists": true,
+    "menuStyles": {
+      "display": "none",
+      "flexDirection": "row",
+      "alignItems": "center",
+      "gap": "20px",
+      "width": "auto",
+      "height": "auto"
+    },
+    "links": [
+      {
+        "text": "Home",
+        "href": "http://localhost:3005/dist/ru/home.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      },
+      {
+        "text": "Courses",
+        "href": "http://localhost:3005/dist/ru/courses.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      },
+      {
+        "text": "Teachers",
+        "href": "http://localhost:3005/dist/ru/teachers.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      },
+      {
+        "text": "Career Center",
+        "href": "http://localhost:3005/dist/ru/career-center.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      },
+      {
+        "text": "About Us",
+        "href": "http://localhost:3005/dist/ru/about.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      },
+      {
+        "text": "Contact",
+        "href": "http://localhost:3005/dist/ru/contact.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      },
+      {
+        "text": "Blog",
+        "href": "http://localhost:3005/dist/ru/blog.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      }
+    ]
+  },
+  "hebrewMenu": {
+    "menuExists": true,
+    "menuStyles": {
+      "display": "none",
+      "flexDirection": "row",
+      "alignItems": "center",
+      "gap": "20px",
+      "width": "auto",
+      "height": "auto"
+    },
+    "links": [
+      {
+        "text": "בית",
+        "href": "http://localhost:3005/dist/he/home.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      },
+      {
+        "text": "קורסים",
+        "href": "http://localhost:3005/dist/he/courses.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      },
+      {
+        "text": "מורים",
+        "href": "http://localhost:3005/dist/he/teachers.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      },
+      {
+        "text": "Career Center",
+        "href": "http://localhost:3005/dist/he/career-center.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      },
+      {
+        "text": "About Us",
+        "href": "http://localhost:3005/dist/he/about.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      },
+      {
+        "text": "Contact",
+        "href": "http://localhost:3005/dist/he/contact.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      },
+      {
+        "text": "Blog",
+        "href": "http://localhost:3005/dist/he/blog.html",
+        "boundingRect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "computedStyle": {
+          "display": "inline-block",
+          "visibility": "visible",
+          "opacity": "1",
+          "fontSize": "16px",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "padding": "10px 20px",
+          "margin": "0px 2px"
+        }
+      }
+    ]
+  },
+  "issues": [],
+  "visualDifferences": []
+}

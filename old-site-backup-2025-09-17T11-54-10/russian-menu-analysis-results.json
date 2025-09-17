@@ -1,0 +1,438 @@
+{
+  "timestamp": "2025-09-15T20:49:55.714Z",
+  "russianMenu": {
+    "language": "Russian",
+    "menuItems": [
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "Home",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "ltr"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "Courses",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "ltr"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "Teachers",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "ltr"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "Career Center",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "ltr"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "About Us",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "ltr"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "Contact",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "ltr"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "Blog",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "ltr"
+        },
+        "isVisible": false
+      }
+    ],
+    "languageSwitcher": {},
+    "spacing": {},
+    "positioning": {},
+    "css": {},
+    "errors": [],
+    "direction": "ltr",
+    "overflowingElements": []
+  },
+  "hebrewMenu": {
+    "language": "Hebrew",
+    "menuItems": [
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "בית",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "rtl"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "קורסים",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "rtl"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "מורים",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "rtl"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "Career Center",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "rtl"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "About Us",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "rtl"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "Contact",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "rtl"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "Blog",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "rtl"
+        },
+        "isVisible": false
+      }
+    ],
+    "languageSwitcher": {},
+    "spacing": {},
+    "positioning": {},
+    "css": {},
+    "errors": [],
+    "direction": "rtl",
+    "overflowingElements": []
+  },
+  "englishMenu": {
+    "language": "English",
+    "menuItems": [
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "Home",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "ltr"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "Courses",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "ltr"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "Teachers",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "ltr"
+        },
+        "isVisible": false
+      },
+      {
+        "selector": ".nav-link, .navbar-nav a, .menu-item, .nav-item a",
+        "text": "Blog",
+        "boundingBox": null,
+        "styles": {
+          "fontSize": "16px",
+          "fontFamily": "\"Plus Jakarta Sans\", sans-serif",
+          "color": "rgba(255, 255, 255, 0.8)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "10px 20px",
+          "margin": "0px 2px",
+          "position": "static",
+          "display": "inline-block",
+          "textAlign": "left",
+          "direction": "ltr"
+        },
+        "isVisible": false
+      }
+    ],
+    "languageSwitcher": {},
+    "spacing": {},
+    "positioning": {},
+    "css": {},
+    "errors": [],
+    "direction": "ltr",
+    "overflowingElements": []
+  },
+  "comparison": {
+    "itemCounts": {
+      "russian": 7,
+      "hebrew": 7,
+      "english": 4
+    },
+    "textComparison": {
+      "russian": [
+        "Home",
+        "Courses",
+        "Teachers",
+        "Career Center",
+        "About Us",
+        "Contact",
+        "Blog"
+      ],
+      "hebrew": [
+        "בית",
+        "קורסים",
+        "מורים",
+        "Career Center",
+        "About Us",
+        "Contact",
+        "Blog"
+      ],
+      "english": [
+        "Home",
+        "Courses",
+        "Teachers",
+        "Blog"
+      ],
+      "missingInRussian": [
+        "בית",
+        "קורסים",
+        "מורים"
+      ],
+      "uniqueToRussian": []
+    },
+    "spacingDifferences": {},
+    "positioningIssues": [],
+    "directionality": {
+      "russian": "ltr",
+      "hebrew": "rtl",
+      "english": "ltr"
+    }
+  },
+  "issues": [
+    {
+      "type": "Missing Menu Items",
+      "severity": "HIGH",
+      "description": "Russian menu is missing 3 items found in Hebrew version",
+      "details": [
+        "בית",
+        "קורסים",
+        "מורים"
+      ]
+    }
+  ],
+  "recommendations": [
+    {
+      "issue": "Missing Menu Items",
+      "priority": "HIGH",
+      "action": "Add missing menu items to Russian navigation",
+      "implementation": "Add the following items to /dist/ru/index.html navigation: בית, קורסים, מורים",
+      "cssChanges": "Ensure consistent .nav-item styling across all language versions"
+    },
+    {
+      "issue": "General Improvement",
+      "priority": "LOW",
+      "action": "Implement universal navigation CSS",
+      "implementation": "Create shared navigation styles that work consistently across all languages",
+      "cssChanges": "/* Universal Navigation Styles */ .navbar { direction: ltr; } .navbar-nav { display: flex; align-items: center; gap: 1rem; }"
+    }
+  ],
+  "error": "context.setViewportSize is not a function"
+}

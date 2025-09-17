@@ -1,0 +1,19 @@
+FROM node:20-alpine
+
+WORKDIR /opt/app
+
+# Only install essential build tools
+RUN apk add --no-cache python3 make g++ git
+
+# Copy package file
+COPY ./strapi-cms/package.json ./
+
+# Install dependencies
+RUN npm install --production=false
+
+# Copy application files
+COPY ./strapi-cms .
+
+EXPOSE 1337
+
+CMD ["npx", "strapi", "develop"]

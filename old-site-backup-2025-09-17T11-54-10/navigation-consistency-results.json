@@ -1,0 +1,107 @@
+{
+  "index.html": {
+    "url": "http://localhost:9090/dist/en/index.html",
+    "navItems": [
+      "Home",
+      "Courses",
+      "Teachers",
+      "Career Services",
+      "Pricing"
+    ],
+    "careerServicesDropdown": [
+      "Career Orientation",
+      "Career Center"
+    ],
+    "matchesExpected": true
+  },
+  "courses.html": {
+    "url": "http://localhost:9090/dist/en/courses.html",
+    "navItems": [
+      "Home",
+      "Courses",
+      "Teachers",
+      "Career Services",
+      "Pricing"
+    ],
+    "careerServicesDropdown": [
+      "Career Orientation",
+      "Career Center"
+    ],
+    "matchesExpected": true
+  },
+  "teachers.html": {
+    "url": "http://localhost:9090/dist/en/teachers.html",
+    "navItems": [
+      "Home",
+      "Courses",
+      "Teachers",
+      "Career Services",
+      "Pricing"
+    ],
+    "careerServicesDropdown": [
+      "Career Orientation",
+      "Career Center"
+    ],
+    "matchesExpected": true
+  },
+  "career-center.html": {
+    "url": "http://localhost:9090/dist/en/career-center.html",
+    "navItems": [
+      "Home",
+      "Courses",
+      "Teachers",
+      "Career Services",
+      "Pricing"
+    ],
+    "careerServicesDropdown": [
+      "Career Orientation",
+      "Career Center"
+    ],
+    "matchesExpected": true
+  },
+  "career-orientation.html": {
+    "url": "http://localhost:9090/dist/en/career-orientation.html",
+    "navItems": [
+      "Home",
+      "Courses",
+      "Teachers",
+      "Career Services",
+      "Pricing"
+    ],
+    "careerServicesDropdown": [
+      "Career Orientation",
+      "Career Center"
+    ],
+    "matchesExpected": true
+  },
+  "detail_courses.html": {
+    "url": "http://localhost:9090/dist/en/detail_courses.html",
+    "navItems": [
+      "Home",
+      "Courses",
+      "Teachers",
+      "Career Services",
+      "Pricing"
+    ],
+    "careerServicesDropdown": [
+      "Career Orientation",
+      "Career Center"
+    ],
+    "matchesExpected": true
+  },
+  "about.html": {
+    "url": "http://localhost:9090/dist/en/about.html",
+    "navItems": [
+      "Home",
+      "Courses",
+      "Teachers",
+      "Career Services",
+      "Pricing"
+    ],
+    "careerServicesDropdown": [
+      "Career Orientation",
+      "Career Center"
+    ],
+    "matchesExpected": true
+  }
+}

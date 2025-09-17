@@ -1,0 +1,124 @@
+{
+  "timestamp": "2025-09-17T11:27:41.797Z",
+  "passed": 23,
+  "failed": 0,
+  "total": 23,
+  "ready": true,
+  "tests": [
+    {
+      "name": "File exists: backups/newDesign/home.html",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "File exists: backups/newDesign/courses.html",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "File exists: backups/newDesign/css/normalize.css",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "File exists: backups/newDesign/js/webflow.js",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "File exists: backups/newDesign/images",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "File exists: backups/newDesign/shared/services/emailService",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "File exists: backups/newDesign/shared/services/imageGenerationService",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "API endpoint: /api/featured-courses",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "API endpoint: /api/generate-image",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "API endpoint: /api/nd/home-page",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "Static file serving configured",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "CORS enabled",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "Has start script",
+      "status": "passed",
+      "details": "echo 'Starting Custom Live API Server (NOT Strapi)' && node server.js"
+    },
+    {
+      "name": "Has required dependencies",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "Has pg (PostgreSQL) dependency",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "Deployment preparation script exists",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "Restore script exists",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": "Deployment guide exists",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": ".env file exists",
+      "status": "passed",
+      "details": "Environment variables configured"
+    },
+    {
+      "name": ".gitignore exists",
+      "status": "passed",
+      "details": ""
+    },
+    {
+      "name": ".env in .gitignore",
+      "status": "passed",
+      "details": "Sensitive files protected"
+    },
+    {
+      "name": "API server responding (port 3000)",
+      "status": "passed",
+      "details": "Server is running"
+    },
+    {
+      "name": "Frontend server responding (port 3005)",
+      "status": "passed",
+      "details": "Frontend is running"
+    }
+  ]
+}

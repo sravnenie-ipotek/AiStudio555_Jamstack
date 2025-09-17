@@ -1,0 +1,108 @@
+<!-- Contact Form Popup Modal -->
+<div id="contactPopup" class="popup-overlay">
+  <div class="popup-container">
+    <!-- Close Button -->
+    <button class="popup-close" aria-label="Close popup">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <!-- Popup Content -->
+    <div class="popup-content">
+      <!-- Header Section -->
+      <div class="popup-header">
+        <h2 class="popup-title">Get In Touch</h2>
+        <p class="popup-subtitle">Let us know how we can help you on your learning journey</p>
+      </div>
+
+      <!-- Contact Form -->
+      <form id="contactForm" class="contact-form">
+        <!-- Name Field -->
+        <div class="form-field">
+          <label for="contactName" class="form-label">Your Name *</label>
+          <input
+            type="text"
+            id="contactName"
+            name="name"
+            class="form-input"
+            placeholder="Enter Your Name"
+            required
+          >
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-field">
+          <label for="contactEmail" class="form-label">Email Address *</label>
+          <input
+            type="email"
+            id="contactEmail"
+            name="email"
+            class="form-input"
+            placeholder="Ex. emailaddress@email.com"
+            required
+          >
+        </div>
+
+        <!-- Subject Field -->
+        <div class="form-field">
+          <label for="contactSubject" class="form-label">Subject *</label>
+          <input
+            type="text"
+            id="contactSubject"
+            name="subject"
+            class="form-input"
+            placeholder="Ex. Want Consultation"
+            required
+          >
+        </div>
+
+        <!-- Message Field -->
+        <div class="form-field">
+          <label for="contactMessage" class="form-label">Your Message *</label>
+          <textarea
+            id="contactMessage"
+            name="message"
+            class="form-textarea"
+            placeholder="Write what you want to share with us..."
+            rows="5"
+            required
+          ></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-submit-wrapper">
+          <button type="submit" class="primary-button form-submit-button">
+            <div class="primary-button-text-wrap">
+              <div class="primary-button-text-block">Send Message</div>
+              <div class="primary-button-text-block is-text-absolute">Send Message</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Loading State -->
+        <div id="formLoading" class="form-loading" style="display: none;">
+          <div class="loading-spinner"></div>
+          <span>Sending message...</span>
+        </div>
+
+        <!-- Success Message -->
+        <div id="formSuccess" class="form-message form-success" style="display: none;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Message sent successfully! We'll get back to you soon.</span>
+        </div>
+
+        <!-- Error Message -->
+        <div id="formError" class="form-message form-error" style="display: none;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke="#EF4444" stroke-width="2"/>
+            <path d="M10 6V10M10 14H10.01" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span>Sorry, there was an error sending your message. Please try again.</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

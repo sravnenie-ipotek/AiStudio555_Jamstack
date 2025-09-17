@@ -1,0 +1,231 @@
+{
+  "analysis_date": "2025-09-16",
+  "source_file": "/Users/michaelmishayev/Desktop/newCode/backups/newDesign/home.html",
+  "total_sections_found": 12,
+  "sections_inventory": {
+    "banner_hero": {
+      "section_name": "Banner/Hero Section",
+      "class": "section banner",
+      "content_found": {
+        "subtitle": "Expert-Led Learning",
+        "title": "Unlock Potential With Proven Courses.",
+        "description": "Here you can elevate your tech career with expert-led courses. whether you're just starting out or aiming to advance your skills, our hands-on, practical training is designed.",
+        "buttons": [
+          {
+            "text": "get in touch",
+            "url": "contact-us.html",
+            "type": "primary"
+          },
+          {
+            "text": "Check Out Courses",
+            "url": "courses.html",
+            "type": "secondary"
+          }
+        ],
+        "images": [
+          "images/Banner-Man-Img1_1Banner-Man-Img1.png",
+          "images/Banner-Man-Img2_1Banner-Man-Img2.png",
+          "images/Banner-Card-Shape1.png",
+          "images/Banner-Card1.png",
+          "images/Banner-Card-Shape2.png",
+          "images/Banner-Card2.png"
+        ],
+        "video": {
+          "poster": "https://cdn.prod.website-files.com/66ebc1dba0dd85605c7bf556%2F66ebe94e35c435b688d514c7_Video-poster-00001.jpg",
+          "sources": [
+            "https://cdn.prod.website-files.com/66ebc1dba0dd85605c7bf556%2F66ebe94e35c435b688d514c7_Video-transcode.mp4",
+            "https://cdn.prod.website-files.com/66ebc1dba0dd85605c7bf556%2F66ebe94e35c435b688d514c7_Video-transcode.webm"
+          ]
+        }
+      }
+    },
+    "course_categories": {
+      "section_name": "Course Categories Section",
+      "class": "section course-categories",
+      "content_found": {
+        "subtitle": "Course Categories",
+        "title": "Browse Our Tech Course Categories.",
+        "description": "Dive into a world of learning with diverse and extensive range of tech courses designed to cater to every interest.",
+        "button": {
+          "text": "Discover Courses",
+          "url": "courses.html"
+        },
+        "categories": "DYNAMIC - Uses w-dyn-list (Webflow CMS)",
+        "note": "This section is set up for dynamic content but shows 'No items found' - likely needs manual category data"
+      }
+    },
+    "about_us": {
+      "section_name": "About Us / Meet Your Mentor",
+      "class": "section about-us",
+      "content_found": {
+        "subtitle": "Meet Your Mentor",
+        "title": "Get To Know Your Pathway To Mastery.",
+        "description": "With over a decade of experience in the tech industry, mentor has dedicated their career to empowering learners.",
+        "counters": [
+          {
+            "value": "100+",
+            "label": "Total Courses Taught"
+          },
+          {
+            "value": "500K+",
+            "label": "Total Happy Learners"
+          },
+          {
+            "value": "10+",
+            "label": "Years Of Experience"
+          }
+        ],
+        "mentor": {
+          "title": "Expert Mentor In Technology",
+          "description": "She has received prestigious honors \"Top Educator\" award and the \"Teaching Excellence\" award.",
+          "image": "images/About-Us-Image.png",
+          "achievement_icons": "images/About-Us-Achievement-Icon.svg"
+        }
+      }
+    },
+    "featured_courses": {
+      "section_name": "Featured Courses Section",
+      "class": "section featured-courses",
+      "content_found": {
+        "subtitle": "Featured Courses",
+        "title": "Enhance Your Skills With Curated Courses.",
+        "description": "Dive into our expertly curated selection of featured courses, designed to equip you with the skills and knowledge needed to excel.",
+        "note": "Uses dynamic course loading from API - content managed through database"
+      }
+    },
+    "why_choose_us": {
+      "section_name": "Why Choose Us Section",
+      "class": "section why-choose-us",
+      "content_found": {
+        "subtitle": "Meet Your Mentor",
+        "title": "What Makes Zohacous Your Best Choice.",
+        "description": "We offers a wide range of courses, including web Development, App Development, Machine Learning, Cloud Computing, Data Science.",
+        "features": [
+          {
+            "icon": "images/Why-Choose-Us-Icon1.svg",
+            "title": "Innovative Teaching Methods Here.",
+            "description": "Utilizes cutting-edge teaching techniques & tools deliver engaging interactive & effective learning."
+          },
+          {
+            "icon": "images/Why-Choose-Us-Icon2.svg",
+            "title": "Certified Professional In Your Needs.",
+            "description": "Numerous industry certification from leading organizations ensuring that the guidance."
+          },
+          {
+            "icon": "images/Why-Choose-Us-Icon3.svg",
+            "title": "Expert Instructor Of Industry.",
+            "description": "Providing hands-on, real-world training and mentorship, aim bridge gap between theoretical."
+          }
+        ]
+      }
+    },
+    "affordable_plan": {
+      "section_name": "Affordable Plan / Pricing Section",
+      "class": "section affordable-plan",
+      "content_found": {
+        "subtitle": "Affordable Plans",
+        "title": "Invest in Future with Subscription Plans.",
+        "note": "Pricing content managed through database - section exists but pricing data is dynamic"
+      }
+    },
+    "detailed_process": {
+      "section_name": "Detailed Process / Learning Journey",
+      "class": "section detailed-process",
+      "content_found": {
+        "subtitle": "Detailed Process",
+        "title": "Your Learning Journey With Our Experts.",
+        "description": "Zohacous, we believe in a structured yet flexible approach to mentorship designed to help you achieve your goals at every step.",
+        "note": "Process steps managed through database"
+      }
+    },
+    "awards": {
+      "section_name": "Awards Section",
+      "class": "section awards",
+      "content_found": {
+        "subtitle": "Prestigious Awards",
+        "title": "Awards That Define Our Excellence.",
+        "description": "Dive into a world of learning with diverse & extensive range of tech courses designed to cater to every interest.",
+        "note": "Awards content managed through database"
+      }
+    },
+    "testimonials": {
+      "section_name": "Testimonials Section",
+      "class": "section testimonials",
+      "content_found": {
+        "subtitle": "Testimonials",
+        "title": "Your Learning Journey With Our Experts.",
+        "description": "Zohacous, we believe in a structured yet flexible approach to mentorship designed to help you achieve your goals at every step.",
+        "note": "Testimonials content managed through database"
+      }
+    },
+    "faq": {
+      "section_name": "FAQ Section",
+      "class": "section faq",
+      "content_found": {
+        "subtitle": "FAQ & Answer",
+        "title": "Frequently Asked Questions",
+        "description": "Dive into a world of learning with diverse and extensive range of tech courses designed to cater to every interest.",
+        "hardcoded_faqs": [
+          {
+            "question": "Q: What types of courses are available on Zohacous?",
+            "answer": "Zohacous offers a wide range of tech courses, including Web Development, App Development, Machine Learning, Cloud Computing, Data Science, Cybersecurity, and more. Our courses are designed to cater to all levels, from beginners to advanced."
+          },
+          {
+            "question": "Q: What is included in the subscription plans?",
+            "answer": "Zohacous offers a wide range of tech courses, including Web Development, App Development, Machine Learning, Cloud Computing, Data Science, Cybersecurity, and more. Our courses are designed to cater to all levels, from beginners to advanced."
+          },
+          {
+            "question": "Q: What kind of support is available for learners?",
+            "answer": "Zohacous offers a wide range of tech courses, including Web Development, App Development, Machine Learning, Cloud Computing, Data Science, Cybersecurity, and more. Our courses are designed to cater to all levels, from beginners to advanced."
+          },
+          {
+            "question": "Q: Are there any prerequisites for enrolling in courses?",
+            "answer": "Zohacous offers a wide range of tech courses, including Web Development, App Development, Machine Learning, Cloud Computing, Data Science, Cybersecurity, and more. Our courses are designed to cater to all levels, from beginners to advanced."
+          },
+          {
+            "question": "Q: How often are new courses added to the platform?",
+            "answer": "Zohacous offers a wide range of tech courses, including Web Development, App Development, Machine Learning, Cloud Computing, Data Science, Cybersecurity, and more. Our courses are designed to cater to all levels, from beginners to advanced."
+          }
+        ],
+        "note": "FAQs are hardcoded with identical answers - need proper content"
+      }
+    },
+    "blog": {
+      "section_name": "Blog / News & Articles Section",
+      "class": "section blog",
+      "content_found": {
+        "subtitle": "News & Articles",
+        "title": "Your Learning Journey With Our Experts.",
+        "description": "Zohacous, we believe in a structured yet flexible approach to mentorship designed to help you achieve your goals at every step.",
+        "note": "Blog content managed through database"
+      }
+    },
+    "track": {
+      "section_name": "Track Section (Animated Ticker)",
+      "class": "section track",
+      "content_found": {
+        "track_items": [
+          "Start Learning",
+          "Browse Courses"
+        ],
+        "note": "Repeating animated track/ticker with these text labels"
+      }
+    },
+    "cta": {
+      "section_name": "Call to Action Section",
+      "class": "section cta",
+      "content_found": {
+        "subtitle": "Start Learning Today",
+        "title": "Discover A World Of Learning Opportunities.",
+        "note": "CTA content managed through database"
+      }
+    },
+    "footer": {
+      "section_name": "Footer Section",
+      "class": "section footer",
+      "content_found": {
+        "note": "Footer content managed through database"
+      }
+    }
+  }
+}

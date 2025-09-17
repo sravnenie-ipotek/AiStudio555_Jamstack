@@ -1,0 +1,96 @@
+{
+  "analysis_date": "2025-09-16",
+  "api_endpoint": "http://localhost:1337/api/nd/home-page",
+  "database_sections_found": 15,
+  "sections_in_database": {
+    "navigation": {
+      "status": "EXISTS",
+      "structure": "Complete navigation menu with dropdowns",
+      "content_fields": ["items", "cta_button"],
+      "sample_content": "Home, Courses, Pricing, About us, Blog, Pages, Utility Pages"
+    },
+    "misc": {
+      "status": "EXISTS",
+      "structure": "Global labels and page titles",
+      "content_fields": ["misc_labels", "page_titles", "buttons_global", "hero_descriptions"],
+      "sample_content": "Page titles, button labels, hero descriptions"
+    },
+    "process": {
+      "status": "EXISTS",
+      "structure": "3-step learning process",
+      "content_fields": ["steps", "title", "subtitle"],
+      "sample_content": "Choose Your Plan, Access All Courses, Learn And Grow"
+    },
+    "about": {
+      "status": "EXISTS",
+      "structure": "Complete about section with counters",
+      "content_fields": ["title", "counters", "subtitle", "button_url", "main_title", "description", "mentor_name", "extended_description"],
+      "sample_content": "Mrs. Sarah Johnson, counters, descriptions"
+    },
+    "awards": {
+      "status": "EXISTS",
+      "structure": "Awards with year, title, description",
+      "content_fields": ["title", "awards", "subtitle"],
+      "sample_content": "4 awards from 2022-2024"
+    },
+    "pricing": {
+      "status": "EXISTS",
+      "structure": "3 pricing plans with features",
+      "content_fields": ["plans", "title", "subtitle", "description"],
+      "sample_content": "Basic $49, Standard $79, Premium $129"
+    },
+    "faq": {
+      "status": "EXISTS",
+      "structure": "5 FAQ items with questions and answers",
+      "content_fields": ["items", "title", "subtitle", "description"],
+      "sample_content": "Course types, subscription plans, support, prerequisites, new courses"
+    },
+    "hero": {
+      "status": "EXISTS",
+      "structure": "Hero section with stats and buttons",
+      "content_fields": ["stats", "title", "button", "subtitle", "button_url", "button_text", "description", "ticker", "buttons"],
+      "sample_content": "Welcome to AI Studio New Design, stats, buttons"
+    },
+    "features": {
+      "status": "EXISTS",
+      "structure": "Feature items with icons, titles, descriptions",
+      "content_fields": ["items", "title", "subtitle", "description"],
+      "sample_content": "3 feature items about teaching methods, certification, expert instructors"
+    },
+    "courses": {
+      "status": "EXISTS",
+      "structure": "Course carousel with detailed course objects",
+      "content_fields": ["items", "title", "subtitle", "viewAllUrl", "viewAllText"],
+      "sample_content": "8 courses with full details (title, price, instructor, etc.)"
+    },
+    "testimonials": {
+      "status": "EXISTS",
+      "structure": "Testimonial carousel with role, quote, title, author",
+      "content_fields": ["items", "title", "subtitle"],
+      "sample_content": "7 testimonials from different roles"
+    },
+    "blog": {
+      "status": "EXISTS",
+      "structure": "Blog grid with date, title, author",
+      "content_fields": ["items", "title", "subtitle", "viewAllUrl", "viewAllText"],
+      "sample_content": "4 blog posts about learning and development"
+    },
+    "cta_1": {
+      "status": "EXISTS",
+      "structure": "Call to action with dual buttons",
+      "content_fields": ["title", "subtitle", "buttonUrl", "buttonText", "button1_url", "button2_url", "description", "button1_text", "button2_text"],
+      "sample_content": "Start Learning Today CTA with Get In Touch and Check Out Courses buttons"
+    },
+    "footer": {
+      "status": "EXISTS",
+      "structure": "Complete footer with columns, contact, newsletter",
+      "content_fields": ["columns", "contact", "sections", "copyright", "about_text", "brand_name", "newsletter"],
+      "sample_content": "Footer with links, contact info, newsletter signup"
+    }
+  },
+  "meta_info": {
+    "locale": "en",
+    "cache_key": "home_en_v1",
+    "timestamp": "2025-09-16T20:03:23.769Z"
+  }
+}
