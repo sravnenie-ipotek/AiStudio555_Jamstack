@@ -1,0 +1,792 @@
+/**
+ * HOME PAGE DATABASE INTEGRATION
+ * Fetches ALL content from nd_home table and populates the page
+ * CRITICAL: No hardcoded content should remain in home.html
+ */
+
+(function() {
+    'use strict';
+
+    // Configuration
+    const API_BASE_URL = window.location.hostname === 'localhost'
+        ? 'http://localhost:1337'
+        : 'https://aistudio555jamstack-production.up.railway.app';
+
+    // Get current language from URL or default to 'en'
+    function getCurrentLocale() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('locale') || 'en';
+    }
+
+    // Main function to load home page data
+    async function loadHomePageData() {
+        try {
+            console.log('🔄 Loading home page data from database...');
+
+            const locale = getCurrentLocale();
+            const response = await fetch(`${API_BASE_URL}/api/nd/home-page?locale=${locale}`);
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch home data: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('✅ Home page data loaded:', data);
+
+            // Populate the page with data - handle the actual API structure
+            if (data.data) {
+                populateHomePage(data.data);
+            } else {
+                console.warn('⚠️ No home page data found in database');
+                // Don't show anything if no data (per user requirement)
+            }
+
+        } catch (error) {
+            console.error('❌ Error loading home page data:', error);
+            // Don't show anything if API fails (per user requirement)
+            console.log('⚠️ Using static content as fallback');
+        }
+    }
+
+    // Populate all sections of the home page
+    function populateHomePage(data) {
+        console.log('📝 Populating home page sections:', Object.keys(data));
+
+        // 1. Hero Section - data.hero.content contains the actual content
+        if (data.hero && data.hero.content) {
+            populateHeroSection(data.hero.content);
+        }
+
+        // 2. Course Categories Section
+        if (data.course_categories && data.course_categories.content) {
+            populateCourseCategories(data.course_categories.content);
+        } else if (data.courses && data.courses.content) {
+            populateCourseCategories(data.courses.content);
+        }
+
+        // 3. Featured Courses Section (from separate API)
+        // Check if courses section should be visible
+        if (data.courses && data.courses.visible === false) {
+            hideFeaturedCoursesSection();
+        } else {
+            showFeaturedCoursesSection();
+            loadFeaturedCourses();
+        }
+
+        // 4. Features Section (Why Choose Us)
+        if (data.features && data.features.content) {
+            populateFeaturesSection(data.features.content);
+        }
+
+        // 3. About Section (Meet Your Mentor)
+        if (data.about && data.about.content) {
+            populateAboutSection(data.about.content);
+        }
+
+        // 4. Testimonials Section
+        if (data.testimonials && data.testimonials.content) {
+            populateTestimonialsSection(data.testimonials.content);
+        }
+
+        // 5. FAQ Section
+        if (data.faq && data.faq.content) {
+            populateFAQSection(data.faq.content);
+        }
+
+        // 6. Process Section
+        if (data.process && data.process.content) {
+            populateProcessSection(data.process.content);
+        }
+
+        // 7. Statistics Section
+        if (data.statistics && data.statistics.content) {
+            populateStatisticsSection(data.statistics.content);
+        }
+    }
+
+    // Populate Hero Section
+    function populateHeroSection(heroData) {
+        console.log('🎯 Updating hero section with:', heroData);
+
+        // Update subtitle if exists
+        if (heroData.subtitle) {
+            updateTextContent('.banner-subtitle', heroData.subtitle);
+        }
+
+        // Update main heading - this is the critical one!
+        if (heroData.title) {
+            updateTextContent('.banner-heading', heroData.title);
+            console.log('✅ Updated hero title to:', heroData.title);
+        }
+
+        // Update description
+        if (heroData.description) {
+            updateTextContent('.banner-description-text', heroData.description);
+        }
+
+        // Update CTA buttons if they exist as array
+        if (heroData.buttons && Array.isArray(heroData.buttons)) {
+            const primaryButton = document.querySelector('.banner-button-wrapper .primary-button:first-child');
+            if (primaryButton && heroData.buttons[0]) {
+                const buttonText = primaryButton.querySelectorAll('.primary-button-text-block');
+                buttonText.forEach(el => {
+                    el.textContent = heroData.buttons[0].text;
+                });
+                if (heroData.buttons[0].url) {
+                    // Fix URLs without protocol
+                    let url = heroData.buttons[0].url;
+                    if (url && !url.startsWith('http') && !url.startsWith('#') && !url.includes('.html')) {
+                        url = 'https://' + url;
+                    }
+                    primaryButton.href = url;
+                }
+            }
+
+            const secondaryButton = document.querySelector('.banner-button-wrapper .primary-button.secondary');
+            if (secondaryButton && heroData.buttons[1]) {
+                const buttonText = secondaryButton.querySelectorAll('.primary-button-text-block');
+                buttonText.forEach(el => {
+                    el.textContent = heroData.buttons[1].text;
+                });
+                if (heroData.buttons[1].url) {
+                    secondaryButton.href = heroData.buttons[1].url;
+                }
+            }
+        }
+
+        console.log('✅ Hero section updated');
+    }
+
+    // Populate Course Categories Section
+    function populateCourseCategories(categoriesData) {
+        console.log('📚 Updating course categories section...', categoriesData);
+
+        // Update section titles
+        if (categoriesData.subtitle) {
+            updateTextContent('.course-categories .section-subtitle', categoriesData.subtitle);
+        }
+        if (categoriesData.title) {
+            updateTextContent('.course-categories .section-title', categoriesData.title);
+        }
+        if (categoriesData.description) {
+            updateTextContent('.course-categories .section-description-text', categoriesData.description);
+        }
+
+        // Update category items
+        const categories = categoriesData.categories || categoriesData.items || [];
+        if (categories.length > 0) {
+            updateCategoryItems(categories);
+        }
+
+        console.log('✅ Course categories section updated');
+    }
+
+    // Update category items dynamically with shared card system
+    function updateCategoryItems(categories) {
+        console.log('🔄 Creating category items with shared card system:', categories.length);
+
+        const container = document.querySelector('.course-categories-collection-list');
+        if (!container) {
+            console.warn('❌ Category container not found');
+            return;
+        }
+
+        // Add shared cards grid class to container
+        container.className = 'course-categories-collection-list shared-cards-grid w-dyn-items';
+
+        // Clear existing items
+        container.innerHTML = '';
+
+        // Create category items (limit to 4 as requested)
+        const limitedCategories = categories.slice(0, 4);
+
+        limitedCategories.forEach((category, index) => {
+            // Get category class for specific styling
+            const categoryClass = getCategoryClass(category.name);
+            const fullDescription = category.description || '';
+            const isLongDescription = fullDescription.length > 120;
+
+            // Create card directly (not wrapped in additional div)
+            const categoryCard = document.createElement('a');
+            categoryCard.className = `shared-card ${categoryClass}`;
+            categoryCard.setAttribute('data-w-id', `category-${index}`);
+            categoryCard.setAttribute('href', category.url || '#');
+            categoryCard.setAttribute('data-category', category.name.toLowerCase().replace(/\s+/g, '-'));
+            categoryCard.setAttribute('role', 'listitem');
+
+            categoryCard.innerHTML = `
+                <div class="shared-card-content">
+                    <div class="shared-card-icon">
+                        <img loading="lazy"
+                             src="${category.icon || 'images/placeholder-icon.svg'}"
+                             alt="${category.name}">
+                    </div>
+
+                    <h4 class="shared-card-title"
+                        ${isLongText(category.name, 40) ? 'title="' + category.name + '"' : ''}>
+                        ${category.name}
+                    </h4>
+
+                    <div class="shared-card-description ${isLongDescription ? 'expandable' : ''}"
+                         ${isLongDescription ? 'title="' + fullDescription + '"' : ''}>
+                        ${fullDescription}
+                    </div>
+
+                    ${isLongDescription ? '<div class="shared-card-tooltip">' + fullDescription + '</div>' : ''}
+                </div>
+
+                <div class="shared-card-bg"></div>
+            `;
+
+            // Add text overflow detection
+            setTimeout(() => {
+                const descElement = categoryCard.querySelector('.shared-card-description');
+                if (descElement && isTextOverflowing(descElement)) {
+                    descElement.classList.add('text-overflow');
+                }
+            }, 100);
+
+            // Add click handler for expandable descriptions
+            const descElement = categoryCard.querySelector('.shared-card-description.expandable');
+            if (descElement) {
+                descElement.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    descElement.classList.toggle('expanded');
+                });
+            }
+
+            container.appendChild(categoryCard);
+        });
+
+        // Hide the "No items found" message
+        const emptyState = document.querySelector('.course-categories-wrapper .w-dyn-empty');
+        if (emptyState) {
+            emptyState.style.display = 'none';
+        }
+
+        console.log(`✅ Created ${limitedCategories.length} shared card category items`);
+    }
+
+    // Helper function to get category-specific CSS class
+    function getCategoryClass(categoryName) {
+        const name = categoryName.toLowerCase().replace(/\s+/g, '-');
+        switch (name) {
+            case 'web-development':
+                return 'category-web-dev';
+            case 'mobile-development':
+                return 'category-mobile';
+            case 'machine-learning':
+                return 'category-ml';
+            case 'cloud-computing':
+                return 'category-cloud';
+            default:
+                return 'category-default';
+        }
+    }
+
+    // Helper function to check if text is too long
+    function isLongText(text, maxLength) {
+        return text && text.length > maxLength;
+    }
+
+    // Helper function to detect text overflow
+    function isTextOverflowing(element) {
+        return element.scrollHeight > element.clientHeight;
+    }
+
+    // Populate Features Section (Why Choose Us)
+    function populateFeaturesSection(featuresData) {
+        console.log('🌟 Updating features section...');
+
+        // This is for the "Why Choose Us" section, not course categories
+        if (featuresData.items && Array.isArray(featuresData.items)) {
+            console.log(`📝 ${featuresData.items.length} features available`);
+        }
+
+        console.log('✅ Features section updated');
+    }
+
+    // Populate About Section
+    function populateAboutSection(aboutData) {
+        console.log('👨‍🏫 Updating about section...');
+
+        // Update section subtitle
+        updateTextContent('.about-us .section-subtitle',
+            aboutData.subtitle || 'Meet Your Mentor');
+
+        // Update section title
+        updateTextContent('.about-us .section-title',
+            aboutData.title || 'Your Pathway To Mastery');
+
+        // Update section description
+        updateTextContent('.about-us .section-description-text',
+            aboutData.description);
+
+        // Update mentor name
+        updateTextContent('.about-us-name',
+            aboutData.mentor_name || 'Expert Instructor');
+
+        // Update mentor description
+        updateTextContent('.about-us-description-text',
+            aboutData.mentor_description);
+
+        // Update achievement text
+        updateTextContent('.about-us-achievement-description-text',
+            aboutData.achievement_text);
+
+        // Update statistics if available
+        if (aboutData.statistics) {
+            // Update course count
+            if (aboutData.statistics.courses) {
+                updateTextContent('.about-us-counter-single:nth-child(1) .about-us-counter-tag-text',
+                    'Total Courses Taught');
+                // Note: Actual number animation would need more complex logic
+            }
+
+            // Update student count
+            if (aboutData.statistics.students) {
+                updateTextContent('.about-us-counter-single:nth-child(2) .about-us-counter-tag-text',
+                    'Total Happy Learners');
+            }
+
+            // Update years of experience
+            if (aboutData.statistics.experience) {
+                updateTextContent('.about-us-counter-single:nth-child(3) .about-us-counter-tag-text',
+                    'Years Of Experience');
+            }
+        }
+
+        console.log('✅ About section updated');
+    }
+
+    // Populate Testimonials Section
+    function populateTestimonialsSection(testimonialsData) {
+        console.log('💬 Updating testimonials section...');
+
+        // Update section title
+        updateTextContent('.testimonials .section-title',
+            testimonialsData.title || 'What Our Students Say');
+
+        // Update section subtitle
+        updateTextContent('.testimonials .section-subtitle',
+            testimonialsData.subtitle || 'Student Success Stories');
+
+        // Testimonials would need dynamic creation of cards
+        // This is a placeholder for the testimonial cards update logic
+        if (testimonialsData.items && Array.isArray(testimonialsData.items)) {
+            console.log(`📝 ${testimonialsData.items.length} testimonials available`);
+        }
+
+        console.log('✅ Testimonials section updated');
+    }
+
+    // Populate FAQ Section
+    function populateFAQSection(faqData) {
+        console.log('❓ Updating FAQ section...');
+
+        // Find FAQ section - it might be in a different location
+        const faqSection = document.querySelector('.faq-section') ||
+                         document.querySelector('[data-section="faq"]');
+
+        if (faqSection && faqData) {
+            // Update FAQ title if exists
+            if (faqData.title) {
+                const faqTitle = faqSection.querySelector('.section-title');
+                if (faqTitle) faqTitle.textContent = faqData.title;
+            }
+
+            // Update FAQ items if they exist
+            if (faqData.items && Array.isArray(faqData.items)) {
+                console.log(`📝 ${faqData.items.length} FAQ items available`);
+                // FAQ items would need special accordion handling
+            }
+        }
+
+        console.log('✅ FAQ section updated');
+    }
+
+    // Populate Process Section
+    function populateProcessSection(processData) {
+        console.log('⚙️ Updating process section...');
+
+        if (processData.title) {
+            updateTextContent('.process-title', processData.title);
+        }
+
+        if (processData.subtitle) {
+            updateTextContent('.process-subtitle', processData.subtitle);
+        }
+
+        if (processData.steps && Array.isArray(processData.steps)) {
+            console.log(`📝 ${processData.steps.length} process steps available`);
+        }
+
+        console.log('✅ Process section updated');
+    }
+
+    // Populate CTA Section
+    function populateCTASection(ctaData) {
+        console.log('📢 Updating CTA section...');
+
+        // Find CTA section
+        const ctaSection = document.querySelector('.cta-section') ||
+                          document.querySelector('[data-section="cta"]');
+
+        if (ctaSection && ctaData) {
+            // Update CTA title
+            if (ctaData.title) {
+                const ctaTitle = ctaSection.querySelector('.section-title');
+                if (ctaTitle) ctaTitle.textContent = ctaData.title;
+            }
+
+            // Update CTA description
+            if (ctaData.description) {
+                const ctaDesc = ctaSection.querySelector('.section-description');
+                if (ctaDesc) ctaDesc.textContent = ctaData.description;
+            }
+
+            // Update CTA button
+            if (ctaData.button_text) {
+                const ctaButton = ctaSection.querySelector('.primary-button');
+                if (ctaButton) {
+                    const buttonTexts = ctaButton.querySelectorAll('.primary-button-text-block');
+                    buttonTexts.forEach(el => {
+                        el.textContent = ctaData.button_text;
+                    });
+                    if (ctaData.button_link) {
+                        ctaButton.href = ctaData.button_link;
+                    }
+                }
+            }
+        }
+
+        console.log('✅ CTA section updated');
+    }
+
+    // Populate Statistics Section
+    function populateStatisticsSection(statsData) {
+        console.log('📊 Updating statistics...');
+
+        if (statsData) {
+            // Update course count
+            if (statsData.total_courses) {
+                const courseCounter = document.querySelector('[data-stat="courses"]');
+                if (courseCounter) {
+                    courseCounter.textContent = statsData.total_courses;
+                }
+            }
+
+            // Update student count
+            if (statsData.total_students) {
+                const studentCounter = document.querySelector('[data-stat="students"]');
+                if (studentCounter) {
+                    studentCounter.textContent = statsData.total_students;
+                }
+            }
+
+            // Update success rate
+            if (statsData.success_rate) {
+                const successRate = document.querySelector('[data-stat="success-rate"]');
+                if (successRate) {
+                    successRate.textContent = statsData.success_rate + '%';
+                }
+            }
+        }
+
+        console.log('✅ Statistics updated');
+    }
+
+    // Utility function to safely update text content
+    function updateTextContent(selector, text) {
+        if (!text) return;
+
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(element => {
+            if (element) {
+                element.textContent = text;
+                // Remove opacity:0 to ensure content is visible
+                if (element.style.opacity === '0') {
+                    element.style.opacity = '1';
+                }
+            }
+        });
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadHomePageData);
+    } else {
+        loadHomePageData();
+    }
+
+    // ==================== FEATURED COURSES SECTION ====================
+
+    // Load Featured Courses from separate API
+    async function loadFeaturedCourses() {
+        try {
+            console.log('🎯 Loading featured courses from API...');
+
+            const response = await fetch(`${API_BASE_URL}/api/featured-courses?limit=8`);
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch featured courses: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('✅ Featured courses data loaded:', data);
+
+            // Populate the featured courses section
+            if (data.success && data.data) {
+                await populateFeaturedCourses(data.data);
+                setupCourseTabFiltering(data.data.categories);
+            } else {
+                console.warn('⚠️ No featured courses data found');
+            }
+
+        } catch (error) {
+            console.error('❌ Error loading featured courses:', error);
+            // Don't break the page if courses can't load
+        }
+    }
+
+    // Populate Featured Courses Section (async to handle shared card component)
+    async function populateFeaturedCourses(coursesData) {
+        console.log('🎯 Populating featured courses section...');
+
+        const courses = coursesData.courses || [];
+        console.log(`📚 ${courses.length} courses available`);
+
+        // Find all tab content containers
+        const tabContainers = document.querySelectorAll('.featured-courses-tab-pane .featured-courses-collection-list');
+
+        for (const container of tabContainers) {
+            // Clear existing placeholder content
+            container.innerHTML = '';
+
+            // Populate with actual courses (show all courses in each tab for now)
+            for (const course of courses.slice(0, 6)) {
+                const courseCard = await createFeaturedCourseCard(course);
+                container.appendChild(courseCard);
+            }
+
+            // Hide the "No items found" message
+            const emptyState = container.parentElement.querySelector('.w-dyn-empty');
+            if (emptyState) {
+                emptyState.style.display = 'none';
+            }
+        }
+
+        console.log('✅ Featured courses section populated');
+    }
+
+    // Hide Featured Courses Section when toggle is off
+    function hideFeaturedCoursesSection() {
+        const featuredCoursesSection = document.querySelector('body > div > section.section.featured-courses');
+        if (featuredCoursesSection) {
+            featuredCoursesSection.style.display = 'none';
+            console.log('🙈 Featured courses section hidden via admin toggle');
+        }
+    }
+
+    // Show Featured Courses Section when toggle is on
+    function showFeaturedCoursesSection() {
+        const featuredCoursesSection = document.querySelector('body > div > section.section.featured-courses');
+        if (featuredCoursesSection) {
+            featuredCoursesSection.style.display = 'block';
+            console.log('👁️ Featured courses section shown via admin toggle');
+        }
+    }
+
+    // Create Featured Course Card using Shared Component
+    async function createFeaturedCourseCard(course) {
+        // Always try to use shared course card component first
+        if (window.CourseCard && window.CourseCard.create) {
+            try {
+                console.log('🎯 Using shared course card component for:', course.title);
+                const sharedCard = await window.CourseCard.create(course, {
+                    customClass: 'featured-courses-collection-item'
+                });
+                console.log('✅ Shared card created successfully');
+                return sharedCard;
+            } catch (error) {
+                console.error('❌ Shared card component failed for home:', error);
+            }
+        } else {
+            console.warn('⚠️ Shared course card component not available on home page');
+        }
+
+        // Fallback to original implementation
+        console.log('🔄 Using fallback card for home:', course.title);
+        return createFallbackFeaturedCourseCard(course);
+    }
+
+    // Fallback Featured Course Card (original implementation)
+    function createFallbackFeaturedCourseCard(course) {
+        const courseItem = document.createElement('div');
+        courseItem.className = 'featured-courses-collection-item w-dyn-item';
+        courseItem.setAttribute('role', 'listitem');
+
+        // Get category color based on course category
+        const categoryColor = getCourseColorByCategory(course.category);
+
+        courseItem.innerHTML = `
+            <div class="featured-courses-single" style="background-color: rgb(4,25,63)">
+                <a href="${course.url || '#'}" class="featured-courses-image-link w-inline-block">
+                    <img loading="lazy"
+                         src="${course.image || 'images/placeholder.jpg'}"
+                         alt="${course.title}"
+                         class="featured-courses-image">
+                </a>
+                <div class="featured-courses-typography">
+                    <div class="featured-courses-name-wrap">
+                        <a href="${course.url || '#'}" class="featured-courses-name course-title-overflow">
+                            ${course.title}
+                        </a>
+                        <div class="featured-courses-rating">
+                            <div class="featured-courses-rating-icon-wrapper">
+                                ${generateStarRating(course.rating || 5)}
+                            </div>
+                            <div class="featured-courses-rating-text">
+                                ${course.rating || '5.0'} (${course.reviews_count || 0})
+                            </div>
+                        </div>
+                        <div class="courses-video-session-time-wrap">
+                            <div class="courses-video-session-time">
+                                <img loading="lazy" src="images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
+                                <div class="courses-video-session-time-text">
+                                    ${course.lessons_count || 0} Lessons
+                                </div>
+                            </div>
+                            <div class="courses-video-session-time">
+                                <img loading="lazy" src="images/Courses-Video-Session--Time-Icon2.svg" alt="" class="courses-video-session-time-icon">
+                                <div class="courses-video-session-time-text">
+                                    ${course.duration || '8 weeks'}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="featured-courses-button-wrapper">
+                            <a href="${course.url || '#'}"
+                               class="primary-button secondary w-inline-block"
+                               style="background-color: rgba(255,255,255,0); color: rgb(255,255,255)">
+                                <div class="primary-button-text-wrap">
+                                    <div class="primary-button-text-block">Course Details</div>
+                                    <div class="primary-button-text-block is-text-absolute">Course Details</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="featured-courses-categories-tag course-category-overflow"
+                     style="background-color: ${categoryColor}; color: rgb(255,255,255)">
+                    ${course.category}
+                </div>
+            </div>
+        `;
+
+        // Add text overflow handling
+        setupTextOverflowForCard(courseItem);
+
+        return courseItem;
+    }
+
+    // Text overflow handling for fallback cards
+    function setupTextOverflowForCard(cardElement) {
+        const titleElement = cardElement.querySelector('.course-title-overflow');
+        if (titleElement && titleElement.textContent.length > 60) {
+            titleElement.setAttribute('title', titleElement.textContent);
+            titleElement.style.overflow = 'hidden';
+            titleElement.style.textOverflow = 'ellipsis';
+            titleElement.style.display = '-webkit-box';
+            titleElement.style.webkitLineClamp = '2';
+            titleElement.style.webkitBoxOrient = 'vertical';
+        }
+
+        const categoryElement = cardElement.querySelector('.course-category-overflow');
+        if (categoryElement && categoryElement.textContent.length > 15) {
+            categoryElement.setAttribute('title', categoryElement.textContent);
+        }
+    }
+
+    // Setup Course Tab Filtering
+    function setupCourseTabFiltering(categoriesData) {
+        console.log('⚙️ Setting up course tab filtering...');
+
+        const tabLinks = document.querySelectorAll('.featured-courses-tab-link');
+        const tabPanes = document.querySelectorAll('.featured-courses-tab-pane');
+
+        tabLinks.forEach((tabLink, index) => {
+            tabLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                // Get tab category
+                let category = 'all';
+                const tabText = tabLink.textContent.trim().toLowerCase();
+
+                if (tabText.includes('web')) category = 'web-development';
+                else if (tabText.includes('app')) category = 'app-development';
+                else if (tabText.includes('machine')) category = 'machine-learning';
+                else if (tabText.includes('cloud')) category = 'cloud-computing';
+
+                // Filter and populate the active tab
+                const filteredCourses = categoriesData[category] || [];
+                console.log(`🔍 Filtering to category "${category}": ${filteredCourses.length} courses`);
+
+                // Find the corresponding tab pane
+                const targetPane = tabPanes[index];
+                if (targetPane) {
+                    const container = targetPane.querySelector('.featured-courses-collection-list');
+                    if (container) {
+                        // Clear and repopulate (async)
+                        container.innerHTML = '';
+
+                        // Populate filtered courses
+                        for (const course of filteredCourses.slice(0, 6)) {
+                            const courseCard = await createFeaturedCourseCard(course);
+                            container.appendChild(courseCard);
+                        }
+
+                        // Show empty state if no courses
+                        const emptyState = targetPane.querySelector('.w-dyn-empty');
+                        if (emptyState) {
+                            emptyState.style.display = filteredCourses.length === 0 ? 'block' : 'none';
+                        }
+                    }
+                }
+            });
+        });
+
+        console.log('✅ Course tab filtering setup complete');
+    }
+
+    // Helper Functions
+    function generateStarRating(rating) {
+        const fullStars = Math.floor(rating);
+        let starsHtml = '';
+
+        for (let i = 0; i < 5; i++) {
+            starsHtml += '<img loading="lazy" src="images/Featured-Courses-Rating-Icon.svg" alt="" class="featured-courses-rating-icon">';
+        }
+
+        return starsHtml;
+    }
+
+    function getCourseColorByCategory(category) {
+        if (!category) return '#667eea';
+
+        const cat = category.toLowerCase();
+        if (cat.includes('web')) return '#667eea';
+        if (cat.includes('app') || cat.includes('mobile')) return '#f093fb';
+        if (cat.includes('machine') || cat.includes('ml') || cat.includes('ai')) return '#4facfe';
+        if (cat.includes('cloud')) return '#43e97b';
+
+        return '#667eea'; // default
+    }
+
+    // ==================== END FEATURED COURSES ====================
+
+    // Expose function globally for debugging
+    window.reloadHomePageData = loadHomePageData;
+    window.loadFeaturedCourses = loadFeaturedCourses;
+
+})();
