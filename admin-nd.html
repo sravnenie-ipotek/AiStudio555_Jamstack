@@ -502,6 +502,7 @@
                 <button class="tab active" data-tab="home">Home Page</button>
                 <button class="tab" data-tab="courses">Courses</button>
                 <button class="tab" data-tab="pricing">Pricing</button>
+                <button class="tab" data-tab="teachers">Teachers</button>
                 <button class="tab" data-tab="blog">Blog</button>
                 <button class="tab" data-tab="menu">Navigation</button>
                 <button class="tab" data-tab="footer">Footer</button>
@@ -957,11 +958,141 @@
                 </div>
             </div>
 
+            <!-- Teachers Content -->
+            <div class="content-section" id="teachers">
+                <div class="section-header">
+                    <div class="section-title">Teachers Page Management</div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-small btn-success" onclick="saveTeachersData()">💾 Save Changes</button>
+                        <button class="btn btn-small" onclick="loadTeachersData()">🔄 Refresh</button>
+                    </div>
+                </div>
+
+                <div id="teachersContent">
+                    <!-- Hero Section -->
+                    <div class="form-group" style="border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <label style="margin: 0;">🎯 Hero Section</label>
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" id="teachers_hero_visible" checked>
+                                <span>Visible</span>
+                            </label>
+                        </div>
+                        <input type="text" id="teachers_hero_title" placeholder="Hero Title (e.g., Our Teachers)" class="mb-10">
+                        <input type="text" id="teachers_hero_subtitle" placeholder="Hero Subtitle (e.g., Meet Our Team)" class="mb-10">
+                        <textarea id="teachers_hero_description" placeholder="Hero Description" rows="2" class="mb-10"></textarea>
+                    </div>
+
+                    <!-- Instructor Grid Section -->
+                    <div class="form-group" style="border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <label style="margin: 0;">👨‍🏫 Instructor Grid</label>
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" id="teachers_instructor_grid_visible" checked>
+                                <span>Visible</span>
+                            </label>
+                        </div>
+                        <input type="text" id="teachers_instructor_grid_title" placeholder="Section Title" class="mb-10">
+                        <input type="text" id="teachers_instructor_grid_subtitle" placeholder="Section Subtitle" class="mb-10">
+                        <textarea id="teachers_instructor_grid_description" placeholder="Section Description" rows="3" class="mb-10"></textarea>
+
+                        <div class="list-manager mt-20">
+                            <div class="list-item-header">
+                                <strong>Instructors</strong>
+                                <button class="btn btn-small btn-success" onclick="addInstructorItem()">+ Add Instructor</button>
+                            </div>
+                            <div id="instructorsList"></div>
+                        </div>
+                    </div>
+
+                    <!-- Become Instructor Section -->
+                    <div class="form-group" style="border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <label style="margin: 0;">📢 Become Instructor CTA</label>
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" id="teachers_become_instructor_visible" checked>
+                                <span>Visible</span>
+                            </label>
+                        </div>
+                        <input type="text" id="teachers_become_instructor_title" placeholder="CTA Title" class="mb-10">
+                        <input type="text" id="teachers_become_instructor_subtitle" placeholder="CTA Subtitle" class="mb-10">
+                        <textarea id="teachers_become_instructor_description" placeholder="CTA Description" rows="2" class="mb-10"></textarea>
+                        <input type="text" id="teachers_become_instructor_primary_button" placeholder="Primary Button Text" class="mb-10">
+                        <input type="text" id="teachers_become_instructor_primary_link" placeholder="Primary Button Link" class="mb-10">
+                        <input type="text" id="teachers_become_instructor_secondary_button" placeholder="Secondary Button Text" class="mb-10">
+                        <input type="text" id="teachers_become_instructor_secondary_link" placeholder="Secondary Button Link" class="mb-10">
+                    </div>
+
+                    <!-- Stats Section -->
+                    <div class="form-group" style="border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <label style="margin: 0;">📊 Stats Section</label>
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" id="teachers_stats_visible" checked>
+                                <span>Visible</span>
+                            </label>
+                        </div>
+
+                        <div class="list-manager mt-20">
+                            <div class="list-item-header">
+                                <strong>Stats Items</strong>
+                                <button class="btn btn-small btn-success" onclick="addStatsItem()">+ Add Item</button>
+                            </div>
+                            <div id="statsList"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="content-section" id="blog">
                 <div class="section-header">
                     <div class="section-title">Blog Management</div>
+                    <button class="btn" onclick="loadBlogPosts()">🔄 Refresh</button>
                 </div>
-                <p>Blog management coming soon...</p>
+
+                <div id="blog-posts-container">
+                    <div class="loading">Loading blog posts...</div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Add New Blog Post</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>📝 Title</label>
+                            <input type="text" id="new-blog-title" placeholder="Enter blog post title">
+                        </div>
+                        <div class="form-group">
+                            <label>👤 Author</label>
+                            <input type="text" id="new-blog-author" placeholder="Author name">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>🏷️ Category</label>
+                            <select id="new-blog-category">
+                                <option value="ai">AI & Machine Learning</option>
+                                <option value="web">Web Development</option>
+                                <option value="career">Career Development</option>
+                                <option value="data">Data Science</option>
+                                <option value="security">Cybersecurity</option>
+                                <option value="design">UI/UX Design</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🔗 Article URL</label>
+                            <input type="url" id="new-blog-url" placeholder="https://blog.example.com/article">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>📄 Excerpt</label>
+                        <textarea id="new-blog-excerpt" placeholder="Brief description of the article"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>📝 Content</label>
+                        <textarea id="new-blog-content" placeholder="Full article content" rows="5"></textarea>
+                    </div>
+                    <button class="btn" onclick="addBlogPost()">➕ Add Blog Post</button>
+                </div>
             </div>
 
             <div class="content-section" id="menu">
@@ -1055,6 +1186,9 @@
                     } else if (tabId === 'pricing') {
                         console.log('💰 Pricing tab activated, loading pricing data...');
                         await loadPricingData();
+                    } else if (tabId === 'teachers') {
+                        console.log('👨‍🏫 Teachers tab activated, loading teachers data...');
+                        await loadTeachersData();
                     }
                 });
             });
@@ -2157,12 +2291,336 @@
             container.appendChild(item);
         }
 
+        // ==================== TEACHERS MANAGEMENT FUNCTIONS ====================
+
+        // Load teachers data
+        async function loadTeachersData() {
+            try {
+                showLoading();
+                console.log('📊 Loading teachers data from nd_teachers_page...');
+
+                const response = await fetch(`${API_BASE}/nd/teachers-page?locale=${currentLang}`);
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    console.log('✅ Teachers data loaded:', result.data);
+
+                    // Process sections
+                    result.data.forEach(section => {
+                        const content = section.content || {};
+
+                        switch (section.section_name) {
+                            case 'hero':
+                                document.getElementById('teachers_hero_title').value = content.title || '';
+                                document.getElementById('teachers_hero_subtitle').value = content.subtitle || '';
+                                document.getElementById('teachers_hero_description').value = content.description || '';
+                                document.getElementById('teachers_hero_visible').checked = section.visible !== false;
+                                break;
+
+                            case 'instructor_grid':
+                                document.getElementById('teachers_instructor_grid_title').value = content.title || '';
+                                document.getElementById('teachers_instructor_grid_subtitle').value = content.subtitle || '';
+                                document.getElementById('teachers_instructor_grid_description').value = content.description || '';
+                                document.getElementById('teachers_instructor_grid_visible').checked = section.visible !== false;
+
+                                // Load instructors
+                                const instructorsContainer = document.getElementById('instructorsList');
+                                instructorsContainer.innerHTML = '';
+                                const instructors = content.instructors || [];
+                                if (Array.isArray(instructors)) {
+                                    instructors.forEach(instructor => addInstructorItem(instructor));
+                                }
+                                break;
+
+                            case 'become_instructor':
+                                document.getElementById('teachers_become_instructor_title').value = content.title || '';
+                                document.getElementById('teachers_become_instructor_subtitle').value = content.subtitle || '';
+                                document.getElementById('teachers_become_instructor_description').value = content.description || '';
+                                document.getElementById('teachers_become_instructor_primary_button').value = content.primary_button || '';
+                                document.getElementById('teachers_become_instructor_primary_link').value = content.primary_link || '';
+                                document.getElementById('teachers_become_instructor_secondary_button').value = content.secondary_button || '';
+                                document.getElementById('teachers_become_instructor_secondary_link').value = content.secondary_link || '';
+                                document.getElementById('teachers_become_instructor_visible').checked = section.visible !== false;
+                                break;
+
+                            case 'stats':
+                                document.getElementById('teachers_stats_visible').checked = section.visible !== false;
+
+                                // Load stats items
+                                const statsContainer = document.getElementById('statsList');
+                                statsContainer.innerHTML = '';
+                                const statsItems = content.items || [];
+                                if (Array.isArray(statsItems)) {
+                                    statsItems.forEach(item => addStatsItem(item));
+                                }
+                                break;
+                        }
+                    });
+
+                    showToast('Teachers data loaded successfully', 'success');
+                } else {
+                    showToast('No teachers data found', 'warning');
+                }
+            } catch (error) {
+                console.error('Error loading teachers data:', error);
+                showToast('Failed to load teachers data', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Save teachers data
+        async function saveTeachersData() {
+            try {
+                showLoading();
+                console.log('💾 Saving teachers data to nd_teachers_page...');
+
+                // Collect instructors
+                const instructors = [];
+                document.querySelectorAll('#instructorsList .instructor-item').forEach(item => {
+                    instructors.push({
+                        id: instructors.length + 1,
+                        name: item.querySelector('[data-field="name"]').value,
+                        expertise: item.querySelector('[data-field="expertise"]').value,
+                        bio: item.querySelector('[data-field="bio"]').value,
+                        image: item.querySelector('[data-field="image"]').value,
+                        profile_link: item.querySelector('[data-field="profile_link"]').value
+                    });
+                });
+
+                // Collect stats items
+                const statsItems = [];
+                document.querySelectorAll('#statsList .stats-item').forEach(item => {
+                    statsItems.push({
+                        text: item.querySelector('[data-field="text"]').value
+                    });
+                });
+
+                const sectionsData = {
+                    hero: {
+                        title: document.getElementById('teachers_hero_title').value,
+                        subtitle: document.getElementById('teachers_hero_subtitle').value,
+                        description: document.getElementById('teachers_hero_description').value,
+                        visible: document.getElementById('teachers_hero_visible').checked
+                    },
+                    instructor_grid: {
+                        title: document.getElementById('teachers_instructor_grid_title').value,
+                        subtitle: document.getElementById('teachers_instructor_grid_subtitle').value,
+                        description: document.getElementById('teachers_instructor_grid_description').value,
+                        instructors: instructors,
+                        visible: document.getElementById('teachers_instructor_grid_visible').checked
+                    },
+                    become_instructor: {
+                        title: document.getElementById('teachers_become_instructor_title').value,
+                        subtitle: document.getElementById('teachers_become_instructor_subtitle').value,
+                        description: document.getElementById('teachers_become_instructor_description').value,
+                        primary_button: document.getElementById('teachers_become_instructor_primary_button').value,
+                        primary_link: document.getElementById('teachers_become_instructor_primary_link').value,
+                        secondary_button: document.getElementById('teachers_become_instructor_secondary_button').value,
+                        secondary_link: document.getElementById('teachers_become_instructor_secondary_link').value,
+                        visible: document.getElementById('teachers_become_instructor_visible').checked
+                    },
+                    stats: {
+                        items: statsItems,
+                        visible: document.getElementById('teachers_stats_visible').checked
+                    }
+                };
+
+                // Save each section
+                for (const [sectionName, sectionData] of Object.entries(sectionsData)) {
+                    const response = await fetch(`${API_BASE}/nd/teachers-page/${sectionName}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: sectionData, locale: currentLang })
+                    });
+
+                    const result = await response.json();
+                    if (!result.success) {
+                        throw new Error(`Failed to save ${sectionName} section: ${result.error}`);
+                    }
+                }
+
+                showToast('Teachers data saved successfully', 'success');
+            } catch (error) {
+                console.error('Error saving teachers data:', error);
+                showToast('Failed to save teachers data: ' + error.message, 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Add instructor item
+        function addInstructorItem(data = {}) {
+            const container = document.getElementById('instructorsList');
+            const item = document.createElement('div');
+            item.className = 'instructor-item';
+            item.style.cssText = 'background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 15px;';
+
+            item.innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <input type="text" placeholder="Instructor Name" value="${data.name || ''}" data-field="name">
+                    <input type="text" placeholder="Expertise (e.g., AI & Machine Learning)" value="${data.expertise || ''}" data-field="expertise">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <input type="text" placeholder="Image URL" value="${data.image || ''}" data-field="image" style="width: 100%;">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <textarea placeholder="Bio/Description" data-field="bio" rows="3" style="width: 100%;">${data.bio || ''}</textarea>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" placeholder="Profile Link" value="${data.profile_link || '#'}" data-field="profile_link" style="flex: 1;">
+                    <button class="btn btn-small btn-danger" onclick="this.parentElement.parentElement.remove()">Remove</button>
+                </div>
+            `;
+
+            container.appendChild(item);
+        }
+
+        // Add stats item
+        function addStatsItem(data = {}) {
+            const container = document.getElementById('statsList');
+            const item = document.createElement('div');
+            item.className = 'stats-item';
+            item.style.cssText = 'background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 10px;';
+
+            item.innerHTML = `
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" placeholder="Stats Text (e.g., Start Learning)" value="${data.text || ''}" data-field="text" style="flex: 1;">
+                    <button class="btn btn-small btn-danger" onclick="this.parentElement.parentElement.remove()">Remove</button>
+                </div>
+            `;
+
+            container.appendChild(item);
+        }
+
+        // Blog Management Functions
+        async function loadBlogPosts() {
+            const container = document.getElementById('blog-posts-container');
+            container.innerHTML = '<div class="loading">Loading blog posts...</div>';
+
+            try {
+                const response = await fetch('/api/blog-posts');
+                const result = await response.json();
+                const posts = result.data || [];
+
+                if (posts.length === 0) {
+                    container.innerHTML = '<p>No blog posts found. Add your first post below!</p>';
+                    return;
+                }
+
+                container.innerHTML = posts.map(post => `
+                    <div class="blog-post-item" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+                        <div style="display: grid; grid-template-columns: 1fr 200px; gap: 15px; margin-bottom: 10px;">
+                            <div>
+                                <h4>${post.attributes.title}</h4>
+                                <p style="color: #666; margin: 5px 0;">by ${post.attributes.author}</p>
+                                <p style="color: #888; font-size: 14px;">${post.attributes.excerpt}</p>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <button class="btn btn-small" onclick="editBlogPost(${post.id})">✏️ Edit</button>
+                                <button class="btn btn-small btn-danger" onclick="deleteBlogPost(${post.id})">🗑️ Delete</button>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 14px; color: #666;">
+                            <div><strong>Category:</strong> ${post.attributes.category || 'None'}</div>
+                            <div><strong>URL:</strong> ${post.attributes.url ? `<a href="${post.attributes.url}" target="_blank">${post.attributes.url}</a>` : 'No URL'}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                container.innerHTML = '<p style="color: red;">Error loading blog posts: ' + error.message + '</p>';
+            }
+        }
+
+        async function addBlogPost() {
+            const title = document.getElementById('new-blog-title').value;
+            const author = document.getElementById('new-blog-author').value;
+            const category = document.getElementById('new-blog-category').value;
+            const url = document.getElementById('new-blog-url').value;
+            const excerpt = document.getElementById('new-blog-excerpt').value;
+            const content = document.getElementById('new-blog-content').value;
+
+            if (!title || !author || !excerpt) {
+                alert('Please fill in title, author, and excerpt fields');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/blog-posts', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title,
+                        author,
+                        category,
+                        url: url || null,
+                        excerpt,
+                        content,
+                        slug: title.toLowerCase().replace(/[^\\w ]+/g, '').replace(/ +/g, '-'),
+                        published_at: new Date().toISOString(),
+                        locale: 'en'
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Blog post added successfully!');
+                    // Clear form
+                    document.getElementById('new-blog-title').value = '';
+                    document.getElementById('new-blog-author').value = '';
+                    document.getElementById('new-blog-url').value = '';
+                    document.getElementById('new-blog-excerpt').value = '';
+                    document.getElementById('new-blog-content').value = '';
+                    // Reload posts
+                    loadBlogPosts();
+                } else {
+                    alert('Error adding blog post');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function editBlogPost(id) {
+            // For now, just show an alert. Full editing would require more complex UI
+            alert('Editing functionality coming soon! For now, you can delete and re-add posts.');
+        }
+
+        async function deleteBlogPost(id) {
+            if (!confirm('Are you sure you want to delete this blog post?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/blog-posts/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('Blog post deleted successfully!');
+                    loadBlogPosts();
+                } else {
+                    alert('Error deleting blog post');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
         // Initialize search
         document.addEventListener('DOMContentLoaded', function() {
             // Build initial search index after a short delay
             setTimeout(() => {
                 buildSearchIndex();
             }, 1000);
+
+            // Auto-load blog posts when blog tab is clicked
+            const blogTab = document.querySelector('[data-tab="blog"]');
+            if (blogTab) {
+                blogTab.addEventListener('click', function() {
+                    setTimeout(loadBlogPosts, 100);
+                });
+            }
 
             // Add search event listeners
             const searchInput = document.getElementById('adminSearch');

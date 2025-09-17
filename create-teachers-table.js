@@ -1,16 +1,27 @@
-const { Pool } = require('pg');
+const { Client } = require('pg');
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-});
+// Load environment variables
+require('dotenv').config();
+
+// Use the same connection logic as server.js
+let dbConfig;
+if (process.env.DATABASE_URL) {
+  const isLocal = process.env.DATABASE_URL.includes('localhost') || process.env.NODE_ENV === 'development';
+  dbConfig = {
+    connectionString: process.env.DATABASE_URL,
+    ssl: isLocal ? false : { rejectUnauthorized: false }
+  };
+}
 
 async function createTeachersTable() {
   try {
     console.log('🏗️  Creating nd_teachers_page table...');
 
     // Create table with same structure as other nd_ tables
-    await pool.query(`
+    const client = new Client(dbConfig);
+    await client.connect();
+
+    await client.query(`
       CREATE TABLE IF NOT EXISTS nd_teachers_page (
         id SERIAL PRIMARY KEY,
         section_name VARCHAR(100) UNIQUE NOT NULL,
@@ -110,7 +121,7 @@ async function createTeachersTable() {
     console.log('📊 Inserting initial sections...');
 
     for (const section of sections) {
-      await pool.query(`
+      await client.query(`
         INSERT INTO nd_teachers_page (section_name, content_en, content_ru, content_he, visible)
         VALUES ($1, $2, $3, $4, $5)
         ON CONFLICT (section_name) DO UPDATE SET
@@ -128,13 +139,13 @@ async function createTeachersTable() {
     console.log('✅ Initial data inserted successfully');
 
     // Verify the data
-    const result = await pool.query('SELECT section_name, visible FROM nd_teachers_page ORDER BY section_name');
+    const result = await client.query('SELECT section_name, visible FROM nd_teachers_page ORDER BY section_name');
     console.log('📋 Created sections:', result.rows);
 
   } catch (error) {
     console.error('❌ Error creating teachers table:', error);
   } finally {
-    await pool.end();
+    await client.end();
   }
 }
 

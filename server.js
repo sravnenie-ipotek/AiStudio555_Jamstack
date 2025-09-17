@@ -711,6 +711,7 @@ app.get('/api/blog-posts', async (req, res) => {
           content: post.content,
           author: post.author,
           category: post.category,
+          url: post.url,
           publishedAt: post.published_at
         }
       }))
@@ -7488,6 +7489,126 @@ app.put('/api/nd/pricing-page/:section_name', async (req, res) => {
   }
 });
 
+// ==================== ND TEACHERS PAGE ENDPOINTS ====================
+
+// Get teachers page content for new design
+app.get('/api/nd/teachers-page', async (req, res) => {
+  try {
+    const { locale = 'en', preview = false } = req.query;
+
+    // Build query based on locale columns existence
+    let query;
+    if (locale === 'en') {
+      query = `
+        SELECT
+          id,
+          section_name,
+          content_en as content,
+          content_ru,
+          content_he,
+          visible,
+          created_at,
+          updated_at
+        FROM nd_teachers_page
+        ${!preview ? 'WHERE visible = true' : ''}
+        ORDER BY id ASC
+      `;
+    } else {
+      query = `
+        SELECT
+          id,
+          section_name,
+          content_${locale} as content,
+          content_en,
+          content_ru,
+          content_he,
+          visible,
+          created_at,
+          updated_at
+        FROM nd_teachers_page
+        ${!preview ? 'WHERE visible = true' : ''}
+        ORDER BY id ASC
+      `;
+    }
+
+    const data = await queryDatabase(query);
+
+    // Process data to include fallback and preview information
+    const processedData = data.map(section => {
+      let content = section.content || {};
+
+      // If content is empty and not English, fallback to English
+      if (locale !== 'en' && (!content || Object.keys(content).length === 0)) {
+        content = section.content_en || {};
+      }
+
+      return {
+        id: section.id,
+        section_name: section.section_name,
+        content: content,
+        visible: section.visible,
+        created_at: section.created_at,
+        updated_at: section.updated_at,
+        isPreview: preview,
+        locale: locale
+      };
+    });
+
+    res.json({
+      success: true,
+      data: processedData,
+      locale: locale,
+      isPreview: preview,
+      message: `Teachers page content retrieved for locale: ${locale}`
+    });
+  } catch (error) {
+    console.error('Error fetching teachers page:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch teachers page content',
+      message: error.message
+    });
+  }
+});
+
+// Update teachers page section content
+app.put('/api/nd/teachers-page/:section_name', async (req, res) => {
+  try {
+    const { section_name } = req.params;
+    const { content, locale = 'en' } = req.body;
+
+    const contentColumn = `content_${locale}`;
+
+    const result = await queryDatabase(
+      `UPDATE nd_teachers_page
+       SET ${contentColumn} = $1, updated_at = CURRENT_TIMESTAMP
+       WHERE section_name = $2
+       RETURNING *`,
+      [JSON.stringify(content), section_name]
+    );
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: `Teachers section ${section_name} not found`
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: `Teachers section ${section_name} updated successfully`
+    });
+  } catch (error) {
+    console.error('Error updating teachers section:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update teachers section',
+      message: error.message
+    });
+  }
+});
+
 // Update section visibility
 app.patch('/api/nd/home-page/:section_key/visibility', async (req, res) => {
   try {
@@ -7630,10 +7751,14 @@ app.listen(PORT, () => {
   console.log(`   GET  /api/courses`);
   console.log(`   GET  /api/blog-posts`);
   console.log(`   GET  /api/teachers`);
+  console.log(`   GET  /api/nd/pricing-page`);
+  console.log(`   GET  /api/nd/teachers-page`);
   console.log(`   GET  /api/status`);
   console.log(`   POST /api/courses`);
   console.log(`   PUT  /api/courses/:id`);
   console.log(`   PUT  /api/home-page/:id`);
+  console.log(`   PUT  /api/nd/pricing-page/:section_name`);
+  console.log(`   PUT  /api/nd/teachers-page/:section_name`);
   console.log(`   DELETE /api/courses/:id`);
   console.log('🔒 Secure footer endpoints:');
   console.log(`   GET  /api/footer-content`);
