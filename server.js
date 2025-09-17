@@ -728,6 +728,83 @@ app.get('/api/blog-posts', async (req, res) => {
   }
 });
 
+// INDIVIDUAL BLOG POST (following course pattern)
+app.get('/api/blog-posts/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const locale = getLocale(req);
+    console.log(`📰 Fetching blog post ${id} for locale: ${locale}`);
+
+    const query = 'SELECT * FROM blog_posts WHERE id = $1';
+    const result = await queryDatabase(query, [id]);
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Blog post not found'
+      });
+    }
+
+    const blog = result[0];
+
+    // Apply locale fallback for multi-language fields
+    const localizedBlog = {
+      ...blog,
+      title: blog[`title_${locale}`] || blog.title,
+      content: blog[`content_${locale}`] || blog.content,
+      excerpt: blog[`excerpt_${locale}`] || blog.excerpt
+    };
+
+    // Format response following course pattern
+    res.json({
+      success: true,
+      data: {
+        id: localizedBlog.id,
+        title: localizedBlog.title,
+        content: localizedBlog.content,
+        excerpt: localizedBlog.excerpt,
+        author: localizedBlog.author,
+        author_bio: localizedBlog.author_bio,
+        author_image_url: localizedBlog.author_image_url,
+        author_social_links: localizedBlog.author_social_links || {},
+        category: localizedBlog.category,
+        url: localizedBlog.url,
+        featured_image_url: localizedBlog.featured_image_url,
+        video_url: localizedBlog.video_url,
+        gallery_images: localizedBlog.gallery_images || [],
+        content_sections: localizedBlog.content_sections || [],
+        tags: localizedBlog.tags || [],
+        related_posts: localizedBlog.related_posts || [],
+        meta_title: localizedBlog.meta_title,
+        meta_description: localizedBlog.meta_description,
+        reading_time: localizedBlog.reading_time || 5,
+        views_count: localizedBlog.views_count || 0,
+        likes_count: localizedBlog.likes_count || 0,
+        shares_count: localizedBlog.shares_count || 0,
+        is_featured: localizedBlog.is_featured || false,
+        is_published: localizedBlog.is_published !== false,
+        is_visible: localizedBlog.is_visible !== false,
+        locale: localizedBlog.locale || 'en',
+        published_at: localizedBlog.published_at,
+        created_at: localizedBlog.created_at,
+        updated_at: localizedBlog.updated_at
+      }
+    });
+
+    // Increment view count (async, don't wait)
+    queryDatabase('UPDATE blog_posts SET views_count = COALESCE(views_count, 0) + 1 WHERE id = $1', [id])
+      .catch(err => console.log('View count update failed:', err.message));
+
+  } catch (error) {
+    console.error('Error fetching blog post:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Database error',
+      details: error.message
+    });
+  }
+});
+
 // TEACHERS (with locale support and categories)
 app.get('/api/teachers', async (req, res) => {
   try {
@@ -3776,7 +3853,13 @@ app.get('/en/courses.html', (req, res) => {
 });
 
 app.get('/en/teachers.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/en/teachers.html'));
+  const filePath = path.join(__dirname, 'dist/en/teachers.html');
+  if (require('fs').existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    // Fallback to root teachers.html
+    res.sendFile(path.join(__dirname, 'teachers.html'));
+  }
 });
 
 app.get('/he/courses.html', (req, res) => {
@@ -3784,7 +3867,13 @@ app.get('/he/courses.html', (req, res) => {
 });
 
 app.get('/he/teachers.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/he/teachers.html'));
+  const filePath = path.join(__dirname, 'dist/he/teachers.html');
+  if (require('fs').existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    // Fallback to root teachers.html
+    res.sendFile(path.join(__dirname, 'teachers.html'));
+  }
 });
 
 app.get('/ru/courses.html', (req, res) => {
@@ -3792,7 +3881,13 @@ app.get('/ru/courses.html', (req, res) => {
 });
 
 app.get('/ru/teachers.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/ru/teachers.html'));
+  const filePath = path.join(__dirname, 'dist/ru/teachers.html');
+  if (require('fs').existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    // Fallback to root teachers.html
+    res.sendFile(path.join(__dirname, 'teachers.html'));
+  }
 });
 
 // Serve blog pages
@@ -3830,7 +3925,13 @@ app.get('/dist/en/courses.html', (req, res) => {
 });
 
 app.get('/dist/en/teachers.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/en/teachers.html'));
+  const filePath = path.join(__dirname, 'dist/en/teachers.html');
+  if (require('fs').existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    // Fallback to root teachers.html
+    res.sendFile(path.join(__dirname, 'teachers.html'));
+  }
 });
 
 app.get('/dist/en/career-center.html', (req, res) => {
@@ -3846,7 +3947,13 @@ app.get('/dist/ru/courses.html', (req, res) => {
 });
 
 app.get('/dist/ru/teachers.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/ru/teachers.html'));
+  const filePath = path.join(__dirname, 'dist/ru/teachers.html');
+  if (require('fs').existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    // Fallback to root teachers.html
+    res.sendFile(path.join(__dirname, 'teachers.html'));
+  }
 });
 
 app.get('/dist/ru/career-center.html', (req, res) => {
@@ -3862,7 +3969,13 @@ app.get('/dist/he/courses.html', (req, res) => {
 });
 
 app.get('/dist/he/teachers.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/he/teachers.html'));
+  const filePath = path.join(__dirname, 'dist/he/teachers.html');
+  if (require('fs').existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    // Fallback to root teachers.html
+    res.sendFile(path.join(__dirname, 'teachers.html'));
+  }
 });
 
 app.get('/dist/he/career-center.html', (req, res) => {
