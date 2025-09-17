@@ -702,29 +702,54 @@ app.get('/api/blog-posts', async (req, res) => {
   try {
     const locale = getLocale(req);
     console.log(`🌍 Fetching blog posts for locale: ${locale}`);
-    
-    const data = await queryWithFallback(
-      'SELECT * FROM blog_posts WHERE locale = $1 AND published_at IS NOT NULL ORDER BY created_at DESC',
-      [locale]
-    );
-    
+
+    // For admin interface, get ALL posts (not just published)
+    const query = 'SELECT * FROM blog_posts ORDER BY created_at DESC';
+    const data = await queryDatabase(query, []);
+
     res.json({
+      success: true,
       data: data.map(post => ({
         id: post.id,
-        attributes: {
-          title: post.title,
-          slug: post.slug,
-          excerpt: post.excerpt,
-          content: post.content,
-          author: post.author,
-          category: post.category,
-          url: post.url,
-          publishedAt: post.published_at
-        }
+        title: post.title || 'Untitled',
+        slug: post.slug,
+        excerpt: post.excerpt || post.short_description,
+        short_description: post.short_description,
+        content: post.content || post.description,
+        description: post.description,
+        author: post.author,
+        author_email: post.author_email,
+        author_bio: post.author_bio,
+        author_image_url: post.author_image_url,
+        author_social_links: post.author_social_links,
+        category: post.category,
+        status: post.status || 'draft',
+        reading_time: post.reading_time,
+        featured_image_url: post.featured_image_url,
+        gallery_images: post.gallery_images,
+        video_url: post.video_url,
+        url: post.url,
+        tags: post.tags,
+        content_sections: post.content_sections,
+        views_count: post.views_count || 0,
+        likes_count: post.likes_count || 0,
+        shares_count: post.shares_count || 0,
+        is_featured: post.is_featured || false,
+        seo_keywords: post.seo_keywords,
+        meta_description: post.meta_description,
+        published_at: post.published_at,
+        created_at: post.created_at,
+        updated_at: post.updated_at,
+        locale: post.locale
       }))
     });
   } catch (error) {
-    res.status(500).json({ error: 'Database error', details: error.message });
+    console.error('Error fetching blog posts:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Database error',
+      details: error.message
+    });
   }
 });
 
@@ -5048,29 +5073,136 @@ app.put('/api/courses-page', async (req, res) => {
   }
 });
 
-// Update blog posts
+// Create new blog post
+app.post('/api/blog-posts', async (req, res) => {
+  try {
+    const data = req.body;
+
+    // Prepare fields for insertion
+    const fields = Object.keys(data).filter(key => key !== 'id');
+    const values = fields.map(field => data[field]);
+    const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+
+    const insertQuery = `
+      INSERT INTO blog_posts (${fields.join(', ')}, created_at, updated_at)
+      VALUES (${placeholders}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      RETURNING *
+    `;
+
+    const result = await queryDatabase(insertQuery, values);
+    res.json({
+      success: true,
+      data: result[0],
+      message: 'Blog post created successfully'
+    });
+  } catch (error) {
+    console.error('Error creating blog post:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create blog post',
+      details: error.message
+    });
+  }
+});
+
+// Update specific blog post
+app.put('/api/blog-posts/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+
+    // Remove id from data to avoid conflicts
+    delete data.id;
+
+    // Prepare fields for update
+    const fields = Object.keys(data);
+    const setClause = fields.map((field, index) => `${field} = $${index + 2}`).join(', ');
+    const values = [id, ...fields.map(field => data[field])];
+
+    const updateQuery = `
+      UPDATE blog_posts
+      SET ${setClause}, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $1
+      RETURNING *
+    `;
+
+    const result = await queryDatabase(updateQuery, values);
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Blog post not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: 'Blog post updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating blog post:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update blog post',
+      details: error.message
+    });
+  }
+});
+
+// Delete specific blog post
+app.delete('/api/blog-posts/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deleteQuery = 'DELETE FROM blog_posts WHERE id = $1 RETURNING *';
+    const result = await queryDatabase(deleteQuery, [id]);
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Blog post not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Blog post deleted successfully',
+      data: result[0]
+    });
+  } catch (error) {
+    console.error('Error deleting blog post:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to delete blog post',
+      details: error.message
+    });
+  }
+});
+
+// Update blog posts (legacy bulk endpoint)
 app.put('/api/blog-posts', async (req, res) => {
   try {
     const locale = getLocale(req);
     const data = req.body;
-    
+
     // Check if record exists
     const checkQuery = 'SELECT id FROM blog_posts WHERE locale = $1';
     const existing = await queryDatabase(checkQuery, [locale]);
-    
+
     if (existing.length > 0) {
       // Update existing
       const fields = Object.keys(data).filter(key => key !== 'id');
       const setClause = fields.map((field, index) => `${field} = $${index + 2}`).join(', ');
       const values = [existing[0].id, ...fields.map(field => data[field])];
-      
+
       const updateQuery = `
-        UPDATE blog_posts 
-        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
-        WHERE id = $1 
+        UPDATE blog_posts
+        SET ${setClause}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = $1
         RETURNING *
       `;
-      
+
       const result = await queryDatabase(updateQuery, values);
       res.json(result[0]);
     } else {
@@ -5078,13 +5210,13 @@ app.put('/api/blog-posts', async (req, res) => {
       const fields = ['locale', ...Object.keys(data)];
       const values = [locale, ...Object.values(data)];
       const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
-      
+
       const insertQuery = `
-        INSERT INTO blog_posts (${fields.join(', ')}) 
-        VALUES (${placeholders}) 
+        INSERT INTO blog_posts (${fields.join(', ')})
+        VALUES (${placeholders})
         RETURNING *
       `;
-      
+
       const result = await queryDatabase(insertQuery, values);
       res.json(result[0]);
     }
@@ -6101,6 +6233,137 @@ app.delete('/api/nd/courses/:id', async (req, res) => {
     });
   } catch (error) {
     console.error('Error deleting course:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ============================================
+// ND TEACHERS API ENDPOINTS
+// Universal Shared Component System
+// ============================================
+
+// GET all teachers from entity_teachers table
+app.get('/api/nd/teachers', async (req, res) => {
+  try {
+    const { locale = 'en', category = null, limit = null } = req.query;
+
+    let query = `
+      SELECT
+        id, teacher_key, full_name, professional_title, company,
+        bio, profile_image_url,
+        skills, experience_history, courses_taught, student_reviews,
+        statistics, contact_info, social_links,
+        is_featured, display_order, is_active,
+        created_at, updated_at
+      FROM entity_teachers
+      WHERE is_active = true
+    `;
+
+    const params = [];
+    let paramIndex = 1;
+
+    if (category && category !== 'all') {
+      query += ` AND category = $${paramIndex}`;
+      params.push(category);
+      paramIndex++;
+    }
+
+    if (limit) {
+      query += ` ORDER BY display_order ASC, created_at DESC LIMIT $${paramIndex}`;
+      params.push(parseInt(limit));
+    } else {
+      query += ` ORDER BY display_order ASC, created_at DESC`;
+    }
+
+    const teachers = await queryDatabase(query, params);
+
+    res.json({
+      success: true,
+      data: teachers.map(teacher => ({
+        id: teacher.id,
+        teacher_key: teacher.teacher_key,
+        full_name: teacher.full_name,
+        professional_title: teacher.professional_title,
+        company: teacher.company,
+        bio: teacher.bio,
+        profile_image_url: teacher.profile_image_url,
+        skills: teacher.skills,
+        experience_history: teacher.experience_history,
+        courses_taught: teacher.courses_taught,
+        student_reviews: teacher.student_reviews,
+        statistics: teacher.statistics,
+        contact_info: teacher.contact_info,
+        social_links: teacher.social_links,
+        is_featured: teacher.is_featured,
+        display_order: teacher.display_order,
+        created_at: teacher.created_at,
+        updated_at: teacher.updated_at
+      }))
+    });
+  } catch (error) {
+    console.error('Error fetching teachers:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// GET single teacher by ID
+app.get('/api/nd/teachers/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { preview = false } = req.query;
+
+    console.log(`📦 Fetching teacher ID: ${id}${preview ? ' (preview mode)' : ''}`);
+
+    const query = `
+      SELECT
+        id, teacher_key, full_name, professional_title, company,
+        bio, profile_image_url,
+        skills, experience_history, courses_taught, student_reviews,
+        statistics, contact_info, social_links,
+        is_featured, display_order, is_active,
+        created_at, updated_at
+      FROM entity_teachers
+      WHERE id = $1 ${!preview ? 'AND is_active = true' : ''}
+    `;
+
+    const teachers = await queryDatabase(query, [id]);
+
+    if (teachers.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Teacher not found',
+        debug: { id, preview }
+      });
+    }
+
+    const teacher = teachers[0];
+
+    res.json({
+      success: true,
+      data: {
+        id: teacher.id,
+        teacher_key: teacher.teacher_key,
+        full_name: teacher.full_name,
+        professional_title: teacher.professional_title,
+        company: teacher.company,
+        bio: teacher.bio,
+        profile_image_url: teacher.profile_image_url,
+        skills: teacher.skills,
+        experience_history: teacher.experience_history,
+        courses_taught: teacher.courses_taught,
+        student_reviews: teacher.student_reviews,
+        statistics: teacher.statistics,
+        contact_info: teacher.contact_info,
+        social_links: teacher.social_links,
+        is_featured: teacher.is_featured,
+        display_order: teacher.display_order,
+        is_active: teacher.is_active,
+        created_at: teacher.created_at,
+        updated_at: teacher.updated_at
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching teacher:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

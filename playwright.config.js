@@ -6,7 +6,7 @@ const { defineConfig, devices } = require('@playwright/test');
  * @see https://playwright.dev/docs/test-configuration
  */
 module.exports = defineConfig({
-  testDir: './tests',
+  testDir: './',
   
   /* Test organization */
   fullyParallel: process.env.PARALLEL === 'true',
@@ -71,6 +71,7 @@ module.exports = defineConfig({
         '**/performance.spec.js',
         '**/comprehensive-system.spec.js',
         '**/responsive-quick.spec.js',
+        '**/responsive-newdesign.spec.js',
         '**/teachers-page.spec.js'
       ]
     },
@@ -101,6 +102,7 @@ module.exports = defineConfig({
       use: { ...devices['Pixel 5'] },
       testMatch: [
         '**/responsive.spec.js',
+        '**/responsive-newdesign.spec.js',
         '**/accessibility.spec.js',
         '**/performance.spec.js',
         '**/form-validation.spec.js'
@@ -123,6 +125,7 @@ module.exports = defineConfig({
       use: { ...devices['iPad Pro'] },
       testMatch: [
         '**/responsive.spec.js',
+        '**/responsive-newdesign.spec.js',
         '**/multi-language.spec.js'
       ]
     },

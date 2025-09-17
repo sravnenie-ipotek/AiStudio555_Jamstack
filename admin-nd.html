@@ -476,6 +476,9 @@
             100% { transform: rotate(360deg); }
         }
     </style>
+
+    <!-- Admin Hints System -->
+    <link rel="stylesheet" href="backups/newDesign/css/admin-hints.css">
 </head>
 <body>
     <!-- Preview Banner -->
@@ -594,7 +597,7 @@
                     <div class="list-manager mt-20">
                         <div class="list-item-header">
                             <strong>Course Cards</strong>
-                            <button class="btn btn-small btn-success" onclick="addCourseCard()">+ Add Course</button>
+                            <button class="btn btn-small btn-success add-course-btn" id="addCourseBtn" onclick="addCourseCard()">+ Add Course</button>
                         </div>
                         <div id="courseCards"></div>
                     </div>
@@ -2353,10 +2356,10 @@
                                 <button class="btn btn-small" onclick="openCourseDetailsModal(${course.id})" style="background: #667eea; color: white;">
                                     📝 Edit Details
                                 </button>
-                                <button class="btn btn-small" onclick="window.open('http://localhost:3005/backups/newDesign/detail_courses.html?id=${course.id}&preview=true', '_blank')" style="background: #28a745; color: white;">
+                                <button class="btn btn-small preview-btn" onclick="window.open('http://localhost:3005/backups/newDesign/detail_courses.html?id=${course.id}&preview=true', '_blank')" style="background: #28a745; color: white;">
                                     👁️ Preview
                                 </button>
-                                <button class="btn btn-small btn-danger" onclick="deleteCourse(${course.id})">
+                                <button class="btn btn-small btn-danger delete-btn" onclick="deleteCourse(${course.id})">
                                     🗑️ Delete
                                 </button>
                             </div>
@@ -4084,6 +4087,48 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
     </style>
+
+    <!-- Admin Hints System JavaScript -->
+    <script src="backups/newDesign/js/admin-hints-system.js"></script>
+
+    <script>
+        // Integration with existing language system
+        function switchLanguage(lang) {
+            // Update admin hints language
+            if (window.setAdminLanguage) {
+                window.setAdminLanguage(lang);
+            }
+
+            // Existing language switching logic here...
+            console.log('Language switched to:', lang);
+        }
+
+        // Auto-detect and apply hints when tabs are switched
+        document.addEventListener('DOMContentLoaded', function() {
+            // Re-apply hints when content changes
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList' && window.adminHints) {
+                        // Delay to allow content to render
+                        setTimeout(() => {
+                            window.adminHints.applyHints();
+                        }, 100);
+                    }
+                });
+            });
+
+            // Observe changes in content areas
+            const contentAreas = document.querySelectorAll('#coursesContent, #homeContent, #teachersContent, #footerContent');
+            contentAreas.forEach(area => {
+                if (area) {
+                    observer.observe(area, {
+                        childList: true,
+                        subtree: true
+                    });
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>

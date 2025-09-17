@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test');
 
 // Quick responsive test for key pages and viewports
 const baseUrl = 'http://localhost:3005';
-const testPages = ['home.html', 'courses.html', 'teachers.html'];
+const testPages = ['home.html', 'courses.html', 'pricing.html', 'blog.html', 'teachers.html'];
 const keyViewports = [
   { name: 'Desktop', width: 1920, height: 1080 },
   { name: 'Tablet', width: 768, height: 1024 },

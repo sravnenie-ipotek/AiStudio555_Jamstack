@@ -10,7 +10,7 @@
   <link href="css/normalize.css" rel="stylesheet" type="text/css">
   <link href="css/webflow.css" rel="stylesheet" type="text/css">
   <link href="css/aizeks-groovy-site.webflow.css" rel="stylesheet" type="text/css">
-  <link href="shared/shared-cards.css" rel="stylesheet" type="text/css">
+  <link href="css/shared-cards.css" rel="stylesheet" type="text/css">
   <link href="css/course-card-styles.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous">
@@ -289,23 +289,50 @@
               </div>
             </div>
             <div class="course-categories-wrapper">
-              <div class="course-categories-collection-list-wrapper w-dyn-list">
-                <div role="list" class="course-categories-collection-list w-dyn-items">
-                  <div role="listitem" class="course-categories-collection-item w-dyn-item">
-                    <a data-w-id="8451e571-ac2e-e095-9348-de81aaa105f8" href="#" class="course-categories-single w-inline-block">
-                      <div class="course-categories-typography">
-                        <div class="course-categories-icon-wrapper"><img loading="lazy" src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" alt="" class="course-categories-icon w-dyn-bind-empty"></div>
-                        <div class="course-categories-name-description-wrap">
-                          <h4 class="course-categories-name w-dyn-bind-empty"></h4>
-                          <div class="course-categories-description-text w-dyn-bind-empty"></div>
-                        </div>
-                      </div><img style="opacity:0;-webkit-transform:translate3d(0, 0, 0) scale3d(1.2, 1.2, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1.2, 1.2, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1.2, 1.2, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1.2, 1.2, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" loading="lazy" alt="" src="images/Course-Categories-Hover-In-Shape.jpg" class="course-categories-hover-in-shape">
-                    </a>
+              <div class="shared-cards-grid">
+                <a href="courses.html?category=web-development" class="shared-card category-web-dev">
+                  <div class="shared-card-bg"></div>
+                  <div class="shared-card-content">
+                    <div class="shared-card-icon">
+                      <img src="images/Core-Values-Icon1.svg" alt="Web Development" />
+                    </div>
+                    <h4 class="shared-card-title">Web Development</h4>
+                    <p class="shared-card-description">Master modern web technologies including HTML5, CSS3, JavaScript, React, and Node.js to build responsive and dynamic web applications.</p>
                   </div>
-                </div>
-                <div class="w-dyn-empty">
-                  <div>No items found.</div>
-                </div>
+                </a>
+
+                <a href="courses.html?category=mobile-development" class="shared-card category-mobile">
+                  <div class="shared-card-bg"></div>
+                  <div class="shared-card-content">
+                    <div class="shared-card-icon">
+                      <img src="images/Core-Values-Icon3.svg" alt="Mobile Development" />
+                    </div>
+                    <h4 class="shared-card-title">Mobile Development</h4>
+                    <p class="shared-card-description">Create native and cross-platform mobile applications using React Native, Flutter, Swift, and Kotlin for iOS and Android.</p>
+                  </div>
+                </a>
+
+                <a href="courses.html?category=machine-learning" class="shared-card category-ml">
+                  <div class="shared-card-bg"></div>
+                  <div class="shared-card-content">
+                    <div class="shared-card-icon">
+                      <img src="images/Core-Values-Icon4.svg" alt="Machine Learning" />
+                    </div>
+                    <h4 class="shared-card-title">Machine Learning</h4>
+                    <p class="shared-card-description">Dive into AI and ML with Python, TensorFlow, and PyTorch. Learn data science, neural networks, and deep learning algorithms.</p>
+                  </div>
+                </a>
+
+                <a href="courses.html?category=cloud-computing" class="shared-card category-cloud">
+                  <div class="shared-card-bg"></div>
+                  <div class="shared-card-content">
+                    <div class="shared-card-icon">
+                      <img src="images/Core-Values-Icon5.svg" alt="Cloud Computing" />
+                    </div>
+                    <h4 class="shared-card-title">Cloud Computing</h4>
+                    <p class="shared-card-description">Master cloud platforms like AWS, Azure, and Google Cloud. Learn DevOps, containerization with Docker and Kubernetes.</p>
+                  </div>
+                </a>
               </div>
             </div>
           </div>

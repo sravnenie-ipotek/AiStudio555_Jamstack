@@ -4,7 +4,9 @@ const { test, expect } = require('@playwright/test');
 const baseUrl = 'http://localhost:3005';
 const testPages = [
   'home.html',
-  'courses.html', 
+  'courses.html',
+  'pricing.html',
+  'blog.html',
   'teachers.html',
   'career-center.html',
   'career-orientation.html'
