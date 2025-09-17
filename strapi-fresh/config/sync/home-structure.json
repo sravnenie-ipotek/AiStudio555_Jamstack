@@ -1,7 +1,7 @@
 {
   "page": "home",
-  "lastSync": "2025-09-11T10:02:42.701Z",
-  "htmlVersion": "a01de44374e4ac4ca2e633132c07f20c564eab79",
+  "lastSync": "2025-09-17T05:41:11.514Z",
+  "htmlVersion": "97aa058678b72021122f3ac3107fb6f03781b525",
   "structure": {
     "sections": [
       {
@@ -132,7 +132,7 @@
         }
       }
     ],
-    "timestamp": "2025-09-11T10:02:42.681Z",
-    "htmlSize": 107358
+    "timestamp": "2025-09-17T05:41:11.493Z",
+    "htmlSize": 110360
   }
 }

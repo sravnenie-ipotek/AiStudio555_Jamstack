@@ -5458,6 +5458,299 @@ app.put('/api/job-postings', async (req, res) => {
   }
 });
 
+// ============================================
+// ND COURSES API ENDPOINTS
+// ============================================
+
+// GET all courses from nd_courses table
+app.get('/api/nd/courses', async (req, res) => {
+  try {
+    const { locale = 'en', featured = null, category = null, limit = null } = req.query;
+
+    let query = `
+      SELECT
+        id, course_key,
+        COALESCE(
+          CASE
+            WHEN $1 = 'ru' THEN NULLIF(title_ru, '')
+            WHEN $1 = 'he' THEN NULLIF(title_he, '')
+          END,
+          title
+        ) as title,
+        COALESCE(
+          CASE
+            WHEN $1 = 'ru' THEN NULLIF(description_ru, '')
+            WHEN $1 = 'he' THEN NULLIF(description_he, '')
+          END,
+          description
+        ) as description,
+        COALESCE(
+          CASE
+            WHEN $1 = 'ru' THEN NULLIF(short_description_ru, '')
+            WHEN $1 = 'he' THEN NULLIF(short_description_he, '')
+          END,
+          short_description
+        ) as short_description,
+        price, old_price, currency,
+        duration, level, category, instructor, language,
+        image, video_url, thumbnail, url,
+        rating, reviews_count, students_count, lessons_count,
+        features, syllabus, requirements, what_you_learn,
+        featured, visible, published, enrollment_open,
+        order_index, tags,
+        created_at, updated_at
+      FROM nd_courses
+      WHERE visible = true AND published = true
+    `;
+
+    const params = [locale];
+    let paramIndex = 2;
+
+    if (featured !== null) {
+      query += ` AND featured = $${paramIndex}`;
+      params.push(featured === 'true');
+      paramIndex++;
+    }
+
+    if (category) {
+      query += ` AND category = $${paramIndex}`;
+      params.push(category);
+      paramIndex++;
+    }
+
+    query += ' ORDER BY featured DESC, order_index ASC, created_at DESC';
+
+    if (limit) {
+      query += ` LIMIT $${paramIndex}`;
+      params.push(parseInt(limit));
+    }
+
+    const courses = await queryDatabase(query, params);
+
+    res.json({
+      success: true,
+      data: courses,
+      meta: {
+        total: courses.length,
+        locale: locale
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching nd_courses:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// GET single course by ID
+app.get('/api/nd/courses/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { locale = 'en' } = req.query;
+
+    const query = `
+      SELECT
+        id, course_key,
+        COALESCE(
+          CASE
+            WHEN $1 = 'ru' THEN NULLIF(title_ru, '')
+            WHEN $1 = 'he' THEN NULLIF(title_he, '')
+          END,
+          title
+        ) as title,
+        COALESCE(
+          CASE
+            WHEN $1 = 'ru' THEN NULLIF(description_ru, '')
+            WHEN $1 = 'he' THEN NULLIF(description_he, '')
+          END,
+          description
+        ) as description,
+        COALESCE(
+          CASE
+            WHEN $1 = 'ru' THEN NULLIF(short_description_ru, '')
+            WHEN $1 = 'he' THEN NULLIF(short_description_he, '')
+          END,
+          short_description
+        ) as short_description,
+        price, old_price, currency,
+        duration, level, category, instructor, language,
+        image, video_url, thumbnail, url,
+        rating, reviews_count, students_count, lessons_count,
+        features, syllabus, requirements, what_you_learn,
+        featured, visible, published, enrollment_open,
+        meta_title, meta_description, meta_keywords, slug,
+        order_index, tags,
+        start_date, end_date,
+        created_at, updated_at
+      FROM nd_courses
+      WHERE id = $2
+    `;
+
+    const courses = await queryDatabase(query, [locale, id]);
+
+    if (courses.length === 0) {
+      return res.status(404).json({ success: false, error: 'Course not found' });
+    }
+
+    res.json({
+      success: true,
+      data: courses[0]
+    });
+  } catch (error) {
+    console.error('Error fetching course:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// CREATE new course
+app.post('/api/nd/courses', async (req, res) => {
+  try {
+    const {
+      title, description, short_description,
+      price, old_price, currency = 'USD',
+      duration, level, category, instructor,
+      image, video_url, url,
+      rating, reviews_count, students_count, lessons_count,
+      features = [], syllabus = [],
+      featured = false, visible = true
+    } = req.body;
+
+    // Generate course_key
+    const courseKey = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
+
+    const query = `
+      INSERT INTO nd_courses (
+        course_key, title, description, short_description,
+        price, old_price, currency,
+        duration, level, category, instructor,
+        image, video_url, url,
+        rating, reviews_count, students_count, lessons_count,
+        features, syllabus,
+        featured, visible,
+        order_index
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22,
+        (SELECT COALESCE(MAX(order_index), 0) + 1 FROM nd_courses)
+      )
+      RETURNING *
+    `;
+
+    const params = [
+      courseKey, title, description, short_description,
+      price, old_price, currency,
+      duration, level, category, instructor,
+      image, video_url, url,
+      rating, reviews_count, students_count, lessons_count,
+      JSON.stringify(features), JSON.stringify(syllabus),
+      featured, visible
+    ];
+
+    const result = await queryDatabase(query, params);
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: 'Course created successfully'
+    });
+  } catch (error) {
+    console.error('Error creating course:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// UPDATE course
+app.put('/api/nd/courses/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    // Build dynamic UPDATE query
+    const updateFields = [];
+    const values = [];
+    let valueIndex = 1;
+
+    // Define which fields can be updated
+    const allowedFields = [
+      'title', 'description', 'short_description',
+      'title_ru', 'description_ru', 'short_description_ru',
+      'title_he', 'description_he', 'short_description_he',
+      'price', 'old_price', 'currency',
+      'duration', 'level', 'category', 'instructor',
+      'image', 'video_url', 'url',
+      'rating', 'reviews_count', 'students_count', 'lessons_count',
+      'features', 'syllabus', 'requirements', 'what_you_learn',
+      'featured', 'visible', 'published', 'enrollment_open',
+      'order_index'
+    ];
+
+    for (const [key, value] of Object.entries(updates)) {
+      if (allowedFields.includes(key)) {
+        updateFields.push(`${key} = $${valueIndex}`);
+        // Handle JSON fields
+        if (['features', 'syllabus', 'requirements', 'what_you_learn'].includes(key)) {
+          values.push(JSON.stringify(value));
+        } else {
+          values.push(value);
+        }
+        valueIndex++;
+      }
+    }
+
+    if (updateFields.length === 0) {
+      return res.status(400).json({ success: false, error: 'No valid fields to update' });
+    }
+
+    updateFields.push(`updated_at = CURRENT_TIMESTAMP`);
+    values.push(id);
+
+    const query = `
+      UPDATE nd_courses
+      SET ${updateFields.join(', ')}
+      WHERE id = $${valueIndex}
+      RETURNING *
+    `;
+
+    const result = await queryDatabase(query, values);
+
+    if (result.length === 0) {
+      return res.status(404).json({ success: false, error: 'Course not found' });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: 'Course updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating course:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// DELETE course
+app.delete('/api/nd/courses/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await queryDatabase(
+      'DELETE FROM nd_courses WHERE id = $1 RETURNING id, title',
+      [id]
+    );
+
+    if (result.length === 0) {
+      return res.status(404).json({ success: false, error: 'Course not found' });
+    }
+
+    res.json({
+      success: true,
+      message: `Course "${result[0].title}" deleted successfully`,
+      data: { id: result[0].id }
+    });
+  } catch (error) {
+    console.error('Error deleting course:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Start server
 
 // ==================== UI MIGRATION ENDPOINT ====================
@@ -7081,6 +7374,115 @@ app.get('/api/nd/footer', async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Failed to fetch footer',
+      message: error.message
+    });
+  }
+});
+
+// Get pricing page content for new design
+app.get('/api/nd/pricing-page', async (req, res) => {
+  try {
+    const { locale = 'en', preview = false } = req.query;
+
+    // Build query based on locale columns existence
+    let query;
+    if (locale === 'ru' || locale === 'he') {
+      query = `
+        SELECT
+          id,
+          section_name,
+          COALESCE(content_${locale}, content_en) as content,
+          content_en,
+          content_ru,
+          content_he,
+          visible,
+          created_at,
+          updated_at
+        FROM nd_pricing_page
+        ${!preview ? 'WHERE visible = true' : ''}
+        ORDER BY id ASC
+      `;
+    } else {
+      query = `
+        SELECT
+          id,
+          section_name,
+          content_en as content,
+          content_en,
+          content_ru,
+          content_he,
+          visible,
+          created_at,
+          updated_at
+        FROM nd_pricing_page
+        ${!preview ? 'WHERE visible = true' : ''}
+        ORDER BY id ASC
+      `;
+    }
+
+    const rows = await queryDatabase(query);
+
+    // Organize data by section
+    const sections = {};
+    rows.forEach(row => {
+      sections[row.section_name] = row.content || {};
+    });
+
+    res.json({
+      success: true,
+      data: {
+        id: 'pricing-page',
+        type: 'pricing-page',
+        attributes: {
+          sections: sections,
+          locale: locale,
+          preview: preview
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching ND pricing page:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch pricing page',
+      message: error.message
+    });
+  }
+});
+
+// Update pricing page section content
+app.put('/api/nd/pricing-page/:section_name', async (req, res) => {
+  try {
+    const { section_name } = req.params;
+    const { content, locale = 'en' } = req.body;
+
+    const contentColumn = `content_${locale}`;
+
+    const result = await queryDatabase(
+      `UPDATE nd_pricing_page
+       SET ${contentColumn} = $1, updated_at = CURRENT_TIMESTAMP
+       WHERE section_name = $2
+       RETURNING *`,
+      [JSON.stringify(content), section_name]
+    );
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: `Pricing section ${section_name} not found`
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: `Pricing section ${section_name} updated successfully`
+    });
+  } catch (error) {
+    console.error('Error updating pricing section:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update pricing section',
       message: error.message
     });
   }

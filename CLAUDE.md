@@ -2,6 +2,21 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🚨 ACTIVE PROJECT: NewDesign (`/backups/newDesign`)
+
+**⚠️ IMPORTANT: We are currently working EXCLUSIVELY on the NewDesign project located at:**
+```
+/Users/michaelmishayev/Desktop/newCode/backups/newDesign/
+```
+
+All development efforts should focus on this directory. The NewDesign version represents the latest iteration of the AI Studio platform with improved UI/UX patterns.
+
+### Access URLs
+- **Local Development**: http://localhost:3005/backups/newDesign/home.html
+- **API Server**: http://localhost:1337
+
+---
+
 ## Project Overview
 
 This is an **AI Studio E-Learning Platform** using JAMstack architecture with a **100% Custom Backend**. The project consists of a static frontend (HTML/CSS/JS) that connects directly to a custom Express.js API for dynamic content management, user authentication, and course delivery.
@@ -153,11 +168,18 @@ fetch('https://aistudio555jamstack-production.up.railway.app/api/home-page?previ
 │   ├── en/              # English versions
 │   ├── ru/              # Russian versions
 │   └── he/              # Hebrew versions (RTL)
-├── css/                  # Webflow styles
-├── js/                   # Client-side scripts
+├── css/                  # Webflow styles + shared components
+│   └── uniform-card-styles.css # Standardized card component styles
+├── js/                   # Client-side scripts + shared components
 │   ├── webflow-strapi-integration.js  # Main API integration (misleading name)
 │   ├── strapi-integration.js          # Secondary integration (misleading name)
-│   └── contact-form-modal.js          # Contact form modal with EmailJS integration
+│   ├── contact-form-modal.js          # Contact form modal with EmailJS integration
+│   └── uniform-card-generator.js      # Shared card component system
+├── shared/               # Reusable components and templates
+│   └── components/       # Shared UI components
+│       ├── uniform-card-template.html     # Standardized card HTML template
+│       ├── uniform-card-styles.css        # Card component CSS (copied to /css/)
+│       └── uniform-card-generator.js      # Card component JS (copied to /js/)
 ├── images/               # Static assets
 ├── Docs/                 # Project documentation
 │   └── architecture/     # System architecture docs
@@ -278,10 +300,22 @@ fetch('https://aistudio555jamstack-production.up.railway.app/api/home-page?previ
 - **Visual Hierarchy**: Ensure content is visible without animation dependencies
 - **Mobile-First**: All designs must work on mobile before desktop
 
+### Shared Components System
+- **Location**: `/shared/components/` directory for template storage
+- **Implementation**: Files copied to `/css/` and `/js/` for HTTP server access
+- **Uniform Cards**: Standardized card component ensuring identical dimensions
+  - Fixed height: 600px (desktop), 580px (tablet), 560px (mobile)
+  - Consistent image height: 260px across all cards
+  - Auto-applied via JavaScript: `uniform-card-generator.js`
+  - CSS-enforced uniformity: `uniform-card-styles.css`
+- **Usage**: Include CSS + JS in `<head>` and let system auto-apply uniform sizing
+- **Templates**: Reusable HTML templates with placeholder variables
+
 ### Path Issues in Subdirectories
 - **Important**: Language versions in `/dist/en/`, `/dist/ru/`, `/dist/he/` need relative paths
 - **Script References**: Use `../js/` for scripts from language subdirectories
 - **Image References**: Check for proper path resolution
+- **Shared Components**: Reference from `/css/` and `/js/` directories, not `/shared/`
 
 ## Testing and Validation
 

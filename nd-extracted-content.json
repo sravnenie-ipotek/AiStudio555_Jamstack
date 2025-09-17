@@ -1,0 +1,156 @@
+{
+  "hero": {
+    "subtitle": "Expert-Led Learning",
+    "title": "Unlock Potential With Proven Courses.",
+    "description": "Here you can elevate your tech career with expert-led courses. whether you're just starting out or aiming to advance your skills, our hands-on, practical training is designed.",
+    "button_text": "get in touch",
+    "stats": []
+  },
+  "features": {
+    "subtitle": "",
+    "title": "",
+    "items": []
+  },
+  "about": {
+    "subtitle": "Meet Your Mentor",
+    "title": "Get To Know  Your Pathway To Mastery.",
+    "description": "With over a decade of experience in the tech industry, mentor has dedicated their career to empowering learners.",
+    "button_text": ""
+  },
+  "courses": {
+    "subtitle": "",
+    "title": "",
+    "items": []
+  },
+  "testimonials": {
+    "subtitle": "",
+    "title": "",
+    "items": []
+  },
+  "blog": {
+    "subtitle": "News & Articles",
+    "title": "Your Learning Journey With Our Experts.",
+    "items": [
+      {
+        "image": "",
+        "date": "",
+        "author": "",
+        "title": ""
+      },
+      {
+        "image": "",
+        "date": "",
+        "author": "",
+        "title": ""
+      },
+      {
+        "image": "",
+        "date": "",
+        "author": "",
+        "title": ""
+      }
+    ]
+  },
+  "cta": {
+    "title": "",
+    "description": "",
+    "button_text": ""
+  },
+  "pricing": {
+    "subtitle": "",
+    "title": "",
+    "plans": []
+  },
+  "faq": {
+    "subtitle": "FAQ & Answer",
+    "title": "Invest in Future with Subscription Plans.",
+    "items": []
+  },
+  "footer": {
+    "about_text": "",
+    "links": [
+      {
+        "title": "MenuUtility PagesMenuContact",
+        "items": [
+          {
+            "text": "Home",
+            "href": "home.html"
+          },
+          {
+            "text": "About Us",
+            "href": "about-us.html"
+          },
+          {
+            "text": "Courses",
+            "href": "courses.html"
+          },
+          {
+            "text": "Course Single",
+            "href": "https://zohacous.webflow.io/courses/html-css-bootstrap-build-responsive-websites"
+          },
+          {
+            "text": "Pricing",
+            "href": "pricing.html"
+          },
+          {
+            "text": "Pricing Single",
+            "href": "https://zohacous.webflow.io/product/premium-plan"
+          },
+          {
+            "text": "Blog",
+            "href": "blog.html"
+          },
+          {
+            "text": "Blog Single",
+            "href": "https://zohacous.webflow.io/blog/future-of-web-app-develop-trends-to-watch-in-2024"
+          },
+          {
+            "text": "Contact Us",
+            "href": "contact-us.html"
+          },
+          {
+            "text": "404 Not Found",
+            "href": "404.html"
+          },
+          {
+            "text": "Password Protected",
+            "href": "401.html"
+          },
+          {
+            "text": "Changelog",
+            "href": "template-pages/changelog.html"
+          },
+          {
+            "text": "License",
+            "href": "template-pages/license.html"
+          },
+          {
+            "text": "Style Guide",
+            "href": "template-pages/style-guide.html"
+          },
+          {
+            "text": "Sign Up",
+            "href": "authentication-pages/sign-up.html"
+          },
+          {
+            "text": "Sign In",
+            "href": "authentication-pages/sign-in.html"
+          },
+          {
+            "text": "Forgot Password",
+            "href": "authentication-pages/forgot-password.html"
+          },
+          {
+            "text": "Reset Password",
+            "href": "authentication-pages/reset-password.html"
+          }
+        ]
+      }
+    ],
+    "contact": {
+      "phone": "(000) 012 3456 7890",
+      "email": "zohacous@email.com",
+      "address": "1234 Valencia, Suite, SF, CA"
+    }
+  }
+}

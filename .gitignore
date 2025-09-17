@@ -52,6 +52,10 @@ test-results/
 *-backup-*.tar.gz
 *-backup-*.zip
 
+# Archived old project
+old-project/
+old-project-backup-*.zip
+
 # Backup directories
 backups/
 
