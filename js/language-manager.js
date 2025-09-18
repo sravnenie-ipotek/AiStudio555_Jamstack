@@ -72,7 +72,7 @@ class LanguageManager {
     getLocaleFromURL() {
         const params = new URLSearchParams(window.location.search);
         const locale = params.get('locale');
-        return this.supportedLocales.includes(locale) ? locale : null;
+        return locale && this.supportedLocales && this.supportedLocales.includes(locale) ? locale : null;
     }
 
     /**

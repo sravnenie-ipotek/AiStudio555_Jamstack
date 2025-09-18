@@ -3909,6 +3909,37 @@ app.get('/ru/strapi-content-loader.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'strapi-content-loader.js'));
 });
 
+// Serve shared components with correct MIME types for all languages
+app.get(['/en/shared/components/sharedPopUp/popup.js', '/he/shared/components/sharedPopUp/popup.js', '/ru/shared/components/sharedPopUp/popup.js'], (req, res) => {
+  res.type('application/javascript');
+  res.sendFile(path.join(__dirname, 'shared/components/sharedPopUp/popup.js'));
+});
+
+app.get(['/en/shared/services/emailService/emailService.js', '/he/shared/services/emailService/emailService.js', '/ru/shared/services/emailService/emailService.js'], (req, res) => {
+  res.type('application/javascript');
+  res.sendFile(path.join(__dirname, 'shared/services/emailService/emailService.js'));
+});
+
+app.get(['/en/js/language-manager.js', '/he/js/language-manager.js', '/ru/js/language-manager.js'], (req, res) => {
+  res.type('application/javascript');
+  res.sendFile(path.join(__dirname, 'js/language-manager.js'));
+});
+
+app.get(['/en/js/nd-home-integration.js', '/he/js/nd-home-integration.js', '/ru/js/nd-home-integration.js'], (req, res) => {
+  res.type('application/javascript');
+  res.sendFile(path.join(__dirname, 'js/nd-home-integration.js'));
+});
+
+app.get(['/en/js/course-card-component.js', '/he/js/course-card-component.js', '/ru/js/course-card-component.js'], (req, res) => {
+  res.type('application/javascript');
+  res.sendFile(path.join(__dirname, 'js/course-card-component.js'));
+});
+
+app.get(['/en/js/nd-courses-integration.js', '/he/js/nd-courses-integration.js', '/ru/js/nd-courses-integration.js'], (req, res) => {
+  res.type('application/javascript');
+  res.sendFile(path.join(__dirname, 'js/nd-courses-integration.js'));
+});
+
 
 // Serve home.html properly for all languages
 app.get(['/dist/en/home.html', '/en/home.html'], (req, res) => {

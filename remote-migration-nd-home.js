@@ -3,10 +3,12 @@
 
 const { Pool } = require('pg');
 
-// Use Railway's DATABASE_URL directly
+// Use Railway's DATABASE_URL directly - check if production
+const isProduction = process.env.DATABASE_URL && process.env.DATABASE_URL.includes('railway');
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: isProduction ? { rejectUnauthorized: false } : false
 });
 
 async function migrate() {
