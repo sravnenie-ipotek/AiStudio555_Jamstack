@@ -24,7 +24,7 @@
             console.log('🔄 Loading home page data from database...');
 
             const locale = getCurrentLocale();
-            const response = await fetch(`${API_BASE_URL}/api/nd/home-page?locale=${locale}`);
+            const response = await fetch(`${API_BASE_URL}/api/home-page?locale=${locale}`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch home data: ${response.status}`);
