@@ -87,33 +87,37 @@ class SharedMenu {
    */
   getMenuHTML() {
     return `
-<div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
+<div role="banner" class="navbar custom-nav">
   <div class="container">
     <div class="navbar-content">
-      <a href="index.html" class="zohacous-logo-link w-nav-brand">
+      <!-- Logo -->
+      <a href="index.html" class="zohacous-logo-link nav-brand">
         <img loading="lazy" src="${this.getImagePath('Logo.svg')}" alt="AI Studio Logo" class="zohacous-logo-image">
       </a>
 
-      <nav role="navigation" class="nav-menu w-nav-menu">
-        <a href="home.html" class="nav-link w-nav-link">Home</a>
-        <a href="courses.html" class="nav-link w-nav-link">Courses</a>
-        <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
-        <a href="blog.html" class="nav-link w-nav-link">Blog</a>
-        <a href="teachers.html" class="nav-link w-nav-link">Teachers</a>
+      <!-- Main Navigation -->
+      <nav role="navigation" class="nav-menu custom-nav-menu">
+        <!-- Primary Navigation Links -->
+        <a href="home.html" class="nav-link">Home</a>
+        <a href="courses.html" class="nav-link">Courses</a>
+        <a href="pricing.html" class="nav-link">Pricing</a>
+        <a href="blog.html" class="nav-link">Blog</a>
+        <a href="teachers.html" class="nav-link">Teachers</a>
 
-        <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
-          <div class="dropdown-toggle w-dropdown-toggle">
+        <!-- About Us Dropdown -->
+        <div class="menu-dropdown-wrapper custom-dropdown">
+          <div class="dropdown-toggle custom-dropdown-toggle">
             <div class="dropdown-toggle-text-block">About Us</div>
             <div class="dropdown-toggle-arrow-2"></div>
           </div>
-          <nav class="dropdown-column-wrapper-3 w-dropdown-list" style="width: auto; min-width: auto;">
+          <nav class="dropdown-column-wrapper-3 custom-dropdown-list" style="width: auto; min-width: auto;">
             <div class="dropdown-pd" style="padding: 20px 30px;">
               <div class="dropdown-singel-wrapper">
                 <div class="dropdown-menu-wrapper">
-                  <a href="career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
+                  <a href="career-orientation.html" class="dropdown-menu-text-link-block inline-block">
                     <div>Career Orientation</div>
                   </a>
-                  <a href="career-center.html" class="dropdown-menu-text-link-block mb0 w-inline-block">
+                  <a href="career-center.html" class="dropdown-menu-text-link-block mb0 inline-block">
                     <div>Career Center</div>
                   </a>
                 </div>
@@ -122,62 +126,83 @@ class SharedMenu {
           </nav>
         </div>
 
-        <div data-delay="0" data-hover="true" class="menu-dropdown-wrapper w-dropdown">
-          <div class="dropdown-toggle w-dropdown-toggle">
+        <!-- Pages Dropdown -->
+        <div class="menu-dropdown-wrapper custom-dropdown">
+          <div class="dropdown-toggle custom-dropdown-toggle">
             <div class="dropdown-toggle-text-block">Pages</div>
             <div class="dropdown-toggle-arrow-2"></div>
           </div>
-          <nav class="dropdown-column-wrapper-3 w-dropdown-list">
+          <nav class="dropdown-column-wrapper-3 custom-dropdown-list">
             <div class="dropdown-pd pd-60px">
-              <div class="w-layout-grid dropdown-grid">
+              <div class="dropdown-grid grid grid-cols-3 gap-6">
+                <!-- Menu Column -->
                 <div class="dropdown-singel-wrapper">
                   <div class="dropdown-title-wrapper">
                     <h3 class="dropdown-title">Menu</h3>
                   </div>
                   <div class="dropdown-menu-wrapper">
-                    <a href="home.html" class="dropdown-menu-text-link-block w-inline-block">
+                    <a href="home.html" class="dropdown-menu-text-link-block inline-block">
                       <div>Home</div>
                     </a>
-                    <a href="about-us.html" class="dropdown-menu-text-link-block w-inline-block">
+                    <a href="about-us.html" class="dropdown-menu-text-link-block inline-block">
                       <div>About us</div>
                     </a>
-                    <a href="courses.html" class="dropdown-menu-text-link-block w-inline-block">
+                    <a href="courses.html" class="dropdown-menu-text-link-block inline-block">
                       <div>Courses</div>
                     </a>
-                    <a href="contact-us.html" class="dropdown-menu-text-link-block mb0 w-inline-block">
+                    <a href="pricing.html" class="dropdown-menu-text-link-block inline-block">
+                      <div>Pricing</div>
+                    </a>
+                    <a href="contact-us.html" class="dropdown-menu-text-link-block mb0 inline-block">
                       <div>Contact Us</div>
                     </a>
                   </div>
                 </div>
+
+                <!-- Pages Column -->
                 <div class="dropdown-singel-wrapper">
                   <div class="dropdown-title-wrapper">
                     <h3 class="dropdown-title">Pages</h3>
                   </div>
                   <div class="dropdown-menu-wrapper">
-                    <a href="blog.html" class="dropdown-menu-text-link-block w-inline-block">
+                    <a href="blog.html" class="dropdown-menu-text-link-block inline-block">
                       <div>Blogs</div>
                     </a>
-                    <a href="authentication-pages/sign-in.html" class="dropdown-menu-text-link-block w-inline-block">
+                    <a href="authentication-pages/sign-in.html" class="dropdown-menu-text-link-block inline-block">
                       <div>Sign in</div>
                     </a>
-                    <a href="authentication-pages/sign-up.html" class="dropdown-menu-text-link-block w-inline-block">
+                    <a href="authentication-pages/sign-up.html" class="dropdown-menu-text-link-block inline-block">
                       <div>Sign up</div>
+                    </a>
+                    <a href="authentication-pages/forgot-password.html" class="dropdown-menu-text-link-block inline-block">
+                      <div>Forget password</div>
+                    </a>
+                    <a href="authentication-pages/reset-password.html" class="dropdown-menu-text-link-block inline-block">
+                      <div>Reset password</div>
                     </a>
                   </div>
                 </div>
+
+                <!-- Utility Pages Column -->
                 <div class="dropdown-singel-wrapper">
                   <div class="dropdown-title-wrapper">
                     <h3 class="dropdown-title">Utility Pages</h3>
                   </div>
                   <div class="dropdown-menu-wrapper">
-                    <a href="template-pages/style-guide.html" class="dropdown-menu-text-link-block w-inline-block">
+                    <a href="template-pages/style-guide.html" class="dropdown-menu-text-link-block inline-block">
                       <div>Style Guide</div>
                     </a>
-                    <a href="404.html" class="dropdown-menu-text-link-block w-inline-block">
+                    <a href="404.html" class="dropdown-menu-text-link-block inline-block">
                       <div>404 Not Found</div>
                     </a>
-                    <a href="401.html" class="dropdown-menu-text-link-block w-inline-block">
+                    <a href="401.html" class="dropdown-menu-text-link-block inline-block">
                       <div>Password Protected</div>
+                    </a>
+                    <a href="template-pages/license.html" class="dropdown-menu-text-link-block inline-block">
+                      <div>Licenses</div>
+                    </a>
+                    <a href="template-pages/changelog.html" class="dropdown-menu-text-link-block inline-block">
+                      <div>Changelog</div>
                     </a>
                   </div>
                 </div>
@@ -186,32 +211,66 @@ class SharedMenu {
           </nav>
         </div>
 
+        <!-- Mobile Sign Up Button -->
         <div class="primary-button-wrapper mobile">
-          <a href="#" class="primary-button w-inline-block" onclick="openContactPopup(); return false;">
+          <a href="#" class="primary-button inline-block" onclick="openContactPopup(); return false;">
             <div class="primary-button-text-wrap">
               <div class="primary-button-text-block">Sign Up Today</div>
               <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
             </div>
           </a>
+        </div>
+
+        <!-- Mobile Language Switchers -->
+        <div class="mobile-language-switchers">
+          <!-- Mobile Language Pills -->
+          <div class="mobile-lang-pills">
+            <a href="#" class="mobile-lang-pill active" onclick="setActivePill(this)">EN</a>
+            <a href="#" class="mobile-lang-pill" onclick="setActivePill(this)">RU</a>
+            <a href="#" class="mobile-lang-pill" onclick="setActivePill(this)">HE</a>
+          </div>
         </div>
       </nav>
 
+      <!-- Right Side Controls -->
       <div class="navbar-button-wrapper">
-        <div class="lang-pills">
-          <a href="#" class="lang-pill active" onclick="setActivePill(this)">EN</a>
-          <a href="#" class="lang-pill" onclick="setActivePill(this)">RU</a>
-          <a href="#" class="lang-pill" onclick="setActivePill(this)">HE</a>
+        <!-- Language Switchers -->
+        <div class="language-switchers">
+          <!-- Variation 1: Minimal Dropdown -->
+          <div class="lang-dropdown" onclick="toggleDropdown(this)">
+            <div class="lang-dropdown-trigger">
+              <svg class="globe-icon" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+              </svg>
+              <span>English</span>
+              <span class="dropdown-arrow">▼</span>
+            </div>
+            <div class="lang-dropdown-menu">
+              <a href="#" class="lang-option active">English</a>
+              <a href="#" class="lang-option">Русский</a>
+              <a href="#" class="lang-option">עברית</a>
+            </div>
+          </div>
+
+          <!-- Variation 2: Pill Toggle -->
+          <div class="lang-pills">
+            <a href="#" class="lang-pill active" onclick="setActivePill(this)">EN</a>
+            <a href="#" class="lang-pill" onclick="setActivePill(this)">RU</a>
+            <a href="#" class="lang-pill" onclick="setActivePill(this)">HE</a>
+          </div>
         </div>
 
-        <div class="w-commerce-commercecartwrapper navbar-cart">
-          <a class="w-commerce-commercecartopenlink navbar-cart-button w-inline-block" href="#">
+        <!-- Shopping Cart -->
+        <div class="custom-cart-wrapper navbar-cart">
+          <a class="custom-cart-open-link navbar-cart-button inline-block" role="button" aria-haspopup="dialog" aria-label="Open cart" href="#">
             <img loading="lazy" src="${this.getImagePath('Navbar-Cart-Icon.svg')}" alt="Shopping Cart" class="navbar-cart-icon">
-            <div class="w-commerce-commercecartopenlinkcount cart-quantity">0</div>
+            <div class="custom-cart-count cart-quantity">0</div>
           </a>
         </div>
 
+        <!-- Desktop Sign Up Button -->
         <div class="primary-button-wrapper desktop">
-          <a href="#" class="primary-button w-inline-block" onclick="openContactPopup(); return false;">
+          <a href="#" class="primary-button inline-block" onclick="openContactPopup(); return false;">
             <div class="primary-button-text-wrap">
               <div class="primary-button-text-block">Sign Up Today</div>
               <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
@@ -219,8 +278,13 @@ class SharedMenu {
           </a>
         </div>
 
-        <div class="menu-button w-nav-button">
-          <div class="hamburger-menu-icon"></div>
+        <!-- Mobile Menu Toggle -->
+        <div class="menu-button custom-nav-button">
+          <div class="hamburger-icon">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -252,7 +316,7 @@ class SharedMenu {
     // Remove all current classes
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
-      link.classList.remove('w--current');
+      link.classList.remove('w--current', 'active');
     });
 
     // Find and activate current page link
@@ -263,7 +327,7 @@ class SharedMenu {
     });
 
     if (activeLink) {
-      activeLink.classList.add('w--current');
+      activeLink.classList.add('w--current', 'active');
     }
 
     this.currentPage = page;
@@ -288,10 +352,13 @@ class SharedMenu {
         dropdown.addEventListener('mouseenter', () => this.showDropdown(dropdown));
         dropdown.addEventListener('mouseleave', () => this.hideDropdown(dropdown));
 
-        // Mobile click
+        // Mobile click (only on mobile)
         toggle.addEventListener('click', (e) => {
-          e.preventDefault();
-          this.handleDropdownToggle(dropdown);
+          if (window.innerWidth <= 991) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.handleDropdownToggle(dropdown);
+          }
         });
       }
     });
@@ -314,12 +381,12 @@ class SharedMenu {
     this.mobileMenuOpen = !this.mobileMenuOpen;
 
     if (this.mobileMenuOpen) {
-      this.navMenu.classList.add('w--open');
-      this.mobileMenuButton.classList.add('w--open');
+      this.navMenu.classList.add('w--open', 'active');
+      this.mobileMenuButton.classList.add('w--open', 'active');
       document.body.style.overflow = 'hidden';
     } else {
-      this.navMenu.classList.remove('w--open');
-      this.mobileMenuButton.classList.remove('w--open');
+      this.navMenu.classList.remove('w--open', 'active');
+      this.mobileMenuButton.classList.remove('w--open', 'active');
       document.body.style.overflow = '';
     }
   }
@@ -328,21 +395,21 @@ class SharedMenu {
    * Handle dropdown toggle for mobile
    */
   handleDropdownToggle(dropdown) {
-    const isOpen = dropdown.classList.contains('w--open');
+    const isOpen = dropdown.classList.contains('w--open') || dropdown.classList.contains('active');
 
     // Close all other dropdowns
     this.dropdowns.forEach(d => {
       if (d !== dropdown) {
-        d.classList.remove('w--open');
+        d.classList.remove('w--open', 'active');
       }
     });
 
     // Toggle current dropdown
     if (isOpen) {
-      dropdown.classList.remove('w--open');
+      dropdown.classList.remove('w--open', 'active');
       this.activeDropdown = null;
     } else {
-      dropdown.classList.add('w--open');
+      dropdown.classList.add('w--open', 'active');
       this.activeDropdown = dropdown;
     }
   }
@@ -352,7 +419,7 @@ class SharedMenu {
    */
   showDropdown(dropdown) {
     if (window.innerWidth > 991) {
-      dropdown.classList.add('w--open');
+      dropdown.classList.add('w--open', 'active');
       this.activeDropdown = dropdown;
     }
   }
@@ -362,7 +429,7 @@ class SharedMenu {
    */
   hideDropdown(dropdown) {
     if (window.innerWidth > 991) {
-      dropdown.classList.remove('w--open');
+      dropdown.classList.remove('w--open', 'active');
       if (this.activeDropdown === dropdown) {
         this.activeDropdown = null;
       }
@@ -377,15 +444,15 @@ class SharedMenu {
       // Close mobile menu
       if (this.mobileMenuOpen) {
         this.mobileMenuOpen = false;
-        this.navMenu.classList.remove('w--open');
-        this.mobileMenuButton.classList.remove('w--open');
+        this.navMenu.classList.remove('w--open', 'active');
+        this.mobileMenuButton.classList.remove('w--open', 'active');
         document.body.style.overflow = '';
       }
 
       // Close dropdowns on mobile
       if (window.innerWidth <= 991) {
         this.dropdowns.forEach(dropdown => {
-          dropdown.classList.remove('w--open');
+          dropdown.classList.remove('w--open', 'active');
         });
         this.activeDropdown = null;
       }
@@ -400,14 +467,14 @@ class SharedMenu {
       // Desktop: close mobile menu if open
       if (this.mobileMenuOpen) {
         this.mobileMenuOpen = false;
-        this.navMenu.classList.remove('w--open');
-        this.mobileMenuButton.classList.remove('w--open');
+        this.navMenu.classList.remove('w--open', 'active');
+        this.mobileMenuButton.classList.remove('w--open', 'active');
         document.body.style.overflow = '';
       }
     } else {
       // Mobile: close all dropdowns
       this.dropdowns.forEach(dropdown => {
-        dropdown.classList.remove('w--open');
+        dropdown.classList.remove('w--open', 'active');
       });
       this.activeDropdown = null;
     }
@@ -502,10 +569,45 @@ window.toggleDropdown = function(element) {
 };
 
 window.setActivePill = function(element) {
-  element.parentNode.querySelectorAll('.lang-pill').forEach(pill => {
-    pill.classList.remove('active');
-  });
-  element.classList.add('active');
+  // Handle both desktop and mobile language pills
+  const isDesktop = element.classList.contains('lang-pill');
+  const isMobile = element.classList.contains('mobile-lang-pill');
+
+  if (isDesktop) {
+    // Desktop language pills
+    element.parentNode.querySelectorAll('.lang-pill').forEach(pill => {
+      pill.classList.remove('active');
+    });
+    element.classList.add('active');
+
+    // Sync with mobile pills
+    const lang = element.textContent;
+    document.querySelectorAll('.mobile-lang-pill').forEach(pill => {
+      pill.classList.remove('active');
+      if (pill.textContent === lang) {
+        pill.classList.add('active');
+      }
+    });
+  } else if (isMobile) {
+    // Mobile language pills
+    element.parentNode.querySelectorAll('.mobile-lang-pill').forEach(pill => {
+      pill.classList.remove('active');
+    });
+    element.classList.add('active');
+
+    // Sync with desktop pills
+    const lang = element.textContent;
+    document.querySelectorAll('.lang-pill').forEach(pill => {
+      pill.classList.remove('active');
+      if (pill.textContent === lang) {
+        pill.classList.add('active');
+      }
+    });
+  }
+
+  // You could add language switching logic here
+  const lang = element.textContent;
+  console.log('Language switched to:', lang);
 };
 
 // Close dropdowns when clicking outside
