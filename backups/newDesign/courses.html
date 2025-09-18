@@ -264,6 +264,94 @@
       background-color: #ffd659 !important;
       color: #05051a !important;
     }
+
+    /* Mobile Menu Styles */
+    @media (max-width: 991px) {
+      /* Style mobile menu - let Webflow control display */
+      .nav-menu, .w-nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        bottom: 0;
+        left: auto;
+        width: 85%;
+        max-width: 360px;
+        background: #05051a;
+        z-index: 999;
+        padding: 80px 20px 20px;
+        overflow-y: auto;
+        transition: right 0.3s ease, transform 0.3s ease;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+      /* Show menu when Webflow opens it */
+      .w-nav-menu[style*="display: block"] {
+        right: 0 !important;
+        transform: translateX(0) !important;
+      }
+      /* Style mobile menu items */
+      .nav-menu .nav-link,
+      .w-nav-menu .w-nav-link {
+        display: block !important;
+        padding: 15px 0;
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .nav-menu .nav-link:hover,
+      .w-nav-menu .w-nav-link:hover {
+        color: #ffd659;
+      }
+      /* Style dropdowns in mobile */
+      .nav-menu .menu-dropdown-wrapper,
+      .w-nav-menu .w-dropdown {
+        display: block !important;
+        margin: 15px 0;
+      }
+      .nav-menu .dropdown-toggle,
+      .w-nav-menu .w-dropdown-toggle {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 15px 0 !important;
+        color: white !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+      }
+      /* Mobile language pills */
+      .mobile-language-switchers {
+        display: block !important;
+        padding: 15px 0 !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+      }
+      .mobile-lang-pills {
+        display: flex !important;
+        gap: 10px !important;
+        justify-content: center !important;
+      }
+      /* Mobile Sign Up button */
+      .primary-button-wrapper.mobile,
+      .nav-menu .primary-button-wrapper.mobile {
+        display: block !important;
+        margin-top: 20px;
+        width: 100%;
+      }
+      .primary-button-wrapper.mobile .primary-button,
+      .nav-menu .primary-button-wrapper.mobile .primary-button {
+        width: 100% !important;
+        text-align: center !important;
+      }
+      /* Hide desktop elements on mobile */
+      .primary-button-wrapper.desktop {
+        display: none !important;
+      }
+      .lang-pills {
+        display: none !important;
+      }
+      .navbar-cart {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body>

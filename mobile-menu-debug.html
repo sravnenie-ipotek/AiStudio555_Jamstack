@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Menu Debug Tool</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .debug-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .debug-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .mobile-simulator {
+            width: 375px;
+            height: 600px;
+            margin: 0 auto;
+            position: relative;
+            border: 8px solid #333;
+            border-radius: 25px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .mobile-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            position: relative;
+        }
+
+        .debug-controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-good { background: #28a745; }
+        .status-bad { background: #dc3545; }
+        .status-warning { background: #ffc107; }
+
+        .test-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .test-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+        }
+
+        .test-card.pass { border-left-color: #28a745; }
+        .test-card.fail { border-left-color: #dc3545; }
+        .test-card.warning { border-left-color: #ffc107; }
+
+        @media (max-width: 768px) {
+            .mobile-simulator {
+                width: 100%;
+                max-width: 375px;
+                border-width: 4px;
+                border-radius: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>📱 Mobile Menu Debug Tool</h1>
+
+        <div class="debug-panel">
+            <h2>🎯 Testing Mobile Menu at http://localhost:3005/home.html</h2>
+
+            <div class="debug-controls">
+                <button class="btn-primary" onclick="testMobileElements()">Test Mobile Elements</button>
+                <button class="btn-success" onclick="testMenuFunctionality()">Test Menu Toggle</button>
+                <button class="btn-warning" onclick="testCSSClasses()">Test CSS Classes</button>
+                <button class="btn-danger" onclick="testJavaScriptErrors()">Check JS Errors</button>
+            </div>
+
+            <div id="test-results" class="test-results"></div>
+        </div>
+
+        <div class="debug-panel">
+            <h2>📱 Mobile View Simulator</h2>
+            <p>Simulating mobile viewport (375px width)</p>
+
+            <div class="mobile-simulator">
+                <div class="mobile-screen">
+                    <iframe id="mobile-iframe" src="http://localhost:3005/home.html"></iframe>
+                </div>
+            </div>
+
+            <div class="debug-controls">
+                <button class="btn-primary" onclick="simulateMenuClick()">Simulate Menu Click</button>
+                <button class="btn-success" onclick="checkMenuState()">Check Menu State</button>
+                <button class="btn-warning" onclick="resetMobileView()">Reset View</button>
+            </div>
+        </div>
+
+        <div class="debug-panel">
+            <h2>📊 Debug Console</h2>
+            <div id="debug-log" class="log">Initializing mobile menu debug tool...\n</div>
+        </div>
+    </div>
+
+    <script>
+        const log = document.getElementById('debug-log');
+        const results = document.getElementById('test-results');
+
+        function logMessage(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+            log.textContent += logEntry;
+            log.scrollTop = log.scrollHeight;
+            console.log(logEntry);
+        }
+
+        function addTestResult(title, status, details) {
+            const card = document.createElement('div');
+            card.className = `test-card ${status}`;
+            card.innerHTML = `
+                <h4>${status === 'pass' ? '✅' : status === 'fail' ? '❌' : '⚠️'} ${title}</h4>
+                <p>${details}</p>
+            `;
+            results.appendChild(card);
+        }
+
+        function clearResults() {
+            results.innerHTML = '';
+        }
+
+        async function testMobileElements() {
+            logMessage('Testing mobile elements structure...');
+            clearResults();
+
+            try {
+                const response = await fetch('http://localhost:3005/home.html');
+                const html = await response.text();
+
+                // Check for mobile menu button
+                const hasMenuButton = html.includes('menu-button') || html.includes('w-nav-button');
+                addTestResult(
+                    'Menu Button Element',
+                    hasMenuButton ? 'pass' : 'fail',
+                    hasMenuButton ? 'Found menu button in HTML' : 'Menu button missing'
+                );
+
+                // Check for hamburger icon
+                const hasHamburgerIcon = html.includes('hamburger-icon') || html.includes('hamburger-line');
+                addTestResult(
+                    'Hamburger Icon',
+                    hasHamburgerIcon ? 'pass' : 'fail',
+                    hasHamburgerIcon ? 'Found hamburger icon elements' : 'Hamburger icon missing'
+                );
+
+                // Check for nav menu
+                const hasNavMenu = html.includes('nav-menu') || html.includes('w-nav-menu');
+                addTestResult(
+                    'Navigation Menu',
+                    hasNavMenu ? 'pass' : 'fail',
+                    hasNavMenu ? 'Found navigation menu container' : 'Navigation menu missing'
+                );
+
+                // Check for mobile CSS
+                const hasMobileCss = html.includes('@media') && html.includes('nav-open');
+                addTestResult(
+                    'Mobile CSS Rules',
+                    hasMobileCss ? 'pass' : 'fail',
+                    hasMobileCss ? 'Found mobile media queries and nav-open class' : 'Mobile CSS missing'
+                );
+
+                logMessage('Mobile elements test completed');
+
+            } catch (error) {
+                addTestResult(
+                    'Mobile Elements Test',
+                    'fail',
+                    `Error testing elements: ${error.message}`
+                );
+                logMessage(`Mobile elements test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testMenuFunctionality() {
+            logMessage('Testing menu toggle functionality...');
+
+            try {
+                const iframe = document.getElementById('mobile-iframe');
+
+                // Wait for iframe to load
+                iframe.onload = () => {
+                    try {
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+                        // Find menu elements
+                        const menuButton = iframeDoc.querySelector('.menu-button, .w-nav-button');
+                        const navMenu = iframeDoc.querySelector('.nav-menu, .w-nav-menu');
+
+                        addTestResult(
+                            'Menu Button Detection',
+                            menuButton ? 'pass' : 'fail',
+                            menuButton ? 'Menu button found in DOM' : 'Menu button not found in DOM'
+                        );
+
+                        addTestResult(
+                            'Nav Menu Detection',
+                            navMenu ? 'pass' : 'fail',
+                            navMenu ? 'Navigation menu found in DOM' : 'Navigation menu not found in DOM'
+                        );
+
+                        if (menuButton && navMenu) {
+                            // Test click event
+                            logMessage('Simulating menu button click...');
+
+                            const initialState = navMenu.classList.contains('nav-open');
+                            menuButton.click();
+
+                            setTimeout(() => {
+                                const newState = navMenu.classList.contains('nav-open');
+                                const changed = initialState !== newState;
+
+                                addTestResult(
+                                    'Menu Toggle Function',
+                                    changed ? 'pass' : 'fail',
+                                    changed ?
+                                        `Menu state changed: ${initialState} → ${newState}` :
+                                        'Menu state did not change'
+                                );
+
+                                // Check CSS classes
+                                const hasNavOpen = navMenu.classList.contains('nav-open');
+                                const hasWOpen = menuButton.classList.contains('w--open');
+
+                                addTestResult(
+                                    'CSS Classes Applied',
+                                    (hasNavOpen || hasWOpen) ? 'pass' : 'fail',
+                                    `nav-open: ${hasNavOpen}, w--open: ${hasWOpen}`
+                                );
+
+                            }, 100);
+                        }
+
+                    } catch (crossOriginError) {
+                        addTestResult(
+                            'Menu Functionality Test',
+                            'warning',
+                            'Cross-origin restrictions prevent DOM access. Test manually in browser.'
+                        );
+                        logMessage('Cannot access iframe DOM due to cross-origin restrictions', 'warning');
+                    }
+                };
+
+                // Trigger iframe reload to test
+                iframe.src = iframe.src;
+
+            } catch (error) {
+                addTestResult(
+                    'Menu Functionality Test',
+                    'fail',
+                    `Error testing functionality: ${error.message}`
+                );
+                logMessage(`Menu functionality test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCSSClasses() {
+            logMessage('Testing CSS classes for mobile menu...');
+
+            try {
+                const response = await fetch('http://localhost:3005/home.html');
+                const html = await response.text();
+
+                // Check for nav-open class styles
+                const hasNavOpenStyles = html.includes('.nav-open') && html.includes('display: block');
+                addTestResult(
+                    'nav-open CSS Styles',
+                    hasNavOpenStyles ? 'pass' : 'fail',
+                    hasNavOpenStyles ? 'Found nav-open class with display styles' : 'nav-open styles missing or incomplete'
+                );
+
+                // Check for hamburger animation
+                const hasHamburgerAnimation = html.includes('.w--open') && html.includes('hamburger-line');
+                addTestResult(
+                    'Hamburger Animation',
+                    hasHamburgerAnimation ? 'pass' : 'fail',
+                    hasHamburgerAnimation ? 'Found hamburger animation styles' : 'Hamburger animation missing'
+                );
+
+                // Check for mobile media query
+                const hasMobileMediaQuery = html.includes('@media') && html.includes('max-width');
+                addTestResult(
+                    'Mobile Media Queries',
+                    hasMobileMediaQuery ? 'pass' : 'fail',
+                    hasMobileMediaQuery ? 'Found mobile media queries' : 'Mobile media queries missing'
+                );
+
+                // Check z-index and positioning
+                const hasZIndex = html.includes('z-index') && html.includes('position');
+                addTestResult(
+                    'Menu Positioning',
+                    hasZIndex ? 'pass' : 'warning',
+                    hasZIndex ? 'Found z-index and positioning styles' : 'Check if menu has proper positioning'
+                );
+
+                logMessage('CSS classes test completed');
+
+            } catch (error) {
+                addTestResult(
+                    'CSS Classes Test',
+                    'fail',
+                    `Error testing CSS: ${error.message}`
+                );
+                logMessage(`CSS classes test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testJavaScriptErrors() {
+            logMessage('Checking for JavaScript errors...');
+
+            const iframe = document.getElementById('mobile-iframe');
+
+            // Listen for iframe console messages
+            iframe.onload = () => {
+                try {
+                    const iframeWindow = iframe.contentWindow;
+
+                    // Check if mobile menu JS is present
+                    const response = fetch('http://localhost:3005/home.html')
+                        .then(res => res.text())
+                        .then(html => {
+                            const hasMobileMenuJS = html.includes('menuButton.addEventListener');
+                            const hasClickHandler = html.includes('click') && html.includes('nav-open');
+
+                            addTestResult(
+                                'Mobile Menu JavaScript',
+                                hasMobileMenuJS ? 'pass' : 'fail',
+                                hasMobileMenuJS ? 'Found mobile menu event listener' : 'Mobile menu JavaScript missing'
+                            );
+
+                            addTestResult(
+                                'Click Event Handler',
+                                hasClickHandler ? 'pass' : 'fail',
+                                hasClickHandler ? 'Found click handler with nav-open toggle' : 'Click handler missing or incomplete'
+                            );
+
+                            // Check console for errors
+                            addTestResult(
+                                'JavaScript Errors',
+                                'warning',
+                                'Check browser console for JavaScript errors when clicking menu button'
+                            );
+                        });
+
+                } catch (error) {
+                    addTestResult(
+                        'JavaScript Test',
+                        'warning',
+                        'Cannot access iframe JavaScript due to cross-origin restrictions'
+                    );
+                }
+            };
+        }
+
+        function simulateMenuClick() {
+            logMessage('Attempting to simulate menu click...');
+
+            const iframe = document.getElementById('mobile-iframe');
+
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                const menuButton = iframeDoc.querySelector('.menu-button, .w-nav-button');
+
+                if (menuButton) {
+                    menuButton.click();
+                    logMessage('Menu button clicked successfully');
+
+                    setTimeout(() => {
+                        checkMenuState();
+                    }, 100);
+                } else {
+                    logMessage('Menu button not found in iframe', 'error');
+                }
+
+            } catch (error) {
+                logMessage('Cannot simulate click due to cross-origin restrictions', 'warning');
+                logMessage('Please test manually: tap the hamburger menu in mobile view', 'info');
+            }
+        }
+
+        function checkMenuState() {
+            logMessage('Checking current menu state...');
+
+            const iframe = document.getElementById('mobile-iframe');
+
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                const navMenu = iframeDoc.querySelector('.nav-menu, .w-nav-menu');
+                const menuButton = iframeDoc.querySelector('.menu-button, .w-nav-button');
+
+                if (navMenu && menuButton) {
+                    const isOpen = navMenu.classList.contains('nav-open');
+                    const hasWOpen = menuButton.classList.contains('w--open');
+
+                    logMessage(`Menu state - nav-open: ${isOpen}, w--open: ${hasWOpen}`);
+
+                    // Check visibility
+                    const style = iframeDoc.defaultView.getComputedStyle(navMenu);
+                    const isVisible = style.display !== 'none' && style.visibility !== 'hidden';
+
+                    logMessage(`Menu visibility - display: ${style.display}, visibility: ${style.visibility}`);
+
+                } else {
+                    logMessage('Menu elements not found', 'error');
+                }
+
+            } catch (error) {
+                logMessage('Cannot check menu state due to cross-origin restrictions', 'warning');
+            }
+        }
+
+        function resetMobileView() {
+            logMessage('Resetting mobile view...');
+
+            const iframe = document.getElementById('mobile-iframe');
+            iframe.src = iframe.src;
+
+            setTimeout(() => {
+                logMessage('Mobile view reset complete');
+            }, 1000);
+        }
+
+        // Auto-run basic tests on load
+        window.addEventListener('load', () => {
+            logMessage('Mobile menu debug tool loaded');
+            logMessage('Click buttons above to run specific tests');
+            logMessage('Or test manually by tapping the hamburger menu in mobile view below');
+
+            // Auto-run element test
+            setTimeout(() => {
+                testMobileElements();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

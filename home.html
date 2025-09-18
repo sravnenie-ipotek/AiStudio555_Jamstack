@@ -59,6 +59,147 @@
       .lang-pills {
         display: none !important;
       }
+
+      /* Mobile Navigation Menu */
+      .nav-menu, .w-nav-menu {
+        display: none !important;
+        position: fixed !important;
+        top: 0 !important;
+        right: -100% !important;
+        bottom: 0 !important;
+        left: auto !important;
+        width: 85% !important;
+        max-width: 360px !important;
+        background: rgba(5, 5, 26, 0.98) !important;
+        backdrop-filter: blur(20px) !important;
+        z-index: 999 !important;
+        padding: 80px 30px 30px !important;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3) !important;
+        transition: right 0.3s ease !important;
+        overflow-y: auto !important;
+      }
+
+      /* Show menu when open */
+      .nav-menu.nav-open, .w-nav-menu.nav-open {
+        display: block !important;
+        right: 0 !important;
+        opacity: 1 !important;
+      }
+
+      /* Style mobile menu items */
+      .nav-menu .nav-link,
+      .w-nav-menu .w-nav-link {
+        display: block !important;
+        padding: 15px 0 !important;
+        color: white !important;
+        text-decoration: none !important;
+        font-size: 18px !important;
+        font-weight: 500 !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        transition: all 0.3s ease !important;
+      }
+
+      .nav-menu .nav-link:hover,
+      .w-nav-menu .w-nav-link:hover {
+        color: #ffd700 !important;
+        padding-left: 10px !important;
+      }
+
+      /* Mobile Language Pills */
+      .mobile-lang-pills {
+        display: flex !important;
+        gap: 10px !important;
+        justify-content: center !important;
+        margin: 20px 0 !important;
+      }
+
+      .mobile-lang-pill {
+        padding: 6px 12px !important;
+        border-radius: 15px !important;
+        background: transparent !important;
+        color: white !important;
+        text-decoration: none !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        transition: all 0.3s ease !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+      }
+
+      .mobile-lang-pill:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-color: rgba(255, 255, 255, 0.5) !important;
+      }
+
+      .mobile-lang-pill.active {
+        background: #ffd700 !important;
+        color: #1a1d3a !important;
+        border-color: #ffd700 !important;
+      }
+
+      /* Menu Button */
+      .menu-button, .w-nav-button {
+        display: flex !important;
+        background: transparent !important;
+        border: none !important;
+        cursor: pointer !important;
+        padding: 10px !important;
+        position: relative !important;
+        z-index: 1000 !important;
+        width: auto !important;
+        height: auto !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      /* Hamburger Icon */
+      .hamburger-icon {
+        width: 24px !important;
+        height: 18px !important;
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+      }
+
+      .hamburger-line {
+        display: block !important;
+        width: 24px !important;
+        height: 2px !important;
+        background-color: #ffffff !important;
+        margin: 0 !important;
+        border-radius: 1px !important;
+        transition: all 0.3s ease !important;
+        position: relative !important;
+      }
+
+      /* Hamburger Animation */
+      .menu-button.w--open .hamburger-line:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px) !important;
+      }
+
+      .menu-button.w--open .hamburger-line:nth-child(2) {
+        opacity: 0 !important;
+      }
+
+      .menu-button.w--open .hamburger-line:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px) !important;
+      }
+
+      .menu-button:hover .hamburger-line {
+        background-color: #ffd700 !important;
+      }
+
+      /* Mobile overlay */
+      .navbar.nav--open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+      }
     }
 
     /* RTL support */
