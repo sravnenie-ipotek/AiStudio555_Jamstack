@@ -1,0 +1,80 @@
+{
+  "overallPercentage": 33,
+  "totalTests": 15,
+  "passedTests": 5,
+  "results": {
+    "en": {
+      "language": "English",
+      "expected": {
+        "blog": "Blog",
+        "author1": "David Kim",
+        "author2": "Tariq Ahmed",
+        "author3": "Nadia Khan",
+        "zohacous": "Zohacous"
+      },
+      "actual": {
+        "blog": "Blog",
+        "author1": "David Kim",
+        "author2": "Tariq Ahmed",
+        "author3": "Nadia Khan",
+        "zohacous": "Zohacous"
+      },
+      "matches": {
+        "blog": true,
+        "author1": true,
+        "author2": true,
+        "author3": true,
+        "zohacous": true
+      }
+    },
+    "ru": {
+      "language": "Russian",
+      "expected": {
+        "blog": "Блог",
+        "author1": "Давид Ким",
+        "author2": "Тарик Ахмед",
+        "author3": "Надия Хан",
+        "zohacous": "Зохакус"
+      },
+      "actual": {
+        "blog": "Blog",
+        "author1": "David Kim",
+        "author2": "Tariq Ahmed",
+        "author3": "Nadia Khan",
+        "zohacous": "Zohacous"
+      },
+      "matches": {
+        "blog": false,
+        "author1": false,
+        "author2": false,
+        "author3": false,
+        "zohacous": false
+      }
+    },
+    "he": {
+      "language": "Hebrew",
+      "expected": {
+        "blog": "בלוג",
+        "author1": "דיוויד קים",
+        "author2": "טאריק אחמד",
+        "author3": "נדיה חאן",
+        "zohacous": "זוהקוס"
+      },
+      "actual": {
+        "blog": "Blog",
+        "author1": "David Kim",
+        "author2": "Tariq Ahmed",
+        "author3": "Nadia Khan",
+        "zohacous": "Zohacous"
+      },
+      "matches": {
+        "blog": false,
+        "author1": false,
+        "author2": false,
+        "author3": false,
+        "zohacous": false
+      }
+    }
+  },
+  "success": false
+}

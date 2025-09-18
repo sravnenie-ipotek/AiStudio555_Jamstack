@@ -270,11 +270,18 @@ class LanguageManager {
         // Update all elements with data-i18n attribute
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.dataset.i18n;
+
+            // First try to get value from API data
             const value = this.getNestedValue(data.data, key);
 
-            if (value) {
+            // If not found in API data, try local translations
+            const localizedValue = !value ? this.getLocalizedText(key, locale) : null;
+
+            const finalValue = value || localizedValue;
+
+            if (finalValue) {
                 if (element.tagName === 'IMG') {
-                    element.src = value;
+                    element.src = finalValue;
                     element.alt = this.getNestedValue(data, `${key}_alt`) || '';
                 } else if (element.tagName === 'A') {
                     if (element.dataset.i18nHref) {
@@ -282,9 +289,11 @@ class LanguageManager {
                     }
                     if (element.dataset.i18nText) {
                         element.textContent = this.getNestedValue(data, element.dataset.i18nText);
+                    } else {
+                        element.textContent = finalValue;
                     }
                 } else {
-                    element.innerHTML = value;
+                    element.innerHTML = finalValue;
                 }
             }
         });
@@ -434,19 +443,43 @@ class LanguageManager {
                 learnMore: 'Learn More',
                 readMore: 'Read More',
                 loading: 'Loading...',
-                error: 'Error loading content'
+                error: 'Error loading content',
+                // Navigation
+                'navigation.blog': 'Blog',
+                // Testimonials
+                'testimonials.author1.name': 'David Kim',
+                'testimonials.author2.name': 'Tariq Ahmed',
+                'testimonials.author3.name': 'Nadia Khan',
+                // Footer
+                'footer.company.zohacous': 'Zohacous'
             },
             ru: {
                 learnMore: 'Узнать больше',
                 readMore: 'Читать далее',
                 loading: 'Загрузка...',
-                error: 'Ошибка загрузки контента'
+                error: 'Ошибка загрузки контента',
+                // Navigation
+                'navigation.blog': 'Блог',
+                // Testimonials
+                'testimonials.author1.name': 'Давид Ким',
+                'testimonials.author2.name': 'Тарик Ахмед',
+                'testimonials.author3.name': 'Надия Хан',
+                // Footer
+                'footer.company.zohacous': 'Зохакус'
             },
             he: {
                 learnMore: 'למד עוד',
                 readMore: 'קרא עוד',
                 loading: 'טוען...',
-                error: 'שגיאה בטעינת תוכן'
+                error: 'שגיאה בטעינת תוכן',
+                // Navigation
+                'navigation.blog': 'בלוג',
+                // Testimonials
+                'testimonials.author1.name': 'דיוויד קים',
+                'testimonials.author2.name': 'טאריק אחמד',
+                'testimonials.author3.name': 'נדיה חאן',
+                // Footer
+                'footer.company.zohacous': 'זוהקוס'
             }
         };
 

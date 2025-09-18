@@ -1,0 +1,93 @@
+{
+  "targetElementsSuccess": 100,
+  "passedTests": 15,
+  "totalTests": 15,
+  "results": {
+    "en": {
+      "navigation.blog": {
+        "found": true,
+        "text": "Blog",
+        "hasDataI18n": true
+      },
+      "testimonials.author1.name": {
+        "found": true,
+        "text": "David Kim",
+        "hasDataI18n": true
+      },
+      "testimonials.author2.name": {
+        "found": true,
+        "text": "Tariq Ahmed",
+        "hasDataI18n": true
+      },
+      "testimonials.author3.name": {
+        "found": true,
+        "text": "Nadia Khan",
+        "hasDataI18n": true
+      },
+      "footer.company.zohacous": {
+        "found": true,
+        "text": "Zohacous",
+        "hasDataI18n": true
+      }
+    },
+    "ru": {
+      "navigation.blog": {
+        "found": true,
+        "text": "Блог",
+        "hasDataI18n": true
+      },
+      "testimonials.author1.name": {
+        "found": true,
+        "text": "Давид Ким",
+        "hasDataI18n": true
+      },
+      "testimonials.author2.name": {
+        "found": true,
+        "text": "Тарик Ахмед",
+        "hasDataI18n": true
+      },
+      "testimonials.author3.name": {
+        "found": true,
+        "text": "Надия Хан",
+        "hasDataI18n": true
+      },
+      "footer.company.zohacous": {
+        "found": true,
+        "text": "Зохакус",
+        "hasDataI18n": true
+      }
+    },
+    "he": {
+      "navigation.blog": {
+        "found": true,
+        "text": "בלוג",
+        "hasDataI18n": true
+      },
+      "testimonials.author1.name": {
+        "found": true,
+        "text": "דיוויד קים",
+        "hasDataI18n": true
+      },
+      "testimonials.author2.name": {
+        "found": true,
+        "text": "טאריק אחמד",
+        "hasDataI18n": true
+      },
+      "testimonials.author3.name": {
+        "found": true,
+        "text": "נדיה חאן",
+        "hasDataI18n": true
+      },
+      "footer.company.zohacous": {
+        "found": true,
+        "text": "זוהקוס",
+        "hasDataI18n": true
+      }
+    }
+  },
+  "elementStats": {
+    "totalDataI18nElements": 101,
+    "ourTargetElements": 5,
+    "translatorExists": true
+  }
+}
