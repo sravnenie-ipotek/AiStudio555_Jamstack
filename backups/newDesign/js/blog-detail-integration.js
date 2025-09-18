@@ -40,6 +40,7 @@ class BlogDetailIntegration {
     async loadBlogDetails() {
         try {
             console.log(`📡 Fetching blog post ${this.blogId}...`);
+            console.log(`🔗 Full URL: ${this.apiBase}/api/blog-posts/${this.blogId}`);
 
             const response = await fetch(`${this.apiBase}/api/blog-posts/${this.blogId}`);
 
@@ -63,7 +64,22 @@ class BlogDetailIntegration {
 
         } catch (error) {
             console.error('❌ Error loading blog post:', error);
-            this.showError('Failed to load blog post. Please try again.');
+
+            // Check if it's a connection error
+            if (error.message.includes('Failed to fetch')) {
+                console.log('🔄 Connection failed, checking server status...');
+                this.showError(`
+                    <strong>Connection Error</strong><br>
+                    Unable to connect to the server.<br><br>
+                    Please ensure:<br>
+                    1. The API server is running (npm start)<br>
+                    2. Server is on port 3000<br>
+                    3. Try refreshing the page<br><br>
+                    <small>URL attempted: ${this.apiBase}/api/blog-posts/${this.blogId}</small>
+                `);
+            } else {
+                this.showError('Failed to load blog post. Please try again.');
+            }
         }
     }
 

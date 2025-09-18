@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Teachers Load</title>
+</head>
+<body>
+    <h1>Test Teachers Load</h1>
+    <button onclick="testLoad()">Test Load Teachers</button>
+    <div id="result"></div>
+
+    <script>
+        async function testLoad() {
+            const API_BASE = 'http://localhost:1337';
+            const response = await fetch(`${API_BASE}/api/nd/teachers`);
+            const result = await response.json();
+            document.getElementById('result').innerHTML = `
+                <pre>${JSON.stringify(result, null, 2)}</pre>
+                <p>Found ${result.data ? result.data.length : 0} teachers</p>
+            `;
+
+            // Now open admin and trigger the function
+            window.open('http://localhost:1337/admin-nd.html#teachers', '_blank');
+        }
+    </script>
+</body>
+</html>

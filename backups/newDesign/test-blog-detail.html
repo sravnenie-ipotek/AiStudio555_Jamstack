@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Blog Detail Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .test-section { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .blog-link { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 5px; }
+        .blog-link:hover { background: #0056b3; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Blog Detail Page Test</h1>
+
+    <div class="test-section">
+        <h2>1. Available Blog Posts</h2>
+        <div id="blog-list"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Test Individual Blog Post</h2>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Server Status</h2>
+        <div id="server-status"></div>
+    </div>
+
+    <script>
+        const blogListDiv = document.getElementById('blog-list');
+        const testResultsDiv = document.getElementById('test-results');
+        const serverStatusDiv = document.getElementById('server-status');
+
+        function addStatus(container, message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = message;
+            container.appendChild(div);
+        }
+
+        async function checkServer() {
+            addStatus(serverStatusDiv, 'Checking server status...', 'info');
+
+            try {
+                const response = await fetch('http://localhost:3000/api/blog-posts');
+                if (response.ok) {
+                    addStatus(serverStatusDiv, '✅ Server is running on port 3000', 'success');
+                    return true;
+                } else {
+                    addStatus(serverStatusDiv, `⚠️ Server responded with status: ${response.status}`, 'error');
+                    return false;
+                }
+            } catch (error) {
+                addStatus(serverStatusDiv, '❌ Server is not running. Please run: npm start', 'error');
+                return false;
+            }
+        }
+
+        async function loadBlogPosts() {
+            try {
+                const response = await fetch('http://localhost:3000/api/blog-posts');
+                const data = await response.json();
+
+                if (data.success && data.data) {
+                    addStatus(blogListDiv, `Found ${data.data.length} blog posts:`, 'success');
+
+                    data.data.forEach(post => {
+                        const link = document.createElement('a');
+                        link.href = `detail_blog.html?id=${post.id}`;
+                        link.className = 'blog-link';
+                        link.textContent = `${post.id}: ${post.title}`;
+                        link.target = '_blank';
+                        blogListDiv.appendChild(link);
+                    });
+
+                    // Test the first blog post
+                    if (data.data.length > 0) {
+                        testBlogDetail(data.data[0].id);
+                    }
+                }
+            } catch (error) {
+                addStatus(blogListDiv, `Error loading posts: ${error.message}`, 'error');
+            }
+        }
+
+        async function testBlogDetail(blogId) {
+            addStatus(testResultsDiv, `Testing blog post ID ${blogId}...`, 'info');
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/blog-posts/${blogId}`);
+                const data = await response.json();
+
+                if (data.success && data.data) {
+                    addStatus(testResultsDiv, '✅ Blog detail API works!', 'success');
+
+                    const details = document.createElement('pre');
+                    details.textContent = JSON.stringify(data.data, null, 2).substring(0, 500) + '...';
+                    testResultsDiv.appendChild(details);
+
+                    addStatus(testResultsDiv, `
+                        <strong>Test Result:</strong><br>
+                        - Title: ${data.data.title}<br>
+                        - Author: ${data.data.author}<br>
+                        - ID: ${data.data.id}<br>
+                        - Content length: ${data.data.content ? data.data.content.length : 0} characters
+                    `, 'success');
+                } else {
+                    addStatus(testResultsDiv, 'Invalid response structure', 'error');
+                }
+            } catch (error) {
+                addStatus(testResultsDiv, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Run tests
+        async function runTests() {
+            const serverOk = await checkServer();
+            if (serverOk) {
+                await loadBlogPosts();
+            }
+        }
+
+        runTests();
+    </script>
+</body>
+</html>

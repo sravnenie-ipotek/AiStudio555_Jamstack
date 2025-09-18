@@ -6832,6 +6832,7 @@ figure {
 
   .why-choose-us-typography {
     order: -1;
+    max-width: 100%;
     padding: 100px 15px 60px;
   }
 
@@ -8416,6 +8417,7 @@ figure {
   }
 
   .why-choose-us-typography {
+    max-width: 100%;
     padding-top: 80px;
     padding-bottom: 50px;
   }
@@ -9982,6 +9984,7 @@ figure {
   }
 
   .why-choose-us-typography {
+    max-width: 100%;
     padding: 60px 10px 40px;
   }
 
@@ -11379,4 +11382,35 @@ figure {
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+}
+/* Critical Responsive Fix for Why Choose Us Section */
+@media screen and (max-width: 991px) {
+  .why-choose-us-typography {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .why-choose-us-image-wrapper {
+    max-width: 100% !important;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .why-choose-us-typography {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .why-choose-us-typography {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .why-choose-us-slider-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .why-choose-us-slider-mask {
+    max-width: 100% !important;
+  }
 }

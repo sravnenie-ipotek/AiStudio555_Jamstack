@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Test Why Choose Us Responsive</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .test-container {
+            background: #f0f0f0;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .pass { background: #d4edda; color: #155724; }
+        .fail { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        pre {
+            background: #1e1e1e;
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #333;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Why Choose Us Section - Responsive Test</h1>
+
+    <div class="test-container">
+        <h2>Test Results:</h2>
+        <div id="results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Live Preview (Mobile View 375px):</h2>
+        <div style="width: 375px; margin: 0 auto; border: 1px solid #ddd;">
+            <iframe src="http://localhost:3005/backups/newDesign/home.html#why-choose-us"
+                    style="width: 375px; height: 800px;"></iframe>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>CSS Fix Applied:</h2>
+        <pre><code>/* Mobile breakpoints - Added max-width: 100% */
+@media screen and (max-width: 991px) {
+  .why-choose-us-typography {
+    max-width: 100%;  /* Added fix */
+    order: -1;
+    padding: 100px 15px 60px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .why-choose-us-typography {
+    max-width: 100%;  /* Added fix */
+    padding-top: 80px;
+    padding-bottom: 50px;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .why-choose-us-typography {
+    max-width: 100%;  /* Added fix */
+    padding: 60px 10px 40px;
+  }
+}</code></pre>
+    </div>
+
+    <script>
+        async function testResponsive() {
+            const results = document.getElementById('results');
+            let html = '';
+
+            // Test viewport sizes
+            const viewports = [
+                { width: 1920, name: 'Desktop' },
+                { width: 768, name: 'Tablet' },
+                { width: 375, name: 'Mobile' }
+            ];
+
+            html += '<div class="status info">Current viewport: ' + window.innerWidth + 'px</div>';
+
+            // Check if CSS file exists and is loaded
+            try {
+                const response = await fetch('/backups/newDesign/css/aizeks-groovy-site.webflow.css');
+                if (response.ok) {
+                    const css = await response.text();
+
+                    // Check for our fixes
+                    if (css.includes('@media screen and (max-width: 991px)') &&
+                        css.includes('.why-choose-us-typography') &&
+                        css.includes('max-width: 100%')) {
+                        html += '<div class="status pass">✅ CSS Fix Applied: max-width: 100% is present in mobile breakpoints</div>';
+                    } else {
+                        html += '<div class="status fail">❌ CSS Fix Missing: max-width: 100% not found in mobile breakpoints</div>';
+                    }
+
+                    // Check base styles
+                    const baseMatch = css.match(/\.why-choose-us-typography\s*{[^}]*max-width:\s*([^;]+);/);
+                    if (baseMatch) {
+                        html += '<div class="status info">Base max-width: ' + baseMatch[1] + '</div>';
+                    }
+
+                } else {
+                    html += '<div class="status fail">❌ Could not load CSS file</div>';
+                }
+            } catch (error) {
+                html += '<div class="status fail">❌ Error checking CSS: ' + error.message + '</div>';
+            }
+
+            // Add browser info
+            html += '<div class="status info">Browser: ' + navigator.userAgent + '</div>';
+
+            results.innerHTML = html;
+        }
+
+        // Run test on load
+        testResponsive();
+
+        // Re-run on resize
+        window.addEventListener('resize', testResponsive);
+    </script>
+</body>
+</html>

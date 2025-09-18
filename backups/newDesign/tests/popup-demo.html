@@ -11,6 +11,11 @@
   <!-- Font Awesome for menu icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
+  <!-- Webflow CSS -->
+  <link href="../css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="../css/webflow.css" rel="stylesheet" type="text/css">
+  <link href="../css/aizeks-groovy-site.webflow.css" rel="stylesheet" type="text/css">
+
   <!-- Shared Menu CSS -->
   <link rel="stylesheet" href="../shared/components/sharedMenu/menu.css">
 
@@ -29,14 +34,11 @@
       background: linear-gradient(135deg, #05051a 0%, #04193f 100%);
       min-height: 100vh;
       color: white;
-      padding-top: 120px; /* Space for fixed navbar */
     }
 
     .page-wrapper {
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding-top: 120px; /* Space for fixed navbar */
     }
 
     .container {
@@ -49,6 +51,12 @@
       text-align: center;
       max-width: 600px;
       padding: 40px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 120px);
     }
 
     .demo-title {
@@ -183,6 +191,92 @@
       color: rgba(255, 255, 255, 0.5);
     }
 
+    /* Primary Button Styles */
+    .primary-button-wrapper {
+      display: flex;
+      align-items: center;
+    }
+
+    .primary-button {
+      background: linear-gradient(135deg, #0080ff 0%, #667eea 100%);
+      border-radius: 12px;
+      padding: 14px 28px;
+      text-decoration: none;
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .primary-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 128, 255, 0.3);
+    }
+
+    .primary-button-text-wrap {
+      position: relative;
+      overflow: hidden;
+      height: 24px;
+    }
+
+    .primary-button-text-block {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      text-align: center;
+      transition: transform 0.3s ease;
+      position: absolute;
+      width: 100%;
+      left: 0;
+      top: 0;
+      line-height: 24px;
+    }
+
+    .primary-button-text-block.is-text-absolute {
+      transform: translateY(100%);
+    }
+
+    .primary-button:hover .primary-button-text-block:not(.is-text-absolute) {
+      transform: translateY(-100%);
+    }
+
+    .primary-button:hover .primary-button-text-block.is-text-absolute {
+      transform: translateY(0);
+    }
+
+    /* Language Pills Styles */
+    .lang-pills {
+      display: flex;
+      gap: 8px;
+      margin-right: 20px;
+    }
+
+    .lang-pill {
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .lang-pill:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .lang-pill.active {
+      background: linear-gradient(135deg, #0080ff 0%, #667eea 100%);
+      color: #ffffff;
+      border-color: transparent;
+    }
+
     @media (max-width: 768px) {
       .demo-container {
         padding: 20px;
@@ -200,6 +294,123 @@
 </head>
 <body>
   <div class="page-wrapper">
+    <!-- Navbar -->
+    <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
+      <div class="container">
+        <div class="navbar-content">
+          <!-- Logo -->
+          <a href="../home.html" class="zohacous-logo-link w-nav-brand">
+            <img loading="lazy" src="../images/Logo.svg" alt="AI Studio Logo" class="zohacous-logo-image">
+          </a>
+
+          <!-- Main Navigation -->
+          <nav role="navigation" class="nav-menu w-nav-menu">
+            <a href="../home.html" class="nav-link w-nav-link">Home</a>
+            <a href="../courses.html" class="nav-link w-nav-link">Courses</a>
+            <a href="../pricing.html" class="nav-link w-nav-link">Pricing</a>
+            <a href="../blog.html" class="nav-link w-nav-link">Blog</a>
+            <a href="../teachers.html" class="nav-link w-nav-link">Teachers</a>
+
+            <!-- About Us Dropdown -->
+            <div data-delay="0" data-hover="true" data-w-id="9a224b60-f557-150b-8062-e4bbef078cfb" class="menu-dropdown-wrapper w-dropdown">
+              <div class="dropdown-toggle w-dropdown-toggle">
+                <div class="dropdown-toggle-text-block">About Us</div>
+                <div class="dropdown-toggle-arrow-2"></div>
+              </div>
+              <nav class="dropdown-column-wrapper-3 w-dropdown-list" style="width: auto; min-width: auto;">
+                <div class="dropdown-pd" style="padding: 20px 30px;">
+                  <div class="dropdown-singel-wrapper">
+                    <div class="dropdown-menu-wrapper">
+                      <a href="../career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
+                        <div>Career Orientation</div>
+                      </a>
+                      <a href="../career-center.html" class="dropdown-menu-text-link-block mb0 w-inline-block">
+                        <div>Career Center</div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </nav>
+            </div>
+
+            <!-- Mobile Sign Up Button -->
+            <div class="primary-button-wrapper mobile">
+              <a href="#" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block" onclick="openContactPopup(); return false;">
+                <div class="primary-button-text-wrap">
+                  <div class="primary-button-text-block">Sign Up Today</div>
+                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                </div>
+              </a>
+            </div>
+          </nav>
+
+          <!-- Right Side Controls -->
+          <div class="navbar-button-wrapper">
+            <!-- Language Switcher Pills -->
+            <div class="lang-pills">
+              <a href="#" class="lang-pill active" onclick="setActivePill(this); return false;">EN</a>
+              <a href="#" class="lang-pill" onclick="setActivePill(this); return false;">RU</a>
+              <a href="#" class="lang-pill" onclick="setActivePill(this); return false;">HE</a>
+            </div>
+
+            <!-- Shopping Cart -->
+            <div data-open-product="" data-wf-cart-type="rightSidebar" data-wf-cart-query="" data-wf-page-link-href-prefix="" class="w-commerce-commercecartwrapper navbar-cart" data-node-type="commerce-cart-wrapper">
+              <a class="w-commerce-commercecartopenlink navbar-cart-button w-inline-block" role="button" aria-haspopup="dialog" aria-label="Open cart" data-node-type="commerce-cart-open-link" href="#">
+                <img loading="lazy" src="../images/Navbar-Cart-Icon.svg" alt="Shopping Cart" class="navbar-cart-icon">
+                <div class="w-commerce-commercecartopenlinkcount cart-quantity">0</div>
+              </a>
+              <div style="display:none" class="w-commerce-commercecartcontainerwrapper w-commerce-commercecartcontainerwrapper--cartType-rightSidebar cart-wrapper" data-node-type="commerce-cart-container-wrapper">
+                <div data-node-type="commerce-cart-container" role="dialog" class="w-commerce-commercecartcontainer cart-container">
+                  <div class="w-commerce-commercecartheader cart-header">
+                    <h4 class="w-commerce-commercecartheading cart-header-title">Your Cart</h4>
+                    <a class="w-commerce-commercecartcloselink cart-close-button w-inline-block" role="button" aria-label="Close cart" data-node-type="commerce-cart-close-link">
+                      <img loading="lazy" src="../images/Cart-Close-Icon.svg" alt="Close Cart" class="cart-close">
+                    </a>
+                  </div>
+                  <div class="w-commerce-commercecartformwrapper">
+                    <form style="display:none" class="w-commerce-commercecartform" data-node-type="commerce-cart-form">
+                      <script type="text/x-wf-template" id="wf-template-022ff995-969a-6767-1e11-b2a08cb61438"></script>
+                      <div class="w-commerce-commercecartlist cart-list" data-wf-collection="database.commerceOrder.userItems" data-wf-template-id="wf-template-022ff995-969a-6767-1e11-b2a08cb61438"></div>
+                      <div class="w-commerce-commercecartfooter cart-footer">
+                        <div aria-live="polite" aria-atomic="true" class="w-commerce-commercecartlineitem">
+                          <div class="cart-footer-title">Subtotal</div>
+                          <div class="w-commerce-commercecartordervalue cart-footer-price"></div>
+                        </div>
+                        <div>
+                          <a href="checkout.html" value="Continue to Checkout" class="w-commerce-commercecartcheckoutbutton cart-footer-button" data-loading-text="Hang Tight..." data-node-type="cart-checkout-button">Continue to Checkout</a>
+                        </div>
+                      </div>
+                    </form>
+                    <div class="w-commerce-commercecartemptystate">
+                      <div aria-label="This cart is empty" aria-live="polite">No items found.</div>
+                    </div>
+                    <div aria-live="assertive" style="display:none" data-node-type="commerce-cart-error" class="w-commerce-commercecarterrorstate">
+                      <div class="w-cart-error-msg" data-w-cart-quantity-error="Product is not available in this quantity." data-w-cart-general-error="Something went wrong when adding this item to the cart." data-w-cart-checkout-error="Checkout is disabled on this site." data-w-cart-cart_order_min-error="The order minimum was not met. Add more items to your cart to continue." data-w-cart-subscription_error-error="Before you purchase, please use your email invite to verify your address so we can send order updates.">Product is not available in this quantity.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Desktop Sign Up Button -->
+            <div class="primary-button-wrapper desktop">
+              <a href="#" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block" onclick="openContactPopup(); return false;">
+                <div class="primary-button-text-wrap">
+                  <div class="primary-button-text-block">Sign Up Today</div>
+                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <div class="menu-button w-nav-button">
+              <div data-is-ix2-target="1" class="hamburger-menu-icon" data-w-id="9700d956-7e80-623a-3836-d267f1fdd0f6" data-animation-type="lottie" data-src="https://uploads-ssl.webflow.com/6649cc3a1ea038d81fed488f/665c6513c402f5112b50428d_Hamburger%20White.lottie" data-loop="0" data-direction="1" data-autoplay="0" data-renderer="svg" data-duration="0" data-ix2-initial-state="0"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="demo-container">
     <h1 class="demo-title">Contact Popup Demo</h1>
     <p class="demo-subtitle">
@@ -285,6 +496,20 @@
   <script src="../shared/components/sharedPopUp/popup.js"></script>
 
   <script>
+    // Language switcher function
+    function setActivePill(element) {
+      // Remove active class from all pills
+      element.parentNode.querySelectorAll('.lang-pill').forEach(pill => {
+        pill.classList.remove('active');
+      });
+      // Add active class to clicked pill
+      element.classList.add('active');
+
+      // You could add language switching logic here
+      const lang = element.textContent;
+      console.log('Language switched to:', lang);
+    }
+
     // Demo functions
     function testMultipleOpens() {
       // Test opening popup multiple times

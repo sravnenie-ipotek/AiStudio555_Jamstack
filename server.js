@@ -5111,13 +5111,57 @@ app.put('/api/blog-posts/:id', async (req, res) => {
     const { id } = req.params;
     const data = req.body;
 
-    // Remove id from data to avoid conflicts
-    delete data.id;
+    // First, check which columns exist in the blog_posts table
+    const existingColumns = await queryDatabase(`
+      SELECT column_name
+      FROM information_schema.columns
+      WHERE table_name = 'blog_posts'
+    `);
+
+    const validColumns = existingColumns.map(row => row.column_name);
+
+    // Filter data to only include columns that exist in the database
+    const updateData = {};
+    for (const [key, value] of Object.entries(data)) {
+      // Skip id field
+      if (key === 'id') continue;
+
+      // Map some fields that might have different names
+      let dbField = key;
+      if (key === 'short_description' && !validColumns.includes(key)) {
+        dbField = 'excerpt';
+      } else if (key === 'description' && !validColumns.includes(key)) {
+        dbField = 'content';
+      }
+
+      // Only include fields that exist in the database
+      if (validColumns.includes(dbField)) {
+        updateData[dbField] = value;
+      }
+    }
+
+    // Handle JSON fields
+    if (updateData.tags && typeof updateData.tags !== 'string') {
+      updateData.tags = JSON.stringify(updateData.tags);
+    }
+    if (updateData.gallery_images && typeof updateData.gallery_images !== 'string') {
+      updateData.gallery_images = JSON.stringify(updateData.gallery_images);
+    }
+    if (updateData.content_sections && typeof updateData.content_sections !== 'string') {
+      updateData.content_sections = JSON.stringify(updateData.content_sections);
+    }
 
     // Prepare fields for update
-    const fields = Object.keys(data);
+    const fields = Object.keys(updateData);
+    if (fields.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'No valid fields to update'
+      });
+    }
+
     const setClause = fields.map((field, index) => `${field} = $${index + 2}`).join(', ');
-    const values = [id, ...fields.map(field => data[field])];
+    const values = [id, ...fields.map(field => updateData[field])];
 
     const updateQuery = `
       UPDATE blog_posts

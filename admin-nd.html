@@ -4479,7 +4479,7 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/nd/blog`, {
+                const response = await fetch(`http://localhost:3000/api/blog-posts`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -4521,7 +4521,7 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/nd/blog/${id}`, {
+                const response = await fetch(`http://localhost:3000/api/blog-posts/${id}`, {
                     method: 'DELETE'
                 });
 
@@ -5193,7 +5193,7 @@
         // Load blog posts with enhanced table display
         async function loadBlogPosts() {
             try {
-                const response = await fetch(`${API_BASE}/api/nd/blog`);
+                const response = await fetch(`http://localhost:3000/api/blog-posts`);
                 const result = await response.json();
 
                 if (result.success && result.data) {
@@ -5265,7 +5265,7 @@
         // Edit blog post
         async function editBlogPost(blogId) {
             try {
-                const response = await fetch(`${API_BASE}/api/nd/blog/${blogId}`);
+                const response = await fetch(`http://localhost:3000/api/blog-posts/${blogId}`);
                 const data = await response.json();
 
                 if (data.success && data.data) {
@@ -5294,7 +5294,7 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/nd/blog/${blogId}`, {
+                const response = await fetch(`http://localhost:3000/api/blog-posts/${blogId}`, {
                     method: 'DELETE'
                 });
 
@@ -5361,8 +5361,8 @@
                 const blogData = collectBlogFormData();
                 const method = isEditingBlog ? 'PUT' : 'POST';
                 const url = isEditingBlog
-                    ? `${API_BASE}/api/nd/blog/${currentBlogPost.id}`
-                    : `${API_BASE}/api/nd/blog`;
+                    ? `http://localhost:3000/api/blog-posts/${currentBlogPost.id}`
+                    : `http://localhost:3000/api/blog-posts`;
 
                 updateBlogAutoSaveStatus('saving');
 

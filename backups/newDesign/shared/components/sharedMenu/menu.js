@@ -197,6 +197,12 @@ class SharedMenu {
       </nav>
 
       <div class="navbar-button-wrapper">
+        <div class="lang-pills">
+          <a href="#" class="lang-pill active" onclick="setActivePill(this)">EN</a>
+          <a href="#" class="lang-pill" onclick="setActivePill(this)">RU</a>
+          <a href="#" class="lang-pill" onclick="setActivePill(this)">HE</a>
+        </div>
+
         <div class="w-commerce-commercecartwrapper navbar-cart">
           <a class="w-commerce-commercecartopenlink navbar-cart-button w-inline-block" href="#">
             <img loading="lazy" src="${this.getImagePath('Navbar-Cart-Icon.svg')}" alt="Shopping Cart" class="navbar-cart-icon">

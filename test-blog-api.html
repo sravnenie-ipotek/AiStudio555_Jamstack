@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Blog API</title>
+</head>
+<body>
+    <h1>Blog API Test</h1>
+    <div id="result">Loading...</div>
+    <script>
+        fetch('http://localhost:3000/api/blog-posts')
+            .then(response => response.json())
+            .then(data => {
+                console.log('API Response:', data);
+                const resultDiv = document.getElementById('result');
+                if (data.success && data.data) {
+                    resultDiv.innerHTML = `
+                        <h2>Found ${data.data.length} blog posts:</h2>
+                        <ul>
+                            ${data.data.map(blog => `
+                                <li>
+                                    <strong>${blog.title}</strong><br>
+                                    Author: ${blog.author}<br>
+                                    Status: ${blog.status}<br>
+                                    Category: ${blog.category || 'N/A'}
+                                </li>
+                            `).join('')}
+                        </ul>
+                        <h3>Raw Data:</h3>
+                        <pre>${JSON.stringify(data.data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = 'No data or error';
+                }
+            })
+            .catch(error => {
+                document.getElementById('result').innerHTML = 'Error: ' + error.message;
+                console.error('Error:', error);
+            });
+    </script>
+</body>
+</html>
