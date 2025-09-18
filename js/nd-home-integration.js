@@ -45,6 +45,10 @@
             console.error('❌ Error loading home page data:', error);
             // Don't show anything if API fails (per user requirement)
             console.log('⚠️ Using static content as fallback');
+
+            // Still try to load featured courses even if home page data fails
+            console.log('🎯 Still attempting to load featured courses...');
+            loadFeaturedCourses();
         }
     }
 
@@ -527,7 +531,7 @@
         try {
             console.log('🎯 Loading featured courses from API...');
 
-            const response = await fetch(`${API_BASE_URL}/api/featured-courses?limit=8`);
+            const response = await fetch(`${API_BASE_URL}/api/courses?featured=true&limit=8`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch featured courses: ${response.status}`);
@@ -537,9 +541,22 @@
             console.log('✅ Featured courses data loaded:', data);
 
             // Populate the featured courses section
-            if (data.success && data.data) {
-                await populateFeaturedCourses(data.data);
-                setupCourseTabFiltering(data.data.categories);
+            if (data.data && data.data.length > 0) {
+                // Transform the API response to match expected format
+                const transformedCourses = data.data.map(course => ({
+                    id: course.id,
+                    title: course.attributes.title,
+                    description: course.attributes.description,
+                    category: course.attributes.category,
+                    price: course.attributes.price,
+                    duration: course.attributes.duration,
+                    lessons_count: course.attributes.lessons,
+                    rating: course.attributes.rating,
+                    url: `detail_courses.html?id=${course.id}`
+                }));
+
+                await populateFeaturedCourses(transformedCourses);
+                setupCourseTabFiltering([]);
             } else {
                 console.warn('⚠️ No featured courses data found');
             }
