@@ -714,8 +714,9 @@ app.get('/api/blog-posts', async (req, res) => {
       query = 'SELECT * FROM blog_posts ORDER BY created_at DESC';
     } else {
       // Public: only show published posts (not drafts)
+      // Note: NULL status is treated as draft
       query = `SELECT * FROM blog_posts
-               WHERE (status IS NULL OR status != 'draft')
+               WHERE status = 'published'
                ORDER BY created_at DESC`;
       params = [];
     }
@@ -750,6 +751,8 @@ app.get('/api/blog-posts', async (req, res) => {
         likes_count: post.likes_count || 0,
         shares_count: post.shares_count || 0,
         is_featured: post.is_featured || false,
+        is_published: post.status === 'published' && post.is_published !== false,
+        is_visible: post.status === 'published' && post.is_visible !== false,
         seo_keywords: post.seo_keywords,
         meta_description: post.meta_description,
         published_at: post.published_at,
@@ -792,7 +795,10 @@ app.get('/api/blog-posts/:id', async (req, res) => {
 
     // Check if post is a draft and block access unless in admin/preview mode
     if (!isAdmin && !preview) {
-      if (blog.status === 'draft' || blog.is_published === false || blog.is_visible === false) {
+      console.log(`🔒 Checking draft status: status=${blog.status}, is_published=${blog.is_published}, is_visible=${blog.is_visible}`);
+      // Treat NULL or 'draft' status as draft, only 'published' is public
+      if (blog.status !== 'published' || blog.is_published === false || blog.is_visible === false) {
+        console.log('❌ Blocking access to draft/unpublished post');
         return res.status(404).json({
           success: false,
           error: 'Blog post not found or not published'
@@ -835,8 +841,8 @@ app.get('/api/blog-posts/:id', async (req, res) => {
         likes_count: localizedBlog.likes_count || 0,
         shares_count: localizedBlog.shares_count || 0,
         is_featured: localizedBlog.is_featured || false,
-        is_published: localizedBlog.is_published !== false,
-        is_visible: localizedBlog.is_visible !== false,
+        is_published: localizedBlog.status === 'published' && localizedBlog.is_published !== false,
+        is_visible: localizedBlog.status === 'published' && localizedBlog.is_visible !== false,
         locale: localizedBlog.locale || 'en',
         published_at: localizedBlog.published_at,
         created_at: localizedBlog.created_at,
