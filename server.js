@@ -8673,15 +8673,8 @@ app.get('/api/nd/blog', async (req, res) => {
     console.log(`📝 Fetching ND blog posts for locale: ${locale}${preview ? ' (preview mode)' : ''}`);
 
     const query = `
-      SELECT
-        id, blog_key, title, summary, content, author_name, author_role,
-        author_image_url, publish_date, category, tags, featured_image_url,
-        meta_title, meta_description, reading_time_minutes,
-        is_featured, is_published, display_order,
-        created_at, updated_at
-      FROM entity_blogs
-      ${!preview ? 'WHERE is_published = true' : ''}
-      ORDER BY display_order ASC, publish_date DESC
+      SELECT * FROM blog_posts
+      ORDER BY published_at DESC
     `;
 
     const blogs = await queryDatabase(query);
@@ -8726,14 +8719,8 @@ app.get('/api/nd/blog/:id', async (req, res) => {
     console.log(`📝 Fetching ND blog post ID: ${id}${preview ? ' (preview mode)' : ''}`);
 
     const query = `
-      SELECT
-        id, blog_key, title, summary, content, author_name, author_role,
-        author_image_url, publish_date, category, tags, featured_image_url,
-        meta_title, meta_description, reading_time_minutes,
-        is_featured, is_published, display_order,
-        created_at, updated_at
-      FROM entity_blogs
-      WHERE id = $1 ${!preview ? 'AND is_published = true' : ''}
+      SELECT * FROM blog_posts
+      WHERE id = $1
     `;
 
     const blogs = await queryDatabase(query, [id]);

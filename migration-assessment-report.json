@@ -1,0 +1,236 @@
+{
+  "timestamp": "2025-09-18T13:53:32.484Z",
+  "inventory": {
+    "home_pages": {
+      "exists": true,
+      "records": 3,
+      "type": "legacy",
+      "risk": "LOW"
+    },
+    "blog_posts": {
+      "exists": true,
+      "records": 3,
+      "type": "legacy",
+      "risk": "LOW"
+    },
+    "courses": {
+      "exists": true,
+      "records": 5,
+      "type": "legacy",
+      "risk": "LOW"
+    },
+    "teachers": {
+      "exists": true,
+      "records": 26,
+      "type": "legacy",
+      "risk": "MEDIUM"
+    },
+    "about_pages": {
+      "exists": true,
+      "records": 3,
+      "type": "legacy",
+      "risk": "LOW"
+    },
+    "contact_pages": {
+      "exists": true,
+      "records": 3,
+      "type": "legacy",
+      "risk": "LOW"
+    },
+    "career_orientation_pages": {
+      "exists": true,
+      "records": 3,
+      "type": "legacy",
+      "risk": "LOW"
+    },
+    "career_center_pages": {
+      "exists": true,
+      "records": 1,
+      "type": "legacy",
+      "risk": "LOW"
+    },
+    "nd_home": {
+      "exists": true,
+      "records": 14,
+      "type": "nd_",
+      "risk": "MEDIUM"
+    },
+    "nd_courses": {
+      "exists": true,
+      "records": 3,
+      "type": "nd_",
+      "risk": "LOW"
+    },
+    "nd_menu": {
+      "exists": true,
+      "records": 6,
+      "type": "nd_",
+      "risk": "LOW"
+    },
+    "nd_footer": {
+      "exists": true,
+      "records": 20,
+      "type": "nd_",
+      "risk": "MEDIUM"
+    },
+    "nd_pricing_page": {
+      "exists": true,
+      "records": 6,
+      "type": "nd_",
+      "risk": "LOW"
+    },
+    "nd_teachers_page": {
+      "exists": true,
+      "records": 6,
+      "type": "nd_",
+      "risk": "LOW"
+    },
+    "nd_career_center_platform_page": {
+      "exists": true,
+      "records": 6,
+      "type": "nd_",
+      "risk": "LOW"
+    },
+    "nd_teachers": {
+      "exists": false,
+      "records": 0,
+      "type": "nd_",
+      "error": "missing"
+    },
+    "nd_home_page": {
+      "exists": true,
+      "records": 13,
+      "type": "nd_",
+      "risk": "MEDIUM"
+    },
+    "nd_about_page": {
+      "exists": true,
+      "records": 8,
+      "type": "nd_",
+      "risk": "LOW"
+    },
+    "nd_blog_posts": {
+      "exists": true,
+      "records": 0,
+      "type": "nd_",
+      "risk": "LOW"
+    },
+    "nd_contact_page": {
+      "exists": true,
+      "records": 7,
+      "type": "nd_",
+      "risk": "LOW"
+    },
+    "nd_career_orientation_page": {
+      "exists": false,
+      "records": 0,
+      "type": "nd_",
+      "error": "missing"
+    },
+    "nd_career_center_page": {
+      "exists": false,
+      "records": 0,
+      "type": "nd_",
+      "error": "missing"
+    }
+  },
+  "risks": [
+    "nd_home already contains 14 records - conflict risk",
+    "nd_courses already contains 3 records - conflict risk",
+    "nd_menu already contains 6 records - conflict risk",
+    "nd_footer already contains 20 records - conflict risk",
+    "nd_pricing_page already contains 6 records - conflict risk",
+    "nd_teachers_page already contains 6 records - conflict risk",
+    "nd_career_center_platform_page already contains 6 records - conflict risk",
+    "nd_home_page already contains 13 records - conflict risk",
+    "nd_about_page already contains 8 records - conflict risk",
+    "nd_contact_page already contains 7 records - conflict risk",
+    "career_orientation_pages has no nd_ counterpart table",
+    "home_pages is critical for API functionality (3 records)",
+    "courses is critical for API functionality (5 records)",
+    "teachers is critical for API functionality (26 records)",
+    "career_orientation_pages is critical for API functionality (3 records)",
+    "career_center_pages is critical for API functionality (1 records)"
+  ],
+  "duplicates": [
+    "home_pages/nd_home both contain data",
+    "courses/nd_courses both contain data",
+    "teachers/nd_teachers_page both contain data",
+    "about_pages/nd_about_page both contain data",
+    "contact_pages/nd_contact_page both contain data",
+    "career_center_pages/nd_career_center_platform_page both contain data",
+    "home_pages/nd_home have 3 overlapping IDs"
+  ],
+  "recommendations": [],
+  "summary": {
+    "total_legacy_tables": 8,
+    "total_legacy_records": 47,
+    "total_nd_tables": 11,
+    "total_nd_records": 89,
+    "high_risk_tables": 0,
+    "existing_nd_data_tables": 10,
+    "missing_nd_tables": 1,
+    "total_risks": 16,
+    "recommendation": "🛑 DO NOT PROCEED - CRITICAL ISSUES FOUND"
+  },
+  "migrationOrder": [
+    {
+      "order": 1,
+      "table": "career_center_pages",
+      "records": 1,
+      "risk": "LOW",
+      "hasNdCounterpart": true
+    },
+    {
+      "order": 2,
+      "table": "home_pages",
+      "records": 3,
+      "risk": "LOW",
+      "hasNdCounterpart": true
+    },
+    {
+      "order": 3,
+      "table": "blog_posts",
+      "records": 3,
+      "risk": "LOW",
+      "hasNdCounterpart": true
+    },
+    {
+      "order": 4,
+      "table": "about_pages",
+      "records": 3,
+      "risk": "LOW",
+      "hasNdCounterpart": true
+    },
+    {
+      "order": 5,
+      "table": "contact_pages",
+      "records": 3,
+      "risk": "LOW",
+      "hasNdCounterpart": true
+    },
+    {
+      "order": 6,
+      "table": "career_orientation_pages",
+      "records": 3,
+      "risk": "LOW",
+      "hasNdCounterpart": false
+    },
+    {
+      "order": 7,
+      "table": "courses",
+      "records": 5,
+      "risk": "LOW",
+      "hasNdCounterpart": true
+    },
+    {
+      "order": 8,
+      "table": "teachers",
+      "records": 26,
+      "risk": "MEDIUM",
+      "hasNdCounterpart": true
+    }
+  ],
+  "recommendation": "🛑 DO NOT PROCEED - CRITICAL ISSUES FOUND",
+  "strategy": "FULL ASSESSMENT AND PLANNING REQUIRED"
+}

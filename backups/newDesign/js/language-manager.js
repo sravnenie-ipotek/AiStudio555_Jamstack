@@ -253,10 +253,10 @@ class LanguageManager {
         const endpoints = {
             'home': `/api/nd/home-page?locale=${locale}`,
             'courses': `/api/nd/courses?locale=${locale}`,
-            'teachers': `/api/teachers?locale=${locale}`,
-            'blog': `/api/blog-posts?locale=${locale}`,
-            'career-center': `/api/career-center-page?locale=${locale}`,
-            'career-orientation': `/api/career-orientation-page?locale=${locale}`
+            'teachers': `/api/nd/teachers?locale=${locale}`,
+            'blog': `/api/nd/blog?locale=${locale}`,
+            'career-center': `/api/nd/career-center-platform-page?locale=${locale}`,
+            'career-orientation': `/api/nd/career-orientation-page?locale=${locale}`
         };
 
         return endpoints[pageName] || null;
