@@ -3940,6 +3940,32 @@ app.get(['/en/js/nd-courses-integration.js', '/he/js/nd-courses-integration.js',
   res.sendFile(path.join(__dirname, 'js/nd-courses-integration.js'));
 });
 
+// Serve CSS files with correct MIME types for all languages
+app.get(['/en/shared/shared-cards.css', '/he/shared/shared-cards.css', '/ru/shared/shared-cards.css'], (req, res) => {
+  res.type('text/css');
+  res.sendFile(path.join(__dirname, 'shared/shared-cards.css'));
+});
+
+app.get(['/en/css/mobile-responsive-fixes.css', '/he/css/mobile-responsive-fixes.css', '/ru/css/mobile-responsive-fixes.css'], (req, res) => {
+  res.type('text/css');
+  res.sendFile(path.join(__dirname, 'css/mobile-responsive-fixes.css'));
+});
+
+app.get(['/en/shared/components/sharedPopUp/popup.css', '/he/shared/components/sharedPopUp/popup.css', '/ru/shared/components/sharedPopUp/popup.css'], (req, res) => {
+  res.type('text/css');
+  res.sendFile(path.join(__dirname, 'shared/components/sharedPopUp/popup.css'));
+});
+
+app.get(['/en/shared/components/sharedMenu/menu.css', '/he/shared/components/sharedMenu/menu.css', '/ru/shared/components/sharedMenu/menu.css'], (req, res) => {
+  res.type('text/css');
+  res.sendFile(path.join(__dirname, 'shared/components/sharedMenu/menu.css'));
+});
+
+app.get(['/en/css/course-card-styles.css', '/he/css/course-card-styles.css', '/ru/css/course-card-styles.css'], (req, res) => {
+  res.type('text/css');
+  res.sendFile(path.join(__dirname, 'css/course-card-styles.css'));
+});
+
 
 // Serve home.html properly for all languages
 app.get(['/dist/en/home.html', '/en/home.html'], (req, res) => {

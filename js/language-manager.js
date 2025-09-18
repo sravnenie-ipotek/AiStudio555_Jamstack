@@ -54,12 +54,12 @@ class LanguageManager {
         if (urlLocale) return urlLocale;
 
         const savedLocale = localStorage.getItem('preferred_locale');
-        if (savedLocale && this.supportedLocales.includes(savedLocale)) {
+        if (savedLocale && this.supportedLocales && this.supportedLocales.includes(savedLocale)) {
             return savedLocale;
         }
 
         const browserLocale = navigator.language.split('-')[0];
-        if (this.supportedLocales.includes(browserLocale)) {
+        if (this.supportedLocales && this.supportedLocales.includes(browserLocale)) {
             return browserLocale;
         }
 

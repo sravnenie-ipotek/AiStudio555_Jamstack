@@ -2399,6 +2399,49 @@
     });
 
     // Language pill switching functionality handled by language-manager.js
+
+    // Global function for language switching (fallback if language-manager.js fails)
+    function setActivePill(element) {
+      // Handle both desktop and mobile language pills
+      const isDesktop = element.classList.contains('lang-pill');
+      const isMobile = element.classList.contains('mobile-lang-pill');
+
+      if (isDesktop) {
+        // Desktop language pills
+        element.parentNode.querySelectorAll('.lang-pill').forEach(pill => {
+          pill.classList.remove('active');
+        });
+        element.classList.add('active');
+
+        // Sync with mobile pills
+        const lang = element.textContent;
+        document.querySelectorAll('.mobile-lang-pill').forEach(pill => {
+          pill.classList.remove('active');
+          if (pill.textContent === lang) {
+            pill.classList.add('active');
+          }
+        });
+      } else if (isMobile) {
+        // Mobile language pills
+        element.parentNode.querySelectorAll('.mobile-lang-pill').forEach(pill => {
+          pill.classList.remove('active');
+        });
+        element.classList.add('active');
+
+        // Sync with desktop pills
+        const lang = element.textContent;
+        document.querySelectorAll('.lang-pill').forEach(pill => {
+          pill.classList.remove('active');
+          if (pill.textContent === lang) {
+            pill.classList.add('active');
+          }
+        });
+      }
+
+      // You could add language switching logic here
+      const lang = element.textContent;
+      console.log('Language switched to:', lang);
+    }
   </script>
 
   <!-- SharedPopUp Component Script -->
