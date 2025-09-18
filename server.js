@@ -3836,16 +3836,19 @@ app.use('/en/js', express.static(path.join(__dirname, 'js')));
 app.use('/en/css', express.static(path.join(__dirname, 'css')));
 app.use('/en/images', express.static(path.join(__dirname, 'images')));
 app.use('/en/fonts', express.static(path.join(__dirname, 'fonts')));
+app.use('/en/shared', express.static(path.join(__dirname, 'shared')));
 
 app.use('/he/js', express.static(path.join(__dirname, 'js')));
 app.use('/he/css', express.static(path.join(__dirname, 'css')));
 app.use('/he/images', express.static(path.join(__dirname, 'images')));
 app.use('/he/fonts', express.static(path.join(__dirname, 'fonts')));
+app.use('/he/shared', express.static(path.join(__dirname, 'shared')));
 
 app.use('/ru/js', express.static(path.join(__dirname, 'js')));
 app.use('/ru/css', express.static(path.join(__dirname, 'css')));
 app.use('/ru/images', express.static(path.join(__dirname, 'images')));
 app.use('/ru/fonts', express.static(path.join(__dirname, 'fonts')));
+app.use('/ru/shared', express.static(path.join(__dirname, 'shared')));
 
 // Serve strapi integration files from root and language paths (MUST BE BEFORE catch-all routes)
 app.get('/strapi-home-integration.js', (req, res) => {
