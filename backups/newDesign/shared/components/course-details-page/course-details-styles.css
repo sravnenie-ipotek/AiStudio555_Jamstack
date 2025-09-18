@@ -1,17 +1,21 @@
 /* SHARED COURSE DETAILS PAGE STYLES */
 /* Clean, database-driven course details styling */
+/* Follows style guide: #05051a, #050f2c, #04193f, #ffd659, #0080ff */
+
+.section.course-details {
+  padding: 80px 0;
+  background: #f8fafc;
+}
 
 .course-details-hero-section {
-  background: linear-gradient(135deg, #041d63 0%, #1a2f6b 100%);
-  color: white;
-  padding: 60px 0;
-  min-height: 400px;
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  margin-bottom: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
 .course-details-hero-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 40px;
@@ -30,16 +34,19 @@
 }
 
 .course-details-hero-title {
+  font-family: 'Manrope', sans-serif;
   font-size: 48px;
   font-weight: 700;
   line-height: 1.2;
   margin: 0 0 20px 0;
+  color: #05051a;
 }
 
 .course-details-hero-description {
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 18px;
   line-height: 1.6;
-  opacity: 0.9;
+  color: #4a5568;
   margin-bottom: 30px;
 }
 
@@ -70,9 +77,6 @@
 }
 
 .course-details-content-section {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 60px 20px;
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 60px;
@@ -96,14 +100,16 @@
 }
 
 .course-details-main-content h2 {
+  font-family: 'Manrope', sans-serif;
   font-size: 28px;
   font-weight: 600;
-  color: #041d63;
+  color: #05051a;
   margin: 0 0 20px 0;
 }
 
 .course-full-description,
 .course-curriculum-description {
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 16px;
   line-height: 1.7;
   color: #4a5568;
@@ -124,6 +130,10 @@
   align-items: flex-start;
   gap: 12px;
   padding: 12px 0;
+  color: #4a5568;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 .course-objective-item::before {
@@ -267,20 +277,13 @@
 
 .course-enroll-button {
   width: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 16px 24px;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease;
   margin-bottom: 20px;
+  text-decoration: none;
+  display: block;
 }
 
-.course-enroll-button:hover {
-  transform: translateY(-2px);
+.course-enroll-button .primary-button-text-wrap {
+  justify-content: center;
 }
 
 .course-guarantee {
@@ -316,67 +319,22 @@
   margin: 0;
 }
 
-.course-cta-section {
-  background: linear-gradient(135deg, #041d63 0%, #1a2f6b 100%);
-  color: white;
-  padding: 60px 0;
+/* Course CTA Section - Uses standard CTA styling from design system */
+.section.course-cta {
+  background: linear-gradient(135deg, #05051a 0%, #050f2c 100%);
+}
+
+.section.course-cta .cta-title-description {
   text-align: center;
 }
 
-.course-cta-content {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 20px;
+.section.course-cta .cta-button-wrapper {
+  text-align: center;
 }
 
-.course-cta-title {
-  font-size: 36px;
-  font-weight: 700;
-  margin: 0 0 20px 0;
-}
-
-.course-cta-description {
-  font-size: 18px;
-  opacity: 0.9;
-  margin-bottom: 30px;
-}
-
-.course-cta-buttons {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.course-cta-primary,
-.course-cta-secondary {
-  padding: 16px 32px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 2px solid white;
-}
-
-.course-cta-primary {
-  background: white;
-  color: #041d63;
-}
-
-.course-cta-secondary {
-  background: transparent;
-  color: white;
-}
-
-.course-cta-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
-}
-
-.course-cta-secondary:hover {
-  background: white;
-  color: #041d63;
+.section.course-cta .course-cta-primary,
+.section.course-cta .course-cta-secondary {
+  text-decoration: none;
 }
 
 /* Responsive Design */
