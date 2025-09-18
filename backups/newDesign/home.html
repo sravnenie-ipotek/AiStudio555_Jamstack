@@ -459,7 +459,7 @@
     }
   </style>
 </head>
-<body data-page="home">
+<body data-page="home" data-dynamic-content="true">
     <!-- HARDCODED WORKING MENU - COPIED FROM popup-demo.html -->
     <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
       <div class="container">
@@ -578,12 +578,12 @@
             <div class="banner-typography">
               <div data-w-id="318d1361-fd67-5c2d-a57c-fa93f86bf5e2" style="opacity:1" class="banner-subtitle-wrapper">
                 <div class="banner-subtitle-line"></div>
-                <div class="banner-subtitle">Expert-Led Learning</div>
+                <div class="banner-subtitle" data-i18n="hero.content.subtitle">Expert-Led Learning</div>
                 <div class="banner-subtitle-line right"></div>
               </div>
               <div data-w-id="318d1361-fd67-5c2d-a57c-fa93f86bf5e7" style="opacity:1" class="banner-title-description">
-                <h1 class="banner-heading">Unlock Potential With Proven Courses.</h1>
-                <p class="banner-description-text">Here you can elevate your tech career with expert-led courses. whether you&#x27;re just starting out or aiming to advance your skills, our hands-on, practical training is designed.</p>
+                <h1 class="banner-heading" data-i18n="hero.content.title">Unlock Potential With Proven Courses.</h1>
+                <p class="banner-description-text" data-i18n="hero.content.description">Here you can elevate your tech career with expert-led courses. whether you&#x27;re just starting out or aiming to advance your skills, our hands-on, practical training is designed.</p>
               </div>
               <div data-w-id="318d1361-fd67-5c2d-a57c-fa93f86bf5ec" style="opacity:1" class="banner-button-wrapper">
                 <a href="contact-us.html" data-w-id="318d1361-fd67-5c2d-a57c-fa93f86bf5ed" class="primary-button w-inline-block">
@@ -625,15 +625,15 @@
             <div class="section-title-wrapper mb40">
               <div class="section-subtitle-wrapper mb0 center">
                 <div class="banner-subtitle-line left mobile"></div>
-                <div class="section-subtitle course-categories">Course Categories</div>
+                <div class="section-subtitle course-categories" data-i18n="course_categories.content.subtitle">Course Categories</div>
                 <div class="banner-subtitle-line right"></div>
               </div>
               <div class="section-title-wrapper-flex center">
                 <div class="single-section-title">
-                  <h2 class="section-title">Browse Our Tech Course Categories.</h2>
+                  <h2 class="section-title" data-i18n="course_categories.content.title">Browse Our Tech Course Categories.</h2>
                 </div>
                 <div class="section-description-button-wrapper course-categories">
-                  <p class="section-description-text mb30">Dive into a world of learning with diverse and extensive range of tech courses designed to cater to every interest.</p>
+                  <p class="section-description-text mb30" data-i18n="course_categories.content.description">Dive into a world of learning with diverse and extensive range of tech courses designed to cater to every interest.</p>
                   <div class="section-button-wrapper">
                     <a href="courses.html" data-w-id="cb375108-7e77-f6e5-1f47-118d6c9e81d7" class="primary-button w-inline-block">
                       <div class="primary-button-text-wrap">
@@ -2398,50 +2398,10 @@
       }
     });
 
-    // Language pill switching functionality
-    function setActivePill(clickedPill) {
-      // Find the parent container (either desktop or mobile pills)
-      const isDesktop = clickedPill.classList.contains('lang-pill');
-      const isMobile = clickedPill.classList.contains('mobile-lang-pill');
-
-      if (isDesktop) {
-        // Remove active from all desktop pills
-        document.querySelectorAll('.lang-pill').forEach(pill => {
-          pill.classList.remove('active');
-        });
-        // Set active on clicked pill
-        clickedPill.classList.add('active');
-
-        // Sync with mobile pills
-        const language = clickedPill.textContent;
-        document.querySelectorAll('.mobile-lang-pill').forEach(pill => {
-          pill.classList.remove('active');
-          if (pill.textContent === language) {
-            pill.classList.add('active');
-          }
-        });
-      } else if (isMobile) {
-        // Remove active from all mobile pills
-        document.querySelectorAll('.mobile-lang-pill').forEach(pill => {
-          pill.classList.remove('active');
-        });
-        // Set active on clicked pill
-        clickedPill.classList.add('active');
-
-        // Sync with desktop pills
-        const language = clickedPill.textContent;
-        document.querySelectorAll('.lang-pill').forEach(pill => {
-          pill.classList.remove('active');
-          if (pill.textContent === language) {
-            pill.classList.add('active');
-          }
-        });
-      }
-    }
+    // Language pill switching functionality handled by language-manager.js
   </script>
 
   <!-- SharedPopUp Component Script -->
-  <script src="shared/components/sharedPopUp/popup.js"></script>
 
   <!-- Language Manager Script -->
   <script src="js/language-manager.js"></script>

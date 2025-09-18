@@ -5,10 +5,10 @@
 
 class LanguageManager {
     constructor() {
+        this.supportedLocales = ['en', 'ru', 'he'];
         this.currentLocale = this.getInitialLocale();
         this.contentCache = {};
         this.isLoading = false;
-        this.supportedLocales = ['en', 'ru', 'he'];
         this.apiBaseUrl = window.location.hostname === 'localhost'
             ? 'http://localhost:1337'
             : 'https://aistudio555jamstack-production.up.railway.app';
@@ -39,7 +39,7 @@ class LanguageManager {
         // Handle browser back/forward
         window.addEventListener('popstate', (e) => {
             const locale = this.getLocaleFromURL();
-            if (locale !== this.currentLocale) {
+            if (locale && locale !== this.currentLocale) {
                 this.switchLanguage(locale, false);
             }
         });
@@ -72,7 +72,7 @@ class LanguageManager {
     getLocaleFromURL() {
         const params = new URLSearchParams(window.location.search);
         const locale = params.get('locale');
-        return this.supportedLocales.includes(locale) ? locale : null;
+        return locale && this.supportedLocales.includes(locale) ? locale : null;
     }
 
     /**
@@ -200,7 +200,8 @@ class LanguageManager {
         }
 
         try {
-            const response = await fetch(`${this.apiBaseUrl}${endpoint}`);
+            const url = `${this.apiBaseUrl}${endpoint}`;
+            const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
             const data = await response.json();
@@ -265,10 +266,11 @@ class LanguageManager {
      * Update page content with localized data
      */
     updatePageContent(data, locale) {
+
         // Update all elements with data-i18n attribute
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.dataset.i18n;
-            const value = this.getNestedValue(data, key);
+            const value = this.getNestedValue(data.data, key);
 
             if (value) {
                 if (element.tagName === 'IMG') {
