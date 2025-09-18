@@ -171,11 +171,33 @@
       background: #1a1d3a !important;
     }
 
-    /* Ensure dropdown stays open when hovering over it */
-    .w-dropdown-list:hover {
+    /* Better dropdown hover behavior - keep open longer */
+    .menu-dropdown-wrapper {
+      position: relative !important;
+    }
+
+    .menu-dropdown-wrapper:hover .w-dropdown-list,
+    .menu-dropdown-wrapper .w-dropdown-list:hover {
       display: block !important;
       visibility: visible !important;
       opacity: 1 !important;
+      transition: opacity 0.2s ease, visibility 0.2s ease !important;
+    }
+
+    /* Create hover bridge to prevent gap between trigger and dropdown */
+    .menu-dropdown-wrapper .w-dropdown-toggle {
+      position: relative !important;
+      z-index: 901 !important;
+    }
+
+    .w-dropdown-list {
+      transition: opacity 0.2s ease, visibility 0.2s ease !important;
+      transition-delay: 0.1s !important; /* Small delay before closing */
+    }
+
+    /* Keep dropdown open when hovering over the entire dropdown wrapper */
+    .menu-dropdown-wrapper:hover .w-dropdown-list {
+      transition-delay: 0s !important; /* No delay when opening */
     }
     /* SIMPLE FIX - Make all buttons work with visible text */
     .primary-button {
@@ -211,7 +233,7 @@
       height: auto !important;
     }
 
-    .primary-button-text-block {
+    .primary-button .primary-button-text-block:not(.is-text-absolute) {
       display: inline !important;
       opacity: 1 !important;
       transform: none !important;
@@ -221,6 +243,9 @@
       white-space: nowrap !important;
       font-size: 16px !important;
       font-weight: 700 !important;
+      width: auto !important;
+      height: auto !important;
+      visibility: visible !important;
     }
 
     /* Hide the duplicate hover text */
@@ -396,6 +421,11 @@
             </div>
           </nav>
           <div class="navbar-button-wrapper">
+            <div class="lang-pills">
+              <a href="#" class="lang-pill active" onclick="setActivePill(this)">EN</a>
+              <a href="#" class="lang-pill" onclick="setActivePill(this)">RU</a>
+              <a href="#" class="lang-pill" onclick="setActivePill(this)">HE</a>
+            </div>
             <div data-open-product="" data-wf-cart-type="rightSidebar" data-wf-cart-query="" data-wf-page-link-href-prefix="" class="w-commerce-commercecartwrapper navbar-cart" data-node-type="commerce-cart-wrapper">
               <a class="w-commerce-commercecartopenlink navbar-cart-button w-inline-block" role="button" aria-haspopup="dialog" aria-label="Open cart" data-node-type="commerce-cart-open-link" href="#"><img loading="lazy" src="images/Navbar-Cart-Icon.svg" alt="" class="navbar-cart-icon">
                 <div class="w-commerce-commercecartopenlinkcount cart-quantity">0</div>
@@ -439,7 +469,11 @@
               </a>
             </div>
             <div class="menu-button w-nav-button">
-              <div data-is-ix2-target="1" class="hamburger-menu-icon" data-w-id="9700d956-7e80-623a-3836-d267f1fdd0f6" data-animation-type="lottie" data-src="https://uploads-ssl.webflow.com/6649cc3a1ea038d81fed488f/665c6513c402f5112b50428d_Hamburger%20White.lottie" data-loop="0" data-direction="1" data-autoplay="0" data-renderer="svg" data-duration="0" data-ix2-initial-state="0"></div>
+              <div class="hamburger-icon">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+              </div>
             </div>
           </div>
         </div>
