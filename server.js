@@ -701,11 +701,26 @@ app.get('/api/courses-page', async (req, res) => {
 app.get('/api/blog-posts', async (req, res) => {
   try {
     const locale = getLocale(req);
-    console.log(`🌍 Fetching blog posts for locale: ${locale}`);
+    const isAdmin = req.query.admin === 'true';
+    const preview = req.query.preview === 'true';
+    console.log(`🌍 Fetching blog posts for locale: ${locale}, admin: ${isAdmin}, preview: ${preview}`);
 
-    // For admin interface, get ALL posts (not just published)
-    const query = 'SELECT * FROM blog_posts ORDER BY created_at DESC';
-    const data = await queryDatabase(query, []);
+    // For admin interface, get ALL posts. For public, only get published posts
+    let query;
+    let params = [];
+
+    if (isAdmin || preview) {
+      // Admin or preview mode: show all posts
+      query = 'SELECT * FROM blog_posts ORDER BY created_at DESC';
+    } else {
+      // Public: only show published posts (not drafts)
+      query = `SELECT * FROM blog_posts
+               WHERE (status IS NULL OR status != 'draft')
+               ORDER BY created_at DESC`;
+      params = [];
+    }
+
+    const data = await queryDatabase(query, params);
 
     res.json({
       success: true,
@@ -758,8 +773,11 @@ app.get('/api/blog-posts/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const locale = getLocale(req);
-    console.log(`📰 Fetching blog post ${id} for locale: ${locale}`);
+    const isAdmin = req.query.admin === 'true';
+    const preview = req.query.preview === 'true';
+    console.log(`📰 Fetching blog post ${id} for locale: ${locale}, admin: ${isAdmin}, preview: ${preview}`);
 
+    // First get the blog post
     const query = 'SELECT * FROM blog_posts WHERE id = $1';
     const result = await queryDatabase(query, [id]);
 
@@ -771,6 +789,16 @@ app.get('/api/blog-posts/:id', async (req, res) => {
     }
 
     const blog = result[0];
+
+    // Check if post is a draft and block access unless in admin/preview mode
+    if (!isAdmin && !preview) {
+      if (blog.status === 'draft' || blog.is_published === false || blog.is_visible === false) {
+        return res.status(404).json({
+          success: false,
+          error: 'Blog post not found or not published'
+        });
+      }
+    }
 
     // Apply locale fallback for multi-language fields
     const localizedBlog = {

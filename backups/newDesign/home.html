@@ -178,62 +178,61 @@
 
     /* Mobile Menu Styles */
     @media (max-width: 991px) {
-      /* Hide menu by default on mobile */
+      /* Hide menu by default on mobile - slide panel from right */
       .nav-menu, .w-nav-menu {
         display: none !important;
-      }
-
-      /* Show menu when open */
-      .nav-menu.nav-open, .w-nav-menu.nav-open {
-        display: flex !important;
-        flex-direction: column !important;
-        position: absolute !important;
-        top: 100% !important;
-        left: 0 !important;
-        right: 0 !important;
-        background: #1a1a3e !important;
-        z-index: 1000 !important;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
-        max-height: calc(100vh - 80px) !important;
-        overflow-y: auto !important;
-        padding: 20px !important;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        bottom: 0;
+        left: auto;
+        width: 85%;
+        max-width: 360px;
+        background: #05051a;
+        z-index: 999;
+        padding: 80px 20px 20px;
+        overflow-y: auto;
+        transition: right 0.3s ease;
         visibility: visible !important;
         opacity: 1 !important;
       }
 
-      /* Style mobile menu items */
-      .nav-menu.nav-open .nav-link,
-      .w-nav-menu.nav-open .w-nav-link {
+      /* Show menu when open */
+      .nav-menu.nav-open, .w-nav-menu.nav-open {
         display: block !important;
-        padding: 20px 30px !important;
-        color: #ffffff !important;
-        text-decoration: none !important;
-        font-size: 18px !important;
-        font-weight: 500 !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-        transition: all 0.3s ease !important;
-        background: transparent !important;
+        right: 0;
+        opacity: 1 !important;
       }
 
-      .nav-menu.nav-open .nav-link:hover,
-      .w-nav-menu.nav-open .w-nav-link:hover {
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        color: #ffd659 !important;
-        padding-left: 35px !important;
+      /* Style mobile menu items */
+      .nav-menu .nav-link,
+      .w-nav-menu .w-nav-link {
+        display: block !important;
+        padding: 15px 0;
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-menu .nav-link:hover,
+      .w-nav-menu .w-nav-link:hover {
+        color: #ffd659;
       }
 
       /* Style dropdowns in mobile */
-      .nav-menu.nav-open .menu-dropdown-wrapper,
-      .w-nav-menu.nav-open .w-dropdown {
-        width: 100% !important;
+      .nav-menu .menu-dropdown-wrapper,
+      .w-nav-menu .w-dropdown {
+        display: block !important;
+        margin: 15px 0;
       }
 
-      .nav-menu.nav-open .dropdown-toggle,
-      .w-nav-menu.nav-open .w-dropdown-toggle {
+      .nav-menu .dropdown-toggle,
+      .w-nav-menu .w-dropdown-toggle {
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
-        padding: 15px 20px !important;
+        padding: 15px 0 !important;
         color: white !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
       }
@@ -241,7 +240,7 @@
       /* Mobile language pills */
       .mobile-language-switchers {
         display: block !important;
-        padding: 15px 20px !important;
+        padding: 15px 0 !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
       }
 
@@ -252,13 +251,15 @@
       }
 
       /* Mobile Sign Up button */
-      .primary-button-wrapper.mobile {
+      .primary-button-wrapper.mobile,
+      .nav-menu .primary-button-wrapper.mobile {
         display: block !important;
-        padding: 15px 20px !important;
-        width: 100% !important;
+        margin-top: 20px;
+        width: 100%;
       }
 
-      .primary-button-wrapper.mobile .primary-button {
+      .primary-button-wrapper.mobile .primary-button,
+      .nav-menu .primary-button-wrapper.mobile .primary-button {
         width: 100% !important;
         text-align: center !important;
       }

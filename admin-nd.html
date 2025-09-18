@@ -5742,7 +5742,7 @@
         // Load blog posts in Teachers tab
         async function loadBlogPostsInTeachers() {
             try {
-                const response = await fetch(`http://localhost:3000/api/blog-posts`);
+                const response = await fetch(`http://localhost:3000/api/blog-posts?admin=true`);
                 const result = await response.json();
 
                 if (result.success && result.data) {
@@ -6195,7 +6195,7 @@
         async function loadBlogAdmin() {
             try {
                 console.log('🔄 Loading blog posts for BlogAdmin tab...');
-                const response = await fetch(`http://localhost:3000/api/blog-posts`);
+                const response = await fetch(`http://localhost:3000/api/blog-posts?admin=true`);
                 const result = await response.json();
 
                 if (result.success && result.data) {
