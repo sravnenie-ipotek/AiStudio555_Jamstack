@@ -24,7 +24,7 @@
             console.log('🔄 Loading home page data from database...');
 
             const locale = getCurrentLocale();
-            const response = await fetch(`${API_BASE_URL}/api/nd/home-page?locale=${locale}`);
+            const response = await fetch(`${API_BASE_URL}/api/home-page?locale=${locale}`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch home data: ${response.status}`);
@@ -507,7 +507,7 @@
         try {
             console.log('🎯 Loading featured courses from API...');
 
-            const response = await fetch(`${API_BASE_URL}/api/featured-courses?featured_only=true&limit=8`);
+            const response = await fetch(`${API_BASE_URL}/api/courses?featured=true&limit=8`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch featured courses: ${response.status}`);

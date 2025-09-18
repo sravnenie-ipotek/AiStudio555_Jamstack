@@ -49,7 +49,7 @@
             console.log('📡 Loading courses data from featured courses API...');
 
             const locale = getCurrentLocale();
-            const response = await fetch(`${API_BASE_URL}/api/featured-courses?locale=${locale}`);
+            const response = await fetch(`${API_BASE_URL}/api/courses`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch courses: ${response.status}`);
