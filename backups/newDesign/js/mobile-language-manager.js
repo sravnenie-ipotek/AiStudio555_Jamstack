@@ -493,8 +493,8 @@ class MobileLanguageManager {
         const endpoints = {
             'home': `/api/nd/home-page?locale=${locale}`,
             'courses': `/api/nd/courses?locale=${locale}`,
-            'teachers': `/api/teachers?locale=${locale}`,
-            'blog': `/api/blog-posts?locale=${locale}`
+            'teachers': `/api/nd/teachers?locale=${locale}`,
+            'blog': `/api/nd/blog?locale=${locale}`
         };
         return endpoints[pageName] || null;
     }

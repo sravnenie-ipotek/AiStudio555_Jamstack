@@ -186,7 +186,7 @@
 
             // Fetch courses data
             console.log('📡 Fetching courses data...');
-            const response = await fetch(`${API_BASE_URL}/api/nd/courses`);
+            const response = await fetch(`${API_BASE_URL}/api/courses`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch courses: ${response.status}`);

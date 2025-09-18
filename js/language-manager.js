@@ -250,8 +250,8 @@ class LanguageManager {
      */
     getAPIEndpoint(pageName, locale) {
         const endpoints = {
-            'home': `/api/nd/home-page?locale=${locale}`,
-            'courses': `/api/nd/courses?locale=${locale}`,
+            'home': `/api/home-page?locale=${locale}`,
+            'courses': `/api/courses`,
             'teachers': `/api/teachers?locale=${locale}`,
             'blog': `/api/blog-posts?locale=${locale}`,
             'career-center': `/api/career-center-page?locale=${locale}`,

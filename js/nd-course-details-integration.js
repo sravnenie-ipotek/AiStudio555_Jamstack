@@ -24,7 +24,7 @@
     // Fetch course data from API
     async function fetchCourseData(courseId, preview = false) {
         try {
-            const url = `${API_BASE}/api/nd/courses/${courseId}${preview ? '?preview=true' : ''}`;
+            const url = `${API_BASE}/api/courses/${courseId}${preview ? '?preview=true' : ''}`;
             console.log('🔍 Fetching course:', url);
 
             const response = await fetch(url);
