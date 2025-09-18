@@ -458,8 +458,25 @@
       background: transparent !important;
     }
   </style>
+  <!-- Mobile Language Manager - Must load early -->
+  <script src="js/mobile-language-manager.js"></script>
 </head>
 <body data-page="home" data-dynamic-content="true">
+  <script>
+    // Ensure mobile language manager initializes
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Initializing language system...');
+      if (!window.mobileLanguageManager) {
+        console.log('Creating new MobileLanguageManager instance...');
+        window.mobileLanguageManager = new MobileLanguageManager();
+      }
+      // Force initial translation load
+      const locale = window.mobileLanguageManager.currentLocale || 'en';
+      if (locale !== 'en') {
+        window.mobileLanguageManager.loadPageContent(locale, false);
+      }
+    });
+  </script>
     <!-- HARDCODED WORKING MENU - COPIED FROM popup-demo.html -->
     <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
       <div class="container">
@@ -1904,11 +1921,11 @@
             <div class="section-title-wrapper blog align-center">
               <div class="section-subtitle-wrapper center-align">
                 <div class="banner-subtitle-line left"></div>
-                <div class="section-subtitle">News &amp; Articles</div>
+                <div class="section-subtitle" data-i18n="blog.content.subtitle">News &amp; Articles</div>
                 <div class="banner-subtitle-line right"></div>
               </div>
-              <h2 class="section-title blog">Your Learning Journey With Our Experts.</h2>
-              <p class="section-description-text blog">Zohacous, we believe in a structured yet flexible approach to mentorship designed to help you achieve your goals at every step.</p>
+              <h2 class="section-title blog" data-i18n="blog.content.title">Your Learning Journey With Our Experts.</h2>
+              <p class="section-description-text blog" data-i18n="blog.content.description">Zohacous, we believe in a structured yet flexible approach to mentorship designed to help you achieve your goals at every step.</p>
             </div>
           </div>
         </div>
@@ -1926,7 +1943,7 @@
                             <div class="blog-card-categories-wrap">
                               <div class="blog-card-categories-flex">
                                 <div class="blog-card-categories-circel"></div>
-                                <div class="blog-card-categories-name">Web Design</div>
+                                <div class="blog-card-categories-name" data-i18n="blog.content.categories.0">Web Design</div>
                               </div>
                             </div>
                             <div class="blog-card-author-name-icon"><img src="images/Blog-Card-Author-Icon.svg" loading="lazy" alt="" class="blog-card-author-icon">
@@ -1940,7 +1957,7 @@
                           <p class="blog-post-description-text w-dyn-bind-empty"></p>
                           <div class="blog-card-link-wrap">
                             <a href="#" class="blog-card-link w-inline-block">
-                              <div class="blog-card-link-text">Read this Article</div>
+                              <div class="blog-card-link-text" data-i18n="misc.content.read_more">Read this Article</div>
                               <div class="blog-card-link-arrow"></div>
                             </a>
                           </div>
@@ -1964,7 +1981,7 @@
                             <div class="blog-card-categories-wrap">
                               <div class="blog-card-categories-flex">
                                 <div class="blog-card-categories-circel"></div>
-                                <div class="blog-card-categories-name">Web Design</div>
+                                <div class="blog-card-categories-name" data-i18n="blog.content.categories.0">Web Design</div>
                               </div>
                             </div>
                             <div class="blog-card-author-name-icon"><img src="images/Blog-Card-Author-Icon.svg" loading="lazy" alt="" class="blog-card-author-icon">
@@ -1978,7 +1995,7 @@
                           <p class="blog-post-description-text w-dyn-bind-empty"></p>
                           <div class="blog-card-link-wrap">
                             <a href="#" class="blog-card-link w-inline-block">
-                              <div class="blog-card-link-text">Read this Article</div>
+                              <div class="blog-card-link-text" data-i18n="misc.content.read_more">Read this Article</div>
                               <div class="blog-card-link-arrow"></div>
                             </a>
                           </div>
@@ -2002,7 +2019,7 @@
                             <div class="blog-card-categories-wrap">
                               <div class="blog-card-categories-flex">
                                 <div class="blog-card-categories-circel"></div>
-                                <div class="blog-card-categories-name">Web Design</div>
+                                <div class="blog-card-categories-name" data-i18n="blog.content.categories.0">Web Design</div>
                               </div>
                             </div>
                             <div class="blog-card-author-name-icon"><img src="images/Blog-Card-Author-Icon.svg" loading="lazy" alt="" class="blog-card-author-icon">
@@ -2016,7 +2033,7 @@
                           <p class="blog-post-description-text w-dyn-bind-empty"></p>
                           <div class="blog-card-link-wrap">
                             <a href="#" class="blog-card-link w-inline-block">
-                              <div class="blog-card-link-text">Read this Article</div>
+                              <div class="blog-card-link-text" data-i18n="misc.content.read_more">Read this Article</div>
                               <div class="blog-card-link-arrow"></div>
                             </a>
                           </div>
@@ -2072,81 +2089,81 @@
             <div class="inner-track-wrapper">
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Start Learning</p>
+                  <p class="track-title-tag" data-i18n="misc.content.start_learning">Start Learning</p>
                 </div>
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Browse Courses</p>
+                  <p class="track-title-tag" data-i18n="misc.content.browse_courses">Browse Courses</p>
                 </div>
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Start Learning</p>
+                  <p class="track-title-tag" data-i18n="misc.content.start_learning">Start Learning</p>
                 </div>
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Browse Courses</p>
+                  <p class="track-title-tag" data-i18n="misc.content.browse_courses">Browse Courses</p>
                 </div>
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Start Learning</p>
-                </div>
-              </div>
-            </div>
-            <div class="inner-track-wrapper">
-              <div class="single-track-wrap">
-                <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Start Learning</p>
-                </div>
-              </div>
-              <div class="single-track-wrap">
-                <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Browse Courses</p>
-                </div>
-              </div>
-              <div class="single-track-wrap">
-                <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Start Learning</p>
-                </div>
-              </div>
-              <div class="single-track-wrap">
-                <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Browse Courses</p>
-                </div>
-              </div>
-              <div class="single-track-wrap">
-                <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Start Learning</p>
+                  <p class="track-title-tag" data-i18n="misc.content.start_learning">Start Learning</p>
                 </div>
               </div>
             </div>
             <div class="inner-track-wrapper">
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Start Learning</p>
+                  <p class="track-title-tag" data-i18n="misc.content.start_learning">Start Learning</p>
                 </div>
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Browse Courses</p>
+                  <p class="track-title-tag" data-i18n="misc.content.browse_courses">Browse Courses</p>
                 </div>
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Start Learning</p>
+                  <p class="track-title-tag" data-i18n="misc.content.start_learning">Start Learning</p>
                 </div>
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Browse Courses</p>
+                  <p class="track-title-tag" data-i18n="misc.content.browse_courses">Browse Courses</p>
                 </div>
               </div>
               <div class="single-track-wrap">
                 <div class="track-title-tag-wrap">
-                  <p class="track-title-tag">Start Learning</p>
+                  <p class="track-title-tag" data-i18n="misc.content.start_learning">Start Learning</p>
+                </div>
+              </div>
+            </div>
+            <div class="inner-track-wrapper">
+              <div class="single-track-wrap">
+                <div class="track-title-tag-wrap">
+                  <p class="track-title-tag" data-i18n="misc.content.start_learning">Start Learning</p>
+                </div>
+              </div>
+              <div class="single-track-wrap">
+                <div class="track-title-tag-wrap">
+                  <p class="track-title-tag" data-i18n="misc.content.browse_courses">Browse Courses</p>
+                </div>
+              </div>
+              <div class="single-track-wrap">
+                <div class="track-title-tag-wrap">
+                  <p class="track-title-tag" data-i18n="misc.content.start_learning">Start Learning</p>
+                </div>
+              </div>
+              <div class="single-track-wrap">
+                <div class="track-title-tag-wrap">
+                  <p class="track-title-tag" data-i18n="misc.content.browse_courses">Browse Courses</p>
+                </div>
+              </div>
+              <div class="single-track-wrap">
+                <div class="track-title-tag-wrap">
+                  <p class="track-title-tag" data-i18n="misc.content.start_learning">Start Learning</p>
                 </div>
               </div>
             </div>
@@ -2160,7 +2177,7 @@
           <div class="cta-title-description">
             <div data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e980" class="section-subtitle-wrapper center-align">
               <div class="banner-subtitle-line left"></div>
-              <div class="section-subtitle">Start Learning Today</div>
+              <div class="section-subtitle" data-i18n="cta.content.subtitle">Start Learning Today</div>
               <div class="banner-subtitle-line right"></div>
             </div>
             <h2 data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e985" class="cta-title">Discover A World Of Learning Opportunities.</h2>
@@ -2210,7 +2227,7 @@
                   <div class="footer-social-media-circel"></div>
                 </a>
               </div>
-              <div class="footer-details-gmail">Contact: <span class="footer-details-gmail-text">zohacous@email.com</span></div>
+              <div class="footer-details-gmail">Contact: <span class="footer-details-gmail-text" data-i18n="footer.content.email">zohacous@email.com</span></div>
               <div class="footer-details-form-wrapper">
                 <div class="footer-details-form-block w-form">
                   <form id="email-form" name="email-form" data-name="Email Form" method="get" class="footer-details-form" data-wf-page-id="68b76410a2f59957bca214c0" data-wf-element-id="6ab616f4-e8bf-402d-a96f-e34ee9f6b1a1"><label for="email-2" class="footer-details-form-text" data-i18n="footer.content.newsletter.label">Subscribe to Newsletter</label>
@@ -2266,7 +2283,7 @@
                 </div>
                 <div class="footer-menu-single">
                   <div class="footer-menu-title-wrapper">
-                    <h4 class="footer-menu-title">Utility Pages</h4>
+                    <h4 class="footer-menu-title" data-i18n="footer.content.menus.2.title">Utility Pages</h4>
                     <div class="footer-menu-title-line"></div>
                   </div>
                   <div class="footer-menu-list-wrapper">
@@ -2316,13 +2333,13 @@
                   </div>
                   <div class="footer-contact-details">
                     <div class="footer-contact-details-single"><img loading="lazy" src="images/Footer-Contact-Details-Icon1.svg" alt="" class="footer-contact-details-icon">
-                      <div class="footer-contact-details-text">(000) 012 3456 7890</div>
+                      <div class="footer-contact-details-text" data-i18n="footer.content.phone">(000) 012 3456 7890</div>
                     </div>
                     <div class="footer-contact-details-single"><img loading="lazy" src="images/Footer-Contact-Details-Icon2.svg" alt="" class="footer-contact-details-icon">
-                      <div class="footer-contact-details-text">zohacous@email.com</div>
+                      <div class="footer-contact-details-text" data-i18n="footer.content.contact_email">zohacous@email.com</div>
                     </div>
                     <div class="footer-contact-details-single"><img loading="lazy" src="images/Footer-Contact-Details-Icon3.svg" alt="" class="footer-contact-details-icon">
-                      <div class="footer-contact-details-text">1234 Valencia, Suite, SF, CA</div>
+                      <div class="footer-contact-details-text" data-i18n="footer.content.address">1234 Valencia, Suite, SF, CA</div>
                     </div>
                   </div>
                 </div>
@@ -2403,8 +2420,7 @@
 
   <!-- SharedPopUp Component Script -->
 
-  <!-- Mobile-First Language Manager Script -->
-  <script src="js/mobile-language-manager.js"></script>
+  
 
 </body>
 </html>
