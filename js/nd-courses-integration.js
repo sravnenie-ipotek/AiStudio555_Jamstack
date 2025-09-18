@@ -26,7 +26,7 @@
             console.log('📡 Loading courses data from featured courses API...');
 
             const locale = getCurrentLocale();
-            const response = await fetch(`${API_BASE_URL}/api/nd/courses?locale=${locale}`);
+            const response = await fetch(`${API_BASE_URL}/api/courses`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch courses: ${response.status}`);
@@ -36,14 +36,27 @@
             console.log('✅ Courses data loaded:', data);
 
             // Populate the courses with shared card component
-            if (data.success && data.data) {
+            if (data.data && data.data.length > 0) {
+                // Transform API response to expected format
+                const transformedCourses = data.data.map(course => ({
+                    id: course.id,
+                    title: course.attributes.title,
+                    description: course.attributes.description,
+                    category: course.attributes.category,
+                    price: course.attributes.price,
+                    duration: course.attributes.duration,
+                    lessons_count: course.attributes.lessons,
+                    rating: course.attributes.rating,
+                    url: `detail_courses.html?id=${course.id}`
+                }));
+
                 // Wrap courses array in expected format
                 const coursesData = {
-                    courses: Array.isArray(data.data) ? data.data : [data.data]
+                    courses: transformedCourses
                 };
                 await populateCoursesSection(coursesData);
                 // Extract unique categories from courses
-                const categories = [...new Set(data.data.map(c => c.category).filter(Boolean))];
+                const categories = [...new Set(transformedCourses.map(c => c.category).filter(Boolean))];
                 setupCoursesTabFiltering(categories);
             } else if (Array.isArray(data)) {
                 // Handle direct array response
