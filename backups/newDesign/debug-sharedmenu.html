@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug SharedMenu - Step by Step</title>
+    <link href="css/webflow.css" rel="stylesheet" type="text/css">
+    <link href="css/aizeks-groovy-site.webflow.css" rel="stylesheet" type="text/css">
+    <link href="shared/components/sharedMenu/menu.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <h1>SharedMenu Debug Test</h1>
+
+    <section class="banner">
+        <h2>Banner section (injection target)</h2>
+        <p>Menu should be injected above this section</p>
+    </section>
+
+    <div id="debug-log"></div>
+
+    <script src="shared/components/sharedMenu/menu.js"></script>
+    <script>
+        const debugLog = document.getElementById('debug-log');
+        function log(message) {
+            console.log(message);
+            debugLog.innerHTML += '<p>' + message + '</p>';
+        }
+
+        // Override console.log to capture SharedMenu logs
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            if (args[0] && args[0].includes && args[0].includes('SharedMenu:')) {
+                debugLog.innerHTML += '<p style="color: blue;"><strong>' + args.join(' ') + '</strong></p>';
+            }
+        };
+
+        log('=== STEP-BY-STEP DEBUG TEST ===');
+        log('1. Page loaded');
+        log('2. SharedMenu class available: ' + (typeof SharedMenu !== 'undefined'));
+
+        if (typeof SharedMenu !== 'undefined') {
+            log('3. Creating manual SharedMenu instance...');
+            try {
+                const menu = new SharedMenu();
+                log('4. Instance created successfully');
+
+                log('5. Testing getImagePath method...');
+                const imagePath = menu.getImagePath('Logo.svg');
+                log('   Image path: ' + imagePath);
+
+                log('6. Testing getMenuHTML method...');
+                const menuHTML = menu.getMenuHTML();
+                log('   Menu HTML length: ' + menuHTML.length + ' characters');
+                log('   First 100 chars: ' + menuHTML.substring(0, 100));
+
+                log('7. Checking DOM elements before init...');
+                log('   .navbar exists: ' + (document.querySelector('.navbar') !== null));
+                log('   .banner exists: ' + (document.querySelector('.banner') !== null));
+                log('   body.firstChild: ' + (document.body.firstChild ? document.body.firstChild.tagName : 'null'));
+
+                log('8. Calling init() method...');
+                menu.init();
+
+                log('9. Checking DOM elements after init...');
+                log('   .navbar exists: ' + (document.querySelector('.navbar') !== null));
+                log('   .w-nav exists: ' + (document.querySelector('.w-nav') !== null));
+
+            } catch (error) {
+                log('ERROR: ' + error.message);
+                log('Stack: ' + error.stack);
+            }
+        } else {
+            log('ERROR: SharedMenu class not found');
+        }
+
+        log('=== DEBUG TEST COMPLETE ===');
+    </script>
+</body>
+</html>

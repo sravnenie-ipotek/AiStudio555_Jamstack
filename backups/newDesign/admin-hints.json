@@ -4,6 +4,8 @@
       "home": "Manage your homepage content including hero sections, featured courses, and testimonials",
       "courses": "Create, edit, and manage all your courses. Use Quick Actions for fast edits or Edit Details for comprehensive changes",
       "teachers": "Manage instructor profiles and information displayed on your site",
+      "blog": "Create, edit, and manage blog posts for your website. Add new articles, edit existing content, and organize your blog",
+      "blogNew": "Advanced blog management with enhanced features for creating, editing, and organizing blog posts",
       "footer": "Update footer content, links, and contact information across your website"
     },
     "buttons": {
@@ -49,6 +51,8 @@
       "home": "Управляйте контентом главной страницы, включая герой-секции, рекомендуемые курсы и отзывы",
       "courses": "Создавайте, редактируйте и управляйте всеми курсами. Используйте Быстрые действия для оперативного редактирования",
       "teachers": "Управляйте профилями преподавателей и информацией, отображаемой на сайте",
+      "blog": "Создавайте, редактируйте и управляйте записями в блоге для вашего веб-сайта. Добавляйте новые статьи, редактируйте существующий контент и организуйте ваш блог",
+      "blogNew": "Продвинутое управление блогом с расширенными функциями для создания, редактирования и организации записей в блоге",
       "footer": "Обновляйте контент подвала, ссылки и контактную информацию по всему сайту"
     },
     "buttons": {
@@ -94,6 +98,8 @@
       "home": "נהל את תוכן עמוד הבית כולל סקציות גיבור, קורסים מומלצים ועדויות",
       "courses": "צור, ערוך ונהל את כל הקורסים שלך. השתמש בפעולות מהירות לעריכה מהירה או פרטי עריכה לשינויים מקיפים",
       "teachers": "נהל פרופילי מדריכים ומידע המוצג באתר שלך",
+      "blog": "צור, ערוך ונהל פוסטים בבלוג עבור האתר שלך. הוסף מאמרים חדשים, ערוך תוכן קיים וארגן את הבלוג שלך",
+      "blogNew": "ניהול בלוג מתקדם עם תכונות משופרות ליצירה, עריכה וארגון של פוסטים בבלוג",
       "footer": "עדכן תוכן כותרת תחתונה, קישורים ומידע ליצירת קשר ברחבי האתר"
     },
     "buttons": {

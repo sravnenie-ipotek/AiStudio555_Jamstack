@@ -2819,9 +2819,9 @@ app.get('/api/featured-courses', async (req, res) => {
     console.log('🎯 Featured Courses API called');
 
     try {
-        const { category = 'all', featured_only = false, limit = 12 } = req.query;
+        const { category = 'all', featured_only = false, limit = 12, locale = 'en' } = req.query;
 
-        console.log(`🔍 Filters - Category: ${category}, Featured Only: ${featured_only}, Limit: ${limit}`);
+        console.log(`🔍 Filters - Category: ${category}, Featured Only: ${featured_only}, Limit: ${limit}, Locale: ${locale}`);
 
         // Build query conditions
         let whereConditions = ['visible = true', 'published = true'];
@@ -2884,9 +2884,45 @@ app.get('/api/featured-courses', async (req, res) => {
         console.log(`📝 Query: ${query}`);
         console.log(`📝 Params: ${JSON.stringify(queryParams)}`);
 
-        const courses = await queryDatabase(query, queryParams);
+        const rawCourses = await queryDatabase(query, queryParams);
 
-        console.log(`✅ Found ${courses.length} courses`);
+        console.log(`✅ Found ${rawCourses.length} courses`);
+
+        // Apply localization and fallback logic
+        const courses = rawCourses.map(course => {
+            let localizedTitle = course.title;
+            let localizedDescription = course.description;
+
+            // Select title based on locale with fallback
+            if (locale === 'en' && course.title_en) {
+                localizedTitle = course.title_en;
+            } else if (locale === 'ru' && course.title_ru) {
+                localizedTitle = course.title_ru;
+            } else if (locale === 'he' && course.title_he) {
+                localizedTitle = course.title_he;
+            } else if (course.title_en) {
+                // Fallback to English if localized version not available
+                localizedTitle = course.title_en;
+            }
+
+            // Select description based on locale with fallback
+            if (locale === 'en' && course.description_en) {
+                localizedDescription = course.description_en;
+            } else if (locale === 'ru' && course.description_ru) {
+                localizedDescription = course.description_ru;
+            } else if (locale === 'he' && course.description_he) {
+                localizedDescription = course.description_he;
+            } else if (course.description_en) {
+                // Fallback to English if localized version not available
+                localizedDescription = course.description_en;
+            }
+
+            return {
+                ...course,
+                title: localizedTitle,
+                description: localizedDescription
+            };
+        });
 
         // Group courses by category for tab filtering
         const coursesByCategory = {

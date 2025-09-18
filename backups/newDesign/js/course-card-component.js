@@ -98,7 +98,7 @@
                            course.url !== 'about:blank#' &&
                            course.url !== '#' &&
                            course.url !== '';
-            const courseUrl = isValidUrl ? course.url : `/backups/newDesign/detail_courses.html?id=${course.id || 0}`;
+            const courseUrl = isValidUrl ? course.url : `detail_courses.html?id=${course.id || 0}`;
 
             const courseData = {
                 COURSE_ID: course.id || 0,
@@ -161,7 +161,7 @@
                           course.url !== 'about:blank#' &&
                           course.url !== '#' &&
                           course.url !== '';
-        const courseUrl = isValidUrl ? course.url : `/backups/newDesign/detail_courses.html?id=${course.id || 0}`;
+        const courseUrl = isValidUrl ? course.url : `detail_courses.html?id=${course.id || 0}`;
 
         courseItem.innerHTML = `
             <div class="featured-courses-single" style="background-color: rgb(4,25,63)">

@@ -162,8 +162,9 @@ class BlogDetailIntegration {
 
         let content = '';
 
-        // Use content_sections if available (structured content)
-        if (blog.content_sections && blog.content_sections.length > 0) {
+        // Use content_sections if available and has actual content (not empty test data)
+        if (blog.content_sections && blog.content_sections.length > 0 &&
+            blog.content_sections[0].title !== 'testTitle') {
             content = blog.content_sections.map(section => {
                 return `
                     <h3>${section.title || ''}</h3>
@@ -172,7 +173,8 @@ class BlogDetailIntegration {
             }).join('');
         } else if (blog.content) {
             // Use main content field
-            content = blog.content;
+            // Preserve line breaks and formatting
+            content = blog.content.replace(/\n/g, '<br>');
         } else {
             content = '<p>No content available.</p>';
         }
@@ -274,12 +276,31 @@ class BlogDetailIntegration {
         const contentElement = document.getElementById('blog-content');
         if (!contentElement) return;
 
+        // Convert YouTube watch URL to embed URL
+        let embedUrl = videoUrl;
+        if (videoUrl.includes('youtube.com/watch')) {
+            const urlParams = new URLSearchParams(new URL(videoUrl).search);
+            const videoId = urlParams.get('v');
+            const timeParam = urlParams.get('t');
+
+            embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            if (timeParam) {
+                // Convert time to seconds if needed (e.g., "10233s" -> "10233")
+                const seconds = timeParam.replace('s', '');
+                embedUrl += `?start=${seconds}`;
+            }
+        } else if (videoUrl.includes('youtu.be/')) {
+            const videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+            embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        }
+
         const videoHtml = `
             <div style="margin: 30px 0;">
-                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-                    <iframe src="${videoUrl}"
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.12);">
+                    <iframe src="${embedUrl}"
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
-                            allowfullscreen>
+                            allowfullscreen
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
                     </iframe>
                 </div>
             </div>

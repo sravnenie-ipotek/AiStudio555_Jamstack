@@ -23,8 +23,13 @@ class SharedMenu {
    * Initialize the menu component
    */
   init() {
-    if (this.isInitialized) return;
+    console.log('SharedMenu: init() called');
+    if (this.isInitialized) {
+      console.log('SharedMenu: Already initialized, skipping');
+      return;
+    }
 
+    console.log('SharedMenu: Starting initialization...');
     this.createMenuHTML();
     this.detectCurrentPage();
     this.bindEvents();
@@ -37,8 +42,16 @@ class SharedMenu {
    * Create and inject menu HTML into the document
    */
   createMenuHTML() {
+    console.log('SharedMenu: createMenuHTML() called');
+
     // Check if menu already exists
-    if (document.querySelector('.navbar')) return;
+    const existingNavbar = document.querySelector('.navbar');
+    if (existingNavbar) {
+      console.log('SharedMenu: Existing navbar found, skipping injection:', existingNavbar);
+      return;
+    }
+
+    console.log('SharedMenu: No existing navbar found, proceeding with injection');
 
     // Get the menu HTML from the template
     const menuHTML = this.getMenuHTML();
@@ -47,14 +60,47 @@ class SharedMenu {
     const menuWrapper = document.createElement('div');
     menuWrapper.innerHTML = menuHTML;
 
-    // Insert at the beginning of the page-wrapper or body
-    const pageWrapper = document.querySelector('.page-wrapper');
-    const targetElement = pageWrapper || document.body;
+    // Smart injection logic to handle different page structures
+    let targetElement;
+    let insertionPoint;
 
+    // Priority 1: Look for .page-wrapper
+    const pageWrapper = document.querySelector('.page-wrapper');
     if (pageWrapper) {
-      targetElement.insertBefore(menuWrapper.firstElementChild, targetElement.firstChild);
+      targetElement = pageWrapper;
+      insertionPoint = targetElement.firstChild;
     } else {
-      targetElement.insertBefore(menuWrapper.firstElementChild, targetElement.firstChild);
+      // Priority 2: Look for main content containers
+      const contentSelectors = [
+        'main',
+        '.main-content',
+        'section:first-of-type',
+        '.section:first-of-type',
+        '.banner'
+      ];
+
+      let contentElement = null;
+      for (const selector of contentSelectors) {
+        contentElement = document.querySelector(selector);
+        if (contentElement) break;
+      }
+
+      if (contentElement) {
+        // Insert before the main content element
+        targetElement = contentElement.parentNode;
+        insertionPoint = contentElement;
+      } else {
+        // Fallback: Use body and insert at the beginning
+        targetElement = document.body;
+        insertionPoint = targetElement.firstChild;
+      }
+    }
+
+    // Inject the menu
+    if (insertionPoint) {
+      targetElement.insertBefore(menuWrapper.firstElementChild, insertionPoint);
+    } else {
+      targetElement.appendChild(menuWrapper.firstElementChild);
     }
 
     // Set up navbar references
@@ -62,6 +108,8 @@ class SharedMenu {
     this.mobileMenuButton = document.querySelector('.menu-button');
     this.navMenu = document.querySelector('.nav-menu');
     this.dropdowns = document.querySelectorAll('.menu-dropdown-wrapper');
+
+    console.log('Menu injected successfully into:', targetElement.tagName, targetElement.className || '(no class)');
   }
 
   /**
@@ -83,234 +131,255 @@ class SharedMenu {
   }
 
   /**
-   * Get the menu HTML template
+   * Get the menu HTML template - EXACT COPY from popup-demo.html
    */
   getMenuHTML() {
+    console.log('SharedMenu: getMenuHTML() called');
+    const imagePath = this.getImagePath('Logo.svg');
+    console.log('SharedMenu: Image path resolved to:', imagePath);
+
+    // Simple test version first - if this works, we know the template string is the issue
+    const simpleHTML = '<div class="navbar w-nav"><div class="container">TEST MENU</div></div>';
+    console.log('SharedMenu: Returning simple HTML for testing');
+    return simpleHTML;
+
+    // Original complex template (temporarily disabled for debugging)
+    /*
     return `
-<div role="banner" class="navbar custom-nav">
-  <div class="container">
-    <div class="navbar-content">
-      <!-- Logo -->
-      <a href="index.html" class="zohacous-logo-link nav-brand">
-        <img loading="lazy" src="${this.getImagePath('Logo.svg')}" alt="AI Studio Logo" class="zohacous-logo-image">
-      </a>
-
-      <!-- Main Navigation -->
-      <nav role="navigation" class="nav-menu custom-nav-menu">
-        <!-- Primary Navigation Links -->
-        <a href="home.html" class="nav-link">Home</a>
-        <a href="courses.html" class="nav-link">Courses</a>
-        <a href="pricing.html" class="nav-link">Pricing</a>
-        <a href="blog.html" class="nav-link">Blog</a>
-        <a href="teachers.html" class="nav-link">Teachers</a>
-
-        <!-- About Us Dropdown -->
-        <div class="menu-dropdown-wrapper custom-dropdown">
-          <div class="dropdown-toggle custom-dropdown-toggle">
-            <div class="dropdown-toggle-text-block">About Us</div>
-            <div class="dropdown-toggle-arrow-2"></div>
-          </div>
-          <nav class="dropdown-column-wrapper-3 custom-dropdown-list" style="width: auto; min-width: auto;">
-            <div class="dropdown-pd" style="padding: 20px 30px;">
-              <div class="dropdown-singel-wrapper">
-                <div class="dropdown-menu-wrapper">
-                  <a href="career-orientation.html" class="dropdown-menu-text-link-block inline-block">
-                    <div>Career Orientation</div>
-                  </a>
-                  <a href="career-center.html" class="dropdown-menu-text-link-block mb0 inline-block">
-                    <div>Career Center</div>
-                  </a>
+    <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
+      <div class="container">
+        <div class="navbar-content">
+          <a href="index.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="${this.getImagePath('Logo.svg')}" alt="" class="zohacous-logo-image"></a>
+          <nav role="navigation" class="nav-menu w-nav-menu">
+            <a href="home.html" class="nav-link w-nav-link">Home</a>
+            <a href="courses.html" class="nav-link w-nav-link">Courses</a>
+            <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
+            <a href="blog.html" class="nav-link w-nav-link">Blog</a>
+            <a href="teachers.html" class="nav-link w-nav-link">Teachers</a>
+            <div data-delay="0" data-hover="true" data-w-id="9a224b60-f557-150b-8062-e4bbef078cfb" class="menu-dropdown-wrapper w-dropdown">
+              <div class="dropdown-toggle w-dropdown-toggle">
+                <div class="dropdown-toggle-text-block">About Us</div>
+                <div class="dropdown-toggle-arrow-2"></div>
+              </div>
+              <nav class="dropdown-column-wrapper-3 w-dropdown-list" style="width: auto; min-width: auto;">
+                <div class="dropdown-pd" style="padding: 20px 30px;">
+                  <div class="dropdown-singel-wrapper">
+                    <div class="dropdown-menu-wrapper">
+                      <a href="career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
+                        <div>Career Orientation</div>
+                      </a>
+                      <a href="career-center.html" class="dropdown-menu-text-link-block mb0 w-inline-block">
+                        <div>Career Center</div>
+                      </a>
+                    </div>
+                  </div>
                 </div>
+              </nav>
+            </div>
+            <div data-delay="0" data-hover="true" data-w-id="9a224b60-f557-150b-8062-e4bbef078cfa" class="menu-dropdown-wrapper w-dropdown">
+              <div class="dropdown-toggle w-dropdown-toggle">
+                <div class="dropdown-toggle-text-block">Pages</div>
+                <div class="dropdown-toggle-arrow-2"></div>
+              </div>
+              <nav class="dropdown-column-wrapper-3 w-dropdown-list">
+                <div class="dropdown-pd pd-60px">
+                  <div class="w-layout-grid dropdown-grid">
+                    <div id="w-node-_9a224b60-f557-150b-8062-e4bbef078d03-81b431a4" class="dropdown-singel-wrapper">
+                      <div class="dropdown-title-wrapper">
+                        <h3 class="dropdown-title">Menu</h3>
+                      </div>
+                      <div class="dropdown-menu-wrapper">
+                        <a href="home.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Home </div>
+                        </a>
+                        <a href="about-us.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>About us</div>
+                        </a>
+                        <a href="courses.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Courses</div>
+                        </a>
+                        <a href="https://zohacous.webflow.io/courses/html-css-bootstrap-build-responsive-websites" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Courses Single</div>
+                          <div class="dropdown-menu-cms-single">
+                            <div class="dropdown-menu-cms-line"></div>
+                            <div class="dropdown-menu-cms">CMS</div>
+                          </div>
+                        </a>
+                        <a href="pricing.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Pricing</div>
+                        </a>
+                        <a href="https://zohacous.webflow.io/product/premium-plan" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Pricing Single</div>
+                          <div class="dropdown-menu-cms-single">
+                            <div class="dropdown-menu-cms-line"></div>
+                            <div class="dropdown-menu-cms">CMS</div>
+                          </div>
+                        </a>
+                        <a href="contact-us.html" class="dropdown-menu-text-link-block mb0 w-inline-block">
+                          <div>Contact Us</div>
+                        </a>
+                      </div>
+                    </div>
+                    <div id="w-node-_9a224b60-f557-150b-8062-e4bbef078d2f-81b431a4" class="dropdown-singel-wrapper">
+                      <div class="dropdown-title-wrapper">
+                        <h3 class="dropdown-title">Pages</h3>
+                      </div>
+                      <div class="dropdown-menu-wrapper">
+                        <a href="blog.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Blogs </div>
+                        </a>
+                        <a href="https://zohacous.webflow.io/blog/future-of-web-app-develop-trends-to-watch-in-2024" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Blog details</div>
+                          <div class="dropdown-menu-cms-single">
+                            <div class="dropdown-menu-cms-line"></div>
+                            <div class="dropdown-menu-cms">CMS</div>
+                          </div>
+                        </a>
+                        <a href="authentication-pages/sign-in.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Sign in</div>
+                        </a>
+                        <a href="authentication-pages/sign-up.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Sign up</div>
+                        </a>
+                        <a href="authentication-pages/forgot-password.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Forget password</div>
+                        </a>
+                        <a href="authentication-pages/reset-password.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Reset password</div>
+                        </a>
+                      </div>
+                    </div>
+                    <div id="w-node-_9a224b60-f557-150b-8062-e4bbef078d57-81b431a4" class="dropdown-singel-wrapper">
+                      <div class="dropdown-title-wrapper">
+                        <h3 class="dropdown-title">Utility Pages</h3>
+                      </div>
+                      <div class="dropdown-menu-wrapper">
+                        <a href="template-pages/style-guide.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Style Guide</div>
+                        </a>
+                        <a href="404.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>404 Not Found</div>
+                        </a>
+                        <a href="401.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Password Protected</div>
+                        </a>
+                        <a href="template-pages/license.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Licenses</div>
+                        </a>
+                        <a href="template-pages/changelog.html" class="dropdown-menu-text-link-block w-inline-block">
+                          <div>Changelog</div>
+                        </a>
+                      </div>
+                      <div class="more-temple-wrapper">
+                        <a href="https://webflow.com/templates/designers/zohaflow" target="_blank" class="more-temple-text-link">More Templates Form Us</a>
+                        <div class="more-temple-text-link-boder"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </nav>
+            </div>
+            <div class="primary-button-wrapper mobile">
+              <a href="#" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block" onclick="openContactPopup(); return false;">
+                <div class="primary-button-text-wrap">
+                  <div class="primary-button-text-block">Sign Up Today</div>
+                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Mobile Language Switchers -->
+            <div class="mobile-language-switchers">
+              <!-- Mobile Language Pills -->
+              <div class="mobile-lang-pills">
+                <a href="#" class="mobile-lang-pill active" onclick="setActivePill(this)">EN</a>
+                <a href="#" class="mobile-lang-pill" onclick="setActivePill(this)">RU</a>
+                <a href="#" class="mobile-lang-pill" onclick="setActivePill(this)">HE</a>
               </div>
             </div>
           </nav>
-        </div>
-
-        <!-- Pages Dropdown -->
-        <div class="menu-dropdown-wrapper custom-dropdown">
-          <div class="dropdown-toggle custom-dropdown-toggle">
-            <div class="dropdown-toggle-text-block">Pages</div>
-            <div class="dropdown-toggle-arrow-2"></div>
-          </div>
-          <nav class="dropdown-column-wrapper-3 custom-dropdown-list">
-            <div class="dropdown-pd pd-60px">
-              <div class="dropdown-grid grid grid-cols-3 gap-6">
-                <!-- Menu Column -->
-                <div class="dropdown-singel-wrapper">
-                  <div class="dropdown-title-wrapper">
-                    <h3 class="dropdown-title">Menu</h3>
+          <div class="navbar-button-wrapper">
+            <div class="lang-pills">
+              <a href="#" class="lang-pill active" onclick="setActivePill(this)">EN</a>
+              <a href="#" class="lang-pill" onclick="setActivePill(this)">RU</a>
+              <a href="#" class="lang-pill" onclick="setActivePill(this)">HE</a>
+            </div>
+            <div data-open-product="" data-wf-cart-type="rightSidebar" data-wf-cart-query="" data-wf-page-link-href-prefix="" class="w-commerce-commercecartwrapper navbar-cart" data-node-type="commerce-cart-wrapper">
+              <a class="w-commerce-commercecartopenlink navbar-cart-button w-inline-block" role="button" aria-haspopup="dialog" aria-label="Open cart" data-node-type="commerce-cart-open-link" href="#"><img loading="lazy" src="${this.getImagePath('Navbar-Cart-Icon.svg')}" alt="" class="navbar-cart-icon">
+                <div class="w-commerce-commercecartopenlinkcount cart-quantity">0</div>
+              </a>
+              <div style="display:none" class="w-commerce-commercecartcontainerwrapper w-commerce-commercecartcontainerwrapper--cartType-rightSidebar cart-wrapper" data-node-type="commerce-cart-container-wrapper">
+                <div data-node-type="commerce-cart-container" role="dialog" class="w-commerce-commercecartcontainer cart-container">
+                  <div class="w-commerce-commercecartheader cart-header">
+                    <h4 class="w-commerce-commercecartheading cart-header-title">Your Cart</h4>
+                    <a class="w-commerce-commercecartcloselink cart-close-button w-inline-block" role="button" aria-label="Close cart" data-node-type="commerce-cart-close-link"><img loading="lazy" src="${this.getImagePath('Cart-Close-Icon.svg')}" alt="" class="cart-close"></a>
                   </div>
-                  <div class="dropdown-menu-wrapper">
-                    <a href="home.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>Home</div>
-                    </a>
-                    <a href="about-us.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>About us</div>
-                    </a>
-                    <a href="courses.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>Courses</div>
-                    </a>
-                    <a href="pricing.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>Pricing</div>
-                    </a>
-                    <a href="contact-us.html" class="dropdown-menu-text-link-block mb0 inline-block">
-                      <div>Contact Us</div>
-                    </a>
-                  </div>
-                </div>
-
-                <!-- Pages Column -->
-                <div class="dropdown-singel-wrapper">
-                  <div class="dropdown-title-wrapper">
-                    <h3 class="dropdown-title">Pages</h3>
-                  </div>
-                  <div class="dropdown-menu-wrapper">
-                    <a href="blog.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>Blogs</div>
-                    </a>
-                    <a href="authentication-pages/sign-in.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>Sign in</div>
-                    </a>
-                    <a href="authentication-pages/sign-up.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>Sign up</div>
-                    </a>
-                    <a href="authentication-pages/forgot-password.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>Forget password</div>
-                    </a>
-                    <a href="authentication-pages/reset-password.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>Reset password</div>
-                    </a>
-                  </div>
-                </div>
-
-                <!-- Utility Pages Column -->
-                <div class="dropdown-singel-wrapper">
-                  <div class="dropdown-title-wrapper">
-                    <h3 class="dropdown-title">Utility Pages</h3>
-                  </div>
-                  <div class="dropdown-menu-wrapper">
-                    <a href="template-pages/style-guide.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>Style Guide</div>
-                    </a>
-                    <a href="404.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>404 Not Found</div>
-                    </a>
-                    <a href="401.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>Password Protected</div>
-                    </a>
-                    <a href="template-pages/license.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>Licenses</div>
-                    </a>
-                    <a href="template-pages/changelog.html" class="dropdown-menu-text-link-block inline-block">
-                      <div>Changelog</div>
-                    </a>
+                  <div class="w-commerce-commercecartformwrapper">
+                    <form style="display:none" class="w-commerce-commercecartform" data-node-type="commerce-cart-form">
+                      <script type="text/x-wf-template" id="wf-template-022ff995-969a-6767-1e11-b2a08cb61438"></script>
+                      <div class="w-commerce-commercecartlist cart-list" data-wf-collection="database.commerceOrder.userItems" data-wf-template-id="wf-template-022ff995-969a-6767-1e11-b2a08cb61438"></div>
+                      <div class="w-commerce-commercecartfooter cart-footer">
+                        <div aria-live="polite" aria-atomic="true" class="w-commerce-commercecartlineitem">
+                          <div class="cart-footer-title">Subtotal</div>
+                          <div class="w-commerce-commercecartordervalue cart-footer-price"></div>
+                        </div>
+                        <div>
+                          <a href="checkout.html" value="Continue to Checkout" class="w-commerce-commercecartcheckoutbutton cart-footer-button" data-loading-text="Hang Tight..." data-node-type="cart-checkout-button">Continue to Checkout</a>
+                        </div>
+                      </div>
+                    </form>
+                    <div class="w-commerce-commercecartemptystate">
+                      <div aria-label="This cart is empty" aria-live="polite">No items found.</div>
+                    </div>
+                    <div aria-live="assertive" style="display:none" data-node-type="commerce-cart-error" class="w-commerce-commercecarterrorstate">
+                      <div class="w-cart-error-msg" data-w-cart-quantity-error="Product is not available in this quantity." data-w-cart-general-error="Something went wrong when adding this item to the cart." data-w-cart-checkout-error="Checkout is disabled on this site." data-w-cart-cart_order_min-error="The order minimum was not met. Add more items to your cart to continue." data-w-cart-subscription_error-error="Before you purchase, please use your email invite to verify your address so we can send order updates.">Product is not available in this quantity.</div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </nav>
-        </div>
-
-        <!-- Mobile Sign Up Button -->
-        <div class="primary-button-wrapper mobile">
-          <a href="#" class="primary-button inline-block" onclick="openContactPopup(); return false;">
-            <div class="primary-button-text-wrap">
-              <div class="primary-button-text-block">Sign Up Today</div>
-              <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+            <div class="primary-button-wrapper desktop">
+              <a href="#" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block" onclick="openContactPopup(); return false;">
+                <div class="primary-button-text-wrap">
+                  <div class="primary-button-text-block">Sign Up Today</div>
+                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                </div>
+              </a>
             </div>
-          </a>
-        </div>
-
-        <!-- Mobile Language Switchers -->
-        <div class="mobile-language-switchers">
-          <!-- Mobile Language Pills -->
-          <div class="mobile-lang-pills">
-            <a href="#" class="mobile-lang-pill active" onclick="setActivePill(this)">EN</a>
-            <a href="#" class="mobile-lang-pill" onclick="setActivePill(this)">RU</a>
-            <a href="#" class="mobile-lang-pill" onclick="setActivePill(this)">HE</a>
-          </div>
-        </div>
-      </nav>
-
-      <!-- Right Side Controls -->
-      <div class="navbar-button-wrapper">
-        <!-- Language Switchers -->
-        <div class="language-switchers">
-          <!-- Variation 1: Minimal Dropdown -->
-          <div class="lang-dropdown" onclick="toggleDropdown(this)">
-            <div class="lang-dropdown-trigger">
-              <svg class="globe-icon" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-              </svg>
-              <span>English</span>
-              <span class="dropdown-arrow">▼</span>
+            <div class="menu-button w-nav-button">
+              <div class="hamburger-icon">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+              </div>
             </div>
-            <div class="lang-dropdown-menu">
-              <a href="#" class="lang-option active">English</a>
-              <a href="#" class="lang-option">Русский</a>
-              <a href="#" class="lang-option">עברית</a>
-            </div>
-          </div>
-
-          <!-- Variation 2: Pill Toggle -->
-          <div class="lang-pills">
-            <a href="#" class="lang-pill active" onclick="setActivePill(this)">EN</a>
-            <a href="#" class="lang-pill" onclick="setActivePill(this)">RU</a>
-            <a href="#" class="lang-pill" onclick="setActivePill(this)">HE</a>
-          </div>
-        </div>
-
-        <!-- Shopping Cart -->
-        <div class="custom-cart-wrapper navbar-cart">
-          <a class="custom-cart-open-link navbar-cart-button inline-block" role="button" aria-haspopup="dialog" aria-label="Open cart" href="#">
-            <img loading="lazy" src="${this.getImagePath('Navbar-Cart-Icon.svg')}" alt="Shopping Cart" class="navbar-cart-icon">
-            <div class="custom-cart-count cart-quantity">0</div>
-          </a>
-        </div>
-
-        <!-- Desktop Sign Up Button -->
-        <div class="primary-button-wrapper desktop">
-          <a href="#" class="primary-button inline-block" onclick="openContactPopup(); return false;">
-            <div class="primary-button-text-wrap">
-              <div class="primary-button-text-block">Sign Up Today</div>
-              <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
-            </div>
-          </a>
-        </div>
-
-        <!-- Mobile Menu Toggle -->
-        <div class="menu-button custom-nav-button">
-          <div class="hamburger-icon">
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
     `;
+    */
   }
 
   /**
    * Detect current page and set active states
    */
   detectCurrentPage() {
-    const path = window.location.pathname;
-    const filename = path.split('/').pop() || 'home.html';
+    const pathname = window.location.pathname;
+    const page = pathname.split('/').pop().replace('.html', '') || 'index';
 
-    // Remove file extension and handle index
-    this.currentPage = filename.replace('.html', '');
-    if (this.currentPage === 'index' || this.currentPage === '') {
-      this.currentPage = 'home';
-    }
+    // Map common page names
+    const pageMap = {
+      'index': 'home',
+      '': 'home'
+    };
 
+    this.currentPage = pageMap[page] || page;
     this.setActivePage(this.currentPage);
   }
 
   /**
-   * Set active page in navigation
+   * Set active page highlighting
    */
   setActivePage(page) {
     // Remove all current classes
@@ -366,11 +435,8 @@ class SharedMenu {
     // Click outside to close
     document.addEventListener('click', this.handleClickOutside);
 
-    // Window resize
+    // Window resize handler
     window.addEventListener('resize', this.handleResize);
-
-    // Intercept "Sign Up Today" buttons to open popup
-    this.interceptSignUpButtons();
   }
 
   /**
@@ -378,84 +444,74 @@ class SharedMenu {
    */
   handleMobileToggle(e) {
     e.preventDefault();
+    e.stopPropagation();
+
     this.mobileMenuOpen = !this.mobileMenuOpen;
 
     if (this.mobileMenuOpen) {
-      this.navMenu.classList.add('w--open', 'active');
-      this.mobileMenuButton.classList.add('w--open', 'active');
+      this.navMenu.classList.add('w--open');
+      this.mobileMenuButton.classList.add('w--open');
+      this.navbar.classList.add('w--open');
       document.body.style.overflow = 'hidden';
     } else {
-      this.navMenu.classList.remove('w--open', 'active');
-      this.mobileMenuButton.classList.remove('w--open', 'active');
+      this.navMenu.classList.remove('w--open');
+      this.mobileMenuButton.classList.remove('w--open');
+      this.navbar.classList.remove('w--open');
       document.body.style.overflow = '';
     }
   }
 
   /**
-   * Handle dropdown toggle for mobile
+   * Handle dropdown toggle (mobile)
    */
   handleDropdownToggle(dropdown) {
-    const isOpen = dropdown.classList.contains('w--open') || dropdown.classList.contains('active');
+    const isOpen = dropdown.classList.contains('w--open');
 
-    // Close all other dropdowns
-    this.dropdowns.forEach(d => {
-      if (d !== dropdown) {
-        d.classList.remove('w--open', 'active');
-      }
-    });
+    // Close all dropdowns
+    this.dropdowns.forEach(d => d.classList.remove('w--open'));
 
     // Toggle current dropdown
-    if (isOpen) {
-      dropdown.classList.remove('w--open', 'active');
-      this.activeDropdown = null;
-    } else {
-      dropdown.classList.add('w--open', 'active');
+    if (!isOpen) {
+      dropdown.classList.add('w--open');
       this.activeDropdown = dropdown;
+    } else {
+      this.activeDropdown = null;
     }
   }
 
   /**
-   * Show dropdown on hover (desktop)
+   * Show dropdown (desktop)
    */
   showDropdown(dropdown) {
     if (window.innerWidth > 991) {
-      dropdown.classList.add('w--open', 'active');
-      this.activeDropdown = dropdown;
+      dropdown.classList.add('w--open');
     }
   }
 
   /**
-   * Hide dropdown on hover leave (desktop)
+   * Hide dropdown (desktop)
    */
   hideDropdown(dropdown) {
     if (window.innerWidth > 991) {
-      dropdown.classList.remove('w--open', 'active');
-      if (this.activeDropdown === dropdown) {
-        this.activeDropdown = null;
-      }
+      dropdown.classList.remove('w--open');
     }
   }
 
   /**
-   * Handle click outside to close mobile menu and dropdowns
+   * Handle click outside
    */
   handleClickOutside(e) {
-    if (!this.navbar.contains(e.target)) {
-      // Close mobile menu
-      if (this.mobileMenuOpen) {
-        this.mobileMenuOpen = false;
-        this.navMenu.classList.remove('w--open', 'active');
-        this.mobileMenuButton.classList.remove('w--open', 'active');
-        document.body.style.overflow = '';
-      }
+    if (!this.navbar) return;
 
-      // Close dropdowns on mobile
-      if (window.innerWidth <= 991) {
-        this.dropdowns.forEach(dropdown => {
-          dropdown.classList.remove('w--open', 'active');
-        });
-        this.activeDropdown = null;
-      }
+    // Close mobile menu if clicking outside
+    if (this.mobileMenuOpen && !this.navbar.contains(e.target)) {
+      this.handleMobileToggle({ preventDefault: () => {}, stopPropagation: () => {} });
+    }
+
+    // Close dropdowns on mobile
+    if (window.innerWidth <= 991 && this.activeDropdown && !this.activeDropdown.contains(e.target)) {
+      this.activeDropdown.classList.remove('w--open');
+      this.activeDropdown = null;
     }
   }
 
@@ -464,162 +520,109 @@ class SharedMenu {
    */
   handleResize() {
     if (window.innerWidth > 991) {
-      // Desktop: close mobile menu if open
-      if (this.mobileMenuOpen) {
-        this.mobileMenuOpen = false;
-        this.navMenu.classList.remove('w--open', 'active');
-        this.mobileMenuButton.classList.remove('w--open', 'active');
-        document.body.style.overflow = '';
-      }
-    } else {
-      // Mobile: close all dropdowns
-      this.dropdowns.forEach(dropdown => {
-        dropdown.classList.remove('w--open', 'active');
-      });
+      // Reset mobile states on desktop
+      this.mobileMenuOpen = false;
+      this.navMenu.classList.remove('w--open');
+      this.mobileMenuButton.classList.remove('w--open');
+      this.navbar.classList.remove('w--open');
+      document.body.style.overflow = '';
+
+      // Close mobile dropdowns
+      this.dropdowns.forEach(d => d.classList.remove('w--open'));
       this.activeDropdown = null;
     }
   }
 
   /**
-   * Intercept "Sign Up Today" buttons to open contact popup
-   */
-  interceptSignUpButtons() {
-    const signUpButtons = this.navbar.querySelectorAll('a[href="#"], a[href="authentication-pages/sign-up.html"]');
-
-    signUpButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        // Check if contact popup is available
-        if (typeof openContactPopup === 'function') {
-          openContactPopup();
-        } else if (window.ContactPopup && typeof window.ContactPopup.open === 'function') {
-          window.ContactPopup.open();
-        } else {
-          // Fallback: redirect to contact page or sign up page
-          console.warn('Contact popup not available, redirecting...');
-          window.location.href = 'contact-us.html';
-        }
-      });
-    });
-  }
-
-  /**
-   * Update cart quantity
-   */
-  updateCartQuantity(count = 0) {
-    const cartQuantity = this.navbar.querySelector('.cart-quantity');
-    if (cartQuantity) {
-      cartQuantity.textContent = count;
-    }
-  }
-
-  /**
-   * Highlight a navigation item
-   */
-  highlightNavItem(page) {
-    this.setActivePage(page);
-  }
-
-  /**
-   * Destroy the menu
-   */
-  destroy() {
-    if (this.navbar) {
-      this.navbar.remove();
-    }
-
-    // Remove event listeners
-    document.removeEventListener('click', this.handleClickOutside);
-    window.removeEventListener('resize', this.handleResize);
-
-    this.isInitialized = false;
-  }
-
-  /**
-   * Get current page
+   * Public API methods
    */
   getCurrentPage() {
     return this.currentPage;
   }
-}
 
-// Create global instance
-window.SharedMenu = new SharedMenu();
-
-// Auto-initialize on DOM load
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    window.SharedMenu.init();
-  });
-} else {
-  window.SharedMenu.init();
-}
-
-// Language Switcher Functions
-window.toggleDropdown = function(element) {
-  element.classList.toggle('active');
-
-  // Close other dropdowns
-  document.querySelectorAll('.lang-dropdown').forEach(dropdown => {
-    if (dropdown !== element) {
-      dropdown.classList.remove('active');
-    }
-  });
-};
-
-window.setActivePill = function(element) {
-  // Handle both desktop and mobile language pills
-  const isDesktop = element.classList.contains('lang-pill');
-  const isMobile = element.classList.contains('mobile-lang-pill');
-
-  if (isDesktop) {
-    // Desktop language pills
-    element.parentNode.querySelectorAll('.lang-pill').forEach(pill => {
-      pill.classList.remove('active');
-    });
-    element.classList.add('active');
-
-    // Sync with mobile pills
-    const lang = element.textContent;
-    document.querySelectorAll('.mobile-lang-pill').forEach(pill => {
-      pill.classList.remove('active');
-      if (pill.textContent === lang) {
-        pill.classList.add('active');
-      }
-    });
-  } else if (isMobile) {
-    // Mobile language pills
-    element.parentNode.querySelectorAll('.mobile-lang-pill').forEach(pill => {
-      pill.classList.remove('active');
-    });
-    element.classList.add('active');
-
-    // Sync with desktop pills
-    const lang = element.textContent;
-    document.querySelectorAll('.lang-pill').forEach(pill => {
-      pill.classList.remove('active');
-      if (pill.textContent === lang) {
-        pill.classList.add('active');
-      }
-    });
+  highlightNavItem(page) {
+    this.setActivePage(page);
   }
 
-  // You could add language switching logic here
-  const lang = element.textContent;
-  console.log('Language switched to:', lang);
-};
+  updateCartQuantity(count) {
+    const cartQuantity = document.querySelector('.cart-quantity');
+    if (cartQuantity) {
+      cartQuantity.textContent = count;
+    }
+  }
+}
 
-// Close dropdowns when clicking outside
-document.addEventListener('click', function(event) {
-  if (!event.target.closest('.lang-dropdown')) {
-    document.querySelectorAll('.lang-dropdown').forEach(dropdown => {
-      dropdown.classList.remove('active');
-    });
+// Export for global usage
+if (typeof window !== 'undefined') {
+  window.SharedMenu = SharedMenu;
+}
+
+// Required functions for menu functionality
+if (typeof window !== 'undefined') {
+  // Language switcher function
+  window.setActivePill = function(element) {
+    // Handle both desktop and mobile language pills
+    const isDesktop = element.classList.contains('lang-pill');
+    const isMobile = element.classList.contains('mobile-lang-pill');
+
+    if (isDesktop) {
+      // Desktop language pills
+      element.parentNode.querySelectorAll('.lang-pill').forEach(pill => {
+        pill.classList.remove('active');
+      });
+      element.classList.add('active');
+
+      // Sync with mobile pills
+      const lang = element.textContent;
+      document.querySelectorAll('.mobile-lang-pill').forEach(pill => {
+        pill.classList.remove('active');
+        if (pill.textContent === lang) {
+          pill.classList.add('active');
+        }
+      });
+    } else if (isMobile) {
+      // Mobile language pills
+      element.parentNode.querySelectorAll('.mobile-lang-pill').forEach(pill => {
+        pill.classList.remove('active');
+      });
+      element.classList.add('active');
+
+      // Sync with desktop pills
+      const lang = element.textContent;
+      document.querySelectorAll('.lang-pill').forEach(pill => {
+        pill.classList.remove('active');
+        if (pill.textContent === lang) {
+          pill.classList.add('active');
+        }
+      });
+    }
+
+    // You could add language switching logic here
+    const lang = element.textContent;
+    console.log('Language switched to:', lang);
+  };
+
+  // Contact popup function (fallback if popup.js not loaded)
+  window.openContactPopup = function() {
+    // Try to use the ContactPopup component if available
+    if (window.ContactPopup && window.ContactPopup.open) {
+      window.ContactPopup.open();
+    } else {
+      // Fallback alert
+      console.warn('ContactPopup component not loaded');
+      alert('Contact popup functionality requires the popup component to be loaded.');
+    }
+  };
+}
+
+// Auto-initialize if needed
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('SharedMenu: DOMContentLoaded fired');
+  if (typeof window !== 'undefined' && !window.sharedMenuInstance) {
+    console.log('SharedMenu: Creating new instance');
+    window.sharedMenuInstance = new SharedMenu();
+    window.sharedMenuInstance.init();
+  } else {
+    console.log('SharedMenu: Instance already exists or window undefined');
   }
 });
-
-// Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = SharedMenu;
-}

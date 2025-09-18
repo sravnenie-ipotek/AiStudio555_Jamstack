@@ -127,7 +127,7 @@
 
         courseItem.innerHTML = `
             <div class="featured-courses-single" style="background-color: rgb(4,25,63)">
-                <a href="${course.url || '#'}" class="featured-courses-image-link w-inline-block">
+                <a href="${course.url || `detail_courses.html?id=${course.id || 0}`}" class="featured-courses-image-link w-inline-block">
                     <img loading="lazy"
                          src="${course.image || 'images/placeholder.jpg'}"
                          alt="${course.title}"
@@ -135,7 +135,7 @@
                 </a>
                 <div class="featured-courses-typography">
                     <div class="featured-courses-name-wrap">
-                        <a href="${course.url || '#'}" class="featured-courses-name course-title-overflow">
+                        <a href="${course.url || `detail_courses.html?id=${course.id || 0}`}" class="featured-courses-name course-title-overflow">
                             ${course.title}
                         </a>
                         <div class="featured-courses-rating">
@@ -161,7 +161,7 @@
                             </div>
                         </div>
                         <div class="featured-courses-button-wrapper">
-                            <a href="${course.url || '#'}"
+                            <a href="${course.url || `detail_courses.html?id=${course.id || 0}`}"
                                class="primary-button secondary w-inline-block"
                                style="background-color: rgba(255,255,255,0); color: rgb(255,255,255)">
                                 <div class="primary-button-text-wrap">

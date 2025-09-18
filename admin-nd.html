@@ -125,45 +125,6 @@
             opacity: 1 !important;
         }
 
-        /* Force visibility for blogNew section */
-        #blogNew.active {
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            position: relative;
-            z-index: 1;
-        }
-
-        #blogNew.active .table-container {
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            height: auto !important;
-            overflow: visible !important;
-            position: relative;
-            z-index: 1;
-        }
-
-        #blogNew.active table {
-            display: table !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            width: 100%;
-        }
-
-        #blogNew.active tbody,
-        #blogNew.active tr {
-            display: table-row !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        }
-
-        #blogNew.active td {
-            display: table-cell !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            color: #2d3748 !important;
-        }
 
         /* Form Groups */
         .form-group {
@@ -551,8 +512,6 @@
                 <button class="tab" data-tab="pricing">Pricing</button>
                 <button class="tab" data-tab="career-platform">Career Platform</button>
                 <button class="tab" data-tab="teachers">Teachers</button>
-                <button class="tab" data-tab="blog">Blog</button>
-                <button class="tab" data-tab="blogNew">BlogNew</button>
                 <button class="tab" data-tab="blogAdmin">BlogAdmin</button>
                 <button class="tab" data-tab="menu">Navigation</button>
                 <button class="tab" data-tab="footer">Footer</button>
@@ -1429,172 +1388,7 @@
                 </div> <!-- Missing closing div 2 -->                </div> <!-- End teachersContent -->
             </div> <!-- End teachers section -->
 
-            <div class="content-section" id="blog">
-                <!-- Blog Management Section (Same as in Teachers Tab) -->
-                <div style="padding-top: 20px;">
-                    <div class="section-header">
-                        <div class="section-title">📝 Blog Posts Management</div>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="btn btn-small btn-success" onclick="openBlogCreateModal()">➕ Add New Blog Post</button>
-                            <button class="btn btn-small" onclick="loadBlogPosts()">🔄 Обновить</button>
-                        </div>
-                    </div>
 
-                    <!-- Blog Search -->
-                    <div style="margin-bottom: 20px;">
-                        <div class="form-group">
-                            <label>🔍 Features Comparison</label>
-                            <input type="text" id="blog-search-input" placeholder="Search by title, author, category..." style="width: 100%;" oninput="filterBlogTable()">
-                        </div>
-                    </div>
-
-                    <!-- Blog Table -->
-                    <div class="table-container" style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; margin-bottom: 20px;">
-                        <table class="admin-table" style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="background: #f8f9fa;">
-                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Blog Post</th>
-                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Author</th>
-                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Category</th>
-                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Status</th>
-                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Published</th>
-                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="blog-table-body">
-                <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#f7fafc'" onmouseout="this.style.backgroundColor='transparent'">
-                    <td style="padding: 16px; vertical-align: top;">
-                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px;">Ethics in AI Development2</div>
-                        <div style="font-size: 12px; color: #718096;">ID: 3 • Created: 9/15/2025</div>
-                    </td>
-                    <td style="padding: 16px; vertical-align: top;">Elena Rodriguez</td>
-                    <td style="padding: 16px; vertical-align: top;">Programming</td>
-                    <td style="padding: 16px; vertical-align: top;">
-                        <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: #fed7d7; color: #742a2a;">
-                            DRAFT
-                        </span>
-                    </td>
-                    <td style="padding: 16px; vertical-align: top;">9/11/2025</td>
-                    <td style="padding: 16px; vertical-align: top;">
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <button onclick="editBlogPost(3)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #667eea; color: white;">
-                                ✏️ Edit
-                            </button>
-                            <button onclick="viewBlogPost(3)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #48bb78; color: white;">
-                                👁️ View
-                            </button>
-                            <button onclick="deleteBlogPost(3)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #f56565; color: white;">
-                                🗑️ Delete
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#f7fafc'" onmouseout="this.style.backgroundColor='transparent'">
-                    <td style="padding: 16px; vertical-align: top;">
-                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px;">AI in Healthcare: Future Trends</div>
-                        <div style="font-size: 12px; color: #718096;">ID: 2 • Created: 9/15/2025</div>
-                    </td>
-                    <td style="padding: 16px; vertical-align: top;">Prof. Michael Chen</td>
-                    <td style="padding: 16px; vertical-align: top;">Uncategorized</td>
-                    <td style="padding: 16px; vertical-align: top;">
-                        <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: #fed7d7; color: #742a2a;">
-                            DRAFT
-                        </span>
-                    </td>
-                    <td style="padding: 16px; vertical-align: top;">9/11/2025</td>
-                    <td style="padding: 16px; vertical-align: top;">
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <button onclick="editBlogPost(2)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #667eea; color: white;">
-                                ✏️ Edit
-                            </button>
-                            <button onclick="viewBlogPost(2)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #48bb78; color: white;">
-                                👁️ View
-                            </button>
-                            <button onclick="deleteBlogPost(2)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #f56565; color: white;">
-                                🗑️ Delete
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#f7fafc'" onmouseout="this.style.backgroundColor='transparent'">
-                    <td style="padding: 16px; vertical-align: top;">
-                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px;">Getting Started with Machine Learning</div>
-                        <div style="font-size: 12px; color: #718096;">ID: 1 • Created: 9/15/2025</div>
-                    </td>
-                    <td style="padding: 16px; vertical-align: top;">Dr. Sarah Johnson</td>
-                    <td style="padding: 16px; vertical-align: top;">Uncategorized</td>
-                    <td style="padding: 16px; vertical-align: top;">
-                        <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: #fed7d7; color: #742a2a;">
-                            DRAFT
-                        </span>
-                    </td>
-                    <td style="padding: 16px; vertical-align: top;">9/11/2025</td>
-                    <td style="padding: 16px; vertical-align: top;">
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <button onclick="editBlogPost(1)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #667eea; color: white;">
-                                ✏️ Edit
-                            </button>
-                            <button onclick="viewBlogPost(1)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #48bb78; color: white;">
-                                👁️ View
-                            </button>
-                            <button onclick="deleteBlogPost(1)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #f56565; color: white;">
-                                🗑️ Delete
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="content-section" id="blogNew">
-                <div class="section-header">
-                    <div class="section-title">📝 Blog Posts Management</div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn btn-small btn-success" onclick="openBlogCreateModal()">➕ Add New Blog Post</button>
-                        <button class="btn btn-small" onclick="loadBlogPostsNew()">🔄 Refresh</button>
-                    </div>
-                </div>
-                <div id="blogNewContent">
-                    <!-- Blog Posts Management Section -->
-
-                    <!-- Blog Search -->
-                    <div style="margin-bottom: 20px;">
-                        <div class="form-group">
-                            <label>🔍 Search Blog Posts</label>
-                            <input type="text" id="blogNew-search-input" placeholder="Search by title, author, category..." style="width: 100%;" oninput="filterBlogNewTable()">
-                        </div>
-                    </div>
-
-                    <!-- Blog Table -->
-                    <div class="table-container" style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; margin-bottom: 20px;">
-                        <table class="admin-table" style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="background: #f8f9fa;">
-                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Blog Post</th>
-                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Author</th>
-                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Category</th>
-                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Status</th>
-                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Published</th>
-                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="blogNew-table-body">
-                                <tr>
-                                    <td colspan="6" style="padding: 40px; text-align: center; color: #718096;">
-                                        <div class="loading-spinner" style="display: inline-block; width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 10px;"></div>
-                                        <div>Loading blog posts...</div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div> <!-- End blogNewContent -->
-            </div>
 
             <div class="content-section" id="blogAdmin">
                 <div class="section-header">
@@ -2007,41 +1801,6 @@
                         await loadTeachersData();
                         // Also load blog posts in teachers tab
                         await loadBlogPostsInTeachers();
-                    } else if (tabId === 'blog') {
-                        console.log('📝 Blog tab activated, loading blog posts...');
-                        // Ensure blog section is visible
-                        const blogSection = document.getElementById('blog');
-                        if (blogSection) {
-                            blogSection.style.display = 'block';
-                            blogSection.classList.add('active');
-                        }
-                        await loadBlogPosts();
-                    } else if (tabId === 'blogNew') {
-                        console.log('📝 BlogNew tab activated, loading blog posts...');
-                        // Ensure blogNew section is visible
-                        const blogNewSection = document.getElementById('blogNew');
-                        if (blogNewSection) {
-                            // Force show the section with multiple approaches
-                            blogNewSection.style.display = 'block !important';
-                            blogNewSection.style.visibility = 'visible !important';
-                            blogNewSection.style.opacity = '1 !important';
-                            blogNewSection.style.position = 'relative';
-                            blogNewSection.style.zIndex = '1';
-                            blogNewSection.classList.add('active');
-                            console.log('✅ BlogNew section visibility set - display:', blogNewSection.style.display);
-                            console.log('✅ BlogNew section classes:', blogNewSection.className);
-                            console.log('✅ BlogNew computed style:', window.getComputedStyle(blogNewSection).display);
-
-                            // Also force visibility on table container
-                            const tableContainer = blogNewSection.querySelector('.table-container');
-                            if (tableContainer) {
-                                tableContainer.style.display = 'block';
-                                tableContainer.style.visibility = 'visible';
-                                tableContainer.style.opacity = '1';
-                                console.log('✅ Table container visibility forced');
-                            }
-                        }
-                        await loadBlogPostsNew();
                     } else if (tabId === 'blogAdmin') {
                         console.log('📝 BlogAdmin tab activated, loading blog posts...');
                         await loadBlogAdmin();
@@ -3391,7 +3150,7 @@
                                 <button class="btn btn-small" onclick="openCourseDetailsModal(${course.id})" style="background: #667eea; color: white;">
                                     📝 Edit Details
                                 </button>
-                                <button class="btn btn-small preview-btn" onclick="window.open('http://localhost:3005/backups/newDesign/detail_courses.html?id=${course.id}&preview=true', '_blank')" style="background: #28a745; color: white;">
+                                <button class="btn btn-small preview-btn" onclick="window.open('http://localhost:3000/backups/newDesign/detail_courses.html?id=${course.id}&preview=true', '_blank')" style="background: #28a745; color: white;">
                                     👁️ Preview
                                 </button>
                                 <button class="btn btn-small btn-danger delete-btn" onclick="deleteCourse(${course.id})">
@@ -3659,7 +3418,7 @@
                         await fetch(`${API_BASE}/courses/${result.data.id}`, {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ url: `/backups/newDesign/detail_courses.html?id=${result.data.id}` })
+                            body: JSON.stringify({ url: `http://localhost:3000/backups/newDesign/detail_courses.html?id=${result.data.id}` })
                         });
                     }
 
@@ -3810,7 +3569,7 @@
                 banner_image: document.getElementById('modal_course_banner').value,
                 lessons: JSON.stringify(courseLessons),
                 // Auto-generate URL for detail_courses.html
-                url: `/backups/newDesign/detail_courses.html?id=${currentEditingCourse.id}`
+                url: `http://localhost:3000/backups/newDesign/detail_courses.html?id=${currentEditingCourse.id}`
             };
 
             showLoading();
@@ -4513,7 +4272,7 @@
 
         // Preview teacher profile
         function previewTeacherProfile(teacherId) {
-            const previewUrl = `/backups/newDesign/detail_teacher.html?id=${teacherId}&preview=true`;
+            const previewUrl = `http://localhost:3000/backups/newDesign/detail_teacher.html?id=${teacherId}&preview=true`;
             window.open(previewUrl, '_blank');
             showToast('🔍 Opened teacher preview in new tab', 'info');
         }
@@ -4767,7 +4526,7 @@
         // Preview teacher from modal (matching courses pattern)
         function previewTeacherFromModal() {
             if (currentEditingTeacherId) {
-                const previewUrl = `/backups/newDesign/detail_teacher.html?id=${currentEditingTeacherId}&preview=true`;
+                const previewUrl = `http://localhost:3000/backups/newDesign/detail_teacher.html?id=${currentEditingTeacherId}&preview=true`;
                 window.open(previewUrl, '_blank');
                 showToast('🔍 Opened teacher preview in new tab', 'info');
             }
@@ -5023,7 +4782,7 @@
         // Preview teacher detail page
         function previewTeacherDetailPage() {
             if (currentEditingDetailTeacherId) {
-                const previewUrl = `/backups/newDesign/detail_teacher.html?id=${currentEditingDetailTeacherId}&preview=true`;
+                const previewUrl = `http://localhost:3000/backups/newDesign/detail_teacher.html?id=${currentEditingDetailTeacherId}&preview=true`;
                 window.open(previewUrl, '_blank');
                 showToast('🔍 Opened teacher detail preview in new tab', 'info');
             }
@@ -5866,7 +5625,7 @@
             <!-- Modal Footer -->
             <div style="padding: 20px; border-top: 1px solid #e1e1e1; display: flex; justify-content: space-between; background: #f8f9fa;">
                 <div>
-                    <button class="btn btn-success" onclick="window.open('http://localhost:3005/backups/newDesign/detail_courses.html?id=' + document.getElementById('modal_course_id').value + '&preview=true', '_blank')">👁️ Preview Course Page</button>
+                    <button class="btn btn-success" onclick="window.open('http://localhost:3000/backups/newDesign/detail_courses.html?id=' + document.getElementById('modal_course_id').value + '&preview=true', '_blank')">👁️ Preview Course Page</button>
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button class="btn btn-secondary" onclick="closeCourseDetailsModal()">Cancel</button>
@@ -6212,7 +5971,7 @@
 
         // View blog post
         function viewBlogPost(blogId) {
-            window.open(`http://localhost:8005/backups/newDesign/detail_blog.html?id=${blogId}`, '_blank');
+            window.open(`http://localhost:3000/backups/newDesign/detail_blog.html?id=${blogId}`, '_blank');
         }
 
         // Delete blog post

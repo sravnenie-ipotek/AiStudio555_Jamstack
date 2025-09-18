@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test SharedMenu</title>
+    <link href="css/webflow.css" rel="stylesheet" type="text/css">
+    <link href="css/aizeks-groovy-site.webflow.css" rel="stylesheet" type="text/css">
+    <link href="shared/components/sharedMenu/menu.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <h1>SharedMenu Test Page</h1>
+
+    <section class="banner">
+        <h2>This is where the menu should inject above</h2>
+        <p>Banner content</p>
+    </section>
+
+    <script src="shared/components/sharedMenu/menu.js"></script>
+    <script>
+        console.log('Test page loaded');
+        console.log('SharedMenu available:', typeof SharedMenu !== 'undefined');
+    </script>
+</body>
+</html>
