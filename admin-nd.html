@@ -119,7 +119,51 @@
             padding: 30px;
         }
 
-        .content-section.active { display: block; }
+        .content-section.active {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        /* Force visibility for blogNew section */
+        #blogNew.active {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative;
+            z-index: 1;
+        }
+
+        #blogNew.active .table-container {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: auto !important;
+            overflow: visible !important;
+            position: relative;
+            z-index: 1;
+        }
+
+        #blogNew.active table {
+            display: table !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            width: 100%;
+        }
+
+        #blogNew.active tbody,
+        #blogNew.active tr {
+            display: table-row !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        #blogNew.active td {
+            display: table-cell !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            color: #2d3748 !important;
+        }
 
         /* Form Groups */
         .form-group {
@@ -508,6 +552,8 @@
                 <button class="tab" data-tab="career-platform">Career Platform</button>
                 <button class="tab" data-tab="teachers">Teachers</button>
                 <button class="tab" data-tab="blog">Blog</button>
+                <button class="tab" data-tab="blogNew">BlogNew</button>
+                <button class="tab" data-tab="blogAdmin">BlogAdmin</button>
                 <button class="tab" data-tab="menu">Navigation</button>
                 <button class="tab" data-tab="footer">Footer</button>
                 <button class="tab" data-tab="settings">Settings</button>
@@ -1336,23 +1382,234 @@
                             <div id="statsList"></div>
                         </div>
                     </div>
+
+                    <!-- Blog Management Section in Teachers Tab -->
+                    <div style="border-top: 2px solid #e0e0e0; padding-top: 20px; margin-top: 30px;">
+                        <div class="section-header">
+                            <div class="section-title">📝 Blog Posts Management</div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-small btn-success" onclick="openBlogCreateModal()">➕ Add New Blog Post</button>
+                                <button class="btn btn-small" onclick="loadBlogPostsInTeachers()">🔄 Refresh</button>
+                            </div>
+                        </div>
+
+                        <!-- Blog Search -->
+                        <div style="margin-bottom: 20px;">
+                            <div class="form-group">
+                                <label>🔍 Search Blog Posts</label>
+                                <input type="text" id="teachers-blog-search-input" placeholder="Search by title, author, category..." style="width: 100%;" oninput="filterTeachersBlogTable()">
+                            </div>
+                        </div>
+
+                        <!-- Blog Table -->
+                        <div class="table-container" style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; margin-bottom: 20px;">
+                            <table class="admin-table" style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #f8f9fa;">
+                                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Blog Post</th>
+                                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Author</th>
+                                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Category</th>
+                                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Status</th>
+                                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Published</th>
+                                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="teachers-blog-table-body">
+                                    <tr>
+                                        <td colspan="6" style="padding: 40px; text-align: center; color: #718096;">
+                                            <div class="loading-spinner" style="display: inline-block; width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 10px;"></div>
+                                            <div>Loading blog posts...</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div> <!-- Missing closing div 1 -->
+                </div> <!-- Missing closing div 2 -->                </div> <!-- End teachersContent -->
+            </div> <!-- End teachers section -->
+
+            <div class="content-section" id="blog">
+                <!-- Blog Management Section (Same as in Teachers Tab) -->
+                <div style="padding-top: 20px;">
+                    <div class="section-header">
+                        <div class="section-title">📝 Blog Posts Management</div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-small btn-success" onclick="openBlogCreateModal()">➕ Add New Blog Post</button>
+                            <button class="btn btn-small" onclick="loadBlogPosts()">🔄 Обновить</button>
+                        </div>
+                    </div>
+
+                    <!-- Blog Search -->
+                    <div style="margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label>🔍 Features Comparison</label>
+                            <input type="text" id="blog-search-input" placeholder="Search by title, author, category..." style="width: 100%;" oninput="filterBlogTable()">
+                        </div>
+                    </div>
+
+                    <!-- Blog Table -->
+                    <div class="table-container" style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; margin-bottom: 20px;">
+                        <table class="admin-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #f8f9fa;">
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Blog Post</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Author</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Category</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Status</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Published</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="blog-table-body">
+                <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#f7fafc'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px; vertical-align: top;">
+                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px;">Ethics in AI Development2</div>
+                        <div style="font-size: 12px; color: #718096;">ID: 3 • Created: 9/15/2025</div>
+                    </td>
+                    <td style="padding: 16px; vertical-align: top;">Elena Rodriguez</td>
+                    <td style="padding: 16px; vertical-align: top;">Programming</td>
+                    <td style="padding: 16px; vertical-align: top;">
+                        <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: #fed7d7; color: #742a2a;">
+                            DRAFT
+                        </span>
+                    </td>
+                    <td style="padding: 16px; vertical-align: top;">9/11/2025</td>
+                    <td style="padding: 16px; vertical-align: top;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button onclick="editBlogPost(3)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #667eea; color: white;">
+                                ✏️ Edit
+                            </button>
+                            <button onclick="viewBlogPost(3)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #48bb78; color: white;">
+                                👁️ View
+                            </button>
+                            <button onclick="deleteBlogPost(3)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #f56565; color: white;">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#f7fafc'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px; vertical-align: top;">
+                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px;">AI in Healthcare: Future Trends</div>
+                        <div style="font-size: 12px; color: #718096;">ID: 2 • Created: 9/15/2025</div>
+                    </td>
+                    <td style="padding: 16px; vertical-align: top;">Prof. Michael Chen</td>
+                    <td style="padding: 16px; vertical-align: top;">Uncategorized</td>
+                    <td style="padding: 16px; vertical-align: top;">
+                        <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: #fed7d7; color: #742a2a;">
+                            DRAFT
+                        </span>
+                    </td>
+                    <td style="padding: 16px; vertical-align: top;">9/11/2025</td>
+                    <td style="padding: 16px; vertical-align: top;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button onclick="editBlogPost(2)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #667eea; color: white;">
+                                ✏️ Edit
+                            </button>
+                            <button onclick="viewBlogPost(2)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #48bb78; color: white;">
+                                👁️ View
+                            </button>
+                            <button onclick="deleteBlogPost(2)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #f56565; color: white;">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#f7fafc'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px; vertical-align: top;">
+                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px;">Getting Started with Machine Learning</div>
+                        <div style="font-size: 12px; color: #718096;">ID: 1 • Created: 9/15/2025</div>
+                    </td>
+                    <td style="padding: 16px; vertical-align: top;">Dr. Sarah Johnson</td>
+                    <td style="padding: 16px; vertical-align: top;">Uncategorized</td>
+                    <td style="padding: 16px; vertical-align: top;">
+                        <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: #fed7d7; color: #742a2a;">
+                            DRAFT
+                        </span>
+                    </td>
+                    <td style="padding: 16px; vertical-align: top;">9/11/2025</td>
+                    <td style="padding: 16px; vertical-align: top;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button onclick="editBlogPost(1)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #667eea; color: white;">
+                                ✏️ Edit
+                            </button>
+                            <button onclick="viewBlogPost(1)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #48bb78; color: white;">
+                                👁️ View
+                            </button>
+                            <button onclick="deleteBlogPost(1)" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #f56565; color: white;">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <div class="content-section" id="blog">
+            <div class="content-section" id="blogNew">
                 <div class="section-header">
-                    <div class="section-title">🎯 Blog Administration</div>
+                    <div class="section-title">📝 Blog Posts Management</div>
                     <div style="display: flex; gap: 10px;">
                         <button class="btn btn-small btn-success" onclick="openBlogCreateModal()">➕ Add New Blog Post</button>
-                        <button class="btn btn-small" onclick="loadBlogPosts()">🔄 Refresh</button>
+                        <button class="btn btn-small" onclick="loadBlogPostsNew()">🔄 Refresh</button>
+                    </div>
+                </div>
+                <div id="blogNewContent">
+                    <!-- Blog Posts Management Section -->
+
+                    <!-- Blog Search -->
+                    <div style="margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label>🔍 Search Blog Posts</label>
+                            <input type="text" id="blogNew-search-input" placeholder="Search by title, author, category..." style="width: 100%;" oninput="filterBlogNewTable()">
+                        </div>
+                    </div>
+
+                    <!-- Blog Table -->
+                    <div class="table-container" style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; margin-bottom: 20px;">
+                        <table class="admin-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #f8f9fa;">
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Blog Post</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Author</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Category</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Status</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Published</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="blogNew-table-body">
+                                <tr>
+                                    <td colspan="6" style="padding: 40px; text-align: center; color: #718096;">
+                                        <div class="loading-spinner" style="display: inline-block; width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 10px;"></div>
+                                        <div>Loading blog posts...</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div> <!-- End blogNewContent -->
+            </div>
+
+            <div class="content-section" id="blogAdmin">
+                <div class="section-header">
+                    <div class="section-title">📝 Blog Posts Management</div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-small btn-success" onclick="openBlogCreateModal()">➕ Add New Blog Post</button>
+                        <button class="btn btn-small" onclick="loadBlogAdmin()">🔄 Refresh</button>
                     </div>
                 </div>
 
-                <!-- Blog Search -->
+                <!-- Search -->
                 <div style="margin-bottom: 20px;">
                     <div class="form-group">
                         <label>🔍 Search Blog Posts</label>
-                        <input type="text" id="blog-search-input" placeholder="Search by title, author, category..." style="width: 100%;" oninput="filterBlogTable()">
+                        <input type="text" id="blogAdmin-search-input" placeholder="Search by title, author, category..." style="width: 100%;" oninput="filterBlogAdminTable()">
                     </div>
                 </div>
 
@@ -1361,7 +1618,7 @@
                     <table class="admin-table" style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr style="background: #f8f9fa;">
-                                <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Blog Post</th>
+                                <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Title</th>
                                 <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Author</th>
                                 <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Category</th>
                                 <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Status</th>
@@ -1369,7 +1626,7 @@
                                 <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="blog-table-body">
+                        <tbody id="blogAdmin-table-body">
                             <tr>
                                 <td colspan="6" style="padding: 40px; text-align: center; color: #718096;">
                                     <div class="loading-spinner" style="display: inline-block; width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 10px;"></div>
@@ -1380,6 +1637,8 @@
                     </table>
                 </div>
             </div>
+
+            </div> <!-- End blogAdmin section -->
 
             <div class="content-section" id="menu">
                 <div class="section-header">
@@ -1746,6 +2005,8 @@
                     } else if (tabId === 'teachers') {
                         console.log('👨‍🏫 Teachers tab activated, loading teachers data...');
                         await loadTeachersData();
+                        // Also load blog posts in teachers tab
+                        await loadBlogPostsInTeachers();
                     } else if (tabId === 'blog') {
                         console.log('📝 Blog tab activated, loading blog posts...');
                         // Ensure blog section is visible
@@ -1755,10 +2016,517 @@
                             blogSection.classList.add('active');
                         }
                         await loadBlogPosts();
+                    } else if (tabId === 'blogNew') {
+                        console.log('📝 BlogNew tab activated, loading blog posts...');
+                        // Ensure blogNew section is visible
+                        const blogNewSection = document.getElementById('blogNew');
+                        if (blogNewSection) {
+                            // Force show the section with multiple approaches
+                            blogNewSection.style.display = 'block !important';
+                            blogNewSection.style.visibility = 'visible !important';
+                            blogNewSection.style.opacity = '1 !important';
+                            blogNewSection.style.position = 'relative';
+                            blogNewSection.style.zIndex = '1';
+                            blogNewSection.classList.add('active');
+                            console.log('✅ BlogNew section visibility set - display:', blogNewSection.style.display);
+                            console.log('✅ BlogNew section classes:', blogNewSection.className);
+                            console.log('✅ BlogNew computed style:', window.getComputedStyle(blogNewSection).display);
+
+                            // Also force visibility on table container
+                            const tableContainer = blogNewSection.querySelector('.table-container');
+                            if (tableContainer) {
+                                tableContainer.style.display = 'block';
+                                tableContainer.style.visibility = 'visible';
+                                tableContainer.style.opacity = '1';
+                                console.log('✅ Table container visibility forced');
+                            }
+                        }
+                        await loadBlogPostsNew();
+                    } else if (tabId === 'blogAdmin') {
+                        console.log('📝 BlogAdmin tab activated, loading blog posts...');
+                        await loadBlogAdmin();
                     }
                 });
             });
         }
+
+        // DEBUG FUNCTION - Run this in browser console to check blogNew status
+        function debugBlogNew() {
+            console.log('🔧 DEBUGGING BLOGNEW TAB:');
+            const section = document.getElementById('blogNew');
+            const tbody = document.getElementById('blogNew-table-body');
+            const tableContainer = section?.querySelector('.table-container');
+
+            console.log('📍 BlogNew section exists:', !!section);
+            console.log('📍 BlogNew section display:', section?.style.display);
+            console.log('📍 BlogNew section computed display:', section ? window.getComputedStyle(section).display : 'N/A');
+            console.log('📍 BlogNew section classes:', section?.className);
+            console.log('📍 BlogNew tbody exists:', !!tbody);
+            console.log('📍 BlogNew tbody content length:', tbody?.innerHTML?.length || 0);
+            console.log('📍 BlogNew table container exists:', !!tableContainer);
+            console.log('📍 BlogNew table container display:', tableContainer?.style.display);
+
+            if (section) {
+                console.log('🎯 Forcing blogNew visibility...');
+                section.style.display = 'block';
+                section.style.visibility = 'visible';
+                section.style.opacity = '1';
+                section.classList.add('active');
+                console.log('✅ Forced visibility applied');
+            }
+
+            console.log('🔄 Calling loadBlogPostsNew()...');
+            loadBlogPostsNew();
+        }
+        window.debugBlogNew = debugBlogNew;
+
+        // Additional debug function to check positioning and dimensions
+        function debugBlogNewPosition() {
+            console.log('🔧 DEBUGGING BLOGNEW POSITION & DIMENSIONS:');
+            const section = document.getElementById('blogNew');
+            if (section) {
+                const rect = section.getBoundingClientRect();
+                const computed = window.getComputedStyle(section);
+
+                console.log('📐 Position & Size:');
+                console.log('  Top:', rect.top, 'Left:', rect.left);
+                console.log('  Width:', rect.width, 'Height:', rect.height);
+                console.log('  Visible on screen:', rect.top >= 0 && rect.left >= 0 && rect.bottom <= window.innerHeight && rect.right <= window.innerWidth);
+
+                console.log('🎨 CSS Properties:');
+                console.log('  Position:', computed.position);
+                console.log('  Z-index:', computed.zIndex);
+                console.log('  Overflow:', computed.overflow);
+                console.log('  Transform:', computed.transform);
+                console.log('  Clip-path:', computed.clipPath);
+
+                // Check if content is behind other elements
+                const elementAtPosition = document.elementFromPoint(rect.left + rect.width/2, rect.top + rect.height/2);
+                console.log('🎯 Element at center of blogNew:', elementAtPosition);
+
+                // Force scroll to blogNew section
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                console.log('📍 Scrolled to blogNew section');
+            }
+        }
+        window.debugBlogNewPosition = debugBlogNewPosition;
+
+        // Force make blogNew content visible by brute force
+        function forceBlogNewVisible() {
+            console.log('🚨 FORCE MAKING BLOGNEW VISIBLE');
+            const section = document.getElementById('blogNew');
+            if (section) {
+                // Nuclear option - force every possible visibility property
+                section.style.cssText = `
+                    display: block !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    position: relative !important;
+                    z-index: 9999 !important;
+                    background: red !important;
+                    min-height: 800px !important;
+                    padding: 50px !important;
+                    margin: 20px !important;
+                    border: 10px solid yellow !important;
+                    color: white !important;
+                    font-size: 20px !important;
+                `;
+
+                // Force all child elements visible too
+                const allChildren = section.querySelectorAll('*');
+                allChildren.forEach(child => {
+                    child.style.cssText += `
+                        display: block !important;
+                        visibility: visible !important;
+                        opacity: 1 !important;
+                        color: white !important;
+                        background: rgba(0,0,0,0.3) !important;
+                    `;
+                });
+
+                console.log('✅ Nuclear visibility applied to blogNew');
+            }
+        }
+        window.forceBlogNewVisible = forceBlogNewVisible;
+
+        // DOM Inspector function - run this to inspect actual DOM
+        function inspectBlogNewDOM() {
+            console.log('🔧 INSPECTING BLOGNEW DOM STRUCTURE:');
+            const section = document.getElementById('blogNew');
+            const content = document.getElementById('blogNewContent');
+            const tbody = document.getElementById('blogNew-table-body');
+
+            console.log('📍 BlogNew section:', section);
+            if (section) {
+                console.log('  - ClientHeight:', section.clientHeight);
+                console.log('  - ScrollHeight:', section.scrollHeight);
+                console.log('  - OffsetHeight:', section.offsetHeight);
+                console.log('  - Children count:', section.children.length);
+                console.log('  - First child:', section.children[0]);
+            }
+
+            console.log('📍 BlogNewContent wrapper:', content);
+            if (content) {
+                console.log('  - ClientHeight:', content.clientHeight);
+                console.log('  - ScrollHeight:', content.scrollHeight);
+                console.log('  - OffsetHeight:', content.offsetHeight);
+                console.log('  - Children count:', content.children.length);
+            }
+
+            console.log('📍 Table body:', tbody);
+            if (tbody) {
+                console.log('  - ClientHeight:', tbody.clientHeight);
+                console.log('  - ScrollHeight:', tbody.scrollHeight);
+                console.log('  - OffsetHeight:', tbody.offsetHeight);
+                console.log('  - InnerHTML length:', tbody.innerHTML.length);
+                console.log('  - Children count:', tbody.children.length);
+                console.log('  - First row:', tbody.children[0]);
+            }
+
+            // Check computed styles
+            if (section) {
+                const computed = window.getComputedStyle(section);
+                console.log('🎨 Section computed styles:');
+                console.log('  - Display:', computed.display);
+                console.log('  - Height:', computed.height);
+                console.log('  - MaxHeight:', computed.maxHeight);
+                console.log('  - Overflow:', computed.overflow);
+                console.log('  - Position:', computed.position);
+                console.log('  - Transform:', computed.transform);
+            }
+
+            if (content) {
+                const computed = window.getComputedStyle(content);
+                console.log('🎨 Content computed styles:');
+                console.log('  - Display:', computed.display);
+                console.log('  - Height:', computed.height);
+                console.log('  - MaxHeight:', computed.maxHeight);
+                console.log('  - Overflow:', computed.overflow);
+            }
+        }
+        window.inspectBlogNewDOM = inspectBlogNewDOM;
+
+        // Find where blogNew actually is in the DOM
+        function findBlogNewInDOM() {
+            console.log('🔍 SEARCHING FOR BLOGNEW IN DOM:');
+            const blogNew = document.getElementById('blogNew');
+
+            if (blogNew) {
+                console.log('📍 BlogNew element found:', blogNew);
+                console.log('📍 Parent element:', blogNew.parentElement);
+                console.log('📍 Parent class:', blogNew.parentElement?.className);
+                console.log('📍 Parent ID:', blogNew.parentElement?.id);
+
+                // Check all content sections
+                const allContentSections = document.querySelectorAll('.content-section');
+                console.log('📍 All content sections found:', allContentSections.length);
+                allContentSections.forEach((section, index) => {
+                    console.log(`  ${index}: ${section.id} - display: ${window.getComputedStyle(section).display}`);
+                });
+
+                // Check if blogNew is inside the admin-card
+                const adminCard = document.querySelector('.admin-card');
+                const isInsideCard = adminCard && adminCard.contains(blogNew);
+                console.log('📍 BlogNew inside admin-card:', isInsideCard);
+
+                // Check siblings
+                console.log('📍 Previous sibling:', blogNew.previousElementSibling?.id);
+                console.log('📍 Next sibling:', blogNew.nextElementSibling?.id);
+            } else {
+                console.error('❌ BlogNew element NOT FOUND in DOM!');
+            }
+        }
+        window.findBlogNewInDOM = findBlogNewInDOM;
+
+        // Fix blogNew positioning by moving it outside of teachers
+        function fixBlogNewPosition() {
+            console.log('🔧 FIXING BLOGNEW POSITION:');
+            const blogNew = document.getElementById('blogNew');
+            const adminCard = document.querySelector('.admin-card');
+
+            if (blogNew && adminCard) {
+                console.log('📍 Current parent:', blogNew.parentElement.id);
+
+                // Remove blogNew from current position
+                blogNew.remove();
+
+                // Find the blog section (should be after teachers)
+                const blogSection = document.getElementById('blog');
+                if (blogSection) {
+                    // Insert blogNew after blog section
+                    blogSection.parentNode.insertBefore(blogNew, blogSection.nextSibling);
+                    console.log('✅ Moved blogNew after blog section');
+                } else {
+                    // Fallback: append to admin card
+                    adminCard.appendChild(blogNew);
+                    console.log('✅ Appended blogNew to admin card');
+                }
+
+                // Force visibility
+                blogNew.style.display = 'block';
+                blogNew.style.visibility = 'visible';
+                blogNew.style.opacity = '1';
+                blogNew.classList.add('active');
+
+                console.log('📍 New parent:', blogNew.parentElement.className);
+                console.log('📍 New position confirmed');
+            }
+        }
+        window.fixBlogNewPosition = fixBlogNewPosition;
+
+        // Force activate BlogNew tab completely
+        function forceActivateBlogNew() {
+            console.log('🚀 FORCE ACTIVATING BLOGNEW:');
+
+            // 1. Hide all other content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('active');
+                console.log(`Hidden section: ${section.id}`);
+            });
+
+            // 2. Show and activate blogNew
+            const blogNew = document.getElementById('blogNew');
+            if (blogNew) {
+                blogNew.style.display = 'block !important';
+                blogNew.style.visibility = 'visible !important';
+                blogNew.style.opacity = '1 !important';
+                blogNew.style.position = 'relative';
+                blogNew.style.zIndex = '10';
+                blogNew.classList.add('active');
+                console.log('✅ BlogNew section activated');
+
+                // 3. Force load content
+                loadBlogPostsNew();
+                console.log('✅ Content loading triggered');
+
+                // 4. Check final status
+                setTimeout(() => {
+                    const rect = blogNew.getBoundingClientRect();
+                    console.log('📐 Final BlogNew dimensions:');
+                    console.log('  Height:', rect.height);
+                    console.log('  Width:', rect.width);
+                    console.log('  Visible:', rect.height > 0 && rect.width > 0);
+                }, 1000);
+            }
+
+            // 5. Activate BlogNew tab button
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            const blogNewTab = document.querySelector('[data-tab="blogNew"]');
+            if (blogNewTab) {
+                blogNewTab.classList.add('active');
+                console.log('✅ BlogNew tab button activated');
+            }
+        }
+        window.forceActivateBlogNew = forceActivateBlogNew;
+
+        // Force physical dimensions and visibility
+        function forcePhysicalVisibility() {
+            console.log('💪 FORCING PHYSICAL VISIBILITY:');
+
+            const blogNew = document.getElementById('blogNew');
+            const blogNewContent = document.getElementById('blogNewContent');
+            const tableContainer = blogNew?.querySelector('.table-container');
+            const table = blogNew?.querySelector('table');
+            const tbody = document.getElementById('blogNew-table-body');
+
+            // Force minimum heights and dimensions
+            if (blogNew) {
+                blogNew.style.cssText = `
+                    display: block !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    position: relative !important;
+                    z-index: 10 !important;
+                    min-height: 800px !important;
+                    height: auto !important;
+                    width: 100% !important;
+                    padding: 30px !important;
+                    margin: 0 !important;
+                    background: rgba(255,0,0,0.1) !important;
+                    border: 3px solid red !important;
+                `;
+                console.log('✅ BlogNew section forced dimensions');
+            }
+
+            if (blogNewContent) {
+                blogNewContent.style.cssText = `
+                    display: block !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    min-height: 600px !important;
+                    height: auto !important;
+                    width: 100% !important;
+                    background: rgba(0,255,0,0.1) !important;
+                    border: 2px solid green !important;
+                `;
+                console.log('✅ BlogNewContent forced dimensions');
+            }
+
+            if (tableContainer) {
+                tableContainer.style.cssText = `
+                    display: block !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    min-height: 400px !important;
+                    height: auto !important;
+                    width: 100% !important;
+                    background: white !important;
+                    border: 2px solid blue !important;
+                    overflow: visible !important;
+                `;
+                console.log('✅ Table container forced dimensions');
+            }
+
+            if (table) {
+                table.style.cssText = `
+                    display: table !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    width: 100% !important;
+                    min-height: 300px !important;
+                    table-layout: auto !important;
+                    border-collapse: collapse !important;
+                `;
+                console.log('✅ Table forced dimensions');
+            }
+
+            if (tbody) {
+                tbody.style.cssText = `
+                    display: table-row-group !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                `;
+
+                // Force each row visible
+                const rows = tbody.querySelectorAll('tr');
+                rows.forEach((row, index) => {
+                    row.style.cssText = `
+                        display: table-row !important;
+                        visibility: visible !important;
+                        opacity: 1 !important;
+                        height: auto !important;
+                        min-height: 60px !important;
+                    `;
+                    console.log(`✅ Row ${index + 1} forced visible`);
+                });
+            }
+
+            // Final check
+            setTimeout(() => {
+                const rect = blogNew?.getBoundingClientRect();
+                console.log('📐 FINAL CHECK:');
+                console.log('  Height:', rect?.height);
+                console.log('  Width:', rect?.width);
+                console.log('  Success:', rect?.height > 0);
+            }, 500);
+        }
+        window.forcePhysicalVisibility = forcePhysicalVisibility;
+
+        // Final solution: Completely rebuild blogNew section
+        function rebuildBlogNewSection() {
+            console.log('🔨 REBUILDING BLOGNEW SECTION:');
+
+            // 1. Remove existing blogNew
+            const existingBlogNew = document.getElementById('blogNew');
+            if (existingBlogNew) {
+                existingBlogNew.remove();
+                console.log('✅ Removed existing blogNew');
+            }
+
+            // 2. Find insertion point (after blog section)
+            const blogSection = document.getElementById('blog');
+            const menuSection = document.getElementById('menu');
+            const insertionPoint = menuSection || blogSection?.nextElementSibling;
+
+            if (!insertionPoint) {
+                console.error('❌ Could not find insertion point');
+                return;
+            }
+
+            // 3. Create new blogNew section with proper structure
+            const newBlogNew = document.createElement('div');
+            newBlogNew.className = 'content-section active';
+            newBlogNew.id = 'blogNew';
+            newBlogNew.style.cssText = `
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                min-height: 600px !important;
+                padding: 30px !important;
+                background: rgba(255,255,255,0.95) !important;
+                border: 2px solid #667eea !important;
+                margin: 20px 0 !important;
+            `;
+
+            newBlogNew.innerHTML = `
+                <div class="section-header">
+                    <div class="section-title">📝 Blog Posts Management (Rebuilt)</div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-small btn-success" onclick="openBlogCreateModal()">➕ Add New Blog Post</button>
+                        <button class="btn btn-small" onclick="loadBlogPostsNew()">🔄 Refresh</button>
+                    </div>
+                </div>
+                <div id="blogNewContent">
+                    <div style="margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label>🔍 Search Blog Posts</label>
+                            <input type="text" id="blogNew-search-input" placeholder="Search by title, author, category..." style="width: 100%;" oninput="filterBlogNewTable()">
+                        </div>
+                    </div>
+                    <div class="table-container" style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; margin-bottom: 20px;">
+                        <table class="admin-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #f8f9fa;">
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Blog Post</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Author</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Category</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Status</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Published</th>
+                                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="blogNew-table-body">
+                                <tr>
+                                    <td colspan="6" style="padding: 40px; text-align: center; color: #718096;">
+                                        <div>Ready to load blog posts...</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            // 4. Insert before menu section
+            insertionPoint.parentNode.insertBefore(newBlogNew, insertionPoint);
+            console.log('✅ Inserted new blogNew section');
+
+            // 5. Hide all other sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                if (section.id !== 'blogNew') {
+                    section.style.display = 'none';
+                    section.classList.remove('active');
+                }
+            });
+
+            // 6. Load content
+            loadBlogPostsNew();
+            console.log('✅ Loading content into rebuilt section');
+
+            // 7. Final verification
+            setTimeout(() => {
+                const rect = newBlogNew.getBoundingClientRect();
+                console.log('📐 REBUILT SECTION CHECK:');
+                console.log('  Height:', rect.height);
+                console.log('  Width:', rect.width);
+                console.log('  Parent:', newBlogNew.parentElement.className);
+                console.log('  SUCCESS:', rect.height > 0 && rect.width > 0);
+            }, 1000);
+        }
+        window.rebuildBlogNewSection = rebuildBlogNewSection;
 
         // Language Switcher
         function initializeLanguageSwitcher() {
@@ -5212,6 +5980,166 @@
             }
         }
 
+        // Load blog posts in Teachers tab
+        async function loadBlogPostsInTeachers() {
+            try {
+                const response = await fetch(`http://localhost:3000/api/blog-posts`);
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    renderTeachersBlogTable(result.data);
+                    console.log(`✅ Loaded ${result.data.length} blog posts in Teachers tab`);
+                } else {
+                    throw new Error('Failed to load blog posts');
+                }
+            } catch (error) {
+                console.error('❌ Error loading blogs in Teachers tab:', error);
+                document.getElementById('teachers-blog-table-body').innerHTML = `
+                    <tr><td colspan="6" style="padding: 40px; text-align: center; color: #e53e3e;">
+                        Error loading blog posts: ${error.message}
+                    </td></tr>
+                `;
+            }
+        }
+
+        function renderTeachersBlogTable(blogs) {
+            const tbody = document.getElementById('teachers-blog-table-body');
+            tbody.innerHTML = blogs.map(blog => `
+                <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#f7fafc'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px; vertical-align: top;">
+                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px;">${blog.title || 'Untitled'}</div>
+                        <div style="font-size: 12px; color: #718096;">ID: ${blog.id} • Created: ${formatDate(blog.created_at)}</div>
+                    </td>
+                    <td style="padding: 16px; vertical-align: top;">${blog.author || 'Unknown'}</td>
+                    <td style="padding: 16px; vertical-align: top;">${blog.category || 'Uncategorized'}</td>
+                    <td style="padding: 16px; vertical-align: top;">
+                        <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; ${getStatusStyle(blog.status)}">
+                            ${(blog.status || 'draft').toUpperCase()}
+                        </span>
+                    </td>
+                    <td style="padding: 16px; vertical-align: top;">${formatDate(blog.published_at) || 'Not published'}</td>
+                    <td style="padding: 16px; vertical-align: top;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button onclick="editBlogPost(${blog.id})" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #667eea; color: white;">
+                                ✏️ Edit
+                            </button>
+                            <button onclick="viewBlogPost(${blog.id})" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #48bb78; color: white;">
+                                👁️ View
+                            </button>
+                            <button onclick="deleteBlogPost(${blog.id})" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #f56565; color: white;">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load blog posts in BlogNew tab
+        async function loadBlogPostsNew() {
+            try {
+                console.log('🔄 Starting loadBlogPostsNew...');
+                const response = await fetch(`http://localhost:3000/api/blog-posts`);
+                console.log('📡 API response received:', response.status);
+                const result = await response.json();
+                console.log('📊 API result:', result);
+
+                if (result.success && result.data) {
+                    console.log('🎯 About to render table with data:', result.data.length, 'posts');
+                    renderBlogNewTable(result.data);
+                    console.log(`✅ Loaded ${result.data.length} blog posts in BlogNew tab`);
+                } else {
+                    throw new Error('Failed to load blog posts');
+                }
+            } catch (error) {
+                console.error('❌ Error loading blogs in BlogNew tab:', error);
+                const tbody = document.getElementById('blogNew-table-body');
+                console.log('🔍 Found tbody element:', !!tbody);
+                if (tbody) {
+                    tbody.innerHTML = `
+                        <tr><td colspan="6" style="padding: 40px; text-align: center; color: #e53e3e;">
+                            Error loading blog posts: ${error.message}
+                        </td></tr>
+                    `;
+                }
+            }
+        }
+
+        function renderBlogNewTable(blogs) {
+            console.log('🎨 Starting renderBlogNewTable with:', blogs.length, 'blogs');
+            const tbody = document.getElementById('blogNew-table-body');
+            console.log('🔍 Found tbody element:', !!tbody, tbody);
+            if (!tbody) {
+                console.error('❌ Could not find blogNew-table-body element!');
+                return;
+            }
+
+            // Force visibility of table and parent containers
+            const table = tbody.closest('table');
+            const tableContainer = tbody.closest('.table-container');
+            const blogNewSection = document.getElementById('blogNew');
+
+            if (table) {
+                table.style.display = 'table';
+                table.style.visibility = 'visible';
+                table.style.opacity = '1';
+            }
+            if (tableContainer) {
+                tableContainer.style.display = 'block';
+                tableContainer.style.visibility = 'visible';
+                tableContainer.style.opacity = '1';
+                tableContainer.style.height = 'auto';
+                tableContainer.style.overflow = 'visible';
+            }
+            if (blogNewSection) {
+                blogNewSection.style.display = 'block';
+                blogNewSection.style.visibility = 'visible';
+                blogNewSection.style.opacity = '1';
+            }
+
+            tbody.innerHTML = blogs.map(blog => `
+                <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s ease; display: table-row; visibility: visible; opacity: 1;" onmouseover="this.style.backgroundColor='#f7fafc'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px; vertical-align: top; display: table-cell; visibility: visible; opacity: 1;">
+                        <div style="font-weight: 600; color: #2d3748 !important; margin-bottom: 4px;">${blog.title || 'Untitled'}</div>
+                        <div style="font-size: 12px; color: #718096 !important;">ID: ${blog.id} • Created: ${formatDate(blog.created_at)}</div>
+                    </td>
+                    <td style="padding: 16px; vertical-align: top; display: table-cell; visibility: visible; opacity: 1; color: #2d3748 !important;">${blog.author || 'Unknown'}</td>
+                    <td style="padding: 16px; vertical-align: top; display: table-cell; visibility: visible; opacity: 1; color: #2d3748 !important;">${blog.category || 'Uncategorized'}</td>
+                    <td style="padding: 16px; vertical-align: top; display: table-cell; visibility: visible; opacity: 1;">
+                        <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; ${getStatusStyle(blog.status)}">
+                            ${(blog.status || 'draft').toUpperCase()}
+                        </span>
+                    </td>
+                    <td style="padding: 16px; vertical-align: top; display: table-cell; visibility: visible; opacity: 1; color: #2d3748 !important;">${formatDate(blog.published_at) || 'Not published'}</td>
+                    <td style="padding: 16px; vertical-align: top; display: table-cell; visibility: visible; opacity: 1;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button onclick="editBlogPost(${blog.id})" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #667eea; color: white;">
+                                ✏️ Edit
+                            </button>
+                            <button onclick="viewBlogPost(${blog.id})" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #48bb78; color: white;">
+                                👁️ View
+                            </button>
+                            <button onclick="deleteBlogPost(${blog.id})" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #f56565; color: white;">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            console.log('✅ renderBlogNewTable completed. Table HTML updated with forced visibility.');
+
+            // Debug visibility
+            setTimeout(() => {
+                console.log('🔍 Post-render debug check:');
+                console.log('  blogNew section:', document.getElementById('blogNew')?.style.display);
+                console.log('  table-container:', document.querySelector('#blogNew .table-container')?.style.display);
+                console.log('  table:', document.querySelector('#blogNew table')?.style.display);
+                console.log('  tbody:', document.getElementById('blogNew-table-body')?.style.display);
+                console.log('  first tr:', document.querySelector('#blogNew-table-body tr')?.style.display);
+                console.log('  Row count in tbody:', document.querySelectorAll('#blogNew-table-body tr').length);
+            }, 100);
+        }
+
         function renderBlogTable(blogs) {
             const tbody = document.getElementById('blog-table-body');
             tbody.innerHTML = blogs.map(blog => `
@@ -5476,6 +6404,103 @@
         function filterBlogTable() {
             const searchTerm = document.getElementById('blog-search-input').value.toLowerCase();
             const rows = document.querySelectorAll('#blog-table-body tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        // Search functionality for Teachers tab blog
+        function filterTeachersBlogTable() {
+            const searchTerm = document.getElementById('teachers-blog-search-input').value.toLowerCase();
+            const rows = document.querySelectorAll('#teachers-blog-table-body tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        // Search functionality for BlogNew tab
+        function filterBlogNewTable() {
+            const searchTerm = document.getElementById('blogNew-search-input').value.toLowerCase();
+            const rows = document.querySelectorAll('#blogNew-table-body tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        // ==== BLOG ADMIN TAB FUNCTIONS ====
+        // Simple implementation to display blog posts from blog_posts table
+
+        async function loadBlogAdmin() {
+            try {
+                console.log('🔄 Loading blog posts for BlogAdmin tab...');
+                const response = await fetch(`http://localhost:3000/api/blog-posts`);
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    renderBlogAdminTable(result.data);
+                    console.log(`✅ Loaded ${result.data.length} blog posts in BlogAdmin tab`);
+                } else {
+                    throw new Error('Failed to load blog posts');
+                }
+            } catch (error) {
+                console.error('❌ Error loading blogs in BlogAdmin tab:', error);
+                const tbody = document.getElementById('blogAdmin-table-body');
+                if (tbody) {
+                    tbody.innerHTML = `
+                        <tr><td colspan="6" style="padding: 40px; text-align: center; color: #e53e3e;">
+                            Error loading blog posts: ${error.message}
+                        </td></tr>
+                    `;
+                }
+            }
+        }
+
+        function renderBlogAdminTable(blogs) {
+            const tbody = document.getElementById('blogAdmin-table-body');
+            if (!tbody) {
+                console.error('❌ Could not find blogAdmin-table-body element!');
+                return;
+            }
+
+            tbody.innerHTML = blogs.map(blog => `
+                <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#f7fafc'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px; vertical-align: top;">
+                        <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px;">${blog.title || 'Untitled'}</div>
+                        <div style="font-size: 12px; color: #718096;">ID: ${blog.id} • Created: ${formatDate(blog.created_at)}</div>
+                    </td>
+                    <td style="padding: 16px; vertical-align: top; color: #2d3748;">${blog.author || 'Unknown'}</td>
+                    <td style="padding: 16px; vertical-align: top; color: #2d3748;">${blog.category || 'Uncategorized'}</td>
+                    <td style="padding: 16px; vertical-align: top;">
+                        <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; ${getStatusStyle(blog.status)}">
+                            ${(blog.status || 'draft').toUpperCase()}
+                        </span>
+                    </td>
+                    <td style="padding: 16px; vertical-align: top; color: #2d3748;">${formatDate(blog.published_at) || 'Not published'}</td>
+                    <td style="padding: 16px; vertical-align: top;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button onclick="editBlogPost(${blog.id})" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #667eea; color: white;">
+                                ✏️ Edit
+                            </button>
+                            <button onclick="viewBlogPost(${blog.id})" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #48bb78; color: white;">
+                                👁️ View
+                            </button>
+                            <button onclick="deleteBlogPost(${blog.id})" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; background: #f56565; color: white;">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            console.log(`✅ BlogAdmin table rendered with ${blogs.length} blog posts`);
+        }
+
+        function filterBlogAdminTable() {
+            const searchTerm = document.getElementById('blogAdmin-search-input').value.toLowerCase();
+            const rows = document.querySelectorAll('#blogAdmin-table-body tr');
             rows.forEach(row => {
                 const text = row.textContent.toLowerCase();
                 row.style.display = text.includes(searchTerm) ? '' : 'none';
@@ -5791,6 +6816,7 @@
             </div>
         </div>
     </div>
+
 
 </body>
 </html>
