@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Blog Database Integration</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        h1 { color: #333; }
+        .section { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .blog-post { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background: #f9f9f9; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Blog Database Integration Verification</h1>
+
+    <div class="section">
+        <h2>1. Server Status Check</h2>
+        <div id="server-status"></div>
+    </div>
+
+    <div class="section">
+        <h2>2. API Response Check</h2>
+        <div id="api-status"></div>
+    </div>
+
+    <div class="section">
+        <h2>3. Database Content</h2>
+        <div id="db-content"></div>
+    </div>
+
+    <div class="section">
+        <h2>4. Blog Integration Test</h2>
+        <button onclick="testBlogIntegration()">Test Blog Integration</button>
+        <div id="integration-test"></div>
+    </div>
+
+    <div class="section">
+        <h2>5. Live Blog Page Test</h2>
+        <button onclick="window.open('blog.html', '_blank')">Open Blog Page</button>
+        <p>Open browser console (F12) to see debug logs</p>
+    </div>
+
+    <script>
+        const serverStatusDiv = document.getElementById('server-status');
+        const apiStatusDiv = document.getElementById('api-status');
+        const dbContentDiv = document.getElementById('db-content');
+        const integrationTestDiv = document.getElementById('integration-test');
+
+        function addStatus(container, message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = message;
+            container.appendChild(div);
+        }
+
+        async function checkServer() {
+            addStatus(serverStatusDiv, 'Checking server on port 3000...', 'info');
+
+            try {
+                const response = await fetch('http://localhost:3000/api/blog-posts');
+                if (response.ok) {
+                    addStatus(serverStatusDiv, '✅ Server is running on port 3000', 'success');
+                    return true;
+                } else {
+                    addStatus(serverStatusDiv, `⚠️ Server responded with status: ${response.status}`, 'warning');
+                    return false;
+                }
+            } catch (error) {
+                addStatus(serverStatusDiv, '❌ Server is not running on port 3000', 'error');
+                addStatus(serverStatusDiv, 'Please run: <code>npm start</code>', 'warning');
+                return false;
+            }
+        }
+
+        async function checkAPI() {
+            addStatus(apiStatusDiv, 'Fetching blog posts from API...', 'info');
+
+            try {
+                const response = await fetch('http://localhost:3000/api/blog-posts');
+                const data = await response.json();
+
+                addStatus(apiStatusDiv, '✅ API Response received', 'success');
+                addStatus(apiStatusDiv, `Response structure: <pre>${JSON.stringify(Object.keys(data), null, 2)}</pre>`, 'info');
+
+                if (data.success && data.data) {
+                    addStatus(apiStatusDiv, `✅ Found ${data.data.length} blog posts`, 'success');
+
+                    // Display posts
+                    data.data.forEach((post, index) => {
+                        const postDiv = document.createElement('div');
+                        postDiv.className = 'blog-post';
+                        postDiv.innerHTML = `
+                            <h4>Post ${index + 1}: ${post.title}</h4>
+                            <p><strong>ID:</strong> ${post.id}</p>
+                            <p><strong>Author:</strong> ${post.author}</p>
+                            <p><strong>Excerpt:</strong> ${post.excerpt}</p>
+                            <p><strong>Category:</strong> ${post.category || 'Not set'}</p>
+                            <p><strong>Image URL:</strong> ${post.image_url || post.featured_image_url || 'Not set'}</p>
+                            <p><strong>Published:</strong> ${post.published_at}</p>
+                        `;
+                        dbContentDiv.appendChild(postDiv);
+                    });
+
+                    return data.data;
+                } else {
+                    addStatus(apiStatusDiv, '⚠️ Unexpected response structure', 'warning');
+                    return [];
+                }
+            } catch (error) {
+                addStatus(apiStatusDiv, `❌ Error: ${error.message}`, 'error');
+                return [];
+            }
+        }
+
+        function testBlogIntegration() {
+            integrationTestDiv.innerHTML = '';
+            addStatus(integrationTestDiv, 'Loading blog-integration.js...', 'info');
+
+            // Create a mock container
+            const container = document.createElement('div');
+            container.className = 'main-blog-collection-list';
+            container.style.display = 'none';
+            document.body.appendChild(container);
+
+            // Load the blog integration script
+            const script = document.createElement('script');
+            script.src = 'js/blog-integration.js';
+            script.onload = () => {
+                addStatus(integrationTestDiv, '✅ blog-integration.js loaded', 'success');
+                addStatus(integrationTestDiv, 'Check browser console for debug logs', 'info');
+
+                // Check if BlogIntegration is available
+                if (typeof BlogIntegration !== 'undefined') {
+                    addStatus(integrationTestDiv, '✅ BlogIntegration object is available', 'success');
+
+                    // Check what's in the container after initialization
+                    setTimeout(() => {
+                        const posts = container.querySelectorAll('.uniform-blog-card');
+                        if (posts.length > 0) {
+                            addStatus(integrationTestDiv, `✅ ${posts.length} blog cards rendered`, 'success');
+                        } else {
+                            addStatus(integrationTestDiv, '⚠️ No blog cards found in container', 'warning');
+                            addStatus(integrationTestDiv, 'Container HTML: <pre>' + container.innerHTML.substring(0, 500) + '...</pre>', 'info');
+                        }
+                    }, 2000);
+                } else {
+                    addStatus(integrationTestDiv, '❌ BlogIntegration object not found', 'error');
+                }
+            };
+            script.onerror = () => {
+                addStatus(integrationTestDiv, '❌ Failed to load blog-integration.js', 'error');
+            };
+            document.body.appendChild(script);
+        }
+
+        // Run checks automatically
+        async function runAllChecks() {
+            const serverOk = await checkServer();
+            if (serverOk) {
+                await checkAPI();
+            }
+        }
+
+        runAllChecks();
+    </script>
+</body>
+</html>

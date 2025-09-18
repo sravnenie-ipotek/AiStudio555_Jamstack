@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Popup Demo - AI Studio</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome for menu icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <!-- Shared Menu CSS -->
+  <link rel="stylesheet" href="../shared/components/sharedMenu/menu.css">
+
+  <!-- Popup CSS -->
+  <link rel="stylesheet" href="../shared/components/sharedPopUp/popup.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      background: linear-gradient(135deg, #05051a 0%, #04193f 100%);
+      min-height: 100vh;
+      color: white;
+      padding-top: 120px; /* Space for fixed navbar */
+    }
+
+    .page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .demo-container {
+      text-align: center;
+      max-width: 600px;
+      padding: 40px;
+    }
+
+    .demo-title {
+      font-family: "Manrope", sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 0%, #0080ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .demo-subtitle {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .demo-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .demo-button {
+      background: linear-gradient(135deg, #0080ff 0%, #667eea 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 18px 32px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      display: inline-block;
+      min-width: 200px;
+    }
+
+    .demo-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 128, 255, 0.3);
+    }
+
+    .demo-button:active {
+      transform: translateY(0);
+    }
+
+    .demo-button-text-wrap {
+      position: relative;
+      overflow: hidden;
+      height: 24px;
+    }
+
+    .demo-button-text {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      text-align: center;
+      transition: transform 0.3s ease;
+      position: absolute;
+      width: 100%;
+      left: 0;
+      top: 0;
+      line-height: 24px;
+    }
+
+    .demo-button-text.is-absolute {
+      transform: translateY(100%);
+    }
+
+    .demo-button:hover .demo-button-text:not(.is-absolute) {
+      transform: translateY(-100%);
+    }
+
+    .demo-button:hover .demo-button-text.is-absolute {
+      transform: translateY(0);
+    }
+
+    .demo-info {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 40px;
+      text-align: left;
+    }
+
+    .demo-info h3 {
+      font-family: "Manrope", sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #ffd659;
+    }
+
+    .demo-info p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 12px;
+    }
+
+    .demo-info ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .demo-info li {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 8px;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .demo-info li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #10b981;
+      font-weight: bold;
+    }
+
+    .footer-note {
+      margin-top: 40px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .demo-container {
+        padding: 20px;
+      }
+
+      .demo-title {
+        font-size: 36px;
+      }
+
+      .demo-subtitle {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="demo-container">
+    <h1 class="demo-title">Contact Popup Demo</h1>
+    <p class="demo-subtitle">
+      Test the shared contact popup component with beautiful animations and form validation.
+      This component follows the AI Studio design system.
+    </p>
+
+    <div class="demo-buttons">
+      <button class="demo-button" onclick="openContactPopup()">
+        <div class="demo-button-text-wrap">
+          <div class="demo-button-text">Open Contact Popup</div>
+          <div class="demo-button-text is-absolute">Get In Touch!</div>
+        </div>
+      </button>
+
+      <button class="demo-button" onclick="testMultipleOpens()">
+        <div class="demo-button-text-wrap">
+          <div class="demo-button-text">Test Multiple Opens</div>
+          <div class="demo-button-text is-absolute">Click Me!</div>
+        </div>
+      </button>
+
+      <button class="demo-button" onclick="testEmailService()">
+        <div class="demo-button-text-wrap">
+          <div class="demo-button-text">Test Email Service</div>
+          <div class="demo-button-text is-absolute">Send Test Email!</div>
+        </div>
+      </button>
+
+      <button class="demo-button" onclick="testMenuFunctions()">
+        <div class="demo-button-text-wrap">
+          <div class="demo-button-text">Test Menu Functions</div>
+          <div class="demo-button-text is-absolute">Menu Demo!</div>
+        </div>
+      </button>
+    </div>
+
+    <div class="demo-info">
+      <h3>🎯 Demo Components</h3>
+      <p>This demo page showcases two shared components from the AI Studio design system:</p>
+
+      <h4>📧 Contact Popup Component</h4>
+      <ul>
+        <li>Smooth fade-in/out animations with backdrop blur</li>
+        <li>Form validation for all required fields</li>
+        <li>Loading states with animated spinner</li>
+        <li>Success and error message displays</li>
+        <li>EmailJS integration for real email sending</li>
+        <li>WhatsApp fallback when email fails</li>
+        <li>Responsive design for all screen sizes</li>
+        <li>Keyboard navigation (ESC to close)</li>
+        <li>Auto-focus on first input field</li>
+      </ul>
+
+      <h4>🧭 Shared Menu Component</h4>
+      <ul>
+        <li>Fixed navigation bar with backdrop blur</li>
+        <li>Responsive mobile hamburger menu</li>
+        <li>Multi-level dropdown navigation</li>
+        <li>Active page detection and highlighting</li>
+        <li>Smooth hover animations and transitions</li>
+        <li>Shopping cart integration</li>
+        <li>Contact popup integration for "Sign Up" buttons</li>
+        <li>Consistent styling across all pages</li>
+      </ul>
+
+      <p><strong>✅ Both Components Active:</strong> The menu is automatically injected at the top, and the popup opens when you click "Sign Up Today" in the menu!</p>
+    </div>
+
+    <div class="footer-note">
+      Press ESC to close the popup, or click outside the modal area.
+    </div>
+    </div>
+  </div>
+
+  <!-- Email Service -->
+  <script src="../shared/services/emailService/emailService.js"></script>
+
+  <!-- Shared Menu JavaScript -->
+  <script src="../shared/components/sharedMenu/menu.js"></script>
+
+  <!-- Popup JavaScript -->
+  <script src="../shared/components/sharedPopUp/popup.js"></script>
+
+  <script>
+    // Demo functions
+    function testMultipleOpens() {
+      // Test opening popup multiple times
+      openContactPopup();
+
+      // Add some demo feedback
+      setTimeout(() => {
+        console.log('Popup opened successfully!');
+      }, 100);
+    }
+
+    async function testEmailService() {
+      console.log('Testing email service...');
+
+      if (!window.emailService) {
+        alert('❌ Email service not available');
+        return;
+      }
+
+      try {
+        // Show status first
+        const status = window.emailService.getStatus();
+        console.log('Email service status:', status);
+
+        // Send test email
+        const result = await window.emailService.sendTestEmail();
+
+        if (result.success) {
+          alert('✅ Test email sent successfully! Check the console for details.');
+          console.log('Test email result:', result);
+        } else {
+          alert('❌ Test email failed: ' + result.message);
+          console.error('Test email error:', result);
+        }
+      } catch (error) {
+        alert('❌ Email service error: ' + error.message);
+        console.error('Email service error:', error);
+      }
+    }
+
+    function testMenuFunctions() {
+      console.log('Testing menu functions...');
+
+      if (!window.SharedMenu) {
+        alert('❌ Shared menu not available');
+        return;
+      }
+
+      try {
+        // Test menu functionality
+        const currentPage = window.SharedMenu.getCurrentPage();
+        console.log('Current page:', currentPage);
+
+        // Test highlighting different pages
+        const pages = ['home', 'courses', 'pricing', 'blog', 'teachers'];
+        let index = 0;
+
+        const highlightNext = () => {
+          window.SharedMenu.highlightNavItem(pages[index]);
+          console.log('Highlighted page:', pages[index]);
+          index = (index + 1) % pages.length;
+
+          if (index === 0) {
+            // Reset to original page after cycling
+            setTimeout(() => {
+              window.SharedMenu.highlightNavItem(currentPage);
+              console.log('Reset to original page:', currentPage);
+            }, 1000);
+          } else {
+            setTimeout(highlightNext, 800);
+          }
+        };
+
+        alert('🧭 Watch the menu navigation highlight cycle through different pages!');
+        highlightNext();
+
+        // Test cart update
+        setTimeout(() => {
+          window.SharedMenu.updateCartQuantity(5);
+          console.log('Updated cart quantity to 5');
+        }, 4000);
+
+      } catch (error) {
+        alert('❌ Menu test error: ' + error.message);
+        console.error('Menu test error:', error);
+      }
+    }
+
+    // Listen for custom events
+    window.addEventListener('popupOpened', (event) => {
+      console.log('Custom event: Popup opened', event.detail);
+    });
+
+    window.addEventListener('popupClosed', (event) => {
+      console.log('Custom event: Popup closed', event.detail);
+    });
+
+    window.addEventListener('formSubmitted', (event) => {
+      console.log('Custom event: Form submitted', event.detail);
+    });
+
+    // Add some demo interactions
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🎯 Demo page loaded successfully!');
+      console.log('Available functions:');
+      console.log('- openContactPopup()');
+      console.log('- closeContactPopup()');
+      console.log('- testEmailService()');
+      console.log('- testMenuFunctions()');
+      console.log('- window.ContactPopup.open()');
+      console.log('- window.ContactPopup.close()');
+      console.log('- window.SharedMenu.highlightNavItem(page)');
+      console.log('- window.SharedMenu.updateCartQuantity(count)');
+
+      // Check services status
+      setTimeout(() => {
+        console.log('\n📊 Services Status Report:');
+
+        if (window.emailService) {
+          const status = window.emailService.getStatus();
+          console.log('📧 Email Service:', status);
+          console.log('✅ Email service loaded and ready!');
+        } else {
+          console.warn('❌ Email service not available');
+        }
+
+        if (window.SharedMenu) {
+          console.log('🧭 Shared Menu: Ready');
+          console.log('- Current page:', window.SharedMenu.getCurrentPage());
+          console.log('- Is initialized:', window.SharedMenu.isInitialized);
+          console.log('✅ Menu loaded and ready!');
+        } else {
+          console.warn('❌ Shared menu not available');
+        }
+
+        if (window.ContactPopup) {
+          console.log('📧 Contact Popup: Ready');
+          console.log('✅ Popup loaded and ready!');
+        } else {
+          console.warn('❌ Contact popup not available');
+        }
+
+        console.log('\n🎉 All components initialized! Try the demo buttons above.');
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

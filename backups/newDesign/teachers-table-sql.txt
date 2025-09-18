@@ -1,0 +1,244 @@
+
+  // Create Teachers Table (LinkedIn-style profiles)
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS entity_teachers (
+        -- Core Fields
+        id SERIAL PRIMARY KEY,
+        teacher_key VARCHAR(100) UNIQUE,
+
+        -- Main Profile Data
+        full_name VARCHAR(255) NOT NULL,
+        professional_title VARCHAR(255) NOT NULL,
+        bio TEXT,
+        short_bio VARCHAR(500),
+        company VARCHAR(255),
+
+        -- LinkedIn-Style Professional Data
+        years_experience INTEGER DEFAULT 0,
+        students_taught INTEGER DEFAULT 0,
+        courses_count INTEGER DEFAULT 0,
+        rating DECIMAL(3, 2) DEFAULT 0.0,
+
+        -- Complex Data (JSONB for nested structures)
+        skills JSONB DEFAULT '[]',
+        experience_history JSONB DEFAULT '[]',
+        courses_taught JSONB DEFAULT '[]',
+        student_reviews JSONB DEFAULT '[]',
+        achievements JSONB DEFAULT '[]',
+        education JSONB DEFAULT '[]',
+
+        -- Media & Links
+        profile_image_url TEXT,
+        background_image_url TEXT,
+        resume_url TEXT,
+        linkedin_url TEXT,
+        github_url TEXT,
+        portfolio_url TEXT,
+
+        -- Contact Information
+        email VARCHAR(255),
+        phone VARCHAR(50),
+        office_hours TEXT,
+        availability_status VARCHAR(100) DEFAULT 'Available',
+
+        -- Teaching Specializations
+        primary_expertise VARCHAR(255),
+        teaching_philosophy TEXT,
+        preferred_teaching_methods JSONB DEFAULT '[]',
+        languages_spoken JSONB DEFAULT '["English"]',
+
+        -- Multi-language Support
+        full_name_ru VARCHAR(255),
+        professional_title_ru VARCHAR(255),
+        bio_ru TEXT,
+        short_bio_ru VARCHAR(500),
+        full_name_he VARCHAR(255),
+        professional_title_he VARCHAR(255),
+        bio_he TEXT,
+        short_bio_he VARCHAR(500),
+
+        -- Social Proof & Statistics
+        total_views INTEGER DEFAULT 0,
+        profile_completeness INTEGER DEFAULT 0,
+        response_rate INTEGER DEFAULT 100,
+        average_session_rating DECIMAL(3, 2) DEFAULT 0.0,
+
+        -- Status Flags
+        is_featured BOOLEAN DEFAULT false,
+        is_visible BOOLEAN DEFAULT true,
+        is_published BOOLEAN DEFAULT true,
+        is_active BOOLEAN DEFAULT true,
+        accepts_new_students BOOLEAN DEFAULT true,
+        is_premium_instructor BOOLEAN DEFAULT false,
+
+        -- Scheduling & Availability
+        timezone VARCHAR(100) DEFAULT 'UTC',
+        weekly_schedule JSONB DEFAULT '{}',
+        booking_calendar_url TEXT,
+
+        -- Performance Metrics
+        completion_rate DECIMAL(5, 2) DEFAULT 100.0,
+        satisfaction_score DECIMAL(3, 2) DEFAULT 5.0,
+
+        -- SEO & Discovery
+        seo_keywords JSONB DEFAULT '[]',
+        category_tags JSONB DEFAULT '[]',
+
+        -- System Metadata
+        admin_notes TEXT,
+        last_login TIMESTAMP,
+        profile_created_by VARCHAR(255),
+
+        -- Timestamps
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+  console.log('✅ Teachers table ensured');
+
+  // Create indexes for better performance
+  await client.query('CREATE INDEX IF NOT EXISTS idx_teachers_teacher_key ON entity_teachers(teacher_key);');
+  await client.query('CREATE INDEX IF NOT EXISTS idx_teachers_featured ON entity_teachers(is_featured) WHERE is_featured = true;');
+  await client.query('CREATE INDEX IF NOT EXISTS idx_teachers_visible ON entity_teachers(is_visible) WHERE is_visible = true;');
+  await client.query('CREATE INDEX IF NOT EXISTS idx_teachers_active ON entity_teachers(is_active) WHERE is_active = true;');
+  await client.query('CREATE INDEX IF NOT EXISTS idx_teachers_rating ON entity_teachers(rating) WHERE rating > 0;');
+  console.log('✅ Teachers table indexes created');
+
+  // Insert sample data if table is empty
+  const teachersCount = await client.query('SELECT COUNT(*) FROM entity_teachers');
+  if (parseInt(teachersCount.rows[0].count) === 0) {
+    console.log('📊 Inserting sample teacher data...');
+
+    const sampleTeachers = [
+      {
+        teacher_key: 'sarah-chen-ai-ml',
+        full_name: 'Sarah Chen',
+        professional_title: 'AI & Machine Learning Instructor',
+        bio: 'Passionate AI instructor with 8+ years of commercial development experience at leading tech companies including Google AI and Meta. I specialize in making complex machine learning concepts accessible through hands-on, practical projects.\n\nMy teaching philosophy centers on learning by doing. I believe that students learn best when they can immediately apply theoretical concepts to real-world problems. This approach has helped me successfully mentor over 300 students in AI fundamentals, many of whom have gone on to secure positions at top tech companies.\n\nAs Co-founder and AI Lead at TechEd Solutions, I develop cutting-edge AI curricula and lead educational initiatives that bridge the gap between academic theory and industry practice.',
+        short_bio: 'Co-founder & AI Lead at TechEd Solutions. 8+ years of commercial AI development experience. Expert in teaching complex machine learning concepts through practical, hands-on projects. Mentored 300+ students.',
+        company: 'TechEd Solutions',
+        years_experience: 8,
+        students_taught: 300,
+        courses_count: 12,
+        rating: 4.9,
+        skills: JSON.stringify(['Machine Learning', 'Deep Learning', 'Neural Networks', 'Python', 'TensorFlow', 'PyTorch', 'Natural Language Processing', 'Computer Vision', 'AI Ethics', 'Data Science']),
+        experience_history: JSON.stringify([
+          {
+            title: 'Co-founder & AI Lead',
+            company: 'TechEd Solutions',
+            duration: '2020 - Present • 4 years',
+            description: 'Leading AI education initiatives and curriculum development for enterprise clients. Built comprehensive training programs that have educated over 1,000 professionals in AI fundamentals.'
+          },
+          {
+            title: 'Senior AI Engineer',
+            company: 'Google AI',
+            duration: '2018 - 2020 • 2 years',
+            description: 'Developed large-scale machine learning systems for natural language processing applications. Led cross-functional teams in implementing AI ethics frameworks.'
+          },
+          {
+            title: 'Machine Learning Engineer',
+            company: 'Meta',
+            duration: '2016 - 2018 • 2 years',
+            description: 'Built recommendation systems serving millions of users. Specialized in deep learning architectures for computer vision and natural language understanding.'
+          }
+        ]),
+        courses_taught: JSON.stringify([
+          {
+            title: 'Machine Learning Fundamentals',
+            description: 'Comprehensive introduction to ML concepts, algorithms, and practical applications.',
+            students: 150,
+            rating: 4.9
+          },
+          {
+            title: 'Deep Learning with Neural Networks',
+            description: 'Advanced course covering neural network architectures and modern deep learning frameworks.',
+            students: 120,
+            rating: 4.8
+          }
+        ]),
+        student_reviews: JSON.stringify([
+          {
+            text: 'Sarah\'s teaching style is exceptional. She breaks down complex AI concepts into digestible pieces.',
+            author: 'Alex Thompson, Software Engineer at Microsoft',
+            rating: 5,
+            stars: '★★★★★'
+          }
+        ]),
+        profile_image_url: 'images/CTA-Section-Bg.jpg',
+        primary_expertise: 'Artificial Intelligence & Machine Learning',
+        category_tags: JSON.stringify(['AI & Machine Learning', 'Data Science']),
+        is_featured: true
+      },
+      {
+        teacher_key: 'mike-johnson-fullstack',
+        full_name: 'Mike Johnson',
+        professional_title: 'Full-Stack Development Instructor',
+        bio: 'Frontend Lead at WebCraft Studios with 10+ years of commercial development experience. I specialize in teaching modern JavaScript, React, and full-stack development through real-world projects and industry best practices.',
+        short_bio: 'Frontend Lead at WebCraft Studios. 10+ years of commercial development experience. Specializes in teaching modern JavaScript, React, and full-stack development.',
+        company: 'WebCraft Studios',
+        years_experience: 10,
+        students_taught: 450,
+        courses_count: 15,
+        rating: 4.8,
+        skills: JSON.stringify(['JavaScript', 'React', 'Node.js', 'Full-Stack Development', 'HTML/CSS']),
+        profile_image_url: 'images/Course-Categories-Content-Bg.jpg',
+        primary_expertise: 'Full-Stack Web Development',
+        category_tags: JSON.stringify(['Web Development', 'JavaScript']),
+        is_featured: true
+      },
+      {
+        teacher_key: 'emily-rodriguez-career',
+        full_name: 'Emily Rodriguez',
+        professional_title: 'Career Transition Coach',
+        bio: 'Software Engineer & Career Mentor with 7+ years of commercial development experience. I specialize in guiding career changers through structured learning paths and practical skill development for successful tech transitions.',
+        short_bio: 'Software Engineer & Career Mentor. 7+ years experience guiding career changers through successful tech transitions.',
+        company: 'Independent Mentor',
+        years_experience: 7,
+        students_taught: 200,
+        courses_count: 8,
+        rating: 4.9,
+        skills: JSON.stringify(['Career Coaching', 'Technical Mentoring', 'Interview Preparation']),
+        profile_image_url: 'images/About-Me-Image.jpg',
+        primary_expertise: 'Career Development',
+        category_tags: JSON.stringify(['Career Development', 'Mentoring']),
+        is_featured: true
+      },
+      {
+        teacher_key: 'david-park-data-science',
+        full_name: 'David Park',
+        professional_title: 'Data Science Instructor',
+        bio: 'Senior Data Scientist & Educator with 9+ years of commercial analytics experience. Passionate about teaching data science fundamentals through interactive workshops and real business case studies.',
+        short_bio: 'Senior Data Scientist & Educator. 9+ years of commercial analytics experience. Teaches data science through interactive workshops.',
+        company: 'DataFlow Analytics',
+        years_experience: 9,
+        students_taught: 275,
+        courses_count: 10,
+        rating: 4.7,
+        skills: JSON.stringify(['Data Science', 'Python', 'R', 'SQL', 'Machine Learning']),
+        profile_image_url: 'images/About-Us-Image.png',
+        primary_expertise: 'Data Science & Analytics',
+        category_tags: JSON.stringify(['Data Science', 'Analytics']),
+        is_featured: true
+      }
+    ];
+
+    for (const teacher of sampleTeachers) {
+      await client.query(`
+        INSERT INTO entity_teachers (
+          teacher_key, full_name, professional_title, bio, short_bio, company,
+          years_experience, students_taught, courses_count, rating, skills,
+          experience_history, courses_taught, student_reviews, profile_image_url,
+          primary_expertise, category_tags, is_featured, is_visible, is_published, is_active
+        ) VALUES (
+          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21
+        ) ON CONFLICT (teacher_key) DO NOTHING
+      `, [
+        teacher.teacher_key, teacher.full_name, teacher.professional_title, teacher.bio, teacher.short_bio, teacher.company,
+        teacher.years_experience, teacher.students_taught, teacher.courses_count, teacher.rating, teacher.skills,
+        teacher.experience_history || '[]', teacher.courses_taught || '[]', teacher.student_reviews || '[]', teacher.profile_image_url,
+        teacher.primary_expertise, teacher.category_tags, teacher.is_featured, true, true, true
+      ]);
+    }
+    console.log('✅ Sample teacher data inserted');
+  }
+  

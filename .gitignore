@@ -57,7 +57,7 @@ old-project/
 old-project-backup-*.zip
 
 # Backup directories
-backups/
+
 
 # Sensitive Documentation
 Docs/access/

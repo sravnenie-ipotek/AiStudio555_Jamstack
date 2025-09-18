@@ -1,0 +1,102 @@
+/* Mobile Responsive Centering Fixes */
+
+/* Fix main content centering on mobile devices */
+@media screen and (max-width: 767px) {
+
+  /* Center ONLY specific section titles and descriptions - targeted approach */
+  .section-title-wrapper .section-title,
+  .section-title-wrapper .section-description-text,
+  .about-us-section-title-wrapper h2,
+  .why-choose-us-section-title h2,
+  .inner-banner-title {
+    text-align: center !important;
+  }
+
+  /* Center specific content areas without affecting layout */
+  .section-title-wrapper {
+    text-align: center !important;
+  }
+
+  /* Center hero section content specifically */
+  .hero-banner-content .section-title,
+  .hero-banner-content .section-description-text,
+  .banner-text-wrapper .section-title,
+  .banner-text-wrapper .section-description-text {
+    text-align: center !important;
+  }
+
+  /* Center subtitle wrappers only */
+  .section-subtitle-wrapper {
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  /* Reset text alignment for navigation and form elements */
+  .nav-menu,
+  .nav-link,
+  .menu-dropdown-wrapper,
+  .dropdown-menu-text-link-block,
+  .footer-menu-list,
+  .footer-menu-list li,
+  .footer-menu-text-link,
+  input,
+  textarea,
+  form,
+  .form-field,
+  .featured-courses-tab-link,
+  .primary-button-text-block {
+    text-align: left !important;
+  }
+
+  /* Keep navigation layout intact */
+  .navbar,
+  .navbar-content,
+  .navbar-button-wrapper,
+  .footer-content,
+  .footer-top-content,
+  .footer-menu-wrapper {
+    text-align: left !important;
+  }
+
+  /* Prevent centering of layout containers */
+  .w-layout-grid,
+  .featured-courses-collection-list,
+  .featured-courses-single,
+  .featured-courses-typography,
+  .track-wrapper,
+  .track,
+  .cta-content {
+    text-align: inherit !important;
+  }
+
+  /* Keep buttons in their original positions */
+  .primary-button,
+  .w-button,
+  .button {
+    display: inline-block !important;
+    width: auto !important;
+  }
+
+  /* Keep images in their containers without forcing block display */
+  .zohacous-logo-image,
+  .navbar-cart-icon,
+  .footer-logo-image,
+  .hamburger-menu-icon {
+    display: inline !important;
+    margin: 0 !important;
+  }
+}
+
+/* Additional fixes for tablet portrait */
+@media screen and (max-width: 991px) and (min-width: 768px) {
+
+  .section-subtitle-wrapper {
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .section-title-wrapper .section-title,
+  .section-title-wrapper .section-description-text {
+    text-align: center !important;
+  }
+}

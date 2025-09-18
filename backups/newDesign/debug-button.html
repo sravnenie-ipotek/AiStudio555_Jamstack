@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Debug Test</title>
+    
+    <!-- Load CSS in same order as popup-demo.html -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="shared/components/sharedMenu/menu.css">
+    
+    <style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            background: #05051a;
+            color: white;
+            padding: 50px;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+        }
+        
+        .test-button {
+            margin: 20px 0;
+        }
+        
+        .debug-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Button Debug Test</h1>
+        
+        <div class="test-button">
+            <h3>1. Menu CSS Button (should be yellow)</h3>
+            <div class="primary-button-wrapper desktop">
+                <a href="#" class="primary-button w-inline-block">
+                    <div class="primary-button-text-wrap">
+                        <div class="primary-button-text-block">Sign Up Today</div>
+                        <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <div class="test-button">
+            <h3>2. Navbar CSS Button (should be yellow)</h3>
+            <div class="navbar">
+                <div class="primary-button-wrapper desktop">
+                    <a href="#" class="primary-button w-inline-block">
+                        <div class="primary-button-text-wrap">
+                            <div class="primary-button-text-block">Sign Up Today</div>
+                            <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="debug-info">
+            <h4>Debug Information:</h4>
+            <p>Inspect the buttons above to see computed styles</p>
+            <p>Expected: background-color: rgb(255, 214, 89)</p>
+            <p>Check for conflicting styles or specificity issues</p>
+        </div>
+    </div>
+    
+    <script>
+        // Debug function to check computed styles
+        function debugButtonStyles() {
+            const buttons = document.querySelectorAll('.primary-button');
+            buttons.forEach((button, index) => {
+                const styles = window.getComputedStyle(button);
+                console.log(`Button ${index + 1}:`, {
+                    backgroundColor: styles.backgroundColor,
+                    color: styles.color,
+                    border: styles.border,
+                    display: styles.display
+                });
+            });
+        }
+        
+        // Run debug after page loads
+        window.addEventListener('load', () => {
+            setTimeout(debugButtonStyles, 1000);
+        });
+    </script>
+</body>
+</html>

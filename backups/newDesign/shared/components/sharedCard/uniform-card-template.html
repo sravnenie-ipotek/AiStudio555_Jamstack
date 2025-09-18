@@ -1,0 +1,44 @@
+<!-- Standardized Uniform Card Template -->
+<!-- Based on 3rd blog card structure with fixed dimensions -->
+<div role="listitem" class="uniform-card-item">
+  <div class="uniform-card">
+    <!-- Fixed Image Container -->
+    <a href="{{PROFILE_LINK}}" class="uniform-card-image-link">
+      <img src="{{IMAGE_URL}}" loading="lazy" alt="{{IMAGE_ALT}}" class="uniform-card-image">
+    </a>
+
+    <!-- Fixed Content Container -->
+    <div class="uniform-card-content">
+      <!-- Category/Expertise Section -->
+      <div class="uniform-card-header">
+        <div class="uniform-card-category">
+          <div class="uniform-card-category-flex">
+            <div class="uniform-card-category-dot"></div>
+            <div class="uniform-card-category-text">{{CATEGORY}}</div>
+          </div>
+        </div>
+        <div class="uniform-card-author">
+          <img src="images/Blog-Card-Author-Icon.svg" loading="lazy" alt="Author" class="uniform-card-author-icon">
+          <div class="uniform-card-author-name">{{AUTHOR_NAME}}</div>
+        </div>
+      </div>
+
+      <!-- Title Section (Fixed Height) -->
+      <a href="{{PROFILE_LINK}}" class="uniform-card-title">{{TITLE}}</a>
+
+      <!-- Divider -->
+      <div class="uniform-card-divider"></div>
+
+      <!-- Description Section (Fixed Height) -->
+      <p class="uniform-card-description">{{DESCRIPTION}}</p>
+
+      <!-- Action Button (Always at Bottom) -->
+      <div class="uniform-card-action">
+        <a href="{{PROFILE_LINK}}" class="uniform-card-button">
+          <div class="uniform-card-button-text">{{BUTTON_TEXT}}</div>
+          <div class="uniform-card-button-arrow"></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

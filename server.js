@@ -6368,6 +6368,162 @@ app.get('/api/nd/teachers/:id', async (req, res) => {
   }
 });
 
+// POST new teacher
+app.post('/api/nd/teachers', async (req, res) => {
+  try {
+    const {
+      teacher_key,
+      full_name,
+      professional_title,
+      company,
+      bio,
+      profile_image_url,
+      skills,
+      experience_history,
+      courses_taught,
+      student_reviews,
+      statistics,
+      contact_info,
+      social_links,
+      is_featured = false,
+      display_order = 999,
+      is_active = true
+    } = req.body;
+
+    console.log('📝 Creating new teacher:', full_name);
+
+    const query = `
+      INSERT INTO entity_teachers (
+        teacher_key, full_name, professional_title, company,
+        bio, profile_image_url,
+        skills, experience_history, courses_taught, student_reviews,
+        statistics, contact_info, social_links,
+        is_featured, display_order, is_active
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+      RETURNING *
+    `;
+
+    const values = [
+      teacher_key || full_name?.toLowerCase().replace(/\s+/g, '-'),
+      full_name,
+      professional_title,
+      company,
+      bio,
+      profile_image_url,
+      JSON.stringify(skills || []),
+      JSON.stringify(experience_history || []),
+      JSON.stringify(courses_taught || []),
+      JSON.stringify(student_reviews || []),
+      JSON.stringify(statistics || {}),
+      JSON.stringify(contact_info || {}),
+      JSON.stringify(social_links || {}),
+      is_featured,
+      display_order,
+      is_active
+    ];
+
+    const result = await queryDatabase(query, values);
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: 'Teacher created successfully'
+    });
+  } catch (error) {
+    console.error('Error creating teacher:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// PUT update teacher
+app.put('/api/nd/teachers/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    console.log('📝 Updating teacher ID:', id);
+
+    // Build dynamic update query
+    const updateFields = [];
+    const values = [];
+    let valueIndex = 1;
+
+    const jsonFields = ['skills', 'experience_history', 'courses_taught', 'student_reviews', 'statistics', 'contact_info', 'social_links'];
+
+    for (const [key, value] of Object.entries(updates)) {
+      if (key !== 'id') {
+        updateFields.push(`${key} = $${valueIndex}`);
+        if (jsonFields.includes(key)) {
+          values.push(JSON.stringify(value));
+        } else {
+          values.push(value);
+        }
+        valueIndex++;
+      }
+    }
+
+    values.push(id); // Add ID as last parameter
+
+    const query = `
+      UPDATE entity_teachers
+      SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $${valueIndex}
+      RETURNING *
+    `;
+
+    const result = await queryDatabase(query, values);
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Teacher not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: 'Teacher updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating teacher:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// DELETE teacher
+app.delete('/api/nd/teachers/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log('🗑️ Deleting teacher ID:', id);
+
+    const query = `
+      DELETE FROM entity_teachers
+      WHERE id = $1
+      RETURNING id, full_name
+    `;
+
+    const result = await queryDatabase(query, [id]);
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Teacher not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: `Teacher ${result[0].full_name} deleted successfully`
+    });
+  } catch (error) {
+    console.error('Error deleting teacher:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Start server
 
 // ==================== UI MIGRATION ENDPOINT ====================
@@ -7904,6 +8060,158 @@ app.get('/api/nd/menu', async (req, res) => {
   }
 });
 
+// PUT update menu for new design
+app.put('/api/nd/menu/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      parent_id,
+      order_index,
+      visible,
+      label_en,
+      label_ru,
+      label_he,
+      url,
+      icon_class,
+      menu_type
+    } = req.body;
+
+    console.log('📝 Updating menu item ID:', id);
+
+    const query = `
+      UPDATE nd_menu
+      SET
+        parent_id = $1,
+        order_index = $2,
+        visible = $3,
+        label_en = $4,
+        label_ru = $5,
+        label_he = $6,
+        url = $7,
+        icon_class = $8,
+        menu_type = $9,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = $10
+      RETURNING *
+    `;
+
+    const values = [
+      parent_id,
+      order_index,
+      visible,
+      label_en,
+      label_ru,
+      label_he,
+      url,
+      icon_class,
+      menu_type,
+      id
+    ];
+
+    const result = await queryDatabase(query, values);
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Menu item not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: 'Menu item updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating menu item:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// POST new menu item
+app.post('/api/nd/menu', async (req, res) => {
+  try {
+    const {
+      parent_id = null,
+      order_index = 999,
+      visible = true,
+      label_en,
+      label_ru,
+      label_he,
+      url,
+      icon_class,
+      menu_type = 'main'
+    } = req.body;
+
+    console.log('📝 Creating new menu item:', label_en);
+
+    const query = `
+      INSERT INTO nd_menu (
+        parent_id, order_index, visible,
+        label_en, label_ru, label_he,
+        url, icon_class, menu_type
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING *
+    `;
+
+    const values = [
+      parent_id,
+      order_index,
+      visible,
+      label_en,
+      label_ru || label_en,
+      label_he || label_en,
+      url,
+      icon_class,
+      menu_type
+    ];
+
+    const result = await queryDatabase(query, values);
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: 'Menu item created successfully'
+    });
+  } catch (error) {
+    console.error('Error creating menu item:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// DELETE menu item
+app.delete('/api/nd/menu/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log('🗑️ Deleting menu item ID:', id);
+
+    const query = `
+      DELETE FROM nd_menu
+      WHERE id = $1
+      RETURNING id, label_en
+    `;
+
+    const result = await queryDatabase(query, [id]);
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Menu item not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: `Menu item ${result[0].label_en} deleted successfully`
+    });
+  } catch (error) {
+    console.error('Error deleting menu item:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Get footer for new design
 app.get('/api/nd/footer', async (req, res) => {
   try {
@@ -7993,6 +8301,444 @@ app.get('/api/nd/footer', async (req, res) => {
       error: 'Failed to fetch footer',
       message: error.message
     });
+  }
+});
+
+// PUT update footer for new design
+app.put('/api/nd/footer/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      section_type,
+      column_number,
+      item_type,
+      content_en,
+      content_ru,
+      content_he,
+      url,
+      icon_class,
+      placeholder_en,
+      placeholder_ru,
+      placeholder_he,
+      button_text_en,
+      button_text_ru,
+      button_text_he,
+      order_index,
+      visible
+    } = req.body;
+
+    console.log('📝 Updating footer item ID:', id);
+
+    const query = `
+      UPDATE nd_footer
+      SET
+        section_type = $1,
+        column_number = $2,
+        item_type = $3,
+        content_en = $4,
+        content_ru = $5,
+        content_he = $6,
+        url = $7,
+        icon_class = $8,
+        placeholder_en = $9,
+        placeholder_ru = $10,
+        placeholder_he = $11,
+        button_text_en = $12,
+        button_text_ru = $13,
+        button_text_he = $14,
+        order_index = $15,
+        visible = $16,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = $17
+      RETURNING *
+    `;
+
+    const values = [
+      section_type,
+      column_number,
+      item_type,
+      content_en,
+      content_ru,
+      content_he,
+      url,
+      icon_class,
+      placeholder_en,
+      placeholder_ru,
+      placeholder_he,
+      button_text_en,
+      button_text_ru,
+      button_text_he,
+      order_index,
+      visible,
+      id
+    ];
+
+    const result = await queryDatabase(query, values);
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Footer item not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: 'Footer item updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating footer item:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// POST new footer item
+app.post('/api/nd/footer', async (req, res) => {
+  try {
+    const {
+      section_type,
+      column_number = null,
+      item_type,
+      content_en,
+      content_ru,
+      content_he,
+      url = null,
+      icon_class = null,
+      placeholder_en = null,
+      placeholder_ru = null,
+      placeholder_he = null,
+      button_text_en = null,
+      button_text_ru = null,
+      button_text_he = null,
+      order_index = 999,
+      visible = true
+    } = req.body;
+
+    console.log('📝 Creating new footer item:', content_en);
+
+    const query = `
+      INSERT INTO nd_footer (
+        section_type, column_number, item_type,
+        content_en, content_ru, content_he,
+        url, icon_class,
+        placeholder_en, placeholder_ru, placeholder_he,
+        button_text_en, button_text_ru, button_text_he,
+        order_index, visible
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+      RETURNING *
+    `;
+
+    const values = [
+      section_type,
+      column_number,
+      item_type,
+      content_en,
+      content_ru || content_en,
+      content_he || content_en,
+      url,
+      icon_class,
+      placeholder_en,
+      placeholder_ru || placeholder_en,
+      placeholder_he || placeholder_en,
+      button_text_en,
+      button_text_ru || button_text_en,
+      button_text_he || button_text_en,
+      order_index,
+      visible
+    ];
+
+    const result = await queryDatabase(query, values);
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: 'Footer item created successfully'
+    });
+  } catch (error) {
+    console.error('Error creating footer item:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// DELETE footer item
+app.delete('/api/nd/footer/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log('🗑️ Deleting footer item ID:', id);
+
+    const query = `
+      DELETE FROM nd_footer
+      WHERE id = $1
+      RETURNING id, content_en
+    `;
+
+    const result = await queryDatabase(query, [id]);
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Footer item not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: `Footer item deleted successfully`
+    });
+  } catch (error) {
+    console.error('Error deleting footer item:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// GET all blog posts for new design
+app.get('/api/nd/blog', async (req, res) => {
+  try {
+    const { locale = 'en', preview = false } = req.query;
+
+    console.log(`📝 Fetching ND blog posts for locale: ${locale}${preview ? ' (preview mode)' : ''}`);
+
+    const query = `
+      SELECT
+        id, blog_key, title, summary, content, author_name, author_role,
+        author_image_url, publish_date, category, tags, featured_image_url,
+        meta_title, meta_description, reading_time_minutes,
+        is_featured, is_published, display_order,
+        created_at, updated_at
+      FROM entity_blogs
+      ${!preview ? 'WHERE is_published = true' : ''}
+      ORDER BY display_order ASC, publish_date DESC
+    `;
+
+    const blogs = await queryDatabase(query);
+
+    res.json({
+      success: true,
+      data: blogs.map(blog => ({
+        id: blog.id,
+        blog_key: blog.blog_key,
+        title: blog.title,
+        summary: blog.summary,
+        content: blog.content,
+        author_name: blog.author_name,
+        author_role: blog.author_role,
+        author_image_url: blog.author_image_url,
+        publish_date: blog.publish_date,
+        category: blog.category,
+        tags: blog.tags,
+        featured_image_url: blog.featured_image_url,
+        meta_title: blog.meta_title,
+        meta_description: blog.meta_description,
+        reading_time_minutes: blog.reading_time_minutes,
+        is_featured: blog.is_featured,
+        is_published: blog.is_published,
+        display_order: blog.display_order,
+        created_at: blog.created_at,
+        updated_at: blog.updated_at
+      }))
+    });
+  } catch (error) {
+    console.error('Error fetching ND blog posts:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// GET single blog post by ID for new design
+app.get('/api/nd/blog/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { preview = false } = req.query;
+
+    console.log(`📝 Fetching ND blog post ID: ${id}${preview ? ' (preview mode)' : ''}`);
+
+    const query = `
+      SELECT
+        id, blog_key, title, summary, content, author_name, author_role,
+        author_image_url, publish_date, category, tags, featured_image_url,
+        meta_title, meta_description, reading_time_minutes,
+        is_featured, is_published, display_order,
+        created_at, updated_at
+      FROM entity_blogs
+      WHERE id = $1 ${!preview ? 'AND is_published = true' : ''}
+    `;
+
+    const blogs = await queryDatabase(query, [id]);
+
+    if (blogs.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Blog post not found',
+        debug: { id, preview }
+      });
+    }
+
+    res.json({
+      success: true,
+      data: blogs[0]
+    });
+  } catch (error) {
+    console.error('Error fetching ND blog post:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// POST new blog post for new design
+app.post('/api/nd/blog', async (req, res) => {
+  try {
+    const {
+      blog_key,
+      title,
+      summary,
+      content,
+      author_name,
+      author_role,
+      author_image_url,
+      publish_date,
+      category,
+      tags,
+      featured_image_url,
+      meta_title,
+      meta_description,
+      reading_time_minutes,
+      is_featured = false,
+      is_published = false,
+      display_order = 999
+    } = req.body;
+
+    console.log('📝 Creating new blog post:', title);
+
+    const query = `
+      INSERT INTO entity_blogs (
+        blog_key, title, summary, content, author_name, author_role,
+        author_image_url, publish_date, category, tags, featured_image_url,
+        meta_title, meta_description, reading_time_minutes,
+        is_featured, is_published, display_order
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+      RETURNING *
+    `;
+
+    const values = [
+      blog_key || title?.toLowerCase().replace(/\s+/g, '-'),
+      title,
+      summary,
+      content,
+      author_name,
+      author_role,
+      author_image_url,
+      publish_date || new Date().toISOString(),
+      category,
+      JSON.stringify(tags || []),
+      featured_image_url,
+      meta_title || title,
+      meta_description || summary,
+      reading_time_minutes || Math.ceil(content?.split(' ').length / 200) || 5,
+      is_featured,
+      is_published,
+      display_order
+    ];
+
+    const result = await queryDatabase(query, values);
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: 'Blog post created successfully'
+    });
+  } catch (error) {
+    console.error('Error creating blog post:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// PUT update blog post for new design
+app.put('/api/nd/blog/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    console.log('📝 Updating blog post ID:', id);
+
+    // Build dynamic update query
+    const updateFields = [];
+    const values = [];
+    let valueIndex = 1;
+
+    const jsonFields = ['tags'];
+
+    for (const [key, value] of Object.entries(updates)) {
+      if (key !== 'id') {
+        updateFields.push(`${key} = $${valueIndex}`);
+        if (jsonFields.includes(key)) {
+          values.push(JSON.stringify(value));
+        } else {
+          values.push(value);
+        }
+        valueIndex++;
+      }
+    }
+
+    values.push(id); // Add ID as last parameter
+
+    const query = `
+      UPDATE entity_blogs
+      SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $${valueIndex}
+      RETURNING *
+    `;
+
+    const result = await queryDatabase(query, values);
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Blog post not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: 'Blog post updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating blog post:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// DELETE blog post for new design
+app.delete('/api/nd/blog/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log('🗑️ Deleting blog post ID:', id);
+
+    const query = `
+      DELETE FROM entity_blogs
+      WHERE id = $1
+      RETURNING id, title
+    `;
+
+    const result = await queryDatabase(query, [id]);
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Blog post not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: `Blog post "${result[0].title}" deleted successfully`
+    });
+  } catch (error) {
+    console.error('Error deleting blog post:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

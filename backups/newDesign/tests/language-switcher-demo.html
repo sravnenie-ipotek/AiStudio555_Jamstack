@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Switcher Variations - Zohacous</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #05051a 0%, #050f2c 50%, #04193f 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .demo-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: #ffd659;
+            margin-bottom: 16px;
+        }
+
+        .demo-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+        }
+
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .variation-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .variation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .variation-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffd659;
+            margin-bottom: 8px;
+        }
+
+        .variation-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 32px;
+        }
+
+        .variation-demo {
+            margin-bottom: 24px;
+        }
+
+        /* Variation 1: Minimal Dropdown */
+        .lang-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .lang-dropdown-trigger {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .lang-dropdown-trigger:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #ffd659;
+        }
+
+        .globe-icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .dropdown-arrow {
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .lang-dropdown.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .lang-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 8px;
+            background: rgba(5, 5, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .lang-dropdown.active .lang-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .lang-option {
+            display: block;
+            padding: 10px 12px;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+
+        .lang-option:hover,
+        .lang-option.active {
+            background: rgba(255, 214, 89, 0.2);
+            color: #ffd659;
+        }
+
+        /* Variation 2: Pill Toggle */
+        .lang-pills {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .lang-pill {
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .lang-pill:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .lang-pill.active {
+            background: #ffd659;
+            color: #05051a;
+        }
+
+        /* Variation 3: Tab Style */
+        .lang-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .lang-tab {
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .lang-tab:hover {
+            color: #ffffff;
+        }
+
+        .lang-tab.active {
+            color: #ffd659;
+            border-bottom-color: #ffd659;
+        }
+
+        /* Variation 4: Icon + Text Cards */
+        .lang-cards {
+            display: flex;
+            gap: 8px;
+        }
+
+        .lang-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-width: 60px;
+        }
+
+        .lang-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 214, 89, 0.5);
+            color: #ffffff;
+        }
+
+        .lang-card.active {
+            background: rgba(255, 214, 89, 0.2);
+            border-color: #ffd659;
+            color: #ffd659;
+        }
+
+        .translate-icon {
+            width: 20px;
+            height: 20px;
+            margin-bottom: 4px;
+            fill: currentColor;
+        }
+
+        /* Variation 5: Compact Buttons */
+        .lang-buttons {
+            display: flex;
+            gap: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 2px;
+        }
+
+        .lang-button {
+            padding: 8px 12px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .lang-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .lang-button.active {
+            background: #0080ff;
+            color: #ffffff;
+        }
+
+        /* Features list */
+        .features-list {
+            list-style: none;
+            text-align: left;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .features-list li {
+            margin-bottom: 4px;
+            position: relative;
+            padding-left: 16px;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #ffd659;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .demo-title {
+                font-size: 36px;
+            }
+
+            .variations-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .lang-cards {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1 class="demo-title">Language Switcher Variations</h1>
+            <p class="demo-subtitle">Choose your preferred language selector design following 2025 UX best practices</p>
+        </div>
+
+        <div class="variations-grid">
+            <!-- Variation 1: Minimal Dropdown -->
+            <div class="variation-card">
+                <h3 class="variation-title">1. Minimal Dropdown</h3>
+                <p class="variation-description">Clean dropdown with globe icon and native language names</p>
+
+                <div class="variation-demo">
+                    <div class="lang-dropdown" onclick="toggleDropdown(this)">
+                        <div class="lang-dropdown-trigger">
+                            <svg class="globe-icon" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                            </svg>
+                            <span>English</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="lang-dropdown-menu">
+                            <a href="#" class="lang-option active">English</a>
+                            <a href="#" class="lang-option">Русский</a>
+                            <a href="#" class="lang-option">עברית</a>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li>Space efficient</li>
+                    <li>Clear visual hierarchy</li>
+                    <li>Globe icon universally understood</li>
+                    <li>Scales well with more languages</li>
+                </ul>
+            </div>
+
+            <!-- Variation 2: Pill Toggle -->
+            <div class="variation-card">
+                <h3 class="variation-title">2. Pill Toggle</h3>
+                <p class="variation-description">Modern pill-style toggle with smooth transitions</p>
+
+                <div class="variation-demo">
+                    <div class="lang-pills">
+                        <a href="#" class="lang-pill active" onclick="setActivePill(this)">EN</a>
+                        <a href="#" class="lang-pill" onclick="setActivePill(this)">RU</a>
+                        <a href="#" class="lang-pill" onclick="setActivePill(this)">HE</a>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li>All options visible</li>
+                    <li>Quick switching</li>
+                    <li>Modern design aesthetic</li>
+                    <li>Touch-friendly</li>
+                </ul>
+            </div>
+
+            <!-- Variation 3: Tab Style -->
+            <div class="variation-card">
+                <h3 class="variation-title">3. Tab Style</h3>
+                <p class="variation-description">Classic tab interface with underline active state</p>
+
+                <div class="variation-demo">
+                    <div class="lang-tabs">
+                        <a href="#" class="lang-tab active" onclick="setActiveTab(this)">English</a>
+                        <a href="#" class="lang-tab" onclick="setActiveTab(this)">Русский</a>
+                        <a href="#" class="lang-tab" onclick="setActiveTab(this)">עברית</a>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li>Familiar interface pattern</li>
+                    <li>Full language names</li>
+                    <li>Clear active state</li>
+                    <li>Accessible design</li>
+                </ul>
+            </div>
+
+            <!-- Variation 4: Icon + Text Cards -->
+            <div class="variation-card">
+                <h3 class="variation-title">4. Icon + Text Cards</h3>
+                <p class="variation-description">Small cards with translate icon and language codes</p>
+
+                <div class="variation-demo">
+                    <div class="lang-cards">
+                        <a href="#" class="lang-card active" onclick="setActiveCard(this)">
+                            <svg class="translate-icon" viewBox="0 0 24 24">
+                                <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
+                            </svg>
+                            EN
+                        </a>
+                        <a href="#" class="lang-card" onclick="setActiveCard(this)">
+                            <svg class="translate-icon" viewBox="0 0 24 24">
+                                <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
+                            </svg>
+                            RU
+                        </a>
+                        <a href="#" class="lang-card" onclick="setActiveCard(this)">
+                            <svg class="translate-icon" viewBox="0 0 24 24">
+                                <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
+                            </svg>
+                            HE
+                        </a>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li>Visual icon recognition</li>
+                    <li>Compact design</li>
+                    <li>Individual selection areas</li>
+                    <li>Easy to scan</li>
+                </ul>
+            </div>
+
+            <!-- Variation 5: Compact Buttons -->
+            <div class="variation-card">
+                <h3 class="variation-title">5. Compact Buttons</h3>
+                <p class="variation-description">Tight button group with blue active state</p>
+
+                <div class="variation-demo">
+                    <div class="lang-buttons">
+                        <a href="#" class="lang-button active" onclick="setActiveButton(this)">English</a>
+                        <a href="#" class="lang-button" onclick="setActiveButton(this)">Русский</a>
+                        <a href="#" class="lang-button" onclick="setActiveButton(this)">עברית</a>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li>Minimal footprint</li>
+                    <li>Clear button states</li>
+                    <li>Fast switching</li>
+                    <li>Fits in tight spaces</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dropdown functionality
+        function toggleDropdown(element) {
+            element.classList.toggle('active');
+
+            // Close other dropdowns
+            document.querySelectorAll('.lang-dropdown').forEach(dropdown => {
+                if (dropdown !== element) {
+                    dropdown.classList.remove('active');
+                }
+            });
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.lang-dropdown')) {
+                document.querySelectorAll('.lang-dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }
+        });
+
+        // Pill toggle functionality
+        function setActivePill(element) {
+            element.parentNode.querySelectorAll('.lang-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // Tab functionality
+        function setActiveTab(element) {
+            element.parentNode.querySelectorAll('.lang-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // Card functionality
+        function setActiveCard(element) {
+            element.parentNode.querySelectorAll('.lang-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // Button functionality
+        function setActiveButton(element) {
+            element.parentNode.querySelectorAll('.lang-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Profile Image Generator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 2px solid #9ae6b4;
+        }
+
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 2px solid #fc8181;
+        }
+
+        .status.info {
+            background: #bee3f8;
+            color: #2a4365;
+            border: 2px solid #63b3ed;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .teacher-preview {
+            background: #050f2c;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 280px;
+            background: #1a202c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0aec0;
+        }
+
+        .teacher-info {
+            padding: 20px;
+            color: white;
+        }
+
+        .teacher-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .teacher-title {
+            font-size: 14px;
+            color: #667eea;
+            margin-bottom: 12px;
+        }
+
+        .teacher-company {
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        canvas {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Teacher Profile Image Generator</h1>
+        <div class="status info">
+            Generating professional abstract profile images for teachers without faces - following company design standards
+        </div>
+
+        <div class="controls">
+            <button onclick="generateAllImages()">🚀 Generate All Teacher Images</button>
+            <button onclick="downloadAllImages()">📥 Download All Images</button>
+            <button onclick="clearPreviews()">🗑️ Clear Previews</button>
+        </div>
+
+        <div id="status-container"></div>
+        <div id="preview-container" class="preview-grid"></div>
+
+        <canvas id="canvas" width="400" height="400"></canvas>
+    </div>
+
+    <script>
+        // Teacher profile designs based on their expertise and company
+        const teacherDesigns = {
+            'machine-learning': {
+                gradients: [
+                    ['#4facfe', '#00f2fe'],  // AI Blue
+                    ['#a8edea', '#fed6e3'],  // Soft ML
+                    ['#667eea', '#764ba2']   // Purple Tech
+                ],
+                icons: ['🧠', '🤖', '⚡', '🔬'],
+                patterns: ['neural', 'circuit', 'data']
+            },
+            'development': {
+                gradients: [
+                    ['#11998e', '#38ef7d'],  // Green Code
+                    ['#667eea', '#764ba2'],  // Purple Dev
+                    ['#f093fb', '#f5576c']   // Pink Code
+                ],
+                icons: ['💻', '⚙️', '🔧', '📱'],
+                patterns: ['code', 'brackets', 'terminal']
+            },
+            'data-analytics': {
+                gradients: [
+                    ['#ff6b6b', '#ffa500'],  // Orange Analytics
+                    ['#4ecdc4', '#44a08d'],  // Teal Data
+                    ['#667eea', '#764ba2']   // Purple Analytics
+                ],
+                icons: ['📊', '📈', '🎯', '💎'],
+                patterns: ['charts', 'graphs', 'analytics']
+            },
+            'cloud-devops': {
+                gradients: [
+                    ['#43e97b', '#38f9d7'],  // Green Cloud
+                    ['#667eea', '#764ba2'],  // Purple DevOps
+                    ['#4facfe', '#00f2fe']   // Blue Cloud
+                ],
+                icons: ['☁️', '🔄', '⚡', '🚀'],
+                patterns: ['cloud', 'infrastructure', 'pipeline']
+            },
+            'design': {
+                gradients: [
+                    ['#feca57', '#ff9ff3'],  // Creative Orange
+                    ['#f093fb', '#f5576c'],  // Pink Design
+                    ['#667eea', '#764ba2']   // Purple Creative
+                ],
+                icons: ['🎨', '✨', '🖌️', '💫'],
+                patterns: ['creative', 'design', 'artistic']
+            },
+            'management': {
+                gradients: [
+                    ['#667eea', '#764ba2'],  // Purple Leadership
+                    ['#11998e', '#38ef7d'],  // Green Management
+                    ['#4facfe', '#00f2fe']   // Blue Strategy
+                ],
+                icons: ['👑', '🎯', '📋', '⭐'],
+                patterns: ['leadership', 'strategy', 'management']
+            }
+        };
+
+        // Company brand colors
+        const companyColors = {
+            'Google': ['#4285F4', '#34A853', '#FBBC05', '#EA4335'],
+            'OpenAI': ['#412991', '#10a37f'],
+            'Meta': ['#1877F2', '#42B883'],
+            'Tesla': ['#CC0000', '#000000'],
+            'Microsoft': ['#00BCF2', '#FFB900'],
+            'Amazon': ['#FF9900', '#232F3E'],
+            'Stripe': ['#635BFF', '#00D924'],
+            'Slack': ['#4A154B', '#ECB22E'],
+            'Twitter': ['#1DA1F2', '#14171A'],
+            'Apple': ['#007AFF', '#5856D6'],
+            'Spotify': ['#1DB954', '#191414'],
+            'AWS': ['#FF9900', '#232F3E'],
+            'GitHub': ['#24292e', '#0366d6'],
+            'Salesforce': ['#00A1E0', '#1798C1'],
+            'Airbnb': ['#FF5A5F', '#767676'],
+            'Adobe': ['#FF0000', '#FA0F00']
+        };
+
+        const teachers = [
+            {
+                id: 30,
+                name: "Dr. Sarah Chen",
+                title: "Senior ML Engineer",
+                company: "Google",
+                category: "machine-learning",
+                specialties: "Machine Learning, Deep Learning, Neural Networks"
+            },
+            {
+                id: 31,
+                name: "Dr. Michael Rodriguez",
+                title: "AI Research Scientist",
+                company: "OpenAI",
+                category: "machine-learning",
+                specialties: "Artificial Intelligence, Large Language Models"
+            },
+            {
+                id: 32,
+                name: "Dr. Elena Petrov",
+                title: "Head of Data Science",
+                company: "Meta",
+                category: "machine-learning",
+                specialties: "Data Science, Machine Learning, Recommendation Systems"
+            },
+            {
+                id: 33,
+                name: "David Kim",
+                title: "Computer Vision Engineer",
+                company: "Tesla",
+                category: "development",
+                specialties: "Computer Vision, Autonomous Driving, Deep Learning"
+            },
+            {
+                id: 34,
+                name: "Anna Kowalski",
+                title: "Senior Software Engineer",
+                company: "Microsoft",
+                category: "development",
+                specialties: "Software Engineering, Cloud Architecture, Microservices"
+            },
+            {
+                id: 35,
+                name: "Dr. James Wilson",
+                title: "Principal Data Scientist",
+                company: "Amazon",
+                category: "data-analytics",
+                specialties: "Data Science, Analytics, Machine Learning"
+            },
+            {
+                id: 36,
+                name: "Maria Santos",
+                title: "Data Analytics Lead",
+                company: "Stripe",
+                category: "data-analytics",
+                specialties: "Data Analytics, Financial Data, Fraud Detection"
+            },
+            {
+                id: 37,
+                name: "Alex Thompson",
+                title: "Senior Backend Engineer",
+                company: "Slack",
+                category: "cloud-devops",
+                specialties: "Backend Engineering, Distributed Systems"
+            },
+            {
+                id: 38,
+                name: "Lisa Zhang",
+                title: "DevOps Architect",
+                company: "Twitter",
+                category: "cloud-devops",
+                specialties: "DevOps, Cloud Infrastructure, CI/CD"
+            },
+            {
+                id: 39,
+                name: "Robert Johnson",
+                title: "UX Design Lead",
+                company: "Apple",
+                category: "design",
+                specialties: "UX Design, User Research, Prototyping"
+            },
+            {
+                id: 40,
+                name: "Sofia Andersson",
+                title: "Product Designer",
+                company: "Spotify",
+                category: "design",
+                specialties: "Product Design, UI Design, User Interface"
+            },
+            {
+                id: 41,
+                name: "Raj Patel",
+                title: "Engineering Manager",
+                company: "AWS",
+                category: "management",
+                specialties: "Engineering Management, Team Leadership"
+            },
+            {
+                id: 42,
+                name: "Jennifer Wu",
+                title: "Technical Program Manager",
+                company: "GitHub",
+                category: "management",
+                specialties: "Program Management, Cross-functional Leadership"
+            },
+            {
+                id: 43,
+                name: "Marcus Brown",
+                title: "Product Manager",
+                company: "Salesforce",
+                category: "management",
+                specialties: "Product Management, Enterprise Software"
+            },
+            {
+                id: 44,
+                name: "Sarah Kim",
+                title: "Senior Product Manager",
+                company: "Airbnb",
+                category: "management",
+                specialties: "Product Management, Marketplace Platforms"
+            },
+            {
+                id: 45,
+                name: "Emma Davis",
+                title: "Principal Designer",
+                company: "Adobe",
+                category: "design",
+                specialties: "Design Leadership, Creative Software"
+            }
+        ];
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const generatedImages = {};
+
+        function showStatus(message, type = 'info') {
+            const container = document.getElementById('status-container');
+            const status = document.createElement('div');
+            status.className = `status ${type}`;
+            status.textContent = message;
+            container.appendChild(status);
+
+            setTimeout(() => {
+                container.removeChild(status);
+            }, 5000);
+        }
+
+        function generateTeacherImage(teacher) {
+            return new Promise((resolve) => {
+                const design = teacherDesigns[teacher.category];
+                const companyColor = companyColors[teacher.company];
+
+                // Choose gradient (mix category design with company colors)
+                let gradient;
+                if (companyColor && Math.random() > 0.3) {
+                    gradient = [companyColor[0], companyColor[1] || companyColor[0]];
+                } else {
+                    gradient = design.gradients[Math.floor(Math.random() * design.gradients.length)];
+                }
+
+                // Create gradient background
+                const grad = ctx.createLinearGradient(0, 0, 400, 400);
+                grad.addColorStop(0, gradient[0]);
+                grad.addColorStop(1, gradient[1]);
+
+                // Clear and fill background
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 400, 400);
+
+                // Add geometric overlay pattern
+                ctx.globalAlpha = 0.1;
+                drawGeometricPattern(teacher.category);
+                ctx.globalAlpha = 1;
+
+                // Add main icon/symbol (large, centered)
+                const icon = design.icons[Math.floor(Math.random() * design.icons.length)];
+                ctx.font = 'bold 120px Arial';
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.textAlign = 'center';
+                ctx.fillText(icon, 200, 220);
+
+                // Add company initial in corner
+                if (teacher.company) {
+                    ctx.font = 'bold 40px Arial';
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(teacher.company[0], 30, 50);
+                }
+
+                // Add category indicator
+                const categoryShort = teacher.category.split('-')[0].toUpperCase();
+                ctx.font = 'bold 16px Arial';
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.textAlign = 'right';
+                ctx.fillText(categoryShort, 370, 380);
+
+                // Add subtle tech pattern overlay
+                ctx.globalAlpha = 0.05;
+                drawTechPattern();
+                ctx.globalAlpha = 1;
+
+                // Convert to blob and resolve
+                canvas.toBlob(resolve, 'image/jpeg', 0.9);
+            });
+        }
+
+        function drawGeometricPattern(category) {
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = 2;
+
+            switch(category) {
+                case 'machine-learning':
+                    // Neural network pattern
+                    for (let i = 0; i < 8; i++) {
+                        for (let j = 0; j < 8; j++) {
+                            const x = i * 50 + 25;
+                            const y = j * 50 + 25;
+                            ctx.beginPath();
+                            ctx.arc(x, y, 3, 0, Math.PI * 2);
+                            ctx.stroke();
+
+                            // Connect some nodes
+                            if (Math.random() > 0.7) {
+                                ctx.beginPath();
+                                ctx.moveTo(x, y);
+                                ctx.lineTo(x + 50, y + 50);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                    break;
+
+                case 'development':
+                    // Code brackets pattern
+                    for (let i = 0; i < 10; i++) {
+                        const x = Math.random() * 400;
+                        const y = Math.random() * 400;
+                        ctx.font = '24px monospace';
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                        ctx.fillText(['</', '{}', '()', '[]'][Math.floor(Math.random() * 4)], x, y);
+                    }
+                    break;
+
+                case 'data-analytics':
+                    // Chart bars pattern
+                    for (let i = 0; i < 12; i++) {
+                        const x = i * 35;
+                        const height = Math.random() * 200 + 50;
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                        ctx.fillRect(x, 400 - height, 20, height);
+                    }
+                    break;
+
+                case 'cloud-devops':
+                    // Cloud/infrastructure grid
+                    for (let i = 0; i < 400; i += 40) {
+                        ctx.beginPath();
+                        ctx.moveTo(i, 0);
+                        ctx.lineTo(i, 400);
+                        ctx.moveTo(0, i);
+                        ctx.lineTo(400, i);
+                        ctx.stroke();
+                    }
+                    break;
+
+                case 'design':
+                    // Creative circles and curves
+                    for (let i = 0; i < 6; i++) {
+                        const x = Math.random() * 400;
+                        const y = Math.random() * 400;
+                        const radius = Math.random() * 100 + 20;
+                        ctx.beginPath();
+                        ctx.arc(x, y, radius, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
+                    break;
+
+                case 'management':
+                    // Leadership hierarchy pattern
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+                    ctx.lineWidth = 3;
+                    for (let i = 1; i < 6; i++) {
+                        const y = i * 60;
+                        ctx.beginPath();
+                        ctx.moveTo(50, y);
+                        ctx.lineTo(350, y);
+                        ctx.stroke();
+
+                        // Add connecting lines
+                        for (let j = 0; j < i; j++) {
+                            const x = 100 + j * 50;
+                            ctx.beginPath();
+                            ctx.moveTo(x, y - 30);
+                            ctx.lineTo(x, y);
+                            ctx.stroke();
+                        }
+                    }
+                    break;
+            }
+        }
+
+        function drawTechPattern() {
+            // Add subtle tech grid overlay
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+
+            for (let i = 0; i < 400; i += 20) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, 400);
+                ctx.moveTo(0, i);
+                ctx.lineTo(400, i);
+                ctx.stroke();
+            }
+        }
+
+        function createPreviewCard(teacher, imageBlob) {
+            const preview = document.createElement('div');
+            preview.className = 'teacher-preview';
+            preview.innerHTML = `
+                <div class="preview-image">
+                    <img src="${URL.createObjectURL(imageBlob)}"
+                         alt="${teacher.name}"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="teacher-info">
+                    <div class="teacher-name">${teacher.name}</div>
+                    <div class="teacher-title">${teacher.title}</div>
+                    <div class="teacher-company">${teacher.company}</div>
+                </div>
+            `;
+
+            return preview;
+        }
+
+        async function generateAllImages() {
+            showStatus('🚀 Starting teacher image generation...', 'info');
+            const previewContainer = document.getElementById('preview-container');
+            previewContainer.innerHTML = '';
+
+            for (let i = 0; i < teachers.length; i++) {
+                const teacher = teachers[i];
+                showStatus(`🎨 Generating image for ${teacher.name} (${i + 1}/${teachers.length})`, 'info');
+
+                try {
+                    const imageBlob = await generateTeacherImage(teacher);
+                    generatedImages[teacher.id] = imageBlob;
+
+                    const previewCard = createPreviewCard(teacher, imageBlob);
+                    previewContainer.appendChild(previewCard);
+
+                    showStatus(`✅ Generated image for ${teacher.name}`, 'success');
+                } catch (error) {
+                    showStatus(`❌ Failed to generate image for ${teacher.name}: ${error.message}`, 'error');
+                }
+
+                // Small delay to prevent UI blocking
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            showStatus('🎉 All teacher images generated successfully!', 'success');
+        }
+
+        function downloadAllImages() {
+            if (Object.keys(generatedImages).length === 0) {
+                showStatus('⚠️ No images to download. Generate images first.', 'error');
+                return;
+            }
+
+            showStatus('📥 Starting downloads...', 'info');
+
+            Object.entries(generatedImages).forEach(([teacherId, blob]) => {
+                const teacher = teachers.find(t => t.id == teacherId);
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `teacher-${teacherId}-${teacher.name.replace(/\s+/g, '-').toLowerCase()}.jpg`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+
+            showStatus('✅ All images downloaded!', 'success');
+        }
+
+        function clearPreviews() {
+            document.getElementById('preview-container').innerHTML = '';
+            Object.keys(generatedImages).forEach(key => delete generatedImages[key]);
+            showStatus('🗑️ Previews cleared', 'info');
+        }
+
+        // Auto-generate on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            showStatus('🎨 Teacher Profile Image Generator Ready!', 'success');
+        });
+    </script>
+</body>
+</html>

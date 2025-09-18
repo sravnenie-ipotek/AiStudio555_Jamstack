@@ -1,0 +1,436 @@
+/**
+ * Teachers API Endpoints for NewDesign System
+ * Following Single Table Design Philosophy & RESTful Pattern
+ * Supports LinkedIn-style comprehensive teacher profiles
+ */
+
+// Teachers API Endpoints to add to server.js
+
+// =============================================================================
+// GET ALL TEACHERS (List View)
+// URL: /api/nd/teachers
+// =============================================================================
+
+const getTeachersEndpoint = `
+// GET all teachers (NewDesign system)
+app.get('/api/nd/teachers', async (req, res) => {
+  try {
+    const { locale = 'en', category, featured, limit, offset = 0 } = req.query;
+    console.log('🎓 Fetching teachers list...', { locale, category, featured });
+
+    let query = \`
+      SELECT
+        id, teacher_key,
+        COALESCE(
+          CASE
+            WHEN $1 = 'ru' THEN NULLIF(full_name_ru, '')
+            WHEN $1 = 'he' THEN NULLIF(full_name_he, '')
+          END,
+          full_name
+        ) as full_name,
+        COALESCE(
+          CASE
+            WHEN $1 = 'ru' THEN NULLIF(professional_title_ru, '')
+            WHEN $1 = 'he' THEN NULLIF(professional_title_he, '')
+          END,
+          professional_title
+        ) as professional_title,
+        COALESCE(
+          CASE
+            WHEN $1 = 'ru' THEN NULLIF(short_bio_ru, '')
+            WHEN $1 = 'he' THEN NULLIF(short_bio_he, '')
+          END,
+          short_bio
+        ) as short_bio,
+        company, years_experience, students_taught, courses_count, rating,
+        profile_image_url, primary_expertise, category_tags,
+        is_featured, is_visible, is_active, accepts_new_students,
+        created_at, updated_at
+      FROM entity_teachers
+      WHERE is_visible = true AND is_published = true
+    \`;
+
+    const params = [locale];
+    let paramCount = 1;
+
+    // Filter by category if specified
+    if (category && category !== 'all') {
+      paramCount++;
+      query += \` AND category_tags @> $\${paramCount}\`;
+      params.push(JSON.stringify([category]));
+    }
+
+    // Filter by featured status
+    if (featured === 'true') {
+      query += \` AND is_featured = true\`;
+    }
+
+    // Add ordering
+    query += \` ORDER BY
+      CASE WHEN is_featured = true THEN 0 ELSE 1 END,
+      rating DESC,
+      students_taught DESC,
+      full_name ASC
+    \`;
+
+    // Add pagination
+    if (limit) {
+      paramCount++;
+      query += \` LIMIT $\${paramCount}\`;
+      params.push(parseInt(limit));
+    }
+
+    if (offset > 0) {
+      paramCount++;
+      query += \` OFFSET $\${paramCount}\`;
+      params.push(parseInt(offset));
+    }
+
+    const teachers = await queryDatabase(query, params);
+
+    const response = {
+      success: true,
+      data: teachers.map(teacher => ({
+        id: teacher.id,
+        teacher_key: teacher.teacher_key,
+        attributes: {
+          full_name: teacher.full_name,
+          professional_title: teacher.professional_title,
+          short_bio: teacher.short_bio,
+          company: teacher.company,
+          years_experience: teacher.years_experience,
+          students_taught: teacher.students_taught,
+          courses_count: teacher.courses_count,
+          rating: parseFloat(teacher.rating || 0),
+          profile_image_url: teacher.profile_image_url,
+          primary_expertise: teacher.primary_expertise,
+          category_tags: teacher.category_tags,
+          is_featured: teacher.is_featured,
+          profile_url: \`detail_teacher.html?id=\${teacher.id}\`
+        }
+      }))
+    };
+
+    console.log(\`✅ Found \${teachers.length} teachers\`);
+    res.json(response);
+
+  } catch (error) {
+    console.error('❌ Error fetching teachers:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Database error',
+      details: error.message
+    });
+  }
+});
+`;
+
+// =============================================================================
+// GET SINGLE TEACHER (Profile Detail View)
+// URL: /api/nd/teachers/:id
+// =============================================================================
+
+const getSingleTeacherEndpoint = `
+// GET single teacher by ID (NewDesign system)
+app.get('/api/nd/teachers/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { locale = 'en' } = req.query;
+    console.log(\`🎯 Fetching teacher profile for ID: \${id}, locale: \${locale}\`);
+
+    const query = \`
+      SELECT
+        id, teacher_key,
+        COALESCE(
+          CASE
+            WHEN $1 = 'ru' THEN NULLIF(full_name_ru, '')
+            WHEN $1 = 'he' THEN NULLIF(full_name_he, '')
+          END,
+          full_name
+        ) as full_name,
+        COALESCE(
+          CASE
+            WHEN $1 = 'ru' THEN NULLIF(professional_title_ru, '')
+            WHEN $1 = 'he' THEN NULLIF(professional_title_he, '')
+          END,
+          professional_title
+        ) as professional_title,
+        COALESCE(
+          CASE
+            WHEN $1 = 'ru' THEN NULLIF(bio_ru, '')
+            WHEN $1 = 'he' THEN NULLIF(bio_he, '')
+          END,
+          bio
+        ) as bio,
+        COALESCE(
+          CASE
+            WHEN $1 = 'ru' THEN NULLIF(short_bio_ru, '')
+            WHEN $1 = 'he' THEN NULLIF(short_bio_he, '')
+          END,
+          short_bio
+        ) as short_bio,
+
+        -- Professional Data
+        company, years_experience, students_taught, courses_count, rating,
+        primary_expertise, teaching_philosophy,
+
+        -- Complex JSONB fields (already parsed by PostgreSQL)
+        skills, experience_history, courses_taught, student_reviews,
+        achievements, education, preferred_teaching_methods, languages_spoken,
+
+        -- Media & Links
+        profile_image_url, background_image_url, resume_url,
+        linkedin_url, github_url, portfolio_url,
+
+        -- Contact & Availability
+        email, phone, office_hours, availability_status, timezone,
+        weekly_schedule, booking_calendar_url,
+
+        -- Performance Metrics
+        completion_rate, satisfaction_score, response_rate,
+        profile_completeness, average_session_rating,
+
+        -- Social Proof
+        total_views, seo_keywords, category_tags,
+
+        -- Status Flags
+        is_featured, is_visible, is_published, is_active,
+        accepts_new_students, is_premium_instructor,
+
+        -- Timestamps
+        created_at, updated_at, last_login
+
+      FROM entity_teachers
+      WHERE id = $2 AND is_visible = true
+    \`;
+
+    const teachers = await queryDatabase(query, [locale, id]);
+
+    if (teachers.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Teacher not found',
+        message: \`Teacher with ID \${id} not found or not visible\`
+      });
+    }
+
+    const teacher = teachers[0];
+
+    // Enhanced response with all LinkedIn-style profile data
+    const response = {
+      success: true,
+      data: {
+        id: teacher.id,
+        teacher_key: teacher.teacher_key,
+
+        // Basic Profile Info
+        full_name: teacher.full_name,
+        professional_title: teacher.professional_title,
+        bio: teacher.bio,
+        short_bio: teacher.short_bio,
+        company: teacher.company,
+
+        // Professional Statistics
+        statistics: {
+          years_experience: teacher.years_experience,
+          students_taught: teacher.students_taught,
+          courses_count: teacher.courses_count,
+          rating: parseFloat(teacher.rating || 0),
+          completion_rate: parseFloat(teacher.completion_rate || 100),
+          satisfaction_score: parseFloat(teacher.satisfaction_score || 5),
+          response_rate: teacher.response_rate,
+          total_views: teacher.total_views
+        },
+
+        // Skills & Expertise (JSONB automatically parsed)
+        skills: teacher.skills || [],
+        primary_expertise: teacher.primary_expertise,
+        teaching_philosophy: teacher.teaching_philosophy,
+        category_tags: teacher.category_tags || [],
+
+        // Professional Experience (JSONB automatically parsed)
+        experience_history: teacher.experience_history || [],
+        education: teacher.education || [],
+        achievements: teacher.achievements || [],
+
+        // Teaching Portfolio (JSONB automatically parsed)
+        courses_taught: teacher.courses_taught || [],
+        student_reviews: teacher.student_reviews || [],
+        preferred_teaching_methods: teacher.preferred_teaching_methods || [],
+        languages_spoken: teacher.languages_spoken || ['English'],
+
+        // Media & Links
+        profile_image_url: teacher.profile_image_url,
+        background_image_url: teacher.background_image_url,
+        resume_url: teacher.resume_url,
+        linkedin_url: teacher.linkedin_url,
+        github_url: teacher.github_url,
+        portfolio_url: teacher.portfolio_url,
+
+        // Contact & Availability
+        contact: {
+          email: teacher.email,
+          phone: teacher.phone,
+          office_hours: teacher.office_hours,
+          availability_status: teacher.availability_status,
+          timezone: teacher.timezone,
+          booking_calendar_url: teacher.booking_calendar_url,
+          accepts_new_students: teacher.accepts_new_students
+        },
+
+        // Schedule (JSONB automatically parsed)
+        weekly_schedule: teacher.weekly_schedule || {},
+
+        // Profile Status
+        profile_status: {
+          is_featured: teacher.is_featured,
+          is_active: teacher.is_active,
+          is_premium_instructor: teacher.is_premium_instructor,
+          profile_completeness: teacher.profile_completeness
+        },
+
+        // SEO & Discovery
+        seo_keywords: teacher.seo_keywords || [],
+
+        // Timestamps
+        created_at: teacher.created_at,
+        updated_at: teacher.updated_at,
+        last_login: teacher.last_login
+      }
+    };
+
+    console.log(\`✅ Teacher profile retrieved: \${teacher.full_name}\`);
+    res.json(response);
+
+  } catch (error) {
+    console.error('❌ Error fetching teacher profile:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Database error',
+      details: error.message
+    });
+  }
+});
+`;
+
+// =============================================================================
+// SEARCH TEACHERS
+// URL: /api/nd/teachers/search
+// =============================================================================
+
+const searchTeachersEndpoint = `
+// SEARCH teachers (NewDesign system)
+app.get('/api/nd/teachers/search', async (req, res) => {
+  try {
+    const { q, locale = 'en', category, skill, limit = 20 } = req.query;
+    console.log(\`🔍 Searching teachers: "\${q}"\`, { locale, category, skill });
+
+    if (!q || q.trim().length < 2) {
+      return res.status(400).json({
+        success: false,
+        error: 'Search query must be at least 2 characters long'
+      });
+    }
+
+    const searchQuery = q.trim().toLowerCase();
+
+    let query = \`
+      SELECT
+        id, teacher_key, full_name, professional_title, short_bio,
+        company, years_experience, students_taught, rating,
+        profile_image_url, primary_expertise, skills, category_tags,
+        ts_rank_cd(
+          to_tsvector('english',
+            COALESCE(full_name, '') || ' ' ||
+            COALESCE(professional_title, '') || ' ' ||
+            COALESCE(short_bio, '') || ' ' ||
+            COALESCE(primary_expertise, '')
+          ),
+          plainto_tsquery('english', $1)
+        ) as search_rank
+      FROM entity_teachers
+      WHERE is_visible = true AND is_published = true
+        AND (
+          LOWER(full_name) LIKE $2 OR
+          LOWER(professional_title) LIKE $2 OR
+          LOWER(short_bio) LIKE $2 OR
+          LOWER(primary_expertise) LIKE $2 OR
+          skills @> to_jsonb(ARRAY[$1]) OR
+          to_tsvector('english',
+            COALESCE(full_name, '') || ' ' ||
+            COALESCE(professional_title, '') || ' ' ||
+            COALESCE(short_bio, '')
+          ) @@ plainto_tsquery('english', $1)
+        )
+    \`;
+
+    const params = [searchQuery, \`%\${searchQuery}%\`];
+
+    // Add category filter
+    if (category && category !== 'all') {
+      query += \` AND category_tags @> $3\`;
+      params.push(JSON.stringify([category]));
+    }
+
+    query += \`
+      ORDER BY
+        search_rank DESC,
+        CASE WHEN is_featured = true THEN 0 ELSE 1 END,
+        rating DESC
+      LIMIT $\${params.length + 1}
+    \`;
+    params.push(parseInt(limit));
+
+    const teachers = await queryDatabase(query, params);
+
+    res.json({
+      success: true,
+      query: searchQuery,
+      results_count: teachers.length,
+      data: teachers.map(teacher => ({
+        id: teacher.id,
+        teacher_key: teacher.teacher_key,
+        attributes: {
+          full_name: teacher.full_name,
+          professional_title: teacher.professional_title,
+          short_bio: teacher.short_bio,
+          company: teacher.company,
+          years_experience: teacher.years_experience,
+          students_taught: teacher.students_taught,
+          rating: parseFloat(teacher.rating || 0),
+          profile_image_url: teacher.profile_image_url,
+          primary_expertise: teacher.primary_expertise,
+          skills: teacher.skills,
+          category_tags: teacher.category_tags,
+          profile_url: \`detail_teacher.html?id=\${teacher.id}\`,
+          search_rank: parseFloat(teacher.search_rank || 0)
+        }
+      }))
+    });
+
+  } catch (error) {
+    console.error('❌ Error searching teachers:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Search error',
+      details: error.message
+    });
+  }
+});
+`;
+
+console.log('📋 Teachers API Endpoints Created:');
+console.log('1. GET /api/nd/teachers - List all teachers');
+console.log('2. GET /api/nd/teachers/:id - Get single teacher profile');
+console.log('3. GET /api/nd/teachers/search - Search teachers');
+console.log('');
+console.log('🔧 To implement:');
+console.log('1. Add these endpoints to your main server.js file');
+console.log('2. Run the database migration to create the entity_teachers table');
+console.log('3. Test the endpoints with your Railway PostgreSQL database');
+
+module.exports = {
+  getTeachersEndpoint,
+  getSingleTeacherEndpoint,
+  searchTeachersEndpoint
+};

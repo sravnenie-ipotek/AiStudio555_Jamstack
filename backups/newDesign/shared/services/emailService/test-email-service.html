@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Service Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .test-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .test-button:hover {
+            background: #5a6fd8;
+        }
+
+        .test-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .status {
+            background: #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .status.success {
+            background: #d1edff;
+            border-left: 4px solid #28a745;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+
+        .config-display {
+            background: #f1f3f4;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .form-test {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Email Service Test Suite</h1>
+
+        <!-- Service Status -->
+        <div class="test-section">
+            <h3>📊 Service Status</h3>
+            <button class="test-button" onclick="checkStatus()">Check Status</button>
+            <button class="test-button" onclick="initializeService()">Initialize Service</button>
+            <div id="statusResult" class="status"></div>
+        </div>
+
+        <!-- EmailJS Library Test -->
+        <div class="test-section">
+            <h3>📦 EmailJS Library Test</h3>
+            <button class="test-button" onclick="testEmailJSLibrary()">Test Library</button>
+            <button class="test-button" onclick="loadEmailJSManually()">Load Library Manually</button>
+            <div id="libraryResult" class="status"></div>
+        </div>
+
+        <!-- Configuration Test -->
+        <div class="test-section">
+            <h3>⚙️ Configuration Test</h3>
+            <button class="test-button" onclick="showConfiguration()">Show Config</button>
+            <div id="configResult" class="config-display" style="display: none;"></div>
+        </div>
+
+        <!-- Send Test Email -->
+        <div class="test-section">
+            <h3>📧 Send Test Email</h3>
+            <div class="form-test">
+                <div class="form-group">
+                    <label for="testName">Full Name:</label>
+                    <input type="text" id="testName" value="Test User" />
+                </div>
+                <div class="form-group">
+                    <label for="testPhone">Phone Number:</label>
+                    <input type="tel" id="testPhone" value="+1-234-567-8900" />
+                </div>
+                <div class="form-group">
+                    <label for="testMessage">Message:</label>
+                    <textarea id="testMessage" rows="3">This is a test email from the NewDesign EmailService. Testing functionality and integration.</textarea>
+                </div>
+            </div>
+            <br>
+            <button class="test-button" onclick="sendTestEmail()">Send Test Email</button>
+            <button class="test-button" onclick="testWhatsApp()">Test WhatsApp</button>
+            <div id="emailResult" class="status"></div>
+        </div>
+
+        <!-- Full Integration Test -->
+        <div class="test-section">
+            <h3>🔧 Full Integration Test</h3>
+            <button class="test-button" onclick="runFullTest()">Run All Tests</button>
+            <div id="fullTestResult" class="status"></div>
+        </div>
+    </div>
+
+    <!-- Load EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <!-- Load Email Service -->
+    <script src="./emailConfig.js"></script>
+    <script src="./emailService.js"></script>
+
+    <script>
+        // Test functions
+        async function checkStatus() {
+            const statusDiv = document.getElementById('statusResult');
+
+            try {
+                if (typeof window.emailService !== 'undefined') {
+                    const status = window.emailService.getStatus();
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = `
+                        <strong>✅ Email Service Status:</strong><br>
+                        • Initialized: ${status.isInitialized}<br>
+                        • EmailJS Loaded: ${status.isEmailJSLoaded}<br>
+                        • EmailJS Available: ${status.emailJSAvailable}<br>
+                        • Public Key: ${status.config.publicKey}<br>
+                        • Service ID: ${status.config.serviceId}<br>
+                        • Template ID: ${status.config.templateId}<br>
+                        • WhatsApp: ${status.config.whatsappNumber}
+                    `;
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.textContent = '❌ EmailService not available';
+                }
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '❌ Error checking status: ' + error.message;
+            }
+        }
+
+        async function initializeService() {
+            const statusDiv = document.getElementById('statusResult');
+            statusDiv.textContent = '🔄 Initializing service...';
+
+            try {
+                const success = await window.emailService.init();
+                if (success) {
+                    statusDiv.className = 'status success';
+                    statusDiv.textContent = '✅ Service initialized successfully';
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.textContent = '❌ Service initialization failed';
+                }
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '❌ Initialization error: ' + error.message;
+            }
+        }
+
+        function testEmailJSLibrary() {
+            const resultDiv = document.getElementById('libraryResult');
+
+            resultDiv.innerHTML = `
+                <strong>📦 EmailJS Library Status:</strong><br>
+                • EmailJS Available: ${typeof emailjs !== 'undefined'}<br>
+                • EmailJS Object: ${typeof emailjs}<br>
+                • Methods Available: ${typeof emailjs !== 'undefined' ? Object.keys(emailjs).join(', ') : 'N/A'}<br>
+                • Version: ${typeof emailjs !== 'undefined' && emailjs.version ? emailjs.version : 'Unknown'}
+            `;
+
+            resultDiv.className = typeof emailjs !== 'undefined' ? 'status success' : 'status error';
+        }
+
+        async function loadEmailJSManually() {
+            const resultDiv = document.getElementById('libraryResult');
+            resultDiv.textContent = '🔄 Loading EmailJS manually...';
+
+            try {
+                await window.emailService.loadEmailJS();
+                resultDiv.className = 'status success';
+                resultDiv.textContent = '✅ EmailJS loaded successfully';
+            } catch (error) {
+                resultDiv.className = 'status error';
+                resultDiv.textContent = '❌ Failed to load EmailJS: ' + error.message;
+            }
+        }
+
+        function showConfiguration() {
+            const configDiv = document.getElementById('configResult');
+
+            if (typeof EMAIL_CONFIG !== 'undefined') {
+                configDiv.style.display = 'block';
+                configDiv.innerHTML = `
+                    <strong>⚙️ Email Configuration:</strong><br>
+                    ${JSON.stringify(EMAIL_CONFIG, null, 2)}
+                `;
+            } else {
+                configDiv.style.display = 'block';
+                configDiv.textContent = '❌ EMAIL_CONFIG not available';
+            }
+        }
+
+        async function sendTestEmail() {
+            const resultDiv = document.getElementById('emailResult');
+            const button = event.target;
+
+            button.disabled = true;
+            button.textContent = 'Sending...';
+
+            const testData = {
+                fullName: document.getElementById('testName').value,
+                phoneNumber: document.getElementById('testPhone').value,
+                message: document.getElementById('testMessage').value
+            };
+
+            try {
+                const result = await window.emailService.sendContactEmail(testData);
+
+                if (result.success) {
+                    resultDiv.className = 'status success';
+                    resultDiv.innerHTML = `
+                        <strong>✅ Email sent successfully!</strong><br>
+                        Message: ${result.message}<br>
+                        Response: ${JSON.stringify(result.response, null, 2)}
+                    `;
+                } else {
+                    resultDiv.className = 'status error';
+                    resultDiv.innerHTML = `
+                        <strong>❌ Email failed to send</strong><br>
+                        Message: ${result.message}<br>
+                        Error: ${result.error ? JSON.stringify(result.error, null, 2) : 'Unknown error'}
+                    `;
+                }
+            } catch (error) {
+                resultDiv.className = 'status error';
+                resultDiv.textContent = '❌ Test email error: ' + error.message;
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Send Test Email';
+            }
+        }
+
+        function testWhatsApp() {
+            const testData = {
+                fullName: document.getElementById('testName').value,
+                phoneNumber: document.getElementById('testPhone').value,
+                message: document.getElementById('testMessage').value
+            };
+
+            try {
+                window.emailService.openWhatsApp(testData);
+                const resultDiv = document.getElementById('emailResult');
+                resultDiv.className = 'status success';
+                resultDiv.textContent = '✅ WhatsApp opened successfully (check for new tab)';
+            } catch (error) {
+                const resultDiv = document.getElementById('emailResult');
+                resultDiv.className = 'status error';
+                resultDiv.textContent = '❌ WhatsApp test failed: ' + error.message;
+            }
+        }
+
+        async function runFullTest() {
+            const resultDiv = document.getElementById('fullTestResult');
+            const tests = [];
+
+            resultDiv.textContent = '🔄 Running full test suite...';
+
+            try {
+                // Test 1: Service availability
+                tests.push({
+                    name: 'Service Availability',
+                    result: typeof window.emailService !== 'undefined',
+                    details: typeof window.emailService !== 'undefined' ? 'EmailService available' : 'EmailService not found'
+                });
+
+                // Test 2: EmailJS library
+                tests.push({
+                    name: 'EmailJS Library',
+                    result: typeof emailjs !== 'undefined',
+                    details: typeof emailjs !== 'undefined' ? 'EmailJS loaded' : 'EmailJS not loaded'
+                });
+
+                // Test 3: Configuration
+                tests.push({
+                    name: 'Configuration',
+                    result: typeof EMAIL_CONFIG !== 'undefined',
+                    details: typeof EMAIL_CONFIG !== 'undefined' ? 'CONFIG loaded' : 'CONFIG not loaded'
+                });
+
+                // Test 4: Service initialization
+                let initResult = false;
+                try {
+                    initResult = await window.emailService.init();
+                    tests.push({
+                        name: 'Service Initialization',
+                        result: initResult,
+                        details: initResult ? 'Initialized successfully' : 'Initialization failed'
+                    });
+                } catch (error) {
+                    tests.push({
+                        name: 'Service Initialization',
+                        result: false,
+                        details: 'Error: ' + error.message
+                    });
+                }
+
+                // Test 5: Status check
+                try {
+                    const status = window.emailService.getStatus();
+                    tests.push({
+                        name: 'Status Check',
+                        result: status.isInitialized,
+                        details: `Initialized: ${status.isInitialized}, EmailJS: ${status.isEmailJSLoaded}`
+                    });
+                } catch (error) {
+                    tests.push({
+                        name: 'Status Check',
+                        result: false,
+                        details: 'Error: ' + error.message
+                    });
+                }
+
+                // Generate results
+                const passed = tests.filter(t => t.result).length;
+                const total = tests.length;
+
+                let resultHTML = `<strong>🧪 Test Results: ${passed}/${total} passed</strong><br><br>`;
+
+                tests.forEach(test => {
+                    const icon = test.result ? '✅' : '❌';
+                    resultHTML += `${icon} ${test.name}: ${test.details}<br>`;
+                });
+
+                resultDiv.className = passed === total ? 'status success' : 'status error';
+                resultDiv.innerHTML = resultHTML;
+
+            } catch (error) {
+                resultDiv.className = 'status error';
+                resultDiv.textContent = '❌ Full test failed: ' + error.message;
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            console.log('🧪 Email Service Test Page Loaded');
+            console.log('EmailService available:', typeof window.emailService !== 'undefined');
+            console.log('EmailJS available:', typeof emailjs !== 'undefined');
+            console.log('CONFIG available:', typeof EMAIL_CONFIG !== 'undefined');
+
+            // Auto-run status check
+            setTimeout(() => {
+                checkStatus();
+                testEmailJSLibrary();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

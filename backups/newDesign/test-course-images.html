@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Image Generation Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-family: monospace;
+        }
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .course-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .course-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+        .course-info {
+            padding: 15px;
+        }
+        .course-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .course-category {
+            color: #666;
+            font-size: 14px;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Course Image Generation Test</h1>
+
+        <div class="controls">
+            <button class="btn" onclick="testImageGeneration()">Generate Test Images</button>
+            <button class="btn" onclick="loadRealCourses()">Load Real Courses</button>
+            <button class="btn" onclick="clearImages()">Clear All</button>
+        </div>
+
+        <div id="status" class="status">Ready to generate course images...</div>
+
+        <div id="courseGrid" class="course-grid"></div>
+    </div>
+
+    <!-- Load Image Generation Service -->
+    <script src="shared/services/imageGenerationService/imageGenerationConfig.js"></script>
+    <script src="shared/services/imageGenerationService/imageGenerationService.js"></script>
+
+    <script>
+        // Sample course data for testing
+        const sampleCourses = [
+            {
+                id: 1,
+                title: 'Full-Stack Web Development Bootcamp',
+                category: 'Web Development',
+                description: 'Learn HTML, CSS, JavaScript, React, Node.js'
+            },
+            {
+                id: 2,
+                title: 'iOS & Android App Development',
+                category: 'App Development',
+                description: 'Build mobile apps with Swift and Kotlin'
+            },
+            {
+                id: 3,
+                title: 'Deep Learning and Neural Networks',
+                category: 'Machine Learning',
+                description: 'Master TensorFlow and PyTorch'
+            },
+            {
+                id: 4,
+                title: 'AWS Cloud Architecture',
+                category: 'Cloud Computing',
+                description: 'Design scalable cloud solutions'
+            },
+            {
+                id: 5,
+                title: 'Data Analysis with Python',
+                category: 'Data Science',
+                description: 'Pandas, NumPy, and visualization'
+            },
+            {
+                id: 6,
+                title: 'Ethical Hacking and Penetration Testing',
+                category: 'Cybersecurity',
+                description: 'Security testing and vulnerability assessment'
+            }
+        ];
+
+        // Image prompts for each category
+        const categoryPrompts = {
+            'Web Development': 'Modern web development workspace with HTML CSS JavaScript code on multiple monitors, clean desk setup',
+            'App Development': 'Mobile app development with iOS and Android devices, code editor on laptop, modern workspace',
+            'Machine Learning': 'Artificial intelligence neural network visualization, data science workspace with graphs',
+            'Cloud Computing': 'Cloud infrastructure diagram with servers and networks, professional tech visualization',
+            'Data Science': 'Data analytics dashboard with charts and graphs on monitor, professional setting',
+            'Cybersecurity': 'Cybersecurity operations center with security monitoring screens, dark professional environment'
+        };
+
+        // Test image generation
+        async function testImageGeneration() {
+            const statusDiv = document.getElementById('status');
+            const gridDiv = document.getElementById('courseGrid');
+            const button = event.target;
+
+            button.disabled = true;
+            statusDiv.textContent = 'Initializing image generation service...';
+
+            try {
+                // Initialize service
+                await window.imageGenService.init();
+                statusDiv.textContent = 'Service initialized. Generating images...';
+
+                gridDiv.innerHTML = '';
+
+                // Generate images for each sample course
+                for (const course of sampleCourses) {
+                    statusDiv.textContent = `Generating image for: ${course.title}...`;
+
+                    // Create course card
+                    const card = createCourseCard(course);
+                    gridDiv.appendChild(card);
+
+                    // Generate image
+                    const prompt = categoryPrompts[course.category] || 'Online education course thumbnail';
+                    const result = await window.imageGenService.generateImages(prompt, {
+                        numberOfImages: 1,
+                        aspectRatio: '16:9'
+                    });
+
+                    if (result.success && result.images && result.images.length > 0) {
+                        const imageData = result.images[0];
+                        const imageUrl = imageData.base64
+                            ? `data:${imageData.mimeType || 'image/png'};base64,${imageData.base64}`
+                            : imageData.placeholder;
+
+                        // Update card with generated image
+                        const img = card.querySelector('.course-image');
+                        img.src = imageUrl;
+                    }
+
+                    // Small delay between generations
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+
+                statusDiv.textContent = '✅ All images generated successfully!';
+
+            } catch (error) {
+                statusDiv.textContent = `❌ Error: ${error.message}`;
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        // Load real courses from API
+        async function loadRealCourses() {
+            const statusDiv = document.getElementById('status');
+            const gridDiv = document.getElementById('courseGrid');
+            const button = event.target;
+
+            button.disabled = true;
+            statusDiv.textContent = 'Loading courses from API...';
+
+            try {
+                const API_URL = window.location.hostname === 'localhost'
+                    ? 'http://localhost:3000/api/featured-courses'
+                    : 'https://aistudio555jamstack-production.up.railway.app/api/featured-courses';
+
+                const response = await fetch(API_URL);
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.courses) {
+                    gridDiv.innerHTML = '';
+
+                    for (const course of data.data.courses.slice(0, 6)) {
+                        const card = createCourseCard(course);
+                        gridDiv.appendChild(card);
+                    }
+
+                    statusDiv.textContent = `✅ Loaded ${data.data.courses.length} courses from API`;
+                } else {
+                    statusDiv.textContent = '⚠️ No courses found in API';
+                }
+
+            } catch (error) {
+                statusDiv.textContent = `❌ Error loading courses: ${error.message}`;
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        // Create course card element
+        function createCourseCard(course) {
+            const card = document.createElement('div');
+            card.className = 'course-card';
+            card.innerHTML = `
+                <img class="course-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='180' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23999' font-family='Arial' font-size='14'%3EGenerating...%3C/text%3E%3C/svg%3E" alt="${course.title}">
+                <div class="course-info">
+                    <div class="course-title">${course.title}</div>
+                    <div class="course-category">${course.category || 'General'}</div>
+                </div>
+            `;
+            return card;
+        }
+
+        // Clear all images
+        function clearImages() {
+            document.getElementById('courseGrid').innerHTML = '';
+            document.getElementById('status').textContent = 'Ready to generate course images...';
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            console.log('Course Image Test Page Ready');
+            console.log('Image Service Available:', typeof window.imageGenService !== 'undefined');
+        });
+    </script>
+</body>
+</html>

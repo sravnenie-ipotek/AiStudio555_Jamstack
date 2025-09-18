@@ -1,0 +1,145 @@
+<!--
+BLOG DETAILS SHARED COMPONENT TEMPLATE
+CRITICAL: NO HARDCODED CONTENT - ALL populated by JavaScript
+Following Universal Shared Component Architecture
+-->
+
+<div class="entity-details-hero-section">
+  <div class="entity-details-hero-content">
+    <div class="entity-details-breadcrumbs">
+      <a href="blog.html">Blog</a> > <span class="entity-breadcrumb-title"></span>
+    </div>
+    <h1 class="entity-details-hero-title"></h1>  <!-- Empty, populated by JS -->
+    <p class="entity-details-hero-description"></p>  <!-- Empty, populated by JS -->
+
+    <div class="entity-details-hero-meta">
+      <span class="entity-rating-stars"></span>  <!-- Dynamic rating -->
+      <span class="entity-author"></span>        <!-- From database -->
+      <span class="entity-date"></span>          <!-- From database -->
+      <span class="entity-reading-time"></span>  <!-- From database -->
+    </div>
+  </div>
+</div>
+
+<div class="entity-details-content-section">
+  <div class="entity-details-main-content">
+    <!-- Featured Image -->
+    <div class="entity-featured-image-section" style="display: none;">
+      <img class="entity-featured-image" src="" alt="" />
+    </div>
+
+    <!-- Blog Content Overview -->
+    <div class="entity-overview-section">
+      <h2>Article Content</h2>
+      <div class="entity-full-description"></div>
+    </div>
+
+    <!-- Dynamic Content Sections -->
+    <div class="entity-content-section">
+      <h2>Article Sections</h2>
+      <div class="entity-content-container">
+        <!-- Populated from database content_sections -->
+      </div>
+    </div>
+
+    <!-- Tags Section -->
+    <div class="entity-tags-section" style="display: none;">
+      <h2>Tags</h2>
+      <div class="entity-tags-list">
+        <!-- Populated from database tags -->
+      </div>
+    </div>
+
+    <!-- Gallery Section -->
+    <div class="entity-gallery-section" style="display: none;">
+      <h2>Gallery</h2>
+      <div class="entity-gallery-container">
+        <!-- Populated from database gallery_images -->
+      </div>
+    </div>
+
+    <!-- Related Posts -->
+    <div class="entity-related-section" style="display: none;">
+      <h2>Related Articles</h2>
+      <div class="entity-related-container">
+        <!-- Populated from database related_posts -->
+      </div>
+    </div>
+  </div>
+
+  <div class="entity-details-sidebar">
+    <!-- Blog Info Card -->
+    <div class="entity-info-card">
+      <div class="entity-meta-info">
+        <div class="entity-category-tag">
+          <span class="entity-category"></span>
+        </div>
+
+        <div class="entity-stats">
+          <div class="entity-stat-item">
+            <span class="entity-views-count"></span> Views
+          </div>
+          <div class="entity-stat-item">
+            <span class="entity-likes-count"></span> Likes
+          </div>
+          <div class="entity-stat-item">
+            <span class="entity-shares-count"></span> Shares
+          </div>
+        </div>
+
+        <div class="entity-published-date">
+          Published: <span class="entity-publish-date"></span>
+        </div>
+      </div>
+
+      <div class="entity-action-buttons">
+        <button class="entity-action-button entity-like-button">
+          <span>👍 Like Article</span>
+        </button>
+        <button class="entity-action-button entity-share-button">
+          <span>📤 Share</span>
+        </button>
+      </div>
+
+      <div class="entity-external-link" style="display: none;">
+        <a href="" class="entity-external-url" target="_blank">
+          <span>🔗 Read Original</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Author Info -->
+    <div class="entity-author-card">
+      <h3>About the Author</h3>
+      <div class="author-info">
+        <img class="author-image" src="" alt="" />
+        <div class="author-details">
+          <h4 class="author-name"></h4>
+          <p class="author-bio"></p>
+        </div>
+        <div class="author-social-links">
+          <!-- Populated from database author_social_links -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Video Section -->
+    <div class="entity-video-section" style="display: none;">
+      <h3>Video Content</h3>
+      <div class="entity-video-container">
+        <!-- Populated from database video_url -->
+      </div>
+    </div>
+
+    <!-- Featured Flag -->
+    <div class="entity-featured-badge" style="display: none;">
+      <span>⭐ Featured Article</span>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay (initially hidden) -->
+<div class="entity-loading-overlay" style="display: none;">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading blog details...</div>
+</div>
