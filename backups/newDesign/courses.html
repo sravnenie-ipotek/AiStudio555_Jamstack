@@ -192,12 +192,33 @@
 
     .w-dropdown-list {
       transition: opacity 0.2s ease, visibility 0.2s ease !important;
-      transition-delay: 0.1s !important; /* Small delay before closing */
+      transition-delay: 0.8s !important; /* Much longer delay before closing - easier to hover */
     }
 
     /* Keep dropdown open when hovering over the entire dropdown wrapper */
     .menu-dropdown-wrapper:hover .w-dropdown-list {
       transition-delay: 0s !important; /* No delay when opening */
+    }
+
+    /* Ensure dropdown stays open when mouse moves over dropdown content */
+    .w-dropdown-list:hover {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      transition-delay: 0s !important;
+    }
+
+    /* Add hover bridge area to prevent dropdown from closing between trigger and dropdown */
+    .menu-dropdown-wrapper::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      height: 20px;
+      background: transparent;
+      z-index: 900;
+      pointer-events: auto;
     }
     /* SIMPLE FIX - Make all buttons work with visible text */
     .primary-button {
@@ -267,8 +288,9 @@
 
     /* Mobile Menu Styles */
     @media (max-width: 991px) {
-      /* Style mobile menu - let Webflow control display */
+      /* Hide menu by default on mobile - slide panel from right */
       .nav-menu, .w-nav-menu {
+        display: none !important;
         position: fixed;
         top: 0;
         right: -100%;
@@ -280,14 +302,27 @@
         z-index: 999;
         padding: 80px 20px 20px;
         overflow-y: auto;
-        transition: right 0.3s ease, transform 0.3s ease;
+        transition: right 0.3s ease;
         visibility: visible !important;
         opacity: 1 !important;
       }
-      /* Show menu when Webflow opens it */
-      .w-nav-menu[style*="display: block"] {
+      /* Show menu when hamburger has w--open class */
+      .w-nav-button.w--open ~ .navbar-button-wrapper .w-nav-menu,
+      .w-nav-button.w--open + * .w-nav-menu,
+      .navbar.w-nav .w-nav-button.w--open ~ * .w-nav-menu,
+      .w--open ~ * .w-nav-menu {
+        display: block !important;
         right: 0 !important;
-        transform: translateX(0) !important;
+        opacity: 1 !important;
+        transform: translateY(0px) !important;
+      }
+
+      /* Alternative: target menu when navbar has open state */
+      .navbar:has(.w-nav-button.w--open) .w-nav-menu {
+        display: block !important;
+        right: 0 !important;
+        opacity: 1 !important;
+        transform: translateY(0px) !important;
       }
       /* Style mobile menu items */
       .nav-menu .nav-link,
@@ -351,6 +386,73 @@
       .navbar-cart {
         display: none !important;
       }
+      /* Hamburger animation */
+      .menu-button.w--open .hamburger-line:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px) !important;
+      }
+      .menu-button.w--open .hamburger-line:nth-child(2) {
+        opacity: 0 !important;
+      }
+      .menu-button.w--open .hamburger-line:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px) !important;
+      }
+      .hamburger-line {
+        display: block !important;
+        width: 24px !important;
+        height: 2px !important;
+        background-color: #ffffff !important;
+        margin: 0 !important;
+        border-radius: 1px !important;
+        transition: all 0.3s ease !important;
+        position: relative !important;
+      }
+      /* Hamburger icon container */
+      .hamburger-icon {
+        width: 24px !important;
+        height: 18px !important;
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+      }
+      /* Ensure navbar container has relative positioning */
+      .navbar {
+        position: relative !important;
+      }
+      /* Show menu button on mobile */
+      .menu-button, .w-nav-button {
+        display: flex !important;
+        background: transparent !important;
+        border: none !important;
+        cursor: pointer !important;
+        padding: 10px !important;
+        position: relative !important;
+        z-index: 1000 !important;
+        width: auto !important;
+        height: auto !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      .menu-button:hover .hamburger-line {
+        background-color: #ffd659 !important;
+      }
+    }
+    /* Hide mobile elements on desktop */
+    @media (min-width: 992px) {
+      .menu-button, .w-nav-button {
+        display: none !important;
+      }
+      .mobile-language-switchers {
+        display: none !important;
+      }
+      .primary-button-wrapper.mobile {
+        display: none !important;
+      }
+      /* Show desktop nav menu */
+      .nav-menu, .w-nav-menu {
+        display: flex !important;
+        align-items: center !important;
+      }
     }
   </style>
 </head>
@@ -381,109 +483,6 @@
                       <a href="career-center.html" class="dropdown-menu-text-link-block mb0 w-inline-block">
                         <div>Career Center</div>
                       </a>
-                    </div>
-                  </div>
-                </div>
-              </nav>
-            </div>
-            <div data-delay="0" data-hover="true" data-w-id="9a224b60-f557-150b-8062-e4bbef078cfa" class="menu-dropdown-wrapper w-dropdown">
-              <div class="dropdown-toggle w-dropdown-toggle">
-                <div class="dropdown-toggle-text-block">Pages</div>
-                <div class="dropdown-toggle-arrow-2"></div>
-              </div>
-              <nav class="dropdown-column-wrapper-3 w-dropdown-list">
-                <div class="dropdown-pd pd-60px">
-                  <div class="w-layout-grid dropdown-grid">
-                    <div id="w-node-_9a224b60-f557-150b-8062-e4bbef078d03-81b431a4" class="dropdown-singel-wrapper">
-                      <div class="dropdown-title-wrapper">
-                        <h3 class="dropdown-title">Menu</h3>
-                      </div>
-                      <div class="dropdown-menu-wrapper">
-                        <a href="home.html" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Home </div>
-                        </a>
-                        <a href="about-us.html" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>About us</div>
-                        </a>
-                        <a href="courses.html" aria-current="page" class="dropdown-menu-text-link-block w-inline-block w--current">
-                          <div>Courses</div>
-                        </a>
-                        <a href="https://zohacous.webflow.io/courses/html-css-bootstrap-build-responsive-websites" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Courses Single</div>
-                          <div class="dropdown-menu-cms-single">
-                            <div class="dropdown-menu-cms-line"></div>
-                            <div class="dropdown-menu-cms">CMS</div>
-                          </div>
-                        </a>
-                        <a href="pricing.html" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Pricing</div>
-                        </a>
-                        <a href="https://zohacous.webflow.io/product/premium-plan" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Pricing Single</div>
-                          <div class="dropdown-menu-cms-single">
-                            <div class="dropdown-menu-cms-line"></div>
-                            <div class="dropdown-menu-cms">CMS</div>
-                          </div>
-                        </a>
-                        <a href="contact-us.html" class="dropdown-menu-text-link-block mb0 w-inline-block">
-                          <div>Contact Us</div>
-                        </a>
-                      </div>
-                    </div>
-                    <div id="w-node-_9a224b60-f557-150b-8062-e4bbef078d2f-81b431a4" class="dropdown-singel-wrapper">
-                      <div class="dropdown-title-wrapper">
-                        <h3 class="dropdown-title">Pages</h3>
-                      </div>
-                      <div class="dropdown-menu-wrapper">
-                        <a href="blog.html" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Blogs </div>
-                        </a>
-                        <a href="https://zohacous.webflow.io/blog/future-of-web-app-develop-trends-to-watch-in-2024" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Blog details</div>
-                          <div class="dropdown-menu-cms-single">
-                            <div class="dropdown-menu-cms-line"></div>
-                            <div class="dropdown-menu-cms">CMS</div>
-                          </div>
-                        </a>
-                        <a href="authentication-pages/sign-in.html" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Sign in</div>
-                        </a>
-                        <a href="authentication-pages/sign-up.html" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Sign up</div>
-                        </a>
-                        <a href="authentication-pages/forgot-password.html" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Forget password</div>
-                        </a>
-                        <a href="authentication-pages/reset-password.html" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Reset password</div>
-                        </a>
-                      </div>
-                    </div>
-                    <div id="w-node-_9a224b60-f557-150b-8062-e4bbef078d57-81b431a4" class="dropdown-singel-wrapper">
-                      <div class="dropdown-title-wrapper">
-                        <h3 class="dropdown-title">Utility Pages</h3>
-                      </div>
-                      <div class="dropdown-menu-wrapper">
-                        <a href="template-pages/style-guide.html" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Style Guide</div>
-                        </a>
-                        <a href="404.html" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>404 Not Found</div>
-                        </a>
-                        <a href="401.html" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Password Protected</div>
-                        </a>
-                        <a href="template-pages/license.html" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Licenses</div>
-                        </a>
-                        <a href="template-pages/changelog.html" class="dropdown-menu-text-link-block w-inline-block">
-                          <div>Changelog</div>
-                        </a>
-                      </div>
-                      <div class="more-temple-wrapper">
-                        <a href="https://webflow.com/templates/designers/zohaflow" target="_blank" class="more-temple-text-link">More Templates Form Us</a>
-                        <div class="more-temple-text-link-boder"></div>
-                      </div>
                     </div>
                   </div>
                 </div>
