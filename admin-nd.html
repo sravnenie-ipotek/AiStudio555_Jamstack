@@ -1608,8 +1608,8 @@
     <script>
         // API Configuration
         const API_BASE = window.location.hostname === 'localhost'
-            ? 'http://localhost:3000/api/nd'
-            : '/api/nd';
+            ? 'http://localhost:3000/api'
+            : 'https://aistudio555jamstack-production.up.railway.app/api';
 
         // Current language
         let currentLang = 'en';
@@ -2710,8 +2710,8 @@
                 const response = await fetch(`${API_BASE}/home-page?locale=${currentLang}`);
                 const data = await response.json();
 
-                if (data.success) {
-                    populateHomeForm(data.data);
+                if (data && data.data) {
+                    populateHomeForm(data.data.attributes || data.data);
                     showToast('Content loaded successfully', 'success');
                     // Rebuild search index after loading data
                     setTimeout(buildSearchIndex, 500);
@@ -2726,177 +2726,128 @@
 
         // Populate Form
         function populateHomeForm(data) {
-            // Hero Section
-            if (data.hero) {
-                document.getElementById('hero_visible').checked = data.hero.visible;
-                document.getElementById('hero_title').value = data.hero.content?.title || '';
-                document.getElementById('hero_subtitle').value = data.hero.content?.subtitle || '';
-                document.getElementById('hero_description').value = data.hero.content?.description || '';
+            // Handle custom API flat data structure
 
-                // Hero Buttons
-                const buttonsContainer = document.getElementById('heroButtons');
-                buttonsContainer.innerHTML = '';
-                (data.hero.content?.buttons || []).forEach(btn => {
-                    addHeroButton(btn);
+            // Hero Section - using flat field names from custom API
+            document.getElementById('hero_visible').checked = data.heroSectionVisible !== false;
+            document.getElementById('hero_title').value = data.heroTitle || '';
+            document.getElementById('hero_subtitle').value = data.heroSubtitle || '';
+            document.getElementById('hero_description').value = data.heroDescription || '';
+
+            // Hero Buttons - skip for now as they're not in the flat structure
+            document.getElementById('heroButtons').innerHTML = '';
+
+            // Features Section - map from flat structure
+            document.getElementById('features_visible').checked = true; // Default visible
+            document.getElementById('features_title').value = data.focusPracticeTitle || 'Focus on Practice';
+            document.getElementById('features_subtitle').value = data.coreSkillsTitle || 'Core Skills Development';
+
+            // Feature Items - populate from flat fields
+            const featureItems = document.getElementById('featureItems');
+            featureItems.innerHTML = '';
+            // Add features from flat structure
+            if (data.feature1Title) {
+                addFeatureItem({
+                    icon: '🎯',
+                    title: data.feature1Title,
+                    description: data.feature1Description
                 });
             }
-
-            // Features Section
-            if (data.features) {
-                document.getElementById('features_visible').checked = data.features.visible;
-                document.getElementById('features_title').value = data.features.content?.title || '';
-                document.getElementById('features_subtitle').value = data.features.content?.subtitle || '';
-
-                // Feature Items
-                const featuresContainer = document.getElementById('featureItems');
-                featuresContainer.innerHTML = '';
-                (data.features.content?.items || []).forEach(item => {
-                    addFeatureItem(item);
+            if (data.feature2Title) {
+                addFeatureItem({
+                    icon: '✨',
+                    title: data.feature2Title,
+                    description: data.feature2Description
+                });
+            }
+            if (data.feature3Title) {
+                addFeatureItem({
+                    icon: '🔄',
+                    title: data.feature3Title,
+                    description: data.feature3Description
                 });
             }
 
             // Courses Section
-            if (data.courses) {
-                document.getElementById('courses_visible').checked = data.courses.visible;
-                document.getElementById('courses_title').value = data.courses.content?.title || '';
-                document.getElementById('courses_subtitle').value = data.courses.content?.subtitle || '';
-            }
+            document.getElementById('courses_visible').checked = data.featuredCoursesVisible !== false;
+            document.getElementById('courses_title').value = data.featuredCoursesTitle || '';
+            document.getElementById('courses_subtitle').value = data.featuredCoursesDescription || '';
 
             // Testimonials Section
-            if (data.testimonials) {
-                document.getElementById('testimonials_visible').checked = data.testimonials.visible;
-                document.getElementById('testimonials_title').value = data.testimonials.content?.title || '';
-                document.getElementById('testimonials_subtitle').value = data.testimonials.content?.subtitle || '';
-            }
+            document.getElementById('testimonials_visible').checked = data.testimonialsVisible !== false;
+            document.getElementById('testimonials_title').value = data.testimonialsTitle || '';
+            document.getElementById('testimonials_subtitle').value = data.testimonialsSubtitle || '';
 
-            // Awards Section
-            if (data.awards) {
-                document.getElementById('awards_visible').checked = data.awards.visible !== false;
-                document.getElementById('awards_title').value = data.awards.content?.title || '';
-                document.getElementById('awards_subtitle').value = data.awards.content?.subtitle || '';
+            // Awards Section - may not exist in flat structure
+            document.getElementById('awards_visible').checked = false;
+            document.getElementById('awards_title').value = '';
+            document.getElementById('awards_subtitle').value = '';
 
-                // Award Items
-                const awardsContainer = document.getElementById('awardItems');
-                awardsContainer.innerHTML = '';
-                (data.awards.content?.items || []).forEach(item => {
-                    addAwardItem(item);
-                });
-            }
+            // Pricing Section - use defaults if not in flat structure
+            document.getElementById('pricing_visible').checked = true;
+            document.getElementById('pricing_title').value = 'Choose Your Learning Path';
+            document.getElementById('pricing_subtitle').value = 'Flexible Pricing Plans';
 
-            // Pricing Section
-            if (data.pricing) {
-                document.getElementById('pricing_visible').checked = data.pricing.visible !== false;
-                document.getElementById('pricing_title').value = data.pricing.content?.title || 'Choose Your Learning Path';
-                document.getElementById('pricing_subtitle').value = data.pricing.content?.subtitle || 'Flexible Pricing Plans';
+            // Add default pricing plans
+            const defaultPlans = [
+                { id: 'basic', name: 'Basic Plan', price_monthly: '29', price_yearly: '278', description: 'Perfect for beginners', features: ['50+ courses', 'Community support', 'Certificates'], featured: false },
+                { id: 'pro', name: 'Pro Plan', price_monthly: '79', price_yearly: '758', description: 'For serious learners', features: ['All courses', 'Priority support', '1-on-1 mentoring', 'Job placement'], featured: true, popular_badge: 'Most Popular' },
+                { id: 'enterprise', name: 'Enterprise', price_monthly: 'Custom', price_yearly: 'Custom', description: 'For teams', features: ['Everything in Pro', 'Unlimited team members', 'Dedicated manager'], featured: false }
+            ];
+            document.getElementById('pricingPlans').innerHTML = '';
+            defaultPlans.forEach(plan => addPricingPlan(plan));
 
-                // Pricing Plans
-                const pricingContainer = document.getElementById('pricingPlans');
-                pricingContainer.innerHTML = '';
-                (data.pricing.content?.plans || []).forEach(plan => {
-                    addPricingPlan(plan);
-                });
-            } else {
-                // Add default pricing plans if none exist
-                const defaultPlans = [
-                    { id: 'basic', name: 'Basic Plan', price_monthly: '29', price_yearly: '278', description: 'Perfect for beginners', features: ['50+ courses', 'Community support', 'Certificates'], featured: false },
-                    { id: 'pro', name: 'Pro Plan', price_monthly: '79', price_yearly: '758', description: 'For serious learners', features: ['All courses', 'Priority support', '1-on-1 mentoring', 'Job placement'], featured: true, popular_badge: 'Most Popular' },
-                    { id: 'enterprise', name: 'Enterprise', price_monthly: 'Custom', price_yearly: 'Custom', description: 'For teams', features: ['Everything in Pro', 'Unlimited team members', 'Dedicated manager'], featured: false }
-                ];
-                document.getElementById('pricingPlans').innerHTML = '';
-                defaultPlans.forEach(plan => addPricingPlan(plan));
-            }
-
-            // CTA Section
-            if (data.cta_1) {
-                document.getElementById('cta_visible').checked = data.cta_1.visible;
-                document.getElementById('cta_title').value = data.cta_1.content?.title || '';
-                document.getElementById('cta_description').value = data.cta_1.content?.description || '';
-                document.getElementById('cta_button_text').value = data.cta_1.content?.buttonText || '';
-                document.getElementById('cta_button_url').value = data.cta_1.content?.buttonUrl || '';
-            }
+            // CTA Section - map from flat structure if available
+            document.getElementById('cta_visible').checked = true;
+            document.getElementById('cta_title').value = data.btnGetStarted || 'Ready to Start Learning?';
+            document.getElementById('cta_description').value = 'Join thousands of successful students';
+            document.getElementById('cta_button_text').value = data.btnSignUpToday || 'Sign Up Today';
+            document.getElementById('cta_button_url').value = '#signup';
         }
 
         // Save Home Content
         async function saveHomeContent() {
             showLoading();
 
-            const sections = {
-                hero: {
-                    visible: document.getElementById('hero_visible').checked,
-                    content: {
-                        title: document.getElementById('hero_title').value,
-                        subtitle: document.getElementById('hero_subtitle').value,
-                        description: document.getElementById('hero_description').value,
-                        buttons: getHeroButtons()
-                    }
-                },
-                features: {
-                    visible: document.getElementById('features_visible').checked,
-                    content: {
-                        title: document.getElementById('features_title').value,
-                        subtitle: document.getElementById('features_subtitle').value,
-                        items: getFeatureItems()
-                    }
-                },
-                courses: {
-                    visible: document.getElementById('courses_visible').checked,
-                    content: {
-                        title: document.getElementById('courses_title').value,
-                        subtitle: document.getElementById('courses_subtitle').value
-                    }
-                },
-                testimonials: {
-                    visible: document.getElementById('testimonials_visible').checked,
-                    content: {
-                        title: document.getElementById('testimonials_title').value,
-                        subtitle: document.getElementById('testimonials_subtitle').value
-                    }
-                },
-                awards: {
-                    visible: document.getElementById('awards_visible').checked,
-                    content: {
-                        title: document.getElementById('awards_title').value,
-                        subtitle: document.getElementById('awards_subtitle').value,
-                        items: getAwardItems()
-                    }
-                },
-                pricing: {
-                    visible: document.getElementById('pricing_visible').checked,
-                    content: {
-                        title: document.getElementById('pricing_title').value,
-                        subtitle: document.getElementById('pricing_subtitle').value,
-                        plans: getPricingPlans()
-                    }
-                },
-                cta_1: {
-                    visible: document.getElementById('cta_visible').checked,
-                    content: {
-                        title: document.getElementById('cta_title').value,
-                        description: document.getElementById('cta_description').value,
-                        buttonText: document.getElementById('cta_button_text').value,
-                        buttonUrl: document.getElementById('cta_button_url').value
-                    }
-                }
-            };
-
             try {
-                // Save each section
-                for (const [key, data] of Object.entries(sections)) {
-                    const payload = {};
-                    payload[`content_${currentLang}`] = data.content;
-                    payload.visible = data.visible;
+                // Build payload using flat structure that matches the custom API
+                const payload = {
+                    // Hero Section
+                    heroSectionVisible: document.getElementById('hero_visible').checked,
+                    heroTitle: document.getElementById('hero_title').value,
+                    heroSubtitle: document.getElementById('hero_subtitle').value,
+                    heroDescription: document.getElementById('hero_description').value,
 
-                    await fetch(`${API_BASE}/home-page/${key}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
+                    // Features Section
+                    featuredCoursesVisible: document.getElementById('courses_visible').checked,
+                    featuredCoursesTitle: document.getElementById('courses_title').value,
+                    featuredCoursesDescription: document.getElementById('courses_subtitle').value,
+
+                    // Testimonials Section
+                    testimonialsVisible: document.getElementById('testimonials_visible').checked,
+                    testimonialsTitle: document.getElementById('testimonials_title').value,
+                    testimonialsSubtitle: document.getElementById('testimonials_subtitle').value,
+
+                    // Feature items (if they exist in form)
+                    focusPracticeTitle: document.getElementById('features_title').value || 'Focus on Practice',
+                    coreSkillsTitle: document.getElementById('features_subtitle').value || 'Core Skills Development'
+                };
+
+                // Send PUT request to update home page (using ID 1 as default)
+                const response = await fetch(`${API_BASE}/home-page/1`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    showToast('Content saved successfully', 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
                 }
-
-                showToast('Content saved successfully', 'success');
             } catch (error) {
                 showToast('Failed to save content', 'error');
-                console.error(error);
+                console.error('Save error:', error);
             } finally {
                 hideLoading();
             }
@@ -3416,7 +3367,7 @@
                                 <button class="btn btn-small" onclick="openCourseDetailsModal(${course.id})" style="background: #667eea; color: white;">
                                     📝 Edit Details
                                 </button>
-                                <button class="btn btn-small preview-btn" onclick="window.open('http://localhost:3000/backups/newDesign/detail_courses.html?id=${course.id}&preview=true', '_blank')" style="background: #28a745; color: white;">
+                                <button class="btn btn-small preview-btn" onclick="window.open('/backups/newDesign/detail_courses.html?id=${course.id}&preview=true', '_blank')" style="background: #28a745; color: white;">
                                     👁️ Preview
                                 </button>
                                 <button class="btn btn-small btn-danger delete-btn" onclick="deleteCourse(${course.id})">
@@ -3684,7 +3635,7 @@
                         await fetch(`${API_BASE}/courses/${result.data.id}`, {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ url: `http://localhost:3000/backups/newDesign/detail_courses.html?id=${result.data.id}` })
+                            body: JSON.stringify({ url: `/backups/newDesign/detail_courses.html?id=${result.data.id}` })
                         });
                     }
 
@@ -3835,7 +3786,7 @@
                 banner_image: document.getElementById('modal_course_banner').value,
                 lessons: JSON.stringify(courseLessons),
                 // Auto-generate URL for detail_courses.html
-                url: `http://localhost:3000/backups/newDesign/detail_courses.html?id=${currentEditingCourse.id}`
+                url: `/backups/newDesign/detail_courses.html?id=${currentEditingCourse.id}`
             };
 
             showLoading();
@@ -4007,7 +3958,7 @@
                 showLoading();
                 console.log('📊 Loading pricing data from nd_pricing_page...');
 
-                const response = await fetch(`${API_BASE}/pricing-page?locale=${currentLang}`);
+                const response = await fetch(`${API_BASE}/nd/pricing-page?locale=${currentLang}`);
                 const result = await response.json();
 
                 if (result.success && result.data) {
@@ -4153,7 +4104,7 @@
 
                 let allSuccess = true;
                 for (const [sectionName, content] of Object.entries(sections)) {
-                    const response = await fetch(`${API_BASE}/pricing-page/${sectionName}`, {
+                    const response = await fetch(`${API_BASE}/nd/pricing-page/${sectionName}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ content, locale: currentLang })
@@ -4238,7 +4189,7 @@
             try {
                 console.log('🔄 Loading teachers from entity_teachers table...');
 
-                const response = await fetch(`${API_BASE}/api/nd/teachers`);
+                const response = await fetch(`${API_BASE}/nd/teachers`);
                 const result = await response.json();
 
                 if (result.success && result.data && result.data.length > 0) {
@@ -4452,7 +4403,7 @@
 
                 const url = editingTeacherId !== null
                     ? `${API_BASE}/api/nd/teachers/${editingTeacherId}`
-                    : `${API_BASE}/api/nd/teachers`;
+                    : `${API_BASE}/nd/teachers`;
 
                 const response = await fetch(url, {
                     method: editingTeacherId !== null ? 'PUT' : 'POST',
@@ -4538,7 +4489,7 @@
 
         // Preview teacher profile
         function previewTeacherProfile(teacherId) {
-            const previewUrl = `http://localhost:3000/backups/newDesign/detail_teacher.html?id=${teacherId}&preview=true`;
+            const previewUrl = `/backups/newDesign/detail_teacher.html?id=${teacherId}&preview=true`;
             window.open(previewUrl, '_blank');
             showToast('🔍 Opened teacher preview in new tab', 'info');
         }
@@ -4792,7 +4743,7 @@
         // Preview teacher from modal (matching courses pattern)
         function previewTeacherFromModal() {
             if (currentEditingTeacherId) {
-                const previewUrl = `http://localhost:3000/backups/newDesign/detail_teacher.html?id=${currentEditingTeacherId}&preview=true`;
+                const previewUrl = `/backups/newDesign/detail_teacher.html?id=${currentEditingTeacherId}&preview=true`;
                 window.open(previewUrl, '_blank');
                 showToast('🔍 Opened teacher preview in new tab', 'info');
             }
@@ -5048,7 +4999,7 @@
         // Preview teacher detail page
         function previewTeacherDetailPage() {
             if (currentEditingDetailTeacherId) {
-                const previewUrl = `http://localhost:3000/backups/newDesign/detail_teacher.html?id=${currentEditingDetailTeacherId}&preview=true`;
+                const previewUrl = `/backups/newDesign/detail_teacher.html?id=${currentEditingDetailTeacherId}&preview=true`;
                 window.open(previewUrl, '_blank');
                 showToast('🔍 Opened teacher detail preview in new tab', 'info');
             }
@@ -5062,7 +5013,7 @@
                 showLoading();
                 console.log('📊 Loading teachers data from nd_teachers_page...');
 
-                const response = await fetch(`${API_BASE}/teachers-page?locale=${currentLang}`);
+                const response = await fetch(`${API_BASE}/nd/teachers-page?locale=${currentLang}`);
                 const result = await response.json();
 
                 if (result.success && result.data) {
@@ -5191,7 +5142,7 @@
 
                 // Save each section
                 for (const [sectionName, sectionData] of Object.entries(sectionsData)) {
-                    const response = await fetch(`${API_BASE}/teachers-page/${sectionName}`, {
+                    const response = await fetch(`${API_BASE}/nd/teachers-page/${sectionName}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ content: sectionData, locale: currentLang })
@@ -5272,7 +5223,7 @@
             }
 
             try {
-                const response = await fetch(`http://localhost:3000/api/blog-posts`, {
+                const response = await fetch(`${API_BASE}/blog-posts`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -5314,7 +5265,7 @@
             }
 
             try {
-                const response = await fetch(`http://localhost:3000/api/blog-posts/${id}`, {
+                const response = await fetch(`${API_BASE}/blog-posts/${id}`, {
                     method: 'DELETE'
                 });
 
@@ -5338,7 +5289,7 @@
                 showLoading();
                 console.log('📚 Loading Career Center Platform data...');
 
-                const response = await fetch(`${API_BASE}/api/nd/career-center-platform-page?locale=${currentLang}`);
+                const response = await fetch(`${API_BASE}/nd/career-center-platform-page?locale=${currentLang}`);
                 const result = await response.json();
 
                 if (result.success && result.data && result.data.sections) {
@@ -5485,7 +5436,7 @@
 
                 // Save each section
                 for (const [sectionName, sectionData] of Object.entries(sections)) {
-                    const response = await fetch(`${API_BASE}/api/nd/career-center-platform-page/${sectionName}`, {
+                    const response = await fetch(`${API_BASE}/nd/career-center-platform-page/${sectionName}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -5891,7 +5842,7 @@
             <!-- Modal Footer -->
             <div style="padding: 20px; border-top: 1px solid #e1e1e1; display: flex; justify-content: space-between; background: #f8f9fa;">
                 <div>
-                    <button class="btn btn-success" onclick="window.open('http://localhost:3000/backups/newDesign/detail_courses.html?id=' + document.getElementById('modal_course_id').value + '&preview=true', '_blank')">👁️ Preview Course Page</button>
+                    <button class="btn btn-success" onclick="window.open('/backups/newDesign/detail_courses.html?id=' + document.getElementById('modal_course_id').value + '&preview=true', '_blank')">👁️ Preview Course Page</button>
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button class="btn btn-secondary" onclick="closeCourseDetailsModal()">Cancel</button>
