@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quick Test - Courses API</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .course { border: 1px solid #ccc; margin: 10px; padding: 15px; border-radius: 5px; }
+        .loading { color: #666; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Quick Test - ND Courses API</h1>
+    <div id="status">Loading...</div>
+    <div id="results"></div>
+
+    <script>
+        console.log('🧪 Testing ND Courses API...');
+
+        const API_URL = 'http://localhost:1337/api/nd/courses';
+        const statusDiv = document.getElementById('status');
+        const resultsDiv = document.getElementById('results');
+
+        async function testAPI() {
+            try {
+                statusDiv.innerHTML = '<span class="loading">🔄 Fetching courses from API...</span>';
+                console.log('📡 Calling API:', API_URL);
+
+                const response = await fetch(API_URL);
+                console.log('📊 Response status:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('✅ Data received:', data);
+
+                if (data.success && Array.isArray(data.data)) {
+                    statusDiv.innerHTML = `<span class="success">✅ Success! Found ${data.data.length} courses</span>`;
+
+                    data.data.forEach((course, index) => {
+                        const courseDiv = document.createElement('div');
+                        courseDiv.className = 'course';
+                        courseDiv.innerHTML = `
+                            <h3>${course.title}</h3>
+                            <p><strong>Category:</strong> ${course.category}</p>
+                            <p><strong>Price:</strong> $${course.price}</p>
+                            <p><strong>Rating:</strong> ${course.rating}/5</p>
+                            <p><strong>Featured:</strong> ${course.featured ? 'Yes' : 'No'}</p>
+                            <p>${course.description}</p>
+                        `;
+                        resultsDiv.appendChild(courseDiv);
+                    });
+                } else {
+                    throw new Error('Invalid API response structure');
+                }
+            } catch (error) {
+                console.error('❌ Error:', error);
+                statusDiv.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+                resultsDiv.innerHTML = `
+                    <div style="background: #fee; padding: 15px; border-radius: 5px;">
+                        <h3>Troubleshooting:</h3>
+                        <ul>
+                            <li>Check if server is running on port 1337</li>
+                            <li>Check browser console for CORS errors</li>
+                            <li>Verify API endpoint: <code>${API_URL}</code></li>
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+
+        // Test immediately
+        testAPI();
+
+        // Test language switching
+        setTimeout(() => {
+            console.log('🌍 Testing Russian locale...');
+            fetch(`${API_URL}?locale=ru`)
+                .then(r => r.json())
+                .then(data => {
+                    console.log('🇷🇺 Russian title:', data.data[0]?.title);
+                })
+                .catch(e => console.error('Russian test failed:', e));
+        }, 2000);
+    </script>
+</body>
+</html>

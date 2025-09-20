@@ -12,7 +12,7 @@
 
     // Configuration
     const API_BASE_URL = window.location.hostname === 'localhost'
-        ? 'https://aistudio555jamstack-production.up.railway.app'
+        ? 'http://localhost:1337'
         : 'https://aistudio555jamstack-production.up.railway.app';
 
     console.log('🔧 API Base URL:', API_BASE_URL);
@@ -49,7 +49,7 @@
             console.log('📡 Loading courses data from featured courses API...');
 
             const locale = getCurrentLocale();
-            const response = await fetch(`${API_BASE_URL}/api/courses`);
+            const response = await fetch(`${API_BASE_URL}/api/nd/courses`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch courses: ${response.status}`);
@@ -59,20 +59,23 @@
             console.log('✅ Courses data loaded:', data);
 
             // Populate the courses with shared card component
-            if (data.success && data.data && data.data.courses) {
-                // Use courses array from API response
+            // Handle nd_courses API structure
+            if (data.success && Array.isArray(data.data)) {
+                // New nd_courses API returns data as direct array
+                const coursesData = {
+                    courses: data.data
+                };
+                await populateCoursesSection(coursesData);
+                // Extract categories from courses
+                const categories = [...new Set(data.data.map(c => c.category).filter(Boolean))];
+                setupCoursesTabFiltering(categories);
+            } else if (data.data && data.data.courses) {
+                // Legacy structure support (just in case)
                 const coursesData = {
                     courses: data.data.courses
                 };
                 await populateCoursesSection(coursesData);
-                // Use categorized data from API response
                 setupCoursesTabFiltering(data.data.categories);
-            } else if (Array.isArray(data)) {
-                // Handle direct array response
-                const coursesData = { courses: data };
-                await populateCoursesSection(coursesData);
-                const categories = [...new Set(data.map(c => c.category).filter(Boolean))];
-                setupCoursesTabFiltering(categories);
             } else {
                 console.warn('⚠️ No courses data found in database');
                 // Don't show anything if no data

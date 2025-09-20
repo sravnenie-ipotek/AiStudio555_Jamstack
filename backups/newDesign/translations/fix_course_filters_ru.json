@@ -1,0 +1,14 @@
+{
+  "content_ru": {
+    "content": {
+      "filters": {
+        "all": "Все",
+        "web_development": "Веб-разработка",
+        "app_development": "Разработка приложений",
+        "machine_learning": "Машинное обучение",
+        "cloud_computing": "Облачные вычисления",
+        "data_science": "Наука о данных"
+      }
+    }
+  }
+}

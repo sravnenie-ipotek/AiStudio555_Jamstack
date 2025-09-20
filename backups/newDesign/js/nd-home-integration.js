@@ -9,7 +9,7 @@
 
     // Configuration
     const API_BASE_URL = window.location.hostname === 'localhost'
-        ? 'http://localhost:3000'
+        ? 'http://localhost:1337'
         : 'https://aistudio555jamstack-production.up.railway.app';
 
     // Get current language from URL or default to 'en'
@@ -507,7 +507,7 @@
         try {
             console.log('🎯 Loading featured courses from API...');
 
-            const response = await fetch(`${API_BASE_URL}/api/courses?featured=true&limit=8`);
+            const response = await fetch(`${API_BASE_URL}/api/nd/courses?featured=true&limit=8`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch featured courses: ${response.status}`);
@@ -517,7 +517,14 @@
             console.log('✅ Featured courses data loaded:', data);
 
             // Populate the featured courses section
-            if (data.success && data.data) {
+            // Handle nd_courses API structure (direct array)
+            if (data.success && Array.isArray(data.data)) {
+                const coursesData = { courses: data.data };
+                await populateFeaturedCourses(coursesData);
+                const categories = [...new Set(data.data.map(c => c.category).filter(Boolean))];
+                setupCourseTabFiltering(categories);
+            } else if (data.data && data.data.courses) {
+                // Legacy structure support
                 await populateFeaturedCourses(data.data);
                 setupCourseTabFiltering(data.data.categories);
             } else {
