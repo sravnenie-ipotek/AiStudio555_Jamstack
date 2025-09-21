@@ -9,6 +9,21 @@
 - **Fallback**: Automatic fallback to English if translation missing
 - **Admin System**: Centralized admin panel with modal-based editing (admin-nd.html)
 
+### 🔑 Key Architecture Principles
+1. **Separation of Concerns**:
+   - **Page Tables** (nd_*_page): Store UI text, buttons, labels, headers
+   - **Entity Tables** (nd_courses, teachers): Store actual content data
+
+2. **Translation System**:
+   - Each page table has `content_en`, `content_ru`, `content_he` columns
+   - API automatically serves based on `?locale=` parameter
+   - Frontend uses `data-i18n` attributes to map translations
+
+3. **Example: Courses Page**:
+   - `nd_courses_page`: Stores "Course Details" button text, "Featured Courses" title
+   - `nd_courses`: Stores actual course data (React Course, Python Course, etc.)
+   - Both work together to render the complete page
+
 ### 📁 Project Structure
 - **NewDesign Pages**: `/backups/newDesign/` directory (home.html, courses.html, etc.)
 - **Admin Panel**: `/admin-nd.html` - SINGLE source for ALL content management
@@ -20,10 +35,30 @@
 ## 🗂️ Database Tables Overview
 
 ### Table Categories
-1. **Page Content Tables** - Store page-specific content (nd_home, nd_pricing_page, etc.)
-2. **Entity Data Tables** - Store actual data records (nd_courses, teachers, blog_posts)
-3. **System Tables** - Navigation, footer, settings (nd_menu, nd_footer)
-4. **Legacy Tables** - Old project tables still in use (teachers, courses, etc.)
+1. **Page Content Tables** - Store page-specific content and translations
+   - `nd_home` - Home page sections (hero, features, testimonials, etc.)
+   - `nd_courses_page` - Courses page UI translations and content
+   - `nd_pricing_page` - Pricing page content
+   - `nd_about_page` - About page content
+   - `nd_contact_page` - Contact page content
+   - `nd_teachers_page` - Teachers page sections
+   - `nd_career_center_platform_page` - Career center page content
+
+2. **Entity Data Tables** - Store actual data records
+   - `nd_courses` - Course catalog data
+   - `teachers` / `entity_teachers` - Teacher profiles
+   - `blog_posts` - Blog articles
+   - `nd_pricing_plans` - Pricing plan details
+
+3. **System Tables** - Navigation, footer, settings
+   - `nd_menu` - Navigation menu items
+   - `nd_footer` - Footer content
+   - `nd_settings` - System configuration
+
+4. **Legacy Tables** - Old project tables still in use
+   - `courses` - Old course data
+   - `home_pages` - Old home page content
+   - Various content_* tables
 
 ---
 
@@ -62,10 +97,14 @@ CREATE TABLE nd_home (
 
 ### 2. COURSES PAGE ✅ ACTIVE + STATIC IMAGES
 **Screen**: `/backups/newDesign/courses.html`
-**Table**: `nd_courses` (data table)
-**API**: `/api/featured-courses`, `/api/nd/courses`
+**Tables**:
+- `nd_courses_page` - Page content and translations
+- `nd_courses` - Course entity data
+**API**:
+- `/api/nd/courses-page` - Page content and UI translations
+- `/api/nd/courses` - Course data
 **Integration**: `js/nd-courses-integration.js`, `js/course-card-component.js`
-**Records**: 3 active courses
+**Records**: 7 page sections, 3 active courses
 
 **⚡ STATIC IMAGE SYSTEM**:
 - **Problem Solved**: Dynamic image generation creating new pictures each load
@@ -240,6 +279,30 @@ function showEditModal(entityType, entityId) {
 ---
 
 ## 🗄️ Entity Data Tables
+
+### `nd_courses_page` ✅ ACTIVE
+```sql
+CREATE TABLE nd_courses_page (
+    id SERIAL PRIMARY KEY,
+    section_key VARCHAR(100) UNIQUE NOT NULL,
+    section_type VARCHAR(50),
+    content_en JSONB,
+    content_ru JSONB,
+    content_he JSONB,
+    visible BOOLEAN DEFAULT true,
+    animations_enabled BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+```
+**Sections**:
+- `hero` - Page hero banner
+- `featured_courses` - Course filter tabs and titles
+- `ui_elements` - Buttons and labels
+- `cart` - Shopping cart UI text
+- `cta_bottom` - Bottom call-to-action
+- `misc` - Miscellaneous UI text
+- `navigation` - Navigation menu items
 
 ### `nd_courses` ✅ ACTIVE
 ```sql

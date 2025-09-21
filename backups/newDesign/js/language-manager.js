@@ -10,7 +10,7 @@ class LanguageManager {
         this.contentCache = {};
         this.isLoading = false;
         this.apiBaseUrl = window.location.hostname === 'localhost'
-            ? 'http://localhost:1337'
+            ? 'http://localhost:3000'
             : 'https://aistudio555jamstack-production.up.railway.app';
 
         // Initialize on DOM ready
@@ -252,8 +252,8 @@ class LanguageManager {
     getAPIEndpoint(pageName, locale) {
         const endpoints = {
             'home': `/api/nd/home-page?locale=${locale}`,
-            'courses': `/api/nd/courses?locale=${locale}`,
-            'teachers': `/api/nd/teachers?locale=${locale}`,
+            'courses': `/api/nd/courses-page?locale=${locale}`,  // Changed to courses-page for UI translations
+            'teachers': `/api/nd/teachers-page?locale=${locale}`, // Changed to teachers-page for consistency
             'blog': `/api/nd/blog?locale=${locale}`,
             'career-center': `/api/nd/career-center-platform-page?locale=${locale}`,
             'career-orientation': `/api/nd/career-orientation-page?locale=${locale}`

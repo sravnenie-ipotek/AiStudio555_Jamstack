@@ -218,6 +218,78 @@
     .blog-card-link:hover .blog-card-link-arrow {
       transform: translateX(5px) !important;
     }
+
+    /* Language Pills Styling */
+    .lang-pills {
+      display: inline-flex !important;
+      gap: 10px !important;
+      margin: 0 20px !important;
+      align-items: center !important;
+    }
+
+    .lang-pill {
+      padding: 6px 12px !important;
+      border-radius: 20px !important;
+      background: transparent !important;
+      color: white !important;
+      text-decoration: none !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      transition: all 0.3s ease !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+    }
+
+    .lang-pill:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    .lang-pill.active {
+      background: #ffd700 !important;
+      color: #1a1d3a !important;
+      border-color: #ffd700 !important;
+    }
+
+    .mobile-lang-pill {
+      padding: 8px 16px !important;
+      border-radius: 20px !important;
+      background: transparent !important;
+      color: white !important;
+      text-decoration: none !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      transition: all 0.3s ease !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+    }
+
+    .mobile-lang-pill:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    .mobile-lang-pill.active {
+      background: #ffd700 !important;
+      color: #1a1d3a !important;
+      border-color: #ffd700 !important;
+    }
+
+    @media screen and (max-width: 991px) {
+      .mobile-lang-pills {
+        display: flex !important;
+        gap: 10px !important;
+        justify-content: center !important;
+      }
+
+      .lang-pills {
+        display: none !important;
+      }
+    }
+
+    @media screen and (min-width: 992px) {
+      .mobile-lang-pills {
+        display: none !important;
+      }
+    }
   </style>
   <!-- Uniform Card Styles -->
   <link href="shared/components/sharedCard/uniform-card-styles.css" rel="stylesheet" type="text/css">
@@ -229,14 +301,14 @@
         <div class="navbar-content">
           <a href="index.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
           <nav role="navigation" class="nav-menu w-nav-menu">
-            <a href="home.html" class="nav-link w-nav-link">Home</a>
-            <a href="courses.html" class="nav-link w-nav-link">Courses</a>
-            <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
-            <a href="blog.html" class="nav-link w-nav-link">Blog</a>
-            <a href="teachers.html" aria-current="page" class="nav-link w-nav-link w--current">Teachers</a>
+            <a href="home.html" class="nav-link w-nav-link" data-i18n="navigation.content.home">Home</a>
+            <a href="courses.html" class="nav-link w-nav-link" data-i18n="navigation.content.courses">Courses</a>
+            <a href="pricing.html" class="nav-link w-nav-link" data-i18n="navigation.content.pricing">Pricing</a>
+            <a href="blog.html" class="nav-link w-nav-link" data-i18n="navigation.content.blog">Blog</a>
+            <a href="teachers.html" aria-current="page" class="nav-link w-nav-link w--current" data-i18n="navigation.content.teachers">Teachers</a>
             <div data-delay="0" data-hover="true" data-w-id="9a224b60-f557-150b-8062-e4bbef078cfb" class="menu-dropdown-wrapper w-dropdown">
               <div class="dropdown-toggle w-dropdown-toggle">
-                <div class="dropdown-toggle-text-block">About Us</div>
+                <div class="dropdown-toggle-text-block" data-i18n="navigation.content.about_us">About Us</div>
                 <div class="dropdown-toggle-arrow-2"></div>
               </div>
               <nav class="dropdown-column-wrapper-3 w-dropdown-list" style="width: auto; min-width: auto;">
@@ -244,15 +316,23 @@
                   <div class="dropdown-singel-wrapper">
                     <div class="dropdown-menu-wrapper">
                       <a href="career-orientation.html" class="dropdown-menu-text-link-block w-inline-block">
-                        <div>Career Orientation</div>
+                        <div data-i18n="navigation.content.career_orientation">Career Orientation</div>
                       </a>
                       <a href="career-center.html" class="dropdown-menu-text-link-block mb0 w-inline-block">
-                        <div>Career Center</div>
+                        <div data-i18n="navigation.content.career_center">Career Center</div>
                       </a>
                     </div>
                   </div>
                 </div>
-              </nav>
+                <div class="mobile-language-switchers">
+              <!-- Mobile Language Pills -->
+              <div class="mobile-lang-pills">
+                <a href="#" class="mobile-lang-pill active" onclick="setActivePill(this)">EN</a>
+                <a href="#" class="mobile-lang-pill" onclick="setActivePill(this)">RU</a>
+                <a href="#" class="mobile-lang-pill" onclick="setActivePill(this)">HE</a>
+              </div>
+            </div>
+          </nav>
             </div>
             <div data-delay="0" data-hover="true" data-w-id="9a224b60-f557-150b-8062-e4bbef078cfa" class="menu-dropdown-wrapper w-dropdown">
               <div class="dropdown-toggle w-dropdown-toggle">
@@ -360,13 +440,19 @@
             <div class="primary-button-wrapper mobile">
               <a href="detail_teacher.html?id=1" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">Sign Up Today</div>
-                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                  <div class="primary-button-text-block" data-i18n="buttons.sign_up_today">Sign Up Today</div>
+                  <div class="primary-button-text-block is-text-absolute" data-i18n="buttons.sign_up_today">Sign Up Today</div>
                 </div>
               </a>
             </div>
           </nav>
           <div class="navbar-button-wrapper">
+            <div class="lang-pills">
+              <a href="#" class="lang-pill active" onclick="setActivePill(this)">EN</a>
+              <a href="#" class="lang-pill" onclick="setActivePill(this)">RU</a>
+              <a href="#" class="lang-pill" onclick="setActivePill(this)">HE</a>
+            </div>
+
             <div data-open-product="" data-wf-cart-type="rightSidebar" data-wf-cart-query="" data-wf-page-link-href-prefix="" class="w-commerce-commercecartwrapper navbar-cart" data-node-type="commerce-cart-wrapper">
               <a class="w-commerce-commercecartopenlink navbar-cart-button w-inline-block" role="button" aria-haspopup="dialog" aria-label="Open cart" data-node-type="commerce-cart-open-link" href="detail_teacher.html?id=1"><img loading="lazy" src="images/Navbar-Cart-Icon.svg" alt="" class="navbar-cart-icon">
                 <div class="w-commerce-commercecartopenlinkcount cart-quantity">0</div>
@@ -404,8 +490,8 @@
             <div class="primary-button-wrapper desktop">
               <a href="authentication-pages/sign-up.html" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
                 <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">Sign Up Today</div>
-                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                  <div class="primary-button-text-block" data-i18n="buttons.sign_up_today">Sign Up Today</div>
+                  <div class="primary-button-text-block is-text-absolute" data-i18n="buttons.sign_up_today">Sign Up Today</div>
                 </div>
               </a>
             </div>
@@ -420,12 +506,12 @@
       <div class="container">
         <div class="inner-banner-content">
           <div class="inner-banner-title-wrapper">
-            <h1 class="inner-banner-title">Our Teachers</h1>
+            <h1 class="inner-banner-title" data-i18n="teachers_page.content.title">Our Teachers</h1>
           </div>
           <div class="inner-banner-text-link-wrapper">
-            <a href="home.html" class="inner-banner-text-link">Home</a>
+            <a href="home.html" class="inner-banner-text-link" data-i18n="navigation.content.home">Home</a>
             <div class="inner-banner-text-link-arrow">|</div>
-            <a href="teachers.html" aria-current="page" class="inner-banner-text-link w--current">Teachers</a>
+            <a href="teachers.html" aria-current="page" class="inner-banner-text-link w--current" data-i18n="navigation.content.teachers">Teachers</a>
           </div>
         </div>
       </div>
@@ -435,11 +521,11 @@
         <div data-w-id="c3e5b5f5-6409-cff7-362a-de9db89758f2" style="opacity:1" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">Meet Our Team</div>
+            <div class="section-subtitle" data-i18n="teachers.content.subtitle">Meet Our Team</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title blog">Expert Instructors Dedicated to Your Success</h2>
-          <p class="section-description-text main-blog">Learn from industry professionals with years of real-world experience who are passionate about sharing their knowledge and helping you achieve your career goals.</p>
+          <h2 class="section-title blog" data-i18n="teachers.content.title">Expert Instructors Dedicated to Your Success</h2>
+          <p class="section-description-text main-blog" data-i18n="teachers.content.description">Learn from industry professionals with years of real-world experience who are passionate about sharing their knowledge and helping you achieve your career goals.</p>
         </div>
         <div data-w-id="ef65d1e6-86c1-82b8-f47d-136072a1d8f6" style="opacity:1" class="main-blog-content">
           <div class="main-blog-collection-list-wrapper">
@@ -853,5 +939,11 @@
 
   <!-- Teachers Integration Script - Static Images Only -->
   <script src="js/teachers-integration.js" type="text/javascript"></script>
+
+  <!-- Enhanced Language Manager for Translations -->
+  <script src="js/enhanced-language-manager.js"></script>
+
+  <!-- Home Integration for API Data -->
+  <script src="js/nd-home-integration.js"></script>
 </body>
 </html>

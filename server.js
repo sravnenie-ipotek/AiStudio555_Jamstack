@@ -8193,6 +8193,129 @@ app.get('/api/nd/home-page', async (req, res) => {
   }
 });
 
+// ==================== ND COURSES PAGE API ====================
+app.get('/api/nd/courses-page', async (req, res) => {
+  const locale = req.query.locale || 'en';
+  const preview = req.query.preview === 'true';
+
+  try {
+    // Get all sections from nd_courses_page
+    const query = `
+      SELECT
+        section_key,
+        section_type,
+        content_${locale} as content,
+        visible,
+        animations_enabled
+      FROM nd_courses_page
+      WHERE visible = true OR $1 = true
+      ORDER BY
+        CASE section_key
+          WHEN 'hero' THEN 1
+          WHEN 'featured_courses' THEN 2
+          WHEN 'ui_elements' THEN 3
+          WHEN 'cart' THEN 4
+          WHEN 'cta_bottom' THEN 5
+          WHEN 'navigation' THEN 6
+          WHEN 'misc' THEN 7
+          ELSE 8
+        END
+    `;
+
+    const rows = await queryDatabase(query, [preview]);
+
+    // Transform to object format
+    const data = {};
+    rows.forEach(row => {
+      data[row.section_key] = {
+        type: row.section_type,
+        content: row.content || {},
+        visible: row.visible,
+        animations_enabled: row.animations_enabled
+      };
+    });
+
+    res.json({
+      success: true,
+      data: data,
+      locale: locale
+    });
+  } catch (error) {
+    console.error('Error fetching courses page:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch courses page content',
+      error: error.message
+    });
+  }
+});
+
+// Update endpoint for nd_courses_page
+app.put('/api/nd/courses-page/:section', async (req, res) => {
+  const { section } = req.params;
+  const updates = req.body;
+
+  try {
+    // Build update query
+    const updateFields = [];
+    const values = [section];
+    let paramCount = 2;
+
+    if (updates.content_en) {
+      updateFields.push(`content_en = $${paramCount}`);
+      values.push(updates.content_en);
+      paramCount++;
+    }
+    if (updates.content_ru) {
+      updateFields.push(`content_ru = $${paramCount}`);
+      values.push(updates.content_ru);
+      paramCount++;
+    }
+    if (updates.content_he) {
+      updateFields.push(`content_he = $${paramCount}`);
+      values.push(updates.content_he);
+      paramCount++;
+    }
+
+    if (updateFields.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No valid update fields provided'
+      });
+    }
+
+    const query = `
+      UPDATE nd_courses_page
+      SET ${updateFields.join(', ')}, updated_at = NOW()
+      WHERE section_key = $1
+      RETURNING *
+    `;
+
+    const result = await queryDatabase(query, values);
+
+    if (!result || result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Section not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: 'Courses page section updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating courses page section:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update courses page section',
+      error: error.message
+    });
+  }
+});
+
+
 // Get menu for new design
 app.get('/api/nd/menu', async (req, res) => {
   try {
