@@ -3232,7 +3232,7 @@
             try {
                 console.log('🔄 Loading courses from nd_courses table...');
                 // Now using dedicated nd_courses table
-                const response = await fetch(`${API_BASE}/courses?locale=${currentLang}`);
+                const response = await fetch(`${API_BASE}/nd/courses?locale=${currentLang}`);
                 const data = await response.json();
 
                 console.log('📡 API Response:', {
@@ -3389,7 +3389,7 @@
         async function quickToggleVisible(courseId, isVisible) {
             try {
                 console.log(`🔄 Quick updating visibility for course ${courseId} to ${isVisible}`);
-                const response = await fetch(`${API_BASE}/courses/${courseId}`, {
+                const response = await fetch(`${API_BASE}/nd/courses/${courseId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ visible: isVisible })
@@ -3414,7 +3414,7 @@
         async function quickToggleFeatured(courseId, isFeatured) {
             try {
                 console.log(`🔄 Quick updating featured status for course ${courseId} to ${isFeatured}`);
-                const response = await fetch(`${API_BASE}/courses/${courseId}`, {
+                const response = await fetch(`${API_BASE}/nd/courses/${courseId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ featured: isFeatured })
@@ -3442,7 +3442,7 @@
 
             try {
                 console.log(`🔄 Quick updating category for course ${courseId} to ${category}`);
-                const response = await fetch(`${API_BASE}/courses/${courseId}`, {
+                const response = await fetch(`${API_BASE}/nd/courses/${courseId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ category: category })
@@ -3469,7 +3469,7 @@
 
             try {
                 console.log(`🔄 Quick updating price for course ${courseId} to $${numPrice}`);
-                const response = await fetch(`${API_BASE}/courses/${courseId}`, {
+                const response = await fetch(`${API_BASE}/nd/courses/${courseId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ price: numPrice })
@@ -3618,8 +3618,8 @@
                 // Save directly to nd_courses table
                 const response = await fetch(
                     editingCourseId !== null
-                        ? `${API_BASE}/courses/${editingCourseId}`
-                        : `${API_BASE}/courses`,
+                        ? `${API_BASE}/nd/courses/${editingCourseId}`
+                        : `${API_BASE}/nd/courses`,
                     {
                         method: editingCourseId !== null ? 'PUT' : 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -3632,7 +3632,7 @@
                 if (result.success || response.ok) {
                     // If creating a new course, update its URL with auto-generated value
                     if (editingCourseId === null && result.data && result.data.id) {
-                        await fetch(`${API_BASE}/courses/${result.data.id}`, {
+                        await fetch(`${API_BASE}/nd/courses/${result.data.id}`, {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ url: `/backups/newDesign/detail_courses.html?id=${result.data.id}` })
@@ -3661,7 +3661,7 @@
             showLoading();
             try {
                 // Delete directly from nd_courses table
-                const response = await fetch(`${API_BASE}/courses/${courseId}`, {
+                const response = await fetch(`${API_BASE}/nd/courses/${courseId}`, {
                     method: 'DELETE'
                 });
 
@@ -3791,7 +3791,7 @@
 
             showLoading();
             try {
-                const response = await fetch(`${API_BASE}/courses/${currentEditingCourse.id}`, {
+                const response = await fetch(`${API_BASE}/nd/courses/${currentEditingCourse.id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(courseData)

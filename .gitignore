@@ -114,3 +114,6 @@ js/teachers-teachmeskills-tabs.js
 # NextJS test directory
 public/
 Docs/nextJs/
+
+# Copy page directory
+copyPage/

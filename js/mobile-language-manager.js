@@ -14,7 +14,7 @@ class MobileLanguageManager {
 
         // Mobile-first performance settings
         this.apiBaseUrl = window.location.hostname === 'localhost'
-            ? 'http://localhost:1337'
+            ? 'http://localhost:3000'
             : 'https://aistudio555jamstack-production.up.railway.app';
 
         // Connection intelligence

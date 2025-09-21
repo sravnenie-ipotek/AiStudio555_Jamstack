@@ -4,9 +4,9 @@
 const BlogIntegration = {
     // Configuration
     config: {
-        apiUrl: window.location.hostname === 'localhost'
-            ? 'http://localhost:3000/api/blog-posts'
-            : 'https://aistudio555jamstack-production.up.railway.app/api/blog-posts',
+        apiBaseUrl: window.location.hostname === 'localhost'
+            ? 'http://localhost:3000'
+            : 'https://aistudio555jamstack-production.up.railway.app',
         postsPerPage: 9,
         currentPage: 1,
         totalPosts: 0,
@@ -39,6 +39,47 @@ const BlogIntegration = {
         console.log('Initializing blog integration...');
         this.loadBlogPosts();
         this.setupEventListeners();
+        this.setupLanguageChangeListener();
+    },
+
+    // Get current locale from language manager or URL
+    getCurrentLocale: function() {
+        // Try to get from global language manager first
+        if (window.languageManager && window.languageManager.currentLocale) {
+            return window.languageManager.currentLocale;
+        }
+
+        // Fallback to URL parameter
+        const params = new URLSearchParams(window.location.search);
+        const locale = params.get('locale');
+        if (locale && ['en', 'ru', 'he'].includes(locale)) {
+            return locale;
+        }
+
+        // Fallback to localStorage
+        const savedLocale = localStorage.getItem('preferred_locale');
+        if (savedLocale && ['en', 'ru', 'he'].includes(savedLocale)) {
+            return savedLocale;
+        }
+
+        return 'en'; // Default
+    },
+
+    // Build API URL with locale parameter
+    getApiUrl: function(endpoint = '/api/nd/blog') {
+        const locale = this.getCurrentLocale();
+        const url = new URL(endpoint, this.config.apiBaseUrl);
+        url.searchParams.set('locale', locale);
+        return url.toString();
+    },
+
+    // Setup language change listener
+    setupLanguageChangeListener: function() {
+        window.addEventListener('languageChanged', (event) => {
+            console.log('Language changed to:', event.detail.locale);
+            // Reload blog posts with new language
+            this.loadBlogPosts(1);
+        });
     },
 
     // Setup event listeners
@@ -54,7 +95,16 @@ const BlogIntegration = {
     loadBlogPosts: async function(page = 1) {
         try {
             console.log('Fetching blog posts from API...');
-            const response = await fetch(`${this.config.apiUrl}?page=${page}&limit=${this.config.postsPerPage}`);
+            console.log('Current locale:', this.getCurrentLocale());
+
+            // Use the new API URL with locale support
+            const apiUrl = this.getApiUrl('/api/nd/blog');
+            const url = new URL(apiUrl);
+            url.searchParams.set('page', page);
+            url.searchParams.set('limit', this.config.postsPerPage);
+
+            console.log('Fetching from URL:', url.toString());
+            const response = await fetch(url.toString());
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

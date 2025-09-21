@@ -609,7 +609,7 @@
   <!-- Uniform Card Styles -->
   <link href="shared/components/sharedCard/uniform-card-styles.css" rel="stylesheet" type="text/css">
 </head>
-<body>
+<body data-page="teachers" data-dynamic-content="true">
   <div class="page-wrapper">
         <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
       <div class="container">
@@ -723,12 +723,12 @@
       <div class="container">
         <div class="inner-banner-content">
           <div class="inner-banner-title-wrapper">
-            <h1 class="inner-banner-title">Our Teachers</h1>
+            <h1 class="inner-banner-title" data-i18n="hero.content.title">Our Teachers</h1>
           </div>
           <div class="inner-banner-text-link-wrapper">
-            <a href="home.html" class="inner-banner-text-link">Home</a>
+            <a href="home.html" class="inner-banner-text-link" data-i18n="hero.content.breadcrumb_home">Home</a>
             <div class="inner-banner-text-link-arrow">|</div>
-            <a href="teachers.html" aria-current="page" class="inner-banner-text-link w--current">Teachers</a>
+            <a href="teachers.html" aria-current="page" class="inner-banner-text-link w--current" data-i18n="hero.content.breadcrumb_current">Teachers</a>
           </div>
         </div>
       </div>
@@ -738,11 +738,11 @@
         <div data-w-id="c3e5b5f5-6409-cff7-362a-de9db89758f2" style="opacity:1" class="section-title-wrapper align-center">
           <div class="section-subtitle-wrapper center-align">
             <div class="banner-subtitle-line left"></div>
-            <div class="section-subtitle">Meet Our Team</div>
+            <div class="section-subtitle" data-i18n="hero.content.subtitle">Meet Our Team</div>
             <div class="banner-subtitle-line right"></div>
           </div>
-          <h2 class="section-title blog">Expert Instructors Dedicated to Your Success</h2>
-          <p class="section-description-text main-blog">Learn from industry professionals with years of real-world experience who are passionate about sharing their knowledge and helping you achieve your career goals.</p>
+          <h2 class="section-title blog" data-i18n="instructor_grid.content.title">Expert Instructors Dedicated to Your Success</h2>
+          <p class="section-description-text main-blog" data-i18n="instructor_grid.content.description">Learn from industry professionals with years of real-world experience who are passionate about sharing their knowledge and helping you achieve your career goals.</p>
         </div>
         <div data-w-id="ef65d1e6-86c1-82b8-f47d-136072a1d8f6" style="opacity:1" class="main-blog-content">
           <div class="main-blog-collection-list-wrapper">
@@ -975,23 +975,23 @@
           <div class="cta-title-description">
             <div data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e980" class="section-subtitle-wrapper center-align">
               <div class="banner-subtitle-line left"></div>
-              <div class="section-subtitle">Start Learning Today</div>
+              <div class="section-subtitle" data-i18n="cta_section.content.subtitle">Start Learning Today</div>
               <div class="banner-subtitle-line right"></div>
             </div>
-            <h2 data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e985" class="cta-title">Discover A World Of Learning Opportunities.</h2>
-            <p data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e987" class="cta-description-text">Don't wait to transform career and unlock your full potential. join our community of passionate learners and gain access to a wide range of courses.</p>
+            <h2 data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e985" class="cta-title" data-i18n="cta_section.content.title">Discover A World Of Learning Opportunities.</h2>
+            <p data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e987" class="cta-description-text" data-i18n="cta_section.content.description">Don't wait to transform career and unlock your full potential. join our community of passionate learners and gain access to a wide range of courses.</p>
           </div>
           <div data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e989" class="cta-button-wrapper">
             <a href="contact-us.html" data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e98a" class="primary-button w-inline-block">
               <div class="primary-button-text-wrap">
-                <div class="primary-button-text-block">get in touch</div>
-                <div class="primary-button-text-block is-text-absolute">get in touch</div>
+                <div class="primary-button-text-block" data-i18n="cta_section.content.primary_button">get in touch</div>
+                <div class="primary-button-text-block is-text-absolute" data-i18n="cta_section.content.primary_button">get in touch</div>
               </div>
             </a>
             <a href="courses.html" data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e990" class="primary-button secondary w-inline-block">
               <div class="primary-button-text-wrap">
-                <div class="primary-button-text-block">Check Out Courses</div>
-                <div class="primary-button-text-block is-text-absolute">Check Out Courses</div>
+                <div class="primary-button-text-block" data-i18n="cta_section.content.secondary_button">Check Out Courses</div>
+                <div class="primary-button-text-block is-text-absolute" data-i18n="cta_section.content.secondary_button">Check Out Courses</div>
               </div>
             </a>
           </div><img data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e996" loading="lazy" alt="" src="images/CTA-Man-Image1.png" class="cta-man-image one"><img data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e997" loading="lazy" alt="" src="images/CTA-Man-Image2_1CTA-Man-Image2.png" class="cta-man-image-two">
@@ -1264,5 +1264,8 @@
 
   <!-- Dynamic Content Integration -->
   <script src="js/nd-teachers-integration.js"></script>
+
+  <!-- Mobile Language Manager - Match home.html pattern -->
+  <script src="js/mobile-language-manager.js"></script>
 </body>
 </html>
