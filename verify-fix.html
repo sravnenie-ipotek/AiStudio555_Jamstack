@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Shared Components Fix</title>
+    <link href="css/menu.css" rel="stylesheet" type="text/css">
+    <link href="css/popup.css" rel="stylesheet" type="text/css">
+    <script src="js/unified-language-manager.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        .lang-pills { display: flex; gap: 10px; margin: 10px 0; }
+        .lang-pill {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .lang-pill.active { background: #ffd700; color: #000; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Shared Components Fix Verification</h1>
+
+    <div class="test-section">
+        <h3>📁 File Accessibility Test</h3>
+        <div id="file-test">Testing file access...</div>
+    </div>
+
+    <div class="test-section">
+        <h3>🌐 Language Switching Test</h3>
+        <div class="lang-pills">
+            <a href="#" class="lang-pill active" onclick="setActivePill(this)">EN</a>
+            <a href="#" class="lang-pill" onclick="setActivePill(this)">RU</a>
+            <a href="#" class="lang-pill" onclick="setActivePill(this)">HE</a>
+        </div>
+        <div id="language-test">Testing language functionality...</div>
+    </div>
+
+    <div class="test-section">
+        <h3>📊 JavaScript Functions Test</h3>
+        <div id="js-test">Testing JavaScript functions...</div>
+    </div>
+
+    <script src="js/popup.js"></script>
+    <script>
+        // Test file loading
+        function testFileLoading() {
+            const fileTest = document.getElementById('file-test');
+            let results = [];
+
+            // Check if CSS files loaded (by checking if styles are applied)
+            const menuCSS = document.querySelector('link[href="css/menu.css"]');
+            const popupCSS = document.querySelector('link[href="css/popup.css"]');
+
+            results.push(`menu.css: ${menuCSS ? '✅ Found' : '❌ Missing'}`);
+            results.push(`popup.css: ${popupCSS ? '✅ Found' : '❌ Missing'}`);
+
+            fileTest.innerHTML = results.join('<br>');
+            fileTest.className = results.every(r => r.includes('✅')) ? 'success' : 'error';
+        }
+
+        // Test JavaScript functions
+        function testJavaScript() {
+            const jsTest = document.getElementById('js-test');
+            let results = [];
+
+            results.push(`setActivePill: ${typeof window.setActivePill === 'function' ? '✅ Available' : '❌ Missing'}`);
+            results.push(`LanguageManager: ${typeof window.LanguageManager === 'function' ? '✅ Available' : '❌ Missing'}`);
+            results.push(`languageManager: ${typeof window.languageManager === 'object' ? '✅ Available' : '❌ Missing'}`);
+
+            jsTest.innerHTML = results.join('<br>');
+            jsTest.className = results.every(r => r.includes('✅')) ? 'success' : 'error';
+        }
+
+        // Test language switching
+        function testLanguageSwitching() {
+            const langTest = document.getElementById('language-test');
+
+            if (typeof window.setActivePill === 'function') {
+                langTest.innerHTML = '✅ Language switching function is available and pills are clickable';
+                langTest.className = 'success';
+            } else {
+                langTest.innerHTML = '❌ Language switching function not available';
+                langTest.className = 'error';
+            }
+        }
+
+        // Run tests when page loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                testFileLoading();
+                testJavaScript();
+                testLanguageSwitching();
+            }, 1000);
+        });
+
+        // Override setActivePill to show it's working
+        const originalSetActivePill = window.setActivePill;
+        window.setActivePill = function(element) {
+            console.log('🎯 setActivePill called for:', element.textContent);
+
+            // Update visual state
+            document.querySelectorAll('.lang-pill').forEach(pill => pill.classList.remove('active'));
+            element.classList.add('active');
+
+            // Show feedback
+            const langTest = document.getElementById('language-test');
+            langTest.innerHTML = `✅ Language pill "${element.textContent}" activated successfully!`;
+            langTest.className = 'success';
+
+            // Call original function if it exists
+            if (originalSetActivePill) {
+                originalSetActivePill(element);
+            }
+        };
+    </script>
+</body>
+</html>

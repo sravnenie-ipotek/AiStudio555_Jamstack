@@ -334,144 +334,134 @@
         </div>
       </div>
     </div>
-    <!-- Inner Banner Section -->
-    <section class="section inner-banner">
+    <!-- Course Details Main Section - Webflow Design -->
+    <section class="section courses-single">
       <div class="container">
-        <div class="inner-banner-content">
-          <div class="inner-banner-title-wrapper">
-            <h1 class="inner-banner-title course-details-hero-title"></h1>
-          </div>
-          <div class="inner-banner-text-link-wrapper">
-            <a href="home.html" class="inner-banner-text-link">Home</a>
-            <div class="inner-banner-text-link-arrow">|</div>
-            <a href="courses.html" class="inner-banner-text-link">Courses</a>
-            <div class="inner-banner-text-link-arrow">|</div>
-            <span class="inner-banner-text-link course-breadcrumb-title"></span>
-          </div>
-        </div>
-      </div>
-    </section>
+        <div class="courses-single-content" data-w-id="course-details-main">
+          <!-- Course Details Content with Opacity Animation -->
+          <div class="course-details-content" style="opacity: 0; transition: opacity 0.5s ease;">
 
-    <!-- SHARED COURSE DETAILS PAGE TEMPLATE -->
-    <!-- This template has NO static content - everything is populated from database -->
-    <section class="section course-details">
-      <div class="container">
-        <div class="course-details-hero-section">
-        <div class="course-details-hero-content">
-          <p class="course-details-hero-description"></p>
+            <!-- Course Name and Description Area -->
+            <div class="courses-single-info">
+              <div class="courses-single-info-content">
+                <h1 class="course-details-name"></h1>
+                <p class="course-details-description-text"></p>
 
-        <div class="course-details-hero-meta">
-          <div class="course-meta-item">
-            <span class="course-rating-stars"></span>
-            <span class="course-rating-text"></span>
-          </div>
-          <div class="course-meta-item">
-            <span class="course-instructor"></span>
-          </div>
-          <div class="course-meta-item">
-            <span class="course-duration"></span>
-          </div>
-        </div>
+                <!-- Author Wrapper -->
+                <div class="courses-single-author-wrapper">
+                  <div class="courses-single-author-image-wrapper">
+                    <img class="courses-single-author-image course-details-author-image" src="images/default-instructor.jpg" alt="" loading="lazy">
+                  </div>
+                  <div class="courses-single-author-content">
+                    <div class="courses-single-author-name course-details-author-name"></div>
+                    <div class="courses-single-author-bio course-details-author-bio"></div>
+                  </div>
+                </div>
 
-          <div class="course-details-hero-image">
-            <img class="course-hero-image" src="" alt="" />
-          </div>
-        </div>
-      </div>
-
-      <div class="course-details-content-section">
-        <div class="course-details-main-content">
-
-          <!-- Course Overview -->
-          <div class="course-overview-section">
-            <h2 data-i18n="course_overview.title">Course Overview</h2>
-            <p class="course-full-description"></p>
-          </div>
-
-          <!-- What You'll Learn -->
-          <div class="course-objectives-section">
-            <h2 data-i18n="what_you_learn.title">What You'll Learn</h2>
-            <div class="course-objectives-list">
-              <!-- Populated from database -->
-            </div>
-          </div>
-
-          <!-- Course Curriculum / Lessons -->
-          <div class="course-curriculum-section">
-            <h2 data-i18n="course_curriculum.title">Course Curriculum</h2>
-            <p class="course-curriculum-description"></p>
-            <div class="course-lessons-container">
-              <!-- Populated from database -->
-            </div>
-          </div>
-
-          <!-- Course Requirements -->
-          <div class="course-requirements-section">
-            <h2 data-i18n="requirements.title">Requirements</h2>
-            <div class="course-requirements-list">
-              <!-- Populated from database -->
-            </div>
-          </div>
-
-          <!-- Course Features -->
-          <div class="course-features-section">
-            <h2 data-i18n="course_features.title">Course Features</h2>
-            <div class="course-features-list">
-              <!-- Populated from database -->
-            </div>
-          </div>
-
-        </div>
-
-        <div class="course-details-sidebar">
-
-          <!-- Course Info Card -->
-          <div class="course-info-card">
-            <div class="course-price">
-              <span class="course-current-price"></span>
-              <span class="course-old-price"></span>
-            </div>
-
-            <div class="course-stats">
-              <div class="course-stat-item">
-                <span class="course-lessons-count"></span> <span data-i18n="course_info.lessons">Lessons</span>
-              </div>
-              <div class="course-stat-item">
-                <span class="course-students-count"></span> <span data-i18n="course_info.students">Students</span>
-              </div>
-              <div class="course-stat-item">
-                <span data-i18n="course_info.level">Level</span>: <span class="course-level"></span>
+                <!-- Short Categories Pills -->
+                <div class="courses-single-short-categories">
+                  <div class="courses-single-short-categories-text course-details-short-categories-text"></div>
+                </div>
               </div>
             </div>
 
-            <div class="course-category-tag">
-              <span class="course-category"></span>
-            </div>
+            <!-- Two Column Bottom Content -->
+            <div class="courses-single-bottom-content">
 
-            <a href="#" class="primary-button course-enroll-button w-inline-block">
-              <div class="primary-button-text-wrap">
-                <div class="primary-button-text-block" data-i18n="ui_elements.buttons.enroll_now">Enroll Now</div>
-                <div class="primary-button-text-block is-text-absolute" data-i18n="ui_elements.buttons.enroll_now">Enroll Now</div>
+              <!-- Left Column: Lessons -->
+              <div class="courses-single-lessons-column">
+                <div class="courses-single-lessons-wrapper">
+                  <h3 class="courses-single-section-title">Course Curriculum</h3>
+                  <div class="course-lessons-container">
+                    <!-- Populated from database -->
+                  </div>
+                </div>
+
+                <!-- What You'll Learn -->
+                <div class="courses-single-objectives-wrapper">
+                  <h3 class="courses-single-section-title">What You'll Learn</h3>
+                  <div class="course-objectives-list">
+                    <!-- Populated from database -->
+                  </div>
+                </div>
+
+                <!-- Requirements -->
+                <div class="courses-single-requirements-wrapper">
+                  <h3 class="courses-single-section-title">Requirements</h3>
+                  <div class="course-requirements-list">
+                    <!-- Populated from database -->
+                  </div>
+                </div>
               </div>
-            </a>
 
-            <div class="course-guarantee">
-              <span class="course-guarantee-text"></span>
-            </div>
-          </div>
+              <!-- Right Column: Sticky Sidebar -->
+              <div class="courses-single-sidebar">
 
-          <!-- Instructor Info -->
-          <div class="course-instructor-card">
-            <h3 data-i18n="instructor.title">About the Instructor</h3>
-            <div class="instructor-info">
-              <img class="instructor-image" src="" alt="" />
-              <div class="instructor-details">
-                <h4 class="instructor-name"></h4>
-                <p class="instructor-bio"></p>
+                <!-- Course Video/Image Card -->
+                <div class="courses-single-video-card">
+                  <div class="courses-single-video-wrapper">
+                    <img class="courses-single-video-thumbnail course-hero-image" src="" alt="" loading="lazy">
+                    <div class="courses-single-video-overlay">
+                      <div class="courses-single-play-button">
+                        <div class="courses-single-play-icon"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Course Info -->
+                  <div class="courses-single-card-info">
+                    <div class="courses-single-price">
+                      <div class="courses-single-current-price course-current-price"></div>
+                      <div class="courses-single-old-price course-old-price"></div>
+                    </div>
+
+                    <!-- Course Features -->
+                    <div class="courses-single-features">
+                      <div class="courses-single-feature-item">
+                        <div class="courses-single-feature-icon"></div>
+                        <div class="courses-single-feature-text">
+                          <span class="course-lessons-count"></span> Lessons
+                        </div>
+                      </div>
+                      <div class="courses-single-feature-item">
+                        <div class="courses-single-feature-icon"></div>
+                        <div class="courses-single-feature-text">
+                          <span class="course-duration"></span>
+                        </div>
+                      </div>
+                      <div class="courses-single-feature-item">
+                        <div class="courses-single-feature-icon"></div>
+                        <div class="courses-single-feature-text">
+                          Level: <span class="course-level"></span>
+                        </div>
+                      </div>
+                      <div class="courses-single-feature-item">
+                        <div class="courses-single-feature-icon"></div>
+                        <div class="courses-single-feature-text">
+                          <span class="course-students-count"></span> Students
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Enroll Button -->
+                    <a href="#" class="primary-button courses-single-enroll-button w-inline-block">
+                      <div class="primary-button-text-wrap">
+                        <div class="primary-button-text-block">Enroll Now</div>
+                        <div class="primary-button-text-block is-text-absolute">Enroll Now</div>
+                      </div>
+                    </a>
+
+                    <!-- Course Category -->
+                    <div class="courses-single-category">
+                      <div class="courses-single-category-tag course-category"></div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
-          </div>
 
+          </div>
         </div>
       </div>
     </section>

@@ -333,7 +333,7 @@ class LanguageManager {
             'pricing': `/api/nd/pricing-page?locale=${locale}`,  // Pricing page translations
             'course-details': `/api/nd/course-details-page?locale=${locale}`, // Course details page UI translations
             'teachers': `/api/nd/teachers-page?locale=${locale}`, // Changed to teachers-page for consistency
-            'blog': `/api/nd/blog?locale=${locale}`,
+            'blog': `/api/nd/blog-page?locale=${locale}`,
             'career-center': `/api/nd/career-center-platform-page?locale=${locale}`,
             'career-orientation': `/api/nd/career-orientation-page?locale=${locale}`
         };

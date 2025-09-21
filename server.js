@@ -9530,6 +9530,281 @@ app.put('/api/nd/home-page/:section_key', async (req, res) => {
   }
 });
 
+// Blog page content endpoint (following home page pattern)
+app.get('/api/nd/blog-page', async (req, res) => {
+  try {
+    const { locale = 'en', preview = false } = req.query;
+
+    // Build query based on locale columns existence
+    let query;
+    if (locale === 'ru' || locale === 'he') {
+      query = `
+        SELECT
+          section_name as section_key,
+          'page' as section_type,
+          visible,
+          COALESCE(content_${locale}, content_en) as content,
+          display_order
+        FROM nd_blog_page
+        ${!preview ? 'WHERE visible = true' : ''}
+        ORDER BY display_order
+      `;
+    } else {
+      query = `
+        SELECT
+          section_name as section_key,
+          'page' as section_type,
+          visible,
+          content_en as content,
+          display_order
+        FROM nd_blog_page
+        ${!preview ? 'WHERE visible = true' : ''}
+        ORDER BY display_order
+      `;
+    }
+
+    const rows = await queryDatabase(query);
+
+    // Format response
+    const response = {
+      success: true,
+      data: {},
+      meta: {
+        locale,
+        cache_key: `blog_${locale}_v1`,
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    // Process each section
+    rows.forEach(row => {
+      const content = row.content || {};
+
+      response.data[row.section_key] = {
+        visible: row.visible,
+        type: row.section_type,
+        content: content,
+        animations_enabled: true // Default for blog page
+      };
+    });
+
+    res.json(response);
+  } catch (error) {
+    console.error('Error fetching ND blog page:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch blog page content',
+      message: error.message
+    });
+  }
+});
+
+// PUT update blog page section content
+app.put('/api/nd/blog-page/:section_name', async (req, res) => {
+  try {
+    const { section_name } = req.params;
+    const { content_en, content_ru, content_he } = req.body;
+
+    console.log(`🔄 Updating blog page section: ${section_name}`);
+
+    const query = `
+      UPDATE nd_blog_page
+      SET content_en = $1, content_ru = $2, content_he = $3, updated_at = NOW()
+      WHERE section_name = $4
+      RETURNING *
+    `;
+
+    const result = await queryDatabase(query, [content_en, content_ru, content_he, section_name]);
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Section not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result[0],
+      message: `Blog page section ${section_name} updated successfully`
+    });
+
+  } catch (error) {
+    console.error('Error updating blog page section:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update blog page section',
+      message: error.message
+    });
+  }
+});
+
+// Create nd_blog_page table for blog translation system
+app.get('/api/create-blog-table', async (req, res) => {
+  try {
+    console.log('🚀 Creating nd_blog_page table...');
+
+    // First check if table exists and its structure
+    try {
+      const tableCheck = await queryDatabase(`
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = 'nd_blog_page'
+        ORDER BY ordinal_position
+      `);
+      console.log('Existing nd_blog_page columns:', tableCheck);
+
+      if (tableCheck.length > 0) {
+        console.log('Table already exists, skipping creation');
+      } else {
+        // Create the table with the same structure as nd_home
+        await queryDatabase(`
+          CREATE TABLE IF NOT EXISTS nd_blog_page (
+            id SERIAL PRIMARY KEY,
+            section_key VARCHAR(100) UNIQUE NOT NULL,
+            section_type VARCHAR(50),
+            content_en JSONB,
+            content_ru JSONB,
+            content_he JSONB,
+            visible BOOLEAN DEFAULT true,
+            animations_enabled BOOLEAN DEFAULT true,
+            created_at TIMESTAMP DEFAULT NOW(),
+            updated_at TIMESTAMP DEFAULT NOW()
+          );
+        `);
+        console.log('✅ nd_blog_page table created successfully');
+      }
+    } catch (checkError) {
+      console.log('Table check error:', checkError.message);
+      // Try to create anyway
+      await queryDatabase(`
+        CREATE TABLE IF NOT EXISTS nd_blog_page (
+          id SERIAL PRIMARY KEY,
+          section_key VARCHAR(100) UNIQUE NOT NULL,
+          section_type VARCHAR(50),
+          content_en JSONB,
+          content_ru JSONB,
+          content_he JSONB,
+          visible BOOLEAN DEFAULT true,
+          animations_enabled BOOLEAN DEFAULT true,
+          created_at TIMESTAMP DEFAULT NOW(),
+          updated_at TIMESTAMP DEFAULT NOW()
+        );
+      `);
+    }
+
+    console.log('✅ nd_blog_page table created successfully');
+
+    // Insert initial sections based on blog.html structure
+    const sections = [
+      {
+        key: 'hero',
+        type: 'banner',
+        content_en: {
+          title: 'Blog',
+          breadcrumb_home: 'Home',
+          breadcrumb_current: 'Blog'
+        },
+        content_ru: {
+          title: 'Блог',
+          breadcrumb_home: 'Главная',
+          breadcrumb_current: 'Блог'
+        },
+        content_he: {
+          title: 'בלוג',
+          breadcrumb_home: 'בית',
+          breadcrumb_current: 'בלוג'
+        }
+      },
+      {
+        key: 'main_content',
+        type: 'content',
+        content_en: {
+          section_title: 'News & Articles',
+          section_subtitle: 'Your Learning Journey with our experts.',
+          section_description: 'Zohacous, we believe in a structured yet flexible approach to mentorship designed to help you achieve your goals at every step.',
+          loading_text: 'Loading blog posts...'
+        },
+        content_ru: {
+          section_title: 'Новости и Статьи',
+          section_subtitle: 'Ваш путь обучения с нашими экспертами.',
+          section_description: 'В Zohacous мы верим в структурированный, но гибкий подход к наставничеству, разработанный для достижения ваших целей на каждом этапе.',
+          loading_text: 'Загрузка статей блога...'
+        },
+        content_he: {
+          section_title: 'חדשות ומאמרים',
+          section_subtitle: 'מסע הלמידה שלך עם המומחים שלנו.',
+          section_description: 'ב-Zohacous, אנו מאמינים בגישה מובנית אך גמישה להדרכה המיועדת לעזור לך להשיג את המטרות שלך בכל שלב.',
+          loading_text: 'טוען פוסטים בבלוג...'
+        }
+      },
+      {
+        key: 'navigation',
+        type: 'menu',
+        content_en: {
+          home: 'Home',
+          courses: 'Courses',
+          pricing: 'Pricing',
+          blog: 'Blog',
+          teachers: 'Teachers',
+          about_us: 'About Us',
+          career_orientation: 'Career Orientation',
+          career_center: 'Career Center'
+        },
+        content_ru: {
+          home: 'Главная',
+          courses: 'Курсы',
+          pricing: 'Цены',
+          blog: 'Блог',
+          teachers: 'Преподаватели',
+          about_us: 'О Нас',
+          career_orientation: 'Профориентация',
+          career_center: 'Центр Карьеры'
+        },
+        content_he: {
+          home: 'בית',
+          courses: 'קורסים',
+          pricing: 'תמחור',
+          blog: 'בלוג',
+          teachers: 'מרצים',
+          about_us: 'אודותינו',
+          career_orientation: 'התמחות בקריירה',
+          career_center: 'מרכז קריירה'
+        }
+      }
+    ];
+
+    for (const section of sections) {
+      await queryDatabase(`
+        INSERT INTO nd_blog_page (section_name, display_order, content_en, content_ru, content_he)
+        VALUES ($1, $2, $3, $4, $5)
+        ON CONFLICT (section_name)
+        DO UPDATE SET
+          content_en = EXCLUDED.content_en,
+          content_ru = EXCLUDED.content_ru,
+          content_he = EXCLUDED.content_he,
+          updated_at = NOW()
+      `, [section.key, 1, JSON.stringify(section.content_en), JSON.stringify(section.content_ru), JSON.stringify(section.content_he)]);
+    }
+
+    console.log('🎉 Blog page table and initial data created successfully!');
+
+    res.json({
+      success: true,
+      message: 'nd_blog_page table created with initial data',
+      sections: sections.map(s => s.key)
+    });
+
+  } catch (error) {
+    console.error('❌ Error creating blog page table:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create blog page table',
+      message: error.message
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════════╗

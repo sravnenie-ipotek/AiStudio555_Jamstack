@@ -12,6 +12,25 @@
         ? 'http://localhost:3000'
         : 'https://aistudio555jamstack-production.up.railway.app';
 
+    // Static course images mapping by category
+    const COURSE_IMAGES = {
+        'Web Development': 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&q=80',
+        'App Development': 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+        'Machine Learning': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80',
+        'Data Science': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80',
+        'Programming': 'https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=800&q=80',
+        'AI & ML': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80',
+        'Cloud Computing': 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&q=80',
+        'Mobile Dev': 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+        'DevOps': 'https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=800&q=80',
+        'default': 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80'
+    };
+
+    // Get static image for course based on category
+    function getStaticCourseImage(category) {
+        return COURSE_IMAGES[category] || COURSE_IMAGES['default'];
+    }
+
     // Extract URL parameters
     function getUrlParams() {
         const params = new URLSearchParams(window.location.search);
@@ -79,23 +98,43 @@
     function populateCourseDetails(course) {
         console.log('📝 Populating course details...');
 
-        // Hero Section
-        const heroTitle = document.querySelector('.course-details-hero-title');
-        if (heroTitle) heroTitle.textContent = course.title || '';
+        // Course Name and Description - Webflow Structure
+        const courseName = document.querySelector('.course-details-name');
+        if (courseName) {
+            courseName.textContent = course.title || '';
+            console.log('✅ Set course name to:', course.title);
+        }
 
-        const heroDescription = document.querySelector('.course-details-hero-description');
-        if (heroDescription) heroDescription.textContent = course.short_description || course.description || '';
+        const courseDescriptionText = document.querySelector('.course-details-description-text');
+        if (courseDescriptionText) {
+            courseDescriptionText.textContent = course.short_description || course.description || '';
+            console.log('✅ Set course description to:', course.short_description || course.description);
+        }
+
+        // Show course details content with opacity animation
+        const courseDetailsContent = document.querySelector('.course-details-content');
+        if (courseDetailsContent) {
+            courseDetailsContent.style.opacity = '1';
+            courseDetailsContent.classList.add('visible');
+            console.log('✅ Course details content made visible');
+        }
 
         // Breadcrumb
         const breadcrumb = document.querySelector('.course-breadcrumb-title');
-        if (breadcrumb) breadcrumb.textContent = course.title || '';
+        if (breadcrumb) {
+            breadcrumb.textContent = course.title || '';
+        }
 
-        // Main Content Area
+        // Main Content Area - Custom Structure
         const fullDescription = document.querySelector('.course-full-description');
-        if (fullDescription) fullDescription.textContent = course.description || '';
+        if (fullDescription) {
+            fullDescription.textContent = course.description || '';
+        }
 
         const curriculumDescription = document.querySelector('.course-curriculum-description');
-        if (curriculumDescription) curriculumDescription.textContent = `This ${course.lessons_count || 0}-lesson course covers all aspects of ${course.title || 'the subject'}.`;
+        if (curriculumDescription) {
+            curriculumDescription.textContent = `This ${course.lessons_count || 0}-lesson course covers all aspects of ${course.title || 'the subject'}.`;
+        }
 
         // Rating
         const ratingContainer = document.querySelector('.course-rating-stars');
@@ -147,34 +186,48 @@
             instructorImageElement.alt = course.instructor || 'Instructor';
         }
 
-        // Course Objectives
-        if (course.objectives) {
-            const objectivesContainer = document.querySelector('.courses-single-objectives-list');
+        const instructorBioElement = document.querySelector('.instructor-bio');
+        if (instructorBioElement) {
+            instructorBioElement.textContent = course.instructor_bio || 'Experienced professional with years of industry expertise and a passion for teaching.';
+        }
+
+        // Course hero image
+        const courseHeroImage = document.querySelector('.course-hero-image');
+        if (courseHeroImage) {
+            // Use course image or a placeholder based on category
+            const heroImageUrl = course.image || getStaticCourseImage(course.category);
+            courseHeroImage.src = heroImageUrl;
+            courseHeroImage.alt = course.title || 'Course';
+        }
+
+        // Course Objectives (What You'll Learn)
+        if (course.what_you_learn && course.what_you_learn.length > 0) {
+            const objectivesContainer = document.querySelector('.course-objectives-list');
             if (objectivesContainer) {
-                const objectives = course.objectives.split(',').map(obj => obj.trim());
+                const objectives = Array.isArray(course.what_you_learn) ? course.what_you_learn : course.what_you_learn.split(',').map(obj => obj.trim());
                 objectivesContainer.innerHTML = objectives.map(obj =>
-                    `<li class="courses-single-objectives-item">
-                        <img src="images/Courses-Single-Check-Icon.svg" alt="✓" class="courses-single-objectives-icon">
+                    `<div class="course-objective-item">
+                        <span class="checkmark">✓</span>
                         <span>${obj}</span>
-                    </li>`
+                    </div>`
                 ).join('');
             }
         }
 
         // Course Requirements
-        if (course.requirements) {
-            const requirementsContainer = document.querySelector('.courses-single-requirements-list');
+        if (course.requirements && course.requirements.length > 0) {
+            const requirementsContainer = document.querySelector('.course-requirements-list');
             if (requirementsContainer) {
-                const requirements = course.requirements.split(',').map(req => req.trim());
+                const requirements = Array.isArray(course.requirements) ? course.requirements : course.requirements.split(',').map(req => req.trim());
                 requirementsContainer.innerHTML = requirements.map(req =>
-                    `<li class="courses-single-requirements-item">${req}</li>`
+                    `<div class="course-requirement-item">${req}</div>`
                 ).join('');
             }
         }
 
         // Lessons/Curriculum
-        if (course.lessons) {
-            const lessonsContainer = document.querySelector('.courses-single-curriculum-list, .courses-single-lessons-list');
+        if (course.syllabus && course.syllabus.length > 0) {
+            const lessonsContainer = document.querySelector('.course-lessons-container');
             if (lessonsContainer) {
                 try {
                     const lessons = typeof course.lessons === 'string' ? JSON.parse(course.lessons) : course.lessons;
@@ -233,11 +286,51 @@
 
         // Show content areas
         const contentAreas = document.querySelectorAll('.w-dyn-hide-empty');
+        console.log('🔍 Found content areas to show:', contentAreas.length);
         contentAreas.forEach(el => {
             el.style.display = 'block';
+            console.log('✅ Showing content area:', el.className);
         });
 
-        console.log('✅ Course details populated successfully');
+        // Also ensure main sections are visible
+        const mainSections = document.querySelectorAll('.course-overview-section, .course-objectives-section, .course-curriculum-section, .course-requirements-section');
+        console.log('🔍 Found main sections:', mainSections.length);
+        mainSections.forEach(section => {
+            section.style.display = 'block';
+            section.style.opacity = '1';
+            section.style.visibility = 'visible';
+            console.log('✅ Ensuring section is visible:', section.className);
+        });
+
+        // Course guarantee
+        const guaranteeTextElement = document.querySelector('.course-guarantee-text');
+        if (guaranteeTextElement) {
+            guaranteeTextElement.textContent = '30-day money-back guarantee';
+        }
+
+        // CTA section
+        const ctaTitleElement = document.querySelector('.course-cta-title');
+        if (ctaTitleElement) {
+            ctaTitleElement.textContent = `Ready to start ${course.title}?`;
+        }
+
+        const ctaDescriptionElement = document.querySelector('.course-cta-description');
+        if (ctaDescriptionElement) {
+            ctaDescriptionElement.textContent = `Join thousands of students who have already mastered ${course.category} with our comprehensive course.`;
+        }
+
+        // Remove any Webflow-specific hiding classes and ensure visibility
+        const allElements = document.querySelectorAll('.course-details *');
+        allElements.forEach(el => {
+            if (el.classList.contains('w-dyn-hide-empty') || el.style.opacity === '0' || el.style.display === 'none') {
+                el.style.display = 'block';
+                el.style.opacity = '1';
+                el.style.visibility = 'visible';
+                el.classList.remove('w-dyn-hide-empty');
+            }
+        });
+
+        console.log('✅ Custom shared course details component populated successfully');
     }
 
     // Get category color
