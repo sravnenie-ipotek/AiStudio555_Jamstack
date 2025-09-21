@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Courses Debug Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #000; color: white; padding: 20px; }
+        .debug-section { background: #111; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Courses Page Debug</h1>
+
+    <div class="debug-section">
+        <h3>📡 API Test</h3>
+        <div id="api-status">Testing API...</div>
+        <div id="api-response"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>🎯 Course Containers</h3>
+        <div id="containers-status">Checking containers...</div>
+    </div>
+
+    <div class="debug-section">
+        <h3>📦 Course Cards</h3>
+        <div id="cards-status">Checking course cards...</div>
+    </div>
+
+    <div class="debug-section">
+        <h3>🔗 Quick Links</h3>
+        <a href="http://localhost:3005/courses.html" target="_blank">→ Open Courses Page</a><br>
+        <a href="http://localhost:3005/detail_courses.html?id=2" target="_blank">→ Open Course Details</a>
+    </div>
+
+    <script>
+        async function debugCourses() {
+            // Test API
+            try {
+                const response = await fetch('http://localhost:3000/api/nd/courses');
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.length > 0) {
+                    document.getElementById('api-status').innerHTML =
+                        `<span class="success">✅ API Working - Found ${data.data.length} courses</span>`;
+                    document.getElementById('api-response').innerHTML =
+                        `<pre>${JSON.stringify(data.data[0], null, 2).substring(0, 500)}...</pre>`;
+                } else {
+                    document.getElementById('api-status').innerHTML =
+                        `<span class="error">❌ API returned no courses</span>`;
+                }
+            } catch (error) {
+                document.getElementById('api-status').innerHTML =
+                    `<span class="error">❌ API Error: ${error.message}</span>`;
+            }
+
+            // Check if we're testing from courses page
+            if (window.location.href.includes('courses.html')) {
+                // Wait a bit for courses to load
+                setTimeout(() => {
+                    const containers = document.querySelectorAll('.featured-courses-collection-list');
+                    const sharedCards = document.querySelectorAll('.shared-course-card-item');
+                    const webflowCards = document.querySelectorAll('.featured-courses-collection-item');
+
+                    document.getElementById('containers-status').innerHTML =
+                        `Found ${containers.length} course containers`;
+
+                    document.getElementById('cards-status').innerHTML =
+                        `Shared cards: ${sharedCards.length}, Webflow cards: ${webflowCards.length}`;
+                }, 2000);
+            } else {
+                document.getElementById('containers-status').innerHTML =
+                    `<span class="warning">⚠️ Not on courses page - can't check containers</span>`;
+                document.getElementById('cards-status').innerHTML =
+                    `<span class="warning">⚠️ Not on courses page - can't check cards</span>`;
+            }
+        }
+
+        // Run debug
+        debugCourses();
+    </script>
+</body>
+</html>

@@ -111,6 +111,29 @@
             console.log('✅ Set course description to:', course.short_description || course.description);
         }
 
+        // Author Information - Webflow Structure
+        const authorName = document.querySelector('.course-details-author-name');
+        if (authorName) {
+            authorName.textContent = course.instructor || 'Expert Instructor';
+        }
+
+        const authorBio = document.querySelector('.course-details-author-bio');
+        if (authorBio) {
+            authorBio.textContent = course.instructor_bio || 'Experienced professional with years of industry expertise and a passion for teaching.';
+        }
+
+        const authorImage = document.querySelector('.courses-single-author-image');
+        if (authorImage) {
+            authorImage.src = course.instructor_image || 'images/default-instructor.jpg';
+            authorImage.alt = course.instructor || 'Instructor';
+        }
+
+        // Short Categories - Webflow Structure
+        const shortCategoriesText = document.querySelector('.course-details-short-categories-text');
+        if (shortCategoriesText) {
+            shortCategoriesText.textContent = course.category || 'General';
+        }
+
         // Show course details content with opacity animation
         const courseDetailsContent = document.querySelector('.course-details-content');
         if (courseDetailsContent) {
@@ -154,11 +177,11 @@
         const durationElement = document.querySelector('.course-duration');
         if (durationElement) durationElement.textContent = course.duration || '8 weeks';
 
-        // Sidebar price and info
-        const currentPriceElement = document.querySelector('.course-current-price');
+        // Sidebar price - Webflow Structure
+        const currentPriceElement = document.querySelector('.courses-single-current-price');
         if (currentPriceElement) currentPriceElement.textContent = `$${course.price || '99.99'}`;
 
-        const oldPriceElement = document.querySelector('.course-old-price');
+        const oldPriceElement = document.querySelector('.courses-single-old-price');
         if (oldPriceElement && course.old_price) {
             oldPriceElement.textContent = `$${course.old_price}`;
             oldPriceElement.style.textDecoration = 'line-through';
@@ -173,8 +196,9 @@
         const levelElement = document.querySelector('.course-level');
         if (levelElement) levelElement.textContent = course.level || 'All Levels';
 
-        const categoryElement = document.querySelector('.course-category');
-        if (categoryElement) categoryElement.textContent = course.category || 'General';
+        // Category tag - Webflow Structure
+        const categoryTag = document.querySelector('.courses-single-category-tag');
+        if (categoryTag) categoryTag.textContent = course.category || 'General';
 
         // Instructor info (sidebar)
         const instructorNameElement = document.querySelector('.instructor-name');
@@ -191,13 +215,12 @@
             instructorBioElement.textContent = course.instructor_bio || 'Experienced professional with years of industry expertise and a passion for teaching.';
         }
 
-        // Course hero image
-        const courseHeroImage = document.querySelector('.course-hero-image');
-        if (courseHeroImage) {
-            // Use course image or a placeholder based on category
-            const heroImageUrl = course.image || getStaticCourseImage(course.category);
-            courseHeroImage.src = heroImageUrl;
-            courseHeroImage.alt = course.title || 'Course';
+        // Course video/image thumbnail - Webflow Structure
+        const courseThumbnail = document.querySelector('.courses-single-video-thumbnail');
+        if (courseThumbnail) {
+            const thumbnailUrl = course.image || getStaticCourseImage(course.category);
+            courseThumbnail.src = thumbnailUrl;
+            courseThumbnail.alt = course.title || 'Course';
         }
 
         // Course Objectives (What You'll Learn)
@@ -258,15 +281,32 @@
             }
         }
 
-        // Features
+        // Features - Webflow Structure
         if (course.features) {
-            const featuresContainer = document.querySelector('.courses-single-features-list');
+            const featuresContainer = document.querySelector('.courses-single-features');
             if (featuresContainer) {
                 const features = course.features.split(',').map(f => f.trim());
                 featuresContainer.innerHTML = features.map(feature =>
                     `<div class="courses-single-feature-item">
-                        <img src="images/Courses-Single-Feature-Icon.svg" alt="✓" class="courses-single-feature-icon">
-                        <span>${feature}</span>
+                        <div class="courses-single-feature-icon"></div>
+                        <div class="courses-single-feature-text">${feature}</div>
+                    </div>`
+                ).join('');
+            }
+        } else {
+            // Default features if none provided
+            const featuresContainer = document.querySelector('.courses-single-features');
+            if (featuresContainer) {
+                const defaultFeatures = [
+                    'Lifetime access',
+                    'Certificate of completion',
+                    'Expert instructor support',
+                    'Mobile learning'
+                ];
+                featuresContainer.innerHTML = defaultFeatures.map(feature =>
+                    `<div class="courses-single-feature-item">
+                        <div class="courses-single-feature-icon"></div>
+                        <div class="courses-single-feature-text">${feature}</div>
                     </div>`
                 ).join('');
             }
@@ -319,8 +359,15 @@
             ctaDescriptionElement.textContent = `Join thousands of students who have already mastered ${course.category} with our comprehensive course.`;
         }
 
-        // Remove any Webflow-specific hiding classes and ensure visibility
-        const allElements = document.querySelectorAll('.course-details *');
+        // Ensure all content is visible in Webflow structure
+        const courseDetailsContent = document.querySelector('.course-details-content');
+        if (courseDetailsContent) {
+            courseDetailsContent.style.opacity = '1';
+            courseDetailsContent.classList.add('visible');
+        }
+
+        // Remove any hiding classes and ensure visibility
+        const allElements = document.querySelectorAll('.courses-single *');
         allElements.forEach(el => {
             if (el.classList.contains('w-dyn-hide-empty') || el.style.opacity === '0' || el.style.display === 'none') {
                 el.style.display = 'block';

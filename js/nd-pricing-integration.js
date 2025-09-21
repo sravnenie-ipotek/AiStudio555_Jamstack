@@ -53,6 +53,9 @@
                 // Always update feature lists for translations
                 updateFeatureLists();
 
+                // Update pricing period texts for current locale
+                updatePricingPeriodTexts();
+
                 // Update Plans Section
                 if (sections.plans) {
                     if (sections.plans.visible === false) {
@@ -264,23 +267,33 @@
                 'פרויקטים מעשיים',
                 'תמיכה בקריירה',
                 'סשיוני תמיכה',
-                'גישה לווебינרים'
+                'גישה לוובינרים'
             ]
         };
 
         const texts = featureTexts[currentLocale] || featureTexts.en;
 
-        // Update feature lists in both Monthly and Yearly tabs
-        const featureElements = document.querySelectorAll('.pricing-plan-featured-name');
-
-        featureElements.forEach((element, index) => {
+        // Update feature lists in BOTH Monthly and Yearly tabs separately
+        // Monthly tab features
+        const monthlyFeatures = document.querySelectorAll('.pricing-plan-tab-pane[data-w-tab="Tab 1"] .pricing-plan-featured-name');
+        monthlyFeatures.forEach((element, index) => {
             if (index < texts.length) {
                 element.textContent = texts[index];
-                console.log(`✅ Updated feature ${index + 1}: ${texts[index]}`);
+                console.log(`✅ Updated Monthly feature ${index + 1}: ${texts[index]}`);
             }
         });
 
-        console.log(`✅ Updated ${featureElements.length} feature elements for locale: ${currentLocale}`);
+        // Yearly tab features
+        const yearlyFeatures = document.querySelectorAll('.pricing-plan-tab-pane[data-w-tab="Tab 2"] .pricing-plan-featured-name');
+        yearlyFeatures.forEach((element, index) => {
+            if (index < texts.length) {
+                element.textContent = texts[index];
+                console.log(`✅ Updated Yearly feature ${index + 1}: ${texts[index]}`);
+            }
+        });
+
+        console.log(`✅ Updated ${monthlyFeatures.length + yearlyFeatures.length} feature elements for locale: ${currentLocale}`);
+        console.log(`   Monthly features: ${monthlyFeatures.length}, Yearly features: ${yearlyFeatures.length}`);
     }
 
     // Update individual plan card
@@ -415,16 +428,60 @@
                 setTimeout(() => {
                     // Re-update pricing after tab switch
                     console.log('🔄 Tab changed, updating pricing display...');
-                    loadPricingContent();
 
-                    // CRITICAL: Force feature list translation update after tab switch
-                    setTimeout(() => {
-                        console.log('🔄 Updating feature lists after tab switch...');
-                        updateFeatureLists();
-                    }, 200);
+                    // Update period text for current locale
+                    updatePricingPeriodTexts();
+
+                    // Update feature lists
+                    updateFeatureLists();
+
+                    // Reload full content to ensure everything is properly translated
+                    loadPricingContent();
                 }, 100);
             });
         });
+    }
+
+    // Update pricing period texts based on current tab and locale
+    function updatePricingPeriodTexts() {
+        const currentLocale = localStorage.getItem('preferred_locale') || 'en';
+
+        const pricingTexts = {
+            en: {
+                perMonth: 'Per Month',
+                perYearly: 'Per Year'
+            },
+            ru: {
+                perMonth: 'В месяц',
+                perYearly: 'В год'
+            },
+            he: {
+                perMonth: 'לחודש',
+                perYearly: 'לשנה'
+            }
+        };
+
+        const texts = pricingTexts[currentLocale] || pricingTexts.en;
+
+        // Check which tab is currently active
+        const activeTab = document.querySelector('.pricing-plan-tab-link.w--current');
+        const isYearlyTab = activeTab && activeTab.getAttribute('data-w-tab') === 'Tab 2';
+
+        // Update all pricing period elements
+        const monthlyPeriodElements = document.querySelectorAll('.pricing-plan-tab-pane[data-w-tab="Tab 1"] .pricing-pack-text');
+        const yearlyPeriodElements = document.querySelectorAll('.pricing-plan-tab-pane[data-w-tab="Tab 2"] .pricing-pack-text');
+
+        // Update monthly tab period texts
+        monthlyPeriodElements.forEach(element => {
+            element.textContent = texts.perMonth;
+        });
+
+        // Update yearly tab period texts
+        yearlyPeriodElements.forEach(element => {
+            element.textContent = texts.perYearly;
+        });
+
+        console.log(`✅ Updated pricing periods for locale: ${currentLocale}, active tab: ${isYearlyTab ? 'Yearly' : 'Monthly'}`);
     }
 
     // Add event listener for language changes
@@ -433,6 +490,14 @@
         // Small delay to ensure localStorage is updated
         setTimeout(() => {
             console.log('🔄 Reloading pricing content with new language...');
+
+            // Update pricing period texts immediately
+            updatePricingPeriodTexts();
+
+            // Update feature lists
+            updateFeatureLists();
+
+            // Reload full content
             loadPricingContent();
         }, 100);
     });
