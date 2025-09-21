@@ -32,31 +32,52 @@ app.use('/shared', express.static(path.join(__dirname, 'shared')));
 app.use(cookieParser());
 
 // Serve language-specific routes BEFORE static middleware - serve home.html directly for proper menu
+// PERMANENT FIX: Always serve main home.html for /en, not dist version
 app.get('/en', (req, res) => {
-  const homePath = path.join(__dirname, 'dist/en/home.html');
-  if (require('fs').existsSync(homePath)) {
-    res.sendFile(homePath);
-  } else {
-    res.sendFile(path.join(__dirname, 'home.html'));
-  }
+  console.log('🔧 Serving main home.html for /en (not dist version)');
+  // Always serve the main home.html with full translation support
+  res.sendFile(path.join(__dirname, 'home.html'));
 });
 
+app.get('/en/', (req, res) => {
+  // Handle trailing slash
+  res.sendFile(path.join(__dirname, 'home.html'));
+});
+
+// PERMANENT FIX: Always serve main home.html for /he, not dist version
 app.get('/he', (req, res) => {
-  const homePath = path.join(__dirname, 'dist/he/home.html');
-  if (require('fs').existsSync(homePath)) {
-    res.sendFile(homePath);
-  } else {
-    res.sendFile(path.join(__dirname, 'dist/he/index.html'));
-  }
+  res.sendFile(path.join(__dirname, 'home.html'));
 });
 
+app.get('/he/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'home.html'));
+});
+
+// PERMANENT FIX: Always serve main home.html for /ru, not dist version
 app.get('/ru', (req, res) => {
-  const homePath = path.join(__dirname, 'dist/ru/home.html');
-  if (require('fs').existsSync(homePath)) {
-    res.sendFile(homePath);
-  } else {
-    res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
-  }
+  res.sendFile(path.join(__dirname, 'home.html'));
+});
+
+app.get('/ru/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'home.html'));
+});
+
+// Handle language-specific page routes (courses, pricing, etc.)
+// This ensures all pages work with proper translations
+const pages = ['courses', 'pricing', 'teachers', 'about', 'contact', 'blog'];
+const languages = ['en', 'ru', 'he'];
+
+languages.forEach(lang => {
+  pages.forEach(page => {
+    app.get(`/${lang}/${page}.html`, (req, res) => {
+      const pagePath = path.join(__dirname, `${page}.html`);
+      if (fs.existsSync(pagePath)) {
+        res.sendFile(pagePath);
+      } else {
+        res.sendFile(path.join(__dirname, 'home.html'));
+      }
+    });
+  });
 });
 
 // Serve static files - main site and dist directory
@@ -709,9 +730,9 @@ app.get('/api/blog-posts', async (req, res) => {
     let query;
     let params = [];
 
-    // Temporarily use the same query for both admin and public to debug
-    query = 'SELECT * FROM blog_posts ORDER BY created_at DESC';
-    params = [];
+    // Filter by locale
+    query = 'SELECT * FROM blog_posts WHERE locale = $1 ORDER BY created_at DESC';
+    params = [locale];
 
     const data = await queryDatabase(query, params);
 
