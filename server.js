@@ -10175,6 +10175,140 @@ app.get('/api/populate-nd-home', async (req, res) => {
   }
 });
 
+// ==================== TARGETED MIGRATION ENDPOINT ====================
+app.get('/api/execute-targeted-migration', async (req, res) => {
+  try {
+    console.log('🎯 Executing targeted migration for 8 missing sections...');
+
+    const sectionsToAdd = [
+      {
+        section_key: 'awards',
+        section_name: 'awards',
+        section_type: 'awards',
+        content_en: {"visible":true,"type":"awards","content":{"items":[{"title":"Online Mentorship Award","description":"Recognized for excellence in online mentorship and student support"},{"title":"Class Mentorship Program","description":"Best-in-class mentorship program for technology professionals"},{"title":"Remote Learning Excellence","description":"Leading the way in remote learning methodologies"},{"title":"Technology Training Leader","description":"Award-winning technology training programs"}]},"animations_enabled":true},
+        content_ru: {"visible":true,"type":"awards","content":{"content":{"items":[{"title":"Награда за Онлайн Наставничество","description":"Признание за превосходство в онлайн наставничестве"},{"title":"Программа Классного Наставничества","description":"Лучшая в своем классе программа наставничества для технического обучения"},{"title":"Превосходство в Дистанционном Обучении","description":"Лидер в методологиях дистанционного обучения"},{"title":"Лидер Технического Обучения","description":"Награжденные программы технического обучения"}],"title":"Награды, Определяющие Наше Превосходство","subtitle":"Престижные Награды","description":"Погрузитесь в мир обучения с нашими наградами и достижениями"}},"animations_enabled":true},
+        content_he: {"visible":true,"type":"awards","content":{"items":[{"title":"פרס חונכות מקוונת","description":"הוכרה למצוינות בחונכות מקוונת ותמיכת סטודנטים"},{"title":"תוכנית חונכות כיתתית","description":"תוכנית החונכות הטובה ביותר לאנשי מקצוע בתחום הטכנולוגיה"},{"title":"מצוינות בלמידה מרחוק","description":"מובילים את הדרך במתודולוגיות למידה מרחוק"},{"title":"מנהיג הכשרה טכנולוגית","description":"תוכניות הכשרה טכנולוגיות עטורות פרסים"}]},"animations_enabled":true}
+      },
+      {
+        section_key: 'cta_bottom',
+        section_name: 'cta_bottom',
+        section_type: 'cta_bottom',
+        content_en: {"visible":true,"type":"call_to_action","content":{"title":"Discover A World Of Learning Opportunities","description":"Don't wait to transform your career and unlock your full potential. Join our community of learners today and elevate your tech career with expert-led courses."},"animations_enabled":true},
+        content_ru: {"visible":true,"type":"call_to_action","content":{"title":"Откройте Мир Возможностей Для Обучения","description":"Не ждите, чтобы трансформировать свою карьеру и раскрыть свой полный потенциал. Присоединяйтесь к нашему сообществу учащихся сегодня и повысьте свою техническую карьеру с курсами под руководством экспертов."},"animations_enabled":true},
+        content_he: {"visible":true,"type":"call_to_action","content":{"title":"גלה עולם של הזדמנויות למידה","description":"אל תחכה לשנות את הקריירה שלך ולפתוח את הפוטנציאל המלא שלך. הצטרף לקהילת הלומדים שלנו היום והעלה את הקריירה הטכנולוגית שלך עם קורסים בהנחיית מומחים."},"animations_enabled":true}
+      },
+      {
+        section_key: 'faq_answers',
+        section_name: 'faq_answers',
+        section_type: 'faq_answers',
+        content_en: {"visible":true,"type":"faq_answers","content":{"answer_default":"Zohacous offers a wide range of tech courses, including Web Development, App Development, Machine Learning, Cloud Computing and more"},"animations_enabled":true},
+        content_ru: {"visible":true,"type":"faq_answers","content":{"content":{"0":"Zohacous предлагает широкий спектр технических курсов, включая веб-разработку, разработку приложений, машинное обучение, облачные вычисления, анализ данных, кибербезопасность и многое другое. Наши курсы разработаны для всех уровней, от начинающих до продвинутых.","1":"Просто выберите курс, который вас интересует, и нажмите \"Записаться\". Вы получите мгновенный доступ ко всем материалам курса и можете начать обучение в своем собственном темпе.","2":"Большинство наших курсов для начинающих не требуют предварительных знаний. Для продвинутых курсов мы рекомендуем базовое понимание программирования. Каждый курс содержит список предварительных требований в описании.","3":"Мы регулярно добавляем новые курсы, чтобы идти в ногу с последними технологиями и тенденциями отрасли. Новые курсы добавляются ежемесячно на основе отзывов студентов и требований рынка.","4":"Мы постоянно обновляем нашу платформу новыми курсами каждый месяц, основываясь на последних тенденциях в технологиях и потребностях наших студентов."}},"animations_enabled":true},
+        content_he: {"visible":true,"type":"faq_answers","content":{"answer_default":"Zohacous מציעה מגוון רחב של קורסי טכנולוגיה, כולל פיתוח אתרים, פיתוח אפליקציות, למידת מכונה, מחשוב ענן ועוד"},"animations_enabled":true}
+      },
+      {
+        section_key: 'faq',
+        section_name: 'faq',
+        section_type: 'faq',
+        content_en: {"visible":true,"type":"faq","content":{"items":[{"answer":"Zohacous offers a wide range of tech courses, including Web Development, App Development, Machine Learning, Cloud Computing, Digital Marketing, and Business Development. Each course is designed by industry experts.","question":"What types of courses does Zohacous offer?"},{"answer":"Getting started is easy! Simply browse our course catalog, select the course that interests you, click \"Enroll Now\", and create your account. You'll have immediate access to all course materials.","question":"How do I get started with a course?"},{"answer":"Prerequisites vary by course. Beginner courses require no prior experience, while advanced courses may require foundational knowledge. Each course page clearly lists any prerequisites.","question":"Are there any prerequisites for enrolling in courses?"},{"answer":"Yes! Our platform is fully responsive and optimized for mobile devices. You can learn on-the-go using your smartphone or tablet through any web browser.","question":"Can I access the courses on mobile devices?"},{"answer":"We add new courses monthly to keep our content fresh and aligned with industry trends. Subscribe to our newsletter to stay updated on new course launches.","question":"How often are new courses added to the platform?"},{"answer":"Yes, you receive a certificate of completion for every course you finish. These certificates can be shared on LinkedIn and added to your professional portfolio.","question":"Do you offer certificates upon course completion?"}],"title":"Your Questions Answered Here","cta_text":"Still don't find out what you are looking for ??","subtitle":"FAQ","description":"Find answers to the most common questions about our courses and platform"},"animations_enabled":true},
+        content_ru: {"visible":true,"type":"faq","content":{"items":[{"answer":"Мы предлагаем широкий спектр курсов, включая веб-разработку, разработку приложений, машинное обучение, облачные вычисления и науку о данных.","question":"Какие типы курсов предлагает Zohacous?"},{"answer":"Просто выберите курс, зарегистрируйтесь и начните учиться в своем темпе с нашими экспертными инструкторами.","question":"Как начать обучение на курсе?"},{"answer":"Большинство наших курсов подходят для начинающих, но некоторые продвинутые курсы могут требовать базовых знаний.","question":"Есть ли предварительные требования для записи на курсы?"},{"answer":"Мы регулярно добавляем новые курсы каждый месяц, чтобы идти в ногу с последними технологическими тенденциями.","question":"Как часто добавляются новые курсы на платформу?"},{"answer":"Да, все наши курсы предоставляют сертификаты об окончании после успешного завершения.","question":"Предлагаете ли вы сертификаты по завершении?"}],"title":"Ответы на Ваши Вопросы","cta_text":"Все еще не нашли то, что искали?","subtitle":"Часто задаваемые вопросы","description":"Найдите ответы на самые распространенные вопросы о наших курсах и платформе"},"animations_enabled":true},
+        content_he: {"visible":true,"type":"faq","content":{"items":[{"answer":"Zohacous מציע מגוון רחב של קורסי טכנולוגיה, כולל פיתוח אתרים, פיתוח אפליקציות, למידת מכונה, מחשוב ענן, שיווק דיגיטלי ופיתוח עסקי. כל קורס מעוצב על ידי מומחים בתעשייה.","question":"אילו סוגי קורסים מציע Zohacous?"},{"answer":"להתחיל זה קל! פשוט עיין בקטלוג הקורסים שלנו, בחר את הקורס שמעניין אותך, לחץ על \"הרשם עכשיו\", וצור את החשבון שלך. תקבל גישה מיידית לכל חומרי הקורס.","question":"איך מתחילים עם קורס?"},{"answer":"דרישות הקדם משתנות לפי קורס. קורסים למתחילים לא דורשים ניסיון קודם, בעוד שקורסים מתקדמים עשויים לדרוש ידע בסיסי. כל דף קורס מפרט בבירור את דרישות הקדם.","question":"האם יש דרישות קדם להרשמה לקורסים?"},{"answer":"כן! הפלטפורמה שלנו רספונסיבית לחלוטין ומותאמת למכשירים ניידים. אתה יכול ללמוד תוך כדי תנועה באמצעות הסמארטפון או הטאבלט שלך דרך כל דפדפן אינטרנט.","question":"האם אני יכול לגשת לקורסים במכשירים ניידים?"},{"answer":"אנו מוסיפים קורסים חדשים מדי חודש כדי לשמור על התוכן שלנו רענן ומעודכן עם מגמות התעשייה. הירשם לניוזלטר שלנו כדי להישאר מעודכן על השקות קורסים חדשים.","question":"באיזו תדירות נוספים קורסים חדשים לפלטפורמה?"},{"answer":"כן, אתה מקבל תעודת סיום עבור כל קורס שאתה מסיים. ניתן לשתף תעודות אלו בלינקדאין ולהוסיף אותן לתיק העבודות המקצועי שלך.","question":"האם אתם מציעים תעודות בסיום הקורס?"}],"title":"התשובות לשאלות שלך","cta_text":"עדיין לא מצאת את מה שחיפשת?","subtitle":"שאלות נפוצות","description":"מצא תשובות לשאלות הנפוצות ביותר על הקורסים והפלטפורמה שלנו"},"animations_enabled":true}
+      },
+      {
+        section_key: 'pricing',
+        section_name: 'pricing',
+        section_type: 'pricing',
+        content_en: {"visible":true,"type":"pricing","content":{"plans":[{"name":"Monthly Plan","price":"$29","period":"Per Month"},{"name":"Annual Plan","price":"$299","period":"Per Year"}],"title":"Invest in Future with Subscription Plans","features":{"support":"24/7 Support","certificate":"Certificate of Completion","career_support":"Career Support","webinar_access":"Webinar Access","course_materials":"Course Materials","support_sessions":"Support Sessions","unlimited_access":"Unlimited Access","community_support":"Community Support","hands_on_projects":"Hands-on Projects"},"subtitle":"Affordable Plans","description":"Dive into a world of learning with diverse and extensive range of tech courses designed to cater to every skill level"},"animations_enabled":true},
+        content_ru: {"visible":true,"type":"pricing","content":{"plans":[{"name":"Месячный План","price":"$29","period":"в месяц"},{"name":"Годовой План","price":"$299","period":"в год"}],"title":"Инвестируйте в Будущее с Планами Подписки","features":{"support":"Поддержка 24/7","certificate":"Сертификат об Окончании","career_support":"Карьерная Поддержка","webinar_access":"Доступ к Вебинарам","course_materials":"Учебные Материалы","support_sessions":"Сессии Поддержки","unlimited_access":"Неограниченный Доступ","community_support":"Поддержка Сообщества","hands_on_projects":"Практические Проекты"},"subtitle":"Доступные Планы","description":"Погрузитесь в мир обучения с разнообразным спектром технических курсов"},"animations_enabled":true},
+        content_he: {"visible":true,"type":"pricing","content":{"plans":[{"name":"תוכנית חודשית","price":"$29","period":"לחודש"},{"name":"תוכנית שנתית","price":"$299","period":"לשנה"}],"title":"השקיעו בעתיד עם תוכניות מנוי","features":{"support":"תמיכה 24/7","certificate":"תעודת סיום","career_support":"תמיכת קריירה","webinar_access":"גישה לוובינרים","course_materials":"חומרי לימוד","support_sessions":"מפגשי תמיכה","unlimited_access":"גישה בלתי מוגבלת","community_support":"תמיכת קהילה","hands_on_projects":"פרויקטים מעשיים"},"subtitle":"תוכניות במחיר סביר","description":"צללו לעולם של למידה עם מגוון רחב ומקיף של קורסי טכנולוגיה המיועדים לכל רמת מיומנות"},"animations_enabled":true}
+      },
+      {
+        section_key: 'process',
+        section_name: 'process',
+        section_type: 'process',
+        content_en: {"visible":true,"type":"process","content":{"help":{"link":"Drop a line here about what you're looking for"},"steps":[{"title":"Choose Your Plan First","number":"Process #01","details":"Select the plan that best fits your learning needs & budget. We offer monthly plans","description":"Select the plan that best fits your learning needs & budget"},{"title":"Access All Courses","number":"Process #02","description":"Dive into any course at your own pace, explore new topics, and take advantage of our resources"},{"title":"Learn And Grow","number":"Process #03","description":"Apply your knowledge through hands-on projects and real-world applications"}],"title":"Your Learning Journey With Our Experts","subtitle":"Detailed Process","description":"At Zohacous, we believe in a structured yet flexible approach to mentorship designed to help you achieve your goals"},"animations_enabled":true},
+        content_ru: {"visible":true,"type":"process","content":{"help":{"link":"Напишите здесь о том, что вы ищете"},"steps":[{"title":"Сначала Выберите Свой План","number":"Процесс #01","details":"Выберите план, который лучше всего соответствует вашим потребностям в обучении и бюджету. Мы предлагаем месячные планы"},{"title":"Доступ ко Всем Курсам","number":"Процесс #02","description":"Погрузитесь в любой курс в своем темпе, изучайте новые темы и воспользуйтесь нашими ресурсами"},{"title":"Учитесь и Растите","number":"Процесс #03","description":"Применяйте свои знания через практические проекты и приложения в реальном мире"}],"title":"Ваше Учебное Путешествие с Нашими Экспертами","subtitle":"Детальный Процесс","description":"В Zohacous мы верим в структурированный, но гибкий подход к наставничеству, разработанный, чтобы помочь вам достичь ваших целей"},"animations_enabled":true},
+        content_he: {"visible":true,"type":"process","content":{"help":{"link":"כתוב כאן על מה שאתה מחפש"},"steps":[{"title":"בחר את התוכנית שלך תחילה","number":"תהליך #01","details":"בחר את התוכנית שמתאימה ביותר לצרכי הלמידה והתקציב שלך. אנו מציעים תוכניות חודשיות"},{"title":"גישה לכל הקורסים","number":"תהליך #02","description":"צלול לכל קורס בקצב שלך, חקור נושאים חדשים ונצל את המשאבים שלנו"},{"title":"למד וגדל","number":"תהליך #03","description":"יישם את הידע שלך דרך פרויקטים מעשיים ויישומים בעולם האמיתי"}],"title":"מסע הלמידה שלך עם המומחים שלנו","subtitle":"תהליך מפורט","description":"ב-Zohacous, אנו מאמינים בגישה מובנית אך גמישה לחניכה שנועדה לעזור לך להשיג את המטרות שלך"},"animations_enabled":true}
+      },
+      {
+        section_key: 'testimonials_data',
+        section_name: 'testimonials_data',
+        section_type: 'testimonials_data',
+        content_en: {"visible":true,"type":"testimonials_data","content":[{"name":"Анна Петрова","text":"Гибкость планов подписки позволила мне учиться в своем темпе. Качество контента непревзойденно","course_taken":"Инженер Машинного Обучения"},{"name":"Алексей Иванов","text":"Я освоил веб-разработку и теперь успешно работаю фрилансером. Проекты были особенно полезными","course_taken":"Фриланс Веб-Разработчик"},{"name":"Мария Сидорова","text":"Она предоставила мне знания и уверенность для смены карьеры. Комплексная программа охватывает все необходимое","course_taken":"Data Scientist"},{"name":"Дмитрий Козлов","text":"Курсы первоклассные, практический подход и экспертные инструкторы сделали обучение увлекательным и эффективным","course_taken":"Full Stack Developer"}],"animations_enabled":true},
+        content_ru: {"visible":true,"type":"testimonials_data","content":{"content":[{"name":"Анна Петрова","text":"Гибкость планов подписки позволила мне учиться в своем темпе. Качество контента непревзойденно","course_taken":"Инженер Машинного Обучения"},{"name":"Алексей Иванов","text":"Я освоил веб-разработку и теперь успешно работаю фрилансером. Проекты были особенно полезными","course_taken":"Фриланс Веб-Разработчик"},{"name":"Мария Сидорова","text":"Она предоставила мне знания и уверенность для смены карьеры. Комплексная программа охватывает все необходимое","course_taken":"Data Scientist"},{"name":"Дмитрий Козлов","text":"Курсы первоклассные, практический подход и экспертные инструкторы сделали обучение увлекательным и эффективным","course_taken":"Full Stack Developer"}]},"animations_enabled":true},
+        content_he: {"visible":true,"type":"testimonials_data","content":[{"name":"Анна Петрова","text":"Гибкость планов подписки позволила мне учиться в своем темпе. Качество контента непревзойденно","course_taken":"Инженер Машинного Обучения"},{"name":"Алексей Иванов","text":"Я освоил веб-разработку и теперь успешно работаю фрилансером. Проекты были особенно полезными","course_taken":"Фриланс Веб-Разработчик"},{"name":"Мария Сидорова","text":"Она предоставила мне знания и уверенность для смены карьеры. Комплексная программа охватывает все необходимое","course_taken":"Data Scientist"},{"name":"Дмитрий Козлов","text":"Курсы первоклассные, практический подход и экспертные инструкторы сделали обучение увлекательным и эффективным","course_taken":"Full Stack Developer"}],"animations_enabled":true}
+      },
+      {
+        section_key: 'testimonials',
+        section_name: 'testimonials',
+        section_type: 'testimonials',
+        content_en: {"visible":true,"type":"testimonials","content":[{"name":"Sarah Johnson","text":"The flexibility of the subscription plans allowed me to learn at my own pace. The quality of the content is unmatched","course_taken":"Machine Learning Engineer"},{"name":"Alex Smith","text":"I have mastered web development and am now freelancing successfully. The projects were particularly helpful","course_taken":"Freelance Web Developer"},{"name":"Maria Garcia","text":"She provided me with the knowledge and confidence to switch careers. The comprehensive curriculum covers everything needed","course_taken":"Data Scientist"},{"name":"David Chen","text":"The courses are top-notch, practical approach and expert instructors made learning engaging and effective","course_taken":"Full Stack Developer"}],"animations_enabled":true},
+        content_ru: {"visible":true,"type":"testimonials","content":{"0":{"text":"Гибкость подписки помогла мне освоить новые навыки в своем темпе. Преподаватели потрясающие!","author":"Оливия Мартинез","course_taken":"Инженер Машинного Обучения"},"1":{"text":"Я освоил веб-разработку благодаря отличным курсам и преподавателям на этой платформе.","author":"Дэвид Ким","course_taken":"Фрилансер Веб-Разработчик"},"2":{"text":"Она дала мне знания и уверенность для смены карьеры в технологиях.","author":"Майкл Беннетт","course_taken":"Full-Stack Разработчик"},"3":{"text":"Курсы первоклассные с практическими проектами, которые действительно помогают в обучении.","author":"Эмили Тернер","course_taken":"Разработчик ПО"},"content":{"title":"Что Говорят Наши Студенты","subtitle":"Истории Успеха Студентов","description":"В Zohacous мы верим в структурированный подход к обучению"}},"animations_enabled":true},
+        content_he: {"visible":true,"type":"testimonials","content":[{"name":"שרה יונסון","text":"הגמישות של תוכניות המנוי אפשרה לי ללמוד בקצב שלי. איכות התוכן היא ללא תחרות","course_taken":"מהנדסת למידת מכונה"},{"name":"אלכס סמית","text":"שלטתי בפיתוח אתרים ועכשיו אני עובד כפרילנסר בהצלחה. הפרויקטים היו מועילים במיוחד","course_taken":"מפתח אתרים פרילנסר"},{"name":"מריה גרסיה","text":"היא סיפקה לי את הידע והביטחון להחליף קריירה. התוכנית המקיפה מכסה כל מה שנדרש","course_taken":"מדענית נתונים"},{"name":"דוד צ'ן","text":"הקורסים הם ברמה הגבוהה ביותר, גישה מעשית ומדריכים מומחים הפכו את הלמידה למרתקת ויעילה","course_taken":"מפתח Full Stack"}],"animations_enabled":true}
+      }
+    ];
+
+    let addedCount = 0;
+    const results = [];
+
+    for (const section of sectionsToAdd) {
+      try {
+        const result = await queryDatabase(
+          `INSERT INTO nd_home (
+            section_key, section_name, section_type,
+            content_en, content_ru, content_he,
+            visible, animations_enabled, order_index,
+            created_at, updated_at
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+          ON CONFLICT (section_key) DO UPDATE SET
+            content_en = EXCLUDED.content_en,
+            content_ru = EXCLUDED.content_ru,
+            content_he = EXCLUDED.content_he,
+            updated_at = CURRENT_TIMESTAMP`,
+          [
+            section.section_key,
+            section.section_name,
+            section.section_type,
+            JSON.stringify(section.content_en),
+            JSON.stringify(section.content_ru),
+            JSON.stringify(section.content_he),
+            true,
+            true,
+            100
+          ]
+        );
+        addedCount++;
+        results.push({ section: section.section_key, status: 'success' });
+        console.log(`✅ Added section: ${section.section_key}`);
+      } catch (error) {
+        console.error(`❌ Failed to add section ${section.section_key}:`, error);
+        results.push({ section: section.section_key, status: 'error', error: error.message });
+      }
+    }
+
+    // Check final count
+    const totalResult = await queryDatabase('SELECT COUNT(*) as count FROM nd_home');
+    const totalSections = totalResult[0].count;
+
+    console.log(`🎯 Targeted migration completed: ${addedCount}/${sectionsToAdd.length} sections added`);
+    console.log(`📊 Total sections now: ${totalSections}`);
+
+    res.json({
+      success: true,
+      message: `Targeted migration completed: ${addedCount}/${sectionsToAdd.length} sections added`,
+      totalSections: totalSections,
+      results: results
+    });
+
+  } catch (error) {
+    console.error('❌ Targeted migration failed:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Targeted migration failed',
+      message: error.message
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════════╗
