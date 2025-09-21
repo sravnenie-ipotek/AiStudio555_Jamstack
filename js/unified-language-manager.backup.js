@@ -1,7 +1,6 @@
 /**
- * Enhanced Language Manager for AI Studio
- * Handles dynamic language switching with intelligent mapping and comprehensive fallbacks
- * Version: 3.0 - Complete Translation Fix
+ * Language Manager for AI Studio
+ * Handles dynamic language switching with intelligent caching and API integration
  */
 
 class LanguageManager {
@@ -13,13 +12,6 @@ class LanguageManager {
         this.apiBaseUrl = window.location.hostname === 'localhost'
             ? 'http://localhost:3000'
             : 'https://aistudio555jamstack-production.up.railway.app';
-
-        // Track translation success rate for debugging
-        this.translationStats = {
-            success: 0,
-            failed: 0,
-            fallback: 0
-        };
 
         // Initialize on DOM ready
         if (document.readyState === 'loading') {
@@ -33,7 +25,7 @@ class LanguageManager {
      * Initialize language manager
      */
     init() {
-        console.log('[LanguageManager] Enhanced Version 3.0 Initializing...');
+        console.log('[LanguageManager] Initializing...');
         console.log('[LanguageManager] Current page:', this.getCurrentPageName());
         console.log('[LanguageManager] Initial locale:', this.currentLocale);
 
@@ -249,9 +241,6 @@ class LanguageManager {
                 detail: { locale }
             }));
 
-            // Log translation stats
-            this.logTranslationStats();
-
         } catch (error) {
             console.error('Error switching language:', error);
             this.showError('Failed to load content in selected language');
@@ -265,9 +254,6 @@ class LanguageManager {
      */
     async loadPageContent(locale) {
         console.log('[LanguageManager] loadPageContent called with locale:', locale);
-
-        // Reset translation stats
-        this.translationStats = { success: 0, failed: 0, fallback: 0 };
 
         // Check cache first
         if (this.contentCache[locale]) {
@@ -343,10 +329,10 @@ class LanguageManager {
     getAPIEndpoint(pageName, locale) {
         const endpoints = {
             'home': `/api/nd/home-page?locale=${locale}`,
-            'courses': `/api/nd/courses-page?locale=${locale}`,
-            'pricing': `/api/nd/pricing-page?locale=${locale}`,
-            'course-details': `/api/nd/course-details-page?locale=${locale}`,
-            'teachers': `/api/nd/teachers-page?locale=${locale}`,
+            'courses': `/api/nd/courses-page?locale=${locale}`,  // Changed to courses-page for UI translations
+            'pricing': `/api/nd/pricing-page?locale=${locale}`,  // Pricing page translations
+            'course-details': `/api/nd/course-details-page?locale=${locale}`, // Course details page UI translations
+            'teachers': `/api/nd/teachers-page?locale=${locale}`, // Changed to teachers-page for consistency
             'blog': `/api/nd/blog-page?locale=${locale}`,
             'career-center': `/api/nd/career-center-platform-page?locale=${locale}`,
             'career-orientation': `/api/nd/career-orientation-page?locale=${locale}`
@@ -360,33 +346,84 @@ class LanguageManager {
      */
     updatePageContent(data, locale) {
         console.log('[LanguageManager] Updating page content for locale:', locale);
-        console.log('[LanguageManager] Available data sections:', Object.keys(data.data || {}));
 
         // Update all elements with data-i18n attribute
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.dataset.i18n;
-            const value = this.getTranslation(data.data, key, locale);
 
-            if (value) {
-                this.translationStats.success++;
+            // First try to get value from API data
+            // Handle the structure: data.data.section.content.field
+            let value = this.getNestedValue(data.data, key);
+
+            // If not found, try various nested structures
+            if (!value) {
+                const parts = key.split('.');
+
+                // Handle buttons.sign_up_today -> ui_elements.content.content.buttons.sign_up_today
+                if (parts[0] === 'buttons' && parts.length === 2) {
+                    const uiPath = `ui_elements.content.content.buttons.${parts[1]}`;
+                    value = this.getNestedValue(data.data, uiPath);
+                }
+                // Handle cart.no_items -> misc.content.content.no_items
+                else if (parts[0] === 'cart' && parts[1] === 'no_items') {
+                    const miscPath = `misc.content.content.no_items`;
+                    value = this.getNestedValue(data.data, miscPath);
+                }
+                // Handle cart.content.field -> cart.content.content.field
+                else if (parts[0] === 'cart' && parts[1] === 'content' && parts.length === 3) {
+                    const cartPath = `cart.content.content.${parts[2]}`;
+                    value = this.getNestedValue(data.data, cartPath);
+                }
+                // Handle section.field -> section.content.field
+                else if (parts.length === 2) {
+                    const keyWithContent = `${parts[0]}.content.${parts[1]}`;
+                    value = this.getNestedValue(data.data, keyWithContent);
+
+                    // If still not found, try section.content.content.field
+                    if (!value) {
+                        const keyWithDoubleContent = `${parts[0]}.content.content.${parts[1]}`;
+                        value = this.getNestedValue(data.data, keyWithDoubleContent);
+                    }
+                }
+                // Handle navigation.content.home -> navigation.content.content.home
+                else if (parts.length === 3 && parts[1] === 'content') {
+                    const keyWithDoubleContent = `${parts[0]}.content.content.${parts[2]}`;
+                    value = this.getNestedValue(data.data, keyWithDoubleContent);
+                }
+            }
+
+            // If not found in API data, try local translations
+            const localizedValue = !value ? this.getLocalizedText(key, locale) : null;
+
+            const finalValue = value || localizedValue;
+
+            // Enhanced debug logging for troubleshooting
+            if (key.includes('navigation') || key.includes('hero') || key.includes('ui') || key.includes('cart')) {
+                console.log(`[Translation Debug] ${key}:`);
+                console.log(`  Original path tried: ${!value ? '✗ Failed' : '✓ Success'}`);
+                console.log(`  Mapped path: ${this.mapDataPath(key)}`);
+                console.log(`  Final value: ${finalValue ? '✓ Found' : '✗ Not found'} (${finalValue || 'null'})`);
+                if (!finalValue) {
+                    console.log(`  Available keys in section:`, Object.keys(this.getExactPath(data.data, key.split('.')[0]) || {}));
+                }
+            }
+
+            if (finalValue) {
                 if (element.tagName === 'IMG') {
-                    element.src = value;
-                    element.alt = this.getTranslation(data.data, `${key}_alt`, locale) || '';
+                    element.src = finalValue;
+                    element.alt = this.getNestedValue(data, `${key}_alt`) || '';
                 } else if (element.tagName === 'A') {
                     if (element.dataset.i18nHref) {
-                        element.href = this.getTranslation(data.data, element.dataset.i18nHref, locale);
+                        element.href = this.getNestedValue(data, element.dataset.i18nHref);
                     }
                     if (element.dataset.i18nText) {
-                        element.textContent = this.getTranslation(data.data, element.dataset.i18nText, locale);
+                        element.textContent = this.getNestedValue(data, element.dataset.i18nText);
                     } else {
-                        element.innerHTML = value;
+                        element.textContent = finalValue;
                     }
                 } else {
-                    element.innerHTML = value;
+                    element.innerHTML = finalValue;
                 }
-            } else {
-                this.translationStats.failed++;
-                console.warn(`[Translation Missing] ${key}`);
             }
         });
 
@@ -413,36 +450,39 @@ class LanguageManager {
         // Handle RTL for Hebrew
         if (locale === 'he') {
             document.documentElement.setAttribute('dir', 'rtl');
+            // Add RTL-specific classes if needed
             document.body.classList.add('rtl');
         } else {
             document.documentElement.setAttribute('dir', 'ltr');
             document.body.classList.remove('rtl');
         }
-
-        // Log final stats
-        this.logTranslationStats();
     }
 
     /**
-     * Get translation with comprehensive fallback system
+     * Get nested value from object using dot notation with intelligent mapping
      */
-    getTranslation(data, key, locale) {
-        // Try exact path first
-        let value = this.getExactPath(data, key);
+    getNestedValue(obj, path) {
+        // First try the exact path
+        let value = this.getExactPath(obj, path);
         if (value) return value;
 
-        // Try mapped path
-        const mappedPaths = this.getComprehensiveMappings(key);
-        for (const path of mappedPaths) {
-            value = this.getExactPath(data, path);
-            if (value) {
-                this.translationStats.fallback++;
-                return value;
+        // Apply intelligent mapping for known mismatches
+        const mappedPath = this.mapDataPath(path);
+        if (mappedPath !== path) {
+            // Handle array of possible paths (for navigation fallbacks)
+            if (Array.isArray(mappedPath)) {
+                for (const possiblePath of mappedPath) {
+                    value = this.getExactPath(obj, possiblePath);
+                    if (value) return value;
+                }
+            } else {
+                value = this.getExactPath(obj, mappedPath);
+                if (value) return value;
             }
         }
 
-        // Try local translations as last resort
-        return this.getLocalizedText(key, locale);
+        // Try additional fallback patterns
+        return this.tryFallbackPaths(obj, path);
     }
 
     /**
@@ -455,189 +495,68 @@ class LanguageManager {
     }
 
     /**
-     * Comprehensive mapping system for all known mismatches
+     * Intelligent path mapping for known mismatches
      */
-    getComprehensiveMappings(path) {
-        const mappings = [];
-
-        // NAVIGATION MAPPINGS - Russian has different structure (no double content)
-        const navMappings = {
-            'navigation.content.items.0.text': ['navigation.content.home', 'navigation.content.content.home', 'navigation.home'],
-            'navigation.content.items.1.text': ['navigation.content.courses', 'navigation.content.content.courses', 'navigation.courses'],
-            'navigation.content.items.2.text': ['navigation.content.teachers', 'navigation.content.content.teachers', 'navigation.teachers'],
-            'navigation.content.items.3.text': ['navigation.content.blog', 'navigation.content.content.blog', 'navigation.blog'],
-            'navigation.content.items.4.text': ['navigation.content.about_us', 'navigation.content.content.about_us', 'navigation.about_us'],
-            'navigation.content.items.6.text': ['navigation.content.pricing', 'navigation.content.content.pricing', 'navigation.pricing'],
-            'navigation.content.career.orientation': ['navigation.content.career_orientation', 'navigation.content.content.career_orientation', 'navigation.career_orientation'],
-            'navigation.content.career.center': ['navigation.content.career_center', 'navigation.content.content.career_center', 'navigation.career_center']
+    mapDataPath(path) {
+        // Navigation items mapping with fallback for different API structures
+        const navItemMappings = {
+            'navigation.content.items.0.text': ['navigation.content.content.home', 'navigation.content.home'],
+            'navigation.content.items.1.text': ['navigation.content.content.courses', 'navigation.content.courses'],
+            'navigation.content.items.2.text': ['navigation.content.content.teachers', 'navigation.content.teachers'],
+            'navigation.content.items.3.text': ['navigation.content.content.blog', 'navigation.content.blog'],
+            'navigation.content.items.4.text': ['navigation.content.content.about_us', 'navigation.content.about_us'],
+            'navigation.content.items.6.text': ['navigation.content.content.pricing', 'navigation.content.pricing'],
+            'navigation.content.career.orientation': ['navigation.content.content.career_orientation', 'navigation.content.career_orientation'],
+            'navigation.content.career.center': ['navigation.content.content.career_center', 'navigation.content.career_center']
         };
 
-        // UI ELEMENTS MAPPINGS
-        const uiMappings = {
-            'ui.content.buttons.sign_up_today': ['ui_elements.content.buttons.sign_up_today', 'ui_elements.content.content.buttons.sign_up_today', 'ui.buttons.sign_up_today', 'misc.content.sign_up_today'],
-            'ui.content.buttons.course_details': ['ui_elements.content.buttons.course_details', 'ui_elements.content.content.buttons.course_details', 'ui.buttons.course_details'],
-            'ui.content.buttons.explore_courses': ['ui_elements.content.buttons.browse_courses', 'ui_elements.content.content.buttons.check_out_courses', 'ui.buttons.explore_courses'],
-            'ui.content.buttons.uncover_all_courses': ['ui_elements.content.buttons.view_courses', 'ui.buttons.uncover_all_courses', 'misc.content.view_courses'],
-            'ui.content.buttons.get_in_touch': ['ui_elements.content.buttons.get_in_touch', 'ui.buttons.get_in_touch', 'misc.content.contact_us'],
-            'ui.content.messages.no_items': ['ui.messages.no_items', 'misc.content.no_items_found', 'cart.content.content.no_items_found']
-        };
-
-        // HERO SECTION MAPPINGS
-        const heroMappings = {
-            'hero.content.button_primary': ['hero.content.cta_text_1', 'ui_elements.content.buttons.get_in_touch', 'hero.content.button_primary'],
-            'hero.content.button_secondary': ['hero.content.cta_text_2', 'ui_elements.content.buttons.check_out_courses', 'hero.content.button_secondary'],
-            'hero.content.subtitle': ['hero.content.subtitle', 'hero.content.expert_led']
-        };
-
-        // CART MAPPINGS
-        const cartMappings = {
-            'cart.content.quantity_display': ['cart.quantity_display', 'cart.content.content.quantity'],
-            'cart.content.content.title': ['cart.content.content.title', 'cart.content.title', 'cart.title'],
-            'cart.content.content.subtotal': ['cart.content.content.subtotal', 'cart.content.subtotal', 'cart.subtotal'],
-            'cart.content.content.continue_to_checkout': ['cart.content.content.continue_to_checkout', 'cart.content.continue_to_checkout', 'cart.continue_to_checkout'],
-            'cart.content.content.no_items_found': ['cart.content.content.no_items_found', 'cart.content.content.cart_is_empty', 'misc.content.content.no_items'],
-            'cart.content.errors.quantity_not_available': ['cart.content.errors.quantity_not_available', 'cart.errors.quantity_not_available', 'cart.content.content.quantity_not_available']
-        };
-
-        // FEATURES/ABOUT MAPPINGS
-        const featuresMappings = {
-            'features.content.subtitle': ['features.content.subtitle', 'about.content.subtitle', 'stats.content.mentor.title'],
-            'features.content.title': ['features.content.title', 'features.content.content.title'],
-            'features.content.description': ['features.content.description', 'features.content.content.description']
-        };
-
-        // COURSE CATEGORIES MAPPINGS
-        const courseCategoriesMappings = {
-            'course_categories.content.subtitle': ['course_categories.content.subtitle', 'course_categories.content.content.subtitle'],
-            'course_categories.content.title': ['course_categories.content.title', 'course_categories.content.content.title'],
-            'course_categories.content.description': ['course_categories.content.description', 'course_categories.content.content.description'],
-            'course_categories.content.items.0.name': ['course_categories.content.items.0.name', 'course_categories.content.content.items.0.name'],
-            'course_categories.content.items.0.description': ['course_categories.content.items.0.description', 'course_categories.content.content.items.0.description'],
-            'course_categories.content.items.3.name': ['course_categories.content.items.3.name', 'course_categories.content.content.items.3.name'],
-            'course_categories.content.items.3.description': ['course_categories.content.items.3.description', 'course_categories.content.content.items.3.description'],
-            'course_categories.content.items.4.name': ['course_categories.content.items.4.name', 'course_categories.content.content.items.4.name'],
-            'course_categories.content.items.4.description': ['course_categories.content.items.4.description', 'course_categories.content.content.items.4.description'],
-            'course_categories.content.items.5.name': ['course_categories.content.items.5.name', 'course_categories.content.content.items.5.name'],
-            'course_categories.content.items.5.description': ['course_categories.content.items.5.description', 'course_categories.content.content.items.5.description']
-        };
-
-        // COURSES SECTION MAPPINGS
-        const coursesMappings = {
-            'courses.content.subtitle': ['featured_courses.content.subtitle', 'courses.content.subtitle'],
-            'courses.content.title': ['featured_courses.content.title', 'courses.content.title'],
-            'courses.content.description': ['featured_courses.content.description', 'courses.content.description'],
-            'courses.content.filters.all': ['courses.content.content.filters.all', 'ui.content.labels.filter_all'],
-            'courses.content.filters.web_development': ['courses.content.content.filters.web_development', 'ui.content.labels.filter_web_development'],
-            'courses.content.filters.cloud_computing': ['courses.content.content.filters.cloud_computing', 'ui.content.labels.filter_cloud_computing']
-        };
-
-        // STATS MAPPINGS
-        const statsMappings = {
-            'stats.content.stats.0.label': ['stats.content.stats.0.label', 'stats.content.content.stats.0.label'],
-            'stats.content.stats.1.label': ['stats.content.stats.1.label', 'stats.content.content.stats.1.label'],
-            'stats.content.stats.2.label': ['stats.content.stats.2.label', 'stats.content.content.stats.2.label'],
-            'stats.content.mentor.title': ['stats.content.mentor.title', 'stats.content.content.mentor.title'],
-            'stats.content.mentor.name': ['stats.content.mentor.name', 'stats.content.content.mentor.name'],
-            'stats.content.mentor.bio': ['stats.content.mentor.bio', 'stats.content.content.mentor.bio'],
-            'stats.content.mentor.description': ['stats.content.mentor.description', 'stats.content.content.mentor.description']
-        };
-
-        // Check all mapping collections
-        const allMappings = Object.assign({},
-            navMappings,
-            uiMappings,
-            heroMappings,
-            cartMappings,
-            featuresMappings,
-            courseCategoriesMappings,
-            coursesMappings,
-            statsMappings
-        );
-
-        if (allMappings[path]) {
-            mappings.push(...allMappings[path]);
+        // UI buttons mapping: remove extra content level
+        if (path.startsWith('ui.content.buttons.')) {
+            return path.replace('ui.content.buttons.', 'ui.buttons.');
         }
 
-        // Generic fallback patterns
-        // Remove extra 'content' levels
-        if (path.includes('.content.content.')) {
-            mappings.push(path.replace('.content.content.', '.content.'));
+        // Cart content mapping: remove double content level
+        if (path.startsWith('cart.content.content.')) {
+            return path.replace('cart.content.content.', 'cart.content.');
         }
 
-        // Add double content level
-        if (path.includes('.content.') && !path.includes('.content.content.')) {
-            mappings.push(path.replace('.content.', '.content.content.'));
+        // Check direct navigation mappings (now returns arrays for fallback)
+        if (navItemMappings[path]) {
+            return navItemMappings[path]; // Return array of possible paths
         }
 
-        // Try without 'content' at all
-        if (path.includes('.content.')) {
-            mappings.push(path.replace('.content.', '.'));
-        }
-
-        return mappings;
+        return path;
     }
 
     /**
-     * Get localized text for common UI elements
+     * Try fallback paths for complex mappings
      */
-    getLocalizedText(key, locale) {
-        const translations = {
-            en: {
-                learnMore: 'Learn More',
-                readMore: 'Read More',
-                loading: 'Loading...',
-                error: 'Error loading content',
-                'navigation.blog': 'Blog',
-                'testimonials.author1.name': 'David Kim',
-                'testimonials.author2.name': 'Tariq Ahmed',
-                'testimonials.author3.name': 'Nadia Khan',
-                'footer.company.zohacous': 'Zohacous'
-            },
-            ru: {
-                learnMore: 'Узнать больше',
-                readMore: 'Читать далее',
-                loading: 'Загрузка...',
-                error: 'Ошибка загрузки контента',
-                'navigation.blog': 'Блог',
-                'testimonials.author1.name': 'Давид Ким',
-                'testimonials.author2.name': 'Тарик Ахмед',
-                'testimonials.author3.name': 'Надия Хан',
-                'footer.company.zohacous': 'Зохакус'
-            },
-            he: {
-                learnMore: 'למד עוד',
-                readMore: 'קרא עוד',
-                loading: 'טוען...',
-                error: 'שגיאה בטעינת תוכן',
-                'navigation.blog': 'בלוג',
-                'testimonials.author1.name': 'דיוויד קים',
-                'testimonials.author2.name': 'טאריק אחמד',
-                'testimonials.author3.name': 'נדיה חאן',
-                'footer.company.zohacous': 'זוהקוס'
-            }
-        };
+    tryFallbackPaths(obj, originalPath) {
+        const parts = originalPath.split('.');
 
-        return translations[locale]?.[key] || translations.en[key];
-    }
-
-    /**
-     * Log translation statistics
-     */
-    logTranslationStats() {
-        const total = this.translationStats.success + this.translationStats.failed;
-        const successRate = total > 0 ? ((this.translationStats.success / total) * 100).toFixed(1) : 0;
-
-        console.log('[Translation Stats]', {
-            success: this.translationStats.success,
-            failed: this.translationStats.failed,
-            fallback: this.translationStats.fallback,
-            successRate: `${successRate}%`
-        });
-
-        // Warn if success rate is low
-        if (successRate < 80 && total > 10) {
-            console.warn('[Translation Warning] Low success rate detected. Check API structure and mappings.');
+        // Try without one content level
+        if (parts.includes('content')) {
+            const withoutContent = parts.filter(part => part !== 'content').join('.');
+            const value = this.getExactPath(obj, withoutContent);
+            if (value) return value;
         }
+
+        // Try with double content level
+        if (parts.length >= 2 && parts[1] === 'content') {
+            const withDoubleContent = [parts[0], 'content', 'content', ...parts.slice(2)].join('.');
+            const value = this.getExactPath(obj, withDoubleContent);
+            if (value) return value;
+        }
+
+        // Try alternative navigation paths
+        if (originalPath.startsWith('navigation.content.')) {
+            // Try navigation.content.content.X format
+            const altPath = originalPath.replace('navigation.content.', 'navigation.content.content.');
+            const value = this.getExactPath(obj, altPath);
+            if (value) return value;
+        }
+
+        return null;
     }
 
     /**
@@ -734,6 +653,58 @@ class LanguageManager {
         `).join('');
 
         container.innerHTML = html;
+    }
+
+    /**
+     * Get localized text for common UI elements
+     */
+    getLocalizedText(key, locale) {
+        const translations = {
+            en: {
+                learnMore: 'Learn More',
+                readMore: 'Read More',
+                loading: 'Loading...',
+                error: 'Error loading content',
+                // Navigation
+                'navigation.blog': 'Blog',
+                // Testimonials
+                'testimonials.author1.name': 'David Kim',
+                'testimonials.author2.name': 'Tariq Ahmed',
+                'testimonials.author3.name': 'Nadia Khan',
+                // Footer
+                'footer.company.zohacous': 'Zohacous'
+            },
+            ru: {
+                learnMore: 'Узнать больше',
+                readMore: 'Читать далее',
+                loading: 'Загрузка...',
+                error: 'Ошибка загрузки контента',
+                // Navigation
+                'navigation.blog': 'Блог',
+                // Testimonials
+                'testimonials.author1.name': 'Давид Ким',
+                'testimonials.author2.name': 'Тарик Ахмед',
+                'testimonials.author3.name': 'Надия Хан',
+                // Footer
+                'footer.company.zohacous': 'Зохакус'
+            },
+            he: {
+                learnMore: 'למד עוד',
+                readMore: 'קרא עוד',
+                loading: 'טוען...',
+                error: 'שגיאה בטעינת תוכן',
+                // Navigation
+                'navigation.blog': 'בלוג',
+                // Testimonials
+                'testimonials.author1.name': 'דיוויד קים',
+                'testimonials.author2.name': 'טאריק אחמד',
+                'testimonials.author3.name': 'נדיה חאן',
+                // Footer
+                'footer.company.zohacous': 'זוהקוס'
+            }
+        };
+
+        return translations[locale]?.[key] || translations.en[key];
     }
 
     /**

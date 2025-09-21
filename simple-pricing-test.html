@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Pricing Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #000; color: white; }
+        .debug { background: #111; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Home Page Pricing Test</h1>
+
+    <div class="debug">
+        <h3>📡 API Test</h3>
+        <div id="api-status">Testing pricing API...</div>
+    </div>
+
+    <div class="debug">
+        <h3>💰 Pricing Integration</h3>
+        <div id="pricing-status">Testing pricing integration...</div>
+    </div>
+
+    <div class="debug">
+        <h3>🔄 Tab Toggle</h3>
+        <div id="toggle-status">Testing tab functionality...</div>
+    </div>
+
+    <div class="debug">
+        <h3>🔗 Quick Links</h3>
+        <a href="http://localhost:3005/home.html" target="_blank" style="color: #4CAF50;">→ Open Home Page</a>
+    </div>
+
+    <script>
+        async function testPricing() {
+            // Test API
+            try {
+                const response = await fetch('http://localhost:3000/api/nd/pricing-page?locale=en');
+                const data = await response.json();
+
+                if (data.success && data.data) {
+                    document.getElementById('api-status').innerHTML =
+                        '<span class="success">✅ API Working</span>';
+                    console.log('API Response:', data);
+                } else {
+                    document.getElementById('api-status').innerHTML =
+                        '<span class="error">❌ API returned no data</span>';
+                }
+            } catch (error) {
+                document.getElementById('api-status').innerHTML =
+                    `<span class="error">❌ API Error: ${error.message}</span>`;
+            }
+
+            // Test pricing integration script
+            try {
+                const scriptResponse = await fetch('http://localhost:3005/js/home-pricing-integration.js');
+                if (scriptResponse.ok) {
+                    document.getElementById('pricing-status').innerHTML =
+                        '<span class="success">✅ Pricing integration script accessible</span>';
+                } else {
+                    document.getElementById('pricing-status').innerHTML =
+                        '<span class="error">❌ Pricing integration script not found</span>';
+                }
+            } catch (error) {
+                document.getElementById('pricing-status').innerHTML =
+                    `<span class="error">❌ Script Error: ${error.message}</span>`;
+            }
+
+            // Instructions for manual testing
+            document.getElementById('toggle-status').innerHTML = `
+                <div style="margin: 10px 0;">
+                    <strong>Manual Test Instructions:</strong><br>
+                    1. Open the Home Page link above<br>
+                    2. Scroll down to the pricing section<br>
+                    3. Look for "Monthly" and "Yearly" tabs<br>
+                    4. Click on "Yearly" tab<br>
+                    5. Check if the tab switches and prices update<br>
+                    6. Open browser console to see any errors
+                </div>
+                <div style="color: #ff9800;">
+                    ⚠️ If tab doesn't switch, there may be a Webflow JavaScript conflict
+                </div>
+            `;
+        }
+
+        testPricing();
+    </script>
+</body>
+</html>

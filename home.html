@@ -504,17 +504,17 @@
             <div class="mobile-language-switchers">
               <!-- Mobile Language Pills -->
               <div class="mobile-lang-pills">
-                <a href="#" class="mobile-lang-pill active" onclick="setActivePill(this)">EN</a>
-                <a href="#" class="mobile-lang-pill" onclick="setActivePill(this)">RU</a>
-                <a href="#" class="mobile-lang-pill" onclick="setActivePill(this)">HE</a>
+                <a href="#" class="mobile-lang-pill active" onclick="setActivePill(this)" data-i18n="ui.content.languages.en">EN</a>
+                <a href="#" class="mobile-lang-pill" onclick="setActivePill(this)" data-i18n="ui.content.languages.ru">RU</a>
+                <a href="#" class="mobile-lang-pill" onclick="setActivePill(this)" data-i18n="ui.content.languages.he">HE</a>
               </div>
             </div>
           </nav>
           <div class="navbar-button-wrapper">
             <div class="lang-pills">
-              <a href="#" class="lang-pill active" onclick="setActivePill(this)">EN</a>
-              <a href="#" class="lang-pill" onclick="setActivePill(this)">RU</a>
-              <a href="#" class="lang-pill" onclick="setActivePill(this)">HE</a>
+              <a href="#" class="lang-pill active" onclick="setActivePill(this)" data-i18n="ui.content.languages.en">EN</a>
+              <a href="#" class="lang-pill" onclick="setActivePill(this)" data-i18n="ui.content.languages.ru">RU</a>
+              <a href="#" class="lang-pill" onclick="setActivePill(this)" data-i18n="ui.content.languages.he">HE</a>
             </div>
             <div data-open-product="" data-wf-cart-type="rightSidebar" data-wf-cart-query="" data-wf-page-link-href-prefix="" class="w-commerce-commercecartwrapper navbar-cart" data-node-type="commerce-cart-wrapper">
               <a class="w-commerce-commercecartopenlink navbar-cart-button w-inline-block" role="button" aria-haspopup="dialog" aria-label="Open cart" data-node-type="commerce-cart-open-link" href="#"><img loading="lazy" src="images/Navbar-Cart-Icon.svg" alt="" class="navbar-cart-icon">
@@ -758,7 +758,7 @@
                     <h3 class="number-digit">3</h3>
                     <h3 class="number-digit">9</h3>
                   </div>
-                  <div class="number-categories">K</div>
+                  <div class="number-categories" data-i18n="stats.content.stats.0.value_suffix">K</div>
                   <div class="number-categories">+</div>
                 </div>
                 <div class="about-us-counter-line"></div>
@@ -1684,7 +1684,7 @@
               <div data-w-tab="Tab 4" class="testimonials-tab-pane w-tab-pane w--tab-active">
                 <div class="testimonials-single-card">
                   <div class="testimonials-title-wrapper">
-                    <h4 class="testimonials-title">&quot;Practical Approach Expert Instructor&quot;</h4>
+                    <h4 class="testimonials-title" data-i18n="testimonials_data.content.items.1.title">&quot;Practical Approach Expert Instructor&quot;</h4>
                   </div>
                   <div class="testimonials-card-line"></div>
                   <div class="testimonials-card-description-text-wrapper">
@@ -1702,7 +1702,7 @@
               <div data-w-tab="Tab 5" class="testimonials-tab-pane w-tab-pane">
                 <div class="testimonials-single-card">
                   <div class="testimonials-title-wrapper">
-                    <h4 class="testimonials-title">&quot;A Game Changer for My Career&quot;</h4>
+                    <h4 class="testimonials-title" data-i18n="testimonials_data.content.items.0.title">&quot;A Game Changer for My Career&quot;</h4>
                   </div>
                   <div class="testimonials-card-line"></div>
                   <div class="testimonials-card-description-text-wrapper">
@@ -2405,6 +2405,9 @@
 
   <!-- Unified Language Manager for All Pages -->
   <script src="js/unified-language-manager.js?v=3000"></script>
+
+  <!-- Home Page Pricing Integration -->
+  <script src="js/home-pricing-integration.js"></script>
 
 </body>
 </html>

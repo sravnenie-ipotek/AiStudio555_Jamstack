@@ -460,16 +460,16 @@ class LanguageManager {
     getComprehensiveMappings(path) {
         const mappings = [];
 
-        // NAVIGATION MAPPINGS - Russian has different structure (no double content)
+        // NAVIGATION MAPPINGS
         const navMappings = {
-            'navigation.content.items.0.text': ['navigation.content.home', 'navigation.content.content.home', 'navigation.home'],
-            'navigation.content.items.1.text': ['navigation.content.courses', 'navigation.content.content.courses', 'navigation.courses'],
-            'navigation.content.items.2.text': ['navigation.content.teachers', 'navigation.content.content.teachers', 'navigation.teachers'],
-            'navigation.content.items.3.text': ['navigation.content.blog', 'navigation.content.content.blog', 'navigation.blog'],
-            'navigation.content.items.4.text': ['navigation.content.about_us', 'navigation.content.content.about_us', 'navigation.about_us'],
-            'navigation.content.items.6.text': ['navigation.content.pricing', 'navigation.content.content.pricing', 'navigation.pricing'],
-            'navigation.content.career.orientation': ['navigation.content.career_orientation', 'navigation.content.content.career_orientation', 'navigation.career_orientation'],
-            'navigation.content.career.center': ['navigation.content.career_center', 'navigation.content.content.career_center', 'navigation.career_center']
+            'navigation.content.items.0.text': ['navigation.content.content.home', 'navigation.content.home', 'navigation.home'],
+            'navigation.content.items.1.text': ['navigation.content.content.courses', 'navigation.content.courses', 'navigation.courses'],
+            'navigation.content.items.2.text': ['navigation.content.content.teachers', 'navigation.content.teachers', 'navigation.teachers'],
+            'navigation.content.items.3.text': ['navigation.content.content.blog', 'navigation.content.blog', 'navigation.blog'],
+            'navigation.content.items.4.text': ['navigation.content.content.about_us', 'navigation.content.about_us', 'navigation.about_us'],
+            'navigation.content.items.6.text': ['navigation.content.content.pricing', 'navigation.content.pricing', 'navigation.pricing'],
+            'navigation.content.career.orientation': ['navigation.content.content.career_orientation', 'navigation.content.career_orientation', 'navigation.career_orientation'],
+            'navigation.content.career.center': ['navigation.content.content.career_center', 'navigation.content.career_center', 'navigation.career_center']
         };
 
         // UI ELEMENTS MAPPINGS
