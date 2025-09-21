@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Translation System Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .warning { color: orange; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #5563d1;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌐 Full Translation System Test</h1>
+
+    <div class="test-section">
+        <h2>1. API Translation Check</h2>
+        <button onclick="checkAPI('en')">Check English</button>
+        <button onclick="checkAPI('ru')">Check Russian</button>
+        <button onclick="checkAPI('he')">Check Hebrew</button>
+        <div id="api-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Courses Page Translation Test</h2>
+        <button onclick="testCoursesPage('en')">Test English</button>
+        <button onclick="testCoursesPage('ru')">Test Russian</button>
+        <button onclick="testCoursesPage('he')">Test Hebrew</button>
+        <iframe id="courses-frame" src="http://localhost:3005/backups/newDesign/courses.html"></iframe>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Translation Coverage</h2>
+        <button onclick="checkCoverage()">Check Coverage</button>
+        <div id="coverage-results"></div>
+    </div>
+
+    <script>
+        async function checkAPI(locale) {
+            const resultsDiv = document.getElementById('api-results');
+            resultsDiv.innerHTML = `<p>Checking ${locale}...</p>`;
+
+            try {
+                const response = await fetch(`http://localhost:1337/api/nd/home-page?locale=${locale}`);
+                const data = await response.json();
+
+                let html = `<h3>API Response for ${locale}:</h3><ul>`;
+
+                // Check navigation
+                const nav = data.data?.navigation?.content;
+                if (nav) {
+                    html += `<li class="success">✅ Navigation: ${Object.keys(nav).length} items</li>`;
+                    html += `<li>Sample: home = "${nav.home || 'N/A'}"</li>`;
+                } else {
+                    html += `<li class="error">❌ Navigation missing</li>`;
+                }
+
+                // Check UI elements
+                const buttons = data.data?.ui_elements?.content?.buttons;
+                if (buttons) {
+                    html += `<li class="success">✅ UI Buttons: ${Object.keys(buttons).length} items</li>`;
+                    html += `<li>Sample: course_details = "${buttons.course_details || 'N/A'}"</li>`;
+                } else {
+                    html += `<li class="error">❌ UI Buttons missing</li>`;
+                }
+
+                // Check other sections
+                const sections = Object.keys(data.data || {});
+                html += `<li>Total sections: ${sections.length}</li>`;
+
+                html += '</ul>';
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                resultsDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+            }
+        }
+
+        function testCoursesPage(locale) {
+            const frame = document.getElementById('courses-frame');
+            frame.src = `http://localhost:3005/backups/newDesign/courses.html?locale=${locale}`;
+
+            setTimeout(() => {
+                checkFrameContent(locale);
+            }, 2000);
+        }
+
+        function checkFrameContent(locale) {
+            const frame = document.getElementById('courses-frame');
+            const doc = frame.contentDocument || frame.contentWindow.document;
+
+            const elements = doc.querySelectorAll('[data-i18n]');
+            console.log(`Found ${elements.length} elements with data-i18n in ${locale} version`);
+
+            // Check if text changed based on locale
+            let sampleText = '';
+            elements.forEach(el => {
+                if (el.getAttribute('data-i18n') === 'navigation.content.home') {
+                    sampleText = el.textContent.trim();
+                    console.log(`Navigation home text: "${sampleText}"`);
+                }
+            });
+
+            // Check for locale-specific text
+            if (locale === 'ru' && doc.body.textContent.includes('Курсы')) {
+                console.log('✅ Russian translation detected');
+            } else if (locale === 'he' && doc.body.textContent.includes('קורסים')) {
+                console.log('✅ Hebrew translation detected');
+            } else if (locale === 'en' && doc.body.textContent.includes('Courses')) {
+                console.log('✅ English text detected');
+            }
+        }
+
+        async function checkCoverage() {
+            const resultsDiv = document.getElementById('coverage-results');
+
+            // Load courses.html and check data-i18n coverage
+            const response = await fetch('http://localhost:3005/backups/newDesign/courses.html');
+            const html = await response.text();
+
+            const i18nMatches = html.match(/data-i18n="[^"]+"/g) || [];
+            const uniquePaths = [...new Set(i18nMatches.map(m => m.replace('data-i18n="', '').replace('"', '')))];
+
+            let coverageHtml = '<h3>Translation Coverage:</h3><ul>';
+            coverageHtml += `<li>Total data-i18n attributes: ${i18nMatches.length}</li>`;
+            coverageHtml += `<li>Unique translation paths: ${uniquePaths.length}</li>`;
+
+            // Group by section
+            const sections = {};
+            uniquePaths.forEach(path => {
+                const section = path.split('.')[0];
+                sections[section] = (sections[section] || 0) + 1;
+            });
+
+            coverageHtml += '<li>By section:<ul>';
+            for (const [section, count] of Object.entries(sections)) {
+                coverageHtml += `<li>${section}: ${count} paths</li>`;
+            }
+            coverageHtml += '</ul></li></ul>';
+
+            resultsDiv.innerHTML = coverageHtml;
+        }
+
+        // Auto-check on load
+        window.addEventListener('load', () => {
+            checkAPI('ru');
+            setTimeout(() => checkCoverage(), 500);
+        });
+    </script>
+</body>
+</html>

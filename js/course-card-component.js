@@ -37,8 +37,8 @@
                 <div class="shared-course-card-button-wrapper">
                     <a href="{{COURSE_URL}}" data-w-id="{{DATA_W_ID}}-button" style="background-color: rgba(255,255,255,0); color: rgb(255,255,255)" class="shared-course-card-button primary-button secondary w-inline-block">
                         <div class="primary-button-text-wrap">
-                            <div class="primary-button-text-block">Course Details</div>
-                            <div class="primary-button-text-block is-text-absolute">Course Details</div>
+                            <div class="primary-button-text-block">{{COURSE_BUTTON_TEXT}}</div>
+                            <div class="primary-button-text-block is-text-absolute">{{COURSE_BUTTON_TEXT}}</div>
                         </div>
                     </a>
                 </div>
@@ -70,6 +70,14 @@
             // Generate unique data-w-id for animations
             const dataWId = `course-card-${course.id || Math.random().toString(36).substr(2, 9)}`;
 
+            // Get button text based on locale
+            const locale = localStorage.getItem('preferred_locale') || 'en';
+            const buttonTexts = {
+                'en': 'Course Details',
+                'ru': 'Детали Курса',
+                'he': 'פרטי הקורס'
+            };
+
             // Prepare course data with fallbacks
             const courseData = {
                 COURSE_ID: course.id || 0,
@@ -85,6 +93,7 @@
                 COURSE_CATEGORY_COLOR: getCourseColorByCategory(course.category),
                 COURSE_INSTRUCTOR: course.instructor || 'Expert Instructor',
                 COURSE_PRICE: course.price ? `$${course.price}` : 'Free',
+                COURSE_BUTTON_TEXT: buttonTexts[locale] || buttonTexts['en'],
                 DATA_W_ID: dataWId
             };
 

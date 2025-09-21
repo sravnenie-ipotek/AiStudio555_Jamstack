@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Execute nd_courses_page SQL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .sql-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #5563d1;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗄️ Create nd_courses_page Table</h1>
+
+        <p>This page will execute SQL to create the <code>nd_courses_page</code> table in the Railway PostgreSQL database.</p>
+
+        <h2>SQL to Execute:</h2>
+        <div class="sql-box" id="sqlContent">
+            Loading SQL...
+        </div>
+
+        <button onclick="executeSQL()" id="executeBtn">🚀 Execute SQL on Railway Database</button>
+        <button onclick="testTable()" id="testBtn">🧪 Test Table</button>
+        <button onclick="testAPI()" id="apiBtn">📡 Test API Endpoint</button>
+
+        <div id="status" class="status"></div>
+        <div id="results" class="results"></div>
+    </div>
+
+    <script>
+        // SQL script embedded
+        const sqlScript = `-- Create nd_courses_page table
+CREATE TABLE IF NOT EXISTS nd_courses_page (
+    id SERIAL PRIMARY KEY,
+    section_key VARCHAR(100) UNIQUE NOT NULL,
+    section_type VARCHAR(50),
+    content_en JSONB,
+    content_ru JSONB,
+    content_he JSONB,
+    visible BOOLEAN DEFAULT true,
+    animations_enabled BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Insert all sections
+INSERT INTO nd_courses_page (section_key, section_type, content_en, content_ru, content_he) VALUES
+('hero', 'hero',
+    '{"title": "Our Courses", "subtitle": "Explore Our Learning Programs", "description": "Choose from our comprehensive range of courses designed to help you master new skills"}'::jsonb,
+    '{"title": "Наши Курсы", "subtitle": "Изучите Наши Учебные Программы", "description": "Выберите из нашего широкого спектра курсов, разработанных чтобы помочь вам освоить новые навыки"}'::jsonb,
+    '{"title": "הקורסים שלנו", "subtitle": "חקור את תוכניות הלמידה שלנו", "description": "בחר מתוך מגוון רחב של קורסים שנועדו לעזור לך לשלוט במיומנויות חדשות"}'::jsonb
+),
+('featured_courses', 'courses',
+    '{"content": {"title": "Featured Courses", "subtitle": "Our Most Popular Programs", "filters": {"all": "All", "web_dev": "Web Development", "mobile_dev": "Mobile Development", "data_science": "Data Science", "machine_learning": "Machine Learning", "cloud": "Cloud Computing"}}}'::jsonb,
+    '{"content": {"title": "Рекомендуемые Курсы", "subtitle": "Наши Самые Популярные Программы", "filters": {"all": "Все", "web_dev": "Веб-разработка", "mobile_dev": "Мобильная разработка", "data_science": "Наука о данных", "machine_learning": "Машинное обучение", "cloud": "Облачные вычисления"}}}'::jsonb,
+    '{"content": {"title": "קורסים מומלצים", "subtitle": "התוכניות הפופולריות ביותר שלנו", "filters": {"all": "הכל", "web_dev": "פיתוח אינטרנט", "mobile_dev": "פיתוח מובייל", "data_science": "מדע הנתונים", "machine_learning": "למידת מכונה", "cloud": "מחשוב ענן"}}}'::jsonb
+),
+('ui_elements', 'ui',
+    '{"content": {"buttons": {"course_details": "Course Details", "start_learning": "Start Learning", "browse_courses": "Browse Courses", "sign_up_today": "Sign Up Today", "get_in_touch": "Get In Touch", "check_out_courses": "Check Out Courses"}, "labels": {"price": "Price", "duration": "Duration", "level": "Level", "students": "Students Enrolled", "rating": "Rating", "instructor": "Instructor"}}}'::jsonb,
+    '{"content": {"buttons": {"course_details": "Детали Курса", "start_learning": "Начать Обучение", "browse_courses": "Просмотреть Курсы", "sign_up_today": "Записаться Сегодня", "get_in_touch": "Связаться", "check_out_courses": "Посмотреть Курсы"}, "labels": {"price": "Цена", "duration": "Продолжительность", "level": "Уровень", "students": "Студентов Записано", "rating": "Рейтинг", "instructor": "Преподаватель"}}}'::jsonb,
+    '{"content": {"buttons": {"course_details": "פרטי הקורס", "start_learning": "התחל ללמוד", "browse_courses": "עיין בקורסים", "sign_up_today": "הרשמה היום", "get_in_touch": "צור קשר", "check_out_courses": "בדוק קורסים"}, "labels": {"price": "מחיר", "duration": "משך", "level": "רמה", "students": "סטודנטים רשומים", "rating": "דירוג", "instructor": "מדריך"}}}'::jsonb
+),
+('cart', 'cart',
+    '{"content": {"title": "Your Cart", "empty_message": "Your cart is empty", "subtotal": "Subtotal", "checkout": "Continue to Checkout", "remove": "Remove", "quantity": "Quantity"}}'::jsonb,
+    '{"content": {"title": "Ваша Корзина", "empty_message": "Ваша корзина пуста", "subtotal": "Промежуточный итог", "checkout": "Продолжить к оформлению", "remove": "Удалить", "quantity": "Количество"}}'::jsonb,
+    '{"content": {"title": "העגלה שלך", "empty_message": "העגלה שלך ריקה", "subtotal": "סכום ביניים", "checkout": "המשך לתשלום", "remove": "הסר", "quantity": "כמות"}}'::jsonb
+),
+('cta_bottom', 'cta',
+    '{"content": {"subtitle": "Start Learning Today", "title": "Discover A World Of Learning Opportunities", "description": "Don't wait to transform your career and unlock your full potential"}}'::jsonb,
+    '{"content": {"subtitle": "Начните Обучение Сегодня", "title": "Откройте Мир Возможностей для Обучения", "description": "Не ждите, чтобы изменить свою карьеру и раскрыть свой полный потенциал"}}'::jsonb,
+    '{"content": {"subtitle": "התחל ללמוד היום", "title": "גלה עולם של הזדמנויות למידה", "description": "אל תחכה לשנות את הקריירה שלך ולפתוח את הפוטנציאל המלא שלך"}}'::jsonb
+),
+('misc', 'misc',
+    '{"content": {"no_items": "No items found", "loading": "Loading courses...", "error": "Failed to load courses"}}'::jsonb,
+    '{"content": {"no_items": "Товары не найдены", "loading": "Загрузка курсов...", "error": "Не удалось загрузить курсы"}}'::jsonb,
+    '{"content": {"no_items": "לא נמצאו פריטים", "loading": "טוען קורסים...", "error": "נכשל בטעינת קורסים"}}'::jsonb
+),
+('navigation', 'navigation',
+    '{"content": {"home": "Home", "courses": "Courses", "pricing": "Pricing", "blog": "Blog", "teachers": "Teachers", "about_us": "About Us", "career_orientation": "Career Orientation", "career_center": "Career Center"}}'::jsonb,
+    '{"content": {"home": "Главная", "courses": "Курсы", "pricing": "Цены", "blog": "Блог", "teachers": "Преподаватели", "about_us": "О нас", "career_orientation": "Профориентация", "career_center": "Центр Карьеры"}}'::jsonb,
+    '{"content": {"home": "בית", "courses": "קורסים", "pricing": "תמחור", "blog": "בלוג", "teachers": "מורים", "about_us": "אודותינו", "career_orientation": "הכוונה מקצועית", "career_center": "מרכז קריירה"}}'::jsonb
+)
+ON CONFLICT (section_key) DO UPDATE
+SET
+    section_type = EXCLUDED.section_type,
+    content_en = EXCLUDED.content_en,
+    content_ru = EXCLUDED.content_ru,
+    content_he = EXCLUDED.content_he,
+    updated_at = NOW();`;
+
+        // Display SQL on page load
+        document.getElementById('sqlContent').textContent = sqlScript;
+
+        async function executeSQL() {
+            const btn = document.getElementById('executeBtn');
+            const status = document.getElementById('status');
+
+            btn.disabled = true;
+            status.className = 'status info';
+            status.innerHTML = '⏳ Executing SQL on Railway database...';
+
+            try {
+                // This would need a server endpoint to execute SQL
+                // For now, we'll show instructions
+                status.className = 'status info';
+                status.innerHTML = `
+                    <h3>📋 Manual Steps Required:</h3>
+                    <ol>
+                        <li>Copy the SQL above</li>
+                        <li>Go to Railway Dashboard</li>
+                        <li>Open the PostgreSQL plugin</li>
+                        <li>Click "Connect" → "psql"</li>
+                        <li>Paste and execute the SQL</li>
+                    </ol>
+                    <p>Or use the Railway CLI:</p>
+                    <pre>railway run psql < production-create-nd-courses-page.sql</pre>
+                `;
+            } catch (error) {
+                status.className = 'status error';
+                status.innerHTML = '❌ Error: ' + error.message;
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        async function testTable() {
+            const btn = document.getElementById('testBtn');
+            const status = document.getElementById('status');
+            const results = document.getElementById('results');
+
+            btn.disabled = true;
+            status.className = 'status info';
+            status.innerHTML = '🧪 Testing table existence...';
+
+            try {
+                // Test via API
+                const response = await fetch('http://localhost:1337/api/nd/courses-page?locale=en');
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    if (data.success) {
+                        status.className = 'status success';
+                        status.innerHTML = '✅ Table exists and API is working!';
+
+                        // Display results
+                        let html = '<h3>Table Contents:</h3><table><tr><th>Section</th><th>Type</th><th>Has EN</th><th>Has RU</th><th>Has HE</th></tr>';
+
+                        for (const [key, section] of Object.entries(data.data)) {
+                            html += `<tr>
+                                <td>${key}</td>
+                                <td>${section.type}</td>
+                                <td>${section.content && Object.keys(section.content).length > 0 ? '✅' : '❌'}</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>`;
+                        }
+                        html += '</table>';
+                        results.innerHTML = html;
+                    } else {
+                        throw new Error(data.message || 'API returned error');
+                    }
+                } else if (response.status === 404) {
+                    status.className = 'status error';
+                    status.innerHTML = '❌ API endpoint not found. Server needs restart.';
+                } else {
+                    const text = await response.text();
+                    throw new Error(`API error: ${text}`);
+                }
+            } catch (error) {
+                status.className = 'status error';
+                status.innerHTML = '❌ ' + error.message;
+
+                if (error.message.includes('relation "nd_courses_page" does not exist')) {
+                    status.innerHTML += '<br><br>Table does not exist yet. Please execute the SQL first.';
+                }
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        async function testAPI() {
+            const btn = document.getElementById('apiBtn');
+            const status = document.getElementById('status');
+            const results = document.getElementById('results');
+
+            btn.disabled = true;
+            status.className = 'status info';
+            status.innerHTML = '📡 Testing API endpoints...';
+
+            try {
+                const locales = ['en', 'ru', 'he'];
+                let html = '<h3>API Test Results:</h3>';
+
+                for (const locale of locales) {
+                    const response = await fetch(`http://localhost:1337/api/nd/courses-page?locale=${locale}`);
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const buttons = data.data?.ui_elements?.content?.buttons;
+
+                        if (buttons) {
+                            html += `<h4>${locale.toUpperCase()}:</h4><ul>`;
+                            html += `<li>Course Details: "${buttons.course_details}"</li>`;
+                            html += `<li>Sign Up Today: "${buttons.sign_up_today}"</li>`;
+                            html += '</ul>';
+                        }
+                    }
+                }
+
+                status.className = 'status success';
+                status.innerHTML = '✅ API endpoints working!';
+                results.innerHTML = html;
+
+            } catch (error) {
+                status.className = 'status error';
+                status.innerHTML = '❌ API Error: ' + error.message;
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Courses Translation</title>
+</head>
+<body>
+    <h1>Testing Courses Page Translation</h1>
+
+    <script>
+        // Test the API directly
+        async function testTranslation() {
+            const apiUrl = 'http://localhost:3000/api/nd/courses-page?locale=ru';
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                console.log('API Response:', data);
+
+                if (data.success) {
+                    document.body.innerHTML += '<h2>✅ API Working!</h2>';
+                    document.body.innerHTML += '<h3>Russian Hero Title: ' + data.data.hero.content.title + '</h3>';
+                    document.body.innerHTML += '<h3>Russian Hero Subtitle: ' + data.data.hero.content.subtitle + '</h3>';
+
+                    // Show all sections
+                    Object.keys(data.data).forEach(section => {
+                        document.body.innerHTML += '<h4>Section: ' + section + '</h4>';
+                        if (data.data[section].content) {
+                            document.body.innerHTML += '<pre>' + JSON.stringify(data.data[section].content, null, 2) + '</pre>';
+                        }
+                    });
+                } else {
+                    document.body.innerHTML += '<h2>❌ API Failed</h2>';
+                }
+            } catch (error) {
+                document.body.innerHTML += '<h2>❌ Error: ' + error.message + '</h2>';
+            }
+        }
+
+        testTranslation();
+    </script>
+
+    <hr>
+    <p><a href="backups/newDesign/courses.html?locale=ru">Go to Actual Courses Page (Russian)</a></p>
+    <p><a href="backups/newDesign/courses.html?locale=en">Go to Actual Courses Page (English)</a></p>
+</body>
+</html>

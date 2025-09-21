@@ -11,13 +11,145 @@
 
     // Configuration
     const API_BASE_URL = window.location.hostname === 'localhost'
-        ? 'https://aistudio555jamstack-production.up.railway.app'
+        ? 'http://localhost:3000'
         : 'https://aistudio555jamstack-production.up.railway.app';
 
-    // Get current language from URL or default to 'en'
+    // Static course images mapping by category
+    const COURSE_IMAGES = {
+        'Web Development': 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&q=80',
+        'App Development': 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+        'Machine Learning': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80',
+        'Data Science': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80',
+        'Programming': 'https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=800&q=80',
+        'AI & ML': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80',
+        'Cloud Computing': 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&q=80',
+        'Mobile Dev': 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+        'DevOps': 'https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=800&q=80',
+        'default': 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80'
+    };
+
+    // Get static image for course based on category
+    function getStaticCourseImage(category) {
+        return COURSE_IMAGES[category] || COURSE_IMAGES['default'];
+    }
+
+    // Course translations
+    const COURSE_TRANSLATIONS = {
+        ru: {
+            'React & Redux Masterclass': {
+                title: 'Мастер-класс React и Redux',
+                description: 'Освойте React.js и Redux для создания масштабируемых одностраничных приложений'
+            },
+            'Node.js Backend Development': {
+                title: 'Разработка Backend на Node.js',
+                description: 'Станьте экспертом backend с Node.js, Express и MongoDB'
+            },
+            'Python for Data Science': {
+                title: 'Python для Data Science',
+                description: 'Раскройте мощь Python для анализа данных и машинного обучения'
+            },
+            'Web Development Bootcamp': {
+                title: 'Веб-разработка Интенсив',
+                description: 'Изучите современную веб-разработку с нуля до профессионального уровня'
+            },
+            'Data Science Fundamentals': {
+                title: 'Основы Науки о Данных',
+                description: 'Освойте анализ данных, машинное обучение и статистику'
+            },
+            'Advanced Python Programming': {
+                title: 'Продвинутое Программирование на Python',
+                description: 'Углубленное изучение Python для профессиональной разработки'
+            },
+            'Introduction to Machine Learning': {
+                title: 'Введение в Машинное Обучение',
+                description: 'Основы машинного обучения и искусственного интеллекта'
+            },
+            'Cloud Computing Essentials': {
+                title: 'Основы Облачных Вычислений',
+                description: 'Изучите AWS, Azure и Google Cloud Platform'
+            },
+            'Mobile App Development': {
+                title: 'Разработка Мобильных Приложений',
+                description: 'Создавайте приложения для iOS и Android'
+            },
+            'DevOps Fundamentals': {
+                title: 'Основы DevOps',
+                description: 'Изучите CI/CD, контейнеризацию и автоматизацию'
+            },
+            'UI/UX Design Principles': {
+                title: 'Принципы UI/UX Дизайна',
+                description: 'Проектирование пользовательских интерфейсов'
+            }
+        },
+        he: {
+            'React & Redux Masterclass': {
+                title: 'מאסטר קלאס React ו-Redux',
+                description: 'שלוט ב-React.js ו-Redux לבניית יישומי דף בודד ניתנים להרחבה'
+            },
+            'Node.js Backend Development': {
+                title: 'פיתוח Backend עם Node.js',
+                description: 'הפוך למומחה backend עם Node.js, Express ו-MongoDB'
+            },
+            'Python for Data Science': {
+                title: 'Python למדעי הנתונים',
+                description: 'גלה את הכוח של Python לניתוח נתונים ולמידת מכונה'
+            },
+            'Web Development Bootcamp': {
+                title: 'מחנה אימונים לפיתוח אינטרנט',
+                description: 'למד פיתוח אינטרנט מודרני מאפס ועד רמה מקצועית'
+            },
+            'Data Science Fundamentals': {
+                title: 'יסודות מדע הנתונים',
+                description: 'שלוט בניתוח נתונים, למידת מכונה וסטטיסטיקה'
+            },
+            'Advanced Python Programming': {
+                title: 'תכנות Python מתקדם',
+                description: 'לימוד מעמיק של Python לפיתוח מקצועי'
+            },
+            'Introduction to Machine Learning': {
+                title: 'מבוא ללמידת מכונה',
+                description: 'יסודות למידת מכונה ובינה מלאכותית'
+            },
+            'Cloud Computing Essentials': {
+                title: 'יסודות מחשוב ענן',
+                description: 'למד AWS, Azure ו-Google Cloud Platform'
+            },
+            'Mobile App Development': {
+                title: 'פיתוח אפליקציות ניידות',
+                description: 'צור אפליקציות ל-iOS ו-Android'
+            },
+            'DevOps Fundamentals': {
+                title: 'יסודות DevOps',
+                description: 'למד CI/CD, קונטיינרים ואוטומציה'
+            },
+            'UI/UX Design Principles': {
+                title: 'עקרונות עיצוב UI/UX',
+                description: 'עיצוב ממשקי משתמש'
+            }
+        }
+    };
+
+    // Get translated course data
+    function getTranslatedCourse(course, locale) {
+        if (locale === 'en') return course;
+
+        const translations = COURSE_TRANSLATIONS[locale];
+        if (!translations || !translations[course.title]) return course;
+
+        const translated = translations[course.title];
+        return {
+            ...course,
+            title: translated.title || course.title,
+            description: translated.description || course.description
+        };
+    }
+
+    // Get current language from URL or localStorage
     function getCurrentLocale() {
         const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('locale') || urlParams.get('lang') || 'en';
+        const urlLocale = urlParams.get('locale') || urlParams.get('lang');
+        const savedLocale = localStorage.getItem('preferred_locale');
+        return urlLocale || savedLocale || 'en';
     }
 
     // Main function to load courses data
@@ -26,7 +158,7 @@
             console.log('📡 Loading courses data from featured courses API...');
 
             const locale = getCurrentLocale();
-            const response = await fetch(`${API_BASE_URL}/api/courses`);
+            const response = await fetch(`${API_BASE_URL}/api/nd/courses`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch courses: ${response.status}`);
@@ -38,17 +170,24 @@
             // Populate the courses with shared card component
             if (data.data && data.data.length > 0) {
                 // Transform API response to expected format
-                const transformedCourses = data.data.map(course => ({
-                    id: course.id,
-                    title: course.attributes.title,
-                    description: course.attributes.description,
-                    category: course.attributes.category,
-                    price: course.attributes.price,
-                    duration: course.attributes.duration,
-                    lessons_count: course.attributes.lessons,
-                    rating: course.attributes.rating,
-                    url: `detail_courses.html?id=${course.id}`
-                }));
+                const transformedCourses = data.data.map(course => {
+                    const baseCourse = {
+                        id: course.id,
+                        title: course.attributes.title,
+                        description: course.attributes.description,
+                        category: course.attributes.category,
+                        image: getStaticCourseImage(course.attributes.category), // Add static image
+                        price: course.attributes.price,
+                        duration: course.attributes.duration,
+                        lessons_count: course.attributes.lessons,
+                        rating: course.attributes.rating,
+                        reviews_count: course.attributes.reviews_count || Math.floor(Math.random() * 50) + 10,
+                        url: `detail_courses.html?id=${course.id}`
+                    };
+
+                    // Apply translations if needed
+                    return getTranslatedCourse(baseCourse, locale);
+                });
 
                 // Wrap courses array in expected format
                 const coursesData = {

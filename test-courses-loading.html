@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Courses Loading</title>
+</head>
+<body>
+    <h1>Testing Courses Page Translation Loading</h1>
+
+    <button onclick="testLocalStorage()">Test localStorage</button>
+    <button onclick="testPageDetection()">Test Page Detection</button>
+    <button onclick="testAPICall()">Test API Call</button>
+    <button onclick="clearAll()">Clear Everything</button>
+
+    <pre id="output"></pre>
+
+    <script>
+        const output = document.getElementById('output');
+
+        function log(msg) {
+            output.textContent += msg + '\n';
+            console.log(msg);
+        }
+
+        function testLocalStorage() {
+            log('=== localStorage Test ===');
+            const saved = localStorage.getItem('preferred_locale');
+            log('Saved locale: ' + (saved || 'NONE'));
+
+            // Set to Russian
+            localStorage.setItem('preferred_locale', 'ru');
+            log('Set to Russian');
+
+            // Check again
+            const afterSet = localStorage.getItem('preferred_locale');
+            log('After setting: ' + afterSet);
+        }
+
+        function testPageDetection() {
+            log('\n=== Page Detection Test ===');
+            // Simulate what the language manager does
+            const path = '/courses.html';
+            let pageName = 'unknown';
+
+            if (path.includes('courses')) pageName = 'courses';
+            else if (path.includes('home')) pageName = 'home';
+
+            log('Path: ' + path);
+            log('Detected page: ' + pageName);
+
+            // Check endpoint
+            const locale = localStorage.getItem('preferred_locale') || 'en';
+            const endpoint = `/api/nd/${pageName}-page?locale=${locale}`;
+            log('Would call: ' + endpoint);
+        }
+
+        async function testAPICall() {
+            log('\n=== API Call Test ===');
+            const locale = localStorage.getItem('preferred_locale') || 'en';
+            const url = `http://localhost:3000/api/nd/courses-page?locale=${locale}`;
+
+            log('Calling: ' + url);
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                log('Success: ' + data.success);
+                log('Has data: ' + (data.data ? 'YES' : 'NO'));
+                if (data.data && data.data.hero) {
+                    log('Hero title: ' + (data.data.hero.content ? data.data.hero.content.title : 'NO CONTENT'));
+                }
+            } catch (error) {
+                log('ERROR: ' + error.message);
+            }
+        }
+
+        function clearAll() {
+            localStorage.clear();
+            output.textContent = '';
+            log('Cleared localStorage and output');
+        }
+
+        // Initial check
+        log('=== Initial State ===');
+        log('Current preferred_locale: ' + (localStorage.getItem('preferred_locale') || 'NONE'));
+        log('Browser language: ' + navigator.language);
+    </script>
+
+    <hr>
+    <p><a href="home.html">Go to Home (should have language switcher)</a></p>
+    <p><a href="courses.html">Go to Courses (should inherit language)</a></p>
+</body>
+</html>

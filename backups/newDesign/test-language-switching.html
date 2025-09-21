@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Language Switching Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1d3a;
+            color: white;
+        }
+        .test-results {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        .page-test {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+        .warning { color: #fbbf24; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #764ba2;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Language Switching Test Suite</h1>
+
+    <div class="test-controls">
+        <button onclick="testHomePage()">Test Home Page</button>
+        <button onclick="testCoursesPage()">Test Courses Page</button>
+        <button onclick="testTeachersPage()">Test Teachers Page</button>
+        <button onclick="runAllTests()">Run All Tests</button>
+    </div>
+
+    <div class="test-results" id="results">
+        <h2>Test Results:</h2>
+        <div id="test-output"></div>
+    </div>
+
+    <iframe id="testFrame" src="http://localhost:3005/backups/newDesign/home.html"></iframe>
+
+    <script>
+        const API_BASE = 'http://localhost:1337';
+        const PAGES = {
+            home: 'http://localhost:3005/backups/newDesign/home.html',
+            courses: 'http://localhost:3005/backups/newDesign/courses.html',
+            teachers: 'http://localhost:3005/backups/newDesign/teachers.html'
+        };
+
+        function log(message, type = 'info') {
+            const output = document.getElementById('test-output');
+            const timestamp = new Date().toLocaleTimeString();
+            const colorClass = type === 'success' ? 'success' : type === 'error' ? 'error' : 'warning';
+            output.innerHTML += `<div class="${colorClass}">[${timestamp}] ${message}</div>`;
+        }
+
+        async function testPage(pageName, url) {
+            log(`\n📄 Testing ${pageName} Page...`, 'info');
+            const frame = document.getElementById('testFrame');
+
+            return new Promise((resolve) => {
+                frame.onload = async () => {
+                    await new Promise(r => setTimeout(r, 1000)); // Wait for page to fully load
+
+                    try {
+                        const frameDoc = frame.contentDocument || frame.contentWindow.document;
+
+                        // Check for language pills
+                        const langPills = frameDoc.querySelectorAll('.lang-pill');
+                        const mobileLangPills = frameDoc.querySelectorAll('.mobile-lang-pill');
+
+                        if (langPills.length > 0) {
+                            log(`✅ Found ${langPills.length} desktop language pills`, 'success');
+                        } else {
+                            log(`❌ No desktop language pills found`, 'error');
+                        }
+
+                        if (mobileLangPills.length > 0) {
+                            log(`✅ Found ${mobileLangPills.length} mobile language pills`, 'success');
+                        } else {
+                            log(`⚠️ No mobile language pills found`, 'warning');
+                        }
+
+                        // Check for data-i18n attributes
+                        const i18nElements = frameDoc.querySelectorAll('[data-i18n]');
+                        if (i18nElements.length > 0) {
+                            log(`✅ Found ${i18nElements.length} elements with data-i18n attributes`, 'success');
+
+                            // Sample some elements
+                            const sample = Array.from(i18nElements).slice(0, 5);
+                            sample.forEach(el => {
+                                log(`  - ${el.tagName}: data-i18n="${el.getAttribute('data-i18n')}" → "${el.textContent.trim().substring(0, 50)}"`, 'info');
+                            });
+                        } else {
+                            log(`❌ No data-i18n attributes found`, 'error');
+                        }
+
+                        // Test language switching
+                        const ruPill = Array.from(langPills).find(p => p.textContent.trim() === 'RU');
+                        if (ruPill) {
+                            log(`🔄 Clicking Russian language pill...`, 'info');
+                            ruPill.click();
+
+                            await new Promise(r => setTimeout(r, 2000)); // Wait for language to switch
+
+                            // Check if URL updated
+                            const currentUrl = frameDoc.location.href;
+                            if (currentUrl.includes('locale=ru')) {
+                                log(`✅ URL updated with locale=ru`, 'success');
+                            } else {
+                                log(`⚠️ URL not updated with locale parameter`, 'warning');
+                            }
+
+                            // Check for Russian text
+                            const pageText = frameDoc.body.textContent;
+                            const hasRussian = /[А-Яа-я]{3,}/.test(pageText);
+
+                            if (hasRussian) {
+                                log(`✅ Russian text detected on the page`, 'success');
+                            } else {
+                                log(`❌ No Russian text found after switching`, 'error');
+                            }
+                        }
+
+                        resolve();
+                    } catch (error) {
+                        log(`❌ Error testing ${pageName}: ${error.message}`, 'error');
+                        resolve();
+                    }
+                };
+
+                frame.src = url;
+            });
+        }
+
+        async function testHomePage() {
+            document.getElementById('test-output').innerHTML = '';
+            await testPage('Home', PAGES.home);
+        }
+
+        async function testCoursesPage() {
+            document.getElementById('test-output').innerHTML = '';
+            await testPage('Courses', PAGES.courses);
+        }
+
+        async function testTeachersPage() {
+            document.getElementById('test-output').innerHTML = '';
+            await testPage('Teachers', PAGES.teachers);
+        }
+
+        async function runAllTests() {
+            document.getElementById('test-output').innerHTML = '';
+            log('🚀 Starting comprehensive language switching tests...', 'info');
+
+            await testPage('Home', PAGES.home);
+            await testPage('Courses', PAGES.courses);
+            await testPage('Teachers', PAGES.teachers);
+
+            log('\n✅ All tests completed!', 'success');
+        }
+
+        // Auto-run tests on load
+        window.addEventListener('load', () => {
+            log('🔧 Test suite loaded. Click buttons to test individual pages or run all tests.', 'info');
+        });
+    </script>
+</body>
+</html>
