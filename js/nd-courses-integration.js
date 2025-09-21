@@ -221,6 +221,7 @@
 
         const courses = coursesData.courses || [];
         console.log(`📚 ${courses.length} courses available`);
+        console.log('Course data sample:', courses[0]);
 
         // Find all tab content containers
         const tabContainers = document.querySelectorAll('.featured-courses-tab-pane .featured-courses-collection-list');
@@ -247,25 +248,8 @@
 
     // Create course card using shared component
     async function createCourseCardForCoursesPage(course) {
-        // Always try to use shared course card component first
-        if (window.CourseCard && window.CourseCard.create) {
-            try {
-                console.log('🎯 Using shared course card component for:', course.title);
-                const sharedCard = await window.CourseCard.create(course, {
-                    customClass: 'featured-courses-collection-item',
-                    showFullDescription: true
-                });
-                console.log('✅ Shared card created successfully');
-                return sharedCard;
-            } catch (error) {
-                console.error('❌ Shared card component failed:', error);
-            }
-        } else {
-            console.warn('⚠️ Shared course card component not available');
-        }
-
-        // Fallback to original featured course card structure
-        console.log('🔄 Using fallback card for:', course.title);
+        // Always use fallback for now since shared component has issues
+        console.log('🔄 Creating course card for:', course.title, 'with image:', course.image);
         return createFallbackCourseCard(course);
     }
 
