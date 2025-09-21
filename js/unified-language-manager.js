@@ -328,14 +328,14 @@ class LanguageManager {
      */
     getAPIEndpoint(pageName, locale) {
         const endpoints = {
-            'home': `/api/nd/home-page?locale=${locale}`,
-            'courses': `/api/nd/courses-page?locale=${locale}`,  // Changed to courses-page for UI translations
-            'pricing': `/api/nd/pricing-page?locale=${locale}`,  // Pricing page translations
-            'course-details': `/api/nd/course-details-page?locale=${locale}`, // Course details page UI translations
-            'teachers': `/api/nd/teachers-page?locale=${locale}`, // Changed to teachers-page for consistency
-            'blog': `/api/nd/blog-page?locale=${locale}`,
-            'career-center': `/api/nd/career-center-platform-page?locale=${locale}`,
-            'career-orientation': `/api/nd/career-orientation-page?locale=${locale}`
+            'home': `/api/home-page?locale=${locale}`,
+            'courses': `/api/courses-page?locale=${locale}`,  // Changed to courses-page for UI translations
+            'pricing': `/api/pricing-page?locale=${locale}`,  // Pricing page translations
+            'course-details': `/api/course-details-page?locale=${locale}`, // Course details page UI translations
+            'teachers': `/api/teachers-page?locale=${locale}`, // Changed to teachers-page for consistency
+            'blog': `/api/blog-page?locale=${locale}`,
+            'career-center': `/api/career-center-platform-page?locale=${locale}`,
+            'career-orientation': `/api/career-orientation-page?locale=${locale}`
         };
 
         return endpoints[pageName] || null;

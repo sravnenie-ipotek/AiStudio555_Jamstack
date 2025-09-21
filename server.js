@@ -9607,21 +9607,23 @@ app.put('/api/nd/blog-page/:section_name', async (req, res) => {
 
     console.log(`🔄 Updating blog page section: ${section_name}`);
 
+    const { display_order = 99, visible = true } = req.body;
+
     const query = `
-      UPDATE nd_blog_page
-      SET content_en = $1, content_ru = $2, content_he = $3, updated_at = NOW()
-      WHERE section_name = $4
+      INSERT INTO nd_blog_page (section_name, content_en, content_ru, content_he, visible, display_order, created_at, updated_at)
+      VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+      ON CONFLICT (section_name)
+      DO UPDATE SET
+        content_en = EXCLUDED.content_en,
+        content_ru = EXCLUDED.content_ru,
+        content_he = EXCLUDED.content_he,
+        visible = EXCLUDED.visible,
+        display_order = EXCLUDED.display_order,
+        updated_at = NOW()
       RETURNING *
     `;
 
-    const result = await queryDatabase(query, [content_en, content_ru, content_he, section_name]);
-
-    if (result.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Section not found'
-      });
-    }
+    const result = await queryDatabase(query, [section_name, content_en, content_ru, content_he, visible, display_order]);
 
     res.json({
       success: true,
