@@ -29,6 +29,9 @@ class LanguageManager {
         console.log('[LanguageManager] Current page:', this.getCurrentPageName());
         console.log('[LanguageManager] Initial locale:', this.currentLocale);
 
+        // Remove any floating language-switcher with locale-selector
+        this.removeFloatingLanguageSwitcher();
+
         // Set initial language state
         this.setInitialLanguageState();
 
@@ -50,6 +53,65 @@ class LanguageManager {
                 this.switchLanguage(locale, false);
             }
         });
+    }
+
+    /**
+     * Remove any floating language-switcher elements
+     */
+    removeFloatingLanguageSwitcher() {
+        // Remove immediately if exists
+        const removeSwitcher = () => {
+            const switchers = document.querySelectorAll('.language-switcher');
+            switchers.forEach(switcher => {
+                // Check if it has the locale-selector or is positioned fixed
+                if (switcher.querySelector('#locale-selector') ||
+                    (switcher.style.position === 'fixed' && switcher.style.top === '20px')) {
+                    switcher.remove();
+                    console.log('[LanguageManager] Removed floating language-switcher');
+                }
+            });
+
+            // Also check for any standalone locale-selector
+            const selectors = document.querySelectorAll('#locale-selector');
+            selectors.forEach(selector => {
+                const parent = selector.closest('.language-switcher');
+                if (parent) {
+                    parent.remove();
+                } else {
+                    selector.remove();
+                }
+                console.log('[LanguageManager] Removed locale-selector');
+            });
+        };
+
+        // Remove immediately
+        removeSwitcher();
+
+        // Set up observer to prevent re-addition
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1) { // Element node
+                        if (node.classList && node.classList.contains('language-switcher')) {
+                            if (node.querySelector('#locale-selector') ||
+                                (node.style.position === 'fixed' && node.style.top === '20px')) {
+                                node.remove();
+                                console.log('[LanguageManager] Prevented language-switcher addition');
+                            }
+                        }
+                    }
+                });
+            });
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        // Also check after a delay in case it's added later
+        setTimeout(removeSwitcher, 100);
+        setTimeout(removeSwitcher, 500);
     }
 
     /**
@@ -252,6 +314,7 @@ class LanguageManager {
             return 'home';
         }
         if (path.includes('courses')) return 'courses';
+        if (path.includes('pricing')) return 'pricing';
         if (path.includes('teachers')) return 'teachers';
         if (path.includes('blog')) return 'blog';
         if (path.includes('career-center')) return 'career-center';
@@ -267,6 +330,7 @@ class LanguageManager {
         const endpoints = {
             'home': `/api/nd/home-page?locale=${locale}`,
             'courses': `/api/nd/courses-page?locale=${locale}`,  // Changed to courses-page for UI translations
+            'pricing': `/api/nd/pricing-page?locale=${locale}`,  // Pricing page translations
             'course-details': `/api/nd/course-details-page?locale=${locale}`, // Course details page UI translations
             'teachers': `/api/nd/teachers-page?locale=${locale}`, // Changed to teachers-page for consistency
             'blog': `/api/nd/blog?locale=${locale}`,

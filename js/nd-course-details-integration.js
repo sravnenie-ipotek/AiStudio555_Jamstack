@@ -80,82 +80,71 @@
         console.log('📝 Populating course details...');
 
         // Hero Section
-        const heroTitle = document.querySelector('.courses-single-hero-heading');
+        const heroTitle = document.querySelector('.course-details-hero-title');
         if (heroTitle) heroTitle.textContent = course.title || '';
 
-        const heroDescription = document.querySelector('.courses-single-hero-paragraph');
+        const heroDescription = document.querySelector('.course-details-hero-description');
         if (heroDescription) heroDescription.textContent = course.short_description || course.description || '';
 
         // Breadcrumb
-        const breadcrumb = document.querySelector('.breadcrumbs-name');
+        const breadcrumb = document.querySelector('.course-breadcrumb-title');
         if (breadcrumb) breadcrumb.textContent = course.title || '';
 
         // Main Content Area
-        const mainTitle = document.querySelector('.courses-single-content-heading');
-        if (mainTitle) mainTitle.textContent = course.title || '';
+        const fullDescription = document.querySelector('.course-full-description');
+        if (fullDescription) fullDescription.textContent = course.description || '';
 
-        const mainDescription = document.querySelector('.courses-single-content-paragraph');
-        if (mainDescription) mainDescription.textContent = course.description || '';
-
-        // Course Image
-        const courseImage = document.querySelector('.courses-single-image');
-        if (courseImage && course.thumbnail_url) {
-            courseImage.src = course.thumbnail_url;
-            courseImage.alt = course.title || '';
-        }
-
-        // Video (if available)
-        const videoFrame = document.querySelector('.courses-single-video iframe');
-        if (videoFrame && course.video_url) {
-            videoFrame.src = course.video_url;
-        }
+        const curriculumDescription = document.querySelector('.course-curriculum-description');
+        if (curriculumDescription) curriculumDescription.textContent = `This ${course.lessons_count || 0}-lesson course covers all aspects of ${course.title || 'the subject'}.`;
 
         // Rating
-        const ratingContainer = document.querySelector('.courses-single-rating-icon-wrapper');
+        const ratingContainer = document.querySelector('.course-rating-stars');
         if (ratingContainer && course.rating) {
             ratingContainer.innerHTML = generateStarRating(course.rating);
         }
 
-        const ratingText = document.querySelector('.courses-single-rating-text');
+        const ratingText = document.querySelector('.course-rating-text');
         if (ratingText) {
             ratingText.textContent = `${course.rating || 5.0} (${course.reviews_count || 0} reviews)`;
         }
 
-        // Price
-        const priceElement = document.querySelector('.courses-single-price-text');
-        if (priceElement) {
-            priceElement.innerHTML = formatPrice(course.price, course.old_price);
-        }
+        // Course meta information
+        const instructorElement = document.querySelector('.course-instructor');
+        if (instructorElement) instructorElement.textContent = course.instructor || 'Expert Instructor';
 
-        // Meta Information
-        const durationElement = document.querySelector('.courses-single-meta-text:nth-of-type(1)');
+        const durationElement = document.querySelector('.course-duration');
         if (durationElement) durationElement.textContent = course.duration || '8 weeks';
 
-        const lessonsElement = document.querySelector('.courses-single-meta-text:nth-of-type(2)');
-        if (lessonsElement) lessonsElement.textContent = `${course.lessons_count || 0} Lessons`;
+        // Sidebar price and info
+        const currentPriceElement = document.querySelector('.course-current-price');
+        if (currentPriceElement) currentPriceElement.textContent = `$${course.price || '99.99'}`;
 
-        const levelElement = document.querySelector('.courses-single-meta-text:nth-of-type(3)');
-        if (levelElement) levelElement.textContent = course.level || 'All Levels';
-
-        const categoryElement = document.querySelector('.courses-single-categories-tag');
-        if (categoryElement) {
-            categoryElement.textContent = course.category || 'General';
-            // Apply category color
-            const categoryColor = getCategoryColor(course.category);
-            categoryElement.style.backgroundColor = categoryColor;
+        const oldPriceElement = document.querySelector('.course-old-price');
+        if (oldPriceElement && course.old_price) {
+            oldPriceElement.textContent = `$${course.old_price}`;
+            oldPriceElement.style.textDecoration = 'line-through';
         }
 
-        // Instructor Information
-        const instructorName = document.querySelector('.courses-single-instructor-name');
-        if (instructorName) instructorName.textContent = course.instructor || 'Expert Instructor';
+        const lessonsCountElement = document.querySelector('.course-lessons-count');
+        if (lessonsCountElement) lessonsCountElement.textContent = course.lessons_count || '0';
 
-        const instructorBio = document.querySelector('.courses-single-instructor-bio');
-        if (instructorBio) instructorBio.textContent = course.instructor_bio || 'Experienced professional with years of industry expertise.';
+        const studentsCountElement = document.querySelector('.course-students-count');
+        if (studentsCountElement) studentsCountElement.textContent = course.students_count || '0';
 
-        const instructorImage = document.querySelector('.courses-single-instructor-image');
-        if (instructorImage && course.instructor_image) {
-            instructorImage.src = course.instructor_image;
-            instructorImage.alt = course.instructor || '';
+        const levelElement = document.querySelector('.course-level');
+        if (levelElement) levelElement.textContent = course.level || 'All Levels';
+
+        const categoryElement = document.querySelector('.course-category');
+        if (categoryElement) categoryElement.textContent = course.category || 'General';
+
+        // Instructor info (sidebar)
+        const instructorNameElement = document.querySelector('.instructor-name');
+        if (instructorNameElement) instructorNameElement.textContent = course.instructor || 'Expert Instructor';
+
+        const instructorImageElement = document.querySelector('.instructor-image');
+        if (instructorImageElement) {
+            instructorImageElement.src = course.instructor_image || 'images/default-instructor.jpg';
+            instructorImageElement.alt = course.instructor || 'Instructor';
         }
 
         // Course Objectives

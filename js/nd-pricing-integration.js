@@ -6,7 +6,7 @@
 
     // API Configuration
     const API_BASE = window.location.hostname === 'localhost'
-        ? 'http://localhost:1337/api/nd'
+        ? 'http://localhost:3000/api/nd'
         : 'https://aistudio555jamstack-production.up.railway.app/api/nd';
 
     // Load pricing data from database
@@ -14,7 +14,15 @@
         try {
             console.log('📊 Fetching pricing data from database...');
 
-            const response = await fetch(`${API_BASE}/pricing-page?locale=en`);
+            // Get current locale from URL parameter or localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLocale = urlParams.get('locale');
+            const savedLocale = localStorage.getItem('preferred_locale');
+            const currentLocale = urlLocale || savedLocale || 'en';
+
+            console.log('🌍 Loading pricing content for locale:', currentLocale);
+
+            const response = await fetch(`${API_BASE}/pricing-page?locale=${currentLocale}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -35,8 +43,11 @@
                             console.log('🔒 Hero section hidden (visibility off)');
                         }
                     } else {
-                        updateHeroSection(sections.hero);
+                        updateHeroSection(sections.hero, currentLocale);
                     }
+                } else {
+                    // If no hero data, use default English texts
+                    updateHeroSection({}, currentLocale);
                 }
 
                 // Update Plans Section
@@ -98,30 +109,49 @@
     }
 
     // Update Hero Section
-    function updateHeroSection(hero) {
-        console.log('🎯 Updating hero section...');
+    function updateHeroSection(hero, locale) {
+        console.log('🎯 Updating hero section for locale:', locale);
+
+        // Default English translations
+        const defaultTexts = {
+            en: {
+                heroTitle: 'Pricing Plan',
+                subtitle: 'Affordable Plans',
+                mainTitle: 'Invest in Future with Subscription Plans.'
+            },
+            ru: {
+                heroTitle: 'Тарифные планы',
+                subtitle: 'Доступные планы',
+                mainTitle: 'Инвестируйте в будущее с планами подписки.'
+            },
+            he: {
+                heroTitle: 'תוכנית תמחור',
+                subtitle: 'תוכניות זולות',
+                mainTitle: 'השקיעו בעתיד עם תוכניות מנוי.'
+            }
+        };
+
+        const texts = defaultTexts[locale] || defaultTexts.en;
 
         // Update title in the hero/banner area
         const heroTitle = document.querySelector('.inner-banner-title');
-        if (heroTitle && hero.title) {
-            heroTitle.textContent = hero.title;
-            console.log('✅ Updated hero title:', hero.title);
+        if (heroTitle) {
+            heroTitle.textContent = hero.title || texts.heroTitle;
+            console.log('✅ Updated hero title:', hero.title || texts.heroTitle);
         }
 
-        // Update subtitle if exists (currently not in the static HTML)
-        // We'll update the section that has "Affordable Plans" and main title
+        // Update the section subtitle that says "Affordable Plans"
         const sectionSubtitle = document.querySelector('.section-subtitle');
-        if (sectionSubtitle && hero.subtitle) {
-            // Update the subtitle that currently says "Affordable Plans"
-            sectionSubtitle.textContent = hero.subtitle;
-            console.log('✅ Updated hero subtitle:', hero.subtitle);
+        if (sectionSubtitle) {
+            sectionSubtitle.textContent = hero.subtitle || texts.subtitle;
+            console.log('✅ Updated section subtitle:', hero.subtitle || texts.subtitle);
         }
 
-        // Also update the main section title that currently says "Invest in Future..."
+        // Update the main section title that says "Invest in Future..."
         const sectionTitle = document.querySelector('.section-title');
-        if (sectionTitle && hero.subtitle) {
-            sectionTitle.textContent = hero.subtitle;
-            console.log('✅ Updated section title with subtitle:', hero.subtitle);
+        if (sectionTitle) {
+            sectionTitle.textContent = hero.description || texts.mainTitle;
+            console.log('✅ Updated section title:', hero.description || texts.mainTitle);
         }
     }
 
@@ -268,6 +298,16 @@
             });
         });
     }
+
+    // Add event listener for language changes
+    window.addEventListener('languageChanged', (event) => {
+        console.log('🌍 Language changed to:', event.detail.locale);
+        // Small delay to ensure localStorage is updated
+        setTimeout(() => {
+            console.log('🔄 Reloading pricing content with new language...');
+            loadPricingContent();
+        }, 100);
+    });
 
     // Initialize
     if (isPricingPage()) {

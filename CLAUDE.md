@@ -37,9 +37,41 @@ Port 3005/8000        → Port 3000 (local)   → Railway Cloud
 - **Custom API**: Express.js server with RESTful endpoints (port 3000 local, Railway-assigned in production)
 - **Database**: Railway PostgreSQL cloud database (production)
 - **Admin Panel**: Custom HTML-based content management interface
-- **Integration Layer**: `js/webflow-strapi-integration.js` handles API communication
+- **Integration Layer**: Various JS files handle API communication and translations
 
 ⚠️ **Note About File Naming**: Files with "strapi" in their names are misleadingly named legacy files. They actually connect to our custom API, not Strapi.
+
+## Translation System (Multi-language Support)
+
+### Unified Translation Architecture
+- **Single Language Manager**: `js/unified-language-manager.js` handles all pages
+- **Language Persistence**: Locale saved in localStorage, persists across pages
+- **URL Parameters**: `?locale=ru` or `?locale=he` for direct language access
+- **Language Switchers**: EN/RU/HE pills in navigation bar
+
+### Database Tables Structure
+1. **Content Tables** (without `_page` suffix):
+   - `nd_home` - Home page sections content
+   - `nd_courses` - Actual course data
+   - `nd_menu` - Navigation items
+   - `nd_footer` - Footer content
+
+2. **Page UI Translation Tables** (with `_page` suffix):
+   - `nd_home_page` - Home page UI translations
+   - `nd_courses_page` - Courses page UI text
+   - `nd_course_details_page` - Course details page UI text
+   - `nd_teachers_page` - Teachers page UI text
+   - `nd_pricing_page` - Pricing page UI text
+   - `nd_about_page` - About page UI text
+   - `nd_contact_page` - Contact page UI text
+
+### Translation Implementation per Page:
+- **home.html**: Uses `nd_home` table + `data-i18n` attributes
+- **courses.html**: Uses `nd_courses_page` for UI + `nd_courses` for data
+- **detail_courses.html**: Uses `nd_course_details_page` for UI + `nd_courses/:id` for specific course
+- **pricing.html**: Uses `nd_pricing_page` table
+- **teachers.html**: Uses `nd_teachers_page` table
+- All pages use unified language manager for consistency
 
 ## Development Commands
 
@@ -113,11 +145,15 @@ The system automatically detects Railway environment variables:
 
 ### Dynamic Content Integration Points
 Pages that connect to Custom API:
-- Course listings: `GET /api/courses`
-- Teachers: `GET /api/teachers` 
+- Home page: `GET /api/nd/home-page?locale={en|ru|he}`
+- Courses page UI: `GET /api/nd/courses-page?locale={en|ru|he}`
+- Course listings: `GET /api/nd/courses`
+- Single course: `GET /api/nd/courses/:id?locale={en|ru|he}`
+- Course details UI: `GET /api/nd/course-details-page?locale={en|ru|he}`
+- Teachers: `GET /api/nd/teachers-page?locale={en|ru|he}`
+- Pricing: `GET /api/nd/pricing-page?locale={en|ru|he}`
 - Blog posts: `GET /api/blog-posts`
-- Career content: `GET /api/career-center-page`, `GET /api/career-orientation-page`  
-- Home page: `GET /api/home-page`
+- Career content: `GET /api/nd/career-center-platform-page?locale={en|ru|he}`
 
 ## Database Schema
 
@@ -156,12 +192,14 @@ fetch('https://aistudio555jamstack-production.up.railway.app/api/home-page?previ
 
 ```
 /
-├── server.js              # Custom Express.js API server
+├── server.js              # Custom Express.js API server with all endpoints
 ├── migrate-to-railway.js  # Database migration script
 ├── content-admin-comprehensive.html  # Custom admin interface
-├── home.html             # Main landing page
-├── courses.html          # Course catalog page
+├── home.html             # Main landing page with translation
+├── courses.html          # Course catalog page with translation
+├── detail_courses.html   # Course details page with translation
 ├── teachers.html         # Teachers/instructors page
+├── pricing.html          # Pricing page with language switcher
 ├── career-center.html    # Career services page
 ├── career-orientation.html # Career guidance page
 ├── dist/                 # Built static files for production
@@ -170,16 +208,19 @@ fetch('https://aistudio555jamstack-production.up.railway.app/api/home-page?previ
 │   └── he/              # Hebrew versions (RTL)
 ├── css/                  # Webflow styles + shared components
 │   └── uniform-card-styles.css # Standardized card component styles
-├── js/                   # Client-side scripts + shared components
-│   ├── webflow-strapi-integration.js  # Main API integration (misleading name)
-│   ├── strapi-integration.js          # Secondary integration (misleading name)
-│   ├── contact-form-modal.js          # Contact form modal with EmailJS integration
-│   └── uniform-card-generator.js      # Shared card component system
+├── js/                   # Client-side scripts + integration files
+│   ├── unified-language-manager.js    # Main translation manager for all pages
+│   ├── nd-courses-integration.js      # Courses page data integration
+│   ├── nd-course-details-integration.js # Course details integration
+│   ├── course-card-component.js       # Course card generation
+│   ├── contact-form-modal.js          # Contact form modal with EmailJS
+│   └── webflow-strapi-integration.js  # Legacy API integration
 ├── shared/               # Reusable components and templates
 │   └── components/       # Shared UI components
-│       ├── uniform-card-template.html     # Standardized card HTML template
-│       ├── uniform-card-styles.css        # Card component CSS (copied to /css/)
-│       └── uniform-card-generator.js      # Card component JS (copied to /js/)
+│       ├── course-details-page/       # Course details page components
+│       │   ├── course-details-styles.css
+│       │   └── course-details-component.js
+│       └── uniform-card-template.html # Card template
 ├── images/               # Static assets
 ├── Docs/                 # Project documentation
 │   └── architecture/     # System architecture docs
