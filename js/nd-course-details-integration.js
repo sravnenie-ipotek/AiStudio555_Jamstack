@@ -282,10 +282,14 @@
         }
 
         // Features - Webflow Structure
-        if (course.features) {
+        if (course.features && course.features.length > 0) {
             const featuresContainer = document.querySelector('.courses-single-features');
             if (featuresContainer) {
-                const features = course.features.split(',').map(f => f.trim());
+                // Handle both array and string formats
+                const features = Array.isArray(course.features)
+                    ? course.features
+                    : course.features.split(',').map(f => f.trim());
+
                 featuresContainer.innerHTML = features.map(feature =>
                     `<div class="courses-single-feature-item">
                         <div class="courses-single-feature-icon"></div>
@@ -360,11 +364,7 @@
         }
 
         // Ensure all content is visible in Webflow structure
-        const courseDetailsContent = document.querySelector('.course-details-content');
-        if (courseDetailsContent) {
-            courseDetailsContent.style.opacity = '1';
-            courseDetailsContent.classList.add('visible');
-        }
+        // (courseDetailsContent already declared above)
 
         // Remove any hiding classes and ensure visibility
         const allElements = document.querySelectorAll('.courses-single *');
