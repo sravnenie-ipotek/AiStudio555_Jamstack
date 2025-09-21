@@ -10072,6 +10072,88 @@ app.get('/api/fix-nd-home-schema', async (req, res) => {
   }
 });
 
+// ==================== POPULATE ND_HOME FULL CONTENT ====================
+app.get('/api/populate-nd-home', async (req, res) => {
+  try {
+    console.log('📦 Populating nd_home with full translation content...');
+
+    // All sections needed based on ultrathink analysis
+    const fullContent = {
+      navigation: { en: '{"home":"Home","courses":"Courses","teachers":"Teachers","blog":"Blog","about_us":"About Us","pricing":"Pricing"}',
+                   ru: '{"home":"Главная","courses":"Курсы","teachers":"Преподаватели","blog":"Блог","about_us":"О нас","pricing":"Цены"}',
+                   he: '{"home":"בית","courses":"קורסים","teachers":"מורים","blog":"בלוג","about_us":"אודותינו","pricing":"תמחור"}' },
+      ui_elements: { en: '{"buttons":{"sign_up_today":"Sign Up Today","course_details":"Course Details","browse_courses":"Browse Courses"}}',
+                    ru: '{"buttons":{"sign_up_today":"Записаться сегодня","course_details":"Детали курса","browse_courses":"Просмотреть курсы"}}',
+                    he: '{"buttons":{"sign_up_today":"הרשם היום","course_details":"פרטי הקורס","browse_courses":"עיין בקורסים"}}' },
+      features: { en: '{"subtitle":"Why Choose Us","title":"Elevate Your Tech Career","items":[{"title":"Expert Instructors"}]}',
+                 ru: '{"subtitle":"Почему выбирают нас","title":"Развивайте карьеру в IT","items":[{"title":"Эксперты-преподаватели"}]}',
+                 he: '{"subtitle":"למה לבחור בנו","title":"קדם את הקריירה","items":[{"title":"מדריכים מומחים"}]}' },
+      stats: { en: '{"stats":[{"value":"15","label":"Years Experience"},{"value":"2000","label":"Happy Students"}]}',
+              ru: '{"stats":[{"value":"15","label":"Лет опыта"},{"value":"2000","label":"Довольных студентов"}]}',
+              he: '{"stats":[{"value":"15","label":"שנות ניסיון"},{"value":"2000","label":"סטודנטים מרוצים"}]}' },
+      featured_courses: { en: '{"subtitle":"Popular Courses","title":"Explore Our Featured Courses"}',
+                         ru: '{"subtitle":"Популярные курсы","title":"Изучите наши избранные курсы"}',
+                         he: '{"subtitle":"קורסים פופולריים","title":"חקור את הקורסים המובילים"}' },
+      course_categories: { en: '{"subtitle":"Course Categories","title":"Browse Our Tech Course Categories"}',
+                          ru: '{"subtitle":"Категории курсов","title":"Просмотрите категории курсов"}',
+                          he: '{"subtitle":"קטגוריות קורסים","title":"עיין בקטגוריות הקורסים"}' },
+      cart: { en: '{"title":"Your Cart","subtotal":"Subtotal","cart_is_empty":"Your cart is empty"}',
+             ru: '{"title":"Ваша корзина","subtotal":"Итог","cart_is_empty":"Ваша корзина пуста"}',
+             he: '{"title":"העגלה שלך","subtotal":"סכום","cart_is_empty":"העגלה ריקה"}' },
+      cta: { en: '{"subtitle":"Start Learning Today","title":"Discover Learning Opportunities"}',
+            ru: '{"subtitle":"Начните учиться сегодня","title":"Откройте возможности обучения"}',
+            he: '{"subtitle":"התחל ללמוד היום","title":"גלה הזדמנויות למידה"}' },
+      footer: { en: '{"company":{"about":"About Us","contact":"Contact"},"copyright":"© 2024 AI Studio"}',
+               ru: '{"company":{"about":"О нас","contact":"Контакты"},"copyright":"© 2024 AI Studio"}',
+               he: '{"company":{"about":"אודותינו","contact":"צור קשר"},"copyright":"© 2024 AI Studio"}' },
+      about: { en: '{"title":"About AI Studio","subtitle":"Leading AI Education"}',
+              ru: '{"title":"О AI Studio","subtitle":"Ведущее образование в ИИ"}',
+              he: '{"title":"אודות AI Studio","subtitle":"חינוך AI מוביל"}' },
+      companies: { en: '{"title":"Trusted By Leading Companies"}',
+                  ru: '{"title":"Нам доверяют ведущие компании"}',
+                  he: '{"title":"מהימן על ידי חברות מובילות"}' },
+      blog: { en: '{"title":"Latest Blog Posts","subtitle":"Stay Updated"}',
+             ru: '{"title":"Последние посты блога","subtitle":"Будьте в курсе"}',
+             he: '{"title":"פוסטים אחרונים בבלוג","subtitle":"הישאר מעודכן"}' },
+      testimonials_meta: { en: '{"title":"What Students Say"}',
+                          ru: '{"title":"Что говорят студенты"}',
+                          he: '{"title":"מה אומרים הסטודנטים"}' },
+      contact: { en: '{"title":"Contact Us","email":"Email Us","call":"Call Us"}',
+                ru: '{"title":"Свяжитесь с нами","email":"Напишите нам","call":"Позвоните нам"}',
+                he: '{"title":"צור קשר","email":"שלח אימייל","call":"התקשר אלינו"}' },
+      courses: { en: '{"all":"All","web_development":"Web Development","cloud":"Cloud Computing"}',
+                ru: '{"all":"Все","web_development":"Веб-разработка","cloud":"Облачные вычисления"}',
+                he: '{"all":"הכל","web_development":"פיתוח אתרים","cloud":"מחשוב ענן"}' },
+      ui: { en: '{"loading":"Loading...","error":"Error","no_items":"No items found"}',
+           ru: '{"loading":"Загрузка...","error":"Ошибка","no_items":"Ничего не найдено"}',
+           he: '{"loading":"טוען...","error":"שגיאה","no_items":"לא נמצאו פריטים"}' },
+      misc: { en: '{"learn_more":"Learn More","read_more":"Read More","view_all":"View All"}',
+             ru: '{"learn_more":"Узнать больше","read_more":"Читать далее","view_all":"Посмотреть все"}',
+             he: '{"learn_more":"למד עוד","read_more":"קרא עוד","view_all":"צפה בכל"}' }
+    };
+
+    let added = 0;
+    for (const [key, content] of Object.entries(fullContent)) {
+      try {
+        await queryDatabase(`
+          INSERT INTO nd_home (section_key, section_name, section_type, content_en, content_ru, content_he, visible, order_index)
+          VALUES ($1, $2, $3, $4::jsonb, $5::jsonb, $6::jsonb, true, $7)
+          ON CONFLICT (section_key) DO UPDATE SET
+            content_en = $4::jsonb, content_ru = $5::jsonb, content_he = $6::jsonb,
+            updated_at = CURRENT_TIMESTAMP
+        `, [key, key.replace('_', ' ').toUpperCase(), key.replace('_', ' ').toUpperCase(),
+            content.en, content.ru, content.he, added + 1]);
+        added++;
+      } catch (e) { console.log(`Skip ${key}: ${e.message}`); }
+    }
+
+    const total = await queryDatabase('SELECT COUNT(*) as count FROM nd_home');
+    res.json({ success: true, message: `Added ${added} sections`, totalSections: total[0].count });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════════╗
