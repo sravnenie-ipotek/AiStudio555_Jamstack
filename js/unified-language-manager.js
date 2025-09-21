@@ -267,6 +267,7 @@ class LanguageManager {
         const endpoints = {
             'home': `/api/nd/home-page?locale=${locale}`,
             'courses': `/api/nd/courses-page?locale=${locale}`,  // Changed to courses-page for UI translations
+            'course-details': `/api/nd/course-details-page?locale=${locale}`, // Course details page UI translations
             'teachers': `/api/nd/teachers-page?locale=${locale}`, // Changed to teachers-page for consistency
             'blog': `/api/nd/blog?locale=${locale}`,
             'career-center': `/api/nd/career-center-platform-page?locale=${locale}`,

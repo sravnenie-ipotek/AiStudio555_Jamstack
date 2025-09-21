@@ -171,17 +171,18 @@
             if (data.data && data.data.length > 0) {
                 // Transform API response to expected format
                 const transformedCourses = data.data.map(course => {
+                    // Always use static images from Unsplash since local images don't exist
                     const baseCourse = {
                         id: course.id,
-                        title: course.attributes.title,
-                        description: course.attributes.description,
-                        category: course.attributes.category,
-                        image: getStaticCourseImage(course.attributes.category), // Add static image
-                        price: course.attributes.price,
-                        duration: course.attributes.duration,
-                        lessons_count: course.attributes.lessons,
-                        rating: course.attributes.rating,
-                        reviews_count: course.attributes.reviews_count || Math.floor(Math.random() * 50) + 10,
+                        title: course.title,
+                        description: course.description,
+                        category: course.category,
+                        image: getStaticCourseImage(course.category), // Always use static image
+                        price: course.price,
+                        duration: course.duration,
+                        lessons_count: course.lessons_count || course.lessons || 0,
+                        rating: course.rating || '4.5',
+                        reviews_count: course.reviews_count || Math.floor(Math.random() * 50) + 10,
                         url: `detail_courses.html?id=${course.id}`
                     };
 

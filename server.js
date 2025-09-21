@@ -8250,6 +8250,52 @@ app.get('/api/nd/courses-page', async (req, res) => {
   }
 });
 
+// ==================== ND COURSE DETAILS PAGE API ====================
+app.get('/api/nd/course-details-page', async (req, res) => {
+  const locale = req.query.locale || 'en';
+  const preview = req.query.preview === 'true';
+
+  try {
+    // Get all sections from nd_course_details_page
+    const query = `
+      SELECT
+        section_key,
+        section_type,
+        content_${locale} as content,
+        visible,
+        order_index
+      FROM nd_course_details_page
+      WHERE visible = true OR $1 = true
+      ORDER BY order_index
+    `;
+
+    const rows = await queryDatabase(query, [preview]);
+
+    // Transform to object format
+    const data = {};
+    rows.forEach(row => {
+      data[row.section_key] = {
+        type: row.section_type,
+        content: row.content || {},
+        visible: row.visible
+      };
+    });
+
+    res.json({
+      success: true,
+      data: data,
+      locale: locale
+    });
+  } catch (error) {
+    console.error('Error fetching course details page:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch course details page content',
+      error: error.message
+    });
+  }
+});
+
 // Update endpoint for nd_courses_page
 app.put('/api/nd/courses-page/:section', async (req, res) => {
   const { section } = req.params;
