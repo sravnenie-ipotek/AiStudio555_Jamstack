@@ -18,6 +18,394 @@
   <link href="images/favicon.svg" rel="shortcut icon" type="image/x-icon">
   <link href="images/webclip.svg" rel="apple-touch-icon">
   <style>
+    /* Language Pills Styling */
+    .lang-pills {
+      display: inline-flex !important;
+      gap: 10px !important;
+      margin: 0 20px !important;
+      align-items: center !important;
+    }
+
+    .lang-pill {
+      padding: 6px 12px !important;
+      border-radius: 20px !important;
+      background: transparent !important;
+      color: white !important;
+      text-decoration: none !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      transition: all 0.3s ease !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+    }
+
+    .lang-pill:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    .lang-pill.active {
+      background: #ffd700 !important;
+      color: #1a1d3a !important;
+      border-color: #ffd700 !important;
+    }
+
+    /* Mobile Language Pills */
+    .mobile-language-switchers {
+      display: none;
+    }
+
+    .mobile-lang-pills {
+      display: flex !important;
+      gap: 10px !important;
+      margin: 20px 0 !important;
+      justify-content: center !important;
+    }
+
+    .mobile-lang-pill {
+      padding: 6px 12px !important;
+      border-radius: 20px !important;
+      background: transparent !important;
+      color: white !important;
+      text-decoration: none !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      transition: all 0.3s ease !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+    }
+
+    .mobile-lang-pill:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    .mobile-lang-pill.active {
+      background: #ffd700 !important;
+      color: #1a1d3a !important;
+      border-color: #ffd700 !important;
+    }
+
+    /* Ensure language pills are always visible */
+    .navbar-button-wrapper {
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 991px) {
+      .lang-pills {
+        display: none !important;
+      }
+
+      .mobile-language-switchers {
+        display: block !important;
+      }
+    }
+
+    /* Simple hamburger menu styling */
+    .hamburger-icon {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .hamburger-line {
+      width: 100%;
+      height: 2px;
+      background-color: white;
+      transition: all 0.3s ease;
+    }
+
+    /* Fix dropdown arrow display */
+    .dropdown-toggle-arrow-2::after {
+      content: '▼' !important;
+      font-family: Arial, sans-serif !important;
+      font-size: 10px !important;
+      display: inline-block !important;
+      margin-left: 5px !important;
+      transition: transform 0.3s ease !important;
+    }
+
+    .dropdown-toggle-arrow-2::before {
+      content: '' !important;
+      display: none !important;
+    }
+
+    .dropdown-toggle-arrow-2 {
+      font-family: Arial, sans-serif !important;
+    }
+
+    /* Rotate arrow when dropdown is open */
+    .w-dropdown-toggle.w--open .dropdown-toggle-arrow-2::after {
+      transform: rotate(180deg) !important;
+    }
+
+    /* Dark theme dropdown styling */
+    .w-dropdown-list {
+      position: absolute !important;
+      z-index: 900 !important;
+      background: #1a1d3a !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+      border-radius: 12px !important;
+      margin-top: 10px !important;
+      min-width: 200px !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      backdrop-filter: blur(10px) !important;
+    }
+
+    /* Style dropdown links */
+    .dropdown-menu-text-link-block {
+      color: white !important;
+      padding: 12px 20px !important;
+      display: block !important;
+      transition: all 0.3s ease !important;
+      text-decoration: none !important;
+      border-radius: 8px !important;
+    }
+
+    .dropdown-menu-text-link-block:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: #ffd700 !important;
+    }
+
+    /* Mobile Menu Styles */
+    @media (max-width: 991px) {
+      /* Hide menu by default on mobile - slide panel from right */
+      .nav-menu, .w-nav-menu {
+        display: none !important;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        bottom: 0;
+        left: auto;
+        width: 85%;
+        max-width: 360px;
+        background: #05051a;
+        z-index: 999;
+        padding: 80px 20px 20px;
+        overflow-y: auto;
+        transition: right 0.3s ease;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+
+      /* Show menu when open */
+      .nav-menu.nav-open, .w-nav-menu.nav-open {
+        display: block !important;
+        right: 0;
+        opacity: 1 !important;
+      }
+
+      /* Style mobile menu items */
+      .nav-menu .nav-link,
+      .w-nav-menu .w-nav-link {
+        display: block !important;
+        padding: 15px 0;
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-menu .nav-link:hover,
+      .w-nav-menu .w-nav-link:hover {
+        color: #ffd659;
+      }
+
+      /* Style dropdowns in mobile */
+      .nav-menu .menu-dropdown-wrapper,
+      .w-nav-menu .w-dropdown {
+        display: block !important;
+        margin: 15px 0;
+      }
+
+      .nav-menu .dropdown-toggle,
+      .w-nav-menu .w-dropdown-toggle {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 15px 0 !important;
+        color: white !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+      }
+
+      /* Mobile language pills */
+      .mobile-language-switchers {
+        display: block !important;
+        padding: 15px 0 !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+      }
+
+      .mobile-lang-pills {
+        display: flex !important;
+        gap: 10px !important;
+        justify-content: center !important;
+      }
+
+      /* Mobile Sign Up button */
+      .primary-button-wrapper.mobile,
+      .nav-menu .primary-button-wrapper.mobile {
+        display: block !important;
+        margin-top: 20px;
+        width: 100%;
+      }
+
+      .primary-button-wrapper.mobile .primary-button,
+      .nav-menu .primary-button-wrapper.mobile .primary-button {
+        width: 100% !important;
+        text-align: center !important;
+      }
+
+      /* Hide desktop elements on mobile */
+      .primary-button-wrapper.desktop {
+        display: none !important;
+      }
+
+      .lang-pills {
+        display: none !important;
+      }
+
+      .navbar-cart {
+        display: none !important;
+      }
+
+      /* Hamburger animation */
+      .menu-button.w--open .hamburger-line:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px) !important;
+      }
+
+      .menu-button.w--open .hamburger-line:nth-child(2) {
+        opacity: 0 !important;
+      }
+
+      .menu-button.w--open .hamburger-line:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px) !important;
+      }
+
+      .hamburger-line {
+        display: block !important;
+        width: 24px !important;
+        height: 2px !important;
+        background-color: #ffffff !important;
+        margin: 0 !important;
+        border-radius: 1px !important;
+        transition: all 0.3s ease !important;
+        position: relative !important;
+      }
+
+      /* Hamburger icon container */
+      .hamburger-icon {
+        width: 24px !important;
+        height: 18px !important;
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+      }
+
+      /* Ensure navbar container has relative positioning */
+      .navbar {
+        position: relative !important;
+      }
+
+      /* Show menu button on mobile */
+      .menu-button, .w-nav-button {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: transparent !important;
+        border: none !important;
+        color: white !important;
+        cursor: pointer !important;
+        padding: 10px !important;
+      }
+    }
+
+    /* Desktop styles */
+    @media (min-width: 992px) {
+      /* Hide mobile elements on desktop */
+      .menu-button, .w-nav-button {
+        display: none !important;
+      }
+
+      .primary-button-wrapper.mobile {
+        display: none !important;
+      }
+
+      /* Show desktop nav menu */
+      .nav-menu, .w-nav-menu {
+        display: flex !important;
+        align-items: center !important;
+      }
+    }
+
+    /* SIMPLE FIX - Make all buttons work with visible text */
+    .primary-button {
+      background-color: #ffd659 !important;
+      color: #05051a !important;
+      border: 1px solid #ffd659 !important;
+      border-radius: 8px !important;
+      padding: 20px 30px !important;
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      text-decoration: none !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-width: 180px !important;
+      position: relative !important;
+      overflow: visible !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .primary-button:hover {
+      background-color: #ffcc00 !important;
+      border-color: #ffcc00 !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 10px 25px rgba(255, 214, 89, 0.3) !important;
+    }
+
+    /* Make text wrapper simple and visible */
+    .primary-button-text-wrap {
+      display: block !important;
+      position: relative !important;
+      overflow: visible !important;
+      height: auto !important;
+      width: auto !important;
+    }
+
+    /* Make ALL text blocks visible and properly positioned */
+    .primary-button-text-block {
+      display: inline !important;
+      color: #05051a !important;
+      font-weight: 700 !important;
+      font-size: 16px !important;
+      line-height: 1 !important;
+      position: static !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: none !important;
+      -webkit-transform: none !important;
+      -moz-transform: none !important;
+      -ms-transform: none !important;
+    }
+
+    /* Hide only the duplicate animated text */
+    .primary-button-text-block.is-text-absolute {
+      display: none !important;
+    }
+
+    /* Force override any inline transform styles */
+    .primary-button-text-block[style] {
+      position: static !important;
+      transform: none !important;
+      -webkit-transform: none !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
     /* Uniform Teacher Card Styles */
     .teacher-card-grid {
       display: grid;
@@ -329,7 +717,9 @@
           </div>
         </div>
       </div>
-    </div><section class="section inner-banner">
+    </div>
+    <!-- END HARDCODED MENU -->
+    <section class="section inner-banner">
       <div class="container">
         <div class="inner-banner-content">
           <div class="inner-banner-title-wrapper">

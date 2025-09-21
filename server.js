@@ -8937,33 +8937,26 @@ app.post('/api/nd/blog', async (req, res) => {
     console.log('📝 Creating new blog post:', title);
 
     const query = `
-      INSERT INTO entity_blogs (
-        blog_key, title, summary, content, author_name, author_role,
-        author_image_url, publish_date, category, tags, featured_image_url,
-        meta_title, meta_description, reading_time_minutes,
-        is_featured, is_published, display_order
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+      INSERT INTO blog_posts (
+        id, title, content, author, featured_image_url, excerpt,
+        category, tags, reading_time, is_featured, is_published,
+        published_at, created_at, updated_at
+      ) VALUES ((SELECT COALESCE(MAX(id), 0) + 1 FROM blog_posts), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW())
       RETURNING *
     `;
 
     const values = [
-      blog_key || title?.toLowerCase().replace(/\s+/g, '-'),
       title,
-      summary,
       content,
-      author_name,
-      author_role,
-      author_image_url,
-      publish_date || new Date().toISOString(),
-      category,
+      author_name || 'Admin User',
+      featured_image_url || 'https://via.placeholder.com/600x400',
+      summary || content?.substring(0, 200) + '...',
+      category || 'General',
       JSON.stringify(tags || []),
-      featured_image_url,
-      meta_title || title,
-      meta_description || summary,
       reading_time_minutes || Math.ceil(content?.split(' ').length / 200) || 5,
-      is_featured,
-      is_published,
-      display_order
+      is_featured || false,
+      is_published || true,
+      is_published ? (publish_date || new Date().toISOString()) : null
     ];
 
     const result = await queryDatabase(query, values);

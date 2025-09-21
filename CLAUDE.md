@@ -2,17 +2,17 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 🚨 ACTIVE PROJECT: NewDesign (`/backups/newDesign`)
+## 🚨 ACTIVE PROJECT: Root Directory (Production Ready)
 
-**⚠️ IMPORTANT: We are currently working EXCLUSIVELY on the NewDesign project located at:**
+**⚠️ IMPORTANT: We are currently working in the ROOT directory:**
 ```
-/Users/michaelmishayev/Desktop/newCode/backups/newDesign/
+/Users/michaelmishayev/Desktop/newCode/
 ```
 
-All development efforts should focus on this directory. The NewDesign version represents the latest iteration of the AI Studio platform with improved UI/UX patterns.
+All development efforts focus on the root level files. The NewDesign version in `/backups/newDesign/` was used for development and testing, but active files have been moved to root for production deployment.
 
 ### Access URLs
-- **Local Development**: http://localhost:3005/backups/newDesign/home.html
+- **Local Development**: http://localhost:3005/home.html
 - **API Server**: http://localhost:1337
 
 ---
