@@ -3858,19 +3858,19 @@ app.use('/en/js', express.static(path.join(__dirname, 'js')));
 app.use('/en/css', express.static(path.join(__dirname, 'css')));
 app.use('/en/images', express.static(path.join(__dirname, 'images')));
 app.use('/en/fonts', express.static(path.join(__dirname, 'fonts')));
-// app.use('/en/shared', express.static(path.join(__dirname, 'shared'))); // DISABLED: Conflicts with MIME type fixes
+// Removed here - re-added after MIME fixes
 
 app.use('/he/js', express.static(path.join(__dirname, 'js')));
 app.use('/he/css', express.static(path.join(__dirname, 'css')));
 app.use('/he/images', express.static(path.join(__dirname, 'images')));
 app.use('/he/fonts', express.static(path.join(__dirname, 'fonts')));
-// app.use('/he/shared', express.static(path.join(__dirname, 'shared'))); // DISABLED: Conflicts with MIME type fixes
+// Removed here - re-added after MIME fixes
 
 app.use('/ru/js', express.static(path.join(__dirname, 'js')));
 app.use('/ru/css', express.static(path.join(__dirname, 'css')));
 app.use('/ru/images', express.static(path.join(__dirname, 'images')));
 app.use('/ru/fonts', express.static(path.join(__dirname, 'fonts')));
-// app.use('/ru/shared', express.static(path.join(__dirname, 'shared'))); // DISABLED: Conflicts with MIME type fixes
+// Removed here - re-added after MIME fixes
 
 // Serve strapi integration files from root and language paths (MUST BE BEFORE catch-all routes)
 app.get('/strapi-home-integration.js', (req, res) => {
@@ -4222,7 +4222,13 @@ rootPages.forEach(page => {
   });
 });
 
-// Catch-all for language subpages (MUST BE AFTER specific routes)
+// Re-enable express.static for shared directories AFTER MIME fixes but BEFORE catch-all routes
+// This ensures MIME type fixes take precedence but other files still get served
+app.use('/en/shared', express.static(path.join(__dirname, 'shared')));
+app.use('/he/shared', express.static(path.join(__dirname, 'shared')));
+app.use('/ru/shared', express.static(path.join(__dirname, 'shared')));
+
+// Catch-all for language subpages (MUST BE AFTER ALL OTHER ROUTES)
 app.get('/en/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/en/index.html'));
 });
@@ -6499,6 +6505,116 @@ const teacherTranslations = {
     professional_title_he: 'מהנדסת למידת מכונה בכירה',
     company_he: 'גוגל',
     bio_he: 'מהנדסת למידת מכונה בכירה בגוגל עם ניסיון של 8+ שנים בפיתוח פתרונות AI בקנה מידה גדול. מתמחה בלמידה עמוקה, ראיית מחשב ועיבוד שפה טבעית.'
+  },
+  16: {
+    full_name_ru: 'Д-р Майкл Родригес',
+    professional_title_ru: 'Научный сотрудник по ИИ',
+    company_ru: 'OpenAI',
+    bio_ru: 'Научный сотрудник в OpenAI с 10+ годами опыта в передовых исследованиях ИИ. Докторская степень из Стэнфорда, опубликовал 30+ работ по глубокому обучению.',
+    full_name_he: 'ד"ר מייקל רודריגז',
+    professional_title_he: 'חוקר AI',
+    company_he: 'OpenAI',
+    bio_he: 'חוקר ב-OpenAI עם ניסיון של 10+ שנים במחקר AI מתקדם. דוקטורט מסטנפורד, פרסם 30+ מאמרים על למידה עמוקה.'
+  },
+  17: {
+    full_name_ru: 'Д-р Елена Петров',
+    professional_title_ru: 'Главный специалист по данным',
+    company_ru: 'Microsoft',
+    bio_ru: 'Главный специалист по данным в Microsoft с 12+ годами опыта в аналитике больших данных. Специалист по прогностическому моделированию и бизнес-аналитике.',
+    full_name_he: 'ד"ר אלנה פטרוב',
+    professional_title_he: 'ראש מדע נתונים',
+    company_he: 'מיקרוסופט',
+    bio_he: 'ראש מדע נתונים במיקרוסופט עם ניסיון של 12+ שנים באנליטיקה של נתונים גדולים. מתמחה במודלים חיזויים ובאנליטיקה עסקית.'
+  },
+  18: {
+    full_name_ru: 'Дэвид Ким',
+    professional_title_ru: 'Архитектор блокчейн',
+    company_ru: 'Blockchain Ventures',
+    bio_ru: 'Архитектор блокчейн с 6+ годами опыта в разработке децентрализованных приложений. Эксперт в смарт-контрактах и криптографии.',
+    full_name_he: 'דיוויד קים',
+    professional_title_he: 'ארכיטקט בלוקצ׳יין',
+    company_he: 'Blockchain Ventures',
+    bio_he: 'ארכיטקט בלוקצ׳יין עם ניסיון של 6+ שנים בפיתוח אפליקציות מבוזרות. מומחה בחוזים חכמים וקריפטוגרפיה.'
+  },
+  19: {
+    full_name_ru: 'Анна Ковальски',
+    professional_title_ru: 'Эксперт по DevOps',
+    company_ru: 'Netflix',
+    bio_ru: 'Эксперт по DevOps в Netflix с 9+ годами опыта в автоматизации инфраструктуры. Специализируется на Kubernetes, Docker и CI/CD.',
+    full_name_he: 'אנה קובלסקי',
+    professional_title_he: 'מומחית DevOps',
+    company_he: 'נטפליקס',
+    bio_he: 'מומחית DevOps בנטפליקס עם ניסיון של 9+ שנים באוטומציה של תשתיות. מתמחה ב-Kubernetes, Docker ו-CI/CD.'
+  },
+  20: {
+    full_name_ru: 'Д-р Джеймс Уилсон',
+    professional_title_ru: 'Директор по ИИ',
+    company_ru: 'IBM Watson',
+    bio_ru: 'Директор по ИИ в IBM Watson с 15+ годами опыта в корпоративных решениях ИИ. Руководит командой из 50+ инженеров.',
+    full_name_he: 'ד"ר ג׳יימס וילסון',
+    professional_title_he: 'מנהל AI',
+    company_he: 'IBM Watson',
+    bio_he: 'מנהל AI ב-IBM Watson עם ניסיון של 15+ שנים בפתרונות AI ארגוניים. מנהל צוות של 50+ מהנדסים.'
+  },
+  21: {
+    full_name_ru: 'Мария Сантос',
+    professional_title_ru: 'Эксперт по кибербезопасности',
+    company_ru: 'Cisco',
+    bio_ru: 'Эксперт по кибербезопасности в Cisco с 10+ годами опыта в защите корпоративных сетей. Специалист по этичному хакингу и анализу угроз.',
+    full_name_he: 'מריה סנטוס',
+    professional_title_he: 'מומחית אבטחת סייבר',
+    company_he: 'סיסקו',
+    bio_he: 'מומחית אבטחת סייבר בסיסקו עם ניסיון של 10+ שנים בהגנה על רשתות ארגוניות. מתמחה בהאקינג אתי וניתוח איומים.'
+  },
+  22: {
+    full_name_ru: 'Алекс Томпсон',
+    professional_title_ru: 'Лид фронтенд-разработчик',
+    company_ru: 'Airbnb',
+    bio_ru: 'Лид фронтенд-разработчик в Airbnb с 8+ годами опыта в создании масштабируемых пользовательских интерфейсов. Эксперт в React и современном JavaScript.',
+    full_name_he: 'אלכס תומפסון',
+    professional_title_he: 'ראש צוות Frontend',
+    company_he: 'Airbnb',
+    bio_he: 'ראש צוות Frontend ב-Airbnb עם ניסיון של 8+ שנים ביצירת ממשקי משתמש בקנה מידה גדול. מומחה ב-React ו-JavaScript מודרני.'
+  },
+  23: {
+    full_name_ru: 'Лиза Браун',
+    professional_title_ru: 'Архитектор облачных решений',
+    company_ru: 'AWS',
+    bio_ru: 'Архитектор облачных решений в AWS с 11+ годами опыта в проектировании масштабируемых облачных инфраструктур.',
+    full_name_he: 'ליסה בראון',
+    professional_title_he: 'ארכיטקט פתרונות ענן',
+    company_he: 'AWS',
+    bio_he: 'ארכיטקט פתרונות ענן ב-AWS עם ניסיון של 11+ שנים בתכנון תשתיות ענן בקנה מידה גדול.'
+  },
+  24: {
+    full_name_ru: 'Роберт Джонсон',
+    professional_title_ru: 'Менеджер продукта ИИ',
+    company_ru: 'Tesla',
+    bio_ru: 'Менеджер продукта ИИ в Tesla с 7+ годами опыта в разработке продуктов автономного вождения.',
+    full_name_he: 'רוברט ג׳ונסון',
+    professional_title_he: 'מנהל מוצר AI',
+    company_he: 'טסלה',
+    bio_he: 'מנהל מוצר AI בטסלה עם ניסיון של 7+ שנים בפיתוח מוצרי נהיגה אוטונומית.'
+  },
+  25: {
+    full_name_ru: 'Софи Мартин',
+    professional_title_ru: 'Исследователь UX',
+    company_ru: 'Spotify',
+    bio_ru: 'Исследователь UX в Spotify с 6+ годами опыта в создании интуитивных пользовательских интерфейсов.',
+    full_name_he: 'סופי מרטין',
+    professional_title_he: 'חוקרת UX',
+    company_he: 'ספוטיפיי',
+    bio_he: 'חוקרת UX בספוטיפיי עם ניסיון של 6+ שנים ביצירת ממשקי משתמש אינטואיטיביים.'
+  },
+  26: {
+    full_name_ru: 'Томас Андерсон',
+    professional_title_ru: 'Инженер по глубокому обучению',
+    company_ru: 'NVIDIA',
+    bio_ru: 'Инженер по глубокому обучению в NVIDIA с 9+ годами опыта в разработке нейронных сетей для компьютерного зрения.',
+    full_name_he: 'תומס אנדרסון',
+    professional_title_he: 'מהנדס למידה עמוקה',
+    company_he: 'NVIDIA',
+    bio_he: 'מהנדס למידה עמוקה ב-NVIDIA עם ניסיון של 9+ שנים בפיתוח רשתות נוירונים לראייה ממוחשבת.'
   }
 };
 
