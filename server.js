@@ -8234,28 +8234,86 @@ app.get('/api/nd/courses-page', async (req, res) => {
   const preview = req.query.preview === 'true';
 
   try {
-    // Get all sections from nd_courses_page
-    const query = `
-      SELECT
-        section_key,
-        section_type,
-        content_${locale} as content,
-        visible,
-        animations_enabled
-      FROM nd_courses_page
-      WHERE visible = true OR $1 = true
-      ORDER BY
-        CASE section_key
-          WHEN 'hero' THEN 1
-          WHEN 'featured_courses' THEN 2
-          WHEN 'ui_elements' THEN 3
-          WHEN 'cart' THEN 4
-          WHEN 'cta_bottom' THEN 5
-          WHEN 'navigation' THEN 6
-          WHEN 'misc' THEN 7
-          ELSE 8
-        END
-    `;
+    // Check if section_type column exists
+    let query;
+    try {
+      const columnCheck = await queryDatabase(`
+        SELECT column_name
+        FROM information_schema.columns
+        WHERE table_name = 'nd_courses_page' AND column_name = 'section_type'
+      `);
+
+      if (columnCheck.length > 0) {
+        // Column exists, use it
+        query = `
+          SELECT
+            section_key,
+            section_type,
+            content_${locale} as content,
+            visible,
+            animations_enabled
+          FROM nd_courses_page
+          WHERE visible = true OR $1 = true
+          ORDER BY
+            CASE section_key
+              WHEN 'hero' THEN 1
+              WHEN 'featured_courses' THEN 2
+              WHEN 'ui_elements' THEN 3
+              WHEN 'cart' THEN 4
+              WHEN 'cta_bottom' THEN 5
+              WHEN 'navigation' THEN 6
+              WHEN 'misc' THEN 7
+              ELSE 8
+            END
+        `;
+      } else {
+        // Column doesn't exist, use fallback
+        query = `
+          SELECT
+            section_key,
+            section_key as section_type,
+            content_${locale} as content,
+            visible,
+            animations_enabled
+          FROM nd_courses_page
+          WHERE visible = true OR $1 = true
+          ORDER BY
+            CASE section_key
+              WHEN 'hero' THEN 1
+              WHEN 'featured_courses' THEN 2
+              WHEN 'ui_elements' THEN 3
+              WHEN 'cart' THEN 4
+              WHEN 'cta_bottom' THEN 5
+              WHEN 'navigation' THEN 6
+              WHEN 'misc' THEN 7
+              ELSE 8
+            END
+        `;
+      }
+    } catch (columnError) {
+      // Fallback if column check fails
+      query = `
+        SELECT
+          section_key,
+          section_key as section_type,
+          content_${locale} as content,
+          visible,
+          animations_enabled
+        FROM nd_courses_page
+        WHERE visible = true OR $1 = true
+        ORDER BY
+          CASE section_key
+            WHEN 'hero' THEN 1
+            WHEN 'featured_courses' THEN 2
+            WHEN 'ui_elements' THEN 3
+            WHEN 'cart' THEN 4
+            WHEN 'cta_bottom' THEN 5
+            WHEN 'navigation' THEN 6
+            WHEN 'misc' THEN 7
+            ELSE 8
+          END
+      `;
+    }
 
     const rows = await queryDatabase(query, [preview]);
 
