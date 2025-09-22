@@ -1,5 +1,7 @@
 check translations:
 http://localhost:3005/test-translations.html
+http://localhost:3005/test-live-translations.html
+
 
 
 

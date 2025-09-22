@@ -51,8 +51,8 @@ class ContactPopup {
           <div class="popup-content">
             <!-- Header Section -->
             <div class="popup-header">
-              <h2 class="popup-title">Get In Touch</h2>
-              <p class="popup-subtitle">Let us know how we can help you on your learning journey</p>
+              <h2 class="popup-title" data-i18n="contact.content.title">Get In Touch</h2>
+              <p class="popup-subtitle" data-i18n="contact.content.description">Let us know how we can help you on your learning journey</p>
             </div>
 
             <!-- Contact Form -->
@@ -130,7 +130,7 @@ class ContactPopup {
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <span>Message sent successfully! We'll get back to you soon.</span>
+                <span data-i18n="contact.content.success_message">Message sent successfully! We'll get back to you soon.</span>
               </div>
 
               <!-- Error Message -->
@@ -139,7 +139,7 @@ class ContactPopup {
                   <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke="#EF4444" stroke-width="2"/>
                   <path d="M10 6V10M10 14H10.01" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/>
                 </svg>
-                <span>Sorry, there was an error sending your message. Please try again.</span>
+                <span data-i18n="contact.content.error_message">Sorry, there was an error sending your message. Please try again.</span>
               </div>
             </form>
           </div>
@@ -188,6 +188,13 @@ class ContactPopup {
     if (this.popup) {
       this.popup.classList.add('active');
       document.body.style.overflow = 'hidden';
+
+      // Trigger language manager to translate popup content
+      if (window.languageManager && window.languageManager.translatePage) {
+        setTimeout(() => {
+          window.languageManager.translatePage();
+        }, 100);
+      }
 
       // Focus on first input
       const firstInput = this.popup.querySelector('#contactName');

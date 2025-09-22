@@ -3,120 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Translation System Test</title>
+    <title>AI Studio - Comprehensive Translation System Test</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             padding: 20px;
-            background: #f5f5f5;
         }
-        .test-container {
-            max-width: 1200px;
+
+        .main-container {
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
         }
-        h1 {
-            color: #333;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
+
+        .header {
+            background: #667eea;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .language-buttons {
-            margin: 20px 0;
+
+        .header h1 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .language-selector {
             display: flex;
             gap: 10px;
         }
+
         .lang-btn {
-            padding: 10px 20px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .tabs-container {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: #718096;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tab.active {
+            color: #667eea;
+            background: white;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #667eea;
+        }
+
+        .tab-content {
+            padding: 30px;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stat-value.success { color: #48bb78; }
+        .stat-value.warning { color: #ed8936; }
+        .stat-value.error { color: #f56565; }
+
+        .results-container {
+            display: grid;
+            gap: 10px;
+        }
+
+        .test-category {
+            background: #f7fafc;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .category-header {
+            background: #e2e8f0;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #4a5568;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-header:hover {
+            background: #cbd5e0;
+        }
+
+        .category-count {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: white;
+        }
+
+        .category-count.success { background: #c6f6d5; color: #276749; }
+        .category-count.partial { background: #fed7aa; color: #7c2d12; }
+        .category-count.error { background: #fed7d7; color: #742a2a; }
+
+        .category-items {
+            padding: 15px 20px;
+        }
+
+        .test-item {
+            display: grid;
+            grid-template-columns: 30px 1fr auto;
+            gap: 15px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .test-item:last-child {
+            border-bottom: none;
+        }
+
+        .test-status {
+            font-size: 20px;
+        }
+
+        .test-details {
+            font-size: 14px;
+        }
+
+        .test-label {
+            font-weight: 500;
+            color: #2d3748;
+            margin-bottom: 3px;
+        }
+
+        .test-path {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .test-value {
+            font-size: 12px;
+            padding: 4px 8px;
+            background: #edf2f7;
+            border-radius: 4px;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 20px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #742a2a;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        .course-drill {
+            margin-top: 10px;
+            padding: 10px;
+            background: #edf2f7;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .course-drill.active {
+            display: block;
+        }
+
+        .drill-btn {
+            font-size: 12px;
+            padding: 4px 8px;
             background: #667eea;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
         }
-        .lang-btn:hover {
+
+        .drill-btn:hover {
             background: #5a67d8;
         }
-        .lang-btn.active {
-            background: #4c51bf;
-        }
-        .stats-box {
-            background: #f7fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 5px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-            padding: 5px 0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .success { color: #48bb78; }
-        .warning { color: #ed8936; }
-        .error { color: #f56565; }
-        .test-results {
-            margin-top: 30px;
-        }
-        .test-item {
-            margin: 10px 0;
-            padding: 10px;
-            background: #f7fafc;
-            border-left: 3px solid #cbd5e0;
-            border-radius: 3px;
-        }
-        .test-item.success {
-            border-left-color: #48bb78;
-            background: #f0fff4;
-        }
-        .test-item.error {
-            border-left-color: #f56565;
-            background: #fff5f5;
-        }
-        .test-path {
+
+        .api-endpoint {
             font-family: 'Courier New', monospace;
+            font-size: 12px;
+            background: #2d3748;
+            color: #48bb78;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .refresh-btn {
+            padding: 8px 16px;
+            background: white;
+            color: #667eea;
+            border: 2px solid white;
+            border-radius: 6px;
+            cursor: pointer;
             font-size: 14px;
-            color: #4a5568;
+            font-weight: 600;
         }
-        .test-value {
-            margin-top: 5px;
-            color: #2d3748;
-        }
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #718096;
+
+        .refresh-btn:hover {
+            background: rgba(255,255,255,0.9);
         }
     </style>
 </head>
 <body>
-    <div class="test-container">
-        <h1>🧪 AI Studio Translation System Test</h1>
-
-        <div class="language-buttons">
-            <button class="lang-btn" onclick="testLanguage('en', this)">Test English</button>
-            <button class="lang-btn" onclick="testLanguage('ru', this)">Test Russian</button>
-            <button class="lang-btn" onclick="testLanguage('he', this)">Test Hebrew</button>
-            <button class="lang-btn" onclick="testAll(this)">Test All Languages</button>
-        </div>
-
-        <div class="stats-box">
-            <h3>Translation Statistics</h3>
-            <div id="stats-content">
-                <div class="loading">Select a language to test...</div>
+    <div class="main-container">
+        <div class="header">
+            <h1>
+                <span>🧪</span>
+                <span>AI Studio Translation Test Suite</span>
+            </h1>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <button class="refresh-btn" onclick="refreshCurrentTest()">🔄 Refresh</button>
+                <div class="language-selector">
+                    <button class="lang-btn active" onclick="setTestLanguage('en', this)">EN</button>
+                    <button class="lang-btn" onclick="setTestLanguage('ru', this)">RU</button>
+                    <button class="lang-btn" onclick="setTestLanguage('he', this)">HE</button>
+                    <button class="lang-btn" onclick="setTestLanguage('all', this)">ALL</button>
+                </div>
             </div>
         </div>
 
-        <div class="test-results">
-            <h3>Test Results</h3>
-            <div id="results-content">
-                <div class="loading">No tests run yet...</div>
-            </div>
+        <div class="tabs-container">
+            <button class="tab active" onclick="switchTab('home', this)">🏠 Home Page</button>
+            <button class="tab" onclick="switchTab('courses', this)">📚 Courses Page</button>
+            <button class="tab" onclick="switchTab('pricing', this)">💰 Pricing Page</button>
+            <button class="tab" onclick="switchTab('teachers', this)">👨‍🏫 Teachers Page</button>
+            <button class="tab" onclick="switchTab('blog', this)">📝 Blog Page</button>
+            <button class="tab" onclick="switchTab('career', this)">🎯 Career Pages</button>
+            <button class="tab" onclick="switchTab('course-details', this)">📖 Course Details</button>
+            <button class="tab" onclick="switchTab('summary', this)">📊 Summary</button>
+        </div>
+
+        <div id="home" class="tab-content active">
+            <div class="api-endpoint">API: /api/nd/home-page?locale={lang}</div>
+            <div id="home-stats" class="stats-grid"></div>
+            <div id="home-results" class="results-container"></div>
+        </div>
+
+        <div id="courses" class="tab-content">
+            <div class="api-endpoint">API: /api/nd/courses-page?locale={lang} + /api/nd/courses</div>
+            <div id="courses-stats" class="stats-grid"></div>
+            <div id="courses-results" class="results-container"></div>
+        </div>
+
+        <div id="pricing" class="tab-content">
+            <div class="api-endpoint">API: /api/nd/pricing-page?locale={lang}</div>
+            <div id="pricing-stats" class="stats-grid"></div>
+            <div id="pricing-results" class="results-container"></div>
+        </div>
+
+        <div id="teachers" class="tab-content">
+            <div class="api-endpoint">API: /api/nd/teachers-page?locale={lang}</div>
+            <div id="teachers-stats" class="stats-grid"></div>
+            <div id="teachers-results" class="results-container"></div>
+        </div>
+
+        <div id="blog" class="tab-content">
+            <div class="api-endpoint">API: /api/nd/blog-page?locale={lang}</div>
+            <div id="blog-stats" class="stats-grid"></div>
+            <div id="blog-results" class="results-container"></div>
+        </div>
+
+        <div id="career" class="tab-content">
+            <div class="api-endpoint">API: /api/nd/career-center-platform-page + career-orientation-page</div>
+            <div id="career-stats" class="stats-grid"></div>
+            <div id="career-results" class="results-container"></div>
+        </div>
+
+        <div id="course-details" class="tab-content">
+            <div class="api-endpoint">API: /api/nd/course-details-page?locale={lang} + /api/nd/courses/:id</div>
+            <div id="course-details-stats" class="stats-grid"></div>
+            <div id="course-details-results" class="results-container"></div>
+        </div>
+
+        <div id="summary" class="tab-content">
+            <div id="summary-content"></div>
         </div>
     </div>
 
@@ -125,225 +387,435 @@
             ? 'http://localhost:3000'
             : 'https://aistudio555jamstack-production.up.railway.app';
 
-        // Key paths to test - handle different structures per language
-        const getTestPaths = (locale) => {
-            // Russian has navigation.content.home, English has navigation.content.content.home
-            const navPath = locale === 'ru' ? 'navigation.content' : 'navigation.content.content';
+        let currentLanguage = 'en';
+        let currentTab = 'home';
+        let testResults = {};
 
-            return [
-                // Navigation items
-                { path: 'navigation.content.items.0.text', expected: `${navPath}.home`, label: 'Navigation: Home' },
-                { path: 'navigation.content.items.1.text', expected: `${navPath}.courses`, label: 'Navigation: Courses' },
-                { path: 'navigation.content.items.2.text', expected: `${navPath}.teachers`, label: 'Navigation: Teachers' },
-                { path: 'navigation.content.items.3.text', expected: `${navPath}.blog`, label: 'Navigation: Blog' },
-                { path: 'navigation.content.items.4.text', expected: `${navPath}.about_us`, label: 'Navigation: About' },
-                { path: 'navigation.content.items.6.text', expected: `${navPath}.pricing`, label: 'Navigation: Pricing' },
-                { path: 'navigation.content.career.orientation', expected: `${navPath}.career_orientation`, label: 'Navigation: Career Orientation' },
-                { path: 'navigation.content.career.center', expected: `${navPath}.career_center`, label: 'Navigation: Career Center' },
-
-            // UI buttons
-            { path: 'ui.content.buttons.sign_up_today', expected: 'ui_elements.content.buttons.sign_up_today', label: 'Button: Sign Up Today' },
-            { path: 'ui.content.buttons.course_details', expected: 'ui_elements.content.buttons.course_details', label: 'Button: Course Details' },
-
-            // Hero section
-            { path: 'hero.content.title', expected: 'hero.content.title', label: 'Hero: Title' },
-            { path: 'hero.content.subtitle', expected: 'hero.content.subtitle', label: 'Hero: Subtitle' },
-            { path: 'hero.content.description', expected: 'hero.content.description', label: 'Hero: Description' },
-            { path: 'hero.content.button_primary', expected: 'hero.content.cta_text_1', label: 'Hero: Primary Button' },
-            { path: 'hero.content.button_secondary', expected: 'hero.content.cta_text_2', label: 'Hero: Secondary Button' },
-
-            // Cart
-            { path: 'cart.content.content.title', expected: 'cart.content.content.title', label: 'Cart: Title' },
-            { path: 'cart.content.content.subtotal', expected: 'cart.content.content.subtotal', label: 'Cart: Subtotal' },
-            { path: 'cart.content.content.no_items_found', expected: 'cart.content.content.cart_is_empty', label: 'Cart: Empty Message' },
-
-            // Features
-            { path: 'features.content.title', expected: 'features.content.title', label: 'Features: Title' },
-            { path: 'features.content.subtitle', expected: 'features.content.subtitle', label: 'Features: Subtitle' },
-
-            // Stats
-            { path: 'stats.content.stats.0.label', expected: 'stats.content.stats.0.label', label: 'Stats: First Label' },
-            { path: 'stats.content.mentor.name', expected: 'stats.content.mentor.name', label: 'Stats: Mentor Name' }
-            ];
+        // Test definitions for each page
+        const pageTests = {
+            home: {
+                endpoint: '/api/nd/home-page',
+                categories: {
+                    navigation: [
+                        { path: 'navigation.content.items.0.text', expected: (locale) => 'navigation.content.home', label: 'Home' },
+                        { path: 'navigation.content.items.1.text', expected: (locale) => 'navigation.content.courses', label: 'Courses' },
+                        { path: 'navigation.content.items.2.text', expected: (locale) => 'navigation.content.teachers', label: 'Teachers' },
+                        { path: 'navigation.content.items.3.text', expected: (locale) => 'navigation.content.blog', label: 'Blog' },
+                        { path: 'navigation.content.items.4.text', expected: (locale) => 'navigation.content.about_us', label: 'About Us' },
+                        { path: 'navigation.content.items.6.text', expected: (locale) => 'navigation.content.pricing', label: 'Pricing' },
+                        { path: 'navigation.content.career.orientation', expected: (locale) => 'navigation.content.career_orientation', label: 'Career Orientation' },
+                        { path: 'navigation.content.career.center', expected: (locale) => 'navigation.content.career_center', label: 'Career Center' }
+                    ],
+                    hero: [
+                        { path: 'hero.content.title', expected: () => 'hero.content.title', label: 'Title' },
+                        { path: 'hero.content.subtitle', expected: () => 'hero.content.subtitle', label: 'Subtitle' },
+                        { path: 'hero.content.description', expected: () => 'hero.content.description', label: 'Description' },
+                        { path: 'hero.content.button_primary', expected: () => 'hero.content.button_primary', label: 'Primary CTA' },
+                        { path: 'hero.content.button_secondary', expected: () => 'hero.content.button_secondary', label: 'Secondary CTA' }
+                    ],
+                    buttons: [
+                        { path: 'ui.content.buttons.sign_up_today', expected: () => 'ui_elements.content.buttons.sign_up_today', label: 'Sign Up Today' },
+                        { path: 'ui.content.buttons.course_details', expected: () => 'ui_elements.content.buttons.course_details', label: 'Course Details' },
+                        { path: 'ui.content.buttons.get_in_touch', expected: () => 'ui_elements.content.buttons.get_in_touch', label: 'Get In Touch' }
+                    ],
+                    features: [
+                        { path: 'features.content.title', expected: () => 'features.content.title', label: 'Features Title' },
+                        { path: 'features.content.subtitle', expected: () => 'features.content.subtitle', label: 'Features Subtitle' },
+                        { path: 'features.content.description', expected: () => 'features.content.description', label: 'Features Description' }
+                    ],
+                    stats: [
+                        { path: 'stats.content.stats.0.label', expected: () => 'stats.content.stats.0.label', label: 'First Stat Label' },
+                        { path: 'stats.content.mentor.name', expected: () => 'stats.content.mentor.name', label: 'Mentor Name' },
+                        { path: 'stats.content.mentor.bio', expected: () => 'stats.content.mentor.bio', label: 'Mentor Bio' }
+                    ],
+                    cart: [
+                        { path: 'cart.content.content.subtotal', expected: () => 'cart.content.content.subtotal', label: 'Cart Subtotal' },
+                        { path: 'cart.content.content.no_items_found', expected: () => 'cart.content.content.cart_is_empty', label: 'Empty Cart Message' }
+                    ],
+                    pricing: [
+                        { path: 'pricing.content.plans.annual.period', expected: () => 'pricing.content.plans.1.period', label: 'Annual Period (Per Yearly)' },
+                        { path: 'pricing.content.plans.monthly.period', expected: () => 'pricing.content.plans.0.period', label: 'Monthly Period' },
+                        { path: 'pricing.content.title', expected: () => 'pricing.content.title', label: 'Pricing Title' }
+                    ]
+                }
+            },
+            courses: {
+                endpoint: '/api/nd/courses-page',
+                additionalEndpoints: ['/api/nd/courses'],
+                categories: {
+                    pageUI: [
+                        { path: 'page.content.title', expected: () => 'page.content.title', label: 'Page Title' },
+                        { path: 'page.content.subtitle', expected: () => 'page.content.subtitle', label: 'Page Subtitle' },
+                        { path: 'page.content.description', expected: () => 'page.content.description', label: 'Page Description' }
+                    ],
+                    filters: [
+                        { path: 'filters.all', expected: () => 'filters.all', label: 'Filter: All' },
+                        { path: 'filters.web_development', expected: () => 'filters.web_development', label: 'Filter: Web Development' },
+                        { path: 'filters.machine_learning', expected: () => 'filters.machine_learning', label: 'Filter: Machine Learning' },
+                        { path: 'filters.cloud_computing', expected: () => 'filters.cloud_computing', label: 'Filter: Cloud Computing' }
+                    ],
+                    courseCards: [
+                        { path: 'course_card.enroll_button', expected: () => 'course_card.enroll_button', label: 'Enroll Button' },
+                        { path: 'course_card.view_details', expected: () => 'course_card.view_details', label: 'View Details' },
+                        { path: 'course_card.duration_label', expected: () => 'course_card.duration_label', label: 'Duration Label' },
+                        { path: 'course_card.level_label', expected: () => 'course_card.level_label', label: 'Level Label' }
+                    ]
+                }
+            },
+            pricing: {
+                endpoint: '/api/nd/pricing-page',
+                categories: {
+                    pageContent: [
+                        { path: 'page.title', expected: () => 'page.title', label: 'Page Title' },
+                        { path: 'page.subtitle', expected: () => 'page.subtitle', label: 'Page Subtitle' },
+                        { path: 'page.description', expected: () => 'page.description', label: 'Page Description' }
+                    ],
+                    plans: [
+                        { path: 'plans.monthly.title', expected: () => 'plans.monthly.title', label: 'Monthly Plan Title' },
+                        { path: 'plans.monthly.price', expected: () => 'plans.monthly.price', label: 'Monthly Price' },
+                        { path: 'plans.yearly.title', expected: () => 'plans.yearly.title', label: 'Yearly Plan Title' },
+                        { path: 'plans.yearly.price', expected: () => 'plans.yearly.price', label: 'Yearly Price' }
+                    ],
+                    features: [
+                        { path: 'features.unlimited_access', expected: () => 'features.unlimited_access', label: 'Unlimited Access' },
+                        { path: 'features.certificate', expected: () => 'features.certificate', label: 'Certificate' },
+                        { path: 'features.support', expected: () => 'features.support', label: 'Support' }
+                    ],
+                    cta: [
+                        { path: 'cta.button_text', expected: () => 'cta.button_text', label: 'CTA Button' },
+                        { path: 'cta.guarantee', expected: () => 'cta.guarantee', label: 'Guarantee Text' }
+                    ]
+                }
+            },
+            teachers: {
+                endpoint: '/api/nd/teachers-page',
+                categories: {
+                    pageContent: [
+                        { path: 'page.title', expected: () => 'page.title', label: 'Page Title' },
+                        { path: 'page.subtitle', expected: () => 'page.subtitle', label: 'Page Subtitle' },
+                        { path: 'page.description', expected: () => 'page.description', label: 'Page Description' }
+                    ],
+                    teacherCard: [
+                        { path: 'teacher_card.view_profile', expected: () => 'teacher_card.view_profile', label: 'View Profile' },
+                        { path: 'teacher_card.experience', expected: () => 'teacher_card.experience', label: 'Experience Label' },
+                        { path: 'teacher_card.students', expected: () => 'teacher_card.students', label: 'Students Label' }
+                    ]
+                }
+            },
+            blog: {
+                endpoint: '/api/nd/blog-page',
+                categories: {
+                    pageContent: [
+                        { path: 'page.title', expected: () => 'page.title', label: 'Page Title' },
+                        { path: 'page.subtitle', expected: () => 'page.subtitle', label: 'Page Subtitle' }
+                    ],
+                    blogCard: [
+                        { path: 'blog_card.read_more', expected: () => 'blog_card.read_more', label: 'Read More' },
+                        { path: 'blog_card.author_by', expected: () => 'blog_card.author_by', label: 'Author By' },
+                        { path: 'blog_card.min_read', expected: () => 'blog_card.min_read', label: 'Min Read' }
+                    ]
+                }
+            },
+            'course-details': {
+                endpoint: '/api/nd/course-details-page',
+                categories: {
+                    pageUI: [
+                        { path: 'ui.breadcrumbs.home', expected: () => 'ui.breadcrumbs.home', label: 'Breadcrumb: Home' },
+                        { path: 'ui.breadcrumbs.courses', expected: () => 'ui.breadcrumbs.courses', label: 'Breadcrumb: Courses' },
+                        { path: 'ui.tabs.overview', expected: () => 'ui.tabs.overview', label: 'Tab: Overview' },
+                        { path: 'ui.tabs.curriculum', expected: () => 'ui.tabs.curriculum', label: 'Tab: Curriculum' },
+                        { path: 'ui.tabs.instructor', expected: () => 'ui.tabs.instructor', label: 'Tab: Instructor' },
+                        { path: 'ui.tabs.reviews', expected: () => 'ui.tabs.reviews', label: 'Tab: Reviews' }
+                    ],
+                    courseInfo: [
+                        { path: 'course_info.duration', expected: () => 'course_info.duration', label: 'Duration' },
+                        { path: 'course_info.level', expected: () => 'course_info.level', label: 'Level' },
+                        { path: 'course_info.students', expected: () => 'course_info.students', label: 'Students Enrolled' },
+                        { path: 'course_info.language', expected: () => 'course_info.language', label: 'Language' }
+                    ],
+                    actions: [
+                        { path: 'actions.enroll_now', expected: () => 'actions.enroll_now', label: 'Enroll Now' },
+                        { path: 'actions.add_to_cart', expected: () => 'actions.add_to_cart', label: 'Add to Cart' },
+                        { path: 'actions.share', expected: () => 'actions.share', label: 'Share' }
+                    ]
+                }
+            }
         };
 
-        async function testLanguage(locale, buttonEl) {
-            const statsEl = document.getElementById('stats-content');
-            const resultsEl = document.getElementById('results-content');
+        async function setTestLanguage(locale, btn) {
+            currentLanguage = locale;
 
-            statsEl.innerHTML = '<div class="loading">Testing ' + locale.toUpperCase() + '...</div>';
-            resultsEl.innerHTML = '<div class="loading">Running tests...</div>';
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
-            try {
-                // Fetch API data
-                const response = await fetch(`${apiBaseUrl}/api/nd/home-page?locale=${locale}`);
-                const data = await response.json();
+            // Run test for current tab
+            await testCurrentPage();
+        }
 
-                if (!data.success || !data.data) {
-                    throw new Error('Invalid API response');
-                }
+        function switchTab(tabName, tabBtn) {
+            // Update tab states
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tabBtn.classList.add('active');
 
-                // Run tests - get correct paths for locale
-                const testPaths = getTestPaths(locale);
-                const results = testPaths.map(test => {
-                    const actualValue = getNestedValue(data.data, test.expected);
-                    const success = actualValue !== null && actualValue !== undefined;
+            // Update content visibility
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
 
-                    return {
-                        ...test,
-                        actualValue,
-                        success
-                    };
-                });
+            currentTab = tabName;
 
-                // Calculate stats
-                const successCount = results.filter(r => r.success).length;
-                const failCount = results.filter(r => !r.success).length;
-                const successRate = ((successCount / results.length) * 100).toFixed(1);
-
-                // Display stats
-                statsEl.innerHTML = `
-                    <div class="stat-row">
-                        <span>Language:</span>
-                        <strong>${locale.toUpperCase()}</strong>
-                    </div>
-                    <div class="stat-row">
-                        <span>Total Tests:</span>
-                        <strong>${results.length}</strong>
-                    </div>
-                    <div class="stat-row success">
-                        <span>Successful:</span>
-                        <strong>${successCount}</strong>
-                    </div>
-                    <div class="stat-row error">
-                        <span>Failed:</span>
-                        <strong>${failCount}</strong>
-                    </div>
-                    <div class="stat-row ${successRate >= 80 ? 'success' : successRate >= 60 ? 'warning' : 'error'}">
-                        <span>Success Rate:</span>
-                        <strong>${successRate}%</strong>
-                    </div>
-                `;
-
-                // Display results
-                resultsEl.innerHTML = results.map(result => `
-                    <div class="test-item ${result.success ? 'success' : 'error'}">
-                        <div><strong>${result.label}</strong></div>
-                        <div class="test-path">HTML expects: ${result.path}</div>
-                        <div class="test-path">API path: ${result.expected}</div>
-                        <div class="test-value">
-                            ${result.success
-                                ? '✅ Found: "' + truncate(result.actualValue, 50) + '"'
-                                : '❌ Not found in API response'}
-                        </div>
-                    </div>
-                `).join('');
-
-                // Mark active button
-                document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-                if (buttonEl) buttonEl.classList.add('active');
-
-            } catch (error) {
-                statsEl.innerHTML = `<div class="error">Error: ${error.message}</div>`;
-                resultsEl.innerHTML = `<div class="error">Failed to run tests</div>`;
+            // Load test for this tab if not summary
+            if (tabName !== 'summary') {
+                testCurrentPage();
+            } else {
+                showSummary();
             }
         }
 
-        async function testAll(buttonEl) {
-            const languages = ['en', 'ru', 'he'];
-            const statsEl = document.getElementById('stats-content');
-            const resultsEl = document.getElementById('results-content');
+        async function testCurrentPage() {
+            if (currentTab === 'summary') {
+                showSummary();
+                return;
+            }
 
-            statsEl.innerHTML = '<div class="loading">Testing all languages...</div>';
+            const statsEl = document.getElementById(`${currentTab}-stats`);
+            const resultsEl = document.getElementById(`${currentTab}-results`);
+
+            // Show loading
+            statsEl.innerHTML = '<div class="loading"><div class="spinner"></div>Testing translations...</div>';
             resultsEl.innerHTML = '';
 
-            const allResults = [];
+            try {
+                const testConfig = pageTests[currentTab];
+                if (!testConfig) {
+                    throw new Error(`No test configuration for ${currentTab}`);
+                }
 
-            for (const locale of languages) {
-                try {
-                    const response = await fetch(`${apiBaseUrl}/api/nd/home-page?locale=${locale}`);
+                // Test all languages or just one
+                const languages = currentLanguage === 'all' ? ['en', 'ru', 'he'] : [currentLanguage];
+                const allResults = [];
+
+                for (const locale of languages) {
+                    // Fetch main endpoint
+                    const mainUrl = `${apiBaseUrl}${testConfig.endpoint}?locale=${locale}`;
+                    const response = await fetch(mainUrl);
                     const data = await response.json();
 
                     if (data.success && data.data) {
-                        const results = testPaths.map(test => {
-                            const actualValue = getNestedValue(data.data, test.expected);
-                            return {
-                                locale,
-                                ...test,
-                                actualValue,
-                                success: actualValue !== null && actualValue !== undefined
-                            };
-                        });
-                        allResults.push(...results);
+                        // Test each category
+                        for (const [categoryName, tests] of Object.entries(testConfig.categories)) {
+                            for (const test of tests) {
+                                const expectedPath = typeof test.expected === 'function'
+                                    ? test.expected(locale)
+                                    : test.expected;
+
+                                const value = getNestedValue(data.data, expectedPath);
+                                allResults.push({
+                                    locale,
+                                    category: categoryName,
+                                    label: test.label,
+                                    path: test.path,
+                                    expected: expectedPath,
+                                    value,
+                                    success: value !== null && value !== undefined
+                                });
+                            }
+                        }
                     }
-                } catch (error) {
-                    console.error(`Error testing ${locale}:`, error);
+
+                    // Test additional endpoints if any
+                    if (testConfig.additionalEndpoints) {
+                        for (const endpoint of testConfig.additionalEndpoints) {
+                            const url = `${apiBaseUrl}${endpoint}`;
+                            const resp = await fetch(url);
+                            const additionalData = await resp.json();
+                            // Store for drill-down
+                            if (currentTab === 'courses' && endpoint.includes('/courses')) {
+                                testResults.coursesList = additionalData;
+                            }
+                        }
+                    }
+                }
+
+                // Display results
+                displayTestResults(statsEl, resultsEl, allResults);
+
+                // Store results for summary
+                testResults[currentTab] = allResults;
+
+            } catch (error) {
+                statsEl.innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
+                resultsEl.innerHTML = '';
+            }
+        }
+
+        function displayTestResults(statsEl, resultsEl, results) {
+            // Calculate stats
+            const stats = calculateStats(results);
+
+            // Display stats
+            statsEl.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Language</div>
+                    <div class="stat-value">${currentLanguage.toUpperCase()}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Tests</div>
+                    <div class="stat-value">${stats.total}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Passed</div>
+                    <div class="stat-value success">${stats.passed}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Failed</div>
+                    <div class="stat-value error">${stats.failed}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Success Rate</div>
+                    <div class="stat-value ${stats.rate >= 80 ? 'success' : stats.rate >= 60 ? 'warning' : 'error'}">${stats.rate}%</div>
+                </div>
+            `;
+
+            // Group results by category
+            const grouped = {};
+            results.forEach(r => {
+                if (!grouped[r.category]) grouped[r.category] = [];
+                grouped[r.category].push(r);
+            });
+
+            // Display results by category
+            let html = '';
+            for (const [category, items] of Object.entries(grouped)) {
+                const categoryPassed = items.filter(i => i.success).length;
+                const categoryTotal = items.length;
+                const categoryClass = categoryPassed === categoryTotal ? 'success' :
+                                     categoryPassed > 0 ? 'partial' : 'error';
+
+                html += `
+                    <div class="test-category">
+                        <div class="category-header" onclick="toggleCategory(this)">
+                            <span>${formatCategoryName(category)}</span>
+                            <span class="category-count ${categoryClass}">${categoryPassed}/${categoryTotal}</span>
+                        </div>
+                        <div class="category-items">
+                            ${items.map(item => `
+                                <div class="test-item">
+                                    <div class="test-status">${item.success ? '✅' : '❌'}</div>
+                                    <div class="test-details">
+                                        <div class="test-label">${item.label}</div>
+                                        <div class="test-path">Expected: ${item.expected}</div>
+                                    </div>
+                                    <div class="test-value">${item.value ? truncate(item.value, 30) : 'Not found'}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+                // Add drill-down for courses
+                if (currentTab === 'courses' && testResults.coursesList && category === 'courseCards') {
+                    html += `
+                        <div class="course-drill">
+                            <button class="drill-btn" onclick="drillIntoCourse()">📊 Drill into Course Details</button>
+                        </div>
+                    `;
                 }
             }
 
-            // Calculate overall stats
-            const byLanguage = {};
-            languages.forEach(locale => {
-                const langResults = allResults.filter(r => r.locale === locale);
-                const successCount = langResults.filter(r => r.success).length;
-                byLanguage[locale] = {
-                    total: langResults.length,
-                    success: successCount,
-                    rate: langResults.length > 0 ? ((successCount / langResults.length) * 100).toFixed(1) : 0
-                };
-            });
+            resultsEl.innerHTML = html;
+        }
 
-            statsEl.innerHTML = `
-                <h4>Overall Results</h4>
-                ${Object.entries(byLanguage).map(([locale, stats]) => `
-                    <div class="stat-row">
-                        <span>${locale.toUpperCase()}:</span>
-                        <strong class="${stats.rate >= 80 ? 'success' : stats.rate >= 60 ? 'warning' : 'error'}">
-                            ${stats.success}/${stats.total} (${stats.rate}%)
-                        </strong>
+        function drillIntoCourse() {
+            // Switch to course details tab
+            const courseDetailsTab = document.querySelector('.tab:nth-child(7)');
+            switchTab('course-details', courseDetailsTab);
+        }
+
+        function toggleCategory(header) {
+            const items = header.nextElementSibling;
+            items.style.display = items.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function calculateStats(results) {
+            const total = results.length;
+            const passed = results.filter(r => r.success).length;
+            const failed = total - passed;
+            const rate = total > 0 ? ((passed / total) * 100).toFixed(1) : 0;
+
+            return { total, passed, failed, rate };
+        }
+
+        function showSummary() {
+            const summaryEl = document.getElementById('summary-content');
+
+            let html = '<h2 style="margin-bottom: 30px;">📊 Complete Translation Test Summary</h2>';
+
+            // Overall stats
+            let totalTests = 0;
+            let totalPassed = 0;
+
+            for (const [page, results] of Object.entries(testResults)) {
+                if (Array.isArray(results)) {
+                    totalTests += results.length;
+                    totalPassed += results.filter(r => r.success).length;
+                }
+            }
+
+            const overallRate = totalTests > 0 ? ((totalPassed / totalTests) * 100).toFixed(1) : 0;
+
+            html += `
+                <div class="stats-grid" style="margin-bottom: 30px;">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Pages Tested</div>
+                        <div class="stat-value">${Object.keys(testResults).length}</div>
                     </div>
-                `).join('')}
+                    <div class="stat-card">
+                        <div class="stat-label">Total Translation Tests</div>
+                        <div class="stat-value">${totalTests}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Overall Pass Rate</div>
+                        <div class="stat-value ${overallRate >= 80 ? 'success' : overallRate >= 60 ? 'warning' : 'error'}">${overallRate}%</div>
+                    </div>
+                </div>
             `;
 
-            // Group results by test
-            const groupedResults = {};
-            testPaths.forEach(test => {
-                groupedResults[test.path] = languages.map(locale => {
-                    const result = allResults.find(r => r.locale === locale && r.path === test.path);
-                    return {
-                        locale,
-                        success: result ? result.success : false,
-                        value: result ? result.actualValue : null
-                    };
-                });
-            });
+            // Page by page summary
+            html += '<h3>Page-by-Page Results</h3>';
+            html += '<div class="results-container">';
 
-            resultsEl.innerHTML = `
-                <h4>Detailed Comparison</h4>
-                ${Object.entries(groupedResults).map(([path, results]) => {
-                    const test = testPaths.find(t => t.path === path);
-                    return `
-                        <div class="test-item">
-                            <div><strong>${test.label}</strong></div>
-                            <div class="test-path">${path}</div>
-                            <div style="display: flex; gap: 20px; margin-top: 10px;">
-                                ${results.map(r => `
-                                    <div>
-                                        <strong>${r.locale.toUpperCase()}:</strong>
-                                        ${r.success ? '✅' : '❌'}
-                                    </div>
-                                `).join('')}
+            for (const [page, results] of Object.entries(testResults)) {
+                if (Array.isArray(results)) {
+                    const stats = calculateStats(results);
+                    html += `
+                        <div class="test-category">
+                            <div class="category-header">
+                                <span>${formatPageName(page)}</span>
+                                <span class="category-count ${stats.rate >= 80 ? 'success' : stats.rate >= 60 ? 'partial' : 'error'}">
+                                    ${stats.passed}/${stats.total} (${stats.rate}%)
+                                </span>
                             </div>
                         </div>
                     `;
-                }).join('')}
-            `;
+                }
+            }
+
+            html += '</div>';
+
+            summaryEl.innerHTML = html;
+        }
+
+        function formatCategoryName(name) {
+            return name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function formatPageName(name) {
+            return name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         }
 
         function getNestedValue(obj, path) {
-            return path.split('.').reduce((curr, prop) => {
-                return curr?.[prop];
-            }, obj);
+            return path.split('.').reduce((curr, prop) => curr?.[prop], obj);
         }
 
         function truncate(str, maxLength) {
@@ -351,6 +823,15 @@
             if (str.length <= maxLength) return str;
             return str.substring(0, maxLength) + '...';
         }
+
+        function refreshCurrentTest() {
+            testCurrentPage();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            testCurrentPage();
+        });
     </script>
 </body>
 </html>

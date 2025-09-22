@@ -3858,19 +3858,19 @@ app.use('/en/js', express.static(path.join(__dirname, 'js')));
 app.use('/en/css', express.static(path.join(__dirname, 'css')));
 app.use('/en/images', express.static(path.join(__dirname, 'images')));
 app.use('/en/fonts', express.static(path.join(__dirname, 'fonts')));
-// Removed here - re-added after MIME fixes
+// app.use('/en/shared', express.static(path.join(__dirname, 'shared'))); // DISABLED: Conflicts with MIME type fixes
 
 app.use('/he/js', express.static(path.join(__dirname, 'js')));
 app.use('/he/css', express.static(path.join(__dirname, 'css')));
 app.use('/he/images', express.static(path.join(__dirname, 'images')));
 app.use('/he/fonts', express.static(path.join(__dirname, 'fonts')));
-// Removed here - re-added after MIME fixes
+// app.use('/he/shared', express.static(path.join(__dirname, 'shared'))); // DISABLED: Conflicts with MIME type fixes
 
 app.use('/ru/js', express.static(path.join(__dirname, 'js')));
 app.use('/ru/css', express.static(path.join(__dirname, 'css')));
 app.use('/ru/images', express.static(path.join(__dirname, 'images')));
 app.use('/ru/fonts', express.static(path.join(__dirname, 'fonts')));
-// Removed here - re-added after MIME fixes
+// app.use('/ru/shared', express.static(path.join(__dirname, 'shared'))); // DISABLED: Conflicts with MIME type fixes
 
 // Serve strapi integration files from root and language paths (MUST BE BEFORE catch-all routes)
 app.get('/strapi-home-integration.js', (req, res) => {
@@ -4222,13 +4222,7 @@ rootPages.forEach(page => {
   });
 });
 
-// Re-enable express.static for shared directories AFTER MIME fixes but BEFORE catch-all routes
-// This ensures MIME type fixes take precedence but other files still get served
-app.use('/en/shared', express.static(path.join(__dirname, 'shared')));
-app.use('/he/shared', express.static(path.join(__dirname, 'shared')));
-app.use('/ru/shared', express.static(path.join(__dirname, 'shared')));
-
-// Catch-all for language subpages (MUST BE AFTER ALL OTHER ROUTES)
+// Catch-all for language subpages (MUST BE AFTER specific routes)
 app.get('/en/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/en/index.html'));
 });
@@ -6444,34 +6438,90 @@ app.delete('/api/nd/courses/:id', async (req, res) => {
 // Universal Shared Component System
 // ============================================
 
-// Translations are now stored in the database columns (full_name_ru, full_name_he, etc.)
+// Teacher translations map (temporary until database supports translations)
+const teacherTranslations = {
+  1: {
+    full_name_ru: 'Сара Чен',
+    professional_title_ru: 'Эксперт по ИИ и машинному обучению',
+    company_ru: 'TechEd Solutions',
+    bio_ru: 'Соучредитель и руководитель отдела ИИ в TechEd Solutions с более чем 8-летним опытом коммерческой разработки ИИ. Эксперт в обучении сложным концепциям машинного обучения через практические проекты.',
+    full_name_he: 'שרה צ׳ן',
+    professional_title_he: 'מומחית AI ולמידת מכונה',
+    company_he: 'TechEd Solutions',
+    bio_he: 'שותפה מייסדת ומובילת AI ב-TechEd Solutions עם ניסיון של 8+ שנים בפיתוח AI מסחרי. מומחית בהוראת מושגים מורכבים של למידת מכונה דרך פרויקטים מעשיים.'
+  },
+  2: {
+    full_name_ru: 'Д-р Майкл Родригес',
+    professional_title_ru: 'Научный сотрудник по ИИ',
+    company_ru: 'OpenAI',
+    bio_ru: 'Научный сотрудник в OpenAI с 10+ годами опыта в передовых исследованиях ИИ. Докторская степень Стэнфорда, опубликовал 30+ работ по глубокому обучению.',
+    full_name_he: 'ד"ר מייקל רודריגז',
+    professional_title_he: 'חוקר AI',
+    company_he: 'OpenAI',
+    bio_he: 'חוקר ב-OpenAI עם ניסיון של 10+ שנים במחקר AI מתקדם. דוקטורט מסטנפורד, פרסם 30+ מאמרים על למידה עמוקה.'
+  },
+  3: {
+    full_name_ru: 'Эмили Родригес',
+    professional_title_ru: 'Коуч по смене карьеры',
+    company_ru: 'CareerPath Pro',
+    bio_ru: 'Сертифицированный коуч с 7+ годами опыта помощи профессионалам в переходе в технологическую индустрию. Специализируется на карьерных стратегиях для ИИ и науки о данных.',
+    full_name_he: 'אמילי רודריגז',
+    professional_title_he: 'מאמנת מעבר קריירה',
+    company_he: 'CareerPath Pro',
+    bio_he: 'מאמנת מוסמכת עם ניסיון של 7+ שנים בסיוע למקצוענים במעבר לתעשיית הטכנולוגיה. מתמחה באסטרטגיות קריירה ל-AI ומדע נתונים.'
+  },
+  4: {
+    full_name_ru: 'Джеймс Томпсон',
+    professional_title_ru: 'Эксперт по полному стеку',
+    company_ru: 'Meta',
+    bio_ru: 'Инженер полного стека в Meta с 12+ годами опыта создания масштабируемых веб-приложений. Эксперт в React, Node.js и облачной архитектуре.',
+    full_name_he: 'ג׳יימס תומפסון',
+    professional_title_he: 'מומחה פול סטאק',
+    company_he: 'מטא',
+    bio_he: 'מהנדס פול סטאק במטא עם ניסיון של 12+ שנים בבניית אפליקציות ווב בקנה מידה גדול. מומחה ב-React, Node.js וארכיטקטורת ענן.'
+  },
+  5: {
+    full_name_ru: 'Линда Джексон',
+    professional_title_ru: 'Руководитель по науке о данных',
+    company_ru: 'Amazon',
+    bio_ru: 'Руководитель по науке о данных в Amazon с 15+ годами опыта в аналитике и машинном обучении. Руководит командой из 20+ специалистов по данным.',
+    full_name_he: 'לינדה ג׳קסון',
+    professional_title_he: 'ראש מדע נתונים',
+    company_he: 'אמזון',
+    bio_he: 'ראש מדע נתונים באמזון עם ניסיון של 15+ שנים באנליטיקה ולמידת מכונה. מנהלת צוות של 20+ מומחי נתונים.'
+  },
+  15: {
+    full_name_ru: 'Д-р Сара Чен',
+    professional_title_ru: 'Старший инженер машинного обучения',
+    company_ru: 'Google',
+    bio_ru: 'Старший инженер по машинному обучению в Google с 8+ годами опыта в разработке масштабируемых решений ИИ. Специализируется на глубоком обучении, компьютерном зрении и обработке естественного языка.',
+    full_name_he: 'ד"ר שרה צ׳ן',
+    professional_title_he: 'מהנדסת למידת מכונה בכירה',
+    company_he: 'גוגל',
+    bio_he: 'מהנדסת למידת מכונה בכירה בגוגל עם ניסיון של 8+ שנים בפיתוח פתרונות AI בקנה מידה גדול. מתמחה בלמידה עמוקה, ראיית מחשב ועיבוד שפה טבעית.'
+  }
+};
 
-// Function to apply translations from database columns
+// Function to apply translations to a teacher object
 function applyTeacherTranslations(teacher, locale) {
-  if (locale === 'en') {
+  if (locale === 'en' || !teacherTranslations[teacher.id]) {
     return teacher;
   }
 
-  // The database columns follow the pattern: field_name_locale (e.g., full_name_ru, full_name_he)
+  const translations = teacherTranslations[teacher.id];
   const localeSuffix = `_${locale}`;
 
   return {
     ...teacher,
-    // Use localized fields from database if available, otherwise fallback to English
-    full_name: teacher[`full_name${localeSuffix}`] || teacher.full_name,
-    professional_title: teacher[`professional_title${localeSuffix}`] || teacher.professional_title,
-    company: teacher[`company${localeSuffix}`] || teacher.company,
-    bio: teacher[`bio${localeSuffix}`] || teacher.bio,
-    // Keep original English fields for fallback
+    full_name: translations[`full_name${localeSuffix}`] || teacher.full_name,
+    professional_title: translations[`professional_title${localeSuffix}`] || teacher.professional_title,
+    company: translations[`company${localeSuffix}`] || teacher.company,
+    bio: translations[`bio${localeSuffix}`] || teacher.bio,
+    // Keep original fields for fallback
     full_name_en: teacher.full_name,
     professional_title_en: teacher.professional_title,
     company_en: teacher.company,
-    bio_en: teacher.bio,
-    // Also include the localized fields directly from database
-    [`full_name_${locale}`]: teacher[`full_name${localeSuffix}`],
-    [`professional_title_${locale}`]: teacher[`professional_title${localeSuffix}`],
-    [`company_${locale}`]: teacher[`company${localeSuffix}`],
-    [`bio_${locale}`]: teacher[`bio${localeSuffix}`]
+    bio_en: teacher.bio
   };
 }
 
@@ -6484,10 +6534,6 @@ app.get('/api/nd/teachers', async (req, res) => {
       SELECT
         id, teacher_key, full_name, professional_title, company,
         bio, profile_image_url,
-        full_name_ru, full_name_he,
-        professional_title_ru, professional_title_he,
-        company_ru, company_he,
-        bio_ru, bio_he,
         skills, experience_history, courses_taught, student_reviews,
         statistics, contact_info, social_links,
         is_featured, display_order, is_active,
@@ -6516,7 +6562,26 @@ app.get('/api/nd/teachers', async (req, res) => {
 
     res.json({
       success: true,
-      data: teachers.map(teacher => applyTeacherTranslations(teacher, locale))
+      data: teachers.map(teacher => applyTeacherTranslations({
+        id: teacher.id,
+        teacher_key: teacher.teacher_key,
+        full_name: teacher.full_name,
+        professional_title: teacher.professional_title,
+        company: teacher.company,
+        bio: teacher.bio,
+        profile_image_url: teacher.profile_image_url,
+        skills: teacher.skills,
+        experience_history: teacher.experience_history,
+        courses_taught: teacher.courses_taught,
+        student_reviews: teacher.student_reviews,
+        statistics: teacher.statistics,
+        contact_info: teacher.contact_info,
+        social_links: teacher.social_links,
+        is_featured: teacher.is_featured,
+        display_order: teacher.display_order,
+        created_at: teacher.created_at,
+        updated_at: teacher.updated_at
+      }, locale))
     });
   } catch (error) {
     console.error('Error fetching teachers:', error);
@@ -6528,18 +6593,14 @@ app.get('/api/nd/teachers', async (req, res) => {
 app.get('/api/nd/teachers/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { preview = false, locale = 'en' } = req.query;
+    const { preview = false } = req.query;
 
-    console.log(`📦 Fetching teacher ID: ${id}, locale: ${locale}${preview ? ' (preview mode)' : ''}`);
+    console.log(`📦 Fetching teacher ID: ${id}${preview ? ' (preview mode)' : ''}`);
 
     const query = `
       SELECT
         id, teacher_key, full_name, professional_title, company,
         bio, profile_image_url,
-        full_name_ru, full_name_he,
-        professional_title_ru, professional_title_he,
-        company_ru, company_he,
-        bio_ru, bio_he,
         skills, experience_history, courses_taught, student_reviews,
         statistics, contact_info, social_links,
         is_featured, display_order, is_active,
@@ -6562,7 +6623,27 @@ app.get('/api/nd/teachers/:id', async (req, res) => {
 
     res.json({
       success: true,
-      data: applyTeacherTranslations(teacher, locale)
+      data: {
+        id: teacher.id,
+        teacher_key: teacher.teacher_key,
+        full_name: teacher.full_name,
+        professional_title: teacher.professional_title,
+        company: teacher.company,
+        bio: teacher.bio,
+        profile_image_url: teacher.profile_image_url,
+        skills: teacher.skills,
+        experience_history: teacher.experience_history,
+        courses_taught: teacher.courses_taught,
+        student_reviews: teacher.student_reviews,
+        statistics: teacher.statistics,
+        contact_info: teacher.contact_info,
+        social_links: teacher.social_links,
+        is_featured: teacher.is_featured,
+        display_order: teacher.display_order,
+        is_active: teacher.is_active,
+        created_at: teacher.created_at,
+        updated_at: teacher.updated_at
+      }
     });
   } catch (error) {
     console.error('Error fetching teacher:', error);
@@ -10396,94 +10477,8 @@ app.post('/api/fix-content-structure', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Fix content structure failed:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Fix content structure failed',
-      message: error.message
-    });
-  }
-});
-
-// ==================== DATABASE SYNC ENDPOINT ====================
-// Sync local database content to production
-app.post('/api/sync-database-complete', async (req, res) => {
-  try {
-    console.log('🔄 Starting complete database sync...');
-
-    // Get local data from another API call
-    const localResponse = await fetch(`http://localhost:${PORT}/api/nd/home-page?locale=ru`);
-    const localData = await localResponse.json();
-
-    if (!localData.success || !localData.data) {
-      throw new Error('Failed to fetch local data');
-    }
-
-    // List of all sections to sync
-    const allSections = Object.keys(localData.data);
-    console.log(`Found ${allSections.length} sections to potentially sync`);
-
-    let syncedCount = 0;
-    const results = [];
-
-    for (const sectionKey of allSections) {
-      try {
-        // Get content for all locales
-        const enResponse = await fetch(`http://localhost:${PORT}/api/nd/home-page?locale=en`);
-        const enData = await enResponse.json();
-        const ruResponse = await fetch(`http://localhost:${PORT}/api/nd/home-page?locale=ru`);
-        const ruData = await ruResponse.json();
-        const heResponse = await fetch(`http://localhost:${PORT}/api/nd/home-page?locale=he`);
-        const heData = await heResponse.json();
-
-        const contentEn = JSON.stringify(enData.data[sectionKey] || {});
-        const contentRu = JSON.stringify(ruData.data[sectionKey] || {});
-        const contentHe = JSON.stringify(heData.data[sectionKey] || {});
-
-        // Sync to production database
-        await queryDatabase(`
-          INSERT INTO nd_home (section_key, content_en, content_ru, content_he, created_at, updated_at)
-          VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-          ON CONFLICT (section_key)
-          DO UPDATE SET
-            content_en = EXCLUDED.content_en,
-            content_ru = EXCLUDED.content_ru,
-            content_he = EXCLUDED.content_he,
-            updated_at = CURRENT_TIMESTAMP
-        `, [sectionKey, contentEn, contentRu, contentHe]);
-
-        syncedCount++;
-        results.push(`✅ Synced: ${sectionKey}`);
-        console.log(`✅ Synced section: ${sectionKey}`);
-
-      } catch (error) {
-        results.push(`❌ Failed: ${sectionKey} - ${error.message}`);
-        console.error(`❌ Error syncing ${sectionKey}:`, error.message);
-      }
-    }
-
-    // Get final count
-    const totalResult = await queryDatabase('SELECT COUNT(*) as count FROM nd_home');
-    const totalSections = totalResult[0].count;
-
-    console.log(`🎯 Complete database sync finished: ${syncedCount}/${allSections.length} sections synced`);
-
-    res.json({
-      success: true,
-      message: `Complete database sync finished: ${syncedCount}/${allSections.length} sections synced`,
-      syncedCount: syncedCount,
-      totalSections: totalSections,
-      sectionsSynced: allSections.slice(0, 10), // First 10 for brevity
-      results: results
-    });
-
-  } catch (error) {
-    console.error('❌ Complete database sync failed:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Complete database sync failed',
-      message: error.message
-    });
+    console.error('Fix structure error:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

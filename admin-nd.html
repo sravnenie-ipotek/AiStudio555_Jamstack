@@ -269,6 +269,39 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            position: relative;
+        }
+
+        /* Enhanced Tooltips */
+        .btn[title]:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3748;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 1000;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+        }
+
+        .btn[title]:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #2d3748;
+            margin-bottom: -4px;
+            z-index: 1000;
+            pointer-events: none;
         }
 
         .btn:hover {
@@ -532,7 +565,61 @@
             <div class="content-section active" id="home">
                 <div class="section-header">
                     <div class="section-title">Home Page Sections</div>
-                    <button class="btn btn-small" onclick="previewChanges()">👁️ Preview</button>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-small" onclick="toggleHomeHelp()">❓ Help</button>
+                        <button class="btn btn-small" onclick="previewChanges()">👁️ Preview</button>
+                    </div>
+                </div>
+
+                <!-- Help Section -->
+                <div id="homeHelpSection" style="display: none; background: linear-gradient(135deg, #667eea15, #764ba215); border: 1px solid #667eea30; border-radius: 12px; padding: 20px; margin: 20px 0;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📚 Home Page Management Guide</h3>
+
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2d3748; margin-bottom: 10px;">📖 Overview</h4>
+                        <p style="color: #4a5568; line-height: 1.6;">This section allows you to manage all content displayed on the home page of your website. Each subsection corresponds to a visible area on your homepage. You can toggle visibility, edit text content, and manage dynamic lists like courses, testimonials, and features.</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2d3748; margin-bottom: 10px;">🔘 Button Functions</h4>
+                        <div style="display: grid; gap: 10px;">
+                            <div style="background: white; padding: 12px; border-radius: 8px; border-left: 3px solid #667eea;">
+                                <strong>💾 Save Changes</strong> - Saves all modifications made to the home page content to the database. Changes won't appear on the live site until saved.
+                            </div>
+                            <div style="background: white; padding: 12px; border-radius: 8px; border-left: 3px solid #10b981;">
+                                <strong>🔄 Reload Content</strong> - Refreshes the form with the latest content from the database, discarding any unsaved changes.
+                            </div>
+                            <div style="background: white; padding: 12px; border-radius: 8px; border-left: 3px solid #f59e0b;">
+                                <strong>📥 Export JSON</strong> - Downloads the current home page configuration as a JSON file for backup or transfer purposes.
+                            </div>
+                            <div style="background: white; padding: 12px; border-radius: 8px; border-left: 3px solid #8b5cf6;">
+                                <strong>📤 Import JSON</strong> - Uploads a previously exported JSON file to restore home page configuration.
+                            </div>
+                            <div style="background: white; padding: 12px; border-radius: 8px; border-left: 3px solid #06b6d4;">
+                                <strong>👁️ Preview</strong> - Opens the home page in a new tab with your unsaved changes applied temporarily for review.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2d3748; margin-bottom: 10px;">📝 Section Controls</h4>
+                        <ul style="color: #4a5568; line-height: 1.8;">
+                            <li><strong>Visibility Toggle</strong> - Use the switch next to each section to show/hide it on the live site</li>
+                            <li><strong>+ Add Button</strong> - Adds new items to lists (features, courses, testimonials, etc.)</li>
+                            <li><strong>Text Fields</strong> - Edit titles, subtitles, and descriptions directly</li>
+                            <li><strong>Delete Icons</strong> - Remove individual items from lists</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: #fef5e7; border: 1px solid #f9c74f; border-radius: 8px; padding: 12px;">
+                        <strong style="color: #f77f00;">⚠️ Important Notes:</strong>
+                        <ul style="color: #d62828; margin-top: 8px; margin-bottom: 0;">
+                            <li>Always save your changes before leaving the page</li>
+                            <li>Use Preview to check your changes before saving</li>
+                            <li>Export JSON regularly for backups</li>
+                            <li>Changes are language-specific based on the selected language</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <!-- Hero Section -->
@@ -555,7 +642,7 @@
                     <div class="list-manager mt-20">
                         <div class="list-item-header">
                             <strong>Buttons</strong>
-                            <button class="btn btn-small btn-success" onclick="addHeroButton()">+ Add Button</button>
+                            <button class="btn btn-small btn-success" onclick="addHeroButton()" title="Add a new call-to-action button to the hero section">+ Add Button</button>
                         </div>
                         <div id="heroButtons"></div>
                     </div>
@@ -579,7 +666,7 @@
                     <div class="list-manager mt-20">
                         <div class="list-item-header">
                             <strong>Feature Items</strong>
-                            <button class="btn btn-small btn-success" onclick="addFeatureItem()">+ Add Feature</button>
+                            <button class="btn btn-small btn-success" onclick="addFeatureItem()" title="Add a new feature item to showcase">+ Add Feature</button>
                         </div>
                         <div id="featureItems"></div>
                     </div>
@@ -603,7 +690,7 @@
                     <div class="list-manager mt-20">
                         <div class="list-item-header">
                             <strong>Course Cards</strong>
-                            <button class="btn btn-small btn-success add-course-btn" id="addCourseBtn" onclick="addCourseCard()">+ Add Course</button>
+                            <button class="btn btn-small btn-success add-course-btn" id="addCourseBtn" onclick="addCourseCard()" title="Add a new course card to display">+ Add Course</button>
                         </div>
                         <div id="courseCards"></div>
                     </div>
@@ -627,7 +714,7 @@
                     <div class="list-manager mt-20">
                         <div class="list-item-header">
                             <strong>Testimonial Items</strong>
-                            <button class="btn btn-small btn-success" onclick="addTestimonial()">+ Add Testimonial</button>
+                            <button class="btn btn-small btn-success" onclick="addTestimonial()" title="Add a new student testimonial">+ Add Testimonial</button>
                         </div>
                         <div id="testimonialItems"></div>
                     </div>
@@ -651,7 +738,7 @@
                     <div class="list-manager mt-20">
                         <div class="list-item-header">
                             <strong>Award Items</strong>
-                            <button class="btn btn-small btn-success" onclick="addAwardItem()">+ Add Award</button>
+                            <button class="btn btn-small btn-success" onclick="addAwardItem()" title="Add a new award or certification">+ Add Award</button>
                         </div>
                         <div id="awardItems"></div>
                     </div>
@@ -675,7 +762,7 @@
                     <div class="list-manager mt-20">
                         <div class="list-item-header">
                             <strong>Pricing Plans (Basic, Pro, Enterprise)</strong>
-                            <button class="btn btn-small btn-success" onclick="addPricingPlan()">+ Add Plan</button>
+                            <button class="btn btn-small btn-success" onclick="addPricingPlan()" title="Add a new pricing plan option">+ Add Plan</button>
                         </div>
                         <div id="pricingPlans"></div>
                     </div>
@@ -700,11 +787,11 @@
                 </div>
 
                 <!-- Save Buttons -->
-                <div style="display: flex; gap: 15px; margin-top: 30px;">
-                    <button class="btn" onclick="saveHomeContent()">💾 Save Changes</button>
-                    <button class="btn btn-secondary" onclick="loadHomeContent()">🔄 Reload Content</button>
-                    <button class="btn btn-secondary" onclick="exportContent()">📥 Export JSON</button>
-                    <button class="btn btn-secondary" onclick="importContent()">📤 Import JSON</button>
+                <div style="display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
+                    <button class="btn" onclick="saveHomeContent()" title="Save all changes to the database">💾 Save Changes</button>
+                    <button class="btn btn-secondary" onclick="loadHomeContent()" title="Reload content from database (discards unsaved changes)">🔄 Reload Content</button>
+                    <button class="btn btn-secondary" onclick="exportContent()" title="Download current configuration as JSON backup">📥 Export JSON</button>
+                    <button class="btn btn-secondary" onclick="importContent()" title="Upload JSON file to restore configuration">📤 Import JSON</button>
                 </div>
             </div>
 
@@ -3175,6 +3262,19 @@
         function previewChanges() {
             const url = `/nd/home.html?preview=true`;
             window.open(url, '_blank');
+        }
+
+        // Toggle Help Section
+        function toggleHomeHelp() {
+            const helpSection = document.getElementById('homeHelpSection');
+            if (helpSection) {
+                if (helpSection.style.display === 'none') {
+                    helpSection.style.display = 'block';
+                    helpSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    helpSection.style.display = 'none';
+                }
+            }
         }
 
         // Export/Import

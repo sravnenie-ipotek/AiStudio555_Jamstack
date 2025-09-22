@@ -2,8 +2,10 @@
 ## Complete Working Logic for Multi-Language Support
 
 **Document Created:** 2025-09-21
+**Last Updated:** 2025-09-22
 **Purpose:** Generic instruction guide for implementing translations on ANY page
-**System:** Enhanced Language Manager with Railway PostgreSQL Database
+**System:** Unified Language Manager with Railway PostgreSQL Database
+**Database Reference:** See `/backups/newDesign/docs/db.md` for complete table structure
 
 ---
 
@@ -11,16 +13,52 @@
 
 ### Translation Flow
 ```
-User Clicks Language � Enhanced Language Manager � API Request � Database � JSON Response � DOM Update
+User Clicks Language � Unified Language Manager � API Request � Database � JSON Response � DOM Update
      (RU/HE)         �  (language-manager.js)  � (?locale=ru) � (nd_tables) � (data.section) � (data-i18n)
 ```
 
 ### Key Components
 1. **Frontend**: HTML with `data-i18n` attributes
-2. **JavaScript**: Enhanced Language Manager (`/js/enhanced-language-manager.js`)
-3. **API Server**: Express.js on port 1337
-4. **Database**: Railway PostgreSQL with `nd_` prefixed tables
-5. **Admin Panel**: `content-admin-comprehensive.html`
+2. **JavaScript**: Unified Language Manager (`/js/unified-language-manager.js`)
+3. **API Server**: Express.js on port 1337 (local) / Railway auto-assigned (production)
+4. **Database**: Railway PostgreSQL with `nd_` prefixed tables (see `/backups/newDesign/docs/db.md`)
+5. **Admin Panel**: `admin-nd.html` (centralized admin system)
+
+---
+
+## 🗂️ Database Structure Overview
+
+**Complete Reference**: See `/backups/newDesign/docs/db.md` for full database documentation
+
+### Page-Based Architecture
+The system uses **30+ active tables** with `nd_` prefix following this pattern:
+
+1. **Page Content Tables** - Store UI translations and page sections
+   - Format: `nd_[pagename]_page` (e.g., `nd_courses_page`, `nd_pricing_page`)
+   - Columns: `content_en`, `content_ru`, `content_he` (JSONB)
+   - Purpose: UI text, buttons, labels, headers
+
+2. **Entity Data Tables** - Store actual content records
+   - Format: `nd_[entityname]` (e.g., `nd_courses`, `nd_teachers`)
+   - Purpose: Course data, teacher profiles, blog posts
+
+3. **System Tables** - Global components
+   - `nd_menu` - Navigation menu items
+   - `nd_footer` - Footer content
+   - `nd_settings` - System configuration
+
+### API Endpoint Pattern
+```
+Page Content: /api/nd/[pagename]-page?locale={en|ru|he}
+Entity Data:  /api/nd/[entityname]?locale={en|ru|he}
+Admin APIs:   PUT /api/nd/[pagename]-page/:section
+```
+
+**Examples**:
+- `/api/nd/home-page?locale=ru` → `nd_home` table
+- `/api/nd/courses-page?locale=he` → `nd_courses_page` table
+- `/api/nd/courses?locale=en` → `nd_courses` table
+- `/api/nd/teachers-page?locale=ru` → `nd_teachers_page` table
 
 ---
 
@@ -30,16 +68,16 @@ User Clicks Language � Enhanced Language Manager � API Request � Database 
 
 #### 1.1 Run Translation Audit
 ```bash
-# Create audit script for any page
-cat > audit-[pagename].js << 'EOF'
+# Create audit script for any page (replace [PAGENAME] with actual page)
+cat > audit-[PAGENAME].js << 'EOF'
 const { chromium } = require('@playwright/test');
 
 (async () => {
     const browser = await chromium.launch({ headless: true });
     const page = await browser.newPage();
 
-    // Change URL to your page
-    await page.goto('http://localhost:3005/[yourpage].html');
+    // IMPORTANT: Replace [PAGENAME] with your actual page name
+    await page.goto('http://localhost:3005/[PAGENAME].html');
     await page.waitForTimeout(1000);
 
     const coverage = await page.evaluate(() => {
@@ -94,7 +132,8 @@ const { chromium } = require('@playwright/test');
 })();
 EOF
 
-node audit-[pagename].js
+# Run the audit (replace [PAGENAME] with actual page name)
+node audit-[PAGENAME].js
 ```
 
 #### 1.2 Identify Missing Elements
@@ -112,17 +151,24 @@ Look for patterns in the output:
 
 #### 2.1 Determine Which Table Your Page Uses
 
-```bash
-# Check available nd_ tables
-curl -s "http://localhost:1337/api/nd/[endpoint]?locale=en" | jq 'keys'
+**Reference**: See `/backups/newDesign/docs/db.md` for complete Screen-to-Table mapping
 
-# Common endpoints:
-# - home-page � nd_home table
-# - courses � nd_courses table
-# - teachers � nd_teachers table
-# - career-center-page � nd_career_center table
-# - career-orientation-page � nd_career_orientation table
+```bash
+# Check available nd_ tables for your page
+curl -s "http://localhost:1337/api/nd/[endpoint]?locale=en" | jq 'keys'
 ```
+
+**Complete Page-to-Endpoint Mapping** (from db.md):
+- `home.html` → `/api/nd/home-page` → `nd_home` table
+- `courses.html` → `/api/nd/courses-page` + `/api/nd/courses` → `nd_courses_page` + `nd_courses` tables
+- `pricing.html` → `/api/nd/pricing-page` → `nd_pricing_page` table
+- `teachers.html` → `/api/nd/teachers-page` + `/api/teachers` → `nd_teachers_page` + `teachers` tables
+- `about-us.html` → `/api/nd/about-page` → `nd_about_page` table
+- `blog.html` → `/api/blog-posts` → `blog_posts` table
+- `contact-us.html` → `/api/nd/contact-page` → `nd_contact_page` table
+- `career-center.html` → `/api/career-center-page` → `career_center_pages` table
+- `career-orientation.html` → `/api/career-orientation-page` → `career_orientation_pages` table
+- `detail_courses.html` → `/api/nd/course-details-page` → `nd_course_details_page` table
 
 #### 2.2 Examine API Response Structure
 
@@ -648,6 +694,80 @@ WHERE id = [record_id];
 
 ---
 
+## 🏗️ Table Structure Reference
+
+### Standard Page Table Structure (from db.md)
+```sql
+CREATE TABLE nd_[pagename]_page (
+    id SERIAL PRIMARY KEY,
+    section_key VARCHAR(100) UNIQUE NOT NULL,
+    section_type VARCHAR(50),
+    content_en JSONB,
+    content_ru JSONB,
+    content_he JSONB,
+    visible BOOLEAN DEFAULT true,
+    animations_enabled BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### Entity Table Structure Examples
+```sql
+-- Courses table
+CREATE TABLE nd_courses (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255),
+    title_ru VARCHAR(255),
+    title_he VARCHAR(255),
+    description TEXT,
+    price DECIMAL(10,2),
+    instructor VARCHAR(255),
+    image VARCHAR(500), -- Overridden by static images
+    category VARCHAR(100),
+    rating DECIMAL(2,1),
+    visible BOOLEAN DEFAULT true,
+    featured BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Teachers table
+CREATE TABLE teachers (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    title VARCHAR(255),
+    bio TEXT,
+    image_url VARCHAR(500), -- Overridden by static images
+    expertise VARCHAR(255),
+    category VARCHAR(100),
+    experience VARCHAR(255),
+    specialties TEXT,
+    company VARCHAR(255),
+    linkedin_url VARCHAR(500),
+    github_url VARCHAR(500),
+    locale VARCHAR(5) DEFAULT 'en',
+    published_at TIMESTAMP
+);
+```
+
+### If Table Doesn't Exist - Create Following This Pattern:
+1. **Check db.md** for existing table structure
+2. **Follow naming convention**: `nd_[pagename]_page` for page content
+3. **Use standard columns**: `content_en`, `content_ru`, `content_he` as JSONB
+4. **Create sections**: Each page section gets a row with unique `section_key`
+5. **Update API**: Add endpoint in server.js following `/api/nd/[pagename]-page` pattern
+
+**Example Creation Script**:
+```sql
+-- If creating new page table (replace [PAGENAME] with actual name)
+INSERT INTO nd_[PAGENAME]_page (section_key, section_type, content_en, content_ru, content_he, visible) VALUES
+('hero', 'hero_section', '{"title": "Hero Title", "subtitle": "Hero Subtitle"}', NULL, NULL, true),
+('features', 'features_section', '{"title": "Features", "items": []}', NULL, NULL, true),
+('cta', 'cta_section', '{"title": "Call to Action", "button": "Get Started"}', NULL, NULL, true);
+```
+
+---
+
 ## =� Quick Reference Commands
 
 ```bash
@@ -681,4 +801,34 @@ node audit-[page].js | grep "Coverage:"
 
 ---
 
+## 📋 Implementation Checklist for Any Page
+
+### Essential Requirements
+- [ ] **Include Unified Language Manager**: Add `<script src="js/unified-language-manager.js?v=3000"></script>` to page
+- [ ] **Add Language Pills**: Include EN/RU/HE language switcher in navigation
+- [ ] **Data-i18n Attributes**: Add `data-i18n` attributes to all translatable elements
+- [ ] **Database Table**: Ensure table exists following `nd_[pagename]_page` pattern
+- [ ] **API Endpoint**: Create `/api/nd/[pagename]-page` endpoint in server.js
+- [ ] **Reference db.md**: Check complete database documentation for table structure
+
+### Validation Checklist
+- [ ] Translation coverage reaches 85%+
+- [ ] No "undefined" translations in console
+- [ ] Russian shows Russian text (not Hebrew)
+- [ ] Hebrew shows Hebrew text with RTL
+- [ ] All navigation items translated
+- [ ] All buttons and forms translated
+- [ ] Database has content_ru and content_he populated
+
+### Database Reference
+**See**: `/backups/newDesign/docs/db.md` for:
+- Complete Screen-to-Table mapping
+- Full API endpoint list
+- Table creation scripts
+- Entity relationship structure
+- 30+ active table documentation
+
+---
+
 *Use this guide for ANY page in the system. The patterns are consistent across all pages.*
+*All tables and endpoints follow the documented patterns in `/backups/newDesign/docs/db.md`*
