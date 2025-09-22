@@ -3858,19 +3858,19 @@ app.use('/en/js', express.static(path.join(__dirname, 'js')));
 app.use('/en/css', express.static(path.join(__dirname, 'css')));
 app.use('/en/images', express.static(path.join(__dirname, 'images')));
 app.use('/en/fonts', express.static(path.join(__dirname, 'fonts')));
-app.use('/en/shared', express.static(path.join(__dirname, 'shared')));
+// app.use('/en/shared', express.static(path.join(__dirname, 'shared'))); // DISABLED: Conflicts with MIME type fixes
 
 app.use('/he/js', express.static(path.join(__dirname, 'js')));
 app.use('/he/css', express.static(path.join(__dirname, 'css')));
 app.use('/he/images', express.static(path.join(__dirname, 'images')));
 app.use('/he/fonts', express.static(path.join(__dirname, 'fonts')));
-app.use('/he/shared', express.static(path.join(__dirname, 'shared')));
+// app.use('/he/shared', express.static(path.join(__dirname, 'shared'))); // DISABLED: Conflicts with MIME type fixes
 
 app.use('/ru/js', express.static(path.join(__dirname, 'js')));
 app.use('/ru/css', express.static(path.join(__dirname, 'css')));
 app.use('/ru/images', express.static(path.join(__dirname, 'images')));
 app.use('/ru/fonts', express.static(path.join(__dirname, 'fonts')));
-app.use('/ru/shared', express.static(path.join(__dirname, 'shared')));
+// app.use('/ru/shared', express.static(path.join(__dirname, 'shared'))); // DISABLED: Conflicts with MIME type fixes
 
 // Serve strapi integration files from root and language paths (MUST BE BEFORE catch-all routes)
 app.get('/strapi-home-integration.js', (req, res) => {
@@ -6438,6 +6438,93 @@ app.delete('/api/nd/courses/:id', async (req, res) => {
 // Universal Shared Component System
 // ============================================
 
+// Teacher translations map (temporary until database supports translations)
+const teacherTranslations = {
+  1: {
+    full_name_ru: 'Сара Чен',
+    professional_title_ru: 'Эксперт по ИИ и машинному обучению',
+    company_ru: 'TechEd Solutions',
+    bio_ru: 'Соучредитель и руководитель отдела ИИ в TechEd Solutions с более чем 8-летним опытом коммерческой разработки ИИ. Эксперт в обучении сложным концепциям машинного обучения через практические проекты.',
+    full_name_he: 'שרה צ׳ן',
+    professional_title_he: 'מומחית AI ולמידת מכונה',
+    company_he: 'TechEd Solutions',
+    bio_he: 'שותפה מייסדת ומובילת AI ב-TechEd Solutions עם ניסיון של 8+ שנים בפיתוח AI מסחרי. מומחית בהוראת מושגים מורכבים של למידת מכונה דרך פרויקטים מעשיים.'
+  },
+  2: {
+    full_name_ru: 'Д-р Майкл Родригес',
+    professional_title_ru: 'Научный сотрудник по ИИ',
+    company_ru: 'OpenAI',
+    bio_ru: 'Научный сотрудник в OpenAI с 10+ годами опыта в передовых исследованиях ИИ. Докторская степень Стэнфорда, опубликовал 30+ работ по глубокому обучению.',
+    full_name_he: 'ד"ר מייקל רודריגז',
+    professional_title_he: 'חוקר AI',
+    company_he: 'OpenAI',
+    bio_he: 'חוקר ב-OpenAI עם ניסיון של 10+ שנים במחקר AI מתקדם. דוקטורט מסטנפורד, פרסם 30+ מאמרים על למידה עמוקה.'
+  },
+  3: {
+    full_name_ru: 'Эмили Родригес',
+    professional_title_ru: 'Коуч по смене карьеры',
+    company_ru: 'CareerPath Pro',
+    bio_ru: 'Сертифицированный коуч с 7+ годами опыта помощи профессионалам в переходе в технологическую индустрию. Специализируется на карьерных стратегиях для ИИ и науки о данных.',
+    full_name_he: 'אמילי רודריגז',
+    professional_title_he: 'מאמנת מעבר קריירה',
+    company_he: 'CareerPath Pro',
+    bio_he: 'מאמנת מוסמכת עם ניסיון של 7+ שנים בסיוע למקצוענים במעבר לתעשיית הטכנולוגיה. מתמחה באסטרטגיות קריירה ל-AI ומדע נתונים.'
+  },
+  4: {
+    full_name_ru: 'Джеймс Томпсон',
+    professional_title_ru: 'Эксперт по полному стеку',
+    company_ru: 'Meta',
+    bio_ru: 'Инженер полного стека в Meta с 12+ годами опыта создания масштабируемых веб-приложений. Эксперт в React, Node.js и облачной архитектуре.',
+    full_name_he: 'ג׳יימס תומפסון',
+    professional_title_he: 'מומחה פול סטאק',
+    company_he: 'מטא',
+    bio_he: 'מהנדס פול סטאק במטא עם ניסיון של 12+ שנים בבניית אפליקציות ווב בקנה מידה גדול. מומחה ב-React, Node.js וארכיטקטורת ענן.'
+  },
+  5: {
+    full_name_ru: 'Линда Джексон',
+    professional_title_ru: 'Руководитель по науке о данных',
+    company_ru: 'Amazon',
+    bio_ru: 'Руководитель по науке о данных в Amazon с 15+ годами опыта в аналитике и машинном обучении. Руководит командой из 20+ специалистов по данным.',
+    full_name_he: 'לינדה ג׳קסון',
+    professional_title_he: 'ראש מדע נתונים',
+    company_he: 'אמזון',
+    bio_he: 'ראש מדע נתונים באמזון עם ניסיון של 15+ שנים באנליטיקה ולמידת מכונה. מנהלת צוות של 20+ מומחי נתונים.'
+  },
+  15: {
+    full_name_ru: 'Д-р Сара Чен',
+    professional_title_ru: 'Старший инженер машинного обучения',
+    company_ru: 'Google',
+    bio_ru: 'Старший инженер по машинному обучению в Google с 8+ годами опыта в разработке масштабируемых решений ИИ. Специализируется на глубоком обучении, компьютерном зрении и обработке естественного языка.',
+    full_name_he: 'ד"ר שרה צ׳ן',
+    professional_title_he: 'מהנדסת למידת מכונה בכירה',
+    company_he: 'גוגל',
+    bio_he: 'מהנדסת למידת מכונה בכירה בגוגל עם ניסיון של 8+ שנים בפיתוח פתרונות AI בקנה מידה גדול. מתמחה בלמידה עמוקה, ראיית מחשב ועיבוד שפה טבעית.'
+  }
+};
+
+// Function to apply translations to a teacher object
+function applyTeacherTranslations(teacher, locale) {
+  if (locale === 'en' || !teacherTranslations[teacher.id]) {
+    return teacher;
+  }
+
+  const translations = teacherTranslations[teacher.id];
+  const localeSuffix = `_${locale}`;
+
+  return {
+    ...teacher,
+    full_name: translations[`full_name${localeSuffix}`] || teacher.full_name,
+    professional_title: translations[`professional_title${localeSuffix}`] || teacher.professional_title,
+    company: translations[`company${localeSuffix}`] || teacher.company,
+    bio: translations[`bio${localeSuffix}`] || teacher.bio,
+    // Keep original fields for fallback
+    full_name_en: teacher.full_name,
+    professional_title_en: teacher.professional_title,
+    company_en: teacher.company,
+    bio_en: teacher.bio
+  };
+}
+
 // GET all teachers from entity_teachers table
 app.get('/api/nd/teachers', async (req, res) => {
   try {
@@ -6475,7 +6562,7 @@ app.get('/api/nd/teachers', async (req, res) => {
 
     res.json({
       success: true,
-      data: teachers.map(teacher => ({
+      data: teachers.map(teacher => applyTeacherTranslations({
         id: teacher.id,
         teacher_key: teacher.teacher_key,
         full_name: teacher.full_name,
@@ -6494,7 +6581,7 @@ app.get('/api/nd/teachers', async (req, res) => {
         display_order: teacher.display_order,
         created_at: teacher.created_at,
         updated_at: teacher.updated_at
-      }))
+      }, locale))
     });
   } catch (error) {
     console.error('Error fetching teachers:', error);
@@ -6506,9 +6593,9 @@ app.get('/api/nd/teachers', async (req, res) => {
 app.get('/api/nd/teachers/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { preview = false } = req.query;
+    const { preview = false, locale = 'en' } = req.query;
 
-    console.log(`📦 Fetching teacher ID: ${id}${preview ? ' (preview mode)' : ''}`);
+    console.log(`📦 Fetching teacher ID: ${id}, locale: ${locale}${preview ? ' (preview mode)' : ''}`);
 
     const query = `
       SELECT
@@ -6536,7 +6623,7 @@ app.get('/api/nd/teachers/:id', async (req, res) => {
 
     res.json({
       success: true,
-      data: {
+      data: applyTeacherTranslations({
         id: teacher.id,
         teacher_key: teacher.teacher_key,
         full_name: teacher.full_name,
@@ -6556,7 +6643,7 @@ app.get('/api/nd/teachers/:id', async (req, res) => {
         is_active: teacher.is_active,
         created_at: teacher.created_at,
         updated_at: teacher.updated_at
-      }
+      }, locale)
     });
   } catch (error) {
     console.error('Error fetching teacher:', error);
