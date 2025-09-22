@@ -56,9 +56,10 @@
     function populateHomePage(data) {
         console.log('📝 Populating home page sections:', Object.keys(data));
 
-        // 1. Hero Section - data.hero.content contains the actual content
-        if (data.hero && data.hero.content) {
-            populateHeroSection(data.hero.content);
+        // 1. Hero Section - SKIP UI translation (handled by unified-language-manager)
+        // Only handle dynamic URLs if needed
+        if (data.hero && data.hero.content && data.hero.content.buttons) {
+            updateHeroButtonURLs(data.hero.content.buttons);
         }
 
         // 2. Course Categories Section
@@ -77,14 +78,13 @@
             loadFeaturedCourses();
         }
 
-        // 4. Features Section (Why Choose Us)
-        if (data.features && data.features.content) {
-            populateFeaturesSection(data.features.content);
-        }
+        // 4. Features Section - SKIP (handled by unified-language-manager)
+        // Features are static UI content
 
-        // 3. About Section (Meet Your Mentor)
-        if (data.about && data.about.content) {
-            populateAboutSection(data.about.content);
+        // 3. About Section - SKIP UI translation (handled by unified-language-manager)
+        // Only handle dynamic statistics if needed
+        if (data.about && data.about.content && data.about.content.statistics) {
+            updateAboutStatistics(data.about.content.statistics);
         }
 
         // 4. Testimonials Section
@@ -101,10 +101,8 @@
             populateFAQSection(data.faq.content);
         }
 
-        // 6. Process Section
-        if (data.process && data.process.content) {
-            populateProcessSection(data.process.content);
-        }
+        // 6. Process Section - SKIP (handled by unified-language-manager)
+        // Process content is static UI
 
         // 7. Statistics Section
         if (data.statistics && data.statistics.content) {
@@ -112,58 +110,8 @@
         }
     }
 
-    // Populate Hero Section
-    function populateHeroSection(heroData) {
-        console.log('🎯 Updating hero section with:', heroData);
-
-        // Update subtitle if exists
-        if (heroData.subtitle) {
-            updateTextContent('.banner-subtitle', heroData.subtitle);
-        }
-
-        // Update main heading - this is the critical one!
-        if (heroData.title) {
-            updateTextContent('.banner-heading', heroData.title);
-            console.log('✅ Updated hero title to:', heroData.title);
-        }
-
-        // Update description
-        if (heroData.description) {
-            updateTextContent('.banner-description-text', heroData.description);
-        }
-
-        // Update CTA buttons if they exist as array
-        if (heroData.buttons && Array.isArray(heroData.buttons)) {
-            const primaryButton = document.querySelector('.banner-button-wrapper .primary-button:first-child');
-            if (primaryButton && heroData.buttons[0]) {
-                const buttonText = primaryButton.querySelectorAll('.primary-button-text-block');
-                buttonText.forEach(el => {
-                    el.textContent = heroData.buttons[0].text;
-                });
-                if (heroData.buttons[0].url) {
-                    // Fix URLs without protocol
-                    let url = heroData.buttons[0].url;
-                    if (url && !url.startsWith('http') && !url.startsWith('#') && !url.includes('.html')) {
-                        url = 'https://' + url;
-                    }
-                    primaryButton.href = url;
-                }
-            }
-
-            const secondaryButton = document.querySelector('.banner-button-wrapper .primary-button.secondary');
-            if (secondaryButton && heroData.buttons[1]) {
-                const buttonText = secondaryButton.querySelectorAll('.primary-button-text-block');
-                buttonText.forEach(el => {
-                    el.textContent = heroData.buttons[1].text;
-                });
-                if (heroData.buttons[1].url) {
-                    secondaryButton.href = heroData.buttons[1].url;
-                }
-            }
-        }
-
-        console.log('✅ Hero section updated');
-    }
+    // DEPRECATED: populateHeroSection() - UI translation now handled by unified-language-manager
+    // This function has been replaced by updateHeroButtonURLs() for dynamic URLs only
 
     // Populate Course Categories Section
     function populateCourseCategories(categoriesData) {
@@ -303,70 +251,11 @@
         return element.scrollHeight > element.clientHeight;
     }
 
-    // Populate Features Section (Why Choose Us)
-    function populateFeaturesSection(featuresData) {
-        console.log('🌟 Updating features section...');
+    // DEPRECATED: populateFeaturesSection() - UI translation now handled by unified-language-manager
+    // Features are static UI content that should use data-i18n attributes
 
-        // This is for the "Why Choose Us" section, not course categories
-        if (featuresData.items && Array.isArray(featuresData.items)) {
-            console.log(`📝 ${featuresData.items.length} features available`);
-        }
-
-        console.log('✅ Features section updated');
-    }
-
-    // Populate About Section
-    function populateAboutSection(aboutData) {
-        console.log('👨‍🏫 Updating about section...');
-
-        // Update section subtitle
-        updateTextContent('.about-us .section-subtitle',
-            aboutData.subtitle || 'Meet Your Mentor');
-
-        // Update section title
-        updateTextContent('.about-us .section-title',
-            aboutData.title || 'Your Pathway To Mastery');
-
-        // Update section description
-        updateTextContent('.about-us .section-description-text',
-            aboutData.description);
-
-        // Update mentor name
-        updateTextContent('.about-us-name',
-            aboutData.mentor_name || 'Expert Instructor');
-
-        // Update mentor description
-        updateTextContent('.about-us-description-text',
-            aboutData.mentor_description);
-
-        // Update achievement text
-        updateTextContent('.about-us-achievement-description-text',
-            aboutData.achievement_text);
-
-        // Update statistics if available
-        if (aboutData.statistics) {
-            // Update course count
-            if (aboutData.statistics.courses) {
-                updateTextContent('.about-us-counter-single:nth-child(1) .about-us-counter-tag-text',
-                    'Total Courses Taught');
-                // Note: Actual number animation would need more complex logic
-            }
-
-            // Update student count
-            if (aboutData.statistics.students) {
-                updateTextContent('.about-us-counter-single:nth-child(2) .about-us-counter-tag-text',
-                    'Total Happy Learners');
-            }
-
-            // Update years of experience
-            if (aboutData.statistics.experience) {
-                updateTextContent('.about-us-counter-single:nth-child(3) .about-us-counter-tag-text',
-                    'Years Of Experience');
-            }
-        }
-
-        console.log('✅ About section updated');
-    }
+    // DEPRECATED: populateAboutSection() - UI translation now handled by unified-language-manager
+    // This function has been replaced by updateAboutStatistics() for dynamic numbers only
 
     // Populate Testimonials Section
     function populateTestimonialsSection(testimonialsData) {
@@ -559,63 +448,11 @@
         console.log('✅ FAQ section updated');
     }
 
-    // Populate Process Section
-    function populateProcessSection(processData) {
-        console.log('⚙️ Updating process section...');
+    // DEPRECATED: populateProcessSection() - UI translation now handled by unified-language-manager
+    // Process content is static UI that should use data-i18n attributes
 
-        if (processData.title) {
-            updateTextContent('.process-title', processData.title);
-        }
-
-        if (processData.subtitle) {
-            updateTextContent('.process-subtitle', processData.subtitle);
-        }
-
-        if (processData.steps && Array.isArray(processData.steps)) {
-            console.log(`📝 ${processData.steps.length} process steps available`);
-        }
-
-        console.log('✅ Process section updated');
-    }
-
-    // Populate CTA Section
-    function populateCTASection(ctaData) {
-        console.log('📢 Updating CTA section...');
-
-        // Find CTA section
-        const ctaSection = document.querySelector('.cta-section') ||
-                          document.querySelector('[data-section="cta"]');
-
-        if (ctaSection && ctaData) {
-            // Update CTA title
-            if (ctaData.title) {
-                const ctaTitle = ctaSection.querySelector('.section-title');
-                if (ctaTitle) ctaTitle.textContent = ctaData.title;
-            }
-
-            // Update CTA description
-            if (ctaData.description) {
-                const ctaDesc = ctaSection.querySelector('.section-description');
-                if (ctaDesc) ctaDesc.textContent = ctaData.description;
-            }
-
-            // Update CTA button
-            if (ctaData.button_text) {
-                const ctaButton = ctaSection.querySelector('.primary-button');
-                if (ctaButton) {
-                    const buttonTexts = ctaButton.querySelectorAll('.primary-button-text-block');
-                    buttonTexts.forEach(el => {
-                        el.textContent = ctaData.button_text;
-                    });
-                    if (ctaData.button_link) {
-                        ctaButton.href = ctaData.button_link;
-                    }
-                }
-            }
-        }
-
-        console.log('✅ CTA section updated');
-    }
+    // DEPRECATED: populateCTASection() - UI translation now handled by unified-language-manager
+    // CTA content is static UI that should use data-i18n attributes
 
     // Populate Statistics Section
     function populateStatisticsSection(statsData) {
@@ -664,6 +501,53 @@
                 }
             }
         });
+    }
+
+    // ==================== HELPER FUNCTIONS FOR DYNAMIC CONTENT ====================
+
+    // Update only dynamic URLs in hero buttons (not text - that's handled by data-i18n)
+    function updateHeroButtonURLs(buttons) {
+        console.log('🔗 Updating hero button URLs only...');
+
+        if (buttons && Array.isArray(buttons)) {
+            const primaryButton = document.querySelector('.banner-button-wrapper .primary-button:first-child');
+            if (primaryButton && buttons[0] && buttons[0].url) {
+                let url = buttons[0].url;
+                if (url && !url.startsWith('http') && !url.startsWith('#') && !url.includes('.html')) {
+                    url = 'https://' + url;
+                }
+                primaryButton.href = url;
+                console.log('✅ Updated primary button URL');
+            }
+
+            const secondaryButton = document.querySelector('.banner-button-wrapper .primary-button.secondary');
+            if (secondaryButton && buttons[1] && buttons[1].url) {
+                secondaryButton.href = buttons[1].url;
+                console.log('✅ Updated secondary button URL');
+            }
+        }
+    }
+
+    // Update only dynamic statistics numbers (not labels - that's handled by data-i18n)
+    function updateAboutStatistics(statistics) {
+        console.log('📊 Updating about statistics numbers only...');
+
+        if (statistics.courses) {
+            const courseCounter = document.querySelector('.about-us-counter-single:nth-child(1) .about-us-counter-number');
+            if (courseCounter) courseCounter.textContent = statistics.courses;
+        }
+
+        if (statistics.students) {
+            const studentCounter = document.querySelector('.about-us-counter-single:nth-child(2) .about-us-counter-number');
+            if (studentCounter) studentCounter.textContent = statistics.students;
+        }
+
+        if (statistics.experience) {
+            const experienceCounter = document.querySelector('.about-us-counter-single:nth-child(3) .about-us-counter-number');
+            if (experienceCounter) experienceCounter.textContent = statistics.experience;
+        }
+
+        console.log('✅ About statistics updated');
     }
 
     // Initialize when DOM is ready - with delay to let language manager run first
