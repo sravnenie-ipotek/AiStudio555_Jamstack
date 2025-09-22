@@ -473,33 +473,41 @@ class LanguageManager {
     getComprehensiveMappings(path) {
         const mappings = [];
 
-        // NAVIGATION MAPPINGS - Russian has different structure (no double content)
+        // NAVIGATION MAPPINGS - Handle quadruple nesting from API
         const navMappings = {
-            'navigation.content.items.0.text': ['navigation.content.home', 'navigation.content.content.home', 'navigation.home'],
-            'navigation.content.items.1.text': ['navigation.content.courses', 'navigation.content.content.courses', 'navigation.courses'],
-            'navigation.content.items.2.text': ['navigation.content.teachers', 'navigation.content.content.teachers', 'navigation.teachers'],
-            'navigation.content.items.3.text': ['navigation.content.blog', 'navigation.content.content.blog', 'navigation.blog'],
-            'navigation.content.items.4.text': ['navigation.content.about_us', 'navigation.content.content.about_us', 'navigation.about_us'],
-            'navigation.content.items.6.text': ['navigation.content.pricing', 'navigation.content.content.pricing', 'navigation.pricing'],
-            'navigation.content.career.orientation': ['navigation.content.career_orientation', 'navigation.content.content.career_orientation', 'navigation.career_orientation'],
-            'navigation.content.career.center': ['navigation.content.career_center', 'navigation.content.content.career_center', 'navigation.career_center']
+            'navigation.content.items.0.text': ['navigation.content.content.content.home', 'navigation.content.content.home', 'navigation.content.home', 'navigation.home'],
+            'navigation.content.items.1.text': ['navigation.content.content.content.courses', 'navigation.content.content.courses', 'navigation.content.courses', 'navigation.courses'],
+            'navigation.content.items.2.text': ['navigation.content.content.content.teachers', 'navigation.content.content.teachers', 'navigation.content.teachers', 'navigation.teachers'],
+            'navigation.content.items.3.text': ['navigation.content.content.content.blog', 'navigation.content.content.blog', 'navigation.content.blog', 'navigation.blog'],
+            'navigation.content.items.4.text': ['navigation.content.content.content.about_us', 'navigation.content.content.about_us', 'navigation.content.about_us', 'navigation.about_us'],
+            'navigation.content.items.6.text': ['navigation.content.content.content.pricing', 'navigation.content.content.pricing', 'navigation.content.pricing', 'navigation.pricing'],
+            'navigation.content.career.orientation': ['navigation.content.content.content.career_orientation', 'navigation.content.content.career_orientation', 'navigation.content.career_orientation', 'navigation.career_orientation'],
+            'navigation.content.career.center': ['navigation.content.content.content.career_center', 'navigation.content.content.career_center', 'navigation.content.career_center', 'navigation.career_center']
         };
 
-        // UI ELEMENTS MAPPINGS
+        // UI ELEMENTS MAPPINGS - Handle quadruple nested content structure
         const uiMappings = {
-            'ui.content.buttons.sign_up_today': ['ui_elements.content.buttons.sign_up_today', 'ui_elements.content.content.buttons.sign_up_today', 'ui.buttons.sign_up_today', 'misc.content.sign_up_today'],
-            'ui.content.buttons.course_details': ['ui_elements.content.buttons.course_details', 'ui_elements.content.content.buttons.course_details', 'ui.buttons.course_details'],
-            'ui.content.buttons.explore_courses': ['ui_elements.content.buttons.browse_courses', 'ui_elements.content.content.buttons.check_out_courses', 'ui.buttons.explore_courses'],
-            'ui.content.buttons.uncover_all_courses': ['ui_elements.content.buttons.view_courses', 'ui.buttons.uncover_all_courses', 'misc.content.view_courses'],
-            'ui.content.buttons.get_in_touch': ['ui_elements.content.buttons.get_in_touch', 'ui.buttons.get_in_touch', 'misc.content.contact_us'],
-            'ui.content.messages.no_items': ['ui.messages.no_items', 'misc.content.no_items_found', 'cart.content.content.no_items_found']
+            'ui.content.buttons.sign_up_today': ['ui_elements.content.content.content.buttons.sign_up_today', 'ui.content.content.content.buttons.sign_up_today', 'ui_elements.content.content.buttons.sign_up_today', 'ui_elements.content.buttons.sign_up_today', 'ui.buttons.sign_up_today', 'misc.content.sign_up_today'],
+            'ui.content.buttons.course_details': ['ui_elements.content.content.content.buttons.course_details', 'ui.content.content.content.buttons.course_details', 'ui_elements.content.content.buttons.course_details', 'ui_elements.content.buttons.course_details', 'ui.buttons.course_details'],
+            'ui.content.buttons.explore_courses': ['ui_elements.content.content.content.buttons.explore_courses', 'ui.content.content.content.buttons.explore_courses', 'ui_elements.content.content.buttons.browse_courses', 'ui_elements.content.buttons.browse_courses', 'ui_elements.content.content.buttons.check_out_courses', 'ui.buttons.explore_courses'],
+            'ui.content.buttons.uncover_all_courses': ['ui_elements.content.content.content.buttons.uncover_all_courses', 'ui.content.content.content.buttons.uncover_all_courses', 'ui_elements.content.buttons.view_courses', 'ui.buttons.uncover_all_courses', 'misc.content.view_courses'],
+            'ui.content.buttons.get_in_touch': ['ui_elements.content.content.content.buttons.get_in_touch', 'ui.content.content.content.buttons.get_in_touch', 'ui_elements.content.content.buttons.get_in_touch', 'ui_elements.content.buttons.get_in_touch', 'ui.buttons.get_in_touch', 'misc.content.contact_us'],
+            'ui.content.buttons.read_more': ['ui_elements.content.content.content.buttons.read_more', 'ui.content.content.content.buttons.read_more', 'ui_elements.content.content.buttons.read_more', 'ui_elements.content.buttons.read_more', 'misc.content.read_more'],
+            'ui.content.messages.no_items': ['ui.content.content.content.messages.no_items', 'ui.messages.no_items', 'misc.content.no_items_found', 'cart.content.content.no_items_found'],
+            'ui.content.messages.loading': ['ui.content.content.content.messages.loading', 'ui.messages.loading', 'misc.content.loading'],
+            'ui.content.messages.error': ['ui.content.content.content.messages.error', 'ui.messages.error', 'misc.content.error'],
+            'ui.content.languages.en': ['ui.content.content.content.languages.en', 'ui.languages.en'],
+            'ui.content.languages.ru': ['ui.content.content.content.languages.ru', 'ui.languages.ru'],
+            'ui.content.languages.he': ['ui.content.content.content.languages.he', 'ui.languages.he']
         };
 
-        // HERO SECTION MAPPINGS
+        // HERO SECTION MAPPINGS - Handle quadruple nesting
         const heroMappings = {
-            'hero.content.button_primary': ['hero.content.cta_text_1', 'ui_elements.content.buttons.get_in_touch', 'hero.content.button_primary'],
-            'hero.content.button_secondary': ['hero.content.cta_text_2', 'ui_elements.content.buttons.check_out_courses', 'hero.content.button_secondary'],
-            'hero.content.subtitle': ['hero.content.subtitle', 'hero.content.expert_led']
+            'hero.content.title': ['hero.content.content.content.title', 'hero.content.content.title', 'hero.content.title'],
+            'hero.content.subtitle': ['hero.content.content.content.subtitle', 'hero.content.content.subtitle', 'hero.content.subtitle', 'hero.content.expert_led'],
+            'hero.content.description': ['hero.content.content.content.description', 'hero.content.content.description', 'hero.content.description'],
+            'hero.content.button_primary': ['hero.content.content.content.cta_text_1', 'hero.content.content.cta_text_1', 'hero.content.cta_text_1', 'ui_elements.content.buttons.get_in_touch', 'hero.content.button_primary'],
+            'hero.content.button_secondary': ['hero.content.content.content.cta_text_2', 'hero.content.content.cta_text_2', 'hero.content.cta_text_2', 'ui_elements.content.buttons.check_out_courses', 'hero.content.button_secondary']
         };
 
         // CART MAPPINGS
@@ -512,18 +520,18 @@ class LanguageManager {
             'cart.content.errors.quantity_not_available': ['cart.content.errors.quantity_not_available', 'cart.errors.quantity_not_available', 'cart.content.content.quantity_not_available']
         };
 
-        // FEATURES/ABOUT MAPPINGS
+        // FEATURES/ABOUT MAPPINGS - Handle quadruple nesting
         const featuresMappings = {
-            'features.content.subtitle': ['features.content.subtitle', 'about.content.subtitle', 'stats.content.mentor.title'],
-            'features.content.title': ['features.content.title', 'features.content.content.title'],
-            'features.content.description': ['features.content.description', 'features.content.content.description'],
-            // Add features items mappings
-            'features.content.items.0.title': ['features.content.items.0.title', 'features.items.0.title'],
-            'features.content.items.0.description': ['features.content.items.0.description', 'features.items.0.description'],
-            'features.content.items.1.title': ['features.content.items.1.title', 'features.items.1.title'],
-            'features.content.items.1.description': ['features.content.items.1.description', 'features.items.1.description'],
-            'features.content.items.2.title': ['features.content.items.2.title', 'features.items.2.title'],
-            'features.content.items.2.description': ['features.content.items.2.description', 'features.items.2.description']
+            'features.content.subtitle': ['features.content.content.content.subtitle', 'features.content.content.subtitle', 'features.content.subtitle', 'about.content.subtitle', 'stats.content.mentor.title'],
+            'features.content.title': ['features.content.content.content.title', 'features.content.content.title', 'features.content.title'],
+            'features.content.description': ['features.content.content.content.description', 'features.content.content.description', 'features.content.description'],
+            // Add features items mappings with quadruple nesting
+            'features.content.items.0.title': ['features.content.content.content.items.0.title', 'features.content.content.items.0.title', 'features.content.items.0.title', 'features.items.0.title'],
+            'features.content.items.0.description': ['features.content.content.content.items.0.description', 'features.content.content.items.0.description', 'features.content.items.0.description', 'features.items.0.description'],
+            'features.content.items.1.title': ['features.content.content.content.items.1.title', 'features.content.content.items.1.title', 'features.content.items.1.title', 'features.items.1.title'],
+            'features.content.items.1.description': ['features.content.content.content.items.1.description', 'features.content.content.items.1.description', 'features.content.items.1.description', 'features.items.1.description'],
+            'features.content.items.2.title': ['features.content.content.content.items.2.title', 'features.content.content.items.2.title', 'features.content.items.2.title', 'features.items.2.title'],
+            'features.content.items.2.description': ['features.content.content.content.items.2.description', 'features.content.content.items.2.description', 'features.content.items.2.description', 'features.items.2.description']
         };
 
         // COURSE CATEGORIES MAPPINGS
@@ -572,31 +580,33 @@ class LanguageManager {
             'pricing.content.plans.monthly.name': ['pricing.content.plans.0.name', 'pricing.content.plans[0].name']
         };
 
-        // FAQ MAPPINGS - Fix array-based FAQ items
+        // FAQ MAPPINGS - Handle quadruple nesting from API response
         const faqMappings = {
-            'faq.content.content.items.0.question': ['faq.content.content.items.0.question', 'faq.content.items.0.question'],
-            'faq.content.content.items.0.answer': ['faq.content.content.items.0.answer', 'faq.content.items.0.answer'],
-            'faq.content.content.items.1.question': ['faq.content.content.items.1.question', 'faq.content.items.1.question'],
-            'faq.content.content.items.1.answer': ['faq.content.content.items.1.answer', 'faq.content.items.1.answer'],
-            'faq.content.content.items.2.question': ['faq.content.content.items.2.question', 'faq.content.items.2.question'],
-            'faq.content.content.items.2.answer': ['faq.content.content.items.2.answer', 'faq.content.items.2.answer'],
-            'faq.content.content.items.3.question': ['faq.content.content.items.3.question', 'faq.content.items.3.question'],
-            'faq.content.content.items.3.answer': ['faq.content.content.items.3.answer', 'faq.content.items.3.answer'],
-            'faq.content.content.items.4.question': ['faq.content.content.items.4.question', 'faq.content.items.4.question'],
-            'faq.content.content.items.4.answer': ['faq.content.content.items.4.answer', 'faq.content.items.4.answer']
+            'faq.content.content.items.0.question': ['faq.content.content.content.items.0.question', 'faq.content.content.items.0.question', 'faq.content.items.0.question'],
+            'faq.content.content.items.0.answer': ['faq.content.content.content.items.0.answer', 'faq.content.content.items.0.answer', 'faq.content.items.0.answer'],
+            'faq.content.content.items.1.question': ['faq.content.content.content.items.1.question', 'faq.content.content.items.1.question', 'faq.content.items.1.question'],
+            'faq.content.content.items.1.answer': ['faq.content.content.content.items.1.answer', 'faq.content.content.items.1.answer', 'faq.content.items.1.answer'],
+            'faq.content.content.items.2.question': ['faq.content.content.content.items.2.question', 'faq.content.content.items.2.question', 'faq.content.items.2.question'],
+            'faq.content.content.items.2.answer': ['faq.content.content.content.items.2.answer', 'faq.content.content.items.2.answer', 'faq.content.items.2.answer'],
+            'faq.content.content.items.3.question': ['faq.content.content.content.items.3.question', 'faq.content.content.items.3.question', 'faq.content.items.3.question'],
+            'faq.content.content.items.3.answer': ['faq.content.content.content.items.3.answer', 'faq.content.content.items.3.answer', 'faq.content.items.3.answer'],
+            'faq.content.content.items.4.question': ['faq.content.content.content.items.4.question', 'faq.content.content.items.4.question', 'faq.content.items.4.question'],
+            'faq.content.content.items.4.answer': ['faq.content.content.content.items.4.answer', 'faq.content.content.items.4.answer', 'faq.content.items.4.answer'],
+            'faq.content.content.title': ['faq.content.content.content.title', 'faq.content.content.title', 'faq.content.title'],
+            'faq.content.content.subtitle': ['faq.content.content.content.subtitle', 'faq.content.content.subtitle', 'faq.content.subtitle']
         };
 
-        // PROCESS/STEPS MAPPINGS
+        // PROCESS/STEPS MAPPINGS - Handle quadruple nesting
         const processMappings = {
-            'process.content.steps.0.number': ['process.content.steps.0.number', 'process.content.content.steps.0.number'],
-            'process.content.steps.0.title': ['process.content.steps.0.title', 'process.content.content.steps.0.title'],
-            'process.content.steps.0.details': ['process.content.steps.0.details', 'process.content.content.steps.0.details'],
-            'process.content.steps.1.number': ['process.content.steps.1.number', 'process.content.content.steps.1.number'],
-            'process.content.steps.1.title': ['process.content.steps.1.title', 'process.content.content.steps.1.title'],
-            'process.content.steps.1.description': ['process.content.steps.1.description', 'process.content.content.steps.1.description'],
-            'process.content.steps.2.number': ['process.content.steps.2.number', 'process.content.content.steps.2.number'],
-            'process.content.steps.2.title': ['process.content.steps.2.title', 'process.content.content.steps.2.title'],
-            'process.content.steps.2.description': ['process.content.steps.2.description', 'process.content.content.steps.2.description']
+            'process.content.steps.0.number': ['process.content.content.content.steps.0.number', 'process.content.content.steps.0.number', 'process.content.steps.0.number'],
+            'process.content.steps.0.title': ['process.content.content.content.steps.0.title', 'process.content.content.steps.0.title', 'process.content.steps.0.title'],
+            'process.content.steps.0.details': ['process.content.content.content.steps.0.details', 'process.content.content.steps.0.details', 'process.content.steps.0.details'],
+            'process.content.steps.1.number': ['process.content.content.content.steps.1.number', 'process.content.content.steps.1.number', 'process.content.steps.1.number'],
+            'process.content.steps.1.title': ['process.content.content.content.steps.1.title', 'process.content.content.steps.1.title', 'process.content.steps.1.title'],
+            'process.content.steps.1.description': ['process.content.content.content.steps.1.description', 'process.content.content.steps.1.description', 'process.content.steps.1.description'],
+            'process.content.steps.2.number': ['process.content.content.content.steps.2.number', 'process.content.content.steps.2.number', 'process.content.steps.2.number'],
+            'process.content.steps.2.title': ['process.content.content.content.steps.2.title', 'process.content.content.steps.2.title', 'process.content.steps.2.title'],
+            'process.content.steps.2.description': ['process.content.content.content.steps.2.description', 'process.content.content.steps.2.description', 'process.content.steps.2.description']
         };
 
         // AWARDS MAPPINGS
@@ -636,27 +646,45 @@ class LanguageManager {
             'contact.content.error_message': ['contact.content.error_message', 'contact.content.content.error_message']
         };
 
-        // FOOTER MENU ITEMS MAPPINGS
+        // FOOTER MENU ITEMS MAPPINGS - Handle triple nested content structure
         const footerMappings = {
-            'footer.content.menus.0.items.3.text': ['footer.content.menus.0.items.3.text', 'footer.content.content.links.course_single'],
-            'footer.content.menus.0.items.5.text': ['footer.content.menus.0.items.5.text', 'footer.content.content.links.pricing_single'],
-            'footer.content.menus.0.items.7.text': ['footer.content.menus.0.items.7.text', 'footer.content.content.links.blog_single'],
-            'footer.content.menus.2.items.0.text': ['footer.content.menus.2.items.0.text', 'footer.content.content.links.404_not_found'],
-            'footer.content.menus.2.items.1.text': ['footer.content.menus.2.items.1.text', 'footer.content.content.links.password_protected'],
-            'footer.content.menus.2.items.2.text': ['footer.content.menus.2.items.2.text', 'footer.content.content.links.changelog'],
-            'footer.content.menus.2.items.3.text': ['footer.content.menus.2.items.3.text', 'footer.content.content.links.license'],
-            'footer.content.menus.2.items.4.text': ['footer.content.menus.2.items.4.text', 'footer.content.content.links.style_guide'],
-            'footer.content.menus.3.items.0.text': ['footer.content.menus.3.items.0.text', 'footer.content.content.links.sign_up'],
-            'footer.content.menus.3.items.1.text': ['footer.content.menus.3.items.1.text', 'footer.content.content.links.sign_in'],
-            'footer.content.menus.3.items.2.text': ['footer.content.menus.3.items.2.text', 'footer.content.content.links.forgot_password'],
-            'footer.content.menus.3.items.3.text': ['footer.content.menus.3.items.3.text', 'footer.content.content.links.reset_password'],
+            'footer.content.menus.0.items.3.text': ['footer.content.menus.0.items.3.text', 'footer.content.content.content.links.course_single'],
+            'footer.content.menus.0.items.5.text': ['footer.content.menus.0.items.5.text', 'footer.content.content.content.links.pricing_single'],
+            'footer.content.menus.0.items.7.text': ['footer.content.menus.0.items.7.text', 'footer.content.content.content.links.blog_single'],
+            'footer.content.menus.2.items.0.text': ['footer.content.menus.2.items.0.text', 'footer.content.content.content.links.404_not_found'],
+            'footer.content.menus.2.items.1.text': ['footer.content.menus.2.items.1.text', 'footer.content.content.content.links.password_protected'],
+            'footer.content.menus.2.items.2.text': ['footer.content.menus.2.items.2.text', 'footer.content.content.content.links.changelog'],
+            'footer.content.menus.2.items.3.text': ['footer.content.menus.2.items.3.text', 'footer.content.content.content.links.license'],
+            'footer.content.menus.2.items.4.text': ['footer.content.menus.2.items.4.text', 'footer.content.content.content.links.style_guide'],
+            'footer.content.menus.3.items.0.text': ['footer.content.menus.3.items.0.text', 'footer.content.content.content.links.sign_up'],
+            'footer.content.menus.3.items.1.text': ['footer.content.menus.3.items.1.text', 'footer.content.content.content.links.sign_in'],
+            'footer.content.menus.3.items.2.text': ['footer.content.menus.3.items.2.text', 'footer.content.content.content.links.forgot_password'],
+            'footer.content.menus.3.items.3.text': ['footer.content.menus.3.items.3.text', 'footer.content.content.content.links.reset_password'],
             // Add newsletter and copyright mappings
             'footer.content.copyright': ['footer.content.copyright', 'footer.copyright', 'footer.content.content.copyright'],
             'footer.content.newsletter.label': ['footer.content.newsletter.label', 'footer.newsletter.label'],
             'footer.content.newsletter.placeholder': ['footer.content.newsletter.placeholder', 'footer.newsletter.placeholder'],
             'footer.content.newsletter.button': ['footer.content.newsletter.button', 'footer.newsletter.button'],
             'footer.content.newsletter.success': ['footer.content.newsletter.success', 'footer.newsletter.success'],
-            'footer.content.newsletter.error': ['footer.content.newsletter.error', 'footer.newsletter.error']
+            'footer.content.newsletter.error': ['footer.content.newsletter.error', 'footer.newsletter.error'],
+            // Add contact information mappings
+            'footer.content.phone': ['footer.content.content.content.phone', 'footer.content.content.phone'],
+            'footer.content.contact_email': ['footer.content.content.content.contact_email', 'footer.content.content.email'],
+            'footer.content.contact_prefix': ['footer.content.content.content.contact_prefix', 'footer.content.content.contact_prefix'],
+            'footer.content.address': ['footer.content.content.content.address', 'footer.content.content.address']
+        };
+
+        // MISC/MISCELLANEOUS MAPPINGS - Handle triple nested content structure
+        const miscMappings = {
+            'misc.content.explore_plans': ['misc.content.content.content.explore_plans', 'misc.content.content.explore_plans'],
+            'misc.content.read_more': ['misc.content.content.content.read_more', 'misc.content.content.read_more'],
+            'misc.content.learn_more': ['misc.content.content.content.learn_more', 'misc.content.content.learn_more'],
+            'misc.content.get_started': ['misc.content.content.content.get_started', 'misc.content.content.get_started'],
+            'misc.content.contact_us': ['misc.content.content.content.contact_us', 'misc.content.content.contact_us'],
+            'misc.content.sign_up_today': ['misc.content.content.content.sign_up_today', 'misc.content.content.sign_up_today'],
+            'misc.content.start_learning': ['misc.content.content.content.start_learning', 'misc.content.content.start_learning'],
+            'misc.content.view_courses': ['misc.content.content.content.view_courses', 'misc.content.content.view_courses'],
+            'misc.content.enroll_now': ['misc.content.content.content.enroll_now', 'misc.content.content.enroll_now']
         };
 
         // Check all mapping collections
@@ -675,7 +703,8 @@ class LanguageManager {
             awardsMappings,
             testimonialsMappings,
             contactMappings,
-            footerMappings
+            footerMappings,
+            miscMappings
         );
 
         if (allMappings[path]) {

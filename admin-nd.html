@@ -1833,7 +1833,7 @@
     <script>
         // API Configuration
         const API_BASE = window.location.hostname === 'localhost'
-            ? 'http://localhost:3000/api'
+            ? 'http://localhost:1337/api'
             : 'https://aistudio555jamstack-production.up.railway.app/api';
 
         // Current language
@@ -6203,7 +6203,7 @@
         // Load blog posts with enhanced table display
         async function loadBlogPosts() {
             try {
-                const response = await fetch(`http://localhost:3000/api/blog-posts`);
+                const response = await fetch(`http://localhost:1337/api/blog-posts`);
                 const result = await response.json();
 
                 if (result.success && result.data) {
@@ -6225,7 +6225,7 @@
         // Load blog posts in Teachers tab
         async function loadBlogPostsInTeachers() {
             try {
-                const response = await fetch(`http://localhost:3000/api/blog-posts?admin=true&locale=${currentLang}`);
+                const response = await fetch(`http://localhost:1337/api/blog-posts?admin=true&locale=${currentLang}`);
                 const result = await response.json();
 
                 if (result.success && result.data) {
@@ -6281,7 +6281,7 @@
         async function loadBlogPostsNew() {
             try {
                 console.log('🔄 Starting loadBlogPostsNew...');
-                const response = await fetch(`http://localhost:3000/api/blog-posts`);
+                const response = await fetch(`http://localhost:1337/api/blog-posts`);
                 console.log('📡 API response received:', response.status);
                 const result = await response.json();
                 console.log('📊 API result:', result);
@@ -6435,7 +6435,7 @@
         // Edit blog post
         async function editBlogPost(blogId) {
             try {
-                const response = await fetch(`http://localhost:3000/api/blog-posts/${blogId}`);
+                const response = await fetch(`http://localhost:1337/api/blog-posts/${blogId}`);
                 const data = await response.json();
 
                 if (data.success && data.data) {
@@ -6454,7 +6454,7 @@
 
         // View blog post
         function viewBlogPost(blogId) {
-            window.open(`http://localhost:3000/backups/newDesign/detail_blog.html?id=${blogId}`, '_blank');
+            window.open(`http://localhost:1337/backups/newDesign/detail_blog.html?id=${blogId}`, '_blank');
         }
 
         // Delete blog post
@@ -6464,7 +6464,7 @@
             }
 
             try {
-                const response = await fetch(`http://localhost:3000/api/blog-posts/${blogId}`, {
+                const response = await fetch(`http://localhost:1337/api/blog-posts/${blogId}`, {
                     method: 'DELETE'
                 });
 
@@ -6531,8 +6531,8 @@
                 const blogData = collectBlogFormData();
                 const method = isEditingBlog ? 'PUT' : 'POST';
                 const url = isEditingBlog
-                    ? `http://localhost:3000/api/blog-posts/${currentBlogPost.id}`
-                    : `http://localhost:3000/api/blog-posts`;
+                    ? `http://localhost:1337/api/blog-posts/${currentBlogPost.id}`
+                    : `http://localhost:1337/api/blog-posts`;
 
                 updateBlogAutoSaveStatus('saving');
 
@@ -6678,7 +6678,7 @@
         async function loadBlogAdmin() {
             try {
                 console.log(`🔄 Loading blog posts for BlogAdmin tab in ${currentLang}...`);
-                const response = await fetch(`http://localhost:3000/api/blog-posts?admin=true&locale=${currentLang}`);
+                const response = await fetch(`http://localhost:1337/api/blog-posts?admin=true&locale=${currentLang}`);
                 const result = await response.json();
 
                 if (result.success && result.data) {
