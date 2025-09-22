@@ -9,7 +9,7 @@
 
     // Configuration
     const API_BASE_URL = window.location.hostname === 'localhost'
-        ? 'http://localhost:1337'
+        ? 'http://localhost:3000'
         : 'https://aistudio555jamstack-production.up.railway.app';
 
     // Get current language from URL or default to 'en'
@@ -90,6 +90,10 @@
         // 4. Testimonials Section
         if (data.testimonials && data.testimonials.content) {
             populateTestimonialsSection(data.testimonials.content);
+        }
+        // Also check for testimonials_data (the actual API field)
+        if (data.testimonials_data) {
+            populateTestimonialsSection(data.testimonials_data);
         }
 
         // 5. FAQ Section
@@ -376,10 +380,97 @@
         updateTextContent('.testimonials .section-subtitle',
             testimonialsData.subtitle || 'Student Success Stories');
 
-        // Testimonials would need dynamic creation of cards
-        // This is a placeholder for the testimonial cards update logic
+        // Update testimonial cards
+        // Handle the deeply nested structure from API: testimonials_data.content.content.content.content
+        let testimonialItems = [];
+
+        // Extract testimonials from various possible locations
+        if (testimonialsData.content) {
+            if (testimonialsData.content.content) {
+                if (testimonialsData.content.content.content) {
+                    if (testimonialsData.content.content.content.content) {
+                        // Deepest nested level - actual testimonials at indices 0-5
+                        testimonialItems = testimonialsData.content.content.content.content;
+                        console.log('Found testimonials at deepest level (content.content.content.content)');
+                    } else {
+                        // One level up - might have some testimonials
+                        testimonialItems = testimonialsData.content.content.content;
+                        console.log('Found testimonials at content.content.content');
+                    }
+                } else if (testimonialsData.content.content) {
+                    testimonialItems = testimonialsData.content.content;
+                    console.log('Found testimonials at content.content');
+                }
+            } else if (testimonialsData.content) {
+                testimonialItems = testimonialsData.content;
+                console.log('Found testimonials at content');
+            }
+        }
+
+        // Also check for items array
         if (testimonialsData.items && Array.isArray(testimonialsData.items)) {
-            console.log(`📝 ${testimonialsData.items.length} testimonials available`);
+            console.log(`📝 ${testimonialsData.items.length} testimonials in items array`);
+        }
+
+        // Update individual testimonial cards by tab index
+        if (testimonialItems && typeof testimonialItems === 'object') {
+            // Update testimonials by index (0-6)
+            for (let i = 0; i <= 6; i++) {
+                if (testimonialItems[i]) {
+                    const testimonial = testimonialItems[i];
+
+                    // Find the tab pane for this index
+                    let tabSelector = '';
+                    if (i === 0) tabSelector = '[data-w-tab="Tab 1"]';
+                    else if (i === 1) tabSelector = '[data-w-tab="Tab 2"]';
+                    else if (i === 2) tabSelector = '[data-w-tab="Tab 3"]';
+                    else if (i === 3) tabSelector = '[data-w-tab="Tab 4"]';
+                    else if (i === 4) tabSelector = '[data-w-tab="Tab 5"]';
+                    else if (i === 5) tabSelector = '[data-w-tab="Tab 6"]';
+                    else if (i === 6) tabSelector = '[data-w-tab="Tab 7"]';
+
+                    const tabPane = document.querySelector(`.testimonials-tab-pane${tabSelector}`);
+                    if (tabPane) {
+                        // Update title/text
+                        const titleEl = tabPane.querySelector('.testimonials-title');
+                        if (titleEl && testimonial.title) {
+                            titleEl.textContent = `"${testimonial.title}"`;
+                            titleEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+                        } else if (titleEl && testimonial.text) {
+                            // If no title, use first part of text
+                            const shortText = testimonial.text.substring(0, 50);
+                            titleEl.textContent = `"${shortText}${testimonial.text.length > 50 ? '...' : ''}"`;
+                            titleEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+                        }
+
+                        // Update description text
+                        const textEl = tabPane.querySelector('.testimonials-card-description-text');
+                        if (textEl && testimonial.text) {
+                            textEl.textContent = `"${testimonial.text}"`;
+                            textEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+                        }
+
+                        // Update author name
+                        const nameEl = tabPane.querySelector('.testimonials-card-author-name');
+                        if (nameEl && testimonial.name) {
+                            nameEl.textContent = testimonial.name;
+                            nameEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+                        }
+
+                        // Update author role/course
+                        const roleEl = tabPane.querySelector('.testimonials-card-author-bio-text');
+                        if (roleEl && testimonial.course_taken) {
+                            roleEl.textContent = testimonial.course_taken;
+                            roleEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+                        } else if (roleEl && testimonial.role) {
+                            roleEl.textContent = testimonial.role;
+                            roleEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+                        }
+
+                        console.log(`✅ Updated testimonial ${i + 1}: ${testimonial.name || 'Anonymous'}`);
+                    }
+                }
+            }
         }
 
         console.log('✅ Testimonials section updated');
@@ -391,7 +482,8 @@
 
         // Find FAQ section - it might be in a different location
         const faqSection = document.querySelector('.faq-section') ||
-                         document.querySelector('[data-section="faq"]');
+                         document.querySelector('[data-section="faq"]') ||
+                         document.querySelector('.faq');
 
         if (faqSection && faqData) {
             // Update FAQ title if exists
@@ -403,7 +495,64 @@
             // Update FAQ items if they exist
             if (faqData.items && Array.isArray(faqData.items)) {
                 console.log(`📝 ${faqData.items.length} FAQ items available`);
-                // FAQ items would need special accordion handling
+
+                // Update each FAQ accordion item
+                faqData.items.forEach((item, index) => {
+                    // Find the tab for this FAQ (Tab 1, Tab 2, etc.)
+                    const tabNumber = index + 1;
+                    const faqTab = document.querySelector(`[data-w-tab="Tab ${tabNumber}"].single-faq-accordion-wrap`);
+
+                    if (faqTab) {
+                        // Update question
+                        const questionEl = faqTab.querySelector('.faq-question');
+                        if (questionEl && item.question) {
+                            // Add "Q: " prefix if not already present
+                            const questionText = item.question.startsWith('Q:') ? item.question : `Q: ${item.question}`;
+                            questionEl.textContent = questionText;
+                            questionEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+                        }
+
+                        // Update answer
+                        const answerEl = faqTab.querySelector('.faq-answer');
+                        if (answerEl && item.answer) {
+                            answerEl.textContent = item.answer;
+                            answerEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+                        }
+
+                        console.log(`✅ Updated FAQ ${tabNumber}: ${item.question}`);
+                    } else {
+                        console.log(`⚠️ FAQ tab ${tabNumber} not found`);
+                    }
+                });
+            }
+
+            // Also handle nested content structure (for API compatibility)
+            if (faqData.content && faqData.content.items && Array.isArray(faqData.content.items)) {
+                console.log(`📝 ${faqData.content.items.length} FAQ items in nested structure`);
+
+                faqData.content.items.forEach((item, index) => {
+                    const tabNumber = index + 1;
+                    const faqTab = document.querySelector(`[data-w-tab="Tab ${tabNumber}"].single-faq-accordion-wrap`);
+
+                    if (faqTab) {
+                        // Update question
+                        const questionEl = faqTab.querySelector('.faq-question');
+                        if (questionEl && item.question) {
+                            const questionText = item.question.startsWith('Q:') ? item.question : `Q: ${item.question}`;
+                            questionEl.textContent = questionText;
+                            questionEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+                        }
+
+                        // Update answer
+                        const answerEl = faqTab.querySelector('.faq-answer');
+                        if (answerEl && item.answer) {
+                            answerEl.textContent = item.answer;
+                            answerEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+                        }
+
+                        console.log(`✅ Updated FAQ ${tabNumber} from nested structure`);
+                    }
+                });
             }
         }
 
@@ -517,11 +666,19 @@
         });
     }
 
-    // Initialize when DOM is ready
+    // Initialize when DOM is ready - with delay to let language manager run first
+    function initializeWithDelay() {
+        // Wait a bit to ensure unified-language-manager.js has processed
+        setTimeout(() => {
+            console.log('🚀 Starting home integration after language manager');
+            loadHomePageData();
+        }, 1000); // 1 second delay to ensure language manager finishes
+    }
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadHomePageData);
+        document.addEventListener('DOMContentLoaded', initializeWithDelay);
     } else {
-        loadHomePageData();
+        initializeWithDelay();
     }
 
     // ==================== FEATURED COURSES SECTION ====================
