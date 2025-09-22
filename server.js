@@ -8202,12 +8202,19 @@ app.get('/api/nd/home-page', async (req, res) => {
     rows.forEach(row => {
       const content = row.content || {};
 
-      response.data[row.section_key] = {
-        visible: row.visible,
-        type: row.section_type,
-        content: content,
-        animations_enabled: row.animations_enabled !== false
-      };
+      // Check if content already has the full structure (visible, type, content)
+      if (content.visible !== undefined && content.type && content.content) {
+        // Content is already properly structured, use it directly
+        response.data[row.section_key] = content;
+      } else {
+        // Content is just the inner data, wrap it properly
+        response.data[row.section_key] = {
+          visible: row.visible,
+          type: row.section_type,
+          content: content,
+          animations_enabled: row.animations_enabled !== false
+        };
+      }
     });
 
     res.json(response);
@@ -10086,6 +10093,60 @@ app.get('/api/fix-nd-home-schema', async (req, res) => {
     res.json({
       success: true,
       message: 'nd_home schema fixed successfully',
+      columns: columns
+    });
+
+  } catch (error) {
+    console.error('❌ Schema fix failed:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Schema fix failed',
+      message: error.message
+    });
+  }
+});
+
+// ==================== SCHEMA FIX FOR COURSES PAGE ====================
+app.get('/api/fix-nd-courses-page-schema', async (req, res) => {
+  try {
+    console.log('🔧 Fixing nd_courses_page table schema...');
+
+    // Add the missing section_type column
+    try {
+      await queryDatabase(`
+        ALTER TABLE nd_courses_page
+        ADD COLUMN IF NOT EXISTS section_type VARCHAR(100)
+      `);
+      console.log('✅ Added section_type column to nd_courses_page');
+    } catch (error) {
+      console.log('Section_type column might already exist:', error.message);
+    }
+
+    // Update section_type from section_name if needed
+    try {
+      await queryDatabase(`
+        UPDATE nd_courses_page
+        SET section_type = section_name
+        WHERE section_type IS NULL AND section_name IS NOT NULL
+      `);
+      console.log('✅ Populated section_type from section_name');
+    } catch (error) {
+      console.log('Update section_type error:', error.message);
+    }
+
+    // Verify the table structure
+    const columns = await queryDatabase(`
+      SELECT column_name, data_type, is_nullable
+      FROM information_schema.columns
+      WHERE table_name = 'nd_courses_page'
+      ORDER BY ordinal_position
+    `);
+
+    console.log('✅ nd_courses_page table schema fixed');
+
+    res.json({
+      success: true,
+      message: 'nd_courses_page schema fixed successfully',
       columns: columns
     });
 
