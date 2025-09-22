@@ -5,7 +5,7 @@ const BlogIntegration = {
     // Configuration
     config: {
         apiBaseUrl: window.location.hostname === 'localhost'
-            ? 'http://localhost:3000'
+            ? 'http://localhost:1337'
             : 'https://aistudio555jamstack-production.up.railway.app',
         postsPerPage: 9,
         currentPage: 1,
@@ -66,7 +66,7 @@ const BlogIntegration = {
     },
 
     // Build API URL with locale parameter
-    getApiUrl: function(endpoint = '/api/nd/blog') {
+    getApiUrl: function(endpoint = '/api/blog-posts') {
         const locale = this.getCurrentLocale();
         const url = new URL(endpoint, this.config.apiBaseUrl);
         url.searchParams.set('locale', locale);
@@ -98,10 +98,11 @@ const BlogIntegration = {
             console.log('Current locale:', this.getCurrentLocale());
 
             // Use the new API URL with locale support
-            const apiUrl = this.getApiUrl('/api/nd/blog');
+            const apiUrl = this.getApiUrl('/api/blog-posts');
             const url = new URL(apiUrl);
-            url.searchParams.set('page', page);
-            url.searchParams.set('limit', this.config.postsPerPage);
+            // Note: Our API doesn't currently support pagination, so we'll get all posts
+            // url.searchParams.set('page', page);
+            // url.searchParams.set('limit', this.config.postsPerPage);
 
             console.log('Fetching from URL:', url.toString());
             const response = await fetch(url.toString());
@@ -127,9 +128,29 @@ const BlogIntegration = {
             }
 
             if (posts.length === 0) {
-                console.log('No posts found, displaying placeholder content');
-                this.displayPlaceholderContent();
+                console.log('No posts found, attempting to display Hebrew blog posts by API call...');
+                console.log('Current locale:', this.getCurrentLocale());
+                console.log('API URL attempted:', url.toString());
+
+                // Try direct API call for debugging
+                fetch(`${this.config.apiBaseUrl}/api/blog-posts?locale=${this.getCurrentLocale()}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        console.log('Direct API call result:', data);
+                        if (data.success && data.data && data.data.length > 0) {
+                            console.log('Found posts via direct call, rendering...');
+                            this.renderBlogPosts(data.data);
+                        } else {
+                            console.log('Still no posts, displaying placeholder content');
+                            this.displayPlaceholderContent();
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Direct API call failed:', err);
+                        this.displayPlaceholderContent();
+                    });
             } else {
+                console.log(`Found ${posts.length} posts for ${this.getCurrentLocale()}, rendering...`);
                 this.renderBlogPosts(posts);
             }
 
@@ -211,17 +232,29 @@ const BlogIntegration = {
             : this.getRandomImage();
 
         // Ensure we never have template placeholders in our data
+        const locale = this.getCurrentLocale();
+        const detailUrl = `blog-detail.html?id=${post.id}&locale=${locale}`;
+
+        console.log(`Post ${post.id} URL debug:`, {
+            'post.url': post.url,
+            'post.url type': typeof post.url,
+            'is null?': post.url === null,
+            'is empty?': post.url === '',
+            'is falsy?': !post.url,
+            'generated URL': detailUrl
+        });
+
         const safePost = {
             id: post.id || 'default-id',
             title: (post.title || 'Default Title').replace(/\{\{.*?\}\}/g, 'Default Title'),
             author: (post.author || 'Default Author').replace(/\{\{.*?\}\}/g, 'Default Author'),
             excerpt: (post.excerpt || 'Default description').replace(/\{\{.*?\}\}/g, 'Default description'),
-            url: post.url || '#'
+            url: post.url && post.url !== '' && post.url !== '#' ? post.url : detailUrl
         };
 
         const cardHtml = `
             <div class="uniform-card">
-                <a href="${safePost.url}" class="uniform-card-image-link" target="_blank" rel="noopener noreferrer">
+                <a href="${safePost.url}" class="uniform-card-image-link">
                     <img src="${imageUrl}" loading="lazy" alt="${safePost.title}" class="uniform-card-image" onerror="this.src='${this.config.defaultImages[0]}'">
                 </a>
                 <div class="uniform-card-content">
@@ -237,11 +270,11 @@ const BlogIntegration = {
                             <div class="uniform-card-author-name">${safePost.author}</div>
                         </div>
                     </div>
-                    <a href="${safePost.url}" class="uniform-card-title" target="_blank" rel="noopener noreferrer">${safePost.title}</a>
+                    <a href="${safePost.url}" class="uniform-card-title">${safePost.title}</a>
                     <div class="uniform-card-divider"></div>
                     <p class="uniform-card-description">${safePost.excerpt}</p>
                     <div class="uniform-card-action">
-                        <a href="${safePost.url}" class="uniform-card-button" target="_blank" rel="noopener noreferrer">
+                        <a href="${safePost.url}" class="uniform-card-button">
                             <div class="uniform-card-button-text">Read Full Article</div>
                             <div class="uniform-card-button-arrow"></div>
                         </a>
@@ -263,11 +296,15 @@ const BlogIntegration = {
     // Fallback blog card creation (original method)
     createFallbackBlogCard: function(post, index) {
         const categoryDisplay = this.config.categories[post.category] || this.formatCategory(post.category);
-        const imageUrl = post.image.startsWith('http') ? post.image : post.image;
+        const imageUrl = post.image && post.image.startsWith('http') ? post.image : this.getRandomImage();
+        const locale = this.getCurrentLocale();
+        const detailUrl = `blog-detail.html?id=${post.id}&locale=${locale}`;
+
+        console.log(`Fallback card for post ${post.id}: URL "${post.url}" -> using "${detailUrl}"`);
 
         const cardHtml = `
             <div class="main-blog-single">
-                <a href="#" class="main-blog-image-link w-inline-block" data-post-id="${post.id}">
+                <a href="${detailUrl}" class="main-blog-image-link w-inline-block">
                     <img src="${imageUrl}" loading="lazy" alt="${post.title}" class="main-blog-image" onerror="this.src='${this.config.defaultImages[0]}'">
                 </a>
                 <div class="main-blog-typography">
@@ -283,11 +320,11 @@ const BlogIntegration = {
                             <div class="blog-card-author-name">${post.author}</div>
                         </div>
                     </div>
-                    <a href="#" class="blog-post-name" data-post-id="${post.id}">${post.title}</a>
+                    <a href="${detailUrl}" class="blog-post-name">${post.title}</a>
                     <div class="main-blog-line"></div>
                     <p class="main-blog-description-text">${post.excerpt || this.truncateText(post.content, 150)}</p>
                     <div class="blog-card-link-wrap">
-                        <a href="#" class="blog-card-link w-inline-block" data-post-id="${post.id}">
+                        <a href="${detailUrl}" class="blog-card-link w-inline-block">
                             <div class="blog-card-link-text">Read this Article</div>
                             <div class="blog-card-link-arrow"></div>
                         </a>
@@ -308,9 +345,10 @@ const BlogIntegration = {
 
     // Display placeholder content when no posts are available
     displayPlaceholderContent: function() {
+        console.log('⚠️ WARNING: Using placeholder content - real Hebrew blog posts not loaded');
         const placeholderPosts = [
             {
-                id: 1,
+                id: 10, // Use real Hebrew blog post IDs
                 title: "The Future of AI in Education: Transforming How We Learn",
                 excerpt: "Explore how artificial intelligence is revolutionizing education through personalized learning paths, intelligent tutoring systems, and adaptive assessments.",
                 author: "Sarah Chen",

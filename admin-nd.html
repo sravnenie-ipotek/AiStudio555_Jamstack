@@ -516,6 +516,7 @@
                 <button class="tab" data-tab="menu">Navigation</button>
                 <button class="tab" data-tab="footer">Footer</button>
                 <button class="tab" data-tab="settings">Settings</button>
+                <button class="tab" data-tab="database">📊 Database Tables</button>
             </div>
 
             <!-- Search Feature -->
@@ -1594,6 +1595,143 @@
                 </div>
             </div>
 
+            <!-- Database Tables Section -->
+            <div class="content-section" id="database">
+                <div class="section-header">
+                    <div class="section-title">📊 Database Tables Reference</div>
+                    <p style="color: #666; margin-top: 5px;">Each page/screen uses specific database tables for content management</p>
+                </div>
+
+                <div class="form-group" style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="color: #2d3748; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">🏠 Home Page</h3>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="margin-bottom: 10px;"><strong>Table:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_home</code></p>
+                        <p style="margin-bottom: 10px;"><strong>API Endpoint:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/home-page</code></p>
+                        <p style="margin-bottom: 10px;"><strong>Sections:</strong> hero, navigation, features, course_categories, courses, stats, pricing, awards, faq, process, testimonials, testimonials_data, contact, footer</p>
+                        <p><strong>Language Columns:</strong> content_en, content_ru, content_he</p>
+                    </div>
+                </div>
+
+                <div class="form-group" style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="color: #2d3748; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">📚 Courses Page</h3>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="margin-bottom: 10px;"><strong>UI Table:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_courses_page</code></p>
+                        <p style="margin-bottom: 10px;"><strong>Data Table:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_courses</code></p>
+                        <p style="margin-bottom: 10px;"><strong>API Endpoints:</strong></p>
+                        <ul style="margin-left: 20px; list-style-type: disc;">
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/courses-page</code> - UI translations</li>
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/courses</code> - Course data</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Language Support:</strong> UI elements and course data both support EN/RU/HE</p>
+                    </div>
+                </div>
+
+                <div class="form-group" style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="color: #2d3748; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">📖 Course Details Page</h3>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="margin-bottom: 10px;"><strong>UI Table:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_course_details_page</code></p>
+                        <p style="margin-bottom: 10px;"><strong>Data Table:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_courses</code> (single course)</p>
+                        <p style="margin-bottom: 10px;"><strong>API Endpoints:</strong></p>
+                        <ul style="margin-left: 20px; list-style-type: disc;">
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/course-details-page</code> - UI translations</li>
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/courses/:id</code> - Single course data</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-group" style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="color: #2d3748; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">💰 Pricing Page</h3>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="margin-bottom: 10px;"><strong>Table:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_pricing_page</code></p>
+                        <p style="margin-bottom: 10px;"><strong>API Endpoint:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/pricing-page</code></p>
+                        <p><strong>Content:</strong> Pricing plans, features, FAQ specific to pricing</p>
+                    </div>
+                </div>
+
+                <div class="form-group" style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="color: #2d3748; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">👨‍🏫 Teachers Page</h3>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="margin-bottom: 10px;"><strong>UI Table:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_teachers_page</code></p>
+                        <p style="margin-bottom: 10px;"><strong>Data Table:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_teachers</code></p>
+                        <p style="margin-bottom: 10px;"><strong>API Endpoints:</strong></p>
+                        <ul style="margin-left: 20px; list-style-type: disc;">
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/teachers-page</code> - UI translations</li>
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/teachers</code> - Teacher data</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-group" style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="color: #2d3748; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">🎯 Career Center & Orientation</h3>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="margin-bottom: 10px;"><strong>Tables:</strong></p>
+                        <ul style="margin-left: 20px; margin-bottom: 10px; list-style-type: disc;">
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_career_center_page</code></li>
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_career_orientation_page</code></li>
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_career_center_platform_page</code></li>
+                        </ul>
+                        <p style="margin-bottom: 10px;"><strong>API Endpoints:</strong></p>
+                        <ul style="margin-left: 20px; list-style-type: disc;">
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/career-center-page</code></li>
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/career-orientation-page</code></li>
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/career-center-platform-page</code></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-group" style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="color: #2d3748; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">ℹ️ About & Contact Pages</h3>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="margin-bottom: 10px;"><strong>Tables:</strong></p>
+                        <ul style="margin-left: 20px; margin-bottom: 10px; list-style-type: disc;">
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_about_page</code></li>
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_contact_page</code></li>
+                        </ul>
+                        <p style="margin-bottom: 10px;"><strong>API Endpoints:</strong></p>
+                        <ul style="margin-left: 20px; list-style-type: disc;">
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/about-page</code></li>
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/contact-page</code></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-group" style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="color: #2d3748; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">📝 Blog</h3>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="margin-bottom: 10px;"><strong>UI Table:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_blog_page</code></p>
+                        <p style="margin-bottom: 10px;"><strong>Data Table:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_blog_posts</code></p>
+                        <p style="margin-bottom: 10px;"><strong>API Endpoints:</strong></p>
+                        <ul style="margin-left: 20px; list-style-type: disc;">
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/blog-page</code> - UI translations</li>
+                            <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">/api/nd/blog-posts</code> - Blog posts data</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-group" style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="color: #2d3748; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">🔧 Shared Components</h3>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #764ba2;">
+                        <p style="margin-bottom: 10px;"><strong>Navigation Menu:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_menu</code></p>
+                        <p style="margin-bottom: 10px;"><strong>Footer:</strong> <code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">nd_footer</code></p>
+                        <p style="margin-bottom: 10px;"><strong>Used on:</strong> All pages</p>
+                        <p><strong>Note:</strong> These components are shared across all pages and managed separately</p>
+                    </div>
+                </div>
+
+                <div style="background: #fff5f5; border: 2px solid #fed7d7; padding: 20px; border-radius: 12px; margin-top: 30px;">
+                    <h4 style="color: #c53030; margin-bottom: 15px;">⚠️ Important Notes:</h4>
+                    <ul style="margin-left: 20px; color: #742a2a; line-height: 1.8;">
+                        <li>All tables use <strong>JSONB columns</strong> for flexible content structure</li>
+                        <li>Language columns: <code>content_en</code>, <code>content_ru</code>, <code>content_he</code></li>
+                        <li>All content supports multi-language (EN/RU/HE)</li>
+                        <li>Hebrew (HE) requires RTL layout support</li>
+                        <li>Use <code>preview=true</code> parameter to see unpublished changes</li>
+                        <li>Changes are immediate - no build process required</li>
+                        <li>Database: PostgreSQL on Railway cloud platform</li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -1619,6 +1757,20 @@
             en: {
                 title: "🎨 New Design Content Manager",
                 subtitle: "Manage content for the new design with visibility controls and multi-language support",
+                blogTable: {
+                    title: "Blog Post",
+                    author: "Author",
+                    category: "Category",
+                    status: "Status",
+                    published: "Published",
+                    actions: "Actions",
+                    edit: "Edit",
+                    view: "View",
+                    delete: "Delete",
+                    search: "Search by title, author, category...",
+                    addNew: "Add New Blog Post",
+                    refresh: "Refresh"
+                },
                 tabs: {
                     home: "Home Page",
                     courses: "Courses",
@@ -1727,6 +1879,20 @@
             ru: {
                 title: "🎨 Менеджер Контента Нового Дизайна",
                 subtitle: "Управление контентом для нового дизайна с контролем видимости и мультиязычной поддержкой",
+                blogTable: {
+                    title: "Запись блога",
+                    author: "Автор",
+                    category: "Категория",
+                    status: "Статус",
+                    published: "Опубликовано",
+                    actions: "Действия",
+                    edit: "Редактировать",
+                    view: "Просмотр",
+                    delete: "Удалить",
+                    search: "Поиск по заголовку, автору, категории...",
+                    addNew: "Добавить новую запись",
+                    refresh: "Обновить"
+                },
                 tabs: {
                     home: "Главная",
                     courses: "Курсы",
@@ -5959,7 +6125,7 @@
         // Load blog posts in Teachers tab
         async function loadBlogPostsInTeachers() {
             try {
-                const response = await fetch(`http://localhost:3000/api/blog-posts?admin=true`);
+                const response = await fetch(`http://localhost:3000/api/blog-posts?admin=true&locale=${currentLang}`);
                 const result = await response.json();
 
                 if (result.success && result.data) {
@@ -6411,8 +6577,8 @@
 
         async function loadBlogAdmin() {
             try {
-                console.log('🔄 Loading blog posts for BlogAdmin tab...');
-                const response = await fetch(`http://localhost:3000/api/blog-posts?admin=true`);
+                console.log(`🔄 Loading blog posts for BlogAdmin tab in ${currentLang}...`);
+                const response = await fetch(`http://localhost:3000/api/blog-posts?admin=true&locale=${currentLang}`);
                 const result = await response.json();
 
                 if (result.success && result.data) {

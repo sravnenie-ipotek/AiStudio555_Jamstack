@@ -9,7 +9,7 @@
 
     // Configuration
     const API_BASE_URL = window.location.hostname === 'localhost'
-        ? 'https://aistudio555jamstack-production.up.railway.app'
+        ? 'http://localhost:1337'
         : 'https://aistudio555jamstack-production.up.railway.app';
 
     // Get current language from URL or default to 'en'
@@ -531,7 +531,7 @@
         try {
             console.log('🎯 Loading featured courses from API...');
 
-            const response = await fetch(`${API_BASE_URL}/api/courses?featured=true&limit=8`);
+            const response = await fetch(`${API_BASE_URL}/api/nd/courses?featured=true&limit=8`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch featured courses: ${response.status}`);
@@ -545,17 +545,18 @@
                 // Transform the API response to match expected format
                 const transformedCourses = data.data.map(course => ({
                     id: course.id,
-                    title: course.attributes.title,
-                    description: course.attributes.description,
-                    category: course.attributes.category,
-                    price: course.attributes.price,
-                    duration: course.attributes.duration,
-                    lessons_count: course.attributes.lessons,
-                    rating: course.attributes.rating,
+                    title: course.title,
+                    description: course.description,
+                    category: course.category,
+                    price: course.price,
+                    duration: course.duration,
+                    lessons_count: course.lessons_count,
+                    rating: course.rating,
+                    image: course.image,
                     url: `detail_courses.html?id=${course.id}`
                 }));
 
-                await populateFeaturedCourses(transformedCourses);
+                await populateFeaturedCourses({ courses: transformedCourses });
                 setupCourseTabFiltering([]);
             } else {
                 console.warn('⚠️ No featured courses data found');

@@ -11,7 +11,7 @@ class LanguageManager {
         this.contentCache = {};
         this.isLoading = false;
         this.apiBaseUrl = window.location.hostname === 'localhost'
-            ? 'http://localhost:3000'
+            ? 'http://localhost:1337'
             : 'https://aistudio555jamstack-production.up.railway.app';
 
         // Track translation success rate for debugging
@@ -362,10 +362,23 @@ class LanguageManager {
         console.log('[LanguageManager] Updating page content for locale:', locale);
         console.log('[LanguageManager] Available data sections:', Object.keys(data.data || {}));
 
+        // Transform array-based API responses (like teachers page) to object format
+        let processedData = data.data;
+        if (Array.isArray(data.data)) {
+            console.log('[LanguageManager] Converting array-based data to object format');
+            processedData = {};
+            data.data.forEach(section => {
+                if (section.section_name && section.content) {
+                    processedData[section.section_name] = { content: section.content };
+                }
+            });
+            console.log('[LanguageManager] Transformed data sections:', Object.keys(processedData));
+        }
+
         // Update all elements with data-i18n attribute
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.dataset.i18n;
-            const value = this.getTranslation(data.data, key, locale);
+            const value = this.getTranslation(processedData, key, locale);
 
             if (value) {
                 this.translationStats.success++;
@@ -503,7 +516,14 @@ class LanguageManager {
         const featuresMappings = {
             'features.content.subtitle': ['features.content.subtitle', 'about.content.subtitle', 'stats.content.mentor.title'],
             'features.content.title': ['features.content.title', 'features.content.content.title'],
-            'features.content.description': ['features.content.description', 'features.content.content.description']
+            'features.content.description': ['features.content.description', 'features.content.content.description'],
+            // Add features items mappings
+            'features.content.items.0.title': ['features.content.items.0.title', 'features.items.0.title'],
+            'features.content.items.0.description': ['features.content.items.0.description', 'features.items.0.description'],
+            'features.content.items.1.title': ['features.content.items.1.title', 'features.items.1.title'],
+            'features.content.items.1.description': ['features.content.items.1.description', 'features.items.1.description'],
+            'features.content.items.2.title': ['features.content.items.2.title', 'features.items.2.title'],
+            'features.content.items.2.description': ['features.content.items.2.description', 'features.items.2.description']
         };
 
         // COURSE CATEGORIES MAPPINGS
@@ -542,6 +562,103 @@ class LanguageManager {
             'stats.content.mentor.description': ['stats.content.mentor.description', 'stats.content.content.mentor.description']
         };
 
+        // PRICING MAPPINGS
+        const pricingMappings = {
+            'pricing.content.plans.annual.period': ['pricing.content.plans.1.period', 'pricing.content.plans[1].period'],
+            'pricing.content.plans.monthly.period': ['pricing.content.plans.0.period', 'pricing.content.plans[0].period'],
+            'pricing.content.plans.annual.price': ['pricing.content.plans.1.price', 'pricing.content.plans[1].price'],
+            'pricing.content.plans.monthly.price': ['pricing.content.plans.0.price', 'pricing.content.plans[0].price'],
+            'pricing.content.plans.annual.name': ['pricing.content.plans.1.name', 'pricing.content.plans[1].name'],
+            'pricing.content.plans.monthly.name': ['pricing.content.plans.0.name', 'pricing.content.plans[0].name']
+        };
+
+        // FAQ MAPPINGS - Fix array-based FAQ items
+        const faqMappings = {
+            'faq.content.content.items.0.question': ['faq.content.content.items.0.question', 'faq.content.items.0.question'],
+            'faq.content.content.items.0.answer': ['faq.content.content.items.0.answer', 'faq.content.items.0.answer'],
+            'faq.content.content.items.1.question': ['faq.content.content.items.1.question', 'faq.content.items.1.question'],
+            'faq.content.content.items.1.answer': ['faq.content.content.items.1.answer', 'faq.content.items.1.answer'],
+            'faq.content.content.items.2.question': ['faq.content.content.items.2.question', 'faq.content.items.2.question'],
+            'faq.content.content.items.2.answer': ['faq.content.content.items.2.answer', 'faq.content.items.2.answer'],
+            'faq.content.content.items.3.question': ['faq.content.content.items.3.question', 'faq.content.items.3.question'],
+            'faq.content.content.items.3.answer': ['faq.content.content.items.3.answer', 'faq.content.items.3.answer'],
+            'faq.content.content.items.4.question': ['faq.content.content.items.4.question', 'faq.content.items.4.question'],
+            'faq.content.content.items.4.answer': ['faq.content.content.items.4.answer', 'faq.content.items.4.answer']
+        };
+
+        // PROCESS/STEPS MAPPINGS
+        const processMappings = {
+            'process.content.steps.0.number': ['process.content.steps.0.number', 'process.content.content.steps.0.number'],
+            'process.content.steps.0.title': ['process.content.steps.0.title', 'process.content.content.steps.0.title'],
+            'process.content.steps.0.details': ['process.content.steps.0.details', 'process.content.content.steps.0.details'],
+            'process.content.steps.1.number': ['process.content.steps.1.number', 'process.content.content.steps.1.number'],
+            'process.content.steps.1.title': ['process.content.steps.1.title', 'process.content.content.steps.1.title'],
+            'process.content.steps.1.description': ['process.content.steps.1.description', 'process.content.content.steps.1.description'],
+            'process.content.steps.2.number': ['process.content.steps.2.number', 'process.content.content.steps.2.number'],
+            'process.content.steps.2.title': ['process.content.steps.2.title', 'process.content.content.steps.2.title'],
+            'process.content.steps.2.description': ['process.content.steps.2.description', 'process.content.content.steps.2.description']
+        };
+
+        // AWARDS MAPPINGS
+        const awardsMappings = {
+            'awards.content.content.items.0.title': ['awards.content.content.items.0.title', 'awards.content.items.0.title'],
+            'awards.content.content.items.0.description': ['awards.content.content.items.0.description', 'awards.content.items.0.description'],
+            'awards.content.content.items.1.title': ['awards.content.content.items.1.title', 'awards.content.items.1.title'],
+            'awards.content.content.items.1.description': ['awards.content.content.items.1.description', 'awards.content.items.1.description'],
+            'awards.content.content.items.2.title': ['awards.content.content.items.2.title', 'awards.content.items.2.title'],
+            'awards.content.content.items.2.description': ['awards.content.content.items.2.description', 'awards.content.items.2.description'],
+            'awards.content.content.items.3.title': ['awards.content.content.items.3.title', 'awards.content.items.3.title'],
+            'awards.content.content.items.3.description': ['awards.content.content.items.3.description', 'awards.content.items.3.description']
+        };
+
+        // TESTIMONIALS MAPPINGS
+        const testimonialsMappings = {
+            'testimonials.content.title': ['testimonials.content.title', 'testimonials.title', 'testimonials.content.content.title'],
+            'testimonials.content.description': ['testimonials.content.description', 'testimonials.description', 'testimonials.content.content.description'],
+            'testimonials.content.content.title': ['testimonials.content.title', 'testimonials.title', 'testimonials.content.content.title'],
+            'testimonials.content.content.description': ['testimonials.content.description', 'testimonials.description', 'testimonials.content.content.description'],
+            'testimonials_data.content.items.0.title': ['testimonials_data.content.items.0.title', 'testimonials_data.items.0.title'],
+            'testimonials_data.content.items.0.text': ['testimonials_data.content.items.0.text', 'testimonials_data.items.0.text'],
+            'testimonials_data.content.items.0.author': ['testimonials_data.content.items.0.author', 'testimonials_data.items.0.author'],
+            'testimonials_data.content.content.4.text': ['testimonials_data.content.content.4.text', 'testimonials_data.content.4.text'],
+            'testimonials_data.content.content.5.text': ['testimonials_data.content.content.5.text', 'testimonials_data.content.5.text'],
+            'testimonials_data.content.content.6.text': ['testimonials_data.content.content.6.text', 'testimonials_data.content.6.text'],
+            'testimonials_data.content.4.text': ['testimonials_data.content.4.text', 'testimonials_data.content.content.4.text'],
+            'testimonials_data.content.5.text': ['testimonials_data.content.5.text', 'testimonials_data.content.content.5.text'],
+            'testimonials_data.content.6.text': ['testimonials_data.content.6.text', 'testimonials_data.content.content.6.text']
+        };
+
+        // CONTACT MAPPINGS
+        const contactMappings = {
+            'contact.content.title': ['contact.content.title', 'contact.content.content.title'],
+            'contact.content.description': ['contact.content.description', 'contact.content.content.description'],
+            'contact.content.success_message': ['contact.content.success_message', 'contact.content.content.success_message'],
+            'contact.content.error_message': ['contact.content.error_message', 'contact.content.content.error_message']
+        };
+
+        // FOOTER MENU ITEMS MAPPINGS
+        const footerMappings = {
+            'footer.content.menus.0.items.3.text': ['footer.content.menus.0.items.3.text', 'footer.content.content.links.course_single'],
+            'footer.content.menus.0.items.5.text': ['footer.content.menus.0.items.5.text', 'footer.content.content.links.pricing_single'],
+            'footer.content.menus.0.items.7.text': ['footer.content.menus.0.items.7.text', 'footer.content.content.links.blog_single'],
+            'footer.content.menus.2.items.0.text': ['footer.content.menus.2.items.0.text', 'footer.content.content.links.404_not_found'],
+            'footer.content.menus.2.items.1.text': ['footer.content.menus.2.items.1.text', 'footer.content.content.links.password_protected'],
+            'footer.content.menus.2.items.2.text': ['footer.content.menus.2.items.2.text', 'footer.content.content.links.changelog'],
+            'footer.content.menus.2.items.3.text': ['footer.content.menus.2.items.3.text', 'footer.content.content.links.license'],
+            'footer.content.menus.2.items.4.text': ['footer.content.menus.2.items.4.text', 'footer.content.content.links.style_guide'],
+            'footer.content.menus.3.items.0.text': ['footer.content.menus.3.items.0.text', 'footer.content.content.links.sign_up'],
+            'footer.content.menus.3.items.1.text': ['footer.content.menus.3.items.1.text', 'footer.content.content.links.sign_in'],
+            'footer.content.menus.3.items.2.text': ['footer.content.menus.3.items.2.text', 'footer.content.content.links.forgot_password'],
+            'footer.content.menus.3.items.3.text': ['footer.content.menus.3.items.3.text', 'footer.content.content.links.reset_password'],
+            // Add newsletter and copyright mappings
+            'footer.content.copyright': ['footer.content.copyright', 'footer.copyright', 'footer.content.content.copyright'],
+            'footer.content.newsletter.label': ['footer.content.newsletter.label', 'footer.newsletter.label'],
+            'footer.content.newsletter.placeholder': ['footer.content.newsletter.placeholder', 'footer.newsletter.placeholder'],
+            'footer.content.newsletter.button': ['footer.content.newsletter.button', 'footer.newsletter.button'],
+            'footer.content.newsletter.success': ['footer.content.newsletter.success', 'footer.newsletter.success'],
+            'footer.content.newsletter.error': ['footer.content.newsletter.error', 'footer.newsletter.error']
+        };
+
         // Check all mapping collections
         const allMappings = Object.assign({},
             navMappings,
@@ -551,7 +668,14 @@ class LanguageManager {
             featuresMappings,
             courseCategoriesMappings,
             coursesMappings,
-            statsMappings
+            statsMappings,
+            pricingMappings,
+            faqMappings,
+            processMappings,
+            awardsMappings,
+            testimonialsMappings,
+            contactMappings,
+            footerMappings
         );
 
         if (allMappings[path]) {

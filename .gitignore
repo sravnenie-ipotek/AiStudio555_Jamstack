@@ -71,6 +71,7 @@ test-api-token.js
 
 # Test and Debug Files
 test-*.js
+test-*.html
 debug-*.js
 analyze-*.js
 verify-*.js
@@ -86,7 +87,34 @@ quick-*.js
 browser-*.js
 detailed-*.js
 dropdown-*.js
-qa-*.js
+qa-*.*
+ultrathink-*.js
+*-migration*.js
+*-migration*.sql
+fix-*.js
+fix-*.sql
+execute-*.js
+create-*.js
+capture-*.js
+detect-*.js
+migrate-*.js
+api-*.js
+simple-*.js
+targeted-*.js
+direct-*.js
+emergency-*.js
+railway-*.js
+insert_*.sql
+railway_*.sql
+*-executor.js
+*-endpoint.js
+*-test-*.html
+*-debug.html
+*-preview.html
+teacher-detail.html
+blog-detail.html
+teacher-card-designs.html
+teacher-cards-social.html
 
 # Screenshots and Images (except /images folder)
 *.png
@@ -107,9 +135,13 @@ css/career-orientation-cards.css
 css/custom-mobile-menu.css
 css/hebrew-dropdown-emergency-fix.css
 css/teachers-teachmeskills-style.css
+css/ai-studio-teacher-card.css
 
 # Temporary JS files
 js/teachers-teachmeskills-tabs.js
+js/ai-studio-teacher-card.js
+js/teachers-integration.js
+js/blog-detail-integration.js
 
 # NextJS test directory
 public/
@@ -117,3 +149,19 @@ Docs/nextJs/
 
 # Copy page directory
 copyPage/
+
+# Temporary folders
+strapi-fresh/
+
+# Report and documentation files
+*_REPORT.md
+*-COMPLETE.md
+*-summary.md
+permanent-*.md
+
+# Database files
+database.db
+temp-*.sql
+
+# Shell scripts
+*.sh
