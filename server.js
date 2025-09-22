@@ -10183,6 +10183,75 @@ app.get('/api/fix-nd-courses-page-schema', async (req, res) => {
   }
 });
 
+// ==================== DEBUG TABLE STRUCTURE ====================
+app.get('/api/debug-courses-table', async (req, res) => {
+  try {
+    const columns = await queryDatabase(`
+      SELECT column_name, data_type, is_nullable
+      FROM information_schema.columns
+      WHERE table_name = 'nd_courses_page'
+      ORDER BY ordinal_position
+    `);
+
+    res.json({
+      success: true,
+      table: 'nd_courses_page',
+      columns: columns
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// ==================== EMERGENCY SCHEMA FIX ====================
+app.get('/api/emergency-fix-courses', async (req, res) => {
+  try {
+    console.log('🚨 Emergency schema fix for nd_courses_page...');
+
+    // Check if column exists
+    const columnExists = await queryDatabase(`
+      SELECT column_name
+      FROM information_schema.columns
+      WHERE table_name = 'nd_courses_page' AND column_name = 'section_type'
+    `);
+
+    let columnAdded = false;
+    if (columnExists.length === 0) {
+      // Add the column
+      await queryDatabase(`
+        ALTER TABLE nd_courses_page
+        ADD COLUMN section_type VARCHAR(100)
+      `);
+      columnAdded = true;
+      console.log('✅ Added section_type column');
+    }
+
+    // Update section_type from section_name
+    await queryDatabase(`
+      UPDATE nd_courses_page
+      SET section_type = section_name
+      WHERE section_type IS NULL AND section_name IS NOT NULL
+    `);
+
+    res.json({
+      success: true,
+      message: 'Emergency fix completed',
+      columnAdded: columnAdded,
+      columnExists: columnExists.length > 0
+    });
+
+  } catch (error) {
+    console.error('❌ Emergency fix failed:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 // ==================== POPULATE ND_HOME FULL CONTENT ====================
 app.get('/api/populate-nd-home', async (req, res) => {
   try {
