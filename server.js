@@ -9885,6 +9885,7 @@ app.get('/api/migrate-nd-tables', async (req, res) => {
           id SERIAL PRIMARY KEY,
           section_key VARCHAR(100) UNIQUE NOT NULL,
           section_name VARCHAR(255),
+          section_type VARCHAR(100),
           content_en JSONB DEFAULT '{}',
           content_ru JSONB DEFAULT '{}',
           content_he JSONB DEFAULT '{}',
@@ -9996,6 +9997,28 @@ app.get('/api/migrate-nd-tables', async (req, res) => {
         console.error(`❌ Error creating ${tableName}:`, error.message);
         results.errors.push(`${tableName}: ${error.message}`);
       }
+    }
+
+    // 3.5. Update existing tables to add missing columns
+    console.log('🔧 Updating table schemas...');
+
+    // Add section_type column to nd_courses_page if missing
+    try {
+      await queryDatabase(`
+        ALTER TABLE nd_courses_page
+        ADD COLUMN IF NOT EXISTS section_type VARCHAR(100)
+      `);
+      console.log('✅ Added section_type column to nd_courses_page');
+
+      // Populate section_type from section_name where missing
+      await queryDatabase(`
+        UPDATE nd_courses_page
+        SET section_type = section_name
+        WHERE section_type IS NULL AND section_name IS NOT NULL
+      `);
+      console.log('✅ Populated section_type from section_name');
+    } catch (error) {
+      console.log('Schema update info:', error.message);
     }
 
     // 4. Add essential sample data for immediate functionality
