@@ -542,6 +542,7 @@ class LanguageManager {
             'buttons.sign_up_today': ['ui_elements.content.content.buttons.sign_up_today', 'ui_elements.content.buttons.sign_up_today', 'ui.content.buttons.sign_up_today'],
             'ui.content.buttons.read_more': ['ui_elements.content.content.content.buttons.read_more', 'ui.content.content.content.buttons.read_more', 'ui_elements.content.content.buttons.read_more', 'ui_elements.content.buttons.read_more', 'misc.content.read_more'],
             'ui.content.messages.no_items': ['ui.content.content.content.messages.no_items', 'ui.messages.no_items', 'misc.content.no_items_found', 'cart.content.content.no_items_found'],
+            'ui.content.messages.no_courses_found': ['ui.content.content.content.messages.no_courses_found', 'ui.messages.no_courses_found', 'misc.content.no_courses_found', 'courses.content.messages.no_courses_found'],
             'ui.content.messages.loading': ['ui.content.content.content.messages.loading', 'ui.messages.loading', 'misc.content.loading'],
             'ui.content.messages.error': ['ui.content.content.content.messages.error', 'ui.messages.error', 'misc.content.error'],
             'ui.content.languages.en': ['ui.content.content.content.languages.en', 'ui.languages.en'],

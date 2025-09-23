@@ -500,7 +500,17 @@
                                 container.appendChild(courseCard);
                             }
                         } else {
-                            container.innerHTML = '<div style="padding: 60px 40px; text-align: center; color: #999; font-size: 18px;">😔 No courses found in this category</div>';
+                            // Create element with data-i18n for translation (System 1)
+                            container.innerHTML = '<div style="padding: 60px 40px; text-align: center; color: #999; font-size: 18px;" data-i18n="ui.content.messages.no_courses_found">😔 No courses found in this category</div>';
+
+                            // Wait for translation to apply, then remove data-i18n (System 2 - DUAL-SYSTEM compliance)
+                            setTimeout(() => {
+                                const messageElement = container.querySelector('[data-i18n="ui.content.messages.no_courses_found"]');
+                                if (messageElement) {
+                                    console.log(`🔄 [DUAL-SYSTEM] Removing data-i18n from no-courses message`);
+                                    messageElement.removeAttribute('data-i18n');
+                                }
+                            }, 100);
                         }
 
                         // DUAL-SYSTEM: After filtering, remove data-i18n from new dynamic content
