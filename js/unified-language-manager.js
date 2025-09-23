@@ -11,7 +11,7 @@ class LanguageManager {
         this.contentCache = {};
         this.isLoading = false;
         this.apiBaseUrl = window.location.hostname === 'localhost'
-            ? 'http://localhost:1337'
+            ? 'http://localhost:3000'
             : 'https://aistudio555jamstack-production.up.railway.app';
 
         // Track translation success rate for debugging
@@ -183,8 +183,9 @@ class LanguageManager {
     attachLanguageSwitchers() {
         // Override the existing setActivePill function
         window.setActivePill = (element) => {
-            const lang = element.textContent.toLowerCase();
-            this.switchLanguage(lang);
+            // Use data-locale attribute if available, otherwise fall back to text content
+            const locale = element.dataset.locale || element.textContent.toLowerCase();
+            this.switchLanguage(locale);
 
             // Update visual state (original functionality)
             const allPills = document.querySelectorAll('.lang-pill, .mobile-lang-pill');
@@ -205,7 +206,7 @@ class LanguageManager {
      */
     shouldLoadContent() {
         // Check if page has dynamic content areas
-        return document.querySelector('[data-dynamic-content]') !== null;
+        return document.querySelector("[data-dynamic-content]") !== null || document.body.dataset.dynamicContent === "true";
     }
 
     /**
@@ -289,7 +290,7 @@ class LanguageManager {
         }
 
         try {
-            const url = `${this.apiBaseUrl}${endpoint}`;
+            const url = `${this.apiBaseUrl}${endpoint}&_t=${Date.now()}`;
             console.log('[LanguageManager] Fetching from:', url);
             const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -380,26 +381,49 @@ class LanguageManager {
             const key = element.dataset.i18n;
             const value = this.getTranslation(processedData, key, locale);
 
-            if (value) {
+            // Debug critical elements
+            if (key === 'testimonials.content.content.title' || key.includes('faq.content')) {
+                console.log(`[DOM Update Debug] ${key}:`, {
+                    hasValue: !!value,
+                    value: value,
+                    elementTag: element.tagName,
+                    currentText: element.textContent?.substring(0, 50)
+                });
+            }
+
+            if (value && value.trim()) {  // More robust value check
                 this.translationStats.success++;
-                if (element.tagName === 'IMG') {
-                    element.src = value;
-                    element.alt = this.getTranslation(data.data, `${key}_alt`, locale) || '';
-                } else if (element.tagName === 'A') {
-                    if (element.dataset.i18nHref) {
-                        element.href = this.getTranslation(data.data, element.dataset.i18nHref, locale);
-                    }
-                    if (element.dataset.i18nText) {
-                        element.textContent = this.getTranslation(data.data, element.dataset.i18nText, locale);
+
+                try {
+                    if (element.tagName === 'IMG') {
+                        element.src = value;
+                        element.alt = this.getTranslation(processedData, `${key}_alt`, locale) || '';
+                    } else if (element.tagName === 'A') {
+                        if (element.dataset.i18nHref) {
+                            element.href = this.getTranslation(processedData, element.dataset.i18nHref, locale);
+                        }
+                        if (element.dataset.i18nText) {
+                            element.textContent = this.getTranslation(processedData, element.dataset.i18nText, locale);
+                        } else {
+                            // Use textContent for better reliability
+                            element.textContent = value;
+                        }
                     } else {
-                        element.innerHTML = value;
+                        // Use textContent for better reliability and to avoid HTML injection issues
+                        element.textContent = value;
+
+                        // Debug critical elements
+                        if (key === 'testimonials.content.content.title') {
+                            console.log(`[DOM Update Success] ${key}: "${element.textContent}"`);
+                        }
                     }
-                } else {
-                    element.innerHTML = value;
+                } catch (error) {
+                    console.error(`[DOM Update Error] ${key}:`, error);
+                    this.translationStats.failed++;
                 }
             } else {
                 this.translationStats.failed++;
-                console.warn(`[Translation Missing] ${key}`);
+                console.warn(`[Translation Missing] ${key} - value: "${value}"`);
             }
         });
 
@@ -450,12 +474,22 @@ class LanguageManager {
             value = this.getExactPath(data, path);
             if (value) {
                 this.translationStats.fallback++;
+                console.log(`[Translation Fallback] ${key} -> ${path}: "${value}"`);
                 return value;
             }
         }
 
+        // Log missing translation for debugging
+        console.warn(`[Translation Missing] ${key} - tried paths:`, [key, ...mappedPaths]);
+
         // Try local translations as last resort
-        return this.getLocalizedText(key, locale);
+        const localValue = this.getLocalizedText(key, locale);
+        if (localValue) {
+            console.log(`[Translation Local] ${key}: "${localValue}"`);
+            return localValue;
+        }
+
+        return null;
     }
 
     /**
@@ -582,18 +616,18 @@ class LanguageManager {
 
         // FAQ MAPPINGS - Handle quadruple nesting from API response
         const faqMappings = {
-            'faq.content.content.items.0.question': ['faq.content.content.content.items.0.question', 'faq.content.content.items.0.question', 'faq.content.items.0.question'],
-            'faq.content.content.items.0.answer': ['faq.content.content.content.items.0.answer', 'faq.content.content.items.0.answer', 'faq.content.items.0.answer'],
-            'faq.content.content.items.1.question': ['faq.content.content.content.items.1.question', 'faq.content.content.items.1.question', 'faq.content.items.1.question'],
-            'faq.content.content.items.1.answer': ['faq.content.content.content.items.1.answer', 'faq.content.content.items.1.answer', 'faq.content.items.1.answer'],
-            'faq.content.content.items.2.question': ['faq.content.content.content.items.2.question', 'faq.content.content.items.2.question', 'faq.content.items.2.question'],
-            'faq.content.content.items.2.answer': ['faq.content.content.content.items.2.answer', 'faq.content.content.items.2.answer', 'faq.content.items.2.answer'],
-            'faq.content.content.items.3.question': ['faq.content.content.content.items.3.question', 'faq.content.content.items.3.question', 'faq.content.items.3.question'],
-            'faq.content.content.items.3.answer': ['faq.content.content.content.items.3.answer', 'faq.content.content.items.3.answer', 'faq.content.items.3.answer'],
-            'faq.content.content.items.4.question': ['faq.content.content.content.items.4.question', 'faq.content.content.items.4.question', 'faq.content.items.4.question'],
-            'faq.content.content.items.4.answer': ['faq.content.content.content.items.4.answer', 'faq.content.content.items.4.answer', 'faq.content.items.4.answer'],
-            'faq.content.content.title': ['faq.content.content.content.title', 'faq.content.content.title', 'faq.content.title'],
-            'faq.content.content.subtitle': ['faq.content.content.content.subtitle', 'faq.content.content.subtitle', 'faq.content.subtitle']
+            'faq.content.content.items.0.question': ['faq.content.items.0.question', 'faq.content.content.items.0.question'],
+            'faq.content.content.items.0.answer': ['faq.content.items.0.answer', 'faq.content.content.items.0.answer'],
+            'faq.content.content.items.1.question': ['faq.content.items.1.question', 'faq.content.content.items.1.question'],
+            'faq.content.content.items.1.answer': ['faq.content.items.1.answer', 'faq.content.content.items.1.answer'],
+            'faq.content.content.items.2.question': ['faq.content.items.2.question', 'faq.content.content.items.2.question'],
+            'faq.content.content.items.2.answer': ['faq.content.items.2.answer', 'faq.content.content.items.2.answer'],
+            'faq.content.content.items.3.question': ['faq.content.items.3.question', 'faq.content.content.items.3.question'],
+            'faq.content.content.items.3.answer': ['faq.content.items.3.answer', 'faq.content.content.items.3.answer'],
+            'faq.content.content.items.4.question': ['faq.content.items.4.question', 'faq.content.content.items.4.question'],
+            'faq.content.content.items.4.answer': ['faq.content.items.4.answer', 'faq.content.content.items.4.answer'],
+            'faq.content.content.title': ['faq.content.title', 'faq.content.content.title'],
+            'faq.content.content.subtitle': ['faq.content.subtitle', 'faq.content.content.subtitle']
         };
 
         // PROCESS/STEPS MAPPINGS - Handle quadruple nesting
@@ -623,16 +657,17 @@ class LanguageManager {
 
         // TESTIMONIALS MAPPINGS
         const testimonialsMappings = {
-            'testimonials.content.title': ['testimonials.content.title', 'testimonials.title', 'testimonials.content.content.title'],
-            'testimonials.content.description': ['testimonials.content.description', 'testimonials.description', 'testimonials.content.content.description'],
-            'testimonials.content.content.title': ['testimonials.content.title', 'testimonials.title', 'testimonials.content.content.title'],
-            'testimonials.content.content.description': ['testimonials.content.description', 'testimonials.description', 'testimonials.content.content.description'],
+            'testimonials.content.title': ['testimonials.content.title', 'testimonials.title'],
+            'testimonials.content.description': ['testimonials.content.description', 'testimonials.description'],
+            'testimonials.content.content.title': ['testimonials.content.title', 'testimonials.title', 'testimonials_meta.content.content.title', 'testimonials_meta.content.title'],
+            'testimonials.content.content.description': ['testimonials.content.description', 'testimonials.description', 'testimonials_meta.content.content.description', 'testimonials_meta.content.description'],
+            'testimonials.content.content.subtitle': ['testimonials.content.subtitle', 'testimonials.subtitle'],
             'testimonials_data.content.items.0.title': ['testimonials_data.content.items.0.title', 'testimonials_data.items.0.title'],
             'testimonials_data.content.items.0.text': ['testimonials_data.content.items.0.text', 'testimonials_data.items.0.text'],
             'testimonials_data.content.items.0.author': ['testimonials_data.content.items.0.author', 'testimonials_data.items.0.author'],
-            'testimonials_data.content.content.4.text': ['testimonials_data.content.content.4.text', 'testimonials_data.content.4.text'],
-            'testimonials_data.content.content.5.text': ['testimonials_data.content.content.5.text', 'testimonials_data.content.5.text'],
-            'testimonials_data.content.content.6.text': ['testimonials_data.content.content.6.text', 'testimonials_data.content.6.text'],
+            'testimonials_data.content.content.4.text': ['testimonials_data.content.content.content.4.text', 'testimonials_data.content.content.4.text', 'testimonials_data.content.4.text'],
+            'testimonials_data.content.content.5.text': ['testimonials_data.content.content.content.5.text', 'testimonials_data.content.content.5.text', 'testimonials_data.content.5.text'],
+            'testimonials_data.content.content.6.text': ['testimonials_data.content.content.content.6.text', 'testimonials_data.content.content.6.text', 'testimonials_data.content.6.text'],
             'testimonials_data.content.4.text': ['testimonials_data.content.4.text', 'testimonials_data.content.content.4.text'],
             'testimonials_data.content.5.text': ['testimonials_data.content.5.text', 'testimonials_data.content.content.5.text'],
             'testimonials_data.content.6.text': ['testimonials_data.content.6.text', 'testimonials_data.content.content.6.text']
@@ -671,7 +706,8 @@ class LanguageManager {
             'footer.content.phone': ['footer.content.content.content.phone', 'footer.content.content.phone'],
             'footer.content.contact_email': ['footer.content.content.content.contact_email', 'footer.content.content.email'],
             'footer.content.contact_prefix': ['footer.content.content.content.contact_prefix', 'footer.content.content.contact_prefix'],
-            'footer.content.address': ['footer.content.content.content.address', 'footer.content.content.address']
+            'footer.content.address': ['footer.content.content.content.address', 'footer.content.content.address'],
+            'footer.content.description': ['footer.content.content.description', 'footer.content.description']
         };
 
         // MISC/MISCELLANEOUS MAPPINGS - Handle triple nested content structure
@@ -744,7 +780,9 @@ class LanguageManager {
                 'testimonials.author1.name': 'David Kim',
                 'testimonials.author2.name': 'Tariq Ahmed',
                 'testimonials.author3.name': 'Nadia Khan',
-                'footer.company.zohacous': 'Zohacous'
+                'footer.company.zohacous': 'Zohacous',
+                'testimonials.content.content.subtitle': 'Testimonials',
+                'testimonials.content.content.title': 'What Our Students Say'
             },
             ru: {
                 learnMore: 'Узнать больше',
@@ -755,7 +793,9 @@ class LanguageManager {
                 'testimonials.author1.name': 'Давид Ким',
                 'testimonials.author2.name': 'Тарик Ахмед',
                 'testimonials.author3.name': 'Надия Хан',
-                'footer.company.zohacous': 'Зохакус'
+                'footer.company.zohacous': 'Зохакус',
+                'testimonials.content.content.subtitle': 'Отзывы',
+                'testimonials.content.content.title': 'Ваш путь обучения с нашими экспертами'
             },
             he: {
                 learnMore: 'למד עוד',
@@ -766,7 +806,9 @@ class LanguageManager {
                 'testimonials.author1.name': 'דיוויד קים',
                 'testimonials.author2.name': 'טאריק אחמד',
                 'testimonials.author3.name': 'נדיה חאן',
-                'footer.company.zohacous': 'זוהקוס'
+                'footer.company.zohacous': 'זוהקוס',
+                'testimonials.content.content.subtitle': 'המלצות',
+                'testimonials.content.content.title': 'מסע הלמידה שלך עם המומחים שלנו'
             }
         };
 

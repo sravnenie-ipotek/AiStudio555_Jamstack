@@ -9,7 +9,7 @@
 
     // API Configuration
     const API_BASE = window.location.hostname === 'localhost'
-        ? 'http://localhost:1337'
+        ? 'http://localhost:3000'
         : 'https://aistudio555jamstack-production.up.railway.app';
 
     // Static course images mapping by category
@@ -429,9 +429,103 @@
         }, 5000);
     }
 
+    // Fetch page UI translations
+    async function fetchPageTranslations(locale) {
+        try {
+            const url = `${API_BASE}/api/nd/course-details-page?locale=${locale}`;
+            console.log('🔍 Fetching page translations:', url);
+
+            const response = await fetch(url);
+            if (!response.ok) {
+                console.warn('Failed to fetch page translations');
+                return null;
+            }
+
+            const data = await response.json();
+            if (data.success && data.data) {
+                return data.data;
+            }
+            return data;
+        } catch (error) {
+            console.error('Error fetching page translations:', error);
+            return null;
+        }
+    }
+
+    // Apply page translations
+    function applyPageTranslations(translations) {
+        if (!translations) return;
+
+        console.log('📝 Applying page translations...');
+
+        // Apply translations to elements with data-i18n attributes
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            const keys = key.split('.');
+
+            let value = translations;
+            for (const k of keys) {
+                if (value && value[k]) {
+                    if (value[k].content && typeof value[k].content === 'object') {
+                        value = value[k].content;
+                    } else {
+                        value = value[k];
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            if (value && typeof value === 'string') {
+                element.textContent = value;
+            } else if (value && value.content && typeof value.content === 'string') {
+                element.textContent = value.content;
+            } else if (value && typeof value === 'object' && keys[keys.length - 1] in value) {
+                element.textContent = value[keys[keys.length - 1]];
+            }
+        });
+
+        // Update specific UI elements
+        if (translations.ui_elements && translations.ui_elements.content) {
+            const ui = translations.ui_elements.content;
+
+            // Update buttons
+            if (ui.buttons) {
+                const enrollButtons = document.querySelectorAll('.enroll-button, .primary-button');
+                enrollButtons.forEach(btn => {
+                    const textElements = btn.querySelectorAll('.primary-button-text-block');
+                    if (textElements.length > 0 && ui.buttons.enroll_now) {
+                        textElements.forEach(el => el.textContent = ui.buttons.enroll_now);
+                    }
+                });
+            }
+
+            // Update labels
+            if (ui.labels) {
+                const priceLabel = document.querySelector('.price-label');
+                if (priceLabel && ui.labels.price) priceLabel.textContent = ui.labels.price;
+
+                const levelLabel = document.querySelector('.level-label');
+                if (levelLabel && ui.labels.level) levelLabel.textContent = ui.labels.level;
+
+                const studentsLabel = document.querySelector('.students-label');
+                if (studentsLabel && ui.labels.students) studentsLabel.textContent = ui.labels.students;
+            }
+        }
+    }
+
     // Initialize on page load
     async function init() {
         console.log('🚀 Initializing Course Details Page...');
+
+        // Get current locale
+        const locale = localStorage.getItem('preferred_locale') || 'en';
+
+        // Fetch and apply page translations
+        const translations = await fetchPageTranslations(locale);
+        if (translations) {
+            applyPageTranslations(translations);
+        }
 
         const params = getUrlParams();
 

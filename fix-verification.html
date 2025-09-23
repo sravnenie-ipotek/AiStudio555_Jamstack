@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation Fix Verification</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .issue { margin: 20px 0; padding: 15px; border-left: 4px solid #007bff; background: #f8f9fa; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 4px; }
+        .pass { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .fail { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .loading { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        pre { background: #f1f3f4; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body data-page="home" data-dynamic-content="true">
+    <div class="container">
+        <h1>🔧 Translation Fix Verification</h1>
+        <p>Testing the specific issues reported in the QA test:</p>
+
+        <div class="issue">
+            <h3>Issue 1: Testimonials Title</h3>
+            <p><strong>Problem:</strong> Showing English "What Our Students Say" instead of Russian translation</p>
+            <div class="result loading" id="issue1-result">Testing...</div>
+            <p><strong>Element:</strong> <span data-i18n="testimonials.content.content.title">Your Learning Journey With Our Experts.</span></p>
+        </div>
+
+        <div class="issue">
+            <h3>Issue 2: FAQ Questions/Answers</h3>
+            <p><strong>Problem:</strong> Russian FAQ showing as "❌" (not translated correctly)</p>
+            <div class="result loading" id="issue2-result">Testing...</div>
+            <p><strong>FAQ Question 1:</strong> <span data-i18n="faq.content.content.items.0.question">Q: What types of courses are available on Zohacous?</span></p>
+            <p><strong>FAQ Answer 1:</strong> <span data-i18n="faq.content.content.items.0.answer">Zohacous offers a wide range of tech courses...</span></p>
+        </div>
+
+        <div id="debug-log">
+            <h3>Debug Log</h3>
+            <pre id="log-content">Initializing...</pre>
+        </div>
+    </div>
+
+    <script src="js/unified-language-manager.js"></script>
+    <script>
+        let logContent = '';
+        function log(message) {
+            logContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+            document.getElementById('log-content').textContent = logContent;
+            console.log(message);
+        }
+
+        // Test the fixes
+        setTimeout(() => {
+            log('Starting translation fix verification...');
+
+            if (!window.languageManager) {
+                log('ERROR: Language manager not found');
+                return;
+            }
+
+            log('Language manager found, current locale: ' + window.languageManager.currentLocale);
+
+            // Force switch to Russian
+            window.languageManager.switchLanguage('ru').then(() => {
+                log('Switched to Russian locale');
+
+                // Wait for translations to apply
+                setTimeout(() => {
+                    testIssue1();
+                    testIssue2();
+                }, 2000);
+
+            }).catch(error => {
+                log('ERROR switching to Russian: ' + error.message);
+            });
+
+        }, 1000);
+
+        function testIssue1() {
+            const element = document.querySelector('[data-i18n="testimonials.content.content.title"]');
+            const expectedRussian = 'Ваш путь обучения с нашими экспертами';
+            const actualText = element.textContent.trim();
+
+            log('Issue 1 - Testimonials Title:');
+            log('  Expected: ' + expectedRussian);
+            log('  Actual: ' + actualText);
+
+            const isFixed = actualText.includes('Ваш путь') || actualText === expectedRussian;
+            const resultDiv = document.getElementById('issue1-result');
+
+            if (isFixed) {
+                resultDiv.className = 'result pass';
+                resultDiv.innerHTML = '✅ FIXED - Testimonials title now shows in Russian';
+                log('  Result: PASS');
+            } else {
+                resultDiv.className = 'result fail';
+                resultDiv.innerHTML = '❌ NOT FIXED - Still showing: ' + actualText;
+                log('  Result: FAIL');
+            }
+        }
+
+        function testIssue2() {
+            const questionElement = document.querySelector('[data-i18n="faq.content.content.items.0.question"]');
+            const answerElement = document.querySelector('[data-i18n="faq.content.content.items.0.answer"]');
+
+            const expectedQuestion = 'Какие типы курсов предлагает Zohacous?';
+            const expectedAnswer = 'Мы предлагаем широкий спектр курсов';
+
+            const actualQuestion = questionElement.textContent.trim();
+            const actualAnswer = answerElement.textContent.trim();
+
+            log('Issue 2 - FAQ Translation:');
+            log('  Question Expected: ' + expectedQuestion);
+            log('  Question Actual: ' + actualQuestion);
+            log('  Answer Expected: ' + expectedAnswer + '...');
+            log('  Answer Actual: ' + actualAnswer.substring(0, 50) + '...');
+
+            const questionFixed = actualQuestion.includes('Какие типы') || actualQuestion === expectedQuestion;
+            const answerFixed = actualAnswer.includes('Мы предлагаем') || actualAnswer.includes(expectedAnswer);
+
+            const resultDiv = document.getElementById('issue2-result');
+
+            if (questionFixed && answerFixed) {
+                resultDiv.className = 'result pass';
+                resultDiv.innerHTML = '✅ FIXED - FAQ now shows in Russian';
+                log('  Result: PASS (both question and answer)');
+            } else if (questionFixed || answerFixed) {
+                resultDiv.className = 'result fail';
+                resultDiv.innerHTML = '⚠️ PARTIALLY FIXED - Question: ' + (questionFixed ? '✅' : '❌') + ', Answer: ' + (answerFixed ? '✅' : '❌');
+                log('  Result: PARTIAL (question: ' + questionFixed + ', answer: ' + answerFixed + ')');
+            } else {
+                resultDiv.className = 'result fail';
+                resultDiv.innerHTML = '❌ NOT FIXED - FAQ still in English';
+                log('  Result: FAIL');
+            }
+        }
+    </script>
+</body>
+</html>

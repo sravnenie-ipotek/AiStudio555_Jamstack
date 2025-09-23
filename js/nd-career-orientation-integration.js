@@ -10,7 +10,7 @@
 
     // Configuration
     const API_BASE_URL = window.location.hostname === 'localhost'
-        ? 'http://localhost:1337'
+        ? 'http://localhost:3000'
         : 'https://aistudio555jamstack-production.up.railway.app';
 
     // Get current language from URL or default to 'en'
@@ -358,11 +358,91 @@
         });
     }
 
+    // Load navigation data for translations (shared across all pages)
+    async function loadNavigationData() {
+        try {
+            console.log('🧭 [Career Orientation] Fetching navigation data for translations...');
+
+            // Get current locale
+            const currentLocale = getCurrentLocale();
+
+            // Fetch navigation data from home-page API
+            const response = await fetch(`${API_BASE_URL}/api/nd/home-page?locale=${currentLocale}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('✅ [Career Orientation] Navigation data received for translations');
+
+            if (result.success && result.data) {
+                // Direct translation of navigation elements
+                directlyUpdateNavigationElements(result.data, currentLocale);
+                console.log('🔄 [Career Orientation] Navigation translation data ready');
+            }
+
+        } catch (error) {
+            console.error('❌ [Career Orientation] Error loading navigation data:', error);
+        }
+    }
+
+    // Directly update navigation elements with translations
+    function directlyUpdateNavigationElements(apiData, locale) {
+        console.log('🎯 [Career Orientation] Directly updating navigation elements...');
+
+        try {
+            const navigation = apiData.navigation?.content?.content;
+            if (!navigation) {
+                console.warn('⚠️ [Career Orientation] No navigation data found in API response');
+                return;
+            }
+
+            // Update Career Orientation
+            const careerOrientationElements = document.querySelectorAll('[data-i18n="navigation.content.career.orientation"]');
+            careerOrientationElements.forEach(element => {
+                if (navigation.career_orientation) {
+                    element.textContent = navigation.career_orientation;
+                    console.log(`✅ [Career Orientation] Updated Career Orientation: "${navigation.career_orientation}"`);
+                }
+            });
+
+            // Update Career Center
+            const careerCenterElements = document.querySelectorAll('[data-i18n="navigation.content.career.center"]');
+            careerCenterElements.forEach(element => {
+                if (navigation.career_center) {
+                    element.textContent = navigation.career_center;
+                    console.log(`✅ [Career Orientation] Updated Career Center: "${navigation.career_center}"`);
+                }
+            });
+
+            // Update Sign Up Today buttons
+            const signUpButtons = apiData.ui_elements?.content?.content?.buttons?.sign_up_today;
+            if (signUpButtons) {
+                const signUpElements = document.querySelectorAll('[data-i18n="ui_elements.content.content.buttons.sign_up_today"]');
+                signUpElements.forEach(element => {
+                    element.textContent = signUpButtons;
+                    console.log(`✅ [Career Orientation] Updated Sign Up Today: "${signUpButtons}"`);
+                });
+            }
+
+            console.log('🎯 [Career Orientation] Direct navigation update complete');
+
+        } catch (error) {
+            console.error('❌ [Career Orientation] Error in direct navigation update:', error);
+        }
+    }
+
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadCareerOrientationData);
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadNavigationData(); // Load navigation for translations first
+            loadCareerOrientationData();
+        });
     } else {
-        loadCareerOrientationData();
+        (async () => {
+            await loadNavigationData(); // Load navigation for translations first
+            loadCareerOrientationData();
+        })();
     }
 
     // Expose function globally for debugging

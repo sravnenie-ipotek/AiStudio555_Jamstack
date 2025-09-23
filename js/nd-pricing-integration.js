@@ -6,7 +6,7 @@
 
     // API Configuration
     const API_BASE = window.location.hostname === 'localhost'
-        ? 'http://localhost:1337/api/nd'
+        ? 'http://localhost:3000/api/nd'
         : 'https://aistudio555jamstack-production.up.railway.app/api/nd';
 
     // Load pricing data from database
@@ -21,6 +21,17 @@
             const currentLocale = urlLocale || savedLocale || 'en';
 
             console.log('🌍 Loading pricing content for locale:', currentLocale);
+
+            // Apply RTL if Hebrew
+            const htmlElement = document.documentElement;
+            if (currentLocale === 'he') {
+                htmlElement.setAttribute('dir', 'rtl');
+                htmlElement.setAttribute('lang', 'he');
+                console.log('✅ Applied RTL layout for Hebrew');
+            } else {
+                htmlElement.setAttribute('dir', 'ltr');
+                htmlElement.setAttribute('lang', currentLocale);
+            }
 
             const response = await fetch(`${API_BASE}/pricing-page?locale=${currentLocale}`);
             if (!response.ok) {
@@ -55,6 +66,9 @@
 
                 // Update pricing period texts for current locale
                 updatePricingPeriodTexts();
+
+                // Update Track section
+                updateTrackSection();
 
                 // Update Plans Section
                 if (sections.plans) {
@@ -114,6 +128,189 @@
         }
     }
 
+    // Global function to enhance any API response with navigation data
+    window.enhanceApiDataWithNavigation = function(apiData, navigationData) {
+        if (!apiData || !navigationData) return apiData;
+
+        // Merge navigation data into the API response
+        const enhanced = { ...apiData };
+        if (navigationData.navigation) enhanced.navigation = navigationData.navigation;
+        if (navigationData.ui_elements) enhanced.ui_elements = navigationData.ui_elements;
+        if (navigationData.footer) enhanced.footer = navigationData.footer;
+
+        console.log('🔗 Enhanced API data with navigation');
+        return enhanced;
+    };
+
+    // Load navigation data for translations (shared across all pages)
+    async function loadNavigationData() {
+        try {
+            console.log('🧭 Fetching navigation data for translations...');
+
+            // Get current locale
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLocale = urlParams.get('locale');
+            const savedLocale = localStorage.getItem('preferred_locale');
+            const currentLocale = urlLocale || savedLocale || 'en';
+
+            // Fetch navigation data from home-page API
+            const response = await fetch(`${API_BASE}/home-page?locale=${currentLocale}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('✅ Navigation data received for translations');
+
+            if (result.success && result.data) {
+                // Directly inject navigation data into LanguageManager's data cache
+                if (window.languageManager && window.languageManager.contentCache) {
+                    console.log('🔄 Injecting navigation data into LanguageManager cache...');
+
+                    // Ensure contentCache has current locale
+                    if (!window.languageManager.contentCache[currentLocale]) {
+                        window.languageManager.contentCache[currentLocale] = {};
+                    }
+
+                    // Inject navigation data
+                    window.languageManager.contentCache[currentLocale].navigation = result.data.navigation;
+                    window.languageManager.contentCache[currentLocale].ui_elements = result.data.ui_elements;
+                    window.languageManager.contentCache[currentLocale].footer = result.data.footer;
+
+                    console.log('✅ Navigation data injected into cache');
+                }
+
+                // Also make it available globally
+                window.globalTranslationData = {
+                    navigation: result.data.navigation,
+                    ui_elements: result.data.ui_elements,
+                    footer: result.data.footer,
+                    locale: currentLocale
+                };
+
+                // Direct translation of navigation elements (bypassing LanguageManager)
+                directlyUpdateNavigationElements(result.data, currentLocale);
+
+                console.log('🔄 Navigation translation data ready');
+            }
+
+        } catch (error) {
+            console.error('❌ Error loading navigation data:', error);
+        }
+    }
+
+    // Setup fetch interceptor to inject navigation data into API responses
+    function setupFetchInterceptor(navigationData) {
+        if (window.fetchInterceptorSetup) return; // Already setup
+        window.fetchInterceptorSetup = true;
+
+        const originalFetch = window.fetch;
+        window.fetch = async function(...args) {
+            const response = await originalFetch.apply(this, args);
+
+            // Only intercept API calls that might need navigation data
+            const url = args[0];
+            if (typeof url === 'string' && url.includes('/api/nd/') &&
+                (url.includes('pricing-page') || url.includes('teachers-page') || url.includes('career'))) {
+
+                // Clone the response to read it
+                const clonedResponse = response.clone();
+                try {
+                    const data = await clonedResponse.json();
+
+                    // Enhance with navigation data
+                    if (data.success && data.data && navigationData) {
+                        console.log('🔗 Intercepting API call:', url);
+                        const enhanced = window.enhanceApiDataWithNavigation(data.data, navigationData);
+
+                        // Return a new response with enhanced data
+                        return new Response(JSON.stringify({
+                            ...data,
+                            data: enhanced
+                        }), {
+                            status: response.status,
+                            statusText: response.statusText,
+                            headers: response.headers
+                        });
+                    }
+                } catch (e) {
+                    console.log('Failed to enhance response:', e);
+                }
+            }
+
+            return response;
+        };
+
+        console.log('🕸️ Fetch interceptor setup complete');
+    }
+
+    // Directly update navigation elements with translations
+    function directlyUpdateNavigationElements(apiData, locale) {
+        console.log('🎯 Directly updating navigation elements...');
+
+        try {
+            const navigation = apiData.navigation?.content?.content;
+            if (!navigation) {
+                console.warn('⚠️ No navigation data found in API response');
+                return;
+            }
+
+            // Update Career Orientation
+            const careerOrientationElements = document.querySelectorAll('[data-i18n="navigation.content.career.orientation"]');
+            careerOrientationElements.forEach(element => {
+                if (navigation.career_orientation) {
+                    element.textContent = navigation.career_orientation;
+                    console.log(`✅ Updated Career Orientation: "${navigation.career_orientation}"`);
+                }
+            });
+
+            // Update Career Center
+            const careerCenterElements = document.querySelectorAll('[data-i18n="navigation.content.career.center"]');
+            careerCenterElements.forEach(element => {
+                if (navigation.career_center) {
+                    element.textContent = navigation.career_center;
+                    console.log(`✅ Updated Career Center: "${navigation.career_center}"`);
+                }
+            });
+
+            // Update Sign Up Today buttons
+            const signUpButtons = apiData.ui_elements?.content?.content?.buttons?.sign_up_today;
+            if (signUpButtons) {
+                const signUpElements = document.querySelectorAll('[data-i18n="ui_elements.content.content.buttons.sign_up_today"]');
+                signUpElements.forEach(element => {
+                    element.textContent = signUpButtons;
+                    console.log(`✅ Updated Sign Up Today: "${signUpButtons}"`);
+                });
+            }
+
+            // Update other common navigation elements
+            const navigationMappings = {
+                '[data-i18n*="navigation"][data-i18n*="home"]': navigation.home,
+                '[data-i18n*="navigation"][data-i18n*="courses"]': navigation.courses,
+                '[data-i18n*="navigation"][data-i18n*="pricing"]': navigation.pricing,
+                '[data-i18n*="navigation"][data-i18n*="teachers"]': navigation.teachers,
+                '[data-i18n*="navigation"][data-i18n*="blog"]': navigation.blog,
+                '[data-i18n*="navigation"][data-i18n*="about"]': navigation.about_us,
+                '[data-i18n*="navigation"][data-i18n*="contact"]': navigation.contact
+            };
+
+            Object.entries(navigationMappings).forEach(([selector, translation]) => {
+                if (translation) {
+                    const elements = document.querySelectorAll(selector);
+                    elements.forEach(element => {
+                        element.textContent = translation;
+                        console.log(`✅ Updated navigation: "${translation}"`);
+                    });
+                }
+            });
+
+            console.log('🎯 Direct navigation update complete');
+
+        } catch (error) {
+            console.error('❌ Error in direct navigation update:', error);
+        }
+    }
+
     // Update Hero Section
     function updateHeroSection(hero, locale) {
         console.log('🎯 Updating hero section for locale:', locale);
@@ -132,32 +329,38 @@
             },
             he: {
                 heroTitle: 'תוכנית תמחור',
-                subtitle: 'תוכניות זולות',
+                subtitle: 'תוכניות במחירים נגישים',
                 mainTitle: 'השקיעו בעתיד עם תוכניות מנוי.'
             }
         };
 
         const texts = defaultTexts[locale] || defaultTexts.en;
 
-        // Update title in the hero/banner area
+        // DUAL-SYSTEM: Hero title may be handled by unified-language-manager
         const heroTitle = document.querySelector('.inner-banner-title');
-        if (heroTitle) {
+        if (heroTitle && !heroTitle.hasAttribute('data-i18n')) {
             heroTitle.textContent = hero.title || texts.heroTitle;
             console.log('✅ Updated hero title:', hero.title || texts.heroTitle);
+        } else if (heroTitle) {
+            console.log('🔄 [DUAL-SYSTEM] Skipping hero title - handled by language manager');
         }
 
-        // Update the section subtitle that says "Affordable Plans"
+        // DUAL-SYSTEM: Section subtitle may be handled by unified-language-manager
         const sectionSubtitle = document.querySelector('.section-subtitle');
-        if (sectionSubtitle) {
+        if (sectionSubtitle && !sectionSubtitle.hasAttribute('data-i18n')) {
             sectionSubtitle.textContent = hero.subtitle || texts.subtitle;
             console.log('✅ Updated section subtitle:', hero.subtitle || texts.subtitle);
+        } else if (sectionSubtitle) {
+            console.log('🔄 [DUAL-SYSTEM] Skipping section subtitle - handled by language manager');
         }
 
-        // Update the main section title that says "Invest in Future..."
+        // DUAL-SYSTEM: Section title may be handled by unified-language-manager
         const sectionTitle = document.querySelector('.section-title');
-        if (sectionTitle) {
+        if (sectionTitle && !sectionTitle.hasAttribute('data-i18n')) {
             sectionTitle.textContent = hero.description || texts.mainTitle;
             console.log('✅ Updated section title:', hero.description || texts.mainTitle);
+        } else if (sectionTitle) {
+            console.log('🔄 [DUAL-SYSTEM] Skipping section title - handled by language manager');
         }
     }
 
@@ -382,35 +585,113 @@
         console.log(`✅ Updated plan: ${planData.name} (locale: ${currentLocale})`);
     }
 
+    // Update Track Section
+    function updateTrackSection() {
+        const currentLocale = localStorage.getItem('preferred_locale') || 'en';
+
+        const trackTexts = {
+            en: {
+                startLearning: 'Start Learning',
+                browseCourses: 'Browse Courses'
+            },
+            ru: {
+                startLearning: 'Начать обучение',
+                browseCourses: 'Просмотреть курсы'
+            },
+            he: {
+                startLearning: 'התחל ללמוד',
+                browseCourses: 'עיין בקורסים'
+            }
+        };
+
+        const texts = trackTexts[currentLocale] || trackTexts.en;
+
+        // Update all Start Learning elements
+        const startLearningElements = document.querySelectorAll('[data-i18n="pricing.content.track.start_learning"]');
+        startLearningElements.forEach(element => {
+            element.textContent = texts.startLearning;
+        });
+
+        // Update all Browse Courses elements
+        const browseCoursesElements = document.querySelectorAll('[data-i18n="pricing.content.track.browse_courses"]');
+        browseCoursesElements.forEach(element => {
+            element.textContent = texts.browseCourses;
+        });
+
+        console.log(`✅ Updated Track section for locale: ${currentLocale}`);
+    }
+
     // Update CTA Section
     function updateCTASection(cta) {
         console.log('📢 Updating CTA section...');
 
+        // Get current locale
+        const currentLocale = localStorage.getItem('preferred_locale') || 'en';
+
+        // Default translations for CTA
+        const ctaDefaults = {
+            en: {
+                subtitle: 'Start Learning Today',
+                title: 'Discover A World Of Learning Opportunities.',
+                description: "Don't wait to transform career and unlock your full potential. join our community of passionate learners and gain access to a wide range of courses.",
+                button1: 'Get in Touch',
+                button2: 'Check Out Courses'
+            },
+            ru: {
+                subtitle: 'Начните учиться сегодня',
+                title: 'Откройте мир возможностей обучения.',
+                description: 'Не ждите, чтобы преобразовать карьеру и раскрыть свой полный потенциал. Присоединяйтесь к нашему сообществу увлеченных учеников.',
+                button1: 'Связаться с нами',
+                button2: 'Посмотреть курсы'
+            },
+            he: {
+                subtitle: 'התחל ללמוד היום',
+                title: 'גלה עולם של הזדמנויות למידה.',
+                description: 'אל תחכה כדי לשנות את הקריירה שלך ולפתוח את מלוא הפוטנציאל שלך. הצטרף לקהילת הלומדים הנלהבים שלנו.',
+                button1: 'צור קשר',
+                button2: 'צפה בקורסים'
+            }
+        };
+
+        const defaults = ctaDefaults[currentLocale] || ctaDefaults.en;
+
+        // Update CTA subtitle
+        const ctaSubtitle = document.querySelector('.section.cta .section-subtitle');
+        if (ctaSubtitle) {
+            ctaSubtitle.textContent = cta.subtitle || defaults.subtitle;
+            console.log('✅ Updated CTA subtitle:', cta.subtitle || defaults.subtitle);
+        }
+
         // Update CTA title
         const ctaTitle = document.querySelector('.cta-title');
-        if (ctaTitle && cta.title) {
-            ctaTitle.textContent = cta.title;
-            console.log('✅ Updated CTA title:', cta.title);
+        if (ctaTitle) {
+            ctaTitle.textContent = cta.title || defaults.title;
+            console.log('✅ Updated CTA title:', cta.title || defaults.title);
         }
 
         // Update CTA description
         const ctaDescription = document.querySelector('.cta-description-text');
-        if (ctaDescription && cta.description) {
-            ctaDescription.textContent = cta.description;
+        if (ctaDescription) {
+            ctaDescription.textContent = cta.description || defaults.description;
             console.log('✅ Updated CTA description');
         }
 
-        // Update button text if provided
-        if (cta.button_text) {
-            const ctaButtons = document.querySelectorAll('.cta-button-wrapper .primary-button-text-block');
-            if (ctaButtons.length > 0) {
-                // Update first button (get in touch)
-                ctaButtons[0].textContent = cta.button_text;
-                if (ctaButtons[1]) {
-                    ctaButtons[1].textContent = cta.button_text;
-                }
-                console.log('✅ Updated CTA button text:', cta.button_text);
-            }
+        // Update buttons with proper translations
+        const ctaButtons = document.querySelectorAll('.cta-button-wrapper .primary-button');
+        if (ctaButtons.length >= 2) {
+            // First button (Get in Touch)
+            const button1Texts = ctaButtons[0].querySelectorAll('.primary-button-text-block');
+            button1Texts.forEach(text => {
+                text.textContent = defaults.button1;
+            });
+
+            // Second button (Check Out Courses)
+            const button2Texts = ctaButtons[1].querySelectorAll('.primary-button-text-block');
+            button2Texts.forEach(text => {
+                text.textContent = defaults.button2;
+            });
+
+            console.log('✅ Updated CTA buttons for locale:', currentLocale);
         }
     }
 
@@ -485,11 +766,23 @@
     }
 
     // Add event listener for language changes
+    // DUAL-SYSTEM: Coordinate with unified-language-manager on language changes
     window.addEventListener('languageChanged', (event) => {
-        console.log('🌍 Language changed to:', event.detail.locale);
-        // Small delay to ensure localStorage is updated
+        console.log('🌍 [DUAL-SYSTEM] Language changed to:', event.detail.locale);
+        // Wait longer to ensure unified-language-manager completes first
         setTimeout(() => {
-            console.log('🔄 Reloading pricing content with new language...');
+            console.log('🔄 [DUAL-SYSTEM] Reloading pricing data after language manager...');
+
+            // Apply RTL if Hebrew
+            const htmlElement = document.documentElement;
+            if (event.detail.locale === 'he') {
+                htmlElement.setAttribute('dir', 'rtl');
+                htmlElement.setAttribute('lang', 'he');
+                console.log('✅ Applied RTL layout for Hebrew');
+            } else {
+                htmlElement.setAttribute('dir', 'ltr');
+                htmlElement.setAttribute('lang', event.detail.locale);
+            }
 
             // Update pricing period texts immediately
             updatePricingPeriodTexts();
@@ -497,23 +790,31 @@
             // Update feature lists
             updateFeatureLists();
 
-            // Reload full content
+            // Update Track section
+            updateTrackSection();
+
+            // Reload full content (respects data-i18n protection)
+            loadNavigationData(); // Refresh navigation translations
             loadPricingContent();
-        }, 100);
+        }, 500);
     });
 
     // Initialize
     if (isPricingPage()) {
         // Wait for DOM to be fully loaded
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('DOMContentLoaded', async () => {
+                await loadNavigationData(); // Load navigation for translations first
                 loadPricingContent();
                 setupTabListeners();
             });
         } else {
             // DOM is already loaded
-            loadPricingContent();
-            setupTabListeners();
+            (async () => {
+                await loadNavigationData(); // Load navigation for translations first
+                loadPricingContent();
+                setupTabListeners();
+            })();
         }
     } else {
         console.log('ℹ️ Not on pricing page, skipping initialization');

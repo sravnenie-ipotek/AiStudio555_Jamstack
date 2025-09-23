@@ -70,8 +70,14 @@
             // Generate unique data-w-id for animations
             const dataWId = `course-card-${course.id || Math.random().toString(36).substr(2, 9)}`;
 
-            // Get button text based on locale
-            const locale = localStorage.getItem('preferred_locale') || 'en';
+            // Get button text based on locale (same logic as other components)
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLocale = urlParams.get('locale') || urlParams.get('lang');
+            const savedLocale = localStorage.getItem('preferred_locale');
+            const locale = urlLocale || savedLocale || 'en';
+
+            console.log(`🔘 [COURSE-CARD] Detected locale: ${locale} (url: ${urlLocale}, saved: ${savedLocale})`);
+
             const buttonTexts = {
                 'en': 'Course Details',
                 'ru': 'Детали Курса',

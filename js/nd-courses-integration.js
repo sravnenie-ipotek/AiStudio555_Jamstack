@@ -11,7 +11,7 @@
 
     // Configuration
     const API_BASE_URL = window.location.hostname === 'localhost'
-        ? 'http://localhost:1337'
+        ? 'http://localhost:3000'
         : 'https://aistudio555jamstack-production.up.railway.app';
 
     // Static course images mapping by category
@@ -158,7 +158,8 @@
             console.log('📡 Loading courses data from featured courses API...');
 
             const locale = getCurrentLocale();
-            const response = await fetch(`${API_BASE_URL}/api/nd/courses`);
+            console.log('🌍 Current locale detected:', locale);
+            const response = await fetch(`${API_BASE_URL}/api/nd/courses?locale=${locale}`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch courses: ${response.status}`);
@@ -169,6 +170,9 @@
 
             // Populate the courses with shared card component
             if (data.data && data.data.length > 0) {
+                console.log(`✅ Found ${data.data.length} courses in API response`);
+                console.log('📚 First course title:', data.data[0].title);
+
                 // Transform API response to expected format
                 const transformedCourses = data.data.map(course => {
                     // Always use static images from Unsplash since local images don't exist
@@ -183,11 +187,11 @@
                         lessons_count: course.lessons_count || course.lessons || 0,
                         rating: course.rating || '4.5',
                         reviews_count: course.reviews_count || Math.floor(Math.random() * 50) + 10,
-                        url: `detail_courses.html?id=${course.id}`
+                        url: `detail_courses.html?id=${course.id}&locale=${locale}`
                     };
 
-                    // Apply translations if needed
-                    return getTranslatedCourse(baseCourse, locale);
+                    // No need for client-side translation - API handles it
+                    return baseCourse;
                 });
 
                 // Wrap courses array in expected format
@@ -221,24 +225,65 @@
 
         const courses = coursesData.courses || [];
         console.log(`📚 ${courses.length} courses available`);
+        console.log('Course titles:', courses.map(c => c.title));
 
         // Find all tab content containers
         const tabContainers = document.querySelectorAll('.featured-courses-tab-pane .featured-courses-collection-list');
+        console.log(`📦 Found ${tabContainers.length} tab containers`);
+
+        if (tabContainers.length === 0) {
+            console.error('❌ No course containers found! Looking for alternative selectors...');
+            const altContainers = document.querySelectorAll('.featured-courses-collection-list');
+            console.log(`🔍 Alternative search found ${altContainers.length} containers`);
+        }
 
         for (const container of tabContainers) {
+            console.log('Processing container:', container);
+            // DUAL-SYSTEM: Preserve elements with data-i18n attributes before clearing
+            const preservedElements = container.querySelectorAll('[data-i18n]');
+            console.log(`🔄 [DUAL-SYSTEM] Preserving ${preservedElements.length} data-i18n elements`);
+
             // Clear existing placeholder content
             container.innerHTML = '';
 
             // Populate with all courses initially (filtering will happen via tabs)
             for (const course of courses.slice(0, 12)) { // Show more courses on courses page
+                console.log(`Creating card for course: ${course.title}`);
                 const courseCard = await createCourseCardForCoursesPage(course);
+                console.log('Card created:', courseCard);
                 container.appendChild(courseCard);
             }
+
+            // DUAL-SYSTEM: After populating, remove data-i18n from dynamic content to prevent conflicts
+            const dynamicElements = container.querySelectorAll('[data-i18n]');
+            dynamicElements.forEach(element => {
+                console.log(`🔄 [DUAL-SYSTEM] Removing data-i18n from dynamic element: ${element.getAttribute('data-i18n')}`);
+                element.removeAttribute('data-i18n');
+            });
 
             // Hide the "No items found" message
             const emptyState = container.parentElement.querySelector('.w-dyn-empty');
             if (emptyState) {
                 emptyState.style.display = 'none';
+            }
+
+            // Ensure container is visible with proper grid layout
+            container.style.display = 'grid';
+            container.style.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
+            container.style.gap = '20px';
+            container.style.opacity = '1';
+            container.style.visibility = 'visible';
+
+            // Also ensure parent elements are visible
+            let parent = container.parentElement;
+            while (parent && parent !== document.body) {
+                if (parent.style.display === 'none') {
+                    parent.style.display = '';
+                }
+                if (parent.style.opacity === '0') {
+                    parent.style.opacity = '1';
+                }
+                parent = parent.parentElement;
             }
         }
 
@@ -314,8 +359,8 @@
                                class="primary-button secondary w-inline-block"
                                style="background-color: rgba(255,255,255,0); color: rgb(255,255,255)">
                                 <div class="primary-button-text-wrap">
-                                    <div class="primary-button-text-block">Course Details</div>
-                                    <div class="primary-button-text-block is-text-absolute">Course Details</div>
+                                    <div class="primary-button-text-block" data-i18n="buttons.course_details">Course Details</div>
+                                    <div class="primary-button-text-block is-text-absolute" data-i18n="buttons.course_details">Course Details</div>
                                 </div>
                             </a>
                         </div>
@@ -366,12 +411,23 @@
                         // Show loading state
                         container.innerHTML = '<div style="padding: 40px; text-align: center; color: white;">Loading courses...</div>';
 
+                        // DUAL-SYSTEM: Preserve data-i18n elements before clearing for filtered courses
+                        const preservedElements = container.querySelectorAll('[data-i18n]');
+                        console.log(`🔄 [DUAL-SYSTEM] Filtering - Preserving ${preservedElements.length} data-i18n elements`);
+
                         // Populate filtered courses
                         container.innerHTML = '';
                         for (const course of filteredCourses.slice(0, 12)) {
                             const courseCard = await createCourseCardForCoursesPage(course);
                             container.appendChild(courseCard);
                         }
+
+                        // DUAL-SYSTEM: After filtering, remove data-i18n from new dynamic content
+                        const dynamicElements = container.querySelectorAll('[data-i18n]');
+                        dynamicElements.forEach(element => {
+                            console.log(`🔄 [DUAL-SYSTEM] Filtering - Removing data-i18n: ${element.getAttribute('data-i18n')}`);
+                            element.removeAttribute('data-i18n');
+                        });
 
                         // Show empty state if no courses
                         const emptyState = targetPane.querySelector('.w-dyn-empty');
@@ -441,12 +497,58 @@
         return '#667eea'; // default blue
     }
 
-    // Initialize when DOM is ready
+    // REMOVED: Navigation translation functions per WorkingLogic.md dual-system architecture
+    // UI translations are handled by unified-language-manager.js (System 1)
+    // This file should only handle dynamic course content (System 2)
+
+    // Initialize when DOM is ready - ONLY load course data (System 2)
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadCoursesData);
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Small delay to ensure unified language manager (System 1) initializes first
+            console.log('⏳ [Courses Integration] Waiting for page setup...');
+            setTimeout(() => {
+                console.log('🚀 [Courses Integration] Loading course data only (System 2)');
+                loadCoursesData();
+            }, 500);
+        });
     } else {
-        loadCoursesData();
+        // Small delay to ensure unified language manager (System 1) initializes first
+        console.log('⏳ [Courses Integration] Waiting for page setup...');
+        setTimeout(() => {
+            console.log('🚀 [Courses Integration] Loading course data only (System 2)');
+            loadCoursesData();
+        }, 500);
     }
+
+    // Listen for language changes
+    window.addEventListener('languageChanged', (event) => {
+        console.log('🌍 [Courses] Language changed to:', event.detail.locale);
+
+        // Update localStorage to ensure consistency
+        localStorage.setItem('preferred_locale', event.detail.locale);
+
+        // Clear any existing courses first
+        const allContainers = document.querySelectorAll('.featured-courses-collection-list');
+        allContainers.forEach(container => {
+            container.innerHTML = '<div style="padding: 20px; text-align: center;">Loading courses...</div>';
+        });
+
+        // Reload courses with new locale
+        setTimeout(() => {
+            console.log('🔄 [Courses] Reloading courses for locale:', event.detail.locale);
+            loadCoursesData();
+        }, 500); // Small delay to let language manager finish
+    });
+
+    // Also listen for storage changes (when language is changed in another tab)
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'preferred_locale' && event.newValue !== event.oldValue) {
+            console.log('🌍 [Courses] Language changed in storage to:', event.newValue);
+            setTimeout(() => {
+                loadCoursesData();
+            }, 500);
+        }
+    });
 
     // Expose functions globally for debugging
     window.reloadCoursesData = loadCoursesData;

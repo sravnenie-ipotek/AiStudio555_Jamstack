@@ -18,20 +18,75 @@
         return urlParams.get('locale') || 'en';
     }
 
+    // Helper function to extract FAQ data from individual fields
+    function extractFAQFromAttributes(attributes) {
+        const faqItems = [];
+
+        // Extract FAQ items from faq1Title/faq1Answer, faq2Title/faq2Answer, etc.
+        for (let i = 1; i <= 10; i++) { // Check up to 10 FAQ items
+            const titleKey = `faq${i}Title`;
+            const answerKey = `faq${i}Answer`;
+
+            if (attributes[titleKey] && attributes[answerKey]) {
+                faqItems.push({
+                    question: attributes[titleKey],
+                    answer: attributes[answerKey]
+                });
+                console.log(`📄 Found FAQ ${i}: ${attributes[titleKey]}`);
+            }
+        }
+
+        console.log(`📄 Extracted ${faqItems.length} FAQ items from attributes`);
+        return {
+            title: attributes.faqTitle || 'FAQ',
+            items: faqItems
+        };
+    }
+
     // Main function to load home page data
     async function loadHomePageData() {
         try {
             console.log('🔄 Loading home page data from database...');
+            console.log('⏰ Home integration start time:', new Date().toISOString());
+
+            // Check if language manager has already run
+            const sampleElement = document.querySelector('.faq-question');
+            if (sampleElement) {
+                console.log('🔍 Initial FAQ question state:', {
+                    hasDataI18n: sampleElement.hasAttribute('data-i18n'),
+                    dataI18nValue: sampleElement.getAttribute('data-i18n'),
+                    currentText: sampleElement.textContent,
+                    timestamp: new Date().toISOString()
+                });
+            }
 
             const locale = getCurrentLocale();
-            const response = await fetch(`${API_BASE_URL}/api/home-page?locale=${locale}`);
+            const response = await fetch(`${API_BASE_URL}/api/nd/home-page?locale=${locale}`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch home data: ${response.status}`);
             }
 
             const data = await response.json();
-            console.log('✅ Home page data loaded:', data);
+            console.log('✅ Home page data loaded. Keys:', Object.keys(data));
+
+            // Debug data structure
+            if (data.data) {
+                console.log('🔍 data.data keys:', Object.keys(data.data));
+                if (data.data.attributes) {
+                    console.log('🔍 data.data.attributes exists. Keys:', Object.keys(data.data.attributes));
+                    console.log('🔍 Has testimonials array?', Array.isArray(data.data.attributes.testimonials));
+                    console.log('🔍 Has faq1Title?', !!data.data.attributes.faq1Title);
+                }
+            }
+
+            // Debug old structure checks
+            console.log('🔍 Old structure checks:');
+            console.log('  - data.testimonials:', !!data.testimonials);
+            console.log('  - data.testimonials_data:', !!data.testimonials_data);
+            console.log('  - data.faq:', !!data.faq);
+
+            console.log('📦 Full data structure sample:', JSON.stringify(data, null, 2).substring(0, 500) + '...');
 
             // Populate the page with data - handle the actual API structure
             if (data.data) {
@@ -95,10 +150,24 @@
         if (data.testimonials_data) {
             populateTestimonialsSection(data.testimonials_data);
         }
+        // NEW: Handle direct testimonials array from API attributes
+        if (data.attributes && data.attributes.testimonials) {
+            console.log('📍 Found testimonials in attributes, processing...');
+            populateTestimonialsSection({ items: data.attributes.testimonials });
+        }
 
         // 5. FAQ Section
         if (data.faq && data.faq.content) {
+            console.log('📍 Found FAQ data in new structure');
             populateFAQSection(data.faq.content);
+        }
+        // Fallback: Handle FAQ data from individual fields in API attributes (old structure)
+        else if (data.attributes) {
+            console.log('📍 Found attributes structure, processing FAQ from individual fields...');
+            const faqData = extractFAQFromAttributes(data.attributes);
+            if (faqData.items && faqData.items.length > 0) {
+                populateFAQSection(faqData);
+            }
         }
 
         // 6. Process Section - SKIP (handled by unified-language-manager)
@@ -261,13 +330,9 @@
     function populateTestimonialsSection(testimonialsData) {
         console.log('💬 Updating testimonials section...');
 
-        // Update section title
-        updateTextContent('.testimonials .section-title',
-            testimonialsData.title || 'What Our Students Say');
-
-        // Update section subtitle
-        updateTextContent('.testimonials .section-subtitle',
-            testimonialsData.subtitle || 'Student Success Stories');
+        // DUAL-SYSTEM: Section title and subtitle handled by unified-language-manager
+        // Do NOT update section title/subtitle here to avoid overriding translations
+        console.log('🔄 Skipping section title/subtitle - handled by language manager');
 
         // Update testimonial cards
         // Handle the deeply nested structure from API: testimonials_data.content.content.content.content
@@ -301,12 +366,34 @@
             console.log(`📝 ${testimonialsData.items.length} testimonials in items array`);
         }
 
+        // Handle both old nested format and new direct array format
+        let actualTestimonialItems = testimonialItems;
+
+        // If it's the new format with 'items' array, use that
+        if (testimonialsData.items && Array.isArray(testimonialsData.items)) {
+            console.log(`📋 Processing ${testimonialsData.items.length} testimonials from items array`);
+            actualTestimonialItems = testimonialsData.items;
+
+            // Convert new format to old format for processing
+            const convertedItems = {};
+            testimonialsData.items.forEach((item, index) => {
+                convertedItems[index] = {
+                    title: item.text ? item.text.substring(0, 50) + (item.text.length > 50 ? '...' : '') : '',
+                    text: item.text || '',
+                    name: item.author || '',
+                    course_taken: item.course_taken || '',
+                    role: item.role || ''
+                };
+            });
+            actualTestimonialItems = convertedItems;
+        }
+
         // Update individual testimonial cards by tab index
-        if (testimonialItems && typeof testimonialItems === 'object') {
+        if (actualTestimonialItems && typeof actualTestimonialItems === 'object') {
             // Update testimonials by index (0-6)
             for (let i = 0; i <= 6; i++) {
-                if (testimonialItems[i]) {
-                    const testimonial = testimonialItems[i];
+                if (actualTestimonialItems[i]) {
+                    const testimonial = actualTestimonialItems[i];
 
                     // Find the tab pane for this index
                     let tabSelector = '';
@@ -323,37 +410,104 @@
                         // Update title/text
                         const titleEl = tabPane.querySelector('.testimonials-title');
                         if (titleEl && testimonial.title) {
+                            console.log(`🔍 Testimonial ${i + 1} title element before update:`, {
+                                hasDataI18n: titleEl.hasAttribute('data-i18n'),
+                                dataI18nValue: titleEl.getAttribute('data-i18n'),
+                                currentText: titleEl.textContent
+                            });
+
                             titleEl.textContent = `"${testimonial.title}"`;
                             titleEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ Testimonial ${i + 1} title updated:`, {
+                                newText: `"${testimonial.title}"`,
+                                hasDataI18nAfter: titleEl.hasAttribute('data-i18n')
+                            });
                         } else if (titleEl && testimonial.text) {
+                            console.log(`🔍 Testimonial ${i + 1} title element before update (using text):`, {
+                                hasDataI18n: titleEl.hasAttribute('data-i18n'),
+                                dataI18nValue: titleEl.getAttribute('data-i18n'),
+                                currentText: titleEl.textContent
+                            });
+
                             // If no title, use first part of text
                             const shortText = testimonial.text.substring(0, 50);
-                            titleEl.textContent = `"${shortText}${testimonial.text.length > 50 ? '...' : ''}"`;
+                            const newTitle = `"${shortText}${testimonial.text.length > 50 ? '...' : ''}"`;
+                            titleEl.textContent = newTitle;
                             titleEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ Testimonial ${i + 1} title updated (using text):`, {
+                                newText: newTitle,
+                                hasDataI18nAfter: titleEl.hasAttribute('data-i18n')
+                            });
                         }
 
                         // Update description text
                         const textEl = tabPane.querySelector('.testimonials-card-description-text');
                         if (textEl && testimonial.text) {
+                            console.log(`🔍 Testimonial ${i + 1} description element before update:`, {
+                                hasDataI18n: textEl.hasAttribute('data-i18n'),
+                                dataI18nValue: textEl.getAttribute('data-i18n'),
+                                currentText: textEl.textContent
+                            });
+
                             textEl.textContent = `"${testimonial.text}"`;
                             textEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ Testimonial ${i + 1} description updated:`, {
+                                newText: `"${testimonial.text}"`,
+                                hasDataI18nAfter: textEl.hasAttribute('data-i18n')
+                            });
                         }
 
                         // Update author name
                         const nameEl = tabPane.querySelector('.testimonials-card-author-name');
                         if (nameEl && testimonial.name) {
+                            console.log(`🔍 Testimonial ${i + 1} name element before update:`, {
+                                hasDataI18n: nameEl.hasAttribute('data-i18n'),
+                                dataI18nValue: nameEl.getAttribute('data-i18n'),
+                                currentText: nameEl.textContent
+                            });
+
                             nameEl.textContent = testimonial.name;
                             nameEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ Testimonial ${i + 1} name updated:`, {
+                                newText: testimonial.name,
+                                hasDataI18nAfter: nameEl.hasAttribute('data-i18n')
+                            });
                         }
 
                         // Update author role/course
                         const roleEl = tabPane.querySelector('.testimonials-card-author-bio-text');
                         if (roleEl && testimonial.course_taken) {
+                            console.log(`🔍 Testimonial ${i + 1} role element before update (course):`, {
+                                hasDataI18n: roleEl.hasAttribute('data-i18n'),
+                                dataI18nValue: roleEl.getAttribute('data-i18n'),
+                                currentText: roleEl.textContent
+                            });
+
                             roleEl.textContent = testimonial.course_taken;
                             roleEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ Testimonial ${i + 1} role updated (course):`, {
+                                newText: testimonial.course_taken,
+                                hasDataI18nAfter: roleEl.hasAttribute('data-i18n')
+                            });
                         } else if (roleEl && testimonial.role) {
+                            console.log(`🔍 Testimonial ${i + 1} role element before update (role):`, {
+                                hasDataI18n: roleEl.hasAttribute('data-i18n'),
+                                dataI18nValue: roleEl.getAttribute('data-i18n'),
+                                currentText: roleEl.textContent
+                            });
+
                             roleEl.textContent = testimonial.role;
                             roleEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ Testimonial ${i + 1} role updated (role):`, {
+                                newText: testimonial.role,
+                                hasDataI18nAfter: roleEl.hasAttribute('data-i18n')
+                            });
                         }
 
                         console.log(`✅ Updated testimonial ${i + 1}: ${testimonial.name || 'Anonymous'}`);
@@ -363,6 +517,48 @@
         }
 
         console.log('✅ Testimonials section updated');
+
+        // Add delayed cleanup to ensure data-i18n attributes are removed
+        // This runs after both integration and language manager are done
+        setTimeout(() => {
+            console.log('🧹 Final Testimonials cleanup - removing any lingering data-i18n attributes...');
+
+            // Clean up all testimonials elements that might have been retranslated
+            const allTestimonialTitles = document.querySelectorAll('.testimonials-title');
+            const allTestimonialTexts = document.querySelectorAll('.testimonials-card-description-text');
+            const allTestimonialNames = document.querySelectorAll('.testimonials-card-author-name');
+            const allTestimonialRoles = document.querySelectorAll('.testimonials-card-author-bio-text');
+
+            allTestimonialTitles.forEach((el, index) => {
+                if (el.hasAttribute('data-i18n')) {
+                    console.log(`🔧 Removing data-i18n from testimonial title ${index + 1}:`, el.getAttribute('data-i18n'));
+                    el.removeAttribute('data-i18n');
+                }
+            });
+
+            allTestimonialTexts.forEach((el, index) => {
+                if (el.hasAttribute('data-i18n')) {
+                    console.log(`🔧 Removing data-i18n from testimonial text ${index + 1}:`, el.getAttribute('data-i18n'));
+                    el.removeAttribute('data-i18n');
+                }
+            });
+
+            allTestimonialNames.forEach((el, index) => {
+                if (el.hasAttribute('data-i18n')) {
+                    console.log(`🔧 Removing data-i18n from testimonial name ${index + 1}:`, el.getAttribute('data-i18n'));
+                    el.removeAttribute('data-i18n');
+                }
+            });
+
+            allTestimonialRoles.forEach((el, index) => {
+                if (el.hasAttribute('data-i18n')) {
+                    console.log(`🔧 Removing data-i18n from testimonial role ${index + 1}:`, el.getAttribute('data-i18n'));
+                    el.removeAttribute('data-i18n');
+                }
+            });
+
+            console.log('✅ Testimonials cleanup completed');
+        }, 2000); // Wait 2 seconds after testimonials population
     }
 
     // Populate FAQ Section
@@ -375,11 +571,9 @@
                          document.querySelector('.faq');
 
         if (faqSection && faqData) {
-            // Update FAQ title if exists
-            if (faqData.title) {
-                const faqTitle = faqSection.querySelector('.section-title');
-                if (faqTitle) faqTitle.textContent = faqData.title;
-            }
+            // DUAL-SYSTEM: FAQ section title handled by unified-language-manager
+            // Do NOT update section title here to avoid overriding translations
+            console.log('🔄 Skipping FAQ section title - handled by language manager');
 
             // Update FAQ items if they exist
             if (faqData.items && Array.isArray(faqData.items)) {
@@ -395,17 +589,41 @@
                         // Update question
                         const questionEl = faqTab.querySelector('.faq-question');
                         if (questionEl && item.question) {
+                            console.log(`🔍 FAQ ${tabNumber} question element before update:`, {
+                                hasDataI18n: questionEl.hasAttribute('data-i18n'),
+                                dataI18nValue: questionEl.getAttribute('data-i18n'),
+                                currentText: questionEl.textContent
+                            });
+
                             // Add "Q: " prefix if not already present
                             const questionText = item.question.startsWith('Q:') ? item.question : `Q: ${item.question}`;
                             questionEl.textContent = questionText;
-                            questionEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+                            // Keep data-i18n for fallback translations
+
+                            console.log(`✅ FAQ ${tabNumber} question updated:`, {
+                                newText: questionText,
+                                hasDataI18nAfter: questionEl.hasAttribute('data-i18n'),
+                                dataI18nAfter: questionEl.getAttribute('data-i18n')
+                            });
                         }
 
                         // Update answer
                         const answerEl = faqTab.querySelector('.faq-answer');
                         if (answerEl && item.answer) {
+                            console.log(`🔍 FAQ ${tabNumber} answer element before update:`, {
+                                hasDataI18n: answerEl.hasAttribute('data-i18n'),
+                                dataI18nValue: answerEl.getAttribute('data-i18n'),
+                                currentText: answerEl.textContent
+                            });
+
                             answerEl.textContent = item.answer;
-                            answerEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+                            // Keep data-i18n for fallback translations
+
+                            console.log(`✅ FAQ ${tabNumber} answer updated:`, {
+                                newText: item.answer,
+                                hasDataI18nAfter: answerEl.hasAttribute('data-i18n'),
+                                dataI18nAfter: answerEl.getAttribute('data-i18n')
+                            });
                         }
 
                         console.log(`✅ Updated FAQ ${tabNumber}: ${item.question}`);
@@ -427,16 +645,40 @@
                         // Update question
                         const questionEl = faqTab.querySelector('.faq-question');
                         if (questionEl && item.question) {
+                            console.log(`🔍 FAQ ${tabNumber} question element before update (nested):`, {
+                                hasDataI18n: questionEl.hasAttribute('data-i18n'),
+                                dataI18nValue: questionEl.getAttribute('data-i18n'),
+                                currentText: questionEl.textContent
+                            });
+
                             const questionText = item.question.startsWith('Q:') ? item.question : `Q: ${item.question}`;
                             questionEl.textContent = questionText;
                             questionEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ FAQ ${tabNumber} question updated (nested):`, {
+                                newText: questionText,
+                                hasDataI18nAfter: questionEl.hasAttribute('data-i18n'),
+                                dataI18nAfter: questionEl.getAttribute('data-i18n')
+                            });
                         }
 
                         // Update answer
                         const answerEl = faqTab.querySelector('.faq-answer');
                         if (answerEl && item.answer) {
+                            console.log(`🔍 FAQ ${tabNumber} answer element before update (nested):`, {
+                                hasDataI18n: answerEl.hasAttribute('data-i18n'),
+                                dataI18nValue: answerEl.getAttribute('data-i18n'),
+                                currentText: answerEl.textContent
+                            });
+
                             answerEl.textContent = item.answer;
-                            answerEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+                            // Keep data-i18n for fallback translations
+
+                            console.log(`✅ FAQ ${tabNumber} answer updated (nested):`, {
+                                newText: item.answer,
+                                hasDataI18nAfter: answerEl.hasAttribute('data-i18n'),
+                                dataI18nAfter: answerEl.getAttribute('data-i18n')
+                            });
                         }
 
                         console.log(`✅ Updated FAQ ${tabNumber} from nested structure`);
@@ -446,6 +688,8 @@
         }
 
         console.log('✅ FAQ section updated');
+
+        // No delayed cleanup needed - let the dual-system work naturally
     }
 
     // DEPRECATED: populateProcessSection() - UI translation now handled by unified-language-manager
@@ -552,11 +796,12 @@
 
     // Initialize when DOM is ready - with delay to let language manager run first
     function initializeWithDelay() {
-        // Wait a bit to ensure unified-language-manager.js has processed
+        // Wait longer to ensure unified-language-manager.js has fully processed all translations
         setTimeout(() => {
-            console.log('🚀 Starting home integration after language manager');
+            console.log('🚀 Starting home integration after language manager completes');
+            console.log('⏰ Delayed start time:', new Date().toISOString());
             loadHomePageData();
-        }, 1000); // 1 second delay to ensure language manager finishes
+        }, 2000); // 2 second delay to ensure language manager finishes completely
     }
 
     if (document.readyState === 'loading') {

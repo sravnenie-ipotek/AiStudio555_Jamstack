@@ -5,7 +5,7 @@ const BlogIntegration = {
     // Configuration
     config: {
         apiBaseUrl: window.location.hostname === 'localhost'
-            ? 'http://localhost:1337'
+            ? 'http://localhost:3000'
             : 'https://aistudio555jamstack-production.up.railway.app',
         postsPerPage: 9,
         currentPage: 1,
@@ -35,8 +35,9 @@ const BlogIntegration = {
     },
 
     // Initialize the blog
-    init: function() {
+    init: async function() {
         console.log('Initializing blog integration...');
+        await this.loadNavigationData(); // Load navigation for translations first
         this.loadBlogPosts();
         this.setupEventListeners();
         this.setupLanguageChangeListener();
@@ -73,12 +74,15 @@ const BlogIntegration = {
         return url.toString();
     },
 
-    // Setup language change listener
+    // DUAL-SYSTEM: Setup language change listener with coordination
     setupLanguageChangeListener: function() {
         window.addEventListener('languageChanged', (event) => {
-            console.log('Language changed to:', event.detail.locale);
-            // Reload blog posts with new language
-            this.loadBlogPosts(1);
+            console.log('🌍 [DUAL-SYSTEM] Language changed to:', event.detail.locale);
+            // Wait for unified-language-manager to complete first
+            setTimeout(() => {
+                console.log('🔄 [DUAL-SYSTEM] Reloading blog posts after language manager...');
+                this.loadBlogPosts(1);
+            }, 500);
         });
     },
 
@@ -200,6 +204,10 @@ const BlogIntegration = {
             console.error('Blog container not found');
             return;
         }
+
+        // DUAL-SYSTEM: Preserve elements with data-i18n attributes before clearing
+        const preservedElements = container.querySelectorAll('[data-i18n]');
+        console.log(`🔄 [DUAL-SYSTEM] Preserving ${preservedElements.length} data-i18n elements`);
 
         // Clear existing content completely
         container.innerHTML = '';
@@ -480,6 +488,80 @@ const BlogIntegration = {
     loadMorePosts: function() {
         this.config.currentPage++;
         this.loadBlogPosts(this.config.currentPage);
+    },
+
+    // Load navigation data for translations (shared across all pages)
+    loadNavigationData: async function() {
+        try {
+            console.log('🧭 [Blog] Fetching navigation data for translations...');
+
+            // Get current locale
+            const currentLocale = this.getCurrentLocale();
+
+            // Fetch navigation data from home-page API
+            const response = await fetch(`${this.config.apiBaseUrl}/api/nd/home-page?locale=${currentLocale}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('✅ [Blog] Navigation data received for translations');
+
+            if (result.success && result.data) {
+                // Direct translation of navigation elements
+                this.directlyUpdateNavigationElements(result.data, currentLocale);
+                console.log('🔄 [Blog] Navigation translation data ready');
+            }
+
+        } catch (error) {
+            console.error('❌ [Blog] Error loading navigation data:', error);
+        }
+    },
+
+    // Directly update navigation elements with translations
+    directlyUpdateNavigationElements: function(apiData, locale) {
+        console.log('🎯 [Blog] Directly updating navigation elements...');
+
+        try {
+            const navigation = apiData.navigation?.content?.content;
+            if (!navigation) {
+                console.warn('⚠️ [Blog] No navigation data found in API response');
+                return;
+            }
+
+            // Update Career Orientation
+            const careerOrientationElements = document.querySelectorAll('[data-i18n="navigation.content.career.orientation"]');
+            careerOrientationElements.forEach(element => {
+                if (navigation.career_orientation) {
+                    element.textContent = navigation.career_orientation;
+                    console.log(`✅ [Blog] Updated Career Orientation: "${navigation.career_orientation}"`);
+                }
+            });
+
+            // Update Career Center
+            const careerCenterElements = document.querySelectorAll('[data-i18n="navigation.content.career.center"]');
+            careerCenterElements.forEach(element => {
+                if (navigation.career_center) {
+                    element.textContent = navigation.career_center;
+                    console.log(`✅ [Blog] Updated Career Center: "${navigation.career_center}"`);
+                }
+            });
+
+            // Update Sign Up Today buttons
+            const signUpButtons = apiData.ui_elements?.content?.content?.buttons?.sign_up_today;
+            if (signUpButtons) {
+                const signUpElements = document.querySelectorAll('[data-i18n="ui_elements.content.content.buttons.sign_up_today"]');
+                signUpElements.forEach(element => {
+                    element.textContent = signUpButtons;
+                    console.log(`✅ [Blog] Updated Sign Up Today: "${signUpButtons}"`);
+                });
+            }
+
+            console.log('🎯 [Blog] Direct navigation update complete');
+
+        } catch (error) {
+            console.error('❌ [Blog] Error in direct navigation update:', error);
+        }
     }
 };
 
