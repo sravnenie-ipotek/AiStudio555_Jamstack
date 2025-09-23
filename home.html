@@ -167,6 +167,118 @@
       background: transparent !important;
     }
 
+    /* RTL Layout Fixes for Why Choose Us / Features Section */
+    [dir="rtl"] .why-choose-us-content {
+      direction: ltr; /* Keep LTR for layout structure */
+      display: flex;
+      flex-direction: row; /* Same as LTR but content will be RTL */
+      gap: 60px; /* Add proper spacing between elements */
+    }
+
+    [dir="rtl"] .why-choose-us-image-wrapper {
+      order: 2; /* Move image to right side (opposite of LTR) */
+      margin-left: 0;
+      margin-right: 0;
+      flex-shrink: 0;
+    }
+
+    [dir="rtl"] .why-choose-us-typography {
+      order: 1; /* Move text to left side (opposite of LTR) */
+      direction: rtl; /* RTL text direction */
+      text-align: right;
+      margin-right: 0;
+      padding-right: 0;
+      flex: 1;
+    }
+
+    [dir="rtl"] .why-choose-us-section-title-wrapper {
+      text-align: right;
+      direction: rtl;
+    }
+
+    [dir="rtl"] .section-subtitle-wrapper {
+      justify-content: flex-start; /* Keep same position as LTR */
+      text-align: right;
+      direction: rtl;
+    }
+
+    [dir="rtl"] .banner-subtitle-line {
+      direction: ltr; /* Keep lines in LTR layout */
+    }
+
+    [dir="rtl"] .why-choose-us-slider-wrapper {
+      text-align: right;
+      direction: rtl;
+    }
+
+    [dir="rtl"] .why-choose-us-single {
+      text-align: right;
+      direction: rtl;
+    }
+
+    [dir="rtl"] .why-choose-us-slider-typography {
+      text-align: right;
+      direction: rtl;
+    }
+
+    [dir="rtl"] .why-choose-us-slider-arrow.left {
+      left: auto;
+      right: 20px;
+    }
+
+    [dir="rtl"] .why-choose-us-slider-arrow.right {
+      right: auto;
+      left: 20px;
+    }
+
+    /* Responsive RTL fixes */
+    @media screen and (max-width: 991px) {
+      [dir="rtl"] .why-choose-us-content {
+        flex-direction: column; /* Same as LTR on mobile */
+        gap: 40px; /* Maintain spacing on mobile */
+      }
+
+      [dir="rtl"] .why-choose-us-image-wrapper {
+        order: 1; /* Reset order on mobile */
+        margin: 0 auto; /* Center image */
+      }
+
+      [dir="rtl"] .why-choose-us-typography {
+        order: 2; /* Reset order on mobile */
+        text-align: center; /* Center on mobile like LTR */
+        margin: 0;
+        padding: 0;
+      }
+
+      [dir="rtl"] .why-choose-us-section-title-wrapper {
+        text-align: center;
+      }
+
+      [dir="rtl"] .section-subtitle-wrapper {
+        justify-content: center;
+      }
+    }
+
+    @media screen and (max-width: 767px) {
+      [dir="rtl"] .why-choose-us-content {
+        gap: 30px; /* Smaller gap on mobile */
+      }
+
+      [dir="rtl"] .why-choose-us-typography {
+        text-align: center;
+        padding: 0;
+        margin: 0;
+      }
+
+      [dir="rtl"] .why-choose-us-section-title-wrapper {
+        text-align: center;
+      }
+
+      [dir="rtl"] .section-subtitle-wrapper {
+        justify-content: center;
+      }
+    }
+
     .dropdown-column-wrapper-3 {
       background: #1a1d3a !important;
     }

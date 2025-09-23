@@ -383,8 +383,9 @@
     }
 
     // Setup course tab filtering for courses page
+    // Independent course filtering system (completely disconnected from Webflow)
     function setupCoursesTabFiltering(allCourses) {
-        console.log('⚙️ Setting up courses tab filtering...');
+        console.log('🚀 Setting up INDEPENDENT courses tab filtering (Webflow disconnected)...');
         console.log(`📚 Total courses available for filtering: ${allCourses.length}`);
 
         // Store courses data globally for tab filtering
@@ -393,56 +394,113 @@
         const tabLinks = document.querySelectorAll('.featured-courses-tab-link');
         const tabPanes = document.querySelectorAll('.featured-courses-tab-pane');
 
+        if (tabLinks.length === 0 || tabPanes.length === 0) {
+            console.warn('⚠️ No tab links or panes found for filtering');
+            return;
+        }
+
+        console.log(`🎯 Found ${tabLinks.length} tab links and ${tabPanes.length} tab panes`);
+
+        // Disable ALL Webflow tab functionality by replacing elements
         tabLinks.forEach((tabLink, index) => {
-            tabLink.addEventListener('click', async (e) => {
-                // Don't prevent default - let Webflow handle tab switching
-                // e.preventDefault();
+            // Clone element to remove all Webflow event listeners
+            const newTabLink = tabLink.cloneNode(true);
+            tabLink.parentNode.replaceChild(newTabLink, tabLink);
 
-                // Small delay to let Webflow switch tabs first
-                setTimeout(async () => {
-                    // Get tab category
-                    const tabText = tabLink.textContent.trim().toLowerCase();
-                    console.log(`🏷️ Tab clicked: "${tabText}"`);
+            // Add our own independent click handler
+            newTabLink.addEventListener('click', async (e) => {
+                e.preventDefault(); // Block ALL Webflow behavior
+                e.stopPropagation(); // Stop event bubbling
+                e.stopImmediatePropagation(); // Stop all other handlers
 
-                    // Filter courses based on tab selection
-                    let filteredCourses = [];
-                    if (tabText.includes('all') || tabText === 'הכל' || tabText === 'все') {
-                        // Show all courses
-                        filteredCourses = allCourses;
+                // Get tab category
+                const tabText = newTabLink.textContent.trim().toLowerCase();
+                console.log(`🏷️ Tab clicked: "${tabText}" (index: ${index}) - INDEPENDENT MODE`);
+
+                // Manually update active states (replace Webflow completely)
+                document.querySelectorAll('.featured-courses-tab-link').forEach(link => {
+                    link.classList.remove('w--current');
+                    link.removeAttribute('aria-selected');
+                    link.style.backgroundColor = ''; // Reset background
+                    link.style.color = ''; // Reset color
+                });
+
+                // Set active state on clicked tab
+                newTabLink.classList.add('w--current');
+                newTabLink.setAttribute('aria-selected', 'true');
+
+                // Manually update tab pane visibility (replace Webflow completely)
+                document.querySelectorAll('.featured-courses-tab-pane').forEach((pane, paneIndex) => {
+                    if (paneIndex === index) {
+                        pane.classList.add('w--tab-active');
+                        pane.style.display = 'block';
+                        pane.style.opacity = '1';
+                        pane.style.visibility = 'visible';
+                    } else {
+                        pane.classList.remove('w--tab-active');
+                        pane.style.display = 'none';
+                        pane.style.opacity = '0';
+                        pane.style.visibility = 'hidden';
+                    }
+                });
+
+                // Filter courses based on tab selection
+                let filteredCourses = [];
+                console.log(`🔍 Available categories:`, [...new Set(allCourses.map(c => c.category))]);
+
+                if (tabText.includes('all') || tabText === 'הכל' || tabText === 'все') {
+                    filteredCourses = allCourses;
+                    console.log(`📂 Showing all ${allCourses.length} courses`);
                 } else if (tabText.includes('web') || tabText.includes('פיתוח אתרים') || tabText.includes('веб')) {
-                    filteredCourses = allCourses.filter(c => c.category && c.category.toLowerCase().includes('web'));
-                } else if (tabText.includes('app') || tabText.includes('פיתוח נייד') || tabText.includes('приложен')) {
-                    filteredCourses = allCourses.filter(c => c.category && (c.category.toLowerCase().includes('app') || c.category.toLowerCase().includes('mobile')));
-                } else if (tabText.includes('machine') || tabText.includes('למידת מכונה') || tabText.includes('машин')) {
-                    filteredCourses = allCourses.filter(c => c.category && c.category.toLowerCase().includes('machine'));
+                    filteredCourses = allCourses.filter(c => c.category &&
+                        c.category.toLowerCase().includes('web'));
+                    console.log(`🌐 Web filter: found ${filteredCourses.length} courses`);
+                } else if (tabText.includes('app') || tabText.includes('mobile') || tabText.includes('פיתוח נייד') || tabText.includes('приложен')) {
+                    filteredCourses = allCourses.filter(c => c.category &&
+                        (c.category.toLowerCase().includes('app') || c.category.toLowerCase().includes('mobile')));
+                    console.log(`📱 App filter: found ${filteredCourses.length} courses`);
+                } else if (tabText.includes('machine') || tabText.includes('learning') || tabText.includes('למידת מכונה') || tabText.includes('машин')) {
+                    filteredCourses = allCourses.filter(c => c.category &&
+                        (c.category.toLowerCase().includes('machine') || c.category.toLowerCase().includes('learning')));
+                    console.log(`🤖 ML filter: found ${filteredCourses.length} courses`);
                 } else if (tabText.includes('cloud') || tabText.includes('מחשוב ענן') || tabText.includes('облач')) {
                     filteredCourses = allCourses.filter(c => c.category && c.category.toLowerCase().includes('cloud'));
+                    console.log(`☁️ Cloud filter: found ${filteredCourses.length} courses`);
                 } else if (tabText.includes('data') || tabText.includes('נתונים') || tabText.includes('данн')) {
-                    filteredCourses = allCourses.filter(c => c.category && c.category.toLowerCase().includes('data'));
+                    filteredCourses = allCourses.filter(c => c.category &&
+                        (c.category.toLowerCase().includes('data') || c.category.toLowerCase().includes('science')));
+                    console.log(`📊 Data filter: found ${filteredCourses.length} courses`);
                 } else {
-                    // Default to all if unknown category
                     filteredCourses = allCourses;
+                    console.log(`❓ Unknown filter "${tabText}", showing all ${allCourses.length} courses`);
                 }
 
-                console.log(`🔍 Filtering result: ${filteredCourses.length} courses`);
+                console.log(`🔍 Filtering result: ${filteredCourses.length} courses - IMMEDIATE UPDATE`);
 
-                // Find the active tab pane (Webflow should have switched it)
-                const targetPane = document.querySelector('.featured-courses-tab-pane.w--tab-active');
+                // Get the target pane directly by index (NO Webflow dependency)
+                const allTabPanes = document.querySelectorAll('.featured-courses-tab-pane');
+                const targetPane = allTabPanes[index];
+
                 if (targetPane) {
                     const container = targetPane.querySelector('.featured-courses-collection-list');
                     if (container) {
-                        // Show loading state
-                        container.innerHTML = '<div style="padding: 40px; text-align: center; color: white;">Loading courses...</div>';
+                        // Show immediate loading state
+                        container.innerHTML = '<div style="padding: 40px; text-align: center; color: white; font-size: 16px;">🔄 Filtering courses...</div>';
 
-                        // DUAL-SYSTEM: Preserve data-i18n elements before clearing for filtered courses
+                        // DUAL-SYSTEM: Preserve data-i18n elements before clearing
                         const preservedElements = container.querySelectorAll('[data-i18n]');
                         console.log(`🔄 [DUAL-SYSTEM] Filtering - Preserving ${preservedElements.length} data-i18n elements`);
 
-                        // Populate filtered courses
+                        // Populate filtered courses IMMEDIATELY (no delays)
                         container.innerHTML = '';
-                        for (const course of filteredCourses.slice(0, 12)) {
-                            const courseCard = await createCourseCardForCoursesPage(course);
-                            container.appendChild(courseCard);
+
+                        if (filteredCourses.length > 0) {
+                            for (const course of filteredCourses.slice(0, 12)) {
+                                const courseCard = await createCourseCardForCoursesPage(course);
+                                container.appendChild(courseCard);
+                            }
+                        } else {
+                            container.innerHTML = '<div style="padding: 60px 40px; text-align: center; color: #999; font-size: 18px;">😔 No courses found in this category</div>';
                         }
 
                         // DUAL-SYSTEM: After filtering, remove data-i18n from new dynamic content
@@ -452,23 +510,40 @@
                             element.removeAttribute('data-i18n');
                         });
 
-                        // Show empty state if no courses
-                        const emptyState = targetPane.querySelector('.w-dyn-empty');
-                        if (emptyState) {
-                            if (filteredCourses.length === 0) {
-                                emptyState.style.display = 'block';
-                                emptyState.innerHTML = '<div style="padding: 40px; text-align: center; color: #666;">No courses found in this category.</div>';
-                            } else {
-                                emptyState.style.display = 'none';
-                            }
-                        }
+                        // Ensure container is properly visible
+                        container.style.display = 'grid';
+                        container.style.opacity = '1';
+                        container.style.visibility = 'visible';
                     }
                 }
-                }, 100); // End of setTimeout
+
+                console.log(`✅ INDEPENDENT filtering completed for "${tabText}" - ${filteredCourses.length} courses shown`);
             });
         });
 
-        console.log('✅ Courses tab filtering setup complete');
+        // Set initial state manually (show "All" tab as active)
+        const firstTab = document.querySelector('.featured-courses-tab-link');
+        const firstPane = document.querySelector('.featured-courses-tab-pane');
+        if (firstTab && firstPane) {
+            firstTab.classList.add('w--current');
+            firstTab.setAttribute('aria-selected', 'true');
+            firstPane.classList.add('w--tab-active');
+            firstPane.style.display = 'block';
+            firstPane.style.opacity = '1';
+            firstPane.style.visibility = 'visible';
+
+            // Hide other panes
+            document.querySelectorAll('.featured-courses-tab-pane').forEach((pane, index) => {
+                if (index !== 0) {
+                    pane.classList.remove('w--tab-active');
+                    pane.style.display = 'none';
+                    pane.style.opacity = '0';
+                    pane.style.visibility = 'hidden';
+                }
+            });
+        }
+
+        console.log('✅ INDEPENDENT courses tab filtering setup complete - Webflow FULLY DISCONNECTED');
     }
 
     // Helper function to setup text overflow for cards

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Debug Course Filtering</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .debug-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+        .warning { color: orange; font-weight: bold; }
+        .info { color: blue; }
+        pre {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        button {
+            padding: 12px 24px;
+            margin: 8px;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background: #667eea;
+            color: white;
+            font-weight: 500;
+        }
+        button:hover {
+            background: #5a67d8;
+        }
+        .test-button {
+            background: #48bb78;
+        }
+        .test-button:hover {
+            background: #38a169;
+        }
+        .filter-test {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .course-item {
+            background: #f7fafc;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+            margin: 5px 0;
+        }
+        .category-tag {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .tabs-preview {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .tab-preview {
+            padding: 10px 20px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tab-preview.active {
+            background: #667eea;
+            color: white;
+        }
+        .tab-preview:hover {
+            background: #cbd5e0;
+        }
+        .tab-preview.active:hover {
+            background: #5a67d8;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Course Filtering Debug Tool</h1>
+
+    <div class="debug-section">
+        <h2>1. Load Course Data</h2>
+        <button onclick="loadCourseData()">Load Courses from API</button>
+        <div id="course-data-status"></div>
+        <pre id="raw-courses-data"></pre>
+    </div>
+
+    <div class="debug-section">
+        <h2>2. Category Analysis</h2>
+        <button onclick="analyzeCourseCategories()">Analyze Categories</button>
+        <div id="category-analysis"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>3. Tab Text Analysis</h2>
+        <button onclick="analyzeTabTexts()">Analyze Tab Texts</button>
+        <div id="tab-analysis"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>4. Filtering Logic Test</h2>
+        <div class="tabs-preview" id="tabs-preview">
+            <!-- Tabs will be populated here -->
+        </div>
+        <button class="test-button" onclick="testAllFilters()">Test All Filters</button>
+        <div id="filter-results"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>5. Live Courses Page Integration</h2>
+        <button onclick="openCoursesPage()">Open Courses Page</button>
+        <button onclick="testLiveFiltering()">Test Live Filtering</button>
+        <div id="live-test-results"></div>
+    </div>
+
+    <script>
+        let allCourses = [];
+        let coursesWindow = null;
+
+        // API configuration
+        const API_BASE_URL = window.location.hostname === 'localhost'
+            ? 'http://localhost:3000'
+            : 'https://aistudio555jamstack-production.up.railway.app';
+
+        async function loadCourseData() {
+            const statusDiv = document.getElementById('course-data-status');
+            const dataDiv = document.getElementById('raw-courses-data');
+
+            statusDiv.innerHTML = '<p class="info">Loading courses...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/nd/courses`);
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.courses) {
+                    allCourses = data.data.courses;
+                    statusDiv.innerHTML = `<p class="success">✅ Loaded ${allCourses.length} courses successfully</p>`;
+                    dataDiv.textContent = JSON.stringify(allCourses, null, 2);
+                } else {
+                    statusDiv.innerHTML = '<p class="error">❌ Failed to load courses</p>';
+                    dataDiv.textContent = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+                dataDiv.textContent = error.stack;
+            }
+        }
+
+        function analyzeCourseCategories() {
+            const analysisDiv = document.getElementById('category-analysis');
+
+            if (allCourses.length === 0) {
+                analysisDiv.innerHTML = '<p class="warning">⚠️ Load courses first</p>';
+                return;
+            }
+
+            // Get all unique categories
+            const categories = [...new Set(allCourses.map(c => c.category).filter(Boolean))];
+            const categoryCounts = {};
+
+            categories.forEach(cat => {
+                categoryCounts[cat] = allCourses.filter(c => c.category === cat).length;
+            });
+
+            // Show courses without categories
+            const noCategoryCount = allCourses.filter(c => !c.category).length;
+
+            let html = '<h3>📊 Category Distribution:</h3>';
+            html += '<div class="results-grid">';
+
+            categories.forEach(cat => {
+                html += `
+                    <div class="course-item">
+                        <span class="category-tag">${cat}</span>
+                        <strong>${categoryCounts[cat]} courses</strong>
+                        <br><small>Lowercase: "${cat.toLowerCase()}"</small>
+                    </div>
+                `;
+            });
+
+            if (noCategoryCount > 0) {
+                html += `
+                    <div class="course-item">
+                        <span class="category-tag" style="background: #e53e3e;">No Category</span>
+                        <strong>${noCategoryCount} courses</strong>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+
+            // Show sample courses for each category
+            html += '<h3>📝 Sample Courses by Category:</h3>';
+            categories.forEach(cat => {
+                const sampleCourses = allCourses.filter(c => c.category === cat).slice(0, 3);
+                html += `<h4>${cat}:</h4><ul>`;
+                sampleCourses.forEach(course => {
+                    html += `<li><strong>${course.title}</strong> - Category: "${course.category}"</li>`;
+                });
+                html += '</ul>';
+            });
+
+            analysisDiv.innerHTML = html;
+        }
+
+        function analyzeTabTexts() {
+            const analysisDiv = document.getElementById('tab-analysis');
+
+            // Common tab texts in different languages
+            const tabTexts = [
+                'All Courses', 'הכל', 'Все курсы',
+                'Web Development', 'פיתוח אתרים', 'Веб-разработка',
+                'Mobile Apps', 'פיתוח נייד', 'Мобильные приложения',
+                'Machine Learning', 'למידת מכונה', 'Машинное обучение',
+                'Cloud Computing', 'מחשוב ענן', 'Облачные вычисления',
+                'Data Science', 'מדע הנתונים', 'Наука о данных'
+            ];
+
+            let html = '<h3>🏷️ Tab Text Analysis:</h3>';
+            html += '<p>Testing how tab texts would be processed by filtering logic:</p>';
+
+            tabTexts.forEach(tabText => {
+                const processed = tabText.trim().toLowerCase();
+                let matchType = 'Unknown';
+
+                if (processed.includes('all') || processed === 'הכל' || processed === 'все курсы') {
+                    matchType = 'All Courses';
+                } else if (processed.includes('web') || processed.includes('פיתוח אתרים') || processed.includes('веб')) {
+                    matchType = 'Web Development';
+                } else if (processed.includes('app') || processed.includes('נייד') || processed.includes('мобильн')) {
+                    matchType = 'Mobile Apps';
+                } else if (processed.includes('machine') || processed.includes('מכונה') || processed.includes('машин')) {
+                    matchType = 'Machine Learning';
+                } else if (processed.includes('cloud') || processed.includes('ענן') || processed.includes('облач')) {
+                    matchType = 'Cloud Computing';
+                } else if (processed.includes('data') || processed.includes('נתונים') || processed.includes('данн')) {
+                    matchType = 'Data Science';
+                }
+
+                html += `
+                    <div class="course-item">
+                        <strong>"${tabText}"</strong><br>
+                        <small>Processed: "${processed}"</small><br>
+                        <span class="category-tag">${matchType}</span>
+                    </div>
+                `;
+            });
+
+            analysisDiv.innerHTML = html;
+        }
+
+        function testAllFilters() {
+            const resultsDiv = document.getElementById('filter-results');
+
+            if (allCourses.length === 0) {
+                resultsDiv.innerHTML = '<p class="warning">⚠️ Load courses first</p>';
+                return;
+            }
+
+            // Create tabs preview
+            const tabsDiv = document.getElementById('tabs-preview');
+            const testTabs = [
+                { text: 'All Courses', category: 'all' },
+                { text: 'Web Development', category: 'web' },
+                { text: 'Mobile Apps', category: 'app' },
+                { text: 'Machine Learning', category: 'machine' },
+                { text: 'Cloud Computing', category: 'cloud' },
+                { text: 'Data Science', category: 'data' }
+            ];
+
+            tabsDiv.innerHTML = '';
+            testTabs.forEach((tab, index) => {
+                const tabEl = document.createElement('div');
+                tabEl.className = `tab-preview ${index === 0 ? 'active' : ''}`;
+                tabEl.textContent = tab.text;
+                tabEl.onclick = () => testSingleFilter(tab.text, tabEl);
+                tabsDiv.appendChild(tabEl);
+            });
+
+            // Test all filters
+            let html = '<h3>🧪 Filter Test Results:</h3>';
+
+            testTabs.forEach(tab => {
+                const filteredCourses = applyFilter(tab.text);
+                html += `
+                    <div class="course-item">
+                        <strong>${tab.text}</strong> → ${filteredCourses.length} courses
+                        <br><small>Courses: ${filteredCourses.map(c => c.title).join(', ')}</small>
+                    </div>
+                `;
+            });
+
+            resultsDiv.innerHTML = html;
+        }
+
+        function testSingleFilter(tabText, tabElement) {
+            // Update active tab
+            document.querySelectorAll('.tab-preview').forEach(t => t.classList.remove('active'));
+            tabElement.classList.add('active');
+
+            const resultsDiv = document.getElementById('filter-results');
+            const filteredCourses = applyFilter(tabText);
+
+            let html = `<h3>🔍 Filter: "${tabText}"</h3>`;
+            html += `<p class="info">Found ${filteredCourses.length} courses</p>`;
+            html += '<div class="results-grid">';
+
+            filteredCourses.forEach(course => {
+                html += `
+                    <div class="course-item">
+                        <strong>${course.title}</strong><br>
+                        <span class="category-tag">${course.category || 'No Category'}</span>
+                    </div>
+                `;
+            });
+
+            if (filteredCourses.length === 0) {
+                html += '<div class="course-item"><p class="warning">No courses found for this filter</p></div>';
+            }
+
+            html += '</div>';
+            resultsDiv.innerHTML = html;
+        }
+
+        function applyFilter(tabText) {
+            const text = tabText.trim().toLowerCase();
+            console.log(`🔍 Testing filter for: "${text}"`);
+            console.log(`📚 Available categories:`, [...new Set(allCourses.map(c => c.category))]);
+
+            if (text.includes('all')) {
+                console.log(`📂 All filter: showing ${allCourses.length} courses`);
+                return allCourses;
+            } else if (text.includes('web')) {
+                // Match "Web Development" category specifically
+                const filtered = allCourses.filter(c => c.category &&
+                    c.category.toLowerCase().includes('web'));
+                console.log(`🌐 Web filter: found ${filtered.length} courses`);
+                return filtered;
+            } else if (text.includes('app') || text.includes('mobile')) {
+                // Match "App Development" category
+                const filtered = allCourses.filter(c => c.category &&
+                    (c.category.toLowerCase().includes('app') || c.category.toLowerCase().includes('mobile')));
+                console.log(`📱 App filter: found ${filtered.length} courses`);
+                return filtered;
+            } else if (text.includes('machine') || text.includes('learning')) {
+                // Match "Machine Learning" category
+                const filtered = allCourses.filter(c => c.category &&
+                    (c.category.toLowerCase().includes('machine') || c.category.toLowerCase().includes('learning')));
+                console.log(`🤖 ML filter: found ${filtered.length} courses`);
+                return filtered;
+            } else if (text.includes('cloud')) {
+                const filtered = allCourses.filter(c => c.category && c.category.toLowerCase().includes('cloud'));
+                console.log(`☁️ Cloud filter: found ${filtered.length} courses`);
+                return filtered;
+            } else if (text.includes('data')) {
+                const filtered = allCourses.filter(c => c.category &&
+                    (c.category.toLowerCase().includes('data') || c.category.toLowerCase().includes('science')));
+                console.log(`📊 Data filter: found ${filtered.length} courses`);
+                return filtered;
+            } else {
+                console.log(`❓ Unknown filter "${text}", showing all ${allCourses.length} courses`);
+                return allCourses;
+            }
+        }
+
+        function openCoursesPage() {
+            coursesWindow = window.open('http://localhost:3005/courses.html', 'courses');
+            document.getElementById('live-test-results').innerHTML = '<p class="info">✅ Courses page opened in new window</p>';
+        }
+
+        function testLiveFiltering() {
+            const resultsDiv = document.getElementById('live-test-results');
+
+            if (!coursesWindow || coursesWindow.closed) {
+                resultsDiv.innerHTML = '<p class="error">❌ Open courses page first</p>';
+                return;
+            }
+
+            try {
+                const doc = coursesWindow.document;
+                const tabLinks = doc.querySelectorAll('.featured-courses-tab-link');
+
+                let html = '<h3>🔴 Live Page Test:</h3>';
+                html += `<p>Found ${tabLinks.length} tabs</p>`;
+
+                tabLinks.forEach((link, index) => {
+                    const text = link.textContent.trim();
+                    html += `
+                        <button onclick="clickLiveTab(${index})" style="margin: 5px;">
+                            Click "${text}" Tab
+                        </button>
+                    `;
+                });
+
+                html += '<div id="live-click-results" style="margin-top: 20px;"></div>';
+                resultsDiv.innerHTML = html;
+
+            } catch (error) {
+                resultsDiv.innerHTML = `<p class="error">❌ Error accessing courses page: ${error.message}</p>`;
+            }
+        }
+
+        function clickLiveTab(index) {
+            if (!coursesWindow || coursesWindow.closed) return;
+
+            try {
+                const doc = coursesWindow.document;
+                const tabLinks = doc.querySelectorAll('.featured-courses-tab-link');
+                const resultsDiv = document.getElementById('live-click-results');
+
+                if (tabLinks[index]) {
+                    const tabText = tabLinks[index].textContent.trim();
+
+                    // Record before state
+                    const beforeActivePanes = doc.querySelectorAll('.featured-courses-tab-pane.w--tab-active');
+                    const beforeCourses = beforeActivePanes.length > 0 ?
+                        beforeActivePanes[0].querySelectorAll('.featured-courses-collection-item').length : 0;
+
+                    // Click the tab
+                    tabLinks[index].click();
+
+                    // Check after state with delay
+                    setTimeout(() => {
+                        const afterActivePanes = doc.querySelectorAll('.featured-courses-tab-pane.w--tab-active');
+                        const afterCourses = afterActivePanes.length > 0 ?
+                            afterActivePanes[0].querySelectorAll('.featured-courses-collection-item').length : 0;
+
+                        const activeTab = doc.querySelector('.featured-courses-tab-link.w--current');
+                        const activeTabText = activeTab ? activeTab.textContent.trim() : 'None';
+
+                        resultsDiv.innerHTML = `
+                            <div class="course-item">
+                                <strong>Clicked: "${tabText}"</strong><br>
+                                Active Tab: "${activeTabText}"<br>
+                                Before: ${beforeCourses} courses<br>
+                                After: ${afterCourses} courses<br>
+                                <span class="category-tag ${afterCourses > 0 ? '' : 'style="background: #e53e3e;"'}">${afterCourses > 0 ? 'Success' : 'Problem'}</span>
+                            </div>
+                        `;
+                    }, 500);
+                }
+            } catch (error) {
+                document.getElementById('live-click-results').innerHTML =
+                    `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        // Auto-load courses on page load
+        window.addEventListener('load', () => {
+            setTimeout(loadCourseData, 1000);
+        });
+    </script>
+</body>
+</html>
