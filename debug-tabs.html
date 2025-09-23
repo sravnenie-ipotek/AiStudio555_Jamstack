@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Debug Course Tabs</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-section { margin: 20px 0; padding: 15px; background: #f0f0f0; border-radius: 5px; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+        .info { color: blue; }
+        pre { background: white; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Course Tabs Debug Tool</h1>
+
+    <div class="debug-section">
+        <h2>Tab Structure Analysis</h2>
+        <button onclick="analyzeTabStructure()">Analyze Tab Structure</button>
+        <div id="tab-structure"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>Course Data Check</h2>
+        <button onclick="checkCourseData()">Check Course Data</button>
+        <div id="course-data"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>Event Listeners</h2>
+        <button onclick="checkEventListeners()">Check Event Listeners</button>
+        <div id="event-listeners"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>Live Tab Monitor</h2>
+        <button onclick="startMonitoring()">Start Monitoring</button>
+        <button onclick="stopMonitoring()">Stop Monitoring</button>
+        <div id="monitor"></div>
+    </div>
+
+    <script>
+        let monitorInterval;
+        const coursesWindow = window.open('http://localhost:3005/courses.html', 'courses');
+
+        function analyzeTabStructure() {
+            const output = document.getElementById('tab-structure');
+
+            if (!coursesWindow || coursesWindow.closed) {
+                output.innerHTML = '<p class="error">Please open courses.html first</p>';
+                return;
+            }
+
+            try {
+                const doc = coursesWindow.document;
+
+                // Find tab menu
+                const tabMenu = doc.querySelector('.featured-courses-tab-menu');
+                const tabLinks = doc.querySelectorAll('.featured-courses-tab-link');
+                const tabPanes = doc.querySelectorAll('.featured-courses-tab-pane');
+                const courseLists = doc.querySelectorAll('.featured-courses-collection-list');
+
+                let html = '<h3>Tab Structure:</h3>';
+                html += `<p>Tab Menu Found: <span class="${tabMenu ? 'success' : 'error'}">${tabMenu ? 'YES' : 'NO'}</span></p>`;
+                html += `<p>Tab Links: <span class="info">${tabLinks.length}</span></p>`;
+                html += `<p>Tab Panes: <span class="info">${tabPanes.length}</span></p>`;
+                html += `<p>Course Lists: <span class="info">${courseLists.length}</span></p>`;
+
+                // Check each tab
+                html += '<h4>Tab Details:</h4>';
+                tabLinks.forEach((link, index) => {
+                    const text = link.textContent.trim();
+                    const isActive = link.classList.contains('w--current');
+                    const tabName = link.getAttribute('data-w-tab');
+
+                    html += `<div style="margin: 10px 0; padding: 10px; background: white; border-radius: 3px;">`;
+                    html += `<strong>Tab ${index + 1}:</strong> "${text}"<br>`;
+                    html += `Active: <span class="${isActive ? 'success' : 'info'}">${isActive}</span><br>`;
+                    html += `Tab Name: ${tabName || 'N/A'}<br>`;
+
+                    // Check corresponding pane
+                    if (tabPanes[index]) {
+                        const pane = tabPanes[index];
+                        const isVisible = pane.classList.contains('w--tab-active');
+                        const courseList = pane.querySelector('.featured-courses-collection-list');
+                        const courses = courseList ? courseList.children.length : 0;
+
+                        html += `Pane Visible: <span class="${isVisible ? 'success' : 'info'}">${isVisible}</span><br>`;
+                        html += `Courses in Pane: <span class="info">${courses}</span>`;
+                    }
+                    html += '</div>';
+                });
+
+                output.innerHTML = html;
+            } catch (err) {
+                output.innerHTML = `<p class="error">Error: ${err.message}</p>`;
+            }
+        }
+
+        function checkCourseData() {
+            const output = document.getElementById('course-data');
+
+            if (!coursesWindow || coursesWindow.closed) {
+                output.innerHTML = '<p class="error">Please open courses.html first</p>';
+                return;
+            }
+
+            try {
+                const win = coursesWindow;
+
+                let html = '<h3>Course Data Status:</h3>';
+
+                // Check window.coursesData
+                if (win.coursesData) {
+                    html += `<p class="success">window.coursesData exists with ${win.coursesData.length} courses</p>`;
+
+                    // Show categories
+                    const categories = [...new Set(win.coursesData.map(c => c.category))];
+                    html += '<h4>Categories found:</h4>';
+                    html += '<ul>';
+                    categories.forEach(cat => {
+                        const count = win.coursesData.filter(c => c.category === cat).length;
+                        html += `<li>${cat || 'Uncategorized'}: ${count} courses</li>`;
+                    });
+                    html += '</ul>';
+                } else {
+                    html += '<p class="error">window.coursesData not found</p>';
+                }
+
+                // Check if reloadCoursesData function exists
+                if (win.reloadCoursesData) {
+                    html += '<p class="success">reloadCoursesData function available</p>';
+                    html += '<button onclick="reloadCourses()">Reload Courses</button>';
+                } else {
+                    html += '<p class="error">reloadCoursesData function not found</p>';
+                }
+
+                output.innerHTML = html;
+            } catch (err) {
+                output.innerHTML = `<p class="error">Error: ${err.message}</p>`;
+            }
+        }
+
+        function checkEventListeners() {
+            const output = document.getElementById('event-listeners');
+
+            if (!coursesWindow || coursesWindow.closed) {
+                output.innerHTML = '<p class="error">Please open courses.html first</p>';
+                return;
+            }
+
+            try {
+                const doc = coursesWindow.document;
+                const tabLinks = doc.querySelectorAll('.featured-courses-tab-link');
+
+                let html = '<h3>Event Listener Check:</h3>';
+
+                // Try to trigger click on each tab
+                tabLinks.forEach((link, index) => {
+                    const text = link.textContent.trim();
+                    html += `<button onclick="simulateTabClick(${index})">Click "${text}" Tab</button>`;
+                });
+
+                html += '<div id="click-result" style="margin-top: 10px;"></div>';
+
+                output.innerHTML = html;
+            } catch (err) {
+                output.innerHTML = `<p class="error">Error: ${err.message}</p>`;
+            }
+        }
+
+        function simulateTabClick(index) {
+            try {
+                const doc = coursesWindow.document;
+                const tabLinks = doc.querySelectorAll('.featured-courses-tab-link');
+
+                if (tabLinks[index]) {
+                    // Log before click
+                    console.log('Before click:', {
+                        activeTab: doc.querySelector('.featured-courses-tab-link.w--current')?.textContent,
+                        visiblePane: doc.querySelector('.featured-courses-tab-pane.w--tab-active')
+                    });
+
+                    // Simulate click
+                    tabLinks[index].click();
+
+                    // Check result after delay
+                    setTimeout(() => {
+                        const resultDiv = document.getElementById('click-result');
+                        const activeTab = doc.querySelector('.featured-courses-tab-link.w--current');
+                        const activePane = doc.querySelector('.featured-courses-tab-pane.w--tab-active');
+                        const courseList = activePane?.querySelector('.featured-courses-collection-list');
+                        const courseCount = courseList ? courseList.children.length : 0;
+
+                        resultDiv.innerHTML = `
+                            <div style="padding: 10px; background: white; border-radius: 3px; margin-top: 10px;">
+                                <strong>After clicking tab ${index + 1}:</strong><br>
+                                Active Tab: ${activeTab?.textContent.trim() || 'None'}<br>
+                                Courses Visible: <span class="${courseCount > 0 ? 'success' : 'error'}">${courseCount}</span>
+                            </div>
+                        `;
+                    }, 500);
+                }
+            } catch (err) {
+                console.error('Click simulation error:', err);
+            }
+        }
+
+        function startMonitoring() {
+            const monitor = document.getElementById('monitor');
+
+            if (!coursesWindow || coursesWindow.closed) {
+                monitor.innerHTML = '<p class="error">Please open courses.html first</p>';
+                return;
+            }
+
+            monitor.innerHTML = '<h3>Monitoring Tab Changes...</h3><div id="monitor-log"></div>';
+            const log = document.getElementById('monitor-log');
+
+            monitorInterval = setInterval(() => {
+                try {
+                    const doc = coursesWindow.document;
+                    const activeTab = doc.querySelector('.featured-courses-tab-link.w--current');
+                    const activePane = doc.querySelector('.featured-courses-tab-pane.w--tab-active');
+                    const courseList = activePane?.querySelector('.featured-courses-collection-list');
+                    const courseCount = courseList ? courseList.children.length : 0;
+
+                    const timestamp = new Date().toLocaleTimeString();
+                    const status = `
+                        <div style="border-bottom: 1px solid #ddd; padding: 5px;">
+                            <strong>${timestamp}</strong> -
+                            Tab: "${activeTab?.textContent.trim() || 'None'}" |
+                            Courses: <span class="${courseCount > 0 ? 'success' : 'error'}">${courseCount}</span>
+                        </div>
+                    `;
+
+                    log.innerHTML = status + log.innerHTML;
+
+                    // Keep only last 10 logs
+                    const logs = log.children;
+                    while (logs.length > 10) {
+                        log.removeChild(logs[logs.length - 1]);
+                    }
+                } catch (err) {
+                    console.error('Monitor error:', err);
+                }
+            }, 1000);
+        }
+
+        function stopMonitoring() {
+            clearInterval(monitorInterval);
+            document.getElementById('monitor').innerHTML += '<p class="info">Monitoring stopped</p>';
+        }
+
+        function reloadCourses() {
+            if (coursesWindow && !coursesWindow.closed && coursesWindow.reloadCoursesData) {
+                coursesWindow.reloadCoursesData();
+                setTimeout(() => checkCourseData(), 1000);
+            }
+        }
+
+        // Auto-analyze when page loads
+        setTimeout(() => {
+            if (coursesWindow && !coursesWindow.closed) {
+                analyzeTabStructure();
+                checkCourseData();
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,573 @@
+// Blog Integration with Database
+// This file handles fetching blog posts from the API and rendering them dynamically
+
+const BlogIntegration = {
+    // Configuration
+    config: {
+        apiBaseUrl: window.location.hostname === 'localhost'
+            ? 'http://localhost:3000'
+            : 'https://aistudio555jamstack-production.up.railway.app',
+        postsPerPage: 9,
+        currentPage: 1,
+        totalPosts: 0,
+        defaultImages: [
+            'images/CTA-Section-Bg.jpg',
+            'images/Course-Categories-Content-Bg.jpg',
+            'images/About-Me-Image.jpg',
+            'images/About-Us-Image.png',
+            'images/Authentication-Image.jpg',
+            'images/Banner-Element.png',
+            'images/Course-Categories-Hover-In-Shape.jpg',
+            'images/Inner-Banner-Bg.jpg',
+            'images/Process-Image.jpg'
+        ],
+        categories: {
+            'ai': 'AI & Machine Learning',
+            'web': 'Web Development',
+            'career': 'Career Development',
+            'data': 'Data Science',
+            'security': 'Cybersecurity',
+            'design': 'UI/UX Design',
+            'cloud': 'Cloud Computing',
+            'mobile': 'Mobile Development',
+            'devops': 'DevOps'
+        }
+    },
+
+    // Initialize the blog
+    init: async function() {
+        console.log('Initializing blog integration...');
+        await this.loadNavigationData(); // Load navigation for translations first
+        this.loadBlogPosts();
+        this.setupEventListeners();
+        this.setupLanguageChangeListener();
+    },
+
+    // Get current locale from language manager or URL
+    getCurrentLocale: function() {
+        // Try to get from global language manager first
+        if (window.languageManager && window.languageManager.currentLocale) {
+            return window.languageManager.currentLocale;
+        }
+
+        // Fallback to URL parameter
+        const params = new URLSearchParams(window.location.search);
+        const locale = params.get('locale');
+        if (locale && ['en', 'ru', 'he'].includes(locale)) {
+            return locale;
+        }
+
+        // Fallback to localStorage
+        const savedLocale = localStorage.getItem('preferred_locale');
+        if (savedLocale && ['en', 'ru', 'he'].includes(savedLocale)) {
+            return savedLocale;
+        }
+
+        return 'en'; // Default
+    },
+
+    // Build API URL with locale parameter
+    getApiUrl: function(endpoint = '/api/blog-posts') {
+        const locale = this.getCurrentLocale();
+        const url = new URL(endpoint, this.config.apiBaseUrl);
+        url.searchParams.set('locale', locale);
+        return url.toString();
+    },
+
+    // DUAL-SYSTEM: Setup language change listener with coordination
+    setupLanguageChangeListener: function() {
+        window.addEventListener('languageChanged', (event) => {
+            console.log('🌍 [DUAL-SYSTEM] Language changed to:', event.detail.locale);
+            // Wait for unified-language-manager to complete first
+            setTimeout(() => {
+                console.log('🔄 [DUAL-SYSTEM] Reloading blog posts after language manager...');
+                this.loadBlogPosts(1);
+            }, 500);
+        });
+    },
+
+    // Setup event listeners
+    setupEventListeners: function() {
+        // Add pagination listeners if needed
+        const loadMoreBtn = document.querySelector('.load-more-btn');
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', () => this.loadMorePosts());
+        }
+    },
+
+    // Load blog posts from API
+    loadBlogPosts: async function(page = 1) {
+        try {
+            console.log('Fetching blog posts from API...');
+            console.log('Current locale:', this.getCurrentLocale());
+
+            // Use the new API URL with locale support
+            const apiUrl = this.getApiUrl('/api/blog-posts');
+            const url = new URL(apiUrl);
+            // Note: Our API doesn't currently support pagination, so we'll get all posts
+            // url.searchParams.set('page', page);
+            // url.searchParams.set('limit', this.config.postsPerPage);
+
+            console.log('Fetching from URL:', url.toString());
+            const response = await fetch(url.toString());
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('API Response:', result);
+
+            // Handle different API response structures
+            let posts = [];
+            if (result.data && Array.isArray(result.data)) {
+                // Strapi-style response
+                posts = result.data.map(item => this.normalizePost(item));
+            } else if (Array.isArray(result)) {
+                // Direct array response
+                posts = result.map(post => this.normalizePost(post));
+            } else if (result.posts && Array.isArray(result.posts)) {
+                // Wrapped response
+                posts = result.posts.map(post => this.normalizePost(post));
+            }
+
+            if (posts.length === 0) {
+                console.log('No posts found, attempting to display Hebrew blog posts by API call...');
+                console.log('Current locale:', this.getCurrentLocale());
+                console.log('API URL attempted:', url.toString());
+
+                // Try direct API call for debugging
+                fetch(`${this.config.apiBaseUrl}/api/blog-posts?locale=${this.getCurrentLocale()}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        console.log('Direct API call result:', data);
+                        if (data.success && data.data && data.data.length > 0) {
+                            console.log('Found posts via direct call, rendering...');
+                            this.renderBlogPosts(data.data);
+                        } else {
+                            console.log('Still no posts, displaying placeholder content');
+                            this.displayPlaceholderContent();
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Direct API call failed:', err);
+                        this.displayPlaceholderContent();
+                    });
+            } else {
+                console.log(`Found ${posts.length} posts for ${this.getCurrentLocale()}, rendering...`);
+                this.renderBlogPosts(posts);
+            }
+
+        } catch (error) {
+            console.error('Error fetching blog posts:', error);
+            this.displayPlaceholderContent();
+        }
+    },
+
+    // Normalize post data from different API structures
+    normalizePost: function(item) {
+        // Handle Strapi-style response
+        if (item.attributes) {
+            return {
+                id: item.id,
+                title: item.attributes.title || 'Untitled Post',
+                excerpt: item.attributes.excerpt || item.attributes.description || '',
+                content: item.attributes.content || '',
+                author: item.attributes.author || 'Guest Author',
+                category: item.attributes.category || 'ai',
+                image: item.attributes.featured_image || item.attributes.image || this.getRandomImage(),
+                url: item.attributes.url || '#',
+                publishedAt: item.attributes.publishedAt || item.attributes.published_at || new Date().toISOString(),
+                slug: item.attributes.slug || this.generateSlug(item.attributes.title)
+            };
+        }
+
+        // Handle direct object
+        return {
+            id: item.id,
+            title: item.title || 'Untitled Post',
+            excerpt: item.excerpt || item.description || '',
+            content: item.content || '',
+            author: item.author || 'Guest Author',
+            category: item.category || 'general',
+            image: item.featured_image || item.image || this.getRandomImage(),
+            url: item.url || '#',
+            publishedAt: item.published_at || item.publishedAt || new Date().toISOString(),
+            slug: item.slug || this.generateSlug(item.title)
+        };
+    },
+
+    // Render blog posts to the page
+    renderBlogPosts: function(posts) {
+        const container = document.querySelector('.main-blog-collection-list');
+        if (!container) {
+            console.error('Blog container not found');
+            return;
+        }
+
+        // DUAL-SYSTEM: Preserve elements with data-i18n attributes before clearing
+        const preservedElements = container.querySelectorAll('[data-i18n]');
+        console.log(`🔄 [DUAL-SYSTEM] Preserving ${preservedElements.length} data-i18n elements`);
+
+        // Clear existing content completely
+        container.innerHTML = '';
+
+        // Remove any old Webflow classes and apply shared card grid
+        container.classList.remove('use-uniform-cards');
+        container.classList.add('uniform-card-grid');
+
+        // Add a data attribute to mark this as blog-integration controlled
+        container.setAttribute('data-blog-integration', 'true');
+
+        // Render each post
+        posts.forEach((post, index) => {
+            const postElement = this.createBlogCard(post, index);
+            container.appendChild(postElement);
+        });
+
+        // Add animation
+        this.animateBlogCards();
+    },
+
+    // Create a single blog card element (reverted to working version with uniform sizing)
+    createBlogCard: function(post, index) {
+        // Debug logging to ensure we have real data
+        console.log('Creating blog card for post:', post.title, 'by', post.author);
+
+        const categoryDisplay = this.config.categories[post.category] || this.formatCategory(post.category);
+        const imageUrl = post.image && (post.image.startsWith('http') || post.image.startsWith('images/'))
+            ? post.image
+            : this.getRandomImage();
+
+        // Ensure we never have template placeholders in our data
+        const locale = this.getCurrentLocale();
+        const detailUrl = `blog-detail.html?id=${post.id}&locale=${locale}`;
+
+        console.log(`Post ${post.id} URL debug:`, {
+            'post.url': post.url,
+            'post.url type': typeof post.url,
+            'is null?': post.url === null,
+            'is empty?': post.url === '',
+            'is falsy?': !post.url,
+            'generated URL': detailUrl
+        });
+
+        const safePost = {
+            id: post.id || 'default-id',
+            title: (post.title || 'Default Title').replace(/\{\{.*?\}\}/g, 'Default Title'),
+            author: (post.author || 'Default Author').replace(/\{\{.*?\}\}/g, 'Default Author'),
+            excerpt: (post.excerpt || 'Default description').replace(/\{\{.*?\}\}/g, 'Default description'),
+            url: post.url && post.url !== '' && post.url !== '#' ? post.url : detailUrl
+        };
+
+        const cardHtml = `
+            <div class="uniform-card">
+                <a href="${safePost.url}" class="uniform-card-image-link">
+                    <img src="${imageUrl}" loading="lazy" alt="${safePost.title}" class="uniform-card-image" onerror="this.src='${this.config.defaultImages[0]}'">
+                </a>
+                <div class="uniform-card-content">
+                    <div class="uniform-card-header">
+                        <div class="uniform-card-category">
+                            <div class="uniform-card-category-flex">
+                                <div class="uniform-card-category-dot"></div>
+                                <div class="uniform-card-category-text">${categoryDisplay}</div>
+                            </div>
+                        </div>
+                        <div class="uniform-card-author">
+                            <img src="images/Blog-Card-Author-Icon.svg" loading="lazy" alt="Author" class="uniform-card-author-icon">
+                            <div class="uniform-card-author-name">${safePost.author}</div>
+                        </div>
+                    </div>
+                    <a href="${safePost.url}" class="uniform-card-title">${safePost.title}</a>
+                    <div class="uniform-card-divider"></div>
+                    <p class="uniform-card-description">${safePost.excerpt}</p>
+                    <div class="uniform-card-action">
+                        <a href="${safePost.url}" class="uniform-card-button">
+                            <div class="uniform-card-button-text">Read Full Article</div>
+                            <div class="uniform-card-button-arrow"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const div = document.createElement('div');
+        div.className = 'uniform-card-item';
+        div.setAttribute('role', 'listitem');
+        div.innerHTML = cardHtml;
+
+        // No need for click handlers - using direct links now
+
+        return div;
+    },
+
+    // Fallback blog card creation (original method)
+    createFallbackBlogCard: function(post, index) {
+        const categoryDisplay = this.config.categories[post.category] || this.formatCategory(post.category);
+        const imageUrl = post.image && post.image.startsWith('http') ? post.image : this.getRandomImage();
+        const locale = this.getCurrentLocale();
+        const detailUrl = `blog-detail.html?id=${post.id}&locale=${locale}`;
+
+        console.log(`Fallback card for post ${post.id}: URL "${post.url}" -> using "${detailUrl}"`);
+
+        const cardHtml = `
+            <div class="main-blog-single">
+                <a href="${detailUrl}" class="main-blog-image-link w-inline-block">
+                    <img src="${imageUrl}" loading="lazy" alt="${post.title}" class="main-blog-image" onerror="this.src='${this.config.defaultImages[0]}'">
+                </a>
+                <div class="main-blog-typography">
+                    <div class="blog-card-categories-author">
+                        <div class="blog-card-categories-wrap">
+                            <div class="blog-card-categories-flex">
+                                <div class="blog-card-categories-circel"></div>
+                                <div class="blog-card-categories-name">${categoryDisplay}</div>
+                            </div>
+                        </div>
+                        <div class="blog-card-author-name-icon">
+                            <img src="images/Blog-Card-Author-Icon.svg" loading="lazy" alt="" class="blog-card-author-icon">
+                            <div class="blog-card-author-name">${post.author}</div>
+                        </div>
+                    </div>
+                    <a href="${detailUrl}" class="blog-post-name">${post.title}</a>
+                    <div class="main-blog-line"></div>
+                    <p class="main-blog-description-text">${post.excerpt || this.truncateText(post.content, 150)}</p>
+                    <div class="blog-card-link-wrap">
+                        <a href="${detailUrl}" class="blog-card-link w-inline-block">
+                            <div class="blog-card-link-text">Read this Article</div>
+                            <div class="blog-card-link-arrow"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const div = document.createElement('div');
+        div.className = 'uniform-card-item';
+        div.setAttribute('role', 'listitem');
+        div.innerHTML = cardHtml;
+
+        // No need for click handlers - using direct links now
+
+        return div;
+    },
+
+    // Display placeholder content when no posts are available
+    displayPlaceholderContent: function() {
+        console.log('⚠️ WARNING: Using placeholder content - real Hebrew blog posts not loaded');
+        const placeholderPosts = [
+            {
+                id: 10, // Use real Hebrew blog post IDs
+                title: "The Future of AI in Education: Transforming How We Learn",
+                excerpt: "Explore how artificial intelligence is revolutionizing education through personalized learning paths, intelligent tutoring systems, and adaptive assessments.",
+                author: "Sarah Chen",
+                category: "ai",
+                image: "images/CTA-Section-Bg.jpg"
+            },
+            {
+                id: 2,
+                title: "Web Development Trends to Watch in 2024",
+                excerpt: "Stay ahead of the curve with the latest web development trends, from serverless architecture and edge computing to WebAssembly and progressive web applications.",
+                author: "Mike Johnson",
+                category: "web",
+                image: "images/Course-Categories-Content-Bg.jpg"
+            },
+            {
+                id: 3,
+                title: "5 Steps to Successfully Transition into Tech",
+                excerpt: "A comprehensive guide for career changers looking to break into the tech industry, covering skill development, portfolio building, and networking strategies.",
+                author: "Emily Rodriguez",
+                category: "career",
+                image: "images/About-Me-Image.jpg"
+            },
+            {
+                id: 4,
+                title: "Machine Learning for Beginners: Where to Start",
+                excerpt: "Demystifying machine learning with practical examples and a clear roadmap for beginners to start their journey in data science and artificial intelligence.",
+                author: "David Park",
+                category: "data",
+                image: "images/About-Us-Image.png"
+            },
+            {
+                id: 5,
+                title: "Essential Cybersecurity Skills for 2024",
+                excerpt: "Understanding the critical cybersecurity skills needed in today's digital landscape, from cloud security and zero-trust architecture to incident response.",
+                author: "Alex Thompson",
+                category: "security",
+                image: "images/Authentication-Image.jpg"
+            },
+            {
+                id: 6,
+                title: "The Psychology Behind Great User Experience",
+                excerpt: "Discover how understanding human psychology can help you create more intuitive and engaging user interfaces that truly resonate with your audience.",
+                author: "Lisa Wang",
+                category: "design",
+                image: "images/Banner-Element.png"
+            },
+            {
+                id: 7,
+                title: "Mastering AWS: A Complete Guide for Developers",
+                excerpt: "Learn how to leverage Amazon Web Services to build scalable, reliable cloud applications with best practices for architecture and deployment.",
+                author: "James Wilson",
+                category: "cloud",
+                image: "images/Course-Categories-Hover-In-Shape.jpg"
+            },
+            {
+                id: 8,
+                title: "Flutter vs React Native: Which Framework to Choose?",
+                excerpt: "A detailed comparison of the two most popular cross-platform mobile development frameworks to help you make the right choice for your project.",
+                author: "Rachel Green",
+                category: "mobile",
+                image: "images/Inner-Banner-Bg.jpg"
+            },
+            {
+                id: 9,
+                title: "Building CI/CD Pipelines with GitHub Actions",
+                excerpt: "Step-by-step guide to automating your development workflow with continuous integration and deployment using GitHub Actions.",
+                author: "Tom Anderson",
+                category: "devops",
+                image: "images/Process-Image.jpg"
+            }
+        ];
+
+        this.renderBlogPosts(placeholderPosts);
+    },
+
+    // Handle blog post click
+    handlePostClick: function(postId, slug) {
+        // Navigate to blog detail page
+        // You can implement this based on your routing strategy
+        console.log(`Navigating to blog post: ${postId} (${slug})`);
+        // window.location.href = `/blog/${slug}`;
+    },
+
+    // Utility function to truncate text
+    truncateText: function(text, maxLength) {
+        if (!text) return '';
+        if (text.length <= maxLength) return text;
+        return text.substr(0, maxLength) + '...';
+    },
+
+    // Generate slug from title
+    generateSlug: function(title) {
+        if (!title) return '';
+        return title.toLowerCase()
+            .replace(/[^\w ]+/g, '')
+            .replace(/ +/g, '-');
+    },
+
+    // Get random image from defaults
+    getRandomImage: function() {
+        const index = Math.floor(Math.random() * this.config.defaultImages.length);
+        return this.config.defaultImages[index];
+    },
+
+    // Format category string
+    formatCategory: function(category) {
+        if (!category) return 'General';
+        return category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ');
+    },
+
+    // Animate blog cards on load
+    animateBlogCards: function() {
+        const cards = document.querySelectorAll('.main-blog-collection-list-item');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 50);
+            }, index * 100);
+        });
+    },
+
+    // Load more posts (pagination)
+    loadMorePosts: function() {
+        this.config.currentPage++;
+        this.loadBlogPosts(this.config.currentPage);
+    },
+
+    // Load navigation data for translations (shared across all pages)
+    loadNavigationData: async function() {
+        try {
+            console.log('🧭 [Blog] Fetching navigation data for translations...');
+
+            // Get current locale
+            const currentLocale = this.getCurrentLocale();
+
+            // Fetch navigation data from home-page API
+            const response = await fetch(`${this.config.apiBaseUrl}/api/nd/home-page?locale=${currentLocale}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('✅ [Blog] Navigation data received for translations');
+
+            if (result.success && result.data) {
+                // Direct translation of navigation elements
+                this.directlyUpdateNavigationElements(result.data, currentLocale);
+                console.log('🔄 [Blog] Navigation translation data ready');
+            }
+
+        } catch (error) {
+            console.error('❌ [Blog] Error loading navigation data:', error);
+        }
+    },
+
+    // Directly update navigation elements with translations
+    directlyUpdateNavigationElements: function(apiData, locale) {
+        console.log('🎯 [Blog] Directly updating navigation elements...');
+
+        try {
+            const navigation = apiData.navigation?.content?.content;
+            if (!navigation) {
+                console.warn('⚠️ [Blog] No navigation data found in API response');
+                return;
+            }
+
+            // Update Career Orientation
+            const careerOrientationElements = document.querySelectorAll('[data-i18n="navigation.content.career.orientation"]');
+            careerOrientationElements.forEach(element => {
+                if (navigation.career_orientation) {
+                    element.textContent = navigation.career_orientation;
+                    console.log(`✅ [Blog] Updated Career Orientation: "${navigation.career_orientation}"`);
+                }
+            });
+
+            // Update Career Center
+            const careerCenterElements = document.querySelectorAll('[data-i18n="navigation.content.career.center"]');
+            careerCenterElements.forEach(element => {
+                if (navigation.career_center) {
+                    element.textContent = navigation.career_center;
+                    console.log(`✅ [Blog] Updated Career Center: "${navigation.career_center}"`);
+                }
+            });
+
+            // Update Sign Up Today buttons
+            const signUpButtons = apiData.ui_elements?.content?.content?.buttons?.sign_up_today;
+            if (signUpButtons) {
+                const signUpElements = document.querySelectorAll('[data-i18n="ui_elements.content.content.buttons.sign_up_today"]');
+                signUpElements.forEach(element => {
+                    element.textContent = signUpButtons;
+                    console.log(`✅ [Blog] Updated Sign Up Today: "${signUpButtons}"`);
+                });
+            }
+
+            console.log('🎯 [Blog] Direct navigation update complete');
+
+        } catch (error) {
+            console.error('❌ [Blog] Error in direct navigation update:', error);
+        }
+    }
+};
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => BlogIntegration.init());
+} else {
+    BlogIntegration.init();
+}

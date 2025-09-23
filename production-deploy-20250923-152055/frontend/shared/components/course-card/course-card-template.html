@@ -1,0 +1,99 @@
+<!--
+SHARED COURSE CARD TEMPLATE
+Usage: This template is used by JavaScript to create consistent course cards
+across home.html and courses.html pages.
+
+Variables that will be replaced:
+- {{COURSE_ID}} - Course database ID
+- {{COURSE_TITLE}} - Course title with text overflow handling
+- {{COURSE_IMAGE}} - Course image URL
+- {{COURSE_URL}} - Course details page URL
+- {{COURSE_RATING}} - Course rating (e.g., "4.5")
+- {{COURSE_RATING_STARS}} - Generated star rating HTML
+- {{COURSE_REVIEWS_COUNT}} - Number of reviews
+- {{COURSE_LESSONS_COUNT}} - Number of lessons
+- {{COURSE_DURATION}} - Course duration (e.g., "8 weeks")
+- {{COURSE_CATEGORY}} - Course category
+- {{COURSE_CATEGORY_COLOR}} - Category background color
+- {{COURSE_INSTRUCTOR}} - Instructor name
+- {{COURSE_PRICE}} - Course price
+- {{DATA_W_ID}} - Unique data-w-id for animations
+-->
+
+<div role="listitem" class="shared-course-card-item w-dyn-item">
+    <div data-w-id="{{DATA_W_ID}}"
+         style="background-color: rgb(4,25,63)"
+         class="shared-course-card">
+
+        <!-- Course Image -->
+        <a href="{{COURSE_URL}}" class="shared-course-card-image-link w-inline-block">
+            <img loading="lazy"
+                 src="{{COURSE_IMAGE}}"
+                 alt="{{COURSE_TITLE}}"
+                 class="shared-course-card-image">
+        </a>
+
+        <!-- Course Content -->
+        <div class="shared-course-card-content">
+            <div class="shared-course-card-content-wrap">
+
+                <!-- Course Title with Text Overflow -->
+                <a href="{{COURSE_URL}}" class="shared-course-card-title">
+                    <span class="shared-course-card-title-text">{{COURSE_TITLE}}</span>
+                    <div class="shared-course-card-title-tooltip">{{COURSE_TITLE}}</div>
+                </a>
+
+                <!-- Rating Section -->
+                <div class="shared-course-card-rating">
+                    <div class="shared-course-card-rating-stars">
+                        {{COURSE_RATING_STARS}}
+                    </div>
+                    <div class="shared-course-card-rating-text">
+                        {{COURSE_RATING}} ({{COURSE_REVIEWS_COUNT}})
+                    </div>
+                </div>
+
+                <!-- Course Meta Information -->
+                <div class="shared-course-card-meta-wrap">
+                    <div class="shared-course-card-meta-item">
+                        <img loading="lazy"
+                             src="images/Courses-Video-Session--Time-Icon.svg"
+                             alt="Lessons"
+                             class="shared-course-card-meta-icon">
+                        <div class="shared-course-card-meta-text">
+                            {{COURSE_LESSONS_COUNT}} Lessons
+                        </div>
+                    </div>
+                    <div class="shared-course-card-meta-item">
+                        <img loading="lazy"
+                             src="images/Courses-Video-Session--Time-Icon2.svg"
+                             alt="Duration"
+                             class="shared-course-card-meta-icon">
+                        <div class="shared-course-card-meta-text">
+                            {{COURSE_DURATION}}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Action Button -->
+                <div class="shared-course-card-button-wrapper">
+                    <a href="{{COURSE_URL}}"
+                       data-w-id="{{DATA_W_ID}}-button"
+                       style="background-color: rgba(255,255,255,0); color: rgb(255,255,255)"
+                       class="shared-course-card-button primary-button secondary w-inline-block">
+                        <div class="primary-button-text-wrap">
+                            <div class="primary-button-text-block">Course Details</div>
+                            <div class="primary-button-text-block is-text-absolute">Course Details</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Course Category Tag -->
+        <div class="shared-course-card-category-tag"
+             style="background-color: {{COURSE_CATEGORY_COLOR}}; color: rgb(255,255,255)">
+            {{COURSE_CATEGORY}}
+        </div>
+    </div>
+</div>

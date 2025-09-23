@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Toggle Debug Tool</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .debug-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .debug-controls {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .test-btn {
+            background: #007bff;
+            color: white;
+        }
+
+        .test-btn:hover {
+            background: #0056b3;
+        }
+
+        .status-good {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-bad {
+            background: #dc3545;
+            color: white;
+        }
+
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin: 10px 0;
+        }
+
+        .test-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .test-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+        }
+
+        .test-card.pass {
+            border-left-color: #28a745;
+        }
+
+        .test-card.fail {
+            border-left-color: #dc3545;
+        }
+
+        .lang-pill-demo {
+            display: inline-flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: transparent;
+            color: #007bff;
+            border: 1px solid #007bff;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .pill:hover {
+            background: #007bff;
+            color: white;
+        }
+
+        .pill.active {
+            background: #ffd700;
+            color: #1a1d3a;
+            border-color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Language Toggle Debug Tool</h1>
+
+    <div class="debug-panel">
+        <h2>🎯 Problem Analysis</h2>
+        <p>Testing why language switching doesn't work in <code>http://localhost:3005/home.html</code></p>
+
+        <div class="debug-controls">
+            <button class="test-btn" onclick="testAPIEndpoints()">Test API Endpoints</button>
+            <button class="test-btn" onclick="testPageStructure()">Test Page Structure</button>
+            <button class="test-btn" onclick="testJavaScript()">Test JavaScript</button>
+            <button class="test-btn" onclick="runFullDiagnosis()">Full Diagnosis</button>
+        </div>
+
+        <div id="test-results" class="test-results"></div>
+        <div id="debug-log" class="log"></div>
+    </div>
+
+    <div class="debug-panel">
+        <h2>🖥️ Live Page Test</h2>
+        <p>Test the actual page with language switching:</p>
+
+        <div class="lang-pill-demo">
+            <a href="#" class="pill active" onclick="switchIframeLanguage('en', this)">EN</a>
+            <a href="#" class="pill" onclick="switchIframeLanguage('ru', this)">RU</a>
+            <a href="#" class="pill" onclick="switchIframeLanguage('he', this)">HE</a>
+        </div>
+
+        <div class="iframe-container">
+            <iframe id="test-iframe" src="http://localhost:3005/home.html"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const log = document.getElementById('debug-log');
+        const results = document.getElementById('test-results');
+
+        function logMessage(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+            log.textContent += logEntry;
+            log.scrollTop = log.scrollHeight;
+            console.log(logEntry);
+        }
+
+        function addTestResult(title, status, details) {
+            const card = document.createElement('div');
+            card.className = `test-card ${status}`;
+            card.innerHTML = `
+                <h4>${status === 'pass' ? '✅' : '❌'} ${title}</h4>
+                <p>${details}</p>
+            `;
+            results.appendChild(card);
+        }
+
+        async function testAPIEndpoints() {
+            logMessage('Testing API endpoints...');
+            results.innerHTML = '';
+
+            const endpoints = [
+                { lang: 'en', url: 'http://localhost:1337/api/nd/home-page?locale=en' },
+                { lang: 'ru', url: 'http://localhost:1337/api/nd/home-page?locale=ru' },
+                { lang: 'he', url: 'http://localhost:1337/api/nd/home-page?locale=he' }
+            ];
+
+            for (const endpoint of endpoints) {
+                try {
+                    const startTime = Date.now();
+                    const response = await fetch(endpoint.url);
+                    const loadTime = Date.now() - startTime;
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        addTestResult(
+                            `API ${endpoint.lang.toUpperCase()}`,
+                            'pass',
+                            `Response OK (${loadTime}ms), ${JSON.stringify(data).length} bytes`
+                        );
+                        logMessage(`${endpoint.lang.toUpperCase()} API working: ${loadTime}ms`);
+                    } else {
+                        addTestResult(
+                            `API ${endpoint.lang.toUpperCase()}`,
+                            'fail',
+                            `HTTP ${response.status} - ${response.statusText}`
+                        );
+                        logMessage(`${endpoint.lang.toUpperCase()} API failed: ${response.status}`, 'error');
+                    }
+                } catch (error) {
+                    addTestResult(
+                        `API ${endpoint.lang.toUpperCase()}`,
+                        'fail',
+                        `Network error: ${error.message}`
+                    );
+                    logMessage(`${endpoint.lang.toUpperCase()} API error: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function testPageStructure() {
+            logMessage('Testing page structure...');
+
+            try {
+                const response = await fetch('http://localhost:3005/home.html');
+                const html = await response.text();
+
+                // Check for language pills
+                const hasLangPills = html.includes('lang-pills');
+                const hasLangManager = html.includes('language-manager.js');
+                const hasSetActivePill = html.includes('setActivePill');
+                const hasDataPage = html.includes('data-page="home"');
+
+                addTestResult(
+                    'Language Pills Structure',
+                    hasLangPills ? 'pass' : 'fail',
+                    hasLangPills ? 'Found .lang-pills container' : 'Missing .lang-pills container'
+                );
+
+                addTestResult(
+                    'Language Manager Script',
+                    hasLangManager ? 'pass' : 'fail',
+                    hasLangManager ? 'language-manager.js is included' : 'language-manager.js is missing'
+                );
+
+                addTestResult(
+                    'setActivePill Function',
+                    hasSetActivePill ? 'pass' : 'fail',
+                    hasSetActivePill ? 'setActivePill onclick handlers found' : 'setActivePill function missing'
+                );
+
+                addTestResult(
+                    'Page Data Attribute',
+                    hasDataPage ? 'pass' : 'fail',
+                    hasDataPage ? 'data-page="home" attribute present' : 'data-page attribute missing'
+                );
+
+                logMessage(`Page structure analysis complete`);
+
+            } catch (error) {
+                addTestResult(
+                    'Page Structure Test',
+                    'fail',
+                    `Could not load page: ${error.message}`
+                );
+                logMessage(`Page structure test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testJavaScript() {
+            logMessage('Testing JavaScript files...');
+
+            const jsFiles = [
+                'http://localhost:3005/js/language-manager.js',
+                'http://localhost:3005/js/webflow.js',
+                'http://localhost:3005/js/nd-home-integration.js'
+            ];
+
+            for (const jsFile of jsFiles) {
+                try {
+                    const response = await fetch(jsFile);
+                    const fileName = jsFile.split('/').pop();
+
+                    if (response.ok) {
+                        const jsContent = await response.text();
+                        const isLanguageManager = fileName === 'language-manager.js';
+
+                        if (isLanguageManager) {
+                            const hasLanguageManagerClass = jsContent.includes('class LanguageManager');
+                            const hasSwitchLanguageMethod = jsContent.includes('switchLanguage');
+                            const hasSetActivePillOverride = jsContent.includes('window.setActivePill');
+
+                            addTestResult(
+                                'Language Manager Class',
+                                hasLanguageManagerClass ? 'pass' : 'fail',
+                                hasLanguageManagerClass ? 'LanguageManager class found' : 'LanguageManager class missing'
+                            );
+
+                            addTestResult(
+                                'Switch Language Method',
+                                hasSwitchLanguageMethod ? 'pass' : 'fail',
+                                hasSwitchLanguageMethod ? 'switchLanguage method found' : 'switchLanguage method missing'
+                            );
+
+                            addTestResult(
+                                'setActivePill Override',
+                                hasSetActivePillOverride ? 'pass' : 'fail',
+                                hasSetActivePillOverride ? 'window.setActivePill override found' : 'setActivePill override missing'
+                            );
+                        }
+
+                        logMessage(`${fileName} loaded successfully (${jsContent.length} bytes)`);
+                    } else {
+                        addTestResult(
+                            fileName,
+                            'fail',
+                            `HTTP ${response.status} - ${response.statusText}`
+                        );
+                        logMessage(`${fileName} failed to load: ${response.status}`, 'error');
+                    }
+                } catch (error) {
+                    addTestResult(
+                        jsFile.split('/').pop(),
+                        'fail',
+                        `Network error: ${error.message}`
+                    );
+                    logMessage(`${jsFile} error: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function runFullDiagnosis() {
+            logMessage('Running full diagnosis...', 'info');
+            results.innerHTML = '';
+
+            await testAPIEndpoints();
+            await testPageStructure();
+            await testJavaScript();
+
+            // Test if page actually responds to language switching
+            logMessage('Testing actual language switching...');
+
+            try {
+                // Try to simulate clicking a language pill
+                const iframe = document.getElementById('test-iframe');
+
+                iframe.onload = () => {
+                    try {
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        const langPills = iframeDoc.querySelectorAll('.lang-pill');
+
+                        addTestResult(
+                            'Language Pills in DOM',
+                            langPills.length > 0 ? 'pass' : 'fail',
+                            `Found ${langPills.length} language pills in DOM`
+                        );
+
+                        if (langPills.length > 0) {
+                            const ruPill = Array.from(langPills).find(pill => pill.textContent === 'RU');
+                            if (ruPill) {
+                                logMessage('Attempting to click RU pill...');
+                                ruPill.click();
+
+                                setTimeout(() => {
+                                    const htmlLang = iframeDoc.documentElement.getAttribute('lang');
+                                    const currentURL = iframe.contentWindow.location.href;
+
+                                    addTestResult(
+                                        'Language Switch Test',
+                                        htmlLang === 'ru' ? 'pass' : 'fail',
+                                        `HTML lang: ${htmlLang}, URL: ${currentURL}`
+                                    );
+
+                                    logMessage(`Language switch result: lang="${htmlLang}", URL contains locale: ${currentURL.includes('locale=ru')}`);
+                                }, 2000);
+                            }
+                        }
+                    } catch (crossOriginError) {
+                        addTestResult(
+                            'DOM Access Test',
+                            'fail',
+                            'Cross-origin restrictions prevent DOM access'
+                        );
+                        logMessage('Cannot access iframe DOM due to cross-origin restrictions', 'warning');
+                    }
+                };
+
+                // Trigger iframe reload to test
+                iframe.src = iframe.src;
+
+            } catch (error) {
+                logMessage(`Full diagnosis error: ${error.message}`, 'error');
+            }
+
+            logMessage('Full diagnosis complete!');
+        }
+
+        function switchIframeLanguage(locale, button) {
+            // Update active pill
+            document.querySelectorAll('.pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+            button.classList.add('active');
+
+            // Update iframe URL
+            const iframe = document.getElementById('test-iframe');
+            const baseURL = 'http://localhost:3005/home.html';
+            iframe.src = `${baseURL}?locale=${locale}`;
+
+            logMessage(`Switching iframe to ${locale.toUpperCase()}`);
+        }
+
+        // Auto-run basic tests on load
+        window.addEventListener('load', () => {
+            logMessage('Debug tool loaded. Click buttons above to run tests.');
+        });
+    </script>
+</body>
+</html>

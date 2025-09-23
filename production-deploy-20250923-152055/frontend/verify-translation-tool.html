@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Translation Tool</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin: 10px 0;
+            display: inline-block;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .warning { background: #fff3cd; color: #856404; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #667eea;
+            color: white;
+            font-size: 14px;
+        }
+        button:hover { background: #5a67d8; }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        pre {
+            background: #f7fafc;
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Translation Tool Verification</h1>
+
+    <div class="test-section">
+        <h2>Step 1: Check Tool is Loading</h2>
+        <button onclick="checkTool()">Check Tool Status</button>
+        <div id="tool-status"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 2: Test Translation Detection</h2>
+        <button onclick="testTranslations()">Run Translation Test</button>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 3: Verify Button Functionality</h2>
+        <p>The tool should now show "📍 Show in Page" buttons next to each untranslated element.</p>
+        <iframe id="test-tool" src="http://localhost:3005/test-live-translations.html"></iframe>
+    </div>
+
+    <script>
+        async function checkTool() {
+            const statusDiv = document.getElementById('tool-status');
+            try {
+                const response = await fetch('http://localhost:3005/test-live-translations.html');
+                const text = await response.text();
+
+                // Check for key elements
+                const hasLocateButton = text.includes('locate-button');
+                const hasLocateFunction = text.includes('function locateElement');
+                const buttonCount = (text.match(/locate-button/g) || []).length;
+
+                statusDiv.innerHTML = `
+                    <div class="status ${hasLocateButton ? 'success' : 'error'}">
+                        ${hasLocateButton ? '✅' : '❌'} Locate button CSS found
+                    </div>
+                    <div class="status ${hasLocateFunction ? 'success' : 'error'}">
+                        ${hasLocateFunction ? '✅' : '❌'} Locate function found
+                    </div>
+                    <div class="status info">
+                        📊 Button references: ${buttonCount} occurrences
+                    </div>
+                    <div class="status ${buttonCount >= 4 ? 'success' : 'warning'}">
+                        ${buttonCount >= 4 ? '✅' : '⚠️'} Implementation looks ${buttonCount >= 4 ? 'complete' : 'partial'}
+                    </div>
+                `;
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testTranslations() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<div class="status info">🔄 Testing translations...</div>';
+
+            try {
+                // Test home page API
+                const response = await fetch('http://localhost:3000/api/nd/home-page?locale=ru');
+                const data = await response.json();
+
+                let issues = [];
+
+                // Check for common translation issues
+                function checkTranslations(obj, path = '') {
+                    for (let key in obj) {
+                        if (typeof obj[key] === 'string') {
+                            // Check if it's in English when it should be Russian
+                            if (obj[key].match(/^[A-Za-z\s]+$/) && obj[key].length > 3) {
+                                issues.push(`${path}.${key}: "${obj[key]}" (looks like English)`);
+                            }
+                        } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                            checkTranslations(obj[key], path ? `${path}.${key}` : key);
+                        }
+                    }
+                }
+
+                checkTranslations(data);
+
+                if (issues.length === 0) {
+                    resultsDiv.innerHTML = '<div class="status success">✅ No obvious translation issues found in API</div>';
+                } else {
+                    resultsDiv.innerHTML = `
+                        <div class="status warning">⚠️ Found ${issues.length} potential issues:</div>
+                        <pre>${issues.slice(0, 5).join('\n')}</pre>
+                        ${issues.length > 5 ? `<div class="status info">...and ${issues.length - 5} more</div>` : ''}
+                    `;
+                }
+
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="status error">❌ API Error: ${error.message}</div>`;
+            }
+        }
+
+        // Auto-check on load
+        window.onload = () => {
+            checkTool();
+        };
+    </script>
+
+    <div class="test-section">
+        <h2>📋 Instructions</h2>
+        <ol>
+            <li>Click "Check Tool Status" to verify the tool is properly configured</li>
+            <li>Click "Run Translation Test" to check API responses</li>
+            <li>In the iframe below:
+                <ul>
+                    <li>Select "Home Page" from the dropdown</li>
+                    <li>Click "Quick Test" or "Test Page"</li>
+                    <li>Look for the blue "📍 Show in Page" buttons next to untranslated elements</li>
+                    <li>Click a button to highlight the element in the preview</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h3>✅ Expected Behavior:</h3>
+        <ul>
+            <li>Each untranslated element should have a "📍 Show in Page" button</li>
+            <li>Clicking the button should highlight the element in yellow with a red border</li>
+            <li>The page should scroll to the highlighted element</li>
+            <li>No JavaScript errors in the console</li>
+        </ul>
+    </div>
+</body>
+</html>

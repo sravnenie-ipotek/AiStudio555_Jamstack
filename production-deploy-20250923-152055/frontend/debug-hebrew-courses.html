@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Debug Hebrew Courses</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            direction: rtl;
+        }
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            direction: ltr;
+            text-align: left;
+        }
+        .course-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>בדיקת עמוד הקורסים בעברית</h1>
+
+    <h2>בדיקת API:</h2>
+    <div id="api-tests"></div>
+
+    <h2>קורסים מהAPI:</h2>
+    <div id="courses"></div>
+
+    <h2>תרגומי UI:</h2>
+    <div id="ui-translations"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000';
+        const testsDiv = document.getElementById('api-tests');
+        const coursesDiv = document.getElementById('courses');
+        const uiDiv = document.getElementById('ui-translations');
+
+        async function runTests() {
+            // Test 1: Check courses API
+            testsDiv.innerHTML += '<h3>Test 1: Courses API (Hebrew)</h3>';
+            try {
+                const resp = await fetch(`${API_BASE}/api/nd/courses?locale=he`);
+                const data = await resp.json();
+
+                if (data.success && data.data && data.data.length > 0) {
+                    testsDiv.innerHTML += `<p class="success">✓ API returned ${data.data.length} courses in Hebrew</p>`;
+
+                    // Display courses
+                    data.data.forEach(course => {
+                        coursesDiv.innerHTML += `
+                            <div class="course-card">
+                                <h3>${course.title}</h3>
+                                <p>${course.description}</p>
+                                <p>קטגוריה: ${course.category} | מחיר: $${course.price}</p>
+                                <p>משך: ${course.duration} | שיעורים: ${course.lessons_count}</p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    testsDiv.innerHTML += '<p class="error">✗ No courses data returned</p>';
+                }
+            } catch (err) {
+                testsDiv.innerHTML += `<p class="error">✗ Courses API Error: ${err.message}</p>`;
+            }
+
+            // Test 2: Check UI translations
+            testsDiv.innerHTML += '<h3>Test 2: UI Translations (Hebrew)</h3>';
+            try {
+                const resp = await fetch(`${API_BASE}/api/nd/courses-page?locale=he`);
+                const data = await resp.json();
+
+                if (data.success && data.data) {
+                    testsDiv.innerHTML += '<p class="success">✓ UI translations loaded</p>';
+
+                    // Display some UI translations
+                    uiDiv.innerHTML += '<pre>' + JSON.stringify(data.data, null, 2) + '</pre>';
+                } else {
+                    testsDiv.innerHTML += '<p class="error">✗ No UI translations</p>';
+                }
+            } catch (err) {
+                testsDiv.innerHTML += `<p class="error">✗ UI Translations Error: ${err.message}</p>`;
+            }
+
+            // Test 3: Check if course cards are visible
+            testsDiv.innerHTML += '<h3>Test 3: Checking actual courses page</h3>';
+            testsDiv.innerHTML += `
+                <p>Please open: <a href="http://localhost:3005/courses.html?locale=he" target="_blank">http://localhost:3005/courses.html?locale=he</a></p>
+                <p>Then open browser console (F12) and check for:</p>
+                <ul>
+                    <li>JavaScript errors</li>
+                    <li>Network errors (failed API calls)</li>
+                    <li>Console logs from nd-courses-integration.js</li>
+                </ul>
+            `;
+        }
+
+        // Run tests on load
+        runTests();
+    </script>
+</body>
+</html>

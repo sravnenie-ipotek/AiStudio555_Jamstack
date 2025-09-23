@@ -1,0 +1,35 @@
+📁 SHARED CARD COMPONENT PATHS
+=====================================
+
+🎯 NEW LOCATION (Use these paths):
+/Users/michaelmishayev/Desktop/newCode/backups/newDesign/shared/components/sharedCard/
+
+📂 Files in this directory:
+├── README.md                    - Complete usage documentation
+├── uniform-card-generator.js    - Main JavaScript component
+├── uniform-card-styles.css      - Complete CSS styling
+├── uniform-card-template.html   - HTML template structure
+└── file-paths.txt              - This file
+
+🔗 HTML Include Paths (relative to project root):
+<!-- CSS -->
+<link href="shared/components/sharedCard/uniform-card-styles.css" rel="stylesheet" type="text/css">
+
+<!-- JavaScript -->
+<script src="shared/components/sharedCard/uniform-card-generator.js" type="text/javascript"></script>
+
+🌐 Fetch Paths for Templates:
+fetch('shared/components/sharedCard/uniform-card-template.html')
+
+✅ Updated Files:
+- ./teachers.html (CSS and JS paths updated)
+- ./js/uniform-card-generator.js (template and CSS paths updated)
+- ./shared/components/sharedCard/uniform-card-generator.js (internal paths updated)
+
+📋 Currently Used In:
+- Blog page (via blog-integration.js)
+- Teachers page (teachers.html)
+- Any page including the generator
+
+💡 Quick Start:
+See README.md for complete documentation and examples.

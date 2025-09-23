@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Course Details Test</title>
+</head>
+<body>
+    <h1>Course Details Test</h1>
+
+    <div>
+        <h2 class="course-details-name">Loading...</h2>
+        <p class="course-details-description-text">Loading description...</p>
+        <div class="courses-single-current-price">Loading price...</div>
+    </div>
+
+    <script>
+        console.log('🚀 Simple test page loaded');
+
+        // Test API call
+        const API_BASE = 'http://localhost:3000';
+        const courseId = 2;
+        const locale = 'en';
+        const url = `${API_BASE}/api/nd/courses/${courseId}?locale=${locale}`;
+
+        console.log('🔍 Fetching course from:', url);
+
+        fetch(url)
+            .then(response => {
+                console.log('📡 Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('✅ Course data received:', data);
+
+                const course = data.success && data.data ? data.data : data;
+
+                // Update DOM
+                const nameEl = document.querySelector('.course-details-name');
+                const descEl = document.querySelector('.course-details-description-text');
+                const priceEl = document.querySelector('.courses-single-current-price');
+
+                if (nameEl) {
+                    nameEl.textContent = course.title || 'No title';
+                    console.log('✅ Updated course name to:', course.title);
+                }
+
+                if (descEl) {
+                    descEl.textContent = course.short_description || course.description || 'No description';
+                    console.log('✅ Updated description');
+                }
+
+                if (priceEl) {
+                    priceEl.textContent = `$${course.price || '0'}`;
+                    console.log('✅ Updated price to:', course.price);
+                }
+            })
+            .catch(error => {
+                console.error('❌ Error fetching course:', error);
+
+                // Update DOM with error
+                const nameEl = document.querySelector('.course-details-name');
+                if (nameEl) {
+                    nameEl.textContent = 'Error loading course';
+                    nameEl.style.color = 'red';
+                }
+            });
+    </script>
+</body>
+</html>

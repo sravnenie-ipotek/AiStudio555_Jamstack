@@ -1,0 +1,530 @@
+/* Course Details Page - Webflow 1:1 Design */
+
+/* Main Section */
+.section.courses-single {
+  background: #05051a;
+  padding: 60px 0 120px;
+  min-height: 100vh;
+}
+
+/* Course Details Content with Opacity Animation */
+.course-details-content {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.course-details-content.visible {
+  opacity: 1;
+}
+
+/* Course Info Section */
+.courses-single-info {
+  margin-bottom: 60px;
+}
+
+.courses-single-info-content {
+  max-width: 800px;
+}
+
+/* Course Name */
+.course-details-name {
+  font-family: "Manrope", sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #ffffff;
+  margin-bottom: 24px;
+}
+
+/* Course Description */
+.course-details-description-text {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 40px;
+}
+
+/* Author Wrapper */
+.courses-single-author-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.courses-single-author-image-wrapper {
+  flex-shrink: 0;
+}
+
+.courses-single-author-image {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.courses-single-author-content {
+  flex: 1;
+}
+
+.course-details-author-name {
+  font-family: "Manrope", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.course-details-author-bio {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+/* Short Categories */
+.courses-single-short-categories {
+  margin-bottom: 48px;
+}
+
+.course-details-short-categories-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 214, 89, 0.1);
+  border: 1px solid rgba(255, 214, 89, 0.3);
+  border-radius: 20px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #ffd659;
+}
+
+/* Two Column Bottom Content */
+.courses-single-bottom-content {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Left Column - Lessons */
+.courses-single-lessons-column {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.courses-single-section-title {
+  font-family: "Manrope", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 24px;
+}
+
+/* Lessons Container */
+.course-lessons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.courses-single-lesson-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.courses-single-lesson-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.courses-single-lesson-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #ffd659;
+  color: #05051a;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.courses-single-lesson-content {
+  flex: 1;
+}
+
+.courses-single-lesson-title {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.4;
+}
+
+.courses-single-lesson-duration {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 4px;
+}
+
+/* Objectives List */
+.course-objectives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.course-objective-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.course-objective-item .checkmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: #ffd659;
+  color: #05051a;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.course-objective-item span:not(.checkmark) {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+}
+
+/* Requirements List */
+.course-requirements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.course-requirement-item {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+  padding-left: 20px;
+  position: relative;
+}
+
+.course-requirement-item::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #ffd659;
+  font-weight: 600;
+}
+
+/* Right Column - Sticky Sidebar */
+.courses-single-sidebar {
+  position: sticky;
+  top: 20px;
+}
+
+/* Video/Image Card */
+.courses-single-video-card {
+  background: #050f2c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.courses-single-video-wrapper {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+
+.courses-single-video-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.courses-single-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.courses-single-video-wrapper:hover .courses-single-video-overlay {
+  opacity: 1;
+}
+
+.courses-single-play-button {
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.courses-single-play-button:hover {
+  transform: scale(1.1);
+}
+
+.courses-single-play-icon {
+  width: 0;
+  height: 0;
+  border-left: 16px solid #05051a;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  margin-left: 4px;
+}
+
+/* Card Info */
+.courses-single-card-info {
+  padding: 32px;
+}
+
+/* Price */
+.courses-single-price {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.courses-single-current-price {
+  font-family: "Manrope", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffd659;
+}
+
+.courses-single-old-price {
+  font-family: "Manrope", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: line-through;
+}
+
+/* Features */
+.courses-single-features {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 24px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.courses-single-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.courses-single-feature-icon {
+  width: 20px;
+  height: 20px;
+  background: #ffd659;
+  border-radius: 4px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.courses-single-feature-icon::after {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #05051a;
+}
+
+.courses-single-feature-text {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+/* Enroll Button */
+.courses-single-enroll-button {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.primary-button {
+  background: #ffd659;
+  color: #05051a;
+  border-radius: 8px;
+  padding: 16px 32px;
+  font-family: "Manrope", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 214, 89, 0.3);
+}
+
+.primary-button-text-wrap {
+  position: relative;
+}
+
+.primary-button-text-block {
+  transition: transform 0.3s ease;
+}
+
+.primary-button-text-block.is-text-absolute {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(100%);
+}
+
+.primary-button:hover .primary-button-text-block:not(.is-text-absolute) {
+  transform: translateY(-100%);
+}
+
+.primary-button:hover .primary-button-text-block.is-text-absolute {
+  transform: translateY(0);
+}
+
+/* Category */
+.courses-single-category {
+  text-align: center;
+}
+
+.courses-single-category-tag {
+  display: inline-block;
+  padding: 8px 16px;
+  background: rgba(255, 214, 89, 0.1);
+  border: 1px solid rgba(255, 214, 89, 0.3);
+  border-radius: 20px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #ffd659;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .courses-single-bottom-content {
+    grid-template-columns: 1fr 350px;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 991px) {
+  .course-details-name {
+    font-size: 2.5rem;
+  }
+
+  .courses-single-bottom-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .courses-single-sidebar {
+    position: relative;
+    top: 0;
+  }
+
+  .courses-single-video-card {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .section.courses-single {
+    padding: 40px 0 80px;
+  }
+
+  .course-details-name {
+    font-size: 2rem;
+  }
+
+  .course-details-description-text {
+    font-size: 1rem;
+  }
+
+  .courses-single-author-wrapper {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .courses-single-card-info {
+    padding: 24px;
+  }
+
+  .courses-single-current-price {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 479px) {
+  .course-details-name {
+    font-size: 1.75rem;
+  }
+
+  .courses-single-bottom-content {
+    gap: 30px;
+  }
+
+  .courses-single-lessons-column {
+    gap: 30px;
+  }
+
+  .courses-single-card-info {
+    padding: 20px;
+  }
+}

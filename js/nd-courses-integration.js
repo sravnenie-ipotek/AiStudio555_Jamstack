@@ -199,15 +199,14 @@
                     courses: transformedCourses
                 };
                 await populateCoursesSection(coursesData);
-                // Extract unique categories from courses
-                const categories = [...new Set(transformedCourses.map(c => c.category).filter(Boolean))];
-                setupCoursesTabFiltering(categories);
+                // Pass the full courses data for filtering
+                setupCoursesTabFiltering(transformedCourses);
             } else if (Array.isArray(data)) {
                 // Handle direct array response
                 const coursesData = { courses: data };
                 await populateCoursesSection(coursesData);
-                const categories = [...new Set(data.map(c => c.category).filter(Boolean))];
-                setupCoursesTabFiltering(categories);
+                // Pass the full courses data for filtering
+                setupCoursesTabFiltering(data);
             } else {
                 console.warn('⚠️ No courses data found in database');
                 // Don't show anything if no data
@@ -246,8 +245,12 @@
             // Clear existing placeholder content
             container.innerHTML = '';
 
-            // Populate with all courses initially (filtering will happen via tabs)
-            for (const course of courses.slice(0, 12)) { // Show more courses on courses page
+            // Initially populate ALL tabs with ALL courses
+            // Filtering will happen when tabs are clicked
+            let coursesToShow = courses;
+
+            // Populate with courses
+            for (const course of coursesToShow.slice(0, 12)) { // Show more courses on courses page
                 console.log(`Creating card for course: ${course.title}`);
                 const courseCard = await createCourseCardForCoursesPage(course);
                 console.log('Card created:', courseCard);
@@ -380,31 +383,51 @@
     }
 
     // Setup course tab filtering for courses page
-    function setupCoursesTabFiltering(categoriesData) {
+    function setupCoursesTabFiltering(allCourses) {
         console.log('⚙️ Setting up courses tab filtering...');
+        console.log(`📚 Total courses available for filtering: ${allCourses.length}`);
+
+        // Store courses data globally for tab filtering
+        window.coursesData = allCourses;
 
         const tabLinks = document.querySelectorAll('.featured-courses-tab-link');
         const tabPanes = document.querySelectorAll('.featured-courses-tab-pane');
 
         tabLinks.forEach((tabLink, index) => {
             tabLink.addEventListener('click', async (e) => {
-                e.preventDefault();
+                // Don't prevent default - let Webflow handle tab switching
+                // e.preventDefault();
 
-                // Get tab category
-                let category = 'all';
-                const tabText = tabLink.textContent.trim().toLowerCase();
+                // Small delay to let Webflow switch tabs first
+                setTimeout(async () => {
+                    // Get tab category
+                    const tabText = tabLink.textContent.trim().toLowerCase();
+                    console.log(`🏷️ Tab clicked: "${tabText}"`);
 
-                if (tabText.includes('web')) category = 'web-development';
-                else if (tabText.includes('app')) category = 'app-development';
-                else if (tabText.includes('machine')) category = 'machine-learning';
-                else if (tabText.includes('cloud')) category = 'cloud-computing';
+                    // Filter courses based on tab selection
+                    let filteredCourses = [];
+                    if (tabText.includes('all') || tabText === 'הכל' || tabText === 'все') {
+                        // Show all courses
+                        filteredCourses = allCourses;
+                } else if (tabText.includes('web') || tabText.includes('פיתוח אתרים') || tabText.includes('веб')) {
+                    filteredCourses = allCourses.filter(c => c.category && c.category.toLowerCase().includes('web'));
+                } else if (tabText.includes('app') || tabText.includes('פיתוח נייד') || tabText.includes('приложен')) {
+                    filteredCourses = allCourses.filter(c => c.category && (c.category.toLowerCase().includes('app') || c.category.toLowerCase().includes('mobile')));
+                } else if (tabText.includes('machine') || tabText.includes('למידת מכונה') || tabText.includes('машин')) {
+                    filteredCourses = allCourses.filter(c => c.category && c.category.toLowerCase().includes('machine'));
+                } else if (tabText.includes('cloud') || tabText.includes('מחשוב ענן') || tabText.includes('облач')) {
+                    filteredCourses = allCourses.filter(c => c.category && c.category.toLowerCase().includes('cloud'));
+                } else if (tabText.includes('data') || tabText.includes('נתונים') || tabText.includes('данн')) {
+                    filteredCourses = allCourses.filter(c => c.category && c.category.toLowerCase().includes('data'));
+                } else {
+                    // Default to all if unknown category
+                    filteredCourses = allCourses;
+                }
 
-                // Filter and populate the active tab
-                const filteredCourses = categoriesData[category] || [];
-                console.log(`🔍 Filtering to category "${category}": ${filteredCourses.length} courses`);
+                console.log(`🔍 Filtering result: ${filteredCourses.length} courses`);
 
-                // Find the corresponding tab pane
-                const targetPane = tabPanes[index];
+                // Find the active tab pane (Webflow should have switched it)
+                const targetPane = document.querySelector('.featured-courses-tab-pane.w--tab-active');
                 if (targetPane) {
                     const container = targetPane.querySelector('.featured-courses-collection-list');
                     if (container) {
@@ -441,6 +464,7 @@
                         }
                     }
                 }
+                }, 100); // End of setTimeout
             });
         });
 

@@ -10504,9 +10504,9 @@ app.get('/api/populate-nd-home', async (req, res) => {
       ui: { en: '{"loading":"Loading...","error":"Error","no_items":"No items found"}',
            ru: '{"loading":"Загрузка...","error":"Ошибка","no_items":"Ничего не найдено"}',
            he: '{"loading":"טוען...","error":"שגיאה","no_items":"לא נמצאו פריטים"}' },
-      misc: { en: '{"learn_more":"Learn More","read_more":"Read More","view_all":"View All"}',
-             ru: '{"learn_more":"Узнать больше","read_more":"Читать далее","view_all":"Посмотреть все"}',
-             he: '{"learn_more":"למד עוד","read_more":"קרא עוד","view_all":"צפה בכל"}' }
+      misc: { en: '{"learn_more":"Learn More","read_more":"Read More","view_all":"View All","explore_plans":"Explore Plans Features"}',
+             ru: '{"learn_more":"Узнать больше","read_more":"Читать далее","view_all":"Посмотреть все","explore_plans":"Изучить планы и функции"}',
+             he: '{"learn_more":"למד עוד","read_more":"קרא עוד","view_all":"צפה בכל","explore_plans":"חקור תוכניות ותכונות"}' }
     };
 
     let added = 0;

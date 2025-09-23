@@ -43,15 +43,31 @@ Port 3005/8000        → Port 3000 (local)   → Railway Cloud
 
 ## Translation System (Multi-language Support)
 
-### Unified Translation Architecture
-- **Single Language Manager**: `js/unified-language-manager.js` handles all pages
-- **Language Persistence**: Locale saved in localStorage, persists across pages
-- **URL Parameters**: `?locale=ru` or `?locale=he` for direct language access
-- **Language Switchers**: EN/RU/HE pills in navigation bar
+### Dual-System Translation Architecture
+Based on `/backups/newDesign/docs/develop/translationLogics/WorkingLogic.md`
+
+#### System 1: UI Translation (unified-language-manager.js)
+- **Handles**: Static UI text (titles, labels, buttons, navigation)
+- **Process**: HTML[data-i18n] → Language Manager → /api/nd/*-page → Database → DOM
+- **Storage**: `nd_*_page` tables for UI translations
+- **Key**: Uses `data-i18n` attributes with path format like `misc.content.explore_plans`
+
+#### System 2: Dynamic Content (nd-*-integration.js)
+- **Handles**: Dynamic content (courses, testimonials, FAQs, blog posts)
+- **Process**: Admin Panel → Database → /api/nd/* → Integration Files → DOM
+- **Storage**: `nd_*` tables (without `_page` suffix) for content
+- **Key**: Removes `data-i18n` attributes after updating to prevent conflicts
+
+### Conflict Prevention
+Integration files **remove data-i18n attributes** after updating content to prevent the translation system from overwriting dynamic content:
+```javascript
+element.textContent = dynamicContent;
+element.removeAttribute('data-i18n'); // Prevents overwrite
+```
 
 ### Database Tables Structure
 1. **Content Tables** (without `_page` suffix):
-   - `nd_home` - Home page sections content
+   - `nd_home` - Home page sections content (including misc.content.explore_plans)
    - `nd_courses` - Actual course data
    - `nd_menu` - Navigation items
    - `nd_footer` - Footer content
@@ -72,6 +88,12 @@ Port 3005/8000        → Port 3000 (local)   → Railway Cloud
 - **pricing.html**: Uses `nd_pricing_page` table
 - **teachers.html**: Uses `nd_teachers_page` table
 - All pages use unified language manager for consistency
+
+### Adding New Translations
+1. **For UI Elements**: Add `data-i18n` attribute to HTML element
+2. **For Dynamic Content**: Update via admin panel or API
+3. **Database Update**: Use PUT endpoint `/api/nd/home-page/{section_key}` with content for all languages
+4. **Example**: Added `explore_plans` to misc section for "Explore Plans Features" button translation
 
 ## Development Commands
 
