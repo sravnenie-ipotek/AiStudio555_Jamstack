@@ -283,6 +283,61 @@
       background: #1a1d3a !important;
     }
 
+    /* Custom Horizontal Slider CSS */
+    .why-choose-us-slider-mask {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: auto;
+    }
+
+    .why-choose-us-slider-track {
+      display: flex;
+      width: 300%; /* 3 slides = 300% */
+      transition: transform 0.7s ease;
+      transform: translateX(0%);
+    }
+
+    .why-choose-us-slide {
+      width: 33.333%; /* Each slide takes 1/3 of track width */
+      flex-shrink: 0;
+      opacity: 1;
+      position: relative;
+    }
+
+    .w-slider-dot {
+      width: 12px !important;
+      height: 12px !important;
+      background-color: rgba(255, 255, 255, 0.3) !important;
+      border-radius: 50% !important;
+      margin: 0 6px !important;
+      cursor: pointer !important;
+      transition: background-color 0.3s ease !important;
+      display: inline-block !important;
+    }
+
+    .w-slider-dot.w-active {
+      background-color: #FFD659 !important;
+    }
+
+    .why-choose-us-slider-arrow {
+      cursor: pointer !important;
+      transition: opacity 0.3s ease !important;
+      z-index: 10;
+      position: relative;
+    }
+
+    .why-choose-us-slider-arrow:hover {
+      opacity: 0.8 !important;
+    }
+
+    .why-choose-us-slide-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
     /* Ensure dropdown stays open when hovering over it */
     .w-dropdown-list:hover {
       display: block !important;
@@ -1209,33 +1264,35 @@
             <div data-w-id="9080857f-b2b3-8693-7c24-b93025b88daa" style="opacity:1" class="why-choose-us-slider-wrapper">
               <div data-delay="4000" data-animation="slide" class="why-choose-us-slider w-slider" data-autoplay="false" data-easing="ease" data-hide-arrows="false" data-disable-swipe="false" data-autoplay-limit="0" data-nav-spacing="3" data-duration="700" data-infinite="false">
                 <div class="why-choose-us-slider-mask w-slider-mask">
-                  <div data-w-id="986f6844-631b-f2f9-f5b6-b395d05c11f1" class="why-choose-us-slide w-slide">
-                    <div class="why-choose-us-single">
-                      <div class="why-choose-us-icon-wrapper"><img src="images/Why-Choose-Us-Icon1.svg" loading="lazy" alt="" class="why-choose-us-icon"></div>
-                      <div class="why-choose-us-slider-typography">
-                        <h4 class="why-choose-us-slider-card-name" data-i18n="features.content.items.0.title">Innovative Teaching Methods Here.</h4>
-                        <div class="why-choose-us-card-line"></div>
-                        <p class="why-choose-us-description-text" data-i18n="features.content.items.0.description">Utilizes cutting-edge teaching techniques &amp; tools deliver engaging interactive &amp; effective learning.</p>
+                  <div class="why-choose-us-slider-track">
+                    <div data-w-id="986f6844-631b-f2f9-f5b6-b395d05c11f1" class="why-choose-us-slide w-slide">
+                      <div class="why-choose-us-single">
+                        <div class="why-choose-us-icon-wrapper"><img src="images/Why-Choose-Us-Icon1.svg" loading="lazy" alt="" class="why-choose-us-icon"></div>
+                        <div class="why-choose-us-slider-typography">
+                          <h4 class="why-choose-us-slider-card-name" data-i18n="features.content.items.0.title">Innovative Teaching Methods Here.</h4>
+                          <div class="why-choose-us-card-line"></div>
+                          <p class="why-choose-us-description-text" data-i18n="features.content.items.0.description">Utilizes cutting-edge teaching techniques &amp; tools deliver engaging interactive &amp; effective learning.</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div data-w-id="06c0b5a4-57df-7769-1d7e-e1a6428259f1" class="why-choose-us-slide w-slide">
-                    <div class="why-choose-us-single">
-                      <div class="why-choose-us-icon-wrapper"><img src="images/Why-Choose-Us-Icon2.svg" loading="lazy" alt="" class="why-choose-us-icon"></div>
-                      <div class="why-choose-us-slider-typography">
-                        <h4 class="why-choose-us-slider-card-name" data-i18n="features.content.items.1.title">Certified Professional In Your Needs.</h4>
-                        <div class="why-choose-us-card-line"></div>
-                        <p class="why-choose-us-description-text" data-i18n="features.content.items.1.description">Numerous industry certification from leading organizations ensuring that the guidance.</p>
+                    <div data-w-id="06c0b5a4-57df-7769-1d7e-e1a6428259f1" class="why-choose-us-slide w-slide">
+                      <div class="why-choose-us-single">
+                        <div class="why-choose-us-icon-wrapper"><img src="images/Why-Choose-Us-Icon2.svg" loading="lazy" alt="" class="why-choose-us-icon"></div>
+                        <div class="why-choose-us-slider-typography">
+                          <h4 class="why-choose-us-slider-card-name" data-i18n="features.content.items.1.title">Certified Professional In Your Needs.</h4>
+                          <div class="why-choose-us-card-line"></div>
+                          <p class="why-choose-us-description-text" data-i18n="features.content.items.1.description">Numerous industry certification from leading organizations ensuring that the guidance.</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div data-w-id="4f7cdeb1-c87f-8da3-6169-b06b1123c681" class="why-choose-us-slide w-slide">
-                    <div class="why-choose-us-single">
-                      <div class="why-choose-us-icon-wrapper"><img src="images/Why-Choose-Us-Icon3.svg" loading="lazy" alt="" class="why-choose-us-icon"></div>
-                      <div class="why-choose-us-slider-typography">
-                        <h4 class="why-choose-us-slider-card-name" data-i18n="features.content.items.2.title">Expert Instructor Of Industry.</h4>
-                        <div class="why-choose-us-card-line"></div>
-                        <p class="why-choose-us-description-text" data-i18n="features.content.items.2.description">Providing hands-on, real-world training and mentorship, aim bridge gap between theoretical.</p>
+                    <div data-w-id="4f7cdeb1-c87f-8da3-6169-b06b1123c681" class="why-choose-us-slide w-slide">
+                      <div class="why-choose-us-single">
+                        <div class="why-choose-us-icon-wrapper"><img src="images/Why-Choose-Us-Icon3.svg" loading="lazy" alt="" class="why-choose-us-icon"></div>
+                        <div class="why-choose-us-slider-typography">
+                          <h4 class="why-choose-us-slider-card-name" data-i18n="features.content.items.2.title">Expert Instructor Of Industry.</h4>
+                          <div class="why-choose-us-card-line"></div>
+                          <p class="why-choose-us-description-text" data-i18n="features.content.items.2.description">Providing hands-on, real-world training and mentorship, aim bridge gap between theoretical.</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2522,6 +2579,93 @@
 
   <!-- Home Page Pricing Integration -->
   <script src="js/home-pricing-integration.js"></script>
+
+  <!-- Custom Slider Functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Why Choose Us Slider
+      function initializeSlider() {
+        const slider = document.querySelector('.why-choose-us-slider');
+        const slides = document.querySelectorAll('.why-choose-us-slide');
+        const leftArrow = document.querySelector('.why-choose-us-slider-arrow.left');
+        const rightArrow = document.querySelector('.why-choose-us-slider-arrow.right');
+        const nav = document.querySelector('.why-choose-us-slide-nav');
+
+        if (!slider || !slides.length) return;
+
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+
+        // Create navigation dots
+        function createNavDots() {
+          if (!nav) return;
+          nav.innerHTML = '';
+          for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'w-slider-dot';
+            if (i === 0) dot.classList.add('w-active');
+            dot.addEventListener('click', () => goToSlide(i));
+            nav.appendChild(dot);
+          }
+        }
+
+        // Go to specific slide
+        function goToSlide(index) {
+          currentSlide = index;
+
+          // Hide all slides
+          slides.forEach((slide, i) => {
+            slide.style.opacity = i === currentSlide ? '1' : '0';
+            slide.style.transform = i === currentSlide ? 'translateX(0%)' : 'translateX(100%)';
+            slide.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+          });
+
+          // Update navigation dots
+          const dots = nav?.querySelectorAll('.w-slider-dot');
+          if (dots) {
+            dots.forEach((dot, i) => {
+              dot.classList.toggle('w-active', i === currentSlide);
+            });
+          }
+        }
+
+        // Next slide
+        function nextSlide() {
+          currentSlide = (currentSlide + 1) % totalSlides;
+          goToSlide(currentSlide);
+        }
+
+        // Previous slide
+        function prevSlide() {
+          currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+          goToSlide(currentSlide);
+        }
+
+        // Add event listeners
+        if (leftArrow) {
+          leftArrow.addEventListener('click', prevSlide);
+          leftArrow.style.cursor = 'pointer';
+        }
+
+        if (rightArrow) {
+          rightArrow.addEventListener('click', nextSlide);
+          rightArrow.style.cursor = 'pointer';
+        }
+
+        // Initialize
+        createNavDots();
+        goToSlide(0);
+
+        console.log('✅ Why Choose Us slider initialized');
+      }
+
+      // Initialize slider when DOM is ready
+      initializeSlider();
+
+      // Re-initialize after content loads
+      setTimeout(initializeSlider, 1000);
+    });
+  </script>
 
 </body>
 </html>
