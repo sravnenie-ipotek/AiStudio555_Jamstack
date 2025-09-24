@@ -959,6 +959,11 @@ class LanguageManager {
                 // UI buttons
                 'ui.content.buttons.sign_up_today': 'Sign Up Today',
                 'ui.content.breadcrumb.home': 'Home',
+                // Pricing page
+                'pricing.content.plans.title': 'Invest in Future with Subscription Plans',
+                'pricing.content.plans.description': 'Dive into a world of learning with diverse and extensive range of tech courses designed to cater to every interest.',
+                'pricing.content.tabs.monthly': 'Monthly',
+                'pricing.content.tabs.yearly': 'Yearly',
                 // Contact page translations
                 'contact.content.title': 'Contact Us',
                 'contact.content.subtitle': 'Let\'s Talk',
@@ -1040,6 +1045,11 @@ class LanguageManager {
                 // UI buttons
                 'ui.content.buttons.sign_up_today': 'Зарегистрироваться',
                 'ui.content.breadcrumb.home': 'Главная',
+                // Pricing page
+                'pricing.content.plans.title': 'Инвестируйте в будущее с планами подписки',
+                'pricing.content.plans.description': 'Погрузитесь в мир обучения с разнообразными и обширными техническими курсами, созданными для удовлетворения любых интересов.',
+                'pricing.content.tabs.monthly': 'Ежемесячно',
+                'pricing.content.tabs.yearly': 'Ежегодно',
                 // Contact page translations
                 'contact.content.title': 'Свяжитесь с нами',
                 'contact.content.subtitle': 'Давайте поговорим',
@@ -1121,6 +1131,11 @@ class LanguageManager {
                 // UI buttons
                 'ui.content.buttons.sign_up_today': 'הירשם היום',
                 'ui.content.breadcrumb.home': 'בית',
+                // Pricing page
+                'pricing.content.plans.title': 'השקיעו בעתיד עם תוכניות מנוי',
+                'pricing.content.plans.description': 'צללו לעולם של למידה עם מגוון רחב ומקיף של קורסים טכנולוגיים שנועדו לענות על כל תחום עניין.',
+                'pricing.content.tabs.monthly': 'חודשי',
+                'pricing.content.tabs.yearly': 'שנתי',
                 // Contact page translations
                 'contact.content.title': 'צור קשר',
                 'contact.content.subtitle': 'בואו נדבר',
