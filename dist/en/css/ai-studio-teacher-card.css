@@ -1,0 +1,384 @@
+/**
+ * AI Studio Teacher Card Component
+ * Shared component for consistent teacher card styling across the platform
+ * Based on Design #10: AI Studio Custom from social network designs
+ */
+
+/* Teacher Card Container */
+.ai-teacher-card {
+    background: #050f2c;
+    color: white;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    height: 520px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    position: relative;
+    font-family: "Manrope", "Plus Jakarta Sans", Arial, sans-serif;
+}
+
+.ai-teacher-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
+    border-color: #667eea;
+}
+
+/* Header Section */
+.ai-teacher-header {
+    padding: 25px 20px 0;
+    text-align: center;
+    position: relative;
+}
+
+.ai-teacher-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ai-teacher-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 3px solid #667eea;
+    object-fit: cover;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+}
+
+.ai-teacher-card:hover .ai-teacher-avatar {
+    transform: scale(1.05);
+}
+
+.ai-teacher-name {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.ai-teacher-title {
+    font-size: 13px;
+    color: #a0aec0;
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.ai-teacher-company {
+    font-size: 12px;
+    color: #666666;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+/* Skills/Expertise Tags */
+.ai-expertise-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 15px;
+    margin-bottom: 20px;
+}
+
+.ai-expertise-tag {
+    padding: 4px 10px;
+    background: rgba(255, 214, 89, 0.1);
+    border: 1px solid rgba(255, 214, 89, 0.3);
+    color: #ffd659;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.ai-teacher-card:hover .ai-expertise-tag {
+    background: rgba(255, 214, 89, 0.2);
+    border-color: rgba(255, 214, 89, 0.5);
+}
+
+/* Performance/Statistics Grid */
+.ai-performance-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 0 20px;
+    margin-bottom: 20px;
+}
+
+.ai-performance-item {
+    text-align: center;
+    padding: 10px 5px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.ai-teacher-card:hover .ai-performance-item {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.ai-perf-value {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 4px;
+    line-height: 1;
+}
+
+.ai-perf-label {
+    font-size: 9px;
+    color: #a0aec0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1;
+}
+
+/* Call to Action Section */
+.ai-teacher-cta {
+    padding: 0 20px 25px;
+    margin-top: auto;
+}
+
+.ai-view-btn {
+    width: 100%;
+    padding: 12px 20px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #667eea;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-family: inherit;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ai-view-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.ai-view-btn:active {
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 991px) {
+    .ai-teacher-card {
+        height: 500px;
+    }
+
+    .ai-teacher-header {
+        padding: 20px 15px 0;
+    }
+
+    .ai-teacher-avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    .ai-teacher-name {
+        font-size: 18px;
+    }
+
+    .ai-performance-grid {
+        padding: 0 15px;
+        gap: 8px;
+    }
+
+    .ai-teacher-cta {
+        padding: 0 15px 20px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .ai-teacher-card {
+        height: 480px;
+    }
+
+    .ai-teacher-header {
+        padding: 18px 15px 0;
+    }
+
+    .ai-teacher-avatar {
+        width: 70px;
+        height: 70px;
+    }
+
+    .ai-teacher-name {
+        font-size: 17px;
+        margin-bottom: 5px;
+    }
+
+    .ai-teacher-title {
+        font-size: 12px;
+    }
+
+    .ai-teacher-company {
+        font-size: 11px;
+        margin-bottom: 15px;
+    }
+
+    .ai-expertise-tags {
+        gap: 4px;
+        margin-bottom: 15px;
+    }
+
+    .ai-expertise-tag {
+        padding: 3px 8px;
+        font-size: 10px;
+    }
+
+    .ai-performance-grid {
+        gap: 6px;
+        margin-bottom: 15px;
+    }
+
+    .ai-performance-item {
+        padding: 8px 3px;
+    }
+
+    .ai-perf-value {
+        font-size: 14px;
+    }
+
+    .ai-perf-label {
+        font-size: 8px;
+    }
+
+    .ai-view-btn {
+        padding: 10px 16px;
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    .ai-teacher-card {
+        height: 460px;
+    }
+
+    .ai-teacher-badge {
+        top: 10px;
+        right: 10px;
+        padding: 4px 8px;
+        font-size: 9px;
+    }
+
+    .ai-performance-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .ai-performance-item {
+        padding: 10px 8px;
+    }
+
+    .ai-perf-value {
+        font-size: 15px;
+    }
+
+    .ai-perf-label {
+        font-size: 9px;
+    }
+}
+
+/* Loading State */
+.ai-teacher-card.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.ai-teacher-card.loading .ai-teacher-avatar {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* Dark theme compatibility */
+.dark-theme .ai-teacher-card {
+    background: #0a0a0a;
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.dark-theme .ai-teacher-card:hover {
+    border-color: #667eea;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .ai-teacher-card {
+        border-width: 2px;
+        border-color: #667eea;
+    }
+
+    .ai-view-btn {
+        border-width: 2px;
+    }
+
+    .ai-expertise-tag {
+        border-width: 2px;
+    }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .ai-teacher-card,
+    .ai-teacher-avatar,
+    .ai-expertise-tag,
+    .ai-performance-item,
+    .ai-view-btn {
+        transition: none;
+    }
+
+    .ai-teacher-card:hover {
+        transform: none;
+    }
+
+    .ai-teacher-card:hover .ai-teacher-avatar {
+        transform: none;
+    }
+}
+
+/* Print styles */
+@media print {
+    .ai-teacher-card {
+        background: white !important;
+        color: black !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+    }
+
+    .ai-teacher-badge,
+    .ai-view-btn {
+        display: none;
+    }
+}

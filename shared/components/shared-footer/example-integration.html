@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shared Footer Integration Example</title>
+
+  <!-- Existing page styles -->
+  <link href="css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="css/webflow.css" rel="stylesheet" type="text/css">
+  <link href="css/aizeks-groovy-site.webflow.css" rel="stylesheet" type="text/css">
+
+  <!-- Shared Footer CSS -->
+  <link rel="stylesheet" href="shared/components/shared-footer/footer.css">
+
+  <style>
+    /* Example page content */
+    .example-content {
+      min-height: 80vh;
+      padding: 80px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-align: center;
+    }
+
+    .example-content h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .example-content p {
+      font-size: 18px;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    /* Container for the page */
+    .page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-wrapper main {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <!-- Main page content -->
+    <main>
+      <div class="example-content">
+        <div>
+          <h1>🚀 Shared Footer Component</h1>
+          <p>
+            This example demonstrates how to integrate the shared footer component
+            into any page. The footer below is dynamically loaded and includes
+            multi-language support, newsletter functionality, and responsive design.
+          </p>
+          <p>
+            <strong>Features demonstrated:</strong><br>
+            ✅ Multi-language support (EN/RU/HE)<br>
+            ✅ Newsletter subscription form<br>
+            ✅ Dynamic content from API<br>
+            ✅ Responsive design<br>
+            ✅ RTL support for Hebrew<br>
+            ✅ WorkingLogic.md dual-system compliance
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!--
+      SHARED FOOTER INTEGRATION
+      Choose one of the methods below:
+    -->
+
+    <!-- Method 1: Direct HTML Include (Copy from footer.html) -->
+    <section class="section footer">
+      <div class="container">
+        <div class="footer-content">
+          <div data-w-id="6ab616f4-e8bf-402d-a96f-e34ee9f6b187" class="footer-top-content">
+
+            <!-- Left Section: Company Details -->
+            <div class="footer-details-content">
+              <!-- Logo -->
+              <a href="index.html" class="footer-logo-link w-inline-block">
+                <img loading="lazy" src="images/Logo.svg" alt="AI Studio Logo" class="footer-logo-image">
+              </a>
+
+              <!-- Description -->
+              <div class="footer-description-text-wrapper">
+                <p class="footer-description-text" data-i18n="footer.content.description">
+                  Elevate tech career with expert-led courses. if you're just aiming to advance skills, practical training is designed.
+                </p>
+              </div>
+
+              <!-- Social Media Links -->
+              <div class="footer-social-media-wrapper">
+                <a href="https://www.facebook.com/" target="_blank" class="footer-social-media-link w-inline-block">
+                  <div class="footer-social-media-icon"></div>
+                  <div class="footer-social-media-circel"></div>
+                </a>
+                <a href="https://twitter.com/" target="_blank" class="footer-social-media-link w-inline-block">
+                  <div class="footer-social-media-icon"></div>
+                  <div class="footer-social-media-circel"></div>
+                </a>
+                <a href="https://www.instagram.com/" target="_blank" class="footer-social-media-link w-inline-block">
+                  <div class="footer-social-media-icon"></div>
+                  <div class="footer-social-media-circel"></div>
+                </a>
+                <a href="https://youtube.com/" target="_blank" class="footer-social-media-link w-inline-block">
+                  <div class="footer-social-media-icon"></div>
+                  <div class="footer-social-media-circel"></div>
+                </a>
+              </div>
+
+              <!-- Contact Email -->
+              <div class="footer-details-gmail" data-i18n="footer.content.contact_prefix">
+                Contact: <span class="footer-details-gmail-text" data-i18n="footer.content.contact_email">zohacous@email.com</span>
+              </div>
+
+              <!-- Newsletter Subscription -->
+              <div class="footer-details-form-wrapper">
+                <div class="footer-details-form-block w-form">
+                  <form id="footer-email-form" name="footer-email-form" data-name="Footer Email Form" method="get" class="footer-details-form">
+                    <label for="footer-email" class="footer-details-form-text" data-i18n="footer.content.newsletter.label">
+                      Subscribe to Newsletter
+                    </label>
+                    <div class="footer-details-form-single">
+                      <input
+                        class="footer-details-form-input-field w-input"
+                        maxlength="256"
+                        name="footer-email"
+                        data-name="Footer Email"
+                        placeholder="Enter email to subscribe"
+                        data-i18n-placeholder="footer.content.newsletter.placeholder"
+                        type="email"
+                        id="footer-email"
+                        required=""
+                      >
+                      <input
+                        type="submit"
+                        data-wait="Please wait..."
+                        class="footer-details-form-submit-button w-button"
+                        value="Subscribe"
+                        data-i18n-value="footer.content.newsletter.submit"
+                      >
+                    </div>
+                  </form>
+                  <div class="w-form-done">
+                    <div data-i18n="footer.content.newsletter.success">Thank you! Your subscription has been received!</div>
+                  </div>
+                  <div class="w-form-fail">
+                    <div data-i18n="footer.content.newsletter.error">Oops! Something went wrong while submitting the form.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Section: Menu Grid -->
+            <div class="footer-menu-wrapper">
+              <div class="w-layout-grid footer-menu-grid">
+
+                <!-- Menu Column 1: Main Navigation -->
+                <div class="footer-menu-single">
+                  <div class="footer-menu-title-wrapper">
+                    <h4 class="footer-menu-title" data-i18n="footer.content.menus.0.title">Menu</h4>
+                    <div class="footer-menu-title-line"></div>
+                  </div>
+                  <div class="footer-menu-list-wrapper">
+                    <ul role="list" class="footer-menu-list">
+                      <li class="footer-menu-list-item">
+                        <a href="home.html" class="footer-menu-text-link" data-i18n="navigation.content.items.0.text">Home</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="about-us.html" class="footer-menu-text-link" data-i18n="navigation.content.items.4.text">About Us</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="courses.html" class="footer-menu-text-link" data-i18n="navigation.content.items.1.text">Courses</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="detail_courses.html" class="footer-menu-text-link" data-i18n="footer.content.menus.0.items.3.text">Course Single</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="pricing.html" class="footer-menu-text-link" data-i18n="navigation.content.items.6.text">Pricing</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="blog.html" class="footer-menu-text-link" data-i18n="navigation.content.items.3.text">Blog</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="contact-us.html" class="footer-menu-text-link" data-i18n="navigation.content.items.5.text">Contact Us</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Menu Column 2: Utility Pages -->
+                <div class="footer-menu-single">
+                  <div class="footer-menu-title-wrapper">
+                    <h4 class="footer-menu-title" data-i18n="footer.content.menus.2.title">Utility Pages</h4>
+                    <div class="footer-menu-title-line"></div>
+                  </div>
+                  <div class="footer-menu-list-wrapper">
+                    <ul role="list" class="footer-menu-list">
+                      <li class="footer-menu-list-item">
+                        <a href="404.html" class="footer-menu-text-link" data-i18n="footer.content.menus.2.items.0.text">404 Not Found</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="401.html" class="footer-menu-text-link" data-i18n="footer.content.menus.2.items.1.text">Password Protected</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="template-pages/changelog.html" class="footer-menu-text-link" data-i18n="footer.content.menus.2.items.2.text">Changelog</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="template-pages/license.html" class="footer-menu-text-link" data-i18n="footer.content.menus.2.items.3.text">License</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="template-pages/style-guide.html" class="footer-menu-text-link" data-i18n="footer.content.menus.2.items.4.text">Style Guide</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Menu Column 3: Authentication & Contact -->
+                <div class="footer-menu-single">
+                  <div class="footer-menu-title-wrapper">
+                    <h4 class="footer-menu-title" data-i18n="footer.content.menus.3.title">Authentication</h4>
+                    <div class="footer-menu-title-line"></div>
+                  </div>
+                  <div class="footer-menu-list-wrapper">
+                    <ul role="list" class="footer-menu-list">
+                      <li class="footer-menu-list-item">
+                        <a href="authentication-pages/sign-up.html" class="footer-menu-text-link" data-i18n="footer.content.menus.3.items.0.text">Sign Up</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="authentication-pages/sign-in.html" class="footer-menu-text-link" data-i18n="footer.content.menus.3.items.1.text">Sign In</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="authentication-pages/forgot-password.html" class="footer-menu-text-link" data-i18n="footer.content.menus.3.items.2.text">Forgot Password</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="authentication-pages/reset-password.html" class="footer-menu-text-link" data-i18n="footer.content.menus.3.items.3.text">Reset Password</a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <!-- Contact Information Section -->
+                  <div class="footer-menu-title-wrapper mt40">
+                    <h4 class="footer-menu-title" data-i18n="footer.content.menus.1.title">Contact</h4>
+                    <div class="footer-menu-title-line"></div>
+                  </div>
+                  <div class="footer-contact-details">
+                    <div class="footer-contact-details-single">
+                      <img loading="lazy" src="images/Footer-Contact-Details-Icon1.svg" alt="Phone" class="footer-contact-details-icon">
+                      <div class="footer-contact-details-text" data-i18n="footer.content.phone">(000) 012 3456 7890</div>
+                    </div>
+                    <div class="footer-contact-details-single">
+                      <img loading="lazy" src="images/Footer-Contact-Details-Icon2.svg" alt="Email" class="footer-contact-details-icon">
+                      <div class="footer-contact-details-text" data-i18n="footer.content.contact_email">zohacous@email.com</div>
+                    </div>
+                    <div class="footer-contact-details-single">
+                      <img loading="lazy" src="images/Footer-Contact-Details-Icon3.svg" alt="Address" class="footer-contact-details-icon">
+                      <div class="footer-contact-details-text" data-i18n="footer.content.address">1234 Valencia, Suite, SF, CA</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Section: Copyright -->
+          <div class="footer-bottom-content">
+            <div class="footer-information-wrapper">
+              <div class="footer-information-text" data-i18n="footer.content.copyright">
+                © Copyright - <a href="index.html" class="footer-information-text-link">Zohacous</a> |
+                Designed by <a href="https://zohaflow.webflow.io" target="_blank" class="footer-information-text-link">Zohaflow</a> -
+                <a href="template-pages/license.html" class="footer-information-text-link">Licensing</a>
+                Powered by <a href="https://webflow.com/" target="_blank" class="footer-information-text-link">Webflow</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!--
+      Alternative Method 2: Dynamic Loading (Uncomment to use)
+      <div id="footer-placeholder"></div>
+    -->
+  </div>
+
+  <!-- Required Scripts -->
+  <!-- IMPORTANT: Load unified language manager FIRST for dual-system to work -->
+  <script src="js/unified-language-manager.js"></script>
+
+  <!-- Shared Footer JavaScript -->
+  <script src="shared/components/shared-footer/footer.js"></script>
+
+  <!--
+    Alternative Method 2: Dynamic Loading Script (Uncomment to use)
+    <script>
+      async function loadSharedFooter() {
+        try {
+          const response = await fetch('shared/components/shared-footer/footer.html');
+          const html = await response.text();
+
+          document.getElementById('footer-placeholder').innerHTML = html;
+
+          // Initialize footer functionality
+          if (window.SharedFooter) {
+            const footer = new SharedFooter();
+            await footer.init();
+          }
+        } catch (error) {
+          console.error('Failed to load shared footer:', error);
+        }
+      }
+
+      // Load when DOM is ready
+      document.addEventListener('DOMContentLoaded', loadSharedFooter);
+    </script>
+  -->
+
+  <script>
+    // Example: Language switching demonstration
+    function switchLanguage(locale) {
+      const url = new URL(window.location);
+      url.searchParams.set('locale', locale);
+      window.location.href = url.toString();
+    }
+
+    // Add language switcher buttons for demonstration
+    document.addEventListener('DOMContentLoaded', () => {
+      const exampleContent = document.querySelector('.example-content > div');
+
+      const languageButtons = document.createElement('div');
+      languageButtons.style.marginTop = '30px';
+      languageButtons.innerHTML = `
+        <p><strong>Test Language Switching:</strong></p>
+        <button onclick="switchLanguage('en')" style="margin: 5px; padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">English</button>
+        <button onclick="switchLanguage('ru')" style="margin: 5px; padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">Русский</button>
+        <button onclick="switchLanguage('he')" style="margin: 5px; padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">עברית</button>
+      `;
+
+      exampleContent.appendChild(languageButtons);
+    });
+  </script>
+</body>
+</html>

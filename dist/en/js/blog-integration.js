@@ -4,9 +4,9 @@
 const BlogIntegration = {
     // Configuration
     config: {
-        apiUrl: window.location.hostname === 'localhost'
-            ? 'http://localhost:1337/api/blog-posts'
-            : 'https://aistudio555jamstack-production.up.railway.app/api/blog-posts',
+        apiBaseUrl: window.location.hostname === 'localhost'
+            ? 'http://localhost:3000'
+            : 'https://aistudio555jamstack-production.up.railway.app',
         postsPerPage: 9,
         currentPage: 1,
         totalPosts: 0,
@@ -35,10 +35,55 @@ const BlogIntegration = {
     },
 
     // Initialize the blog
-    init: function() {
+    init: async function() {
         console.log('Initializing blog integration...');
+        await this.loadNavigationData(); // Load navigation for translations first
         this.loadBlogPosts();
         this.setupEventListeners();
+        this.setupLanguageChangeListener();
+    },
+
+    // Get current locale from language manager or URL
+    getCurrentLocale: function() {
+        // Try to get from global language manager first
+        if (window.languageManager && window.languageManager.currentLocale) {
+            return window.languageManager.currentLocale;
+        }
+
+        // Fallback to URL parameter
+        const params = new URLSearchParams(window.location.search);
+        const locale = params.get('locale');
+        if (locale && ['en', 'ru', 'he'].includes(locale)) {
+            return locale;
+        }
+
+        // Fallback to localStorage
+        const savedLocale = localStorage.getItem('preferred_locale');
+        if (savedLocale && ['en', 'ru', 'he'].includes(savedLocale)) {
+            return savedLocale;
+        }
+
+        return 'en'; // Default
+    },
+
+    // Build API URL with locale parameter
+    getApiUrl: function(endpoint = '/api/blog-posts') {
+        const locale = this.getCurrentLocale();
+        const url = new URL(endpoint, this.config.apiBaseUrl);
+        url.searchParams.set('locale', locale);
+        return url.toString();
+    },
+
+    // DUAL-SYSTEM: Setup language change listener with coordination
+    setupLanguageChangeListener: function() {
+        window.addEventListener('languageChanged', (event) => {
+            console.log('🌍 [DUAL-SYSTEM] Language changed to:', event.detail.locale);
+            // Wait for unified-language-manager to complete first
+            setTimeout(() => {
+                console.log('🔄 [DUAL-SYSTEM] Reloading blog posts after language manager...');
+                this.loadBlogPosts(1);
+            }, 500);
+        });
     },
 
     // Setup event listeners
@@ -54,7 +99,17 @@ const BlogIntegration = {
     loadBlogPosts: async function(page = 1) {
         try {
             console.log('Fetching blog posts from API...');
-            const response = await fetch(`${this.config.apiUrl}?page=${page}&limit=${this.config.postsPerPage}`);
+            console.log('Current locale:', this.getCurrentLocale());
+
+            // Use the new API URL with locale support
+            const apiUrl = this.getApiUrl('/api/blog-posts');
+            const url = new URL(apiUrl);
+            // Note: Our API doesn't currently support pagination, so we'll get all posts
+            // url.searchParams.set('page', page);
+            // url.searchParams.set('limit', this.config.postsPerPage);
+
+            console.log('Fetching from URL:', url.toString());
+            const response = await fetch(url.toString());
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -77,9 +132,29 @@ const BlogIntegration = {
             }
 
             if (posts.length === 0) {
-                console.log('No posts found, displaying placeholder content');
-                this.displayPlaceholderContent();
+                console.log('No posts found, attempting to display Hebrew blog posts by API call...');
+                console.log('Current locale:', this.getCurrentLocale());
+                console.log('API URL attempted:', url.toString());
+
+                // Try direct API call for debugging
+                fetch(`${this.config.apiBaseUrl}/api/blog-posts?locale=${this.getCurrentLocale()}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        console.log('Direct API call result:', data);
+                        if (data.success && data.data && data.data.length > 0) {
+                            console.log('Found posts via direct call, rendering...');
+                            this.renderBlogPosts(data.data);
+                        } else {
+                            console.log('Still no posts, displaying placeholder content');
+                            this.displayPlaceholderContent();
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Direct API call failed:', err);
+                        this.displayPlaceholderContent();
+                    });
             } else {
+                console.log(`Found ${posts.length} posts for ${this.getCurrentLocale()}, rendering...`);
                 this.renderBlogPosts(posts);
             }
 
@@ -130,6 +205,10 @@ const BlogIntegration = {
             return;
         }
 
+        // DUAL-SYSTEM: Preserve elements with data-i18n attributes before clearing
+        const preservedElements = container.querySelectorAll('[data-i18n]');
+        console.log(`🔄 [DUAL-SYSTEM] Preserving ${preservedElements.length} data-i18n elements`);
+
         // Clear existing content completely
         container.innerHTML = '';
 
@@ -161,17 +240,29 @@ const BlogIntegration = {
             : this.getRandomImage();
 
         // Ensure we never have template placeholders in our data
+        const locale = this.getCurrentLocale();
+        const detailUrl = `blog-detail.html?id=${post.id}&locale=${locale}`;
+
+        console.log(`Post ${post.id} URL debug:`, {
+            'post.url': post.url,
+            'post.url type': typeof post.url,
+            'is null?': post.url === null,
+            'is empty?': post.url === '',
+            'is falsy?': !post.url,
+            'generated URL': detailUrl
+        });
+
         const safePost = {
             id: post.id || 'default-id',
             title: (post.title || 'Default Title').replace(/\{\{.*?\}\}/g, 'Default Title'),
             author: (post.author || 'Default Author').replace(/\{\{.*?\}\}/g, 'Default Author'),
             excerpt: (post.excerpt || 'Default description').replace(/\{\{.*?\}\}/g, 'Default description'),
-            url: post.url || '#'
+            url: post.url && post.url !== '' && post.url !== '#' ? post.url : detailUrl
         };
 
         const cardHtml = `
             <div class="uniform-card">
-                <a href="${safePost.url}" class="uniform-card-image-link" target="_blank" rel="noopener noreferrer">
+                <a href="${safePost.url}" class="uniform-card-image-link">
                     <img src="${imageUrl}" loading="lazy" alt="${safePost.title}" class="uniform-card-image" onerror="this.src='${this.config.defaultImages[0]}'">
                 </a>
                 <div class="uniform-card-content">
@@ -187,11 +278,11 @@ const BlogIntegration = {
                             <div class="uniform-card-author-name">${safePost.author}</div>
                         </div>
                     </div>
-                    <a href="${safePost.url}" class="uniform-card-title" target="_blank" rel="noopener noreferrer">${safePost.title}</a>
+                    <a href="${safePost.url}" class="uniform-card-title">${safePost.title}</a>
                     <div class="uniform-card-divider"></div>
                     <p class="uniform-card-description">${safePost.excerpt}</p>
                     <div class="uniform-card-action">
-                        <a href="${safePost.url}" class="uniform-card-button" target="_blank" rel="noopener noreferrer">
+                        <a href="${safePost.url}" class="uniform-card-button">
                             <div class="uniform-card-button-text">Read Full Article</div>
                             <div class="uniform-card-button-arrow"></div>
                         </a>
@@ -213,11 +304,15 @@ const BlogIntegration = {
     // Fallback blog card creation (original method)
     createFallbackBlogCard: function(post, index) {
         const categoryDisplay = this.config.categories[post.category] || this.formatCategory(post.category);
-        const imageUrl = post.image.startsWith('http') ? post.image : post.image;
+        const imageUrl = post.image && post.image.startsWith('http') ? post.image : this.getRandomImage();
+        const locale = this.getCurrentLocale();
+        const detailUrl = `blog-detail.html?id=${post.id}&locale=${locale}`;
+
+        console.log(`Fallback card for post ${post.id}: URL "${post.url}" -> using "${detailUrl}"`);
 
         const cardHtml = `
             <div class="main-blog-single">
-                <a href="#" class="main-blog-image-link w-inline-block" data-post-id="${post.id}">
+                <a href="${detailUrl}" class="main-blog-image-link w-inline-block">
                     <img src="${imageUrl}" loading="lazy" alt="${post.title}" class="main-blog-image" onerror="this.src='${this.config.defaultImages[0]}'">
                 </a>
                 <div class="main-blog-typography">
@@ -233,11 +328,11 @@ const BlogIntegration = {
                             <div class="blog-card-author-name">${post.author}</div>
                         </div>
                     </div>
-                    <a href="#" class="blog-post-name" data-post-id="${post.id}">${post.title}</a>
+                    <a href="${detailUrl}" class="blog-post-name">${post.title}</a>
                     <div class="main-blog-line"></div>
                     <p class="main-blog-description-text">${post.excerpt || this.truncateText(post.content, 150)}</p>
                     <div class="blog-card-link-wrap">
-                        <a href="#" class="blog-card-link w-inline-block" data-post-id="${post.id}">
+                        <a href="${detailUrl}" class="blog-card-link w-inline-block">
                             <div class="blog-card-link-text">Read this Article</div>
                             <div class="blog-card-link-arrow"></div>
                         </a>
@@ -258,9 +353,10 @@ const BlogIntegration = {
 
     // Display placeholder content when no posts are available
     displayPlaceholderContent: function() {
+        console.log('⚠️ WARNING: Using placeholder content - real Hebrew blog posts not loaded');
         const placeholderPosts = [
             {
-                id: 1,
+                id: 10, // Use real Hebrew blog post IDs
                 title: "The Future of AI in Education: Transforming How We Learn",
                 excerpt: "Explore how artificial intelligence is revolutionizing education through personalized learning paths, intelligent tutoring systems, and adaptive assessments.",
                 author: "Sarah Chen",
@@ -392,6 +488,80 @@ const BlogIntegration = {
     loadMorePosts: function() {
         this.config.currentPage++;
         this.loadBlogPosts(this.config.currentPage);
+    },
+
+    // Load navigation data for translations (shared across all pages)
+    loadNavigationData: async function() {
+        try {
+            console.log('🧭 [Blog] Fetching navigation data for translations...');
+
+            // Get current locale
+            const currentLocale = this.getCurrentLocale();
+
+            // Fetch navigation data from home-page API
+            const response = await fetch(`${this.config.apiBaseUrl}/api/nd/home-page?locale=${currentLocale}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('✅ [Blog] Navigation data received for translations');
+
+            if (result.success && result.data) {
+                // Direct translation of navigation elements
+                this.directlyUpdateNavigationElements(result.data, currentLocale);
+                console.log('🔄 [Blog] Navigation translation data ready');
+            }
+
+        } catch (error) {
+            console.error('❌ [Blog] Error loading navigation data:', error);
+        }
+    },
+
+    // Directly update navigation elements with translations
+    directlyUpdateNavigationElements: function(apiData, locale) {
+        console.log('🎯 [Blog] Directly updating navigation elements...');
+
+        try {
+            const navigation = apiData.navigation?.content?.content;
+            if (!navigation) {
+                console.warn('⚠️ [Blog] No navigation data found in API response');
+                return;
+            }
+
+            // Update Career Orientation
+            const careerOrientationElements = document.querySelectorAll('[data-i18n="navigation.content.career.orientation"]');
+            careerOrientationElements.forEach(element => {
+                if (navigation.career_orientation) {
+                    element.textContent = navigation.career_orientation;
+                    console.log(`✅ [Blog] Updated Career Orientation: "${navigation.career_orientation}"`);
+                }
+            });
+
+            // Update Career Center
+            const careerCenterElements = document.querySelectorAll('[data-i18n="navigation.content.career.center"]');
+            careerCenterElements.forEach(element => {
+                if (navigation.career_center) {
+                    element.textContent = navigation.career_center;
+                    console.log(`✅ [Blog] Updated Career Center: "${navigation.career_center}"`);
+                }
+            });
+
+            // Update Sign Up Today buttons
+            const signUpButtons = apiData.ui_elements?.content?.content?.buttons?.sign_up_today;
+            if (signUpButtons) {
+                const signUpElements = document.querySelectorAll('[data-i18n="ui_elements.content.content.buttons.sign_up_today"]');
+                signUpElements.forEach(element => {
+                    element.textContent = signUpButtons;
+                    console.log(`✅ [Blog] Updated Sign Up Today: "${signUpButtons}"`);
+                });
+            }
+
+            console.log('🎯 [Blog] Direct navigation update complete');
+
+        } catch (error) {
+            console.error('❌ [Blog] Error in direct navigation update:', error);
+        }
     }
 };
 

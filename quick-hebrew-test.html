@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hebrew Translation Test</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h1 id="test-title" data-i18n="hero.content.title">Courses</h1>
+    <div id="test-results"></div>
+    
+    <script>
+        console.log("Testing Hebrew Translation...");
+        
+        async function testTranslation() {
+            try {
+                const apiUrl = "http://localhost:3000/api/nd/courses-page?locale=he";
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                const heroTitle = data.data?.hero?.content?.title;
+                console.log("Hero Title from API:", heroTitle);
+                
+                const titleElement = document.getElementById("test-title");
+                const resultsElement = document.getElementById("test-results");
+                
+                if (heroTitle) {
+                    titleElement.textContent = heroTitle;
+                    const isHebrew = /[֐-׿]/.test(heroTitle);
+                    const isCorrect = heroTitle === "הקורסים שלנו";
+                    
+                    resultsElement.innerHTML = `
+                        <h2>Test Results</h2>
+                        <p>API Response: SUCCESS</p>
+                        <p>Hebrew Characters: ${isHebrew ? "YES" : "NO"}</p>
+                        <p>Correct Text: ${isCorrect ? "YES" : "NO"}</p>
+                        <p>Actual: "${heroTitle}"</p>
+                        <p>Expected: "הקורסים שלנו"</p>
+                    `;
+                } else {
+                    resultsElement.innerHTML = "<h2>Failed to get title from API</h2>";
+                }
+                
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("test-results").innerHTML = `
+                    <h2>API Test Failed</h2>
+                    <p>Error: ${error.message}</p>
+                `;
+            }
+        }
+        
+        testTranslation();
+    </script>
+</body>
+</html>

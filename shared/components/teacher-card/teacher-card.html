@@ -1,0 +1,66 @@
+<!-- Shared Teacher Card Component Template -->
+<!-- This is a reference template for the teacher card structure -->
+<!-- The actual cards are generated dynamically by teacher-card.js -->
+
+<div class="shared-teacher-card" data-teacher-id="{{teacher.id}}" role="article" aria-label="{{teacher.name}} profile">
+    <!-- Header Section -->
+    <div class="teacher-card-header">
+        <!-- Badge -->
+        <span class="teacher-badge" data-i18n="teacher.card.badge">AI EXPERT</span>
+
+        <!-- Avatar -->
+        <div class="teacher-avatar-wrapper">
+            <img src="{{teacher.photoUrl}}"
+                 loading="lazy"
+                 alt="{{teacher.name}}"
+                 class="teacher-avatar"
+                 onerror="this.onerror=null; this.src='{{teacher.fallbackUrl}}'">
+        </div>
+
+        <!-- Teacher Info -->
+        <h3 class="teacher-name">{{teacher.name}}</h3>
+        <div class="teacher-title">{{teacher.title}}</div>
+        <div class="teacher-company">{{teacher.company}}</div>
+    </div>
+
+    <!-- Skills Section -->
+    <div class="teacher-skills" role="list" aria-label="Skills">
+        <!-- Dynamic skills tags -->
+        <span class="teacher-skill-tag" role="listitem">{{skill}}</span>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="teacher-stats" role="grid" aria-label="Teacher statistics">
+        <div class="teacher-stat" role="gridcell">
+            <span class="stat-value">{{teacher.rating}}</span>
+            <div class="stat-label">⭐</div>
+        </div>
+        <div class="teacher-stat" role="gridcell">
+            <span class="stat-value">{{teacher.years}}</span>
+            <div class="stat-label" data-i18n="teacher.card.years">YEARS</div>
+        </div>
+        <div class="teacher-stat" role="gridcell">
+            <span class="stat-value">{{teacher.courses}}</span>
+            <div class="stat-label" data-i18n="teacher.card.courses">COURSES</div>
+        </div>
+        <div class="teacher-stat" role="gridcell">
+            <span class="stat-value">{{teacher.students}}</span>
+            <div class="stat-label" data-i18n="teacher.card.students">STUDENTS</div>
+        </div>
+    </div>
+
+    <!-- Bio Section -->
+    <div class="teacher-bio">
+        <p class="teacher-bio-text">{{teacher.bio}}</p>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="teacher-card-footer">
+        <a href="{{teacher.detailUrl}}"
+           class="teacher-view-btn"
+           aria-label="View {{teacher.name}} profile">
+            <span data-i18n="teacher.card.viewProfile">View Profile</span>
+            <span class="btn-arrow">→</span>
+        </a>
+    </div>
+</div>

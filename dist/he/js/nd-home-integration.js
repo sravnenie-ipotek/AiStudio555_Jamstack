@@ -9,7 +9,7 @@
 
     // Configuration
     const API_BASE_URL = window.location.hostname === 'localhost'
-        ? 'http://localhost:1337'
+        ? 'http://localhost:3000'
         : 'https://aistudio555jamstack-production.up.railway.app';
 
     // Get current language from URL or default to 'en'
@@ -18,10 +18,47 @@
         return urlParams.get('locale') || 'en';
     }
 
+    // Helper function to extract FAQ data from individual fields
+    function extractFAQFromAttributes(attributes) {
+        const faqItems = [];
+
+        // Extract FAQ items from faq1Title/faq1Answer, faq2Title/faq2Answer, etc.
+        for (let i = 1; i <= 10; i++) { // Check up to 10 FAQ items
+            const titleKey = `faq${i}Title`;
+            const answerKey = `faq${i}Answer`;
+
+            if (attributes[titleKey] && attributes[answerKey]) {
+                faqItems.push({
+                    question: attributes[titleKey],
+                    answer: attributes[answerKey]
+                });
+                console.log(`📄 Found FAQ ${i}: ${attributes[titleKey]}`);
+            }
+        }
+
+        console.log(`📄 Extracted ${faqItems.length} FAQ items from attributes`);
+        return {
+            title: attributes.faqTitle || 'FAQ',
+            items: faqItems
+        };
+    }
+
     // Main function to load home page data
     async function loadHomePageData() {
         try {
             console.log('🔄 Loading home page data from database...');
+            console.log('⏰ Home integration start time:', new Date().toISOString());
+
+            // Check if language manager has already run
+            const sampleElement = document.querySelector('.faq-question');
+            if (sampleElement) {
+                console.log('🔍 Initial FAQ question state:', {
+                    hasDataI18n: sampleElement.hasAttribute('data-i18n'),
+                    dataI18nValue: sampleElement.getAttribute('data-i18n'),
+                    currentText: sampleElement.textContent,
+                    timestamp: new Date().toISOString()
+                });
+            }
 
             const locale = getCurrentLocale();
             const response = await fetch(`${API_BASE_URL}/api/nd/home-page?locale=${locale}`);
@@ -31,7 +68,25 @@
             }
 
             const data = await response.json();
-            console.log('✅ Home page data loaded:', data);
+            console.log('✅ Home page data loaded. Keys:', Object.keys(data));
+
+            // Debug data structure
+            if (data.data) {
+                console.log('🔍 data.data keys:', Object.keys(data.data));
+                if (data.data.attributes) {
+                    console.log('🔍 data.data.attributes exists. Keys:', Object.keys(data.data.attributes));
+                    console.log('🔍 Has testimonials array?', Array.isArray(data.data.attributes.testimonials));
+                    console.log('🔍 Has faq1Title?', !!data.data.attributes.faq1Title);
+                }
+            }
+
+            // Debug old structure checks
+            console.log('🔍 Old structure checks:');
+            console.log('  - data.testimonials:', !!data.testimonials);
+            console.log('  - data.testimonials_data:', !!data.testimonials_data);
+            console.log('  - data.faq:', !!data.faq);
+
+            console.log('📦 Full data structure sample:', JSON.stringify(data, null, 2).substring(0, 500) + '...');
 
             // Populate the page with data - handle the actual API structure
             if (data.data) {
@@ -45,6 +100,10 @@
             console.error('❌ Error loading home page data:', error);
             // Don't show anything if API fails (per user requirement)
             console.log('⚠️ Using static content as fallback');
+
+            // Still try to load featured courses even if home page data fails
+            console.log('🎯 Still attempting to load featured courses...');
+            loadFeaturedCourses();
         }
     }
 
@@ -52,9 +111,10 @@
     function populateHomePage(data) {
         console.log('📝 Populating home page sections:', Object.keys(data));
 
-        // 1. Hero Section - data.hero.content contains the actual content
-        if (data.hero && data.hero.content) {
-            populateHeroSection(data.hero.content);
+        // 1. Hero Section - SKIP UI translation (handled by unified-language-manager)
+        // Only handle dynamic URLs if needed
+        if (data.hero && data.hero.content && data.hero.content.buttons) {
+            updateHeroButtonURLs(data.hero.content.buttons);
         }
 
         // 2. Course Categories Section
@@ -73,30 +133,45 @@
             loadFeaturedCourses();
         }
 
-        // 4. Features Section (Why Choose Us)
-        if (data.features && data.features.content) {
-            populateFeaturesSection(data.features.content);
-        }
+        // 4. Features Section - SKIP (handled by unified-language-manager)
+        // Features are static UI content
 
-        // 3. About Section (Meet Your Mentor)
-        if (data.about && data.about.content) {
-            populateAboutSection(data.about.content);
+        // 3. About Section - SKIP UI translation (handled by unified-language-manager)
+        // Only handle dynamic statistics if needed
+        if (data.about && data.about.content && data.about.content.statistics) {
+            updateAboutStatistics(data.about.content.statistics);
         }
 
         // 4. Testimonials Section
         if (data.testimonials && data.testimonials.content) {
             populateTestimonialsSection(data.testimonials.content);
         }
+        // Also check for testimonials_data (the actual API field)
+        if (data.testimonials_data) {
+            populateTestimonialsSection(data.testimonials_data);
+        }
+        // NEW: Handle direct testimonials array from API attributes
+        if (data.attributes && data.attributes.testimonials) {
+            console.log('📍 Found testimonials in attributes, processing...');
+            populateTestimonialsSection({ items: data.attributes.testimonials });
+        }
 
         // 5. FAQ Section
         if (data.faq && data.faq.content) {
+            console.log('📍 Found FAQ data in new structure');
             populateFAQSection(data.faq.content);
         }
-
-        // 6. Process Section
-        if (data.process && data.process.content) {
-            populateProcessSection(data.process.content);
+        // Fallback: Handle FAQ data from individual fields in API attributes (old structure)
+        else if (data.attributes) {
+            console.log('📍 Found attributes structure, processing FAQ from individual fields...');
+            const faqData = extractFAQFromAttributes(data.attributes);
+            if (faqData.items && faqData.items.length > 0) {
+                populateFAQSection(faqData);
+            }
         }
+
+        // 6. Process Section - SKIP (handled by unified-language-manager)
+        // Process content is static UI
 
         // 7. Statistics Section
         if (data.statistics && data.statistics.content) {
@@ -104,58 +179,8 @@
         }
     }
 
-    // Populate Hero Section
-    function populateHeroSection(heroData) {
-        console.log('🎯 Updating hero section with:', heroData);
-
-        // Update subtitle if exists
-        if (heroData.subtitle) {
-            updateTextContent('.banner-subtitle', heroData.subtitle);
-        }
-
-        // Update main heading - this is the critical one!
-        if (heroData.title) {
-            updateTextContent('.banner-heading', heroData.title);
-            console.log('✅ Updated hero title to:', heroData.title);
-        }
-
-        // Update description
-        if (heroData.description) {
-            updateTextContent('.banner-description-text', heroData.description);
-        }
-
-        // Update CTA buttons if they exist as array
-        if (heroData.buttons && Array.isArray(heroData.buttons)) {
-            const primaryButton = document.querySelector('.banner-button-wrapper .primary-button:first-child');
-            if (primaryButton && heroData.buttons[0]) {
-                const buttonText = primaryButton.querySelectorAll('.primary-button-text-block');
-                buttonText.forEach(el => {
-                    el.textContent = heroData.buttons[0].text;
-                });
-                if (heroData.buttons[0].url) {
-                    // Fix URLs without protocol
-                    let url = heroData.buttons[0].url;
-                    if (url && !url.startsWith('http') && !url.startsWith('#') && !url.includes('.html')) {
-                        url = 'https://' + url;
-                    }
-                    primaryButton.href = url;
-                }
-            }
-
-            const secondaryButton = document.querySelector('.banner-button-wrapper .primary-button.secondary');
-            if (secondaryButton && heroData.buttons[1]) {
-                const buttonText = secondaryButton.querySelectorAll('.primary-button-text-block');
-                buttonText.forEach(el => {
-                    el.textContent = heroData.buttons[1].text;
-                });
-                if (heroData.buttons[1].url) {
-                    secondaryButton.href = heroData.buttons[1].url;
-                }
-            }
-        }
-
-        console.log('✅ Hero section updated');
-    }
+    // DEPRECATED: populateHeroSection() - UI translation now handled by unified-language-manager
+    // This function has been replaced by updateHeroButtonURLs() for dynamic URLs only
 
     // Populate Course Categories Section
     function populateCourseCategories(categoriesData) {
@@ -295,90 +320,245 @@
         return element.scrollHeight > element.clientHeight;
     }
 
-    // Populate Features Section (Why Choose Us)
-    function populateFeaturesSection(featuresData) {
-        console.log('🌟 Updating features section...');
+    // DEPRECATED: populateFeaturesSection() - UI translation now handled by unified-language-manager
+    // Features are static UI content that should use data-i18n attributes
 
-        // This is for the "Why Choose Us" section, not course categories
-        if (featuresData.items && Array.isArray(featuresData.items)) {
-            console.log(`📝 ${featuresData.items.length} features available`);
-        }
-
-        console.log('✅ Features section updated');
-    }
-
-    // Populate About Section
-    function populateAboutSection(aboutData) {
-        console.log('👨‍🏫 Updating about section...');
-
-        // Update section subtitle
-        updateTextContent('.about-us .section-subtitle',
-            aboutData.subtitle || 'Meet Your Mentor');
-
-        // Update section title
-        updateTextContent('.about-us .section-title',
-            aboutData.title || 'Your Pathway To Mastery');
-
-        // Update section description
-        updateTextContent('.about-us .section-description-text',
-            aboutData.description);
-
-        // Update mentor name
-        updateTextContent('.about-us-name',
-            aboutData.mentor_name || 'Expert Instructor');
-
-        // Update mentor description
-        updateTextContent('.about-us-description-text',
-            aboutData.mentor_description);
-
-        // Update achievement text
-        updateTextContent('.about-us-achievement-description-text',
-            aboutData.achievement_text);
-
-        // Update statistics if available
-        if (aboutData.statistics) {
-            // Update course count
-            if (aboutData.statistics.courses) {
-                updateTextContent('.about-us-counter-single:nth-child(1) .about-us-counter-tag-text',
-                    'Total Courses Taught');
-                // Note: Actual number animation would need more complex logic
-            }
-
-            // Update student count
-            if (aboutData.statistics.students) {
-                updateTextContent('.about-us-counter-single:nth-child(2) .about-us-counter-tag-text',
-                    'Total Happy Learners');
-            }
-
-            // Update years of experience
-            if (aboutData.statistics.experience) {
-                updateTextContent('.about-us-counter-single:nth-child(3) .about-us-counter-tag-text',
-                    'Years Of Experience');
-            }
-        }
-
-        console.log('✅ About section updated');
-    }
+    // DEPRECATED: populateAboutSection() - UI translation now handled by unified-language-manager
+    // This function has been replaced by updateAboutStatistics() for dynamic numbers only
 
     // Populate Testimonials Section
     function populateTestimonialsSection(testimonialsData) {
         console.log('💬 Updating testimonials section...');
 
-        // Update section title
-        updateTextContent('.testimonials .section-title',
-            testimonialsData.title || 'What Our Students Say');
+        // DUAL-SYSTEM: Section title and subtitle handled by unified-language-manager
+        // Do NOT update section title/subtitle here to avoid overriding translations
+        console.log('🔄 Skipping section title/subtitle - handled by language manager');
 
-        // Update section subtitle
-        updateTextContent('.testimonials .section-subtitle',
-            testimonialsData.subtitle || 'Student Success Stories');
+        // Update testimonial cards
+        // Handle the deeply nested structure from API: testimonials_data.content.content.content.content
+        let testimonialItems = [];
 
-        // Testimonials would need dynamic creation of cards
-        // This is a placeholder for the testimonial cards update logic
+        // Extract testimonials from various possible locations
+        if (testimonialsData.content) {
+            if (testimonialsData.content.content) {
+                if (testimonialsData.content.content.content) {
+                    if (testimonialsData.content.content.content.content) {
+                        // Deepest nested level - actual testimonials at indices 0-5
+                        testimonialItems = testimonialsData.content.content.content.content;
+                        console.log('Found testimonials at deepest level (content.content.content.content)');
+                    } else {
+                        // One level up - might have some testimonials
+                        testimonialItems = testimonialsData.content.content.content;
+                        console.log('Found testimonials at content.content.content');
+                    }
+                } else if (testimonialsData.content.content) {
+                    testimonialItems = testimonialsData.content.content;
+                    console.log('Found testimonials at content.content');
+                }
+            } else if (testimonialsData.content) {
+                testimonialItems = testimonialsData.content;
+                console.log('Found testimonials at content');
+            }
+        }
+
+        // Also check for items array
         if (testimonialsData.items && Array.isArray(testimonialsData.items)) {
-            console.log(`📝 ${testimonialsData.items.length} testimonials available`);
+            console.log(`📝 ${testimonialsData.items.length} testimonials in items array`);
+        }
+
+        // Handle both old nested format and new direct array format
+        let actualTestimonialItems = testimonialItems;
+
+        // If it's the new format with 'items' array, use that
+        if (testimonialsData.items && Array.isArray(testimonialsData.items)) {
+            console.log(`📋 Processing ${testimonialsData.items.length} testimonials from items array`);
+            actualTestimonialItems = testimonialsData.items;
+
+            // Convert new format to old format for processing
+            const convertedItems = {};
+            testimonialsData.items.forEach((item, index) => {
+                convertedItems[index] = {
+                    title: item.text ? item.text.substring(0, 50) + (item.text.length > 50 ? '...' : '') : '',
+                    text: item.text || '',
+                    name: item.author || '',
+                    course_taken: item.course_taken || '',
+                    role: item.role || ''
+                };
+            });
+            actualTestimonialItems = convertedItems;
+        }
+
+        // Update individual testimonial cards by tab index
+        if (actualTestimonialItems && typeof actualTestimonialItems === 'object') {
+            // Update testimonials by index (0-6)
+            for (let i = 0; i <= 6; i++) {
+                if (actualTestimonialItems[i]) {
+                    const testimonial = actualTestimonialItems[i];
+
+                    // Find the tab pane for this index
+                    let tabSelector = '';
+                    if (i === 0) tabSelector = '[data-w-tab="Tab 1"]';
+                    else if (i === 1) tabSelector = '[data-w-tab="Tab 2"]';
+                    else if (i === 2) tabSelector = '[data-w-tab="Tab 3"]';
+                    else if (i === 3) tabSelector = '[data-w-tab="Tab 4"]';
+                    else if (i === 4) tabSelector = '[data-w-tab="Tab 5"]';
+                    else if (i === 5) tabSelector = '[data-w-tab="Tab 6"]';
+                    else if (i === 6) tabSelector = '[data-w-tab="Tab 7"]';
+
+                    const tabPane = document.querySelector(`.testimonials-tab-pane${tabSelector}`);
+                    if (tabPane) {
+                        // Update title/text
+                        const titleEl = tabPane.querySelector('.testimonials-title');
+                        if (titleEl && testimonial.title) {
+                            console.log(`🔍 Testimonial ${i + 1} title element before update:`, {
+                                hasDataI18n: titleEl.hasAttribute('data-i18n'),
+                                dataI18nValue: titleEl.getAttribute('data-i18n'),
+                                currentText: titleEl.textContent
+                            });
+
+                            titleEl.textContent = `"${testimonial.title}"`;
+                            titleEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ Testimonial ${i + 1} title updated:`, {
+                                newText: `"${testimonial.title}"`,
+                                hasDataI18nAfter: titleEl.hasAttribute('data-i18n')
+                            });
+                        } else if (titleEl && testimonial.text) {
+                            console.log(`🔍 Testimonial ${i + 1} title element before update (using text):`, {
+                                hasDataI18n: titleEl.hasAttribute('data-i18n'),
+                                dataI18nValue: titleEl.getAttribute('data-i18n'),
+                                currentText: titleEl.textContent
+                            });
+
+                            // If no title, use first part of text
+                            const shortText = testimonial.text.substring(0, 50);
+                            const newTitle = `"${shortText}${testimonial.text.length > 50 ? '...' : ''}"`;
+                            titleEl.textContent = newTitle;
+                            titleEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ Testimonial ${i + 1} title updated (using text):`, {
+                                newText: newTitle,
+                                hasDataI18nAfter: titleEl.hasAttribute('data-i18n')
+                            });
+                        }
+
+                        // Update description text
+                        const textEl = tabPane.querySelector('.testimonials-card-description-text');
+                        if (textEl && testimonial.text) {
+                            console.log(`🔍 Testimonial ${i + 1} description element before update:`, {
+                                hasDataI18n: textEl.hasAttribute('data-i18n'),
+                                dataI18nValue: textEl.getAttribute('data-i18n'),
+                                currentText: textEl.textContent
+                            });
+
+                            textEl.textContent = `"${testimonial.text}"`;
+                            textEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ Testimonial ${i + 1} description updated:`, {
+                                newText: `"${testimonial.text}"`,
+                                hasDataI18nAfter: textEl.hasAttribute('data-i18n')
+                            });
+                        }
+
+                        // Update author name
+                        const nameEl = tabPane.querySelector('.testimonials-card-author-name');
+                        if (nameEl && testimonial.name) {
+                            console.log(`🔍 Testimonial ${i + 1} name element before update:`, {
+                                hasDataI18n: nameEl.hasAttribute('data-i18n'),
+                                dataI18nValue: nameEl.getAttribute('data-i18n'),
+                                currentText: nameEl.textContent
+                            });
+
+                            nameEl.textContent = testimonial.name;
+                            nameEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ Testimonial ${i + 1} name updated:`, {
+                                newText: testimonial.name,
+                                hasDataI18nAfter: nameEl.hasAttribute('data-i18n')
+                            });
+                        }
+
+                        // Update author role/course
+                        const roleEl = tabPane.querySelector('.testimonials-card-author-bio-text');
+                        if (roleEl && testimonial.course_taken) {
+                            console.log(`🔍 Testimonial ${i + 1} role element before update (course):`, {
+                                hasDataI18n: roleEl.hasAttribute('data-i18n'),
+                                dataI18nValue: roleEl.getAttribute('data-i18n'),
+                                currentText: roleEl.textContent
+                            });
+
+                            roleEl.textContent = testimonial.course_taken;
+                            roleEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ Testimonial ${i + 1} role updated (course):`, {
+                                newText: testimonial.course_taken,
+                                hasDataI18nAfter: roleEl.hasAttribute('data-i18n')
+                            });
+                        } else if (roleEl && testimonial.role) {
+                            console.log(`🔍 Testimonial ${i + 1} role element before update (role):`, {
+                                hasDataI18n: roleEl.hasAttribute('data-i18n'),
+                                dataI18nValue: roleEl.getAttribute('data-i18n'),
+                                currentText: roleEl.textContent
+                            });
+
+                            roleEl.textContent = testimonial.role;
+                            roleEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ Testimonial ${i + 1} role updated (role):`, {
+                                newText: testimonial.role,
+                                hasDataI18nAfter: roleEl.hasAttribute('data-i18n')
+                            });
+                        }
+
+                        console.log(`✅ Updated testimonial ${i + 1}: ${testimonial.name || 'Anonymous'}`);
+                    }
+                }
+            }
         }
 
         console.log('✅ Testimonials section updated');
+
+        // Add delayed cleanup to ensure data-i18n attributes are removed
+        // This runs after both integration and language manager are done
+        setTimeout(() => {
+            console.log('🧹 Final Testimonials cleanup - removing any lingering data-i18n attributes...');
+
+            // Clean up all testimonials elements that might have been retranslated
+            const allTestimonialTitles = document.querySelectorAll('.testimonials-title');
+            const allTestimonialTexts = document.querySelectorAll('.testimonials-card-description-text');
+            const allTestimonialNames = document.querySelectorAll('.testimonials-card-author-name');
+            const allTestimonialRoles = document.querySelectorAll('.testimonials-card-author-bio-text');
+
+            allTestimonialTitles.forEach((el, index) => {
+                if (el.hasAttribute('data-i18n')) {
+                    console.log(`🔧 Removing data-i18n from testimonial title ${index + 1}:`, el.getAttribute('data-i18n'));
+                    el.removeAttribute('data-i18n');
+                }
+            });
+
+            allTestimonialTexts.forEach((el, index) => {
+                if (el.hasAttribute('data-i18n')) {
+                    console.log(`🔧 Removing data-i18n from testimonial text ${index + 1}:`, el.getAttribute('data-i18n'));
+                    el.removeAttribute('data-i18n');
+                }
+            });
+
+            allTestimonialNames.forEach((el, index) => {
+                if (el.hasAttribute('data-i18n')) {
+                    console.log(`🔧 Removing data-i18n from testimonial name ${index + 1}:`, el.getAttribute('data-i18n'));
+                    el.removeAttribute('data-i18n');
+                }
+            });
+
+            allTestimonialRoles.forEach((el, index) => {
+                if (el.hasAttribute('data-i18n')) {
+                    console.log(`🔧 Removing data-i18n from testimonial role ${index + 1}:`, el.getAttribute('data-i18n'));
+                    el.removeAttribute('data-i18n');
+                }
+            });
+
+            console.log('✅ Testimonials cleanup completed');
+        }, 2000); // Wait 2 seconds after testimonials population
     }
 
     // Populate FAQ Section
@@ -387,82 +567,136 @@
 
         // Find FAQ section - it might be in a different location
         const faqSection = document.querySelector('.faq-section') ||
-                         document.querySelector('[data-section="faq"]');
+                         document.querySelector('[data-section="faq"]') ||
+                         document.querySelector('.faq');
 
         if (faqSection && faqData) {
-            // Update FAQ title if exists
-            if (faqData.title) {
-                const faqTitle = faqSection.querySelector('.section-title');
-                if (faqTitle) faqTitle.textContent = faqData.title;
-            }
+            // DUAL-SYSTEM: FAQ section title handled by unified-language-manager
+            // Do NOT update section title here to avoid overriding translations
+            console.log('🔄 Skipping FAQ section title - handled by language manager');
 
             // Update FAQ items if they exist
             if (faqData.items && Array.isArray(faqData.items)) {
                 console.log(`📝 ${faqData.items.length} FAQ items available`);
-                // FAQ items would need special accordion handling
+
+                // Update each FAQ accordion item
+                faqData.items.forEach((item, index) => {
+                    // Find the tab for this FAQ (Tab 1, Tab 2, etc.)
+                    const tabNumber = index + 1;
+                    const faqTab = document.querySelector(`[data-w-tab="Tab ${tabNumber}"].single-faq-accordion-wrap`);
+
+                    if (faqTab) {
+                        // Update question
+                        const questionEl = faqTab.querySelector('.faq-question');
+                        if (questionEl && item.question) {
+                            console.log(`🔍 FAQ ${tabNumber} question element before update:`, {
+                                hasDataI18n: questionEl.hasAttribute('data-i18n'),
+                                dataI18nValue: questionEl.getAttribute('data-i18n'),
+                                currentText: questionEl.textContent
+                            });
+
+                            // Add "Q: " prefix if not already present
+                            const questionText = item.question.startsWith('Q:') ? item.question : `Q: ${item.question}`;
+                            questionEl.textContent = questionText;
+                            // Keep data-i18n for fallback translations
+
+                            console.log(`✅ FAQ ${tabNumber} question updated:`, {
+                                newText: questionText,
+                                hasDataI18nAfter: questionEl.hasAttribute('data-i18n'),
+                                dataI18nAfter: questionEl.getAttribute('data-i18n')
+                            });
+                        }
+
+                        // Update answer
+                        const answerEl = faqTab.querySelector('.faq-answer');
+                        if (answerEl && item.answer) {
+                            console.log(`🔍 FAQ ${tabNumber} answer element before update:`, {
+                                hasDataI18n: answerEl.hasAttribute('data-i18n'),
+                                dataI18nValue: answerEl.getAttribute('data-i18n'),
+                                currentText: answerEl.textContent
+                            });
+
+                            answerEl.textContent = item.answer;
+                            // Keep data-i18n for fallback translations
+
+                            console.log(`✅ FAQ ${tabNumber} answer updated:`, {
+                                newText: item.answer,
+                                hasDataI18nAfter: answerEl.hasAttribute('data-i18n'),
+                                dataI18nAfter: answerEl.getAttribute('data-i18n')
+                            });
+                        }
+
+                        console.log(`✅ Updated FAQ ${tabNumber}: ${item.question}`);
+                    } else {
+                        console.log(`⚠️ FAQ tab ${tabNumber} not found`);
+                    }
+                });
+            }
+
+            // Also handle nested content structure (for API compatibility)
+            if (faqData.content && faqData.content.items && Array.isArray(faqData.content.items)) {
+                console.log(`📝 ${faqData.content.items.length} FAQ items in nested structure`);
+
+                faqData.content.items.forEach((item, index) => {
+                    const tabNumber = index + 1;
+                    const faqTab = document.querySelector(`[data-w-tab="Tab ${tabNumber}"].single-faq-accordion-wrap`);
+
+                    if (faqTab) {
+                        // Update question
+                        const questionEl = faqTab.querySelector('.faq-question');
+                        if (questionEl && item.question) {
+                            console.log(`🔍 FAQ ${tabNumber} question element before update (nested):`, {
+                                hasDataI18n: questionEl.hasAttribute('data-i18n'),
+                                dataI18nValue: questionEl.getAttribute('data-i18n'),
+                                currentText: questionEl.textContent
+                            });
+
+                            const questionText = item.question.startsWith('Q:') ? item.question : `Q: ${item.question}`;
+                            questionEl.textContent = questionText;
+                            questionEl.removeAttribute('data-i18n'); // Prevent overwrite by language manager
+
+                            console.log(`✅ FAQ ${tabNumber} question updated (nested):`, {
+                                newText: questionText,
+                                hasDataI18nAfter: questionEl.hasAttribute('data-i18n'),
+                                dataI18nAfter: questionEl.getAttribute('data-i18n')
+                            });
+                        }
+
+                        // Update answer
+                        const answerEl = faqTab.querySelector('.faq-answer');
+                        if (answerEl && item.answer) {
+                            console.log(`🔍 FAQ ${tabNumber} answer element before update (nested):`, {
+                                hasDataI18n: answerEl.hasAttribute('data-i18n'),
+                                dataI18nValue: answerEl.getAttribute('data-i18n'),
+                                currentText: answerEl.textContent
+                            });
+
+                            answerEl.textContent = item.answer;
+                            // Keep data-i18n for fallback translations
+
+                            console.log(`✅ FAQ ${tabNumber} answer updated (nested):`, {
+                                newText: item.answer,
+                                hasDataI18nAfter: answerEl.hasAttribute('data-i18n'),
+                                dataI18nAfter: answerEl.getAttribute('data-i18n')
+                            });
+                        }
+
+                        console.log(`✅ Updated FAQ ${tabNumber} from nested structure`);
+                    }
+                });
             }
         }
 
         console.log('✅ FAQ section updated');
+
+        // No delayed cleanup needed - let the dual-system work naturally
     }
 
-    // Populate Process Section
-    function populateProcessSection(processData) {
-        console.log('⚙️ Updating process section...');
+    // DEPRECATED: populateProcessSection() - UI translation now handled by unified-language-manager
+    // Process content is static UI that should use data-i18n attributes
 
-        if (processData.title) {
-            updateTextContent('.process-title', processData.title);
-        }
-
-        if (processData.subtitle) {
-            updateTextContent('.process-subtitle', processData.subtitle);
-        }
-
-        if (processData.steps && Array.isArray(processData.steps)) {
-            console.log(`📝 ${processData.steps.length} process steps available`);
-        }
-
-        console.log('✅ Process section updated');
-    }
-
-    // Populate CTA Section
-    function populateCTASection(ctaData) {
-        console.log('📢 Updating CTA section...');
-
-        // Find CTA section
-        const ctaSection = document.querySelector('.cta-section') ||
-                          document.querySelector('[data-section="cta"]');
-
-        if (ctaSection && ctaData) {
-            // Update CTA title
-            if (ctaData.title) {
-                const ctaTitle = ctaSection.querySelector('.section-title');
-                if (ctaTitle) ctaTitle.textContent = ctaData.title;
-            }
-
-            // Update CTA description
-            if (ctaData.description) {
-                const ctaDesc = ctaSection.querySelector('.section-description');
-                if (ctaDesc) ctaDesc.textContent = ctaData.description;
-            }
-
-            // Update CTA button
-            if (ctaData.button_text) {
-                const ctaButton = ctaSection.querySelector('.primary-button');
-                if (ctaButton) {
-                    const buttonTexts = ctaButton.querySelectorAll('.primary-button-text-block');
-                    buttonTexts.forEach(el => {
-                        el.textContent = ctaData.button_text;
-                    });
-                    if (ctaData.button_link) {
-                        ctaButton.href = ctaData.button_link;
-                    }
-                }
-            }
-        }
-
-        console.log('✅ CTA section updated');
-    }
+    // DEPRECATED: populateCTASection() - UI translation now handled by unified-language-manager
+    // CTA content is static UI that should use data-i18n attributes
 
     // Populate Statistics Section
     function populateStatisticsSection(statsData) {
@@ -513,11 +747,67 @@
         });
     }
 
-    // Initialize when DOM is ready
+    // ==================== HELPER FUNCTIONS FOR DYNAMIC CONTENT ====================
+
+    // Update only dynamic URLs in hero buttons (not text - that's handled by data-i18n)
+    function updateHeroButtonURLs(buttons) {
+        console.log('🔗 Updating hero button URLs only...');
+
+        if (buttons && Array.isArray(buttons)) {
+            const primaryButton = document.querySelector('.banner-button-wrapper .primary-button:first-child');
+            if (primaryButton && buttons[0] && buttons[0].url) {
+                let url = buttons[0].url;
+                if (url && !url.startsWith('http') && !url.startsWith('#') && !url.includes('.html')) {
+                    url = 'https://' + url;
+                }
+                primaryButton.href = url;
+                console.log('✅ Updated primary button URL');
+            }
+
+            const secondaryButton = document.querySelector('.banner-button-wrapper .primary-button.secondary');
+            if (secondaryButton && buttons[1] && buttons[1].url) {
+                secondaryButton.href = buttons[1].url;
+                console.log('✅ Updated secondary button URL');
+            }
+        }
+    }
+
+    // Update only dynamic statistics numbers (not labels - that's handled by data-i18n)
+    function updateAboutStatistics(statistics) {
+        console.log('📊 Updating about statistics numbers only...');
+
+        if (statistics.courses) {
+            const courseCounter = document.querySelector('.about-us-counter-single:nth-child(1) .about-us-counter-number');
+            if (courseCounter) courseCounter.textContent = statistics.courses;
+        }
+
+        if (statistics.students) {
+            const studentCounter = document.querySelector('.about-us-counter-single:nth-child(2) .about-us-counter-number');
+            if (studentCounter) studentCounter.textContent = statistics.students;
+        }
+
+        if (statistics.experience) {
+            const experienceCounter = document.querySelector('.about-us-counter-single:nth-child(3) .about-us-counter-number');
+            if (experienceCounter) experienceCounter.textContent = statistics.experience;
+        }
+
+        console.log('✅ About statistics updated');
+    }
+
+    // Initialize when DOM is ready - with delay to let language manager run first
+    function initializeWithDelay() {
+        // Wait longer to ensure unified-language-manager.js has fully processed all translations
+        setTimeout(() => {
+            console.log('🚀 Starting home integration after language manager completes');
+            console.log('⏰ Delayed start time:', new Date().toISOString());
+            loadHomePageData();
+        }, 2000); // 2 second delay to ensure language manager finishes completely
+    }
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadHomePageData);
+        document.addEventListener('DOMContentLoaded', initializeWithDelay);
     } else {
-        loadHomePageData();
+        initializeWithDelay();
     }
 
     // ==================== FEATURED COURSES SECTION ====================
@@ -527,7 +817,7 @@
         try {
             console.log('🎯 Loading featured courses from API...');
 
-            const response = await fetch(`${API_BASE_URL}/api/featured-courses?limit=8`);
+            const response = await fetch(`${API_BASE_URL}/api/nd/courses?featured=true&limit=8`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch featured courses: ${response.status}`);
@@ -537,9 +827,23 @@
             console.log('✅ Featured courses data loaded:', data);
 
             // Populate the featured courses section
-            if (data.success && data.data) {
-                await populateFeaturedCourses(data.data);
-                setupCourseTabFiltering(data.data.categories);
+            if (data.data && data.data.length > 0) {
+                // Transform the API response to match expected format
+                const transformedCourses = data.data.map(course => ({
+                    id: course.id,
+                    title: course.title,
+                    description: course.description,
+                    category: course.category,
+                    price: course.price,
+                    duration: course.duration,
+                    lessons_count: course.lessons_count,
+                    rating: course.rating,
+                    image: course.image,
+                    url: `detail_courses.html?id=${course.id}`
+                }));
+
+                await populateFeaturedCourses({ courses: transformedCourses });
+                setupCourseTabFiltering(transformedCourses);
             } else {
                 console.warn('⚠️ No featured courses data found');
             }
@@ -709,7 +1013,7 @@
     }
 
     // Setup Course Tab Filtering
-    function setupCourseTabFiltering(categoriesData) {
+    function setupCourseTabFiltering(allCourses) {
         console.log('⚙️ Setting up course tab filtering...');
 
         const tabLinks = document.querySelectorAll('.featured-courses-tab-link');
@@ -723,13 +1027,18 @@
                 let category = 'all';
                 const tabText = tabLink.textContent.trim().toLowerCase();
 
-                if (tabText.includes('web')) category = 'web-development';
-                else if (tabText.includes('app')) category = 'app-development';
-                else if (tabText.includes('machine')) category = 'machine-learning';
-                else if (tabText.includes('cloud')) category = 'cloud-computing';
+                if (tabText.includes('web')) category = 'Web Development';
+                else if (tabText.includes('app')) category = 'App Development';
+                else if (tabText.includes('machine')) category = 'Machine Learning';
+                else if (tabText.includes('cloud')) category = 'Cloud Computing';
 
-                // Filter and populate the active tab
-                const filteredCourses = categoriesData[category] || [];
+                // Filter courses based on category
+                let filteredCourses = allCourses || [];
+                if (category !== 'all') {
+                    filteredCourses = allCourses.filter(course =>
+                        course.category && course.category.toLowerCase() === category.toLowerCase()
+                    );
+                }
                 console.log(`🔍 Filtering to category "${category}": ${filteredCourses.length} courses`);
 
                 // Find the corresponding tab pane

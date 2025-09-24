@@ -9,8 +9,27 @@
 
     // API Configuration
     const API_BASE = window.location.hostname === 'localhost'
-        ? 'http://localhost:1337'
+        ? 'http://localhost:3000'
         : 'https://aistudio555jamstack-production.up.railway.app';
+
+    // Static course images mapping by category
+    const COURSE_IMAGES = {
+        'Web Development': 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&q=80',
+        'App Development': 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+        'Machine Learning': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80',
+        'Data Science': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80',
+        'Programming': 'https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=800&q=80',
+        'AI & ML': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80',
+        'Cloud Computing': 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&q=80',
+        'Mobile Dev': 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+        'DevOps': 'https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=800&q=80',
+        'default': 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80'
+    };
+
+    // Get static image for course based on category
+    function getStaticCourseImage(category) {
+        return COURSE_IMAGES[category] || COURSE_IMAGES['default'];
+    }
 
     // Extract URL parameters
     function getUrlParams() {
@@ -24,7 +43,8 @@
     // Fetch course data from API
     async function fetchCourseData(courseId, preview = false) {
         try {
-            const url = `${API_BASE}/api/nd/courses/${courseId}${preview ? '?preview=true' : ''}`;
+            const locale = localStorage.getItem('preferred_locale') || 'en';
+            const url = `${API_BASE}/api/nd/courses/${courseId}?locale=${locale}${preview ? '&preview=true' : ''}`;
             console.log('🔍 Fetching course:', url);
 
             const response = await fetch(url);
@@ -78,113 +98,159 @@
     function populateCourseDetails(course) {
         console.log('📝 Populating course details...');
 
-        // Hero Section
-        const heroTitle = document.querySelector('.courses-single-hero-heading');
-        if (heroTitle) heroTitle.textContent = course.title || '';
-
-        const heroDescription = document.querySelector('.courses-single-hero-paragraph');
-        if (heroDescription) heroDescription.textContent = course.short_description || course.description || '';
-
-        // Breadcrumb
-        const breadcrumb = document.querySelector('.breadcrumbs-name');
-        if (breadcrumb) breadcrumb.textContent = course.title || '';
-
-        // Main Content Area
-        const mainTitle = document.querySelector('.courses-single-content-heading');
-        if (mainTitle) mainTitle.textContent = course.title || '';
-
-        const mainDescription = document.querySelector('.courses-single-content-paragraph');
-        if (mainDescription) mainDescription.textContent = course.description || '';
-
-        // Course Image
-        const courseImage = document.querySelector('.courses-single-image');
-        if (courseImage && course.thumbnail_url) {
-            courseImage.src = course.thumbnail_url;
-            courseImage.alt = course.title || '';
+        // Course Name and Description - Webflow Structure
+        const courseName = document.querySelector('.course-details-name');
+        if (courseName) {
+            courseName.textContent = course.title || '';
+            console.log('✅ Set course name to:', course.title);
         }
 
-        // Video (if available)
-        const videoFrame = document.querySelector('.courses-single-video iframe');
-        if (videoFrame && course.video_url) {
-            videoFrame.src = course.video_url;
+        const courseDescriptionText = document.querySelector('.course-details-description-text');
+        if (courseDescriptionText) {
+            courseDescriptionText.textContent = course.short_description || course.description || '';
+            console.log('✅ Set course description to:', course.short_description || course.description);
+        }
+
+        // Author Information - Webflow Structure
+        const authorName = document.querySelector('.course-details-author-name');
+        if (authorName) {
+            authorName.textContent = course.instructor || 'Expert Instructor';
+        }
+
+        const authorBio = document.querySelector('.course-details-author-bio');
+        if (authorBio) {
+            authorBio.textContent = course.instructor_bio || 'Experienced professional with years of industry expertise and a passion for teaching.';
+        }
+
+        const authorImage = document.querySelector('.courses-single-author-image');
+        if (authorImage) {
+            authorImage.src = course.instructor_image || 'images/default-instructor.jpg';
+            authorImage.alt = course.instructor || 'Instructor';
+        }
+
+        // Short Categories - Webflow Structure
+        const shortCategoriesText = document.querySelector('.course-details-short-categories-text');
+        if (shortCategoriesText) {
+            shortCategoriesText.textContent = course.category || 'General';
+        }
+
+        // Show course details content with opacity animation
+        const courseDetailsContent = document.querySelector('.course-details-content');
+        if (courseDetailsContent) {
+            courseDetailsContent.style.opacity = '1';
+            courseDetailsContent.classList.add('visible');
+            console.log('✅ Course details content made visible');
+        }
+
+        // Breadcrumb
+        const breadcrumb = document.querySelector('.course-breadcrumb-title');
+        if (breadcrumb) {
+            breadcrumb.textContent = course.title || '';
+        }
+
+        // Main Content Area - Custom Structure
+        const fullDescription = document.querySelector('.course-full-description');
+        if (fullDescription) {
+            fullDescription.textContent = course.description || '';
+        }
+
+        const curriculumDescription = document.querySelector('.course-curriculum-description');
+        if (curriculumDescription) {
+            curriculumDescription.textContent = `This ${course.lessons_count || 0}-lesson course covers all aspects of ${course.title || 'the subject'}.`;
         }
 
         // Rating
-        const ratingContainer = document.querySelector('.courses-single-rating-icon-wrapper');
+        const ratingContainer = document.querySelector('.course-rating-stars');
         if (ratingContainer && course.rating) {
             ratingContainer.innerHTML = generateStarRating(course.rating);
         }
 
-        const ratingText = document.querySelector('.courses-single-rating-text');
+        const ratingText = document.querySelector('.course-rating-text');
         if (ratingText) {
             ratingText.textContent = `${course.rating || 5.0} (${course.reviews_count || 0} reviews)`;
         }
 
-        // Price
-        const priceElement = document.querySelector('.courses-single-price-text');
-        if (priceElement) {
-            priceElement.innerHTML = formatPrice(course.price, course.old_price);
-        }
+        // Course meta information
+        const instructorElement = document.querySelector('.course-instructor');
+        if (instructorElement) instructorElement.textContent = course.instructor || 'Expert Instructor';
 
-        // Meta Information
-        const durationElement = document.querySelector('.courses-single-meta-text:nth-of-type(1)');
+        const durationElement = document.querySelector('.course-duration');
         if (durationElement) durationElement.textContent = course.duration || '8 weeks';
 
-        const lessonsElement = document.querySelector('.courses-single-meta-text:nth-of-type(2)');
-        if (lessonsElement) lessonsElement.textContent = `${course.lessons_count || 0} Lessons`;
+        // Sidebar price - Webflow Structure
+        const currentPriceElement = document.querySelector('.courses-single-current-price');
+        if (currentPriceElement) currentPriceElement.textContent = `$${course.price || '99.99'}`;
 
-        const levelElement = document.querySelector('.courses-single-meta-text:nth-of-type(3)');
+        const oldPriceElement = document.querySelector('.courses-single-old-price');
+        if (oldPriceElement && course.old_price) {
+            oldPriceElement.textContent = `$${course.old_price}`;
+            oldPriceElement.style.textDecoration = 'line-through';
+        }
+
+        const lessonsCountElement = document.querySelector('.course-lessons-count');
+        if (lessonsCountElement) lessonsCountElement.textContent = course.lessons_count || '0';
+
+        const studentsCountElement = document.querySelector('.course-students-count');
+        if (studentsCountElement) studentsCountElement.textContent = course.students_count || '0';
+
+        const levelElement = document.querySelector('.course-level');
         if (levelElement) levelElement.textContent = course.level || 'All Levels';
 
-        const categoryElement = document.querySelector('.courses-single-categories-tag');
-        if (categoryElement) {
-            categoryElement.textContent = course.category || 'General';
-            // Apply category color
-            const categoryColor = getCategoryColor(course.category);
-            categoryElement.style.backgroundColor = categoryColor;
+        // Category tag - Webflow Structure
+        const categoryTag = document.querySelector('.courses-single-category-tag');
+        if (categoryTag) categoryTag.textContent = course.category || 'General';
+
+        // Instructor info (sidebar)
+        const instructorNameElement = document.querySelector('.instructor-name');
+        if (instructorNameElement) instructorNameElement.textContent = course.instructor || 'Expert Instructor';
+
+        const instructorImageElement = document.querySelector('.instructor-image');
+        if (instructorImageElement) {
+            instructorImageElement.src = course.instructor_image || 'images/default-instructor.jpg';
+            instructorImageElement.alt = course.instructor || 'Instructor';
         }
 
-        // Instructor Information
-        const instructorName = document.querySelector('.courses-single-instructor-name');
-        if (instructorName) instructorName.textContent = course.instructor || 'Expert Instructor';
-
-        const instructorBio = document.querySelector('.courses-single-instructor-bio');
-        if (instructorBio) instructorBio.textContent = course.instructor_bio || 'Experienced professional with years of industry expertise.';
-
-        const instructorImage = document.querySelector('.courses-single-instructor-image');
-        if (instructorImage && course.instructor_image) {
-            instructorImage.src = course.instructor_image;
-            instructorImage.alt = course.instructor || '';
+        const instructorBioElement = document.querySelector('.instructor-bio');
+        if (instructorBioElement) {
+            instructorBioElement.textContent = course.instructor_bio || 'Experienced professional with years of industry expertise and a passion for teaching.';
         }
 
-        // Course Objectives
-        if (course.objectives) {
-            const objectivesContainer = document.querySelector('.courses-single-objectives-list');
+        // Course video/image thumbnail - Webflow Structure
+        const courseThumbnail = document.querySelector('.courses-single-video-thumbnail');
+        if (courseThumbnail) {
+            const thumbnailUrl = course.image || getStaticCourseImage(course.category);
+            courseThumbnail.src = thumbnailUrl;
+            courseThumbnail.alt = course.title || 'Course';
+        }
+
+        // Course Objectives (What You'll Learn)
+        if (course.what_you_learn && course.what_you_learn.length > 0) {
+            const objectivesContainer = document.querySelector('.course-objectives-list');
             if (objectivesContainer) {
-                const objectives = course.objectives.split(',').map(obj => obj.trim());
+                const objectives = Array.isArray(course.what_you_learn) ? course.what_you_learn : course.what_you_learn.split(',').map(obj => obj.trim());
                 objectivesContainer.innerHTML = objectives.map(obj =>
-                    `<li class="courses-single-objectives-item">
-                        <img src="images/Courses-Single-Check-Icon.svg" alt="✓" class="courses-single-objectives-icon">
+                    `<div class="course-objective-item">
+                        <span class="checkmark">✓</span>
                         <span>${obj}</span>
-                    </li>`
+                    </div>`
                 ).join('');
             }
         }
 
         // Course Requirements
-        if (course.requirements) {
-            const requirementsContainer = document.querySelector('.courses-single-requirements-list');
+        if (course.requirements && course.requirements.length > 0) {
+            const requirementsContainer = document.querySelector('.course-requirements-list');
             if (requirementsContainer) {
-                const requirements = course.requirements.split(',').map(req => req.trim());
+                const requirements = Array.isArray(course.requirements) ? course.requirements : course.requirements.split(',').map(req => req.trim());
                 requirementsContainer.innerHTML = requirements.map(req =>
-                    `<li class="courses-single-requirements-item">${req}</li>`
+                    `<div class="course-requirement-item">${req}</div>`
                 ).join('');
             }
         }
 
         // Lessons/Curriculum
-        if (course.lessons) {
-            const lessonsContainer = document.querySelector('.courses-single-curriculum-list, .courses-single-lessons-list');
+        if (course.syllabus && course.syllabus.length > 0) {
+            const lessonsContainer = document.querySelector('.course-lessons-container');
             if (lessonsContainer) {
                 try {
                     const lessons = typeof course.lessons === 'string' ? JSON.parse(course.lessons) : course.lessons;
@@ -215,15 +281,36 @@
             }
         }
 
-        // Features
-        if (course.features) {
-            const featuresContainer = document.querySelector('.courses-single-features-list');
+        // Features - Webflow Structure
+        if (course.features && course.features.length > 0) {
+            const featuresContainer = document.querySelector('.courses-single-features');
             if (featuresContainer) {
-                const features = course.features.split(',').map(f => f.trim());
+                // Handle both array and string formats
+                const features = Array.isArray(course.features)
+                    ? course.features
+                    : course.features.split(',').map(f => f.trim());
+
                 featuresContainer.innerHTML = features.map(feature =>
                     `<div class="courses-single-feature-item">
-                        <img src="images/Courses-Single-Feature-Icon.svg" alt="✓" class="courses-single-feature-icon">
-                        <span>${feature}</span>
+                        <div class="courses-single-feature-icon"></div>
+                        <div class="courses-single-feature-text">${feature}</div>
+                    </div>`
+                ).join('');
+            }
+        } else {
+            // Default features if none provided
+            const featuresContainer = document.querySelector('.courses-single-features');
+            if (featuresContainer) {
+                const defaultFeatures = [
+                    'Lifetime access',
+                    'Certificate of completion',
+                    'Expert instructor support',
+                    'Mobile learning'
+                ];
+                featuresContainer.innerHTML = defaultFeatures.map(feature =>
+                    `<div class="courses-single-feature-item">
+                        <div class="courses-single-feature-icon"></div>
+                        <div class="courses-single-feature-text">${feature}</div>
                     </div>`
                 ).join('');
             }
@@ -243,11 +330,54 @@
 
         // Show content areas
         const contentAreas = document.querySelectorAll('.w-dyn-hide-empty');
+        console.log('🔍 Found content areas to show:', contentAreas.length);
         contentAreas.forEach(el => {
             el.style.display = 'block';
+            console.log('✅ Showing content area:', el.className);
         });
 
-        console.log('✅ Course details populated successfully');
+        // Also ensure main sections are visible
+        const mainSections = document.querySelectorAll('.course-overview-section, .course-objectives-section, .course-curriculum-section, .course-requirements-section');
+        console.log('🔍 Found main sections:', mainSections.length);
+        mainSections.forEach(section => {
+            section.style.display = 'block';
+            section.style.opacity = '1';
+            section.style.visibility = 'visible';
+            console.log('✅ Ensuring section is visible:', section.className);
+        });
+
+        // Course guarantee
+        const guaranteeTextElement = document.querySelector('.course-guarantee-text');
+        if (guaranteeTextElement) {
+            guaranteeTextElement.textContent = '30-day money-back guarantee';
+        }
+
+        // CTA section
+        const ctaTitleElement = document.querySelector('.course-cta-title');
+        if (ctaTitleElement) {
+            ctaTitleElement.textContent = `Ready to start ${course.title}?`;
+        }
+
+        const ctaDescriptionElement = document.querySelector('.course-cta-description');
+        if (ctaDescriptionElement) {
+            ctaDescriptionElement.textContent = `Join thousands of students who have already mastered ${course.category} with our comprehensive course.`;
+        }
+
+        // Ensure all content is visible in Webflow structure
+        // (courseDetailsContent already declared above)
+
+        // Remove any hiding classes and ensure visibility
+        const allElements = document.querySelectorAll('.courses-single *');
+        allElements.forEach(el => {
+            if (el.classList.contains('w-dyn-hide-empty') || el.style.opacity === '0' || el.style.display === 'none') {
+                el.style.display = 'block';
+                el.style.opacity = '1';
+                el.style.visibility = 'visible';
+                el.classList.remove('w-dyn-hide-empty');
+            }
+        });
+
+        console.log('✅ Custom shared course details component populated successfully');
     }
 
     // Get category color
@@ -299,9 +429,103 @@
         }, 5000);
     }
 
+    // Fetch page UI translations
+    async function fetchPageTranslations(locale) {
+        try {
+            const url = `${API_BASE}/api/nd/course-details-page?locale=${locale}`;
+            console.log('🔍 Fetching page translations:', url);
+
+            const response = await fetch(url);
+            if (!response.ok) {
+                console.warn('Failed to fetch page translations');
+                return null;
+            }
+
+            const data = await response.json();
+            if (data.success && data.data) {
+                return data.data;
+            }
+            return data;
+        } catch (error) {
+            console.error('Error fetching page translations:', error);
+            return null;
+        }
+    }
+
+    // Apply page translations
+    function applyPageTranslations(translations) {
+        if (!translations) return;
+
+        console.log('📝 Applying page translations...');
+
+        // Apply translations to elements with data-i18n attributes
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            const keys = key.split('.');
+
+            let value = translations;
+            for (const k of keys) {
+                if (value && value[k]) {
+                    if (value[k].content && typeof value[k].content === 'object') {
+                        value = value[k].content;
+                    } else {
+                        value = value[k];
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            if (value && typeof value === 'string') {
+                element.textContent = value;
+            } else if (value && value.content && typeof value.content === 'string') {
+                element.textContent = value.content;
+            } else if (value && typeof value === 'object' && keys[keys.length - 1] in value) {
+                element.textContent = value[keys[keys.length - 1]];
+            }
+        });
+
+        // Update specific UI elements
+        if (translations.ui_elements && translations.ui_elements.content) {
+            const ui = translations.ui_elements.content;
+
+            // Update buttons
+            if (ui.buttons) {
+                const enrollButtons = document.querySelectorAll('.enroll-button, .primary-button');
+                enrollButtons.forEach(btn => {
+                    const textElements = btn.querySelectorAll('.primary-button-text-block');
+                    if (textElements.length > 0 && ui.buttons.enroll_now) {
+                        textElements.forEach(el => el.textContent = ui.buttons.enroll_now);
+                    }
+                });
+            }
+
+            // Update labels
+            if (ui.labels) {
+                const priceLabel = document.querySelector('.price-label');
+                if (priceLabel && ui.labels.price) priceLabel.textContent = ui.labels.price;
+
+                const levelLabel = document.querySelector('.level-label');
+                if (levelLabel && ui.labels.level) levelLabel.textContent = ui.labels.level;
+
+                const studentsLabel = document.querySelector('.students-label');
+                if (studentsLabel && ui.labels.students) studentsLabel.textContent = ui.labels.students;
+            }
+        }
+    }
+
     // Initialize on page load
     async function init() {
         console.log('🚀 Initializing Course Details Page...');
+
+        // Get current locale
+        const locale = localStorage.getItem('preferred_locale') || 'en';
+
+        // Fetch and apply page translations
+        const translations = await fetchPageTranslations(locale);
+        if (translations) {
+            applyPageTranslations(translations);
+        }
 
         const params = getUrlParams();
 

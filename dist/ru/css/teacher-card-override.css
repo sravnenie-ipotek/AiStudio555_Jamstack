@@ -1,0 +1,130 @@
+/**
+ * Teacher Card Override Styles
+ * Fixes inconsistencies and ensures all teacher cards use the shared component styling
+ */
+
+/* Reset any conflicting styles from old teacher card implementations */
+.teacher-card-grid,
+.teacher-card,
+.ai-teacher-card,
+.ai-studio-teacher-card {
+    all: revert !important;
+}
+
+/* Ensure the main container uses proper grid layout */
+.main-blog-collection-list {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+    gap: 30px !important;
+    padding: 20px 0 !important;
+}
+
+/* Force all teacher card wrappers to be consistent */
+.teacher-card-wrapper,
+.main-blog-collection-list-item {
+    width: 100% !important;
+    height: auto !important;
+    min-height: unset !important;
+    max-height: unset !important;
+}
+
+/* Ensure shared teacher cards have consistent styling */
+.shared-teacher-card {
+    background: linear-gradient(135deg, #050f2c 0%, #0a1940 100%) !important;
+    color: white !important;
+    border: 1px solid rgba(102, 126, 234, 0.2) !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    height: 580px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    position: relative !important;
+    cursor: pointer !important;
+}
+
+/* Override any uniform card styles that might be interfering */
+.main-blog-collection-list.use-uniform-cards .main-blog-single,
+.main-blog-collection-list .main-blog-single {
+    all: unset !important;
+}
+
+/* Ensure old AI Studio teacher card styles don't interfere */
+.ai-teacher-card {
+    display: none !important;
+}
+
+/* Hide any duplicate or old teacher card elements */
+.teacher-card:not(.shared-teacher-card),
+.ai-studio-teacher-card:not(.shared-teacher-card) {
+    display: none !important;
+}
+
+/* Override uniform card styles that might interfere */
+.use-uniform-cards .shared-teacher-card {
+    height: 580px !important;
+    min-height: 580px !important;
+    max-height: 580px !important;
+}
+
+/* Responsive overrides */
+@media screen and (max-width: 991px) {
+    .main-blog-collection-list {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+        gap: 24px !important;
+    }
+
+    .shared-teacher-card {
+        height: 560px !important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .main-blog-collection-list {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .shared-teacher-card {
+        height: 540px !important;
+    }
+}
+
+/* Fix for RTL languages */
+[dir="rtl"] .main-blog-collection-list {
+    direction: rtl !important;
+}
+
+[dir="rtl"] .shared-teacher-card {
+    direction: rtl !important;
+}
+
+/* Remove any inline styles that were added by JavaScript */
+.main-blog-collection-list-item[style],
+.main-blog-single[style] {
+    min-height: unset !important;
+    height: auto !important;
+}
+
+/* Ensure proper hover effects */
+.shared-teacher-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4) !important;
+    border-color: #667eea !important;
+}
+
+/* Fix z-index issues */
+.shared-teacher-card {
+    z-index: 1;
+}
+
+.shared-teacher-card:hover {
+    z-index: 10;
+}
+
+/* Remove any old loading states */
+.teacher-card.loading,
+.ai-teacher-card.loading {
+    display: none !important;
+}

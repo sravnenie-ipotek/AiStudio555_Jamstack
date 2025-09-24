@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Payment Component</title>
+    <script>
+        // Simple verification script
+        window.addEventListener('load', function() {
+            fetch('http://localhost:3005/backups/newDesign/shared/components/paymentComponnent/payment-component.html')
+                .then(response => {
+                    if (response.ok) {
+                        console.log('✅ Component HTML accessible');
+                        return response.text();
+                    }
+                    throw new Error('Failed to load HTML');
+                })
+                .then(html => {
+                    console.log('✅ HTML loaded, length:', html.length);
+                    document.getElementById('status').innerHTML = '✅ Component HTML loaded successfully';
+                    document.getElementById('preview').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('❌ Error:', error);
+                    document.getElementById('status').innerHTML = '❌ Error loading component: ' + error.message;
+                });
+        });
+    </script>
+    <style>
+        #status {
+            padding: 20px;
+            background: #f0f0f0;
+            margin: 20px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        #preview {
+            margin: 20px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="status">Loading component...</div>
+    <div id="preview"></div>
+</body>
+</html>

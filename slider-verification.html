@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Slider Verification Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        .warning { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; }
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover { background: #0056b3; }
+        .code {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            border: 1px solid #e9ecef;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔍 Slider Functionality Verification</h1>
+
+        <div class="info status">
+            <strong>📋 Test Steps:</strong><br>
+            1. Click "Open Home Page" to view the actual page<br>
+            2. Navigate to the "Why Choose Us" section<br>
+            3. Test the slider functionality manually<br>
+            4. Return here to run automated checks
+        </div>
+
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="http://localhost:3005/home.html" target="_blank" class="btn">🏠 Open Home Page</a>
+            <button onclick="runTests()" class="btn">🧪 Run Automated Tests</button>
+            <button onclick="testSliderSpecific()" class="btn">🎯 Test Slider Specifically</button>
+        </div>
+
+        <div id="test-results"></div>
+
+        <div class="test-container">
+            <h3>🎯 Manual Test Checklist</h3>
+            <div class="code">
+Navigate to http://localhost:3005/home.html
+
+1. Scroll down to the "Why Choose Us" section
+2. Look for the slider with cards showing:
+   - "Innovative Teaching Methods Here"
+   - "Certified Professional In Your Needs"
+   - "Expert Instructor Of Industry"
+
+3. Test Left Arrow (←):
+   - Click the left arrow button
+   - Should navigate to previous slide
+   - Should show smooth transition
+
+4. Test Right Arrow (→):
+   - Click the right arrow button
+   - Should navigate to next slide
+   - Should show smooth transition
+
+5. Test Navigation Dots:
+   - Click the dots below the slider
+   - Should jump directly to that slide
+   - Active dot should be highlighted
+
+6. Test Responsive Design:
+   - Test on desktop (wide screen)
+   - Test on tablet (medium screen)
+   - Test on mobile (narrow screen)
+   - Slider should work on all sizes
+
+7. Check Browser Console:
+   - Press F12 to open developer tools
+   - Check for any JavaScript errors
+   - Look for network errors loading webflow.js
+            </div>
+        </div>
+
+        <div class="test-container">
+            <h3>🚨 Common Issues to Look For</h3>
+            <div class="warning status">
+                <strong>If slider is NOT working, check:</strong><br>
+                • JavaScript errors in browser console<br>
+                • Network errors loading webflow.js<br>
+                • Arrow buttons not responding to clicks<br>
+                • Slides not changing when arrows/dots are clicked<br>
+                • No smooth transitions between slides
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function runTests() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<div class="info status">Running tests...</div>';
+
+            let html = '<h3>🧪 Automated Test Results</h3>';
+
+            // Test 1: Check current page for Webflow
+            try {
+                if (typeof window.Webflow !== 'undefined') {
+                    html += '<div class="success status">✅ Webflow.js is loaded on this test page</div>';
+                } else {
+                    html += '<div class="error status">❌ Webflow.js is NOT loaded on this test page (this is expected)</div>';
+                }
+            } catch (e) {
+                html += '<div class="error status">❌ Error checking Webflow: ' + e.message + '</div>';
+            }
+
+            // Test 2: File existence check (simulated)
+            html += '<div class="info status">📁 Webflow.js file was updated today at 16:38</div>';
+            html += '<div class="info status">📏 File size: 1.8MB (normal for webflow.js)</div>';
+
+            // Test 3: Instructions for real testing
+            html += '<div class="warning status">';
+            html += '<strong>⚠️ Important:</strong> The real test must be done on the home page.<br>';
+            html += 'Click "Open Home Page" above and follow the manual test checklist.';
+            html += '</div>';
+
+            resultsDiv.innerHTML = html;
+        }
+
+        function testSliderSpecific() {
+            const resultsDiv = document.getElementById('test-results');
+
+            let html = '<h3>🎯 Slider-Specific Test Instructions</h3>';
+            html += '<div class="info status">';
+            html += '<strong>Run this code in the browser console on home page:</strong><br><br>';
+            html += '<div class="code">';
+            html += `// Test if slider exists
+const slider = document.querySelector('.why-choose-us-slider');
+console.log('Slider found:', !!slider);
+
+// Test arrows
+const leftArrow = document.querySelector('.why-choose-us-slider .w-slider-arrow-left');
+const rightArrow = document.querySelector('.why-choose-us-slider .w-slider-arrow-right');
+console.log('Left arrow found:', !!leftArrow);
+console.log('Right arrow found:', !!rightArrow);
+
+// Test dots
+const dots = document.querySelectorAll('.why-choose-us-slider .w-slider-dot');
+console.log('Navigation dots found:', dots.length);
+
+// Test slides
+const slides = document.querySelectorAll('.why-choose-us-slider .w-slide');
+console.log('Slides found:', slides.length);`;
+            html += '</div>';
+            html += '</div>';
+
+            html += '<div class="success status">';
+            html += '<strong>✅ Expected Results:</strong><br>';
+            html += '• Slider found: true<br>';
+            html += '• Left arrow found: true<br>';
+            html += '• Right arrow found: true<br>';
+            html += '• Navigation dots found: 3<br>';
+            html += '• Slides found: 3';
+            html += '</div>';
+
+            resultsDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

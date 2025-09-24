@@ -11,7 +11,7 @@
 
     // Configuration
     const API_BASE_URL = window.location.hostname === 'localhost'
-        ? 'http://localhost:1337'
+        ? 'http://localhost:3000'
         : 'https://aistudio555jamstack-production.up.railway.app';
 
     // Course categories with appropriate image prompts
@@ -186,7 +186,7 @@
 
             // Fetch courses data
             console.log('📡 Fetching courses data...');
-            const response = await fetch(`${API_BASE_URL}/api/nd/courses`);
+            const response = await fetch(`${API_BASE_URL}/api/courses`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch courses: ${response.status}`);

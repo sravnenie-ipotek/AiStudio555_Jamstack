@@ -1,0 +1,444 @@
+/* Shared Payment Component Styles - Matching Original Design */
+
+/* Container and Main Layout */
+.pricing-plan-content {
+  width: 100%;
+  opacity: 1 !important;
+  text-align: center;
+}
+
+/* Ensure wrapper centers in the section */
+.section.pricing-plan .container {
+  text-align: center;
+}
+
+/* Tab Menu Styling - Original Blue Design */
+.pricing-plan-tabs-menu {
+  background-image: linear-gradient(#ffffff0a, #ffffff0a);
+  border: 1px solid #ffffff1a;
+  border-radius: 14px;
+  margin-bottom: 60px;
+  padding: 2px;
+  display: inline-block;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.pricing-plan-tab-link {
+  color: #05051a;
+  background-color: transparent;
+  border-radius: 10px;
+  padding: 20px 30px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 100%;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pricing-plan-tab-link.w--current {
+  color: #fff;
+  background-color: #0080ff;
+}
+
+.pricing-plan-tab-link:not(.w--current):hover {
+  color: #fff;
+  background-color: rgba(0, 128, 255, 0.1);
+}
+
+/* Tab Content */
+.pricing-plan-tabs-content {
+  text-align: left;
+}
+
+.pricing-plan-tab-pane {
+  display: none;
+}
+
+.pricing-plan-tab-pane.w--tab-active {
+  display: block !important;
+}
+
+/* Pricing Wrapper */
+.pricing-plan-wrapper {
+  background-color: #04193f;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* Pricing Grid Layout - 4 columns */
+.pricing-plan-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+
+/* Features Column (Left) */
+.pricing-plan-featured-name-wrapper {
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.pricing-plan-top-content {
+  text-align: center;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 340px;
+  display: flex;
+}
+
+.pricing-plan-logo-wrapper {
+  margin-bottom: 32px;
+}
+
+.pricing-plan-logo-image {
+  width: auto;
+  height: 40px;
+}
+
+.pricing-plan-man-image-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.pricing-plan-man-image {
+  width: 100%;
+  max-width: 154px;
+}
+
+/* Feature List */
+.pricing-plan-featured-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.pricing-plan-featured-single {
+  background-color: rgba(255, 255, 255, 0.03);
+  min-height: 80px;
+}
+
+.pricing-plan-featured-single.featured-name {
+  grid-column-gap: 20px;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 35px;
+  padding-right: 35px;
+  display: flex;
+}
+
+.pricing-plan-featured-single.featured-name.bg-none {
+  background-color: transparent;
+}
+
+.pricing-plan-featured-single.featured-icon-wrapper {
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.pricing-plan-featured-single.featured-icon-wrapper.bg-none {
+  background-color: transparent;
+}
+
+.pricing-plan-featured-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.pricing-plan-featured-name {
+  color: #fff;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Pricing Cards */
+.pricing-plan-featured-card-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.pricing-plan-featured-card-wrap.border-left {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pricing-plan-featured-card-wrap.border-left.bg {
+  background-image: linear-gradient(#0080ff, #04193f 90%);
+  border-left-style: none;
+  position: relative;
+}
+
+/* Most Popular Badge */
+.pricing-plan-featured-card-wrap.bg::before {
+  content: "";
+  display: none; /* Will be added via JS if needed */
+}
+
+/* Collection List */
+.pricing-plan-featured-collection-list-wrapper {
+  width: 100%;
+}
+
+.pricing-plan-featured-collection-list {
+  display: block;
+}
+
+.pricing-plan-featured-collection-item {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Plan Content */
+.pricing-plan-name-price-wrap {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.pricing-plan-name {
+  color: #fff;
+  margin-bottom: 10px;
+  font-family: Manrope, sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+  min-height: 30px;
+}
+
+.pricing-plan-price-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pricing-plan-price {
+  color: #fff;
+  margin-bottom: 14px;
+  font-family: Manrope, sans-serif;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.pricing-pack-text {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  line-height: 21px;
+}
+
+/* CTA Button - Original Primary Button Style */
+.pricing-plan-button-wrapper {
+  margin-top: auto;
+  padding: 0 20px 30px;
+}
+
+.primary-button.pricing {
+  background-color: #0080ff;
+  border-radius: 9999px;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 18px 40px;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.primary-button.pricing:hover {
+  background-color: #0066cc;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 128, 255, 0.3);
+}
+
+.primary-button-text-wrap {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 100%;
+  position: relative;
+  overflow: hidden;
+  height: 16px;
+}
+
+.primary-button-text-block {
+  display: block;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.primary-button-text-block.is-text-absolute {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  transform: translateY(250%);
+}
+
+.primary-button.pricing:hover .primary-button-text-block:not(.is-text-absolute) {
+  transform: translateY(-250%);
+}
+
+.primary-button.pricing:hover .primary-button-text-block.is-text-absolute {
+  transform: translateY(0);
+}
+
+/* Feature Icons in Cards */
+.featured-icon {
+  width: 24px;
+  height: 24px;
+  opacity: 1;
+}
+
+/* Hide Empty Collections */
+.w-dyn-empty {
+  display: none !important;
+}
+
+/* Main wrapper */
+.pricing-plan-main {
+  width: 100%;
+}
+
+/* RTL Support for Hebrew */
+html[dir="rtl"] .pricing-plan-tabs-menu {
+  direction: ltr; /* Keep tabs in LTR for consistency */
+}
+
+html[dir="rtl"] .pricing-plan-grid {
+  direction: rtl;
+}
+
+html[dir="rtl"] .pricing-plan-featured-single.featured-name {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .pricing-plan-featured-icon {
+  margin-right: 0;
+  margin-left: 12px;
+}
+
+html[dir="rtl"] .pricing-plan-featured-card-wrap.border-left {
+  border-left: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+html[dir="rtl"] .pricing-plan-featured-card-wrap.border-left:first-child {
+  border-right: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Ensure consistent display across all languages */
+.pricing-plan-wrapper {
+  direction: ltr; /* Always LTR for the wrapper */
+}
+
+.pricing-plan-tabs {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Force display of pricing cards */
+.pricing-plan-featured-collection-item {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.pricing-plan-featured-collection-list {
+  display: block !important;
+  opacity: 1 !important;
+}
+
+.pricing-plan-featured-collection-list-wrapper {
+  display: block !important;
+  opacity: 1 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+  .pricing-plan-tabs-menu {
+    width: 100%;
+    max-width: 300px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .pricing-plan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-plan-top-content {
+    min-height: 200px;
+    padding: 40px 20px;
+  }
+
+  .pricing-plan-featured-card-wrap.border-left {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .pricing-plan-featured-single.featured-name {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .pricing-plan-featured-name-wrapper {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+@media (max-width: 767px) {
+  .pricing-plan-tab-link {
+    padding: 16px 24px;
+    font-size: 14px;
+  }
+
+  .pricing-plan-price {
+    font-size: 36px;
+  }
+
+  .pricing-plan-name {
+    font-size: 18px;
+  }
+
+  .primary-button.pricing {
+    padding: 16px 30px;
+  }
+}
+
+@media (max-width: 479px) {
+  .pricing-plan-tabs-menu {
+    width: calc(100% - 40px);
+    max-width: none;
+  }
+
+  .pricing-plan-tab-link {
+    width: 100%;
+    display: block;
+    text-align: center;
+  }
+
+  .pricing-plan-top-content {
+    min-height: 150px;
+  }
+
+  .pricing-plan-featured-single {
+    min-height: 60px;
+  }
+
+  .pricing-plan-price {
+    font-size: 32px;
+  }
+}

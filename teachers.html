@@ -1262,11 +1262,17 @@
     });
   </script>
 
-  <!-- AI Studio Teacher Card Shared Component -->
-  <link href="css/ai-studio-teacher-card.css" rel="stylesheet" type="text/css">
-  <script src="js/ai-studio-teacher-card.js"></script>
-  <!-- Dynamic Content Integration -->
+  <!-- Shared Teacher Card Component -->
+  <link href="css/teacher-card.css" rel="stylesheet" type="text/css">
+
+  <!-- Teacher Card Override Styles (fixes inconsistencies) -->
+  <link href="css/teacher-card-override.css" rel="stylesheet" type="text/css">
+
+  <!-- Dynamic Content Integration (updated to work with new component) -->
   <script src="js/teachers-integration.js"></script>
+
+  <!-- Load Shared Teacher Card Component (after language manager) -->
+  <script src="js/teacher-card.js"></script>
 
   <!-- Unified Language Manager for All Pages -->
   <script src="js/unified-language-manager.js?v=3000"></script>
