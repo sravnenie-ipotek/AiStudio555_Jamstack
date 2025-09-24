@@ -49,9 +49,20 @@ class LanguageManager {
         // Load content for current language if needed
         if (this.shouldLoadContent()) {
             console.log('[LanguageManager] Loading content for locale:', this.currentLocale);
-            this.loadPageContent(this.currentLocale);
+            this.loadPageContent(this.currentLocale).then(() => {
+                // Mark as ready after initial content load
+                document.body.classList.add('language-ready');
+                console.log('[LanguageManager] Initial language load complete, content revealed');
+            }).catch(() => {
+                // Even on error, show content
+                document.body.classList.add('language-ready');
+            });
         } else {
             console.log('[LanguageManager] No dynamic content to load');
+            // If no content to load, mark ready immediately
+            setTimeout(() => {
+                document.body.classList.add('language-ready');
+            }, 100);
         }
 
         // Handle browser back/forward
@@ -126,18 +137,41 @@ class LanguageManager {
      * Get initial locale from URL, localStorage, or browser
      */
     getInitialLocale() {
-        // Priority: URL > localStorage > browser > default
+        // Priority: URL > localStorage > browser (first visit only) > default
         const urlLocale = this.getLocaleFromURL();
-        if (urlLocale) return urlLocale;
+        if (urlLocale) {
+            // URL parameter takes highest priority
+            localStorage.setItem('preferred_locale', urlLocale);
+            localStorage.setItem('locale_detection_complete', 'true');
+            return urlLocale;
+        }
 
         const savedLocale = localStorage.getItem('preferred_locale');
+        const detectionComplete = localStorage.getItem('locale_detection_complete');
+
         if (savedLocale && this.supportedLocales.includes(savedLocale)) {
+            // User has a saved preference
             return savedLocale;
         }
 
-        const browserLocale = navigator.language.split('-')[0];
-        if (this.supportedLocales.includes(browserLocale)) {
-            return browserLocale;
+        // Browser detection ONLY on first visit (prevents race condition)
+        if (!detectionComplete) {
+            const browserLocale = navigator.language.split('-')[0];
+            if (this.supportedLocales.includes(browserLocale)) {
+                // Save the detected locale for future visits
+                localStorage.setItem('preferred_locale', browserLocale);
+                localStorage.setItem('locale_detection_complete', 'true');
+
+                // Apply browser locale immediately but controlled
+                if (browserLocale !== 'en') {
+                    console.log(`[LanguageManager] Browser locale detected: ${browserLocale}, applying immediately`);
+                    // Set a flag to indicate we're doing initial browser-based switch
+                    this.isInitialBrowserSwitch = true;
+                }
+                return browserLocale; // Use detected locale
+            }
+            // Mark detection as complete even if no match
+            localStorage.setItem('locale_detection_complete', 'true');
         }
 
         return 'en';
@@ -542,7 +576,7 @@ class LanguageManager {
             'buttons.sign_up_today': ['ui_elements.content.content.buttons.sign_up_today', 'ui_elements.content.buttons.sign_up_today', 'ui.content.buttons.sign_up_today'],
             'ui.content.buttons.read_more': ['ui_elements.content.content.content.buttons.read_more', 'ui.content.content.content.buttons.read_more', 'ui_elements.content.content.buttons.read_more', 'ui_elements.content.buttons.read_more', 'misc.content.read_more'],
             'ui.content.messages.no_items': ['ui.content.content.content.messages.no_items', 'ui.messages.no_items', 'misc.content.no_items_found', 'cart.content.content.no_items_found'],
-            'ui.content.messages.no_courses_found': ['ui.content.content.content.messages.no_courses_found', 'ui.messages.no_courses_found', 'misc.content.no_courses_found', 'courses.content.messages.no_courses_found'],
+            'ui.content.messages.no_courses_found': ['ui_elements.content.content.messages.no_courses_found', 'ui.messages.no_courses_found', 'misc.content.no_courses_found', 'courses.content.messages.no_courses_found'],
             'ui.content.messages.loading': ['ui.content.content.content.messages.loading', 'ui.messages.loading', 'misc.content.loading'],
             'ui.content.messages.error': ['ui.content.content.content.messages.error', 'ui.messages.error', 'misc.content.error'],
             'ui.content.languages.en': ['ui.content.content.content.languages.en', 'ui.languages.en'],
@@ -643,8 +677,8 @@ class LanguageManager {
             'pricing.content.track.browse_courses': ['misc.content.browse_courses', 'pricing.track.browse_courses'],
 
             // Legacy mappings
-            'pricing.content.plans.annual.period': ['pricing.content.plans.1.period', 'pricing.content.plans[1].period'],
-            'pricing.content.plans.monthly.period': ['pricing.content.plans.0.period', 'pricing.content.plans[0].period'],
+            'pricing.content.plans.annual.period': ['plans.content.plans.annual.period'],
+            'pricing.content.plans.monthly.period': ['plans.content.plans.monthly.period'],
             'pricing.content.plans.annual.price': ['pricing.content.plans.1.price', 'pricing.content.plans[1].price'],
             'pricing.content.plans.monthly.price': ['pricing.content.plans.0.price', 'pricing.content.plans[0].price'],
             'pricing.content.plans.annual.name': ['pricing.content.plans.1.name', 'pricing.content.plans[1].name'],
