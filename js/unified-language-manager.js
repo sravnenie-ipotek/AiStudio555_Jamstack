@@ -347,11 +347,9 @@ class LanguageManager {
         } catch (error) {
             console.error('Error loading content:', error);
 
-            // Try fallback to English if not already
-            if (locale !== 'en') {
-                console.log('Falling back to English content');
-                await this.loadPageContent('en');
-            }
+            console.log(`[LanguageManager] API failed for ${locale}, using local translations as fallback`);
+            // Apply local translations when API fails
+            this.applyLocalTranslations(locale);
         }
     }
 
@@ -375,6 +373,46 @@ class LanguageManager {
                 this.translationStats.failed++;
             }
         });
+
+        // Handle placeholder translations
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+            const key = element.dataset.i18nPlaceholder;
+            const value = this.getLocalizedText(key, locale);
+            if (value) {
+                element.placeholder = value;
+                this.translationStats.success++;
+                console.log(`[Local Translation Placeholder] ${key}: "${value}"`);
+            } else {
+                console.warn(`[Local Translation Placeholder Missing] ${key}`);
+                this.translationStats.failed++;
+            }
+        });
+
+        // Handle value translations (for buttons, submit inputs)
+        document.querySelectorAll('[data-i18n-value]').forEach(element => {
+            const key = element.dataset.i18nValue;
+            const value = this.getLocalizedText(key, locale);
+            if (value) {
+                element.value = value;
+                this.translationStats.success++;
+                console.log(`[Local Translation Value] ${key}: "${value}"`);
+            } else {
+                console.warn(`[Local Translation Value Missing] ${key}`);
+                this.translationStats.failed++;
+            }
+        });
+
+        // Handle RTL for Hebrew
+        if (locale === 'he') {
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.body.classList.add('rtl');
+        } else {
+            document.documentElement.setAttribute('dir', 'ltr');
+            document.body.classList.remove('rtl');
+        }
+
+        // Log translation stats
+        this.logTranslationStats();
     }
 
     /**
@@ -943,7 +981,17 @@ class LanguageManager {
                 'awards.content.content.items.2.title': 'Excellent Remote Learning',
                 'awards.content.content.items.2.description': 'In today\'s digital age, remote learning has become an essential component of the educational experience. Whether for K-12, higher education.',
                 'awards.content.content.items.3.title': 'Leader Technology Training',
-                'awards.content.content.items.3.description': 'Leader Technology Training is designed to empower professionals with the skills and knowledge required to become proficient leaders.'
+                'awards.content.content.items.3.description': 'Leader Technology Training is designed to empower professionals with the skills and knowledge required to become proficient leaders.',
+
+                // Pricing plans translations
+                'pricing.content.plans.monthly.name': 'Monthly',
+                'pricing.content.plans.annual.name': 'Yearly',
+                'pricing.content.plans.monthly.period': 'Per Month',
+                'pricing.content.plans.annual.period': 'Per Year',
+
+                // Process help section
+                'process.content.help.question': 'Still don\'t find out what you are looking for ??',
+                'process.content.help.link': 'Drop a line here what are you looking for.'
             },
             ru: {
                 learnMore: 'Узнать больше',
@@ -1008,7 +1056,17 @@ class LanguageManager {
                 'awards.content.content.items.2.title': 'Совершенство дистанционного обучения',
                 'awards.content.content.items.2.description': 'Ведущие методологии дистанционного обучения',
                 'awards.content.content.items.3.title': 'Лидер технического обучения',
-                'awards.content.content.items.3.description': 'Награждённые программы технического обучения'
+                'awards.content.content.items.3.description': 'Награждённые программы технического обучения',
+
+                // Pricing plans translations
+                'pricing.content.plans.monthly.name': 'Ежемесячно',
+                'pricing.content.plans.annual.name': 'Годовой',
+                'pricing.content.plans.monthly.period': 'В месяц',
+                'pricing.content.plans.annual.period': 'В год',
+
+                // Process help section
+                'process.content.help.question': 'Все еще не можете найти то, что ищете ??',
+                'process.content.help.link': 'Сообщите нам, что вы ищете.'
             },
             he: {
                 learnMore: 'למד עוד',
@@ -1073,7 +1131,17 @@ class LanguageManager {
                 'awards.content.content.items.2.title': 'מצוינות בלמידה מרחוק',
                 'awards.content.content.items.2.description': 'מובילים את הדרך במתודולוגיות למידה מרחוק',
                 'awards.content.content.items.3.title': 'מנהיג הכשרה טכנולוגית',
-                'awards.content.content.items.3.description': 'תוכניות הכשרה טכנולוגיות עטורות פרסים'
+                'awards.content.content.items.3.description': 'תוכניות הכשרה טכנולוגיות עטורות פרסים',
+
+                // Pricing plans translations
+                'pricing.content.plans.monthly.name': 'חודשי',
+                'pricing.content.plans.annual.name': 'שנתי',
+                'pricing.content.plans.monthly.period': 'לחודש',
+                'pricing.content.plans.annual.period': 'לשנה',
+
+                // Process help section
+                'process.content.help.question': 'עדיין לא מוצא את מה שאתה מחפש ??',
+                'process.content.help.link': 'שלח לנו קו כאן מה אתה מחפש.'
             }
         };
 
