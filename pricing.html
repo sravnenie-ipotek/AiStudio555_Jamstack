@@ -48,16 +48,34 @@
       text-align: right;
     }
 
-    /* Enhanced RTL Support for Pricing Page */
+    /* Enhanced RTL Support for Pricing Page - Removed duplicate, consolidated below */
+
+    html[dir="rtl"] .pricing-plan-tab-link {
+      text-align: center;
+      /* Fix individual tab positioning in RTL */
+      position: relative !important;
+      display: inline-block !important;
+      margin: 0 2px !important;
+    }
+
+    /* Specific fix for second tab positioning in RTL */
+    html[dir="rtl"] .pricing-plan-tabs-menu a:nth-child(2) {
+      /* Ensure proper spacing for yearly tab */
+      margin-left: 4px !important;
+      margin-right: 4px !important;
+    }
+
+    /* Enhanced RTL container positioning */
     html[dir="rtl"] .pricing-plan-tabs-menu {
       /* Keep tabs centered and properly displayed */
       direction: ltr;
       text-align: center;
-      margin-top: 30px !important; /* Add spacing for RTL */
-    }
-
-    html[dir="rtl"] .pricing-plan-tab-link {
-      text-align: center;
+      margin-top: 30px !important;
+      /* Add container constraints for better positioning */
+      display: inline-block !important;
+      position: relative !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
     }
 
     html[dir="rtl"] .pricing-plan-content {
@@ -219,6 +237,17 @@
         margin-bottom: 30px !important;
         width: 90% !important;
         max-width: 300px !important;
+        /* Override desktop positioning for mobile */
+        left: 0 !important;
+        transform: none !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+
+      /* Mobile-specific tab spacing */
+      html[dir="rtl"] .pricing-plan-tabs-menu a:nth-child(2) {
+        margin-left: 2px !important;
+        margin-right: 2px !important;
       }
 
       html[dir="rtl"] .pricing-plan-title-wrapper {
@@ -236,6 +265,15 @@
       html[dir="rtl"] .pricing-plan-tabs-menu {
         margin-top: 25px !important;
         width: 95% !important;
+        /* Smaller mobile screens - tighter spacing */
+        left: 0 !important;
+        transform: none !important;
+      }
+
+      /* Tighter spacing for small screens */
+      html[dir="rtl"] .pricing-plan-tabs-menu a:nth-child(2) {
+        margin-left: 1px !important;
+        margin-right: 1px !important;
       }
 
       html[dir="rtl"] .section-title {
@@ -408,9 +446,9 @@
         <div class="navbar-content">
           <a href="index.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
           <nav role="navigation" class="nav-menu w-nav-menu">
-            <a href="home.html" class="nav-link w-nav-link" data-i18n="navigation.content.items.0.text">Home</a>
-            <a href="courses.html" class="nav-link w-nav-link" data-i18n="navigation.content.items.1.text">Courses</a>
-            <a href="pricing.html" aria-current="page" class="nav-link w-nav-link w--current" data-i18n="navigation.content.items.6.text">Pricing</a>
+            <a href="home.html" class="nav-link w-nav-link" data-i18n="navigation.content.home">Home</a>
+            <a href="courses.html" class="nav-link w-nav-link" data-i18n="navigation.content.courses">Courses</a>
+            <a href="pricing.html" aria-current="page" class="nav-link w-nav-link w--current" data-i18n="navigation.content.pricing">Pricing</a>
             <a href="blog.html" class="nav-link w-nav-link" data-i18n="navigation.content.items.3.text">Blog</a>
             <a href="teachers.html" class="nav-link w-nav-link" data-i18n="navigation.content.items.2.text">Teachers</a>
             <div data-delay="0" data-hover="true" data-w-id="9a224b60-f557-150b-8062-e4bbef078cfb" class="menu-dropdown-wrapper w-dropdown">
