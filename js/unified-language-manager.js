@@ -325,7 +325,8 @@ class LanguageManager {
         console.log('[LanguageManager] Endpoint:', endpoint);
 
         if (!endpoint) {
-            console.log('No dynamic content endpoint for this page');
+            console.log('No dynamic content endpoint for this page - applying local translations only');
+            this.applyLocalTranslations(locale);
             return;
         }
 
@@ -352,6 +353,28 @@ class LanguageManager {
                 await this.loadPageContent('en');
             }
         }
+    }
+
+    /**
+     * Apply local translations when no API endpoint is available
+     */
+    applyLocalTranslations(locale) {
+        console.log('[LanguageManager] Applying local translations for:', locale);
+
+        // Update all elements with data-i18n attribute using local fallbacks
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.dataset.i18n;
+            const value = this.getLocalizedText(key, locale);
+
+            if (value) {
+                element.textContent = value;
+                this.translationStats.success++;
+                console.log(`[Local Translation] ${key}: "${value}"`);
+            } else {
+                console.warn(`[Local Translation Missing] ${key}`);
+                this.translationStats.failed++;
+            }
+        });
     }
 
     /**
@@ -411,6 +434,13 @@ class LanguageManager {
             console.log('[LanguageManager] Processing pricing page structure');
             processedData = data.data.attributes.sections;
             console.log('[LanguageManager] Pricing sections:', Object.keys(processedData));
+
+            // If sections are empty, apply local translations
+            if (Object.keys(processedData).length === 0) {
+                console.log('[LanguageManager] No API sections found, applying local translations');
+                this.applyLocalTranslations(locale);
+                return;
+            }
         }
         // Transform array-based API responses (like teachers page) to object format
         else
@@ -895,12 +925,25 @@ class LanguageManager {
                 'ui.content.languages.en': 'EN',
                 'ui.content.languages.ru': 'RU',
                 'ui.content.languages.he': 'HE',
+                // Button translations
+                'misc.content.explore_plans': 'Explore Plans Features',
                 'testimonials.author1.name': 'David Kim',
                 'testimonials.author2.name': 'Tariq Ahmed',
                 'testimonials.author3.name': 'Nadia Khan',
                 'footer.company.zohacous': 'Zohacous',
                 'testimonials.content.content.subtitle': 'Testimonials',
-                'testimonials.content.content.title': 'What Our Students Say'
+                'testimonials.content.content.title': 'What Our Students Say',
+                // Awards section translations
+                'awards.content.content.title': 'Awards That Define Our Excellence.',
+                'awards.content.content.description': 'Dive into a world of learning with diverse & extensive range of tech courses designed to cater to every interest.',
+                'awards.content.content.items.0.title': 'Online Mentorship Award',
+                'awards.content.content.items.0.description': 'We are honored to be recognized with the prestigious online mentorship award, a testament to our unwavering commitment to delivering high-quality.',
+                'awards.content.content.items.1.title': 'Class Mentorship Program',
+                'awards.content.content.items.1.description': 'The Class Mentorship Program is designed to provide students with personalized guidance, academic support, and career development to enhance their learning.',
+                'awards.content.content.items.2.title': 'Excellent Remote Learning',
+                'awards.content.content.items.2.description': 'In today\'s digital age, remote learning has become an essential component of the educational experience. Whether for K-12, higher education.',
+                'awards.content.content.items.3.title': 'Leader Technology Training',
+                'awards.content.content.items.3.description': 'Leader Technology Training is designed to empower professionals with the skills and knowledge required to become proficient leaders.'
             },
             ru: {
                 learnMore: 'Узнать больше',
@@ -947,12 +990,25 @@ class LanguageManager {
                 'ui.content.languages.en': 'EN',
                 'ui.content.languages.ru': 'RU',
                 'ui.content.languages.he': 'HE',
+                // Button translations
+                'misc.content.explore_plans': 'Исследуйте функции планов',
                 'testimonials.author1.name': 'Давид Ким',
                 'testimonials.author2.name': 'Тарик Ахмед',
                 'testimonials.author3.name': 'Надия Хан',
                 'footer.company.zohacous': 'Зохакус',
                 'testimonials.content.content.subtitle': 'Отзывы',
-                'testimonials.content.content.title': 'Ваш путь обучения с нашими экспертами'
+                'testimonials.content.content.title': 'Ваш путь обучения с нашими экспертами',
+                // Awards section translations
+                'awards.content.content.title': 'Награды, определяющие наше совершенство.',
+                'awards.content.content.description': 'Погрузитесь в мир обучения с разнообразным и обширным ассортиментом технических курсов, предназначенных для каждого интереса.',
+                'awards.content.content.items.0.title': 'Награда за онлайн-наставничество',
+                'awards.content.content.items.0.description': 'Признание за excellence в онлайн-наставничестве и поддержке студентов',
+                'awards.content.content.items.1.title': 'Программа наставничества в классе',
+                'awards.content.content.items.1.description': 'Лучшая программа наставничества для технических специалистов',
+                'awards.content.content.items.2.title': 'Совершенство дистанционного обучения',
+                'awards.content.content.items.2.description': 'Ведущие методологии дистанционного обучения',
+                'awards.content.content.items.3.title': 'Лидер технического обучения',
+                'awards.content.content.items.3.description': 'Награждённые программы технического обучения'
             },
             he: {
                 learnMore: 'למד עוד',
@@ -999,12 +1055,25 @@ class LanguageManager {
                 'ui.content.languages.en': 'EN',
                 'ui.content.languages.ru': 'RU',
                 'ui.content.languages.he': 'HE',
+                // Button translations
+                'misc.content.explore_plans': 'גלה תכונות התוכניות',
                 'testimonials.author1.name': 'דיוויד קים',
                 'testimonials.author2.name': 'טאריק אחמד',
                 'testimonials.author3.name': 'נדיה חאן',
                 'footer.company.zohacous': 'זוהקוס',
                 'testimonials.content.content.subtitle': 'המלצות',
-                'testimonials.content.content.title': 'מסע הלמידה שלך עם המומחים שלנו'
+                'testimonials.content.content.title': 'מסע הלמידה שלך עם המומחים שלנו',
+                // Awards section translations
+                'awards.content.content.title': 'פרסים המגדירים את המצוינות שלנו.',
+                'awards.content.content.description': 'צלול לתוך עולם של למידה עם מגוון נרחב של קורסי טכנולוגיה המיועדים לענות על כל עניין.',
+                'awards.content.content.items.0.title': 'פרס חונכות מקוונת',
+                'awards.content.content.items.0.description': 'הוכרה למצוינות בחונכות מקוונת ותמיכת סטודנטים',
+                'awards.content.content.items.1.title': 'תוכנית חונכות כיתתית',
+                'awards.content.content.items.1.description': 'תוכנית החונכות הטובה ביותר לאנשי מקצוע בתחום הטכנולוגיה',
+                'awards.content.content.items.2.title': 'מצוינות בלמידה מרחוק',
+                'awards.content.content.items.2.description': 'מובילים את הדרך במתודולוגיות למידה מרחוק',
+                'awards.content.content.items.3.title': 'מנהיג הכשרה טכנולוגית',
+                'awards.content.content.items.3.description': 'תוכניות הכשרה טכנולוגיות עטורות פרסים'
             }
         };
 
