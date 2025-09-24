@@ -102,8 +102,8 @@
             console.log('⚠️ Using static content as fallback');
 
             // Still try to load featured courses even if home page data fails
-            console.log('🎯 Still attempting to load featured courses...');
-            loadFeaturedCourses();
+            console.log('🎯 Featured courses will be handled by nd-courses-integration.js');
+            // loadFeaturedCourses(); // DISABLED - handled by nd-courses-integration.js
         }
     }
 
@@ -125,12 +125,14 @@
         }
 
         // 3. Featured Courses Section (from separate API)
+        // DISABLED: Let nd-courses-integration.js handle featured courses
         // Check if courses section should be visible
         if (data.courses && data.courses.visible === false) {
             hideFeaturedCoursesSection();
         } else {
             showFeaturedCoursesSection();
-            loadFeaturedCourses();
+            // loadFeaturedCourses(); // DISABLED - handled by nd-courses-integration.js
+            console.log('🎯 Featured courses will be handled by nd-courses-integration.js');
         }
 
         // 4. Features Section - SKIP (handled by unified-language-manager)

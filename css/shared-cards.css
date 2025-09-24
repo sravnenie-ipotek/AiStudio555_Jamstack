@@ -38,7 +38,7 @@
 .shared-card-icon {
     width: 64px;
     height: 64px;
-    margin: 4px 0 20px 0; /* Add top margin to prevent cutoff */
+    margin: 4px auto 20px auto; /* Center align icon and add top margin to prevent cutoff */
     border-radius: 12px;
     padding: 12px;
     display: flex;
@@ -107,7 +107,102 @@
     opacity: 1;
 }
 
-/* Category-specific styling */
+/* Dark theme styling for why-choose-us cards (like Image #2) */
+.why-choose-us-slider-mask.shared-cards-grid .shared-card,
+.shared-cards-grid .shared-card.why-choose-us-card {
+    /* Dark theme styling to match original design */
+    background: #050f2c !important;
+    border-radius: 20px !important;
+    padding: 48px 30px 42px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    backdrop-filter: none !important;
+    color: #fff !important;
+    min-height: 340px !important;
+    display: block !important;
+    position: relative !important;
+    text-decoration: none !important;
+}
+
+.why-choose-us-slider-mask.shared-cards-grid .shared-card:hover,
+.shared-cards-grid .shared-card.why-choose-us-card:hover {
+    background: #050f2c !important;
+    transform: translateY(-8px) !important;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4) !important;
+    border-color: transparent !important;
+    text-decoration: none !important;
+}
+
+/* Dark theme text styling for why-choose-us cards */
+.why-choose-us-slider-mask.shared-cards-grid .shared-card .shared-card-title,
+.shared-cards-grid .shared-card.why-choose-us-card .shared-card-title {
+    color: #fff !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    line-height: 1.3 !important;
+    margin: 0 0 16px 0 !important;
+    display: block !important;
+    overflow: visible !important;
+    text-overflow: initial !important;
+    white-space: normal !important;
+    -webkit-line-clamp: unset !important;
+    max-height: none !important;
+}
+
+.why-choose-us-slider-mask.shared-cards-grid .shared-card .shared-card-description,
+.shared-cards-grid .shared-card.why-choose-us-card .shared-card-description {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    margin: 0 !important;
+    flex-grow: 1 !important;
+    display: block !important;
+    overflow: visible !important;
+    text-overflow: initial !important;
+    white-space: normal !important;
+    -webkit-line-clamp: unset !important;
+    max-height: none !important;
+}
+
+.why-choose-us-slider-mask.shared-cards-grid .shared-card .shared-card-icon,
+.shared-cards-grid .shared-card.why-choose-us-card .shared-card-icon {
+    background: #0080ff !important;
+    border-radius: 16px !important;
+    padding: 16px !important;
+    width: 80px !important;
+    height: 80px !important;
+    margin: 0 auto 24px auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.why-choose-us-slider-mask.shared-cards-grid .shared-card .shared-card-icon img,
+.shared-cards-grid .shared-card.why-choose-us-card .shared-card-icon img {
+    width: 48px !important;
+    height: 48px !important;
+    filter: brightness(0) invert(1) !important;
+}
+
+.why-choose-us-slider-mask.shared-cards-grid .shared-card .shared-card-content,
+.shared-cards-grid .shared-card.why-choose-us-card .shared-card-content {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    padding-top: 8px !important;
+}
+
+/* Neutral styling for why-choose-us cards (no category colors) */
+.shared-card.why-choose-us-card .shared-card-icon {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.shared-card.why-choose-us-card:hover {
+    /* No border-left color - keep neutral */
+}
+
+/* Category-specific styling (for course categories only) */
 .shared-card.category-web-dev .shared-card-icon {
     background: rgba(102, 126, 234, 0.1);
 }
@@ -124,7 +219,7 @@
     background: rgba(67, 233, 123, 0.1);
 }
 
-/* Hover effects */
+/* Hover effects (for course categories only) */
 .shared-card.category-web-dev:hover {
     border-left: 4px solid #667eea;
 }
@@ -271,13 +366,17 @@
 
 /* Grid Layout for Cards */
 .shared-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 24px;
-    margin-top: 40px;
-    padding: 0 8px; /* Prevent edge cutoff */
-    box-sizing: border-box;
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    gap: 24px !important;
+    margin-top: 40px !important;
+    padding: 0 8px !important; /* Prevent edge cutoff */
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    height: auto !important;
+    transform: none !important;
 }
+
 
 /* Prevent card overflow and cutoff */
 .course-categories-wrapper {
@@ -311,14 +410,87 @@
 
 @media (max-width: 991px) {
     .shared-cards-grid {
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+        gap: 20px !important;
+    }
+
+    .why-choose-us-slider-mask.shared-cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+        gap: 20px !important;
     }
 }
 
 @media (max-width: 767px) {
     .shared-cards-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
     }
+
+    .why-choose-us-slider-mask.shared-cards-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+}
+
+/* Ensure the shared cards are being applied correctly */
+.shared-card.why-choose-us-card {
+    /* Remove debug border - styling handled by main overrides above */
+}
+
+/* Additional override for any remaining webflow conflicts */
+.why-choose-us-slider-mask .shared-card * {
+    box-sizing: border-box !important;
+}
+
+/* Force reset any webflow slider positioning */
+.why-choose-us-slider-mask.shared-cards-grid * {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+    transform: none !important;
+}
+
+/* Critical: Override webflow slider display properties for grid layout */
+.why-choose-us-slider-mask.shared-cards-grid {
+    /* Force grid layout over webflow slider */
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    gap: 24px !important;
+
+    /* Reset webflow slider styles */
+    overflow: visible !important;
+    white-space: normal !important;
+    height: auto !important;
+    position: static !important;
+    z-index: auto !important;
+    left: auto !important;
+    right: auto !important;
+
+    /* Grid container setup */
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 8px !important;
+    box-sizing: border-box !important;
+}
+
+/* Reset any child slide styling that might interfere */
+.why-choose-us-slider-mask.shared-cards-grid .shared-card {
+    /* Override any potential webflow slide styling */
+    display: block !important;
+    position: relative !important;
+    vertical-align: baseline !important;
+    width: auto !important;
+    height: auto !important;
+    white-space: normal !important;
+    text-align: left !important;
+
+    /* Ensure grid item behaves correctly */
+    grid-column: span 1 !important;
+    margin: 0 !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
 }

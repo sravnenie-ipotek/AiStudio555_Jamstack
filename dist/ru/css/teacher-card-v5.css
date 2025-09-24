@@ -1,0 +1,339 @@
+/**
+ * Fixed Teacher Card Component CSS
+ * Addresses all UI/UX issues: consistent footers, text overflow, alignment
+ * New structured layout with proper text handling
+ */
+
+/* Main Container - Fixed Height and Structure */
+.shared-teacher-card {
+    background: linear-gradient(135deg, #050f2c 0%, #0a1940 100%);
+    color: white;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 580px; /* Fixed height for consistency */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    font-family: "Manrope", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    cursor: pointer;
+}
+
+.shared-teacher-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+    border-color: #667eea;
+}
+
+/* Photo Section - Fixed 260px Height */
+.teacher-photo-wrapper {
+    position: relative;
+    height: 260px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.teacher-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.shared-teacher-card:hover .teacher-photo {
+    transform: scale(1.05);
+}
+
+.teacher-rating-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    color: #ffd659;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Info Content - Fixed 320px Height (580 - 260) */
+.teacher-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 320px; /* Fixed height for consistency */
+    flex-shrink: 0;
+}
+
+/* Header Section - Fixed Height */
+.teacher-header {
+    margin-bottom: 12px;
+    flex-shrink: 0;
+    height: 70px; /* Fixed height */
+    overflow: hidden;
+}
+
+.teacher-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 6px 0;
+    line-height: 1.3;
+    /* Perfect text overflow handling */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
+.teacher-title {
+    font-size: 14px;
+    color: #a0a7ff;
+    margin-bottom: 4px;
+    font-weight: 500;
+    /* Perfect text overflow handling */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
+.teacher-company {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+    font-weight: 400;
+    /* Perfect text overflow handling */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
+/* Bio Section - Fixed Height for Consistency */
+.teacher-bio-section {
+    flex-shrink: 0;
+    height: 65px; /* Fixed height */
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.teacher-bio {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.4;
+    margin: 0;
+    /* Multi-line text overflow with perfect ellipsis */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Exactly 3 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 100%;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+/* Skills Section - Fixed Height */
+.teacher-skills-section {
+    flex-shrink: 0;
+    height: 50px; /* Fixed height */
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.teacher-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: flex-start;
+    height: 100%;
+    overflow: hidden;
+}
+
+.teacher-skill-tag {
+    padding: 4px 10px;
+    background: rgba(255, 214, 89, 0.15);
+    border: 1px solid rgba(255, 214, 89, 0.4);
+    border-radius: 12px;
+    font-size: 11px;
+    color: #ffd659;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: all 0.2s ease;
+    /* Perfect text overflow for skill tags */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 90px; /* Limit skill tag width */
+    display: inline-block;
+}
+
+.teacher-skill-tag:hover {
+    background: rgba(255, 214, 89, 0.25);
+    transform: scale(1.05);
+}
+
+.teacher-skill-more {
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+}
+
+/* Footer Section - Consistent Stats Layout */
+.teacher-footer {
+    margin-top: auto; /* Push to bottom */
+    flex-shrink: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
+    height: 70px; /* Fixed height */
+}
+
+.teacher-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    text-align: center;
+    height: 100%;
+    align-items: center;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    transition: background 0.2s ease;
+}
+
+.stat-item:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffd659;
+    line-height: 1;
+    margin-bottom: 2px;
+    /* Handle overflow in stats */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.stat-label {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    line-height: 1;
+    /* Handle overflow in labels */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+/* RTL Support */
+[dir="rtl"] .teacher-rating-badge {
+    right: auto;
+    left: 15px;
+}
+
+[dir="rtl"] .teacher-info {
+    text-align: right;
+}
+
+[dir="rtl"] .teacher-skills {
+    justify-content: flex-end;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 991px) {
+    .shared-teacher-card {
+        height: 560px; /* Slightly shorter on tablet */
+    }
+
+    .teacher-info {
+        height: 300px;
+        padding: 18px;
+    }
+
+    .teacher-name {
+        font-size: 17px;
+    }
+
+    .teacher-bio-section {
+        height: 60px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .shared-teacher-card {
+        height: 540px; /* Even shorter on mobile */
+    }
+
+    .teacher-info {
+        height: 280px;
+        padding: 16px;
+    }
+
+    .teacher-name {
+        font-size: 16px;
+    }
+
+    .teacher-bio-section {
+        height: 55px;
+    }
+
+    .teacher-skills-section {
+        height: 45px;
+    }
+
+    .teacher-footer {
+        height: 65px;
+    }
+}
+
+/* Loading States */
+.teacher-card-loading {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Empty State */
+.teachers-empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}

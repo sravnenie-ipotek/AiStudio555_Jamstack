@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hebrew Translation Debug Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #007cba;
+            padding-bottom: 5px;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        
+        .lang-pills {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .lang-pill {
+            padding: 8px 16px;
+            border: 2px solid #007cba;
+            background: white;
+            color: #007cba;
+            text-decoration: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .lang-pill:hover { background: #007cba; color: white; }
+        .lang-pill.active { background: #007cba; color: white; font-weight: bold; }
+        
+        .translation-test {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .test-item {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .test-item strong { display: block; margin-bottom: 5px; }
+        
+        .console-output {
+            background: #1e1e1e;
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .console-line {
+            margin: 2px 0;
+            padding: 2px;
+        }
+        .console-error { color: #ff6b6b; }
+        .console-success { color: #51cf66; }
+        .console-info { color: #74c0fc; }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-primary { background: #007cba; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        
+        /* RTL Styles */
+        html[dir="rtl"] {
+            direction: rtl;
+            text-align: right;
+        }
+        html[dir="rtl"] .translation-test {
+            direction: rtl;
+        }
+        html[dir="rtl"] .lang-pills {
+            flex-direction: row-reverse;
+        }
+    </style>
+</head>
+<body data-page="pricing">
+    <div class="test-container">
+        <h1>🔍 Hebrew Translation Debug Test for Pricing Page</h1>
+        
+        <!-- Language Pills -->
+        <div class="test-section">
+            <h3>1. Language Selection</h3>
+            <div class="lang-pills">
+                <a href="#" class="lang-pill active" data-locale="en" onclick="testLanguage('en')">EN</a>
+                <a href="#" class="lang-pill" data-locale="ru" onclick="testLanguage('ru')">RU</a>
+                <a href="#" class="lang-pill" data-locale="he" onclick="testLanguage('he')">HE</a>
+            </div>
+        </div>
+
+        <!-- Test Elements -->
+        <div class="test-section">
+            <h3>2. Translation Test Elements</h3>
+            <div class="translation-test">
+                <div class="test-item">
+                    <strong>Monthly Tab</strong>
+                    <div id="monthly-test" data-i18n="pricing.content.plans.monthly.name">Monthly</div>
+                </div>
+                <div class="test-item">
+                    <strong>Yearly Tab</strong>
+                    <div id="yearly-test" data-i18n="pricing.content.plans.annual.name">Yearly</div>
+                </div>
+                <div class="test-item">
+                    <strong>Hero Title</strong>
+                    <div id="hero-test" data-i18n="pricing.content.hero.title">Pricing Plan</div>
+                </div>
+                <div class="test-item">
+                    <strong>Explore Button</strong>
+                    <div id="explore-test" data-i18n="misc.content.explore_plans">Explore Plans Features</div>
+                </div>
+                <div class="test-item">
+                    <strong>Pricing Period</strong>
+                    <div id="period-test" class="pricing-pack-text">Per Month</div>
+                </div>
+                <div class="test-item">
+                    <strong>Navigation</strong>
+                    <div id="nav-test" data-i18n="navigation.content.pricing">Pricing</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Controls -->
+        <div class="test-section">
+            <h3>3. Test Controls</h3>
+            <button class="btn-primary" onclick="runAPITest()">Test API Response</button>
+            <button class="btn-secondary" onclick="runLanguageManagerTest()">Test Language Manager</button>
+            <button class="btn-success" onclick="runCompleteTest()">Run Complete Test</button>
+            <button class="btn-danger" onclick="clearResults()">Clear Results</button>
+        </div>
+
+        <!-- Results -->
+        <div class="test-section">
+            <h3>4. Test Results</h3>
+            <div id="test-results"></div>
+        </div>
+
+        <!-- Console Output -->
+        <div class="test-section">
+            <h3>5. Console Output</h3>
+            <div id="console-output" class="console-output"></div>
+        </div>
+
+        <!-- Debug Information -->
+        <div class="test-section">
+            <h3>6. Debug Information</h3>
+            <div id="debug-info"></div>
+        </div>
+    </div>
+
+    <!-- Load the actual translation scripts -->
+    <script src="http://localhost:3005/js/unified-language-manager.js"></script>
+
+    <script>
+        // Global state
+        let testResults = [];
+        let consoleCapture = [];
+        
+        // Console capture
+        const originalConsole = {
+            log: console.log,
+            error: console.error,
+            warn: console.warn
+        };
+        
+        function captureConsole() {
+            console.log = function(...args) {
+                originalConsole.log.apply(console, args);
+                addConsoleOutput('info', args.join(' '));
+            };
+            console.error = function(...args) {
+                originalConsole.error.apply(console, args);
+                addConsoleOutput('error', args.join(' '));
+            };
+            console.warn = function(...args) {
+                originalConsole.warn.apply(console, args);
+                addConsoleOutput('warning', args.join(' '));
+            };
+        }
+        
+        function addConsoleOutput(type, message) {
+            const consoleDiv = document.getElementById('console-output');
+            const line = document.createElement('div');
+            line.className = 'console-line console-' + type;
+            line.textContent = new Date().toLocaleTimeString() + ': ' + message;
+            consoleDiv.appendChild(line);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+            consoleCapture.push({ type, message, timestamp: Date.now() });
+        }
+        
+        function addTestResult(test, status, details) {
+            testResults.push({ test, status, details, timestamp: Date.now() });
+            updateResultsDisplay();
+        }
+        
+        function updateResultsDisplay() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '';
+            
+            testResults.forEach(result => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'test-result ' + (result.status ? 'success' : 'error');
+                resultDiv.innerHTML = `
+                    <strong>${result.test}</strong>: ${result.status ? '✅ PASS' : '❌ FAIL'}<br>
+                    ${result.details}
+                `;
+                resultsDiv.appendChild(resultDiv);
+            });
+        }
+        
+        // Test functions
+        async function testLanguage(locale) {
+            console.log(`🔄 Testing language switch to: ${locale}`);
+            
+            // Update active pill
+            document.querySelectorAll('.lang-pill').forEach(pill => {
+                pill.classList.remove('active');
+                if (pill.dataset.locale === locale) {
+                    pill.classList.add('active');
+                }
+            });
+            
+            // Apply RTL for Hebrew
+            if (locale === 'he') {
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.documentElement.setAttribute('lang', 'he');
+                console.log('✅ Applied RTL layout for Hebrew');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.documentElement.setAttribute('lang', locale);
+                console.log('✅ Applied LTR layout for ' + locale);
+            }
+            
+            // Test language manager if available
+            if (window.languageManager) {
+                try {
+                    await window.languageManager.switchLanguage(locale);
+                    console.log('✅ Language manager switch completed');
+                } catch (error) {
+                    console.error('❌ Language manager switch failed:', error);
+                }
+            }
+            
+            // Test API directly
+            try {
+                const response = await fetch(`http://localhost:3000/api/nd/pricing-page?locale=${locale}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    console.log(`✅ API response successful for ${locale}`);
+                    updateElementsFromAPI(data, locale);
+                } else {
+                    console.error(`❌ API response failed for ${locale}`);
+                }
+            } catch (error) {
+                console.error(`❌ API request failed for ${locale}:`, error);
+            }
+            
+            // Check results after a delay
+            setTimeout(() => {
+                checkTranslationResults(locale);
+            }, 2000);
+        }
+        
+        function updateElementsFromAPI(apiData, locale) {
+            const sections = apiData.data.attributes.sections;
+            
+            // Update hero title
+            if (sections.hero && sections.hero.title) {
+                const heroElement = document.getElementById('hero-test');
+                heroElement.textContent = sections.hero.title;
+                console.log(`Updated hero title: ${sections.hero.title}`);
+            }
+            
+            // Update plan names
+            if (sections.plans && sections.plans.plans) {
+                const monthlyElement = document.getElementById('monthly-test');
+                const yearlyElement = document.getElementById('yearly-test');
+                const periodElement = document.getElementById('period-test');
+                
+                if (sections.plans.plans.monthly) {
+                    monthlyElement.textContent = sections.plans.plans.monthly.name;
+                    periodElement.textContent = sections.plans.plans.monthly.period;
+                    console.log(`Updated monthly: ${sections.plans.plans.monthly.name}`);
+                }
+                
+                if (sections.plans.plans.annual) {
+                    yearlyElement.textContent = sections.plans.plans.annual.name;
+                    console.log(`Updated yearly: ${sections.plans.plans.annual.name}`);
+                }
+            }
+            
+            // Update explore button
+            if (sections.misc && sections.misc.content && sections.misc.content.explore_plans) {
+                const exploreElement = document.getElementById('explore-test');
+                exploreElement.textContent = sections.misc.content.explore_plans;
+                console.log(`Updated explore button: ${sections.misc.content.explore_plans}`);
+            }
+        }
+        
+        function checkTranslationResults(locale) {
+            const expectedTranslations = {
+                'he': {
+                    monthly: 'חודשי',
+                    yearly: 'שנתי',
+                    hero: 'בחר את מסלול הלמידה שלך',
+                    explore: 'גלה את תכונות החבילות',
+                    period: 'לחודש'
+                },
+                'ru': {
+                    monthly: 'Ежемесячно',
+                    yearly: 'Годовой',
+                    hero: 'Выберите свой путь обучения',
+                    explore: 'Изучить возможности планов',
+                    period: 'В месяц'
+                },
+                'en': {
+                    monthly: 'Monthly',
+                    yearly: 'Yearly',
+                    hero: 'Pricing Plan',
+                    explore: 'Explore Plans Features',
+                    period: 'Per Month'
+                }
+            };
+            
+            const expected = expectedTranslations[locale];
+            const results = {};
+            
+            // Check each element
+            results.monthly = document.getElementById('monthly-test').textContent;
+            results.yearly = document.getElementById('yearly-test').textContent;
+            results.hero = document.getElementById('hero-test').textContent;
+            results.explore = document.getElementById('explore-test').textContent;
+            results.period = document.getElementById('period-test').textContent;
+            
+            // Compare and report
+            let allCorrect = true;
+            Object.keys(expected).forEach(key => {
+                const actual = results[key];
+                const expectedText = expected[key];
+                const isCorrect = actual.includes(expectedText) || expectedText.includes(actual);
+                
+                if (!isCorrect) allCorrect = false;
+                
+                console.log(`${isCorrect ? '✅' : '❌'} ${key}: "${actual}" ${isCorrect ? '==' : '!='} "${expectedText}"`);
+            });
+            
+            addTestResult(`Language Switch to ${locale.toUpperCase()}`, allCorrect, 
+                `Monthly: ${results.monthly}, Yearly: ${results.yearly}, Hero: ${results.hero}`);
+        }
+        
+        async function runAPITest() {
+            console.log('🌐 Running API test...');
+            
+            const locales = ['en', 'ru', 'he'];
+            for (const locale of locales) {
+                try {
+                    const response = await fetch(`http://localhost:3000/api/nd/pricing-page?locale=${locale}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        console.log(`✅ API test ${locale}: SUCCESS`);
+                        addTestResult(`API Test ${locale.toUpperCase()}`, true, 
+                            `Response received with ${Object.keys(data.data.attributes.sections).length} sections`);
+                    } else {
+                        console.error(`❌ API test ${locale}: FAILED`);
+                        addTestResult(`API Test ${locale.toUpperCase()}`, false, 'API returned error response');
+                    }
+                } catch (error) {
+                    console.error(`❌ API test ${locale}: ERROR - ${error.message}`);
+                    addTestResult(`API Test ${locale.toUpperCase()}`, false, `Network error: ${error.message}`);
+                }
+            }
+        }
+        
+        async function runLanguageManagerTest() {
+            console.log('🔄 Running Language Manager test...');
+            
+            if (!window.LanguageManager) {
+                console.error('❌ LanguageManager not loaded');
+                addTestResult('Language Manager Availability', false, 'LanguageManager class not found');
+                return;
+            }
+            
+            if (!window.languageManager) {
+                console.error('❌ languageManager instance not found');
+                addTestResult('Language Manager Instance', false, 'languageManager instance not found');
+                return;
+            }
+            
+            console.log('✅ Language Manager available');
+            addTestResult('Language Manager Availability', true, 'LanguageManager loaded and instantiated');
+            
+            // Test Hebrew switch through language manager
+            try {
+                await window.languageManager.switchLanguage('he');
+                console.log('✅ Language Manager Hebrew switch completed');
+                addTestResult('Language Manager Hebrew Switch', true, 'Switch to Hebrew completed without errors');
+            } catch (error) {
+                console.error('❌ Language Manager Hebrew switch failed:', error);
+                addTestResult('Language Manager Hebrew Switch', false, `Error: ${error.message}`);
+            }
+        }
+        
+        async function runCompleteTest() {
+            console.log('🚀 Running complete test suite...');
+            clearResults();
+            
+            await runAPITest();
+            await runLanguageManagerTest();
+            
+            // Test each language
+            for (const locale of ['en', 'ru', 'he']) {
+                await testLanguage(locale);
+                await new Promise(resolve => setTimeout(resolve, 3000)); // Wait between tests
+            }
+            
+            console.log('✅ Complete test suite finished');
+        }
+        
+        function clearResults() {
+            testResults = [];
+            consoleCapture = [];
+            document.getElementById('test-results').innerHTML = '';
+            document.getElementById('console-output').innerHTML = '';
+            document.getElementById('debug-info').innerHTML = '';
+        }
+        
+        function updateDebugInfo() {
+            const debugDiv = document.getElementById('debug-info');
+            debugDiv.innerHTML = `
+                <div class="test-result info">
+                    <strong>Environment Info:</strong><br>
+                    Language Manager: ${typeof window.LanguageManager !== 'undefined' ? '✅ Loaded' : '❌ Not Loaded'}<br>
+                    Language Manager Instance: ${typeof window.languageManager !== 'undefined' ? '✅ Available' : '❌ Not Available'}<br>
+                    Current Direction: ${document.documentElement.getAttribute('dir') || 'ltr'}<br>
+                    Current Language: ${document.documentElement.getAttribute('lang') || 'en'}<br>
+                    Data-i18n Elements: ${document.querySelectorAll('[data-i18n]').length}<br>
+                    Console Logs Captured: ${consoleCapture.length}
+                </div>
+            `;
+        }
+        
+        // Initialize
+        captureConsole();
+        console.log('🔍 Hebrew Translation Debug Page Initialized');
+        
+        // Update debug info periodically
+        setInterval(updateDebugInfo, 2000);
+        updateDebugInfo();
+        
+        // Run initial test after page loads
+        setTimeout(() => {
+            console.log('🔄 Running initial Hebrew test...');
+            testLanguage('he');
+        }, 2000);
+    </script>
+</body>
+</html>

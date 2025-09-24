@@ -93,11 +93,12 @@ const { chromium } = require('playwright');
       blocks.map(b => ({
         text: b.textContent,
         display: window.getComputedStyle(b).display,
-        hasAbsolute: b.classList.contains('is-text-absolute')
+        hasAbsolute: b.classList.contains('is-text-absolute'),
+        isVisible: b.offsetWidth > 0 && b.offsetHeight > 0
       }))
     );
 
-    const visibleTexts = textBlocks.filter(b => !b.hasAbsolute || b.display !== 'none');
+    const visibleTexts = textBlocks.filter(b => b.display !== 'none' && b.isVisible);
     const duplicateCount = visibleTexts.filter(b => b.text === 'Sign Up Today').length;
 
     if (duplicateCount <= 1) {

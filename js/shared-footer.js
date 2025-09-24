@@ -206,8 +206,12 @@ class SharedFooter {
             return;
         }
 
-        // Clear existing menu columns
-        menuGrid.innerHTML = '';
+        console.log('🔄 [SharedFooter] Clearing existing menu columns...');
+
+        // Force clear ALL existing content
+        while (menuGrid.firstChild) {
+            menuGrid.removeChild(menuGrid.firstChild);
+        }
 
         // Use actual site menu structure instead of database
         const siteMenuColumns = this.getSiteMenuStructure();
@@ -215,6 +219,21 @@ class SharedFooter {
         siteMenuColumns.forEach((column, index) => {
             const menuColumn = this.createMenuColumn(column, index);
             menuGrid.appendChild(menuColumn);
+        });
+
+        // Also hide any authentication pages that might be in static HTML
+        document.querySelectorAll('.footer-menu-text-link').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && (href.includes('authentication-pages/') ||
+                        href.includes('sign-up') ||
+                        href.includes('sign-in') ||
+                        href.includes('forgot-password') ||
+                        href.includes('reset-password'))) {
+                const listItem = link.closest('.footer-menu-list-item');
+                if (listItem) {
+                    listItem.style.display = 'none';
+                }
+            }
         });
 
         console.log('✅ [SharedFooter] Menu columns updated with actual site structure');
@@ -558,8 +577,46 @@ class SharedFooter {
     }
 }
 
+// Immediately hide authentication links (even before full initialization)
+function hideAuthenticationLinks() {
+    const authPatterns = [
+        'authentication-pages/',
+        'sign-up',
+        'sign-in',
+        'forgot-password',
+        'reset-password',
+        '404.html',
+        '401.html',
+        'changelog.html',
+        'style-guide.html'
+    ];
+
+    document.querySelectorAll('.footer-menu-text-link').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && authPatterns.some(pattern => href.includes(pattern))) {
+            const listItem = link.closest('.footer-menu-list-item');
+            if (listItem) {
+                listItem.style.display = 'none';
+            }
+        }
+    });
+
+    // Also hide entire columns if they become empty or have wrong titles
+    document.querySelectorAll('.footer-menu-single').forEach(column => {
+        const title = column.querySelector('.footer-menu-title');
+        if (title && (title.textContent === 'Authentication' ||
+                     title.textContent === 'Utility Pages' ||
+                     title.textContent === 'Аутентификация')) {
+            column.style.display = 'none';
+        }
+    });
+}
+
 // Auto-initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+    // Immediately hide unwanted links
+    hideAuthenticationLinks();
+
     // Small delay to ensure other systems are ready
     setTimeout(() => {
         console.log('🚀 [SharedFooter] Auto-initializing footer component...');
@@ -570,6 +627,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 300);
 });
+
+// Also run immediately in case DOM is already loaded
+if (document.readyState !== 'loading') {
+    hideAuthenticationLinks();
+}
 
 // Export for manual usage
 window.SharedFooter = SharedFooter;

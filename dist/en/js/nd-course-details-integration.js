@@ -36,14 +36,14 @@
         const params = new URLSearchParams(window.location.search);
         return {
             id: params.get('id'),
-            preview: params.get('preview') === 'true'
+            preview: params.get('preview') === 'true',
+            locale: params.get('locale') || localStorage.getItem('preferred_locale') || 'en'
         };
     }
 
     // Fetch course data from API
-    async function fetchCourseData(courseId, preview = false) {
+    async function fetchCourseData(courseId, preview = false, locale = 'en') {
         try {
-            const locale = localStorage.getItem('preferred_locale') || 'en';
             const url = `${API_BASE}/api/nd/courses/${courseId}?locale=${locale}${preview ? '&preview=true' : ''}`;
             console.log('🔍 Fetching course:', url);
 
@@ -102,12 +102,14 @@
         const courseName = document.querySelector('.course-details-name');
         if (courseName) {
             courseName.textContent = course.title || '';
+            courseName.removeAttribute('data-i18n'); // Prevent language manager interference
             console.log('✅ Set course name to:', course.title);
         }
 
         const courseDescriptionText = document.querySelector('.course-details-description-text');
         if (courseDescriptionText) {
             courseDescriptionText.textContent = course.short_description || course.description || '';
+            courseDescriptionText.removeAttribute('data-i18n'); // Prevent language manager interference
             console.log('✅ Set course description to:', course.short_description || course.description);
         }
 
@@ -115,11 +117,13 @@
         const authorName = document.querySelector('.course-details-author-name');
         if (authorName) {
             authorName.textContent = course.instructor || 'Expert Instructor';
+            authorName.removeAttribute('data-i18n');
         }
 
         const authorBio = document.querySelector('.course-details-author-bio');
         if (authorBio) {
             authorBio.textContent = course.instructor_bio || 'Experienced professional with years of industry expertise and a passion for teaching.';
+            authorBio.removeAttribute('data-i18n');
         }
 
         const authorImage = document.querySelector('.courses-single-author-image');
@@ -132,6 +136,7 @@
         const shortCategoriesText = document.querySelector('.course-details-short-categories-text');
         if (shortCategoriesText) {
             shortCategoriesText.textContent = course.category || 'General';
+            shortCategoriesText.removeAttribute('data-i18n');
         }
 
         // Show course details content with opacity animation
@@ -378,6 +383,9 @@
         });
 
         console.log('✅ Custom shared course details component populated successfully');
+
+        // Sync absolute text elements after populating content
+        setTimeout(syncAbsoluteTextElements, 100);
     }
 
     // Get category color
@@ -512,22 +520,54 @@
                 if (studentsLabel && ui.labels.students) studentsLabel.textContent = ui.labels.students;
             }
         }
+
+        // Sync absolute text elements with translated text
+        syncAbsoluteTextElements();
+    }
+
+    // Function to sync absolute text elements (for animation effects)
+    function syncAbsoluteTextElements() {
+        // Find all buttons with animation text elements
+        const buttons = document.querySelectorAll('.primary-button, .w-inline-block');
+
+        buttons.forEach(button => {
+            const normalText = button.querySelector('.primary-button-text-block:not(.is-text-absolute)');
+            const absoluteText = button.querySelector('.primary-button-text-block.is-text-absolute');
+
+            if (normalText && absoluteText) {
+                absoluteText.textContent = normalText.textContent;
+                console.log('✅ Synced button text:', normalText.textContent);
+            }
+        });
+
+        console.log('🔄 Synced absolute text elements for all buttons');
     }
 
     // Initialize on page load
     async function init() {
         console.log('🚀 Initializing Course Details Page...');
 
-        // Get current locale
-        const locale = localStorage.getItem('preferred_locale') || 'en';
+        const params = getUrlParams();
 
-        // Fetch and apply page translations
+        // Use locale from URL parameters (with fallbacks)
+        const locale = params.locale;
+        console.log('🌍 Using locale:', locale);
+
+        // Update localStorage for consistency
+        localStorage.setItem('preferred_locale', locale);
+
+        // IMPORTANT: Wait for unified language manager to complete first
+        // This ensures UI translations are applied before we load dynamic content
+        if (window.languageManager && window.languageManager.initialized) {
+            console.log('⏳ Waiting for language manager to complete...');
+            await new Promise(resolve => setTimeout(resolve, 200));
+        }
+
+        // Fetch and apply page translations (for elements not handled by unified manager)
         const translations = await fetchPageTranslations(locale);
         if (translations) {
             applyPageTranslations(translations);
         }
-
-        const params = getUrlParams();
 
         if (!params.id) {
             showError('No course ID provided in URL');
@@ -550,7 +590,7 @@
         document.body.appendChild(loadingIndicator);
 
         // Fetch and populate course data
-        const courseData = await fetchCourseData(params.id, params.preview);
+        const courseData = await fetchCourseData(params.id, params.preview, locale);
 
         // Remove loading indicator
         loadingIndicator.remove();
@@ -577,6 +617,37 @@
         } else {
             showError('Failed to load course details. Please try again.');
         }
+
+        // Add event listener for language changes
+        window.addEventListener('languageChanged', () => {
+            // Wait for translation to complete, then sync absolute text
+            setTimeout(syncAbsoluteTextElements, 100);
+        });
+
+        // Also listen for DOM mutations to catch any translation changes
+        const observer = new MutationObserver((mutations) => {
+            let shouldSync = false;
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                    // Check if any button text was changed
+                    const target = mutation.target;
+                    if (target.classList && (target.classList.contains('primary-button-text-block') ||
+                        target.closest('.primary-button-text-block'))) {
+                        shouldSync = true;
+                    }
+                }
+            });
+
+            if (shouldSync) {
+                setTimeout(syncAbsoluteTextElements, 50);
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
     }
 
     // Start initialization when DOM is ready

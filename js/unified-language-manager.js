@@ -1017,6 +1017,17 @@ class LanguageManager {
                 'awards.content.content.items.3.title': 'Leader Technology Training',
                 'awards.content.content.items.3.description': 'Leader Technology Training is designed to empower professionals with the skills and knowledge required to become proficient leaders.',
 
+                // Pricing features
+                'pricing.features.access_all_courses': 'Access All Courses',
+                'pricing.features.community_support': 'Community Support',
+                'pricing.features.course_materials': 'Course Materials',
+                'pricing.features.hands_on_projects': 'Hands-On Projects',
+                'pricing.features.career_support': 'Career Support',
+                'pricing.features.support_sessions': 'Support Sessions',
+                'pricing.features.access_webinars': 'Access to Webinars',
+                // UI
+                'ui.content.no_items': 'No items found.',
+
                 // Pricing plans translations
                 'pricing.content.plans.monthly.name': 'Monthly',
                 'pricing.content.plans.annual.name': 'Yearly',
@@ -1025,7 +1036,26 @@ class LanguageManager {
 
                 // Process help section
                 'process.content.help.question': 'Still don\'t find out what you are looking for ??',
-                'process.content.help.link': 'Drop a line here what are you looking for.'
+                'process.content.help.link': 'Drop a line here what are you looking for.',
+
+                // Footer translations
+                'footer.content.description': 'Elevate tech career with expert-led courses. if you\'re just aiming to advance skills, practical training is designed.',
+                'footer.content.contact_prefix': 'Contact:',
+                'footer.content.contact_email': 'zohacous@email.com',
+                'footer.content.newsletter.label': 'Subscribe to Newsletter',
+                'footer.content.newsletter.placeholder': 'Enter email to subscribe',
+                'footer.content.newsletter.submit': 'Subscribe',
+                'footer.content.newsletter.success': 'Thank you! Your subscription has been received!',
+                'footer.content.newsletter.error': 'Oops! Something went wrong while submitting the form.',
+                'footer.content.menus.0.title': 'Menu',
+                'footer.content.menus.0.items.3.text': 'Course Single',
+                'footer.content.menus.1.title': 'Company',
+                'footer.content.menus.2.title': 'Support',
+                'footer.content.menus.2.items.0.text': 'Help Center',
+                'footer.content.menus.2.items.1.text': 'Terms of Service',
+                'footer.content.menus.2.items.2.text': 'Privacy Policy',
+                'footer.content.copyright': '© Copyright - <a href="index.html" class="footer-information-text-link">Zohacous</a> | Designed by <a href="https://zohaflow.webflow.io" target="_blank" class="footer-information-text-link">Zohaflow</a> - <a href="template-pages/license.html" class="footer-information-text-link">Licensing</a> Powered by <a href="https://webflow.com/" target="_blank" class="footer-information-text-link">Webflow</a>',
+                'navigation.content.items.5.text': 'Contact Us'
             },
             ru: {
                 learnMore: 'Узнать больше',
@@ -1103,6 +1133,17 @@ class LanguageManager {
                 'awards.content.content.items.3.title': 'Лидер технического обучения',
                 'awards.content.content.items.3.description': 'Награждённые программы технического обучения',
 
+                // Pricing features
+                'pricing.features.access_all_courses': 'Доступ ко всем курсам',
+                'pricing.features.community_support': 'Поддержка сообщества',
+                'pricing.features.course_materials': 'Учебные материалы',
+                'pricing.features.hands_on_projects': 'Практические проекты',
+                'pricing.features.career_support': 'Карьерная поддержка',
+                'pricing.features.support_sessions': 'Сессии поддержки',
+                'pricing.features.access_webinars': 'Доступ к вебинарам',
+                // UI
+                'ui.content.no_items': 'Ничего не найдено.',
+
                 // Pricing plans translations
                 'pricing.content.plans.monthly.name': 'Ежемесячно',
                 'pricing.content.plans.annual.name': 'Годовой',
@@ -1111,7 +1152,26 @@ class LanguageManager {
 
                 // Process help section
                 'process.content.help.question': 'Все еще не можете найти то, что ищете ??',
-                'process.content.help.link': 'Сообщите нам, что вы ищете.'
+                'process.content.help.link': 'Сообщите нам, что вы ищете.',
+
+                // Footer translations
+                'footer.content.description': 'Повысьте свою техническую карьеру с курсами от экспертов. Если вы просто стремитесь развивать навыки, практическое обучение разработано.',
+                'footer.content.contact_prefix': 'Контакт:',
+                'footer.content.contact_email': 'zohacous@email.com',
+                'footer.content.newsletter.label': 'Подписаться на рассылку',
+                'footer.content.newsletter.placeholder': 'Введите email для подписки',
+                'footer.content.newsletter.submit': 'Подписаться',
+                'footer.content.newsletter.success': 'Спасибо! Ваша подписка получена!',
+                'footer.content.newsletter.error': 'Упс! Что-то пошло не так при отправке формы.',
+                'footer.content.menus.0.title': 'Меню',
+                'footer.content.menus.0.items.3.text': 'Одиночный курс',
+                'footer.content.menus.1.title': 'Компания',
+                'footer.content.menus.2.title': 'Поддержка',
+                'footer.content.menus.2.items.0.text': 'Центр помощи',
+                'footer.content.menus.2.items.1.text': 'Условия обслуживания',
+                'footer.content.menus.2.items.2.text': 'Политика конфиденциальности',
+                'footer.content.copyright': '© Авторские права - <a href="index.html" class="footer-information-text-link">Zohacous</a> | Дизайн <a href="https://zohaflow.webflow.io" target="_blank" class="footer-information-text-link">Zohaflow</a> - <a href="template-pages/license.html" class="footer-information-text-link">Лицензирование</a> На платформе <a href="https://webflow.com/" target="_blank" class="footer-information-text-link">Webflow</a>',
+                'navigation.content.items.5.text': 'Свяжитесь с нами'
             },
             he: {
                 learnMore: 'למד עוד',
@@ -1194,6 +1254,17 @@ class LanguageManager {
                 'awards.content.content.items.3.title': 'מנהיג הכשרה טכנולוגית',
                 'awards.content.content.items.3.description': 'תוכניות הכשרה טכנולוגיות עטורות פרסים',
 
+                // Pricing features
+                'pricing.features.access_all_courses': 'גישה לכל הקורסים',
+                'pricing.features.community_support': 'תמיכת קהילה',
+                'pricing.features.course_materials': 'חומרי לימוד',
+                'pricing.features.hands_on_projects': 'פרויקטים מעשיים',
+                'pricing.features.career_support': 'תמיכה בקריירה',
+                'pricing.features.support_sessions': 'מפגשי תמיכה',
+                'pricing.features.access_webinars': 'גישה לוובינרים',
+                // UI
+                'ui.content.no_items': 'לא נמצאו פריטים.',
+
                 // Pricing plans translations
                 'pricing.content.plans.monthly.name': 'חודשי',
                 'pricing.content.plans.annual.name': 'שנתי',
@@ -1202,7 +1273,26 @@ class LanguageManager {
 
                 // Process help section
                 'process.content.help.question': 'עדיין לא מוצא את מה שאתה מחפש ??',
-                'process.content.help.link': 'שלח לנו קו כאן מה אתה מחפש.'
+                'process.content.help.link': 'שלח לנו קו כאן מה אתה מחפש.',
+
+                // Footer translations
+                'footer.content.description': 'העלה את הקריירה הטכנולוגית שלך עם קורסים בהדרכת מומחים. אם אתה פשוט מתכוון לקדם כישורים, ההכשרה המעשית מיועדת.',
+                'footer.content.contact_prefix': 'צור קשר:',
+                'footer.content.contact_email': 'zohacous@email.com',
+                'footer.content.newsletter.label': 'הירשם לניוזלטר',
+                'footer.content.newsletter.placeholder': 'הזן אימייל להרשמה',
+                'footer.content.newsletter.submit': 'הירשם',
+                'footer.content.newsletter.success': 'תודה! ההרשמה שלך התקבלה!',
+                'footer.content.newsletter.error': 'אופס! משהו השתבש בשליחת הטופס.',
+                'footer.content.menus.0.title': 'תפריט',
+                'footer.content.menus.0.items.3.text': 'קורס יחיד',
+                'footer.content.menus.1.title': 'חברה',
+                'footer.content.menus.2.title': 'תמיכה',
+                'footer.content.menus.2.items.0.text': 'מרכז עזרה',
+                'footer.content.menus.2.items.1.text': 'תנאי שירות',
+                'footer.content.menus.2.items.2.text': 'מדיניות פרטיות',
+                'footer.content.copyright': '© זכויות יוצרים - <a href="index.html" class="footer-information-text-link">Zohacous</a> | עוצב על ידי <a href="https://zohaflow.webflow.io" target="_blank" class="footer-information-text-link">Zohaflow</a> - <a href="template-pages/license.html" class="footer-information-text-link">רישוי</a> מופעל על ידי <a href="https://webflow.com/" target="_blank" class="footer-information-text-link">Webflow</a>',
+                'navigation.content.items.5.text': 'צור קשר'
             }
         };
 

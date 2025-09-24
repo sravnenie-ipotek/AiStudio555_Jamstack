@@ -46,23 +46,20 @@ class LanguageManager {
         // Attach language switcher handlers
         this.attachLanguageSwitchers();
 
+        // IMMEDIATE: Show navigation and UI elements (fix race condition)
+        document.body.classList.add('language-ready');
+        console.log('[LanguageManager] Navigation and UI elements revealed immediately');
+
         // Load content for current language if needed
         if (this.shouldLoadContent()) {
-            console.log('[LanguageManager] Loading content for locale:', this.currentLocale);
+            console.log('[LanguageManager] Loading dynamic content for locale:', this.currentLocale);
             this.loadPageContent(this.currentLocale).then(() => {
-                // Mark as ready after initial content load
-                document.body.classList.add('language-ready');
-                console.log('[LanguageManager] Initial language load complete, content revealed');
-            }).catch(() => {
-                // Even on error, show content
-                document.body.classList.add('language-ready');
+                console.log('[LanguageManager] Dynamic content load complete');
+            }).catch((error) => {
+                console.warn('[LanguageManager] Dynamic content load failed:', error);
             });
         } else {
             console.log('[LanguageManager] No dynamic content to load');
-            // If no content to load, mark ready immediately
-            setTimeout(() => {
-                document.body.classList.add('language-ready');
-            }, 100);
         }
 
         // Handle browser back/forward
@@ -201,13 +198,15 @@ class LanguageManager {
             }
         });
 
-        // Set RTL for Hebrew
+        // Set RTL for Hebrew or reset to LTR
         if (this.currentLocale === 'he') {
             document.documentElement.setAttribute('dir', 'rtl');
             document.documentElement.setAttribute('lang', 'he');
+            document.body.classList.add('rtl-mode');
         } else {
             document.documentElement.setAttribute('dir', 'ltr');
             document.documentElement.setAttribute('lang', this.currentLocale);
+            document.body.classList.remove('rtl-mode');
         }
     }
 
@@ -276,8 +275,15 @@ class LanguageManager {
                 history.pushState({locale}, '', url);
             }
 
-            // Update UI state
+            // Update UI state and force visual refresh
             this.setInitialLanguageState();
+
+            // Force DOM refresh for Hebrew/RTL changes
+            if (locale === 'he') {
+                document.body.style.display = 'none';
+                document.body.offsetHeight; // Trigger reflow
+                document.body.style.display = '';
+            }
 
             // Dispatch custom event
             window.dispatchEvent(new CustomEvent('languageChanged', {
@@ -319,7 +325,8 @@ class LanguageManager {
         console.log('[LanguageManager] Endpoint:', endpoint);
 
         if (!endpoint) {
-            console.log('No dynamic content endpoint for this page');
+            console.log('No dynamic content endpoint for this page - applying local translations only');
+            this.applyLocalTranslations(locale);
             return;
         }
 
@@ -340,12 +347,72 @@ class LanguageManager {
         } catch (error) {
             console.error('Error loading content:', error);
 
-            // Try fallback to English if not already
-            if (locale !== 'en') {
-                console.log('Falling back to English content');
-                await this.loadPageContent('en');
-            }
+            console.log(`[LanguageManager] API failed for ${locale}, using local translations as fallback`);
+            // Apply local translations when API fails
+            this.applyLocalTranslations(locale);
         }
+    }
+
+    /**
+     * Apply local translations when no API endpoint is available
+     */
+    applyLocalTranslations(locale) {
+        console.log('[LanguageManager] Applying local translations for:', locale);
+
+        // Update all elements with data-i18n attribute using local fallbacks
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.dataset.i18n;
+            const value = this.getLocalizedText(key, locale);
+
+            if (value) {
+                element.textContent = value;
+                this.translationStats.success++;
+                console.log(`[Local Translation] ${key}: "${value}"`);
+            } else {
+                console.warn(`[Local Translation Missing] ${key}`);
+                this.translationStats.failed++;
+            }
+        });
+
+        // Handle placeholder translations
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+            const key = element.dataset.i18nPlaceholder;
+            const value = this.getLocalizedText(key, locale);
+            if (value) {
+                element.placeholder = value;
+                this.translationStats.success++;
+                console.log(`[Local Translation Placeholder] ${key}: "${value}"`);
+            } else {
+                console.warn(`[Local Translation Placeholder Missing] ${key}`);
+                this.translationStats.failed++;
+            }
+        });
+
+        // Handle value translations (for buttons, submit inputs)
+        document.querySelectorAll('[data-i18n-value]').forEach(element => {
+            const key = element.dataset.i18nValue;
+            const value = this.getLocalizedText(key, locale);
+            if (value) {
+                element.value = value;
+                this.translationStats.success++;
+                console.log(`[Local Translation Value] ${key}: "${value}"`);
+            } else {
+                console.warn(`[Local Translation Value Missing] ${key}`);
+                this.translationStats.failed++;
+            }
+        });
+
+        // Handle RTL for Hebrew
+        if (locale === 'he') {
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.body.classList.add('rtl');
+        } else {
+            document.documentElement.setAttribute('dir', 'ltr');
+            document.body.classList.remove('rtl');
+        }
+
+        // Log translation stats
+        this.logTranslationStats();
     }
 
     /**
@@ -405,6 +472,13 @@ class LanguageManager {
             console.log('[LanguageManager] Processing pricing page structure');
             processedData = data.data.attributes.sections;
             console.log('[LanguageManager] Pricing sections:', Object.keys(processedData));
+
+            // If sections are empty, apply local translations
+            if (Object.keys(processedData).length === 0) {
+                console.log('[LanguageManager] No API sections found, applying local translations');
+                this.applyLocalTranslations(locale);
+                return;
+            }
         }
         // Transform array-based API responses (like teachers page) to object format
         else
@@ -424,13 +498,17 @@ class LanguageManager {
             const key = element.dataset.i18n;
             const value = this.getTranslation(processedData, key, locale);
 
-            // Debug critical elements
-            if (key === 'testimonials.content.content.title' || key.includes('faq.content')) {
+            // Debug critical elements - expanded for pricing page
+            if (key === 'testimonials.content.content.title' || key.includes('faq.content') ||
+                key.includes('pricing.content.hero') || key.includes('pricing.content.subtitle') ||
+                key.includes('pricing.content.title') || key.includes('pricing.content.plans')) {
                 console.log(`[DOM Update Debug] ${key}:`, {
                     hasValue: !!value,
                     value: value,
                     elementTag: element.tagName,
-                    currentText: element.textContent?.substring(0, 50)
+                    elementClass: element.className,
+                    currentText: element.textContent?.substring(0, 50),
+                    apiDataKeys: Object.keys(processedData || {})
                 });
             }
 
@@ -507,12 +585,27 @@ class LanguageManager {
      * Get translation with comprehensive fallback system
      */
     getTranslation(data, key, locale) {
+        // Debug pricing elements specifically
+        if (key.includes('pricing.content.hero') || key.includes('pricing.content.subtitle') || key.includes('pricing.content.title')) {
+            console.log(`[Pricing Debug] Getting translation for: ${key}`);
+            console.log(`[Pricing Debug] Available data structure:`, JSON.stringify(data, null, 2));
+        }
+
         // Try exact path first
         let value = this.getExactPath(data, key);
-        if (value) return value;
+        if (value) {
+            if (key.includes('pricing.content')) {
+                console.log(`[Pricing Debug] Found exact path for ${key}: "${value}"`);
+            }
+            return value;
+        }
 
         // Try mapped path
         const mappedPaths = this.getComprehensiveMappings(key);
+        if (key.includes('pricing.content')) {
+            console.log(`[Pricing Debug] Trying mapped paths for ${key}:`, mappedPaths);
+        }
+
         for (const path of mappedPaths) {
             value = this.getExactPath(data, path);
             if (value) {
@@ -667,24 +760,28 @@ class LanguageManager {
             'pricing.content.plans.subtitle': ['plans.subtitle', 'pricing.plans.subtitle', 'pricing.content.content.plans.subtitle'],
             'pricing.content.plans.description': ['plans.description', 'pricing.plans.description', 'pricing.content.content.plans.description'],
 
-            // CTA section
+            // Hero section additional mappings
+            'pricing.content.subtitle': ['hero.subtitle', 'pricing.hero.subtitle', 'pricing.content.content.hero.subtitle'],
+            'pricing.content.title': ['hero.description', 'pricing.hero.description', 'pricing.content.content.hero.description'],
+
+            // CTA section mappings for pricing page
             'pricing.content.cta.title': ['cta.title', 'pricing.cta.title', 'pricing.content.content.cta.title'],
             'pricing.content.cta.subtitle': ['cta.subtitle', 'pricing.cta.subtitle', 'pricing.content.content.cta.subtitle'],
             'pricing.content.cta.description': ['cta.description', 'pricing.cta.description', 'pricing.content.content.cta.description'],
-            'pricing.content.cta.button1': ['cta.button_text', 'pricing.cta.button_text', 'pricing.content.content.cta.button_text'],
-            'pricing.content.cta.button2': ['cta.button_secondary_text', 'pricing.cta.button_secondary_text', 'pricing.content.content.cta.button_secondary_text'],
+            'pricing.content.cta.button1': ['cta.button1', 'cta.button_text', 'pricing.cta.button_text', 'pricing.content.content.cta.button_text'],
+            'pricing.content.cta.button2': ['cta.button2', 'cta.button_secondary_text', 'pricing.cta.button_secondary_text', 'pricing.content.content.cta.button_secondary_text'],
 
             // Track section
             'pricing.content.track.start_learning': ['misc.content.start_learning', 'pricing.track.start_learning'],
             'pricing.content.track.browse_courses': ['misc.content.browse_courses', 'pricing.track.browse_courses'],
 
-            // Legacy mappings
-            'pricing.content.plans.annual.period': ['plans.content.plans.annual.period'],
-            'pricing.content.plans.monthly.period': ['plans.content.plans.monthly.period'],
-            'pricing.content.plans.annual.price': ['pricing.content.plans.1.price', 'pricing.content.plans[1].price'],
-            'pricing.content.plans.monthly.price': ['pricing.content.plans.0.price', 'pricing.content.plans[0].price'],
-            'pricing.content.plans.annual.name': ['pricing.content.plans.1.name', 'pricing.content.plans[1].name'],
-            'pricing.content.plans.monthly.name': ['pricing.content.plans.0.name', 'pricing.content.plans[0].name']
+            // Fixed API path mappings to match actual response structure (plans.plans.*)
+            'pricing.content.plans.annual.period': ['plans.plans.annual.period', 'plans.content.plans.annual.period'],
+            'pricing.content.plans.monthly.period': ['plans.plans.monthly.period', 'plans.content.plans.monthly.period'],
+            'pricing.content.plans.annual.price': ['plans.plans.annual.price', 'pricing.content.plans.1.price', 'pricing.content.plans[1].price'],
+            'pricing.content.plans.monthly.price': ['plans.plans.monthly.price', 'pricing.content.plans.0.price', 'pricing.content.plans[0].price'],
+            'pricing.content.plans.annual.name': ['plans.plans.annual.name', 'pricing.content.plans.1.name', 'pricing.content.plans[1].name'],
+            'pricing.content.plans.monthly.name': ['plans.plans.monthly.name', 'pricing.content.plans.0.name', 'pricing.content.plans[0].name']
         };
 
         // FAQ MAPPINGS - Handle quadruple nesting from API response
@@ -850,12 +947,115 @@ class LanguageManager {
                 loading: 'Loading...',
                 error: 'Error loading content',
                 'navigation.blog': 'Blog',
+                // Navigation fallback translations
+                'navigation.content.items.0.text': 'Home',
+                'navigation.content.items.1.text': 'Courses',
+                'navigation.content.items.2.text': 'Teachers',
+                'navigation.content.items.3.text': 'Blog',
+                'navigation.content.items.4.text': 'About Us',
+                'navigation.content.items.6.text': 'Pricing',
+                'navigation.content.career.orientation': 'Career Orientation',
+                'navigation.content.career.center': 'Career Center',
+                // UI buttons
+                'ui.content.buttons.sign_up_today': 'Sign Up Today',
+                'ui.content.breadcrumb.home': 'Home',
+                // Pricing page
+                'pricing.content.plans.title': 'Invest in Future with Subscription Plans',
+                'pricing.content.plans.description': 'Dive into a world of learning with diverse and extensive range of tech courses designed to cater to every interest.',
+                'pricing.content.tabs.monthly': 'Monthly',
+                'pricing.content.tabs.yearly': 'Yearly',
+                // Contact page translations
+                'contact.content.title': 'Contact Us',
+                'contact.content.subtitle': 'Let\'s Talk',
+                'contact.content.heading': 'Contact Me For Inquiries',
+                'contact.content.description': 'If you have questions about my courses, need guidance on your learning path, or want to discuss collaboration opportunities, feel free to reach out.',
+                'contact.content.page_title': 'Contact Us - AI Studio E-Learning Platform',
+                'contact.content.details.email': 'info@aistudio555.com',
+                'contact.content.details.phone': '+972 50 123 4567',
+                'contact.content.details.linkedin': 'www.linkedin.com/aistudio555',
+                'contact.content.details.facebook': 'www.facebook.com/aistudio555',
+                'contact.content.form.name_label': 'Your Name *',
+                'contact.content.form.name_placeholder': 'Enter Your Name',
+                'contact.content.form.email_label': 'Email Address *',
+                'contact.content.form.email_placeholder': 'Ex. emailaddress@email.com',
+                'contact.content.form.subject_label': 'Subject *',
+                'contact.content.form.subject_placeholder': 'Ex. Want Consultation',
+                'contact.content.form.message_label': 'Your Message *',
+                'contact.content.form.message_placeholder': 'Write what you want to share with us.',
+                'contact.content.form.submit_button': 'Submit Now',
+                'contact.content.form.success_message': 'Thank you! Your submission has been received!',
+                'contact.content.form.error_message': 'Oops! Something went wrong while submitting the form.',
+                // Track and CTA sections
+                'track.content.start_learning': 'Start Learning',
+                'track.content.browse_courses': 'Browse Courses',
+                'cta.content.subtitle': 'Start Learning Today',
+                'cta.content.title': 'Discover A World Of Learning Opportunities',
+                'cta.content.description': 'Don\'t wait to transform your career and unlock your full potential. Join our community of passionate learners and gain access to a wide range of courses.',
+                'cta.content.button_contact': 'Get In Touch',
+                'cta.content.button_courses': 'Check Out Courses',
+                // UI Language labels
+                'ui.content.languages.en': 'EN',
+                'ui.content.languages.ru': 'RU',
+                'ui.content.languages.he': 'HE',
+                // Button translations
+                'misc.content.explore_plans': 'Explore Plans Features',
                 'testimonials.author1.name': 'David Kim',
                 'testimonials.author2.name': 'Tariq Ahmed',
                 'testimonials.author3.name': 'Nadia Khan',
                 'footer.company.zohacous': 'Zohacous',
                 'testimonials.content.content.subtitle': 'Testimonials',
-                'testimonials.content.content.title': 'What Our Students Say'
+                'testimonials.content.content.title': 'What Our Students Say',
+                // Awards section translations
+                'awards.content.content.title': 'Awards That Define Our Excellence.',
+                'awards.content.content.description': 'Dive into a world of learning with diverse & extensive range of tech courses designed to cater to every interest.',
+                'awards.content.content.items.0.title': 'Online Mentorship Award',
+                'awards.content.content.items.0.description': 'We are honored to be recognized with the prestigious online mentorship award, a testament to our unwavering commitment to delivering high-quality.',
+                'awards.content.content.items.1.title': 'Class Mentorship Program',
+                'awards.content.content.items.1.description': 'The Class Mentorship Program is designed to provide students with personalized guidance, academic support, and career development to enhance their learning.',
+                'awards.content.content.items.2.title': 'Excellent Remote Learning',
+                'awards.content.content.items.2.description': 'In today\'s digital age, remote learning has become an essential component of the educational experience. Whether for K-12, higher education.',
+                'awards.content.content.items.3.title': 'Leader Technology Training',
+                'awards.content.content.items.3.description': 'Leader Technology Training is designed to empower professionals with the skills and knowledge required to become proficient leaders.',
+
+                // Pricing features
+                'pricing.features.access_all_courses': 'Access All Courses',
+                'pricing.features.community_support': 'Community Support',
+                'pricing.features.course_materials': 'Course Materials',
+                'pricing.features.hands_on_projects': 'Hands-On Projects',
+                'pricing.features.career_support': 'Career Support',
+                'pricing.features.support_sessions': 'Support Sessions',
+                'pricing.features.access_webinars': 'Access to Webinars',
+                // UI
+                'ui.content.no_items': 'No items found.',
+
+                // Pricing plans translations
+                'pricing.content.plans.monthly.name': 'Monthly',
+                'pricing.content.plans.annual.name': 'Yearly',
+                'pricing.content.plans.monthly.period': 'Per Month',
+                'pricing.content.plans.annual.period': 'Per Year',
+
+                // Process help section
+                'process.content.help.question': 'Still don\'t find out what you are looking for ??',
+                'process.content.help.link': 'Drop a line here what are you looking for.',
+
+                // Footer translations
+                'footer.content.description': 'Elevate tech career with expert-led courses. if you\'re just aiming to advance skills, practical training is designed.',
+                'footer.content.contact_prefix': 'Contact:',
+                'footer.content.contact_email': 'zohacous@email.com',
+                'footer.content.newsletter.label': 'Subscribe to Newsletter',
+                'footer.content.newsletter.placeholder': 'Enter email to subscribe',
+                'footer.content.newsletter.submit': 'Subscribe',
+                'footer.content.newsletter.success': 'Thank you! Your subscription has been received!',
+                'footer.content.newsletter.error': 'Oops! Something went wrong while submitting the form.',
+                'footer.content.menus.0.title': 'Menu',
+                'footer.content.menus.0.items.3.text': 'Course Single',
+                'footer.content.menus.1.title': 'Company',
+                'footer.content.menus.2.title': 'Support',
+                'footer.content.menus.2.items.0.text': 'Help Center',
+                'footer.content.menus.2.items.1.text': 'Terms of Service',
+                'footer.content.menus.2.items.2.text': 'Privacy Policy',
+                'footer.content.copyright': '© Copyright - <a href="index.html" class="footer-information-text-link">Zohacous</a> | Designed by <a href="https://zohaflow.webflow.io" target="_blank" class="footer-information-text-link">Zohaflow</a> - <a href="template-pages/license.html" class="footer-information-text-link">Licensing</a> Powered by <a href="https://webflow.com/" target="_blank" class="footer-information-text-link">Webflow</a>',
+                'navigation.content.items.5.text': 'Contact Us'
             },
             ru: {
                 learnMore: 'Узнать больше',
@@ -863,12 +1063,115 @@ class LanguageManager {
                 loading: 'Загрузка...',
                 error: 'Ошибка загрузки контента',
                 'navigation.blog': 'Блог',
+                // Navigation fallback translations
+                'navigation.content.items.0.text': 'Главная',
+                'navigation.content.items.1.text': 'Курсы',
+                'navigation.content.items.2.text': 'Преподаватели',
+                'navigation.content.items.3.text': 'Блог',
+                'navigation.content.items.4.text': 'О нас',
+                'navigation.content.items.6.text': 'Цены',
+                'navigation.content.career.orientation': 'Профориентация',
+                'navigation.content.career.center': 'Карьерный центр',
+                // UI buttons
+                'ui.content.buttons.sign_up_today': 'Зарегистрироваться',
+                'ui.content.breadcrumb.home': 'Главная',
+                // Pricing page
+                'pricing.content.plans.title': 'Инвестируйте в будущее с планами подписки',
+                'pricing.content.plans.description': 'Погрузитесь в мир обучения с разнообразными и обширными техническими курсами, созданными для удовлетворения любых интересов.',
+                'pricing.content.tabs.monthly': 'Ежемесячно',
+                'pricing.content.tabs.yearly': 'Ежегодно',
+                // Contact page translations
+                'contact.content.title': 'Свяжитесь с нами',
+                'contact.content.subtitle': 'Давайте поговорим',
+                'contact.content.heading': 'Свяжитесь со мной по вопросам',
+                'contact.content.description': 'Если у вас есть вопросы о моих курсах, нужна помощь в выборе пути обучения или вы хотите обсудить возможности сотрудничества, не стесняйтесь обращаться.',
+                'contact.content.page_title': 'Свяжитесь с нами - Платформа онлайн-обучения AI Studio',
+                'contact.content.details.email': 'info@aistudio555.com',
+                'contact.content.details.phone': '+972 50 123 4567',
+                'contact.content.details.linkedin': 'www.linkedin.com/aistudio555',
+                'contact.content.details.facebook': 'www.facebook.com/aistudio555',
+                'contact.content.form.name_label': 'Ваше имя *',
+                'contact.content.form.name_placeholder': 'Введите ваше имя',
+                'contact.content.form.email_label': 'Адрес электронной почты *',
+                'contact.content.form.email_placeholder': 'Например: email@example.com',
+                'contact.content.form.subject_label': 'Тема *',
+                'contact.content.form.subject_placeholder': 'Например: Нужна консультация',
+                'contact.content.form.message_label': 'Ваше сообщение *',
+                'contact.content.form.message_placeholder': 'Напишите, что вы хотите нам сообщить.',
+                'contact.content.form.submit_button': 'Отправить',
+                'contact.content.form.success_message': 'Спасибо! Ваша заявка получена!',
+                'contact.content.form.error_message': 'Упс! Что-то пошло не так при отправке формы.',
+                // Track and CTA sections
+                'track.content.start_learning': 'Начать обучение',
+                'track.content.browse_courses': 'Просмотреть курсы',
+                'cta.content.subtitle': 'Начните учиться сегодня',
+                'cta.content.title': 'Откройте мир возможностей обучения',
+                'cta.content.description': 'Не ждите, чтобы трансформировать свою карьеру и раскрыть свой полный потенциал. Присоединяйтесь к нашему сообществу увлеченных учеников и получите доступ к широкому спектру курсов.',
+                'cta.content.button_contact': 'Связаться',
+                'cta.content.button_courses': 'Посмотреть курсы',
+                // UI Language labels
+                'ui.content.languages.en': 'EN',
+                'ui.content.languages.ru': 'RU',
+                'ui.content.languages.he': 'HE',
+                // Button translations
+                'misc.content.explore_plans': 'Исследуйте функции планов',
                 'testimonials.author1.name': 'Давид Ким',
                 'testimonials.author2.name': 'Тарик Ахмед',
                 'testimonials.author3.name': 'Надия Хан',
                 'footer.company.zohacous': 'Зохакус',
                 'testimonials.content.content.subtitle': 'Отзывы',
-                'testimonials.content.content.title': 'Ваш путь обучения с нашими экспертами'
+                'testimonials.content.content.title': 'Ваш путь обучения с нашими экспертами',
+                // Awards section translations
+                'awards.content.content.title': 'Награды, определяющие наше совершенство.',
+                'awards.content.content.description': 'Погрузитесь в мир обучения с разнообразным и обширным ассортиментом технических курсов, предназначенных для каждого интереса.',
+                'awards.content.content.items.0.title': 'Награда за онлайн-наставничество',
+                'awards.content.content.items.0.description': 'Признание за excellence в онлайн-наставничестве и поддержке студентов',
+                'awards.content.content.items.1.title': 'Программа наставничества в классе',
+                'awards.content.content.items.1.description': 'Лучшая программа наставничества для технических специалистов',
+                'awards.content.content.items.2.title': 'Совершенство дистанционного обучения',
+                'awards.content.content.items.2.description': 'Ведущие методологии дистанционного обучения',
+                'awards.content.content.items.3.title': 'Лидер технического обучения',
+                'awards.content.content.items.3.description': 'Награждённые программы технического обучения',
+
+                // Pricing features
+                'pricing.features.access_all_courses': 'Доступ ко всем курсам',
+                'pricing.features.community_support': 'Поддержка сообщества',
+                'pricing.features.course_materials': 'Учебные материалы',
+                'pricing.features.hands_on_projects': 'Практические проекты',
+                'pricing.features.career_support': 'Карьерная поддержка',
+                'pricing.features.support_sessions': 'Сессии поддержки',
+                'pricing.features.access_webinars': 'Доступ к вебинарам',
+                // UI
+                'ui.content.no_items': 'Ничего не найдено.',
+
+                // Pricing plans translations
+                'pricing.content.plans.monthly.name': 'Ежемесячно',
+                'pricing.content.plans.annual.name': 'Годовой',
+                'pricing.content.plans.monthly.period': 'В месяц',
+                'pricing.content.plans.annual.period': 'В год',
+
+                // Process help section
+                'process.content.help.question': 'Все еще не можете найти то, что ищете ??',
+                'process.content.help.link': 'Сообщите нам, что вы ищете.',
+
+                // Footer translations
+                'footer.content.description': 'Повысьте свою техническую карьеру с курсами от экспертов. Если вы просто стремитесь развивать навыки, практическое обучение разработано.',
+                'footer.content.contact_prefix': 'Контакт:',
+                'footer.content.contact_email': 'zohacous@email.com',
+                'footer.content.newsletter.label': 'Подписаться на рассылку',
+                'footer.content.newsletter.placeholder': 'Введите email для подписки',
+                'footer.content.newsletter.submit': 'Подписаться',
+                'footer.content.newsletter.success': 'Спасибо! Ваша подписка получена!',
+                'footer.content.newsletter.error': 'Упс! Что-то пошло не так при отправке формы.',
+                'footer.content.menus.0.title': 'Меню',
+                'footer.content.menus.0.items.3.text': 'Одиночный курс',
+                'footer.content.menus.1.title': 'Компания',
+                'footer.content.menus.2.title': 'Поддержка',
+                'footer.content.menus.2.items.0.text': 'Центр помощи',
+                'footer.content.menus.2.items.1.text': 'Условия обслуживания',
+                'footer.content.menus.2.items.2.text': 'Политика конфиденциальности',
+                'footer.content.copyright': '© Авторские права - <a href="index.html" class="footer-information-text-link">Zohacous</a> | Дизайн <a href="https://zohaflow.webflow.io" target="_blank" class="footer-information-text-link">Zohaflow</a> - <a href="template-pages/license.html" class="footer-information-text-link">Лицензирование</a> На платформе <a href="https://webflow.com/" target="_blank" class="footer-information-text-link">Webflow</a>',
+                'navigation.content.items.5.text': 'Свяжитесь с нами'
             },
             he: {
                 learnMore: 'למד עוד',
@@ -876,12 +1179,120 @@ class LanguageManager {
                 loading: 'טוען...',
                 error: 'שגיאה בטעינת תוכן',
                 'navigation.blog': 'בלוג',
+                // Navigation fallback translations
+                'navigation.content.items.0.text': 'בית',
+                'navigation.content.items.1.text': 'קורסים',
+                'navigation.content.items.2.text': 'מרצים',
+                'navigation.content.items.3.text': 'בלוג',
+                'navigation.content.items.4.text': 'אודותינו',
+                'navigation.content.items.6.text': 'מחירים',
+                'navigation.content.career.orientation': 'הכוונה מקצועית',
+                'navigation.content.career.center': 'מרכז הקריירה',
+                // UI buttons
+                'ui.content.buttons.sign_up_today': 'הירשם היום',
+                'ui.content.breadcrumb.home': 'בית',
+                // Pricing page
+                'pricing.content.plans.title': 'השקיעו בעתיד עם תוכניות מנוי',
+                'pricing.content.plans.description': 'צללו לעולם של למידה עם מגוון רחב ומקיף של קורסים טכנולוגיים שנועדו לענות על כל תחום עניין.',
+                'pricing.content.tabs.monthly': 'חודשי',
+                'pricing.content.tabs.yearly': 'שנתי',
+                // Contact page translations
+                'contact.content.title': 'צור קשר',
+                'contact.content.subtitle': 'בואו נדבר',
+                'contact.content.heading': 'צור איתי קשר לבירורים',
+                'contact.content.description': 'אם יש לך שאלות על הקורסים שלי, צריך הכוונה במסלול הלמידה שלך או רוצה לדון בהזדמנויות לשיתוף פעולה, אל תהסס לפנות.',
+                'contact.content.page_title': 'צור קשר - פלטפורמת למידה מקוונת AI Studio',
+                'contact.content.details.email': 'info@aistudio555.com',
+                'contact.content.details.phone': '+972 50 123 4567',
+                'contact.content.details.linkedin': 'www.linkedin.com/aistudio555',
+                'contact.content.details.facebook': 'www.facebook.com/aistudio555',
+                'contact.content.form.name_label': 'השם שלך *',
+                'contact.content.form.name_placeholder': 'הכנס את שמך',
+                'contact.content.form.email_label': 'כתובת דוא״ל *',
+                'contact.content.form.email_placeholder': 'לדוגמה: email@example.com',
+                'contact.content.form.subject_label': 'נושא *',
+                'contact.content.form.subject_placeholder': 'לדוגמה: רוצה ייעוץ',
+                'contact.content.form.message_label': 'ההודעה שלך *',
+                'contact.content.form.message_placeholder': 'כתוב מה אתה רוצה לשתף איתנו.',
+                'contact.content.form.submit_button': 'שלח כעת',
+                'contact.content.form.success_message': 'תודה! הטופס נשלח בהצלחה!',
+                'contact.content.form.error_message': 'אופס! משהו השתבש בשליחת הטופס.',
+                // Track and CTA sections
+                'track.content.start_learning': 'התחל ללמוד',
+                'track.content.browse_courses': 'עיין בקורסים',
+                'cta.content.subtitle': 'התחל ללמוד היום',
+                'cta.content.title': 'גלה עולם של הזדמנויות למידה',
+                'cta.content.description': 'אל תחכה לשנות את הקריירה שלך ולפתוח את הפוטנציאל המלא שלך. הצטרף לקהילת הלומדים הנלהבת שלנו וקבל גישה למגוון רחב של קורסים.',
+                'cta.content.button_contact': 'צור קשר',
+                'cta.content.button_courses': 'בדוק קורסים',
+                // UI Language labels
+                'ui.content.languages.en': 'EN',
+                'ui.content.languages.ru': 'RU',
+                'ui.content.languages.he': 'HE',
+
+                // Footer translations
+                'ui.content.footer.subscribe_newsletter': 'הירשם לניוזלטר',
+                'ui.content.footer.email_placeholder': 'הכנס אימייל להרשמה',
+                'ui.content.footer.subscribe_button': 'הירשם',
+                // Button translations
+                'misc.content.explore_plans': 'גלה תכונות התוכניות',
                 'testimonials.author1.name': 'דיוויד קים',
                 'testimonials.author2.name': 'טאריק אחמד',
                 'testimonials.author3.name': 'נדיה חאן',
                 'footer.company.zohacous': 'זוהקוס',
                 'testimonials.content.content.subtitle': 'המלצות',
-                'testimonials.content.content.title': 'מסע הלמידה שלך עם המומחים שלנו'
+                'testimonials.content.content.title': 'מסע הלמידה שלך עם המומחים שלנו',
+                // Awards section translations
+                'awards.content.content.title': 'פרסים המגדירים את המצוינות שלנו.',
+                'awards.content.content.description': 'צלול לתוך עולם של למידה עם מגוון נרחב של קורסי טכנולוגיה המיועדים לענות על כל עניין.',
+                'awards.content.content.items.0.title': 'פרס חונכות מקוונת',
+                'awards.content.content.items.0.description': 'הוכרה למצוינות בחונכות מקוונת ותמיכת סטודנטים',
+                'awards.content.content.items.1.title': 'תוכנית חונכות כיתתית',
+                'awards.content.content.items.1.description': 'תוכנית החונכות הטובה ביותר לאנשי מקצוע בתחום הטכנולוגיה',
+                'awards.content.content.items.2.title': 'מצוינות בלמידה מרחוק',
+                'awards.content.content.items.2.description': 'מובילים את הדרך במתודולוגיות למידה מרחוק',
+                'awards.content.content.items.3.title': 'מנהיג הכשרה טכנולוגית',
+                'awards.content.content.items.3.description': 'תוכניות הכשרה טכנולוגיות עטורות פרסים',
+
+                // Pricing features
+                'pricing.features.access_all_courses': 'גישה לכל הקורסים',
+                'pricing.features.community_support': 'תמיכת קהילה',
+                'pricing.features.course_materials': 'חומרי לימוד',
+                'pricing.features.hands_on_projects': 'פרויקטים מעשיים',
+                'pricing.features.career_support': 'תמיכה בקריירה',
+                'pricing.features.support_sessions': 'מפגשי תמיכה',
+                'pricing.features.access_webinars': 'גישה לוובינרים',
+                // UI
+                'ui.content.no_items': 'לא נמצאו פריטים.',
+
+                // Pricing plans translations
+                'pricing.content.plans.monthly.name': 'חודשי',
+                'pricing.content.plans.annual.name': 'שנתי',
+                'pricing.content.plans.monthly.period': 'לחודש',
+                'pricing.content.plans.annual.period': 'לשנה',
+
+                // Process help section
+                'process.content.help.question': 'עדיין לא מוצא את מה שאתה מחפש ??',
+                'process.content.help.link': 'שלח לנו קו כאן מה אתה מחפש.',
+
+                // Footer translations
+                'footer.content.description': 'העלה את הקריירה הטכנולוגית שלך עם קורסים בהדרכת מומחים. אם אתה פשוט מתכוון לקדם כישורים, ההכשרה המעשית מיועדת.',
+                'footer.content.contact_prefix': 'צור קשר:',
+                'footer.content.contact_email': 'zohacous@email.com',
+                'footer.content.newsletter.label': 'הירשם לניוזלטר',
+                'footer.content.newsletter.placeholder': 'הזן אימייל להרשמה',
+                'footer.content.newsletter.submit': 'הירשם',
+                'footer.content.newsletter.success': 'תודה! ההרשמה שלך התקבלה!',
+                'footer.content.newsletter.error': 'אופס! משהו השתבש בשליחת הטופס.',
+                'footer.content.menus.0.title': 'תפריט',
+                'footer.content.menus.0.items.3.text': 'קורס יחיד',
+                'footer.content.menus.1.title': 'חברה',
+                'footer.content.menus.2.title': 'תמיכה',
+                'footer.content.menus.2.items.0.text': 'מרכז עזרה',
+                'footer.content.menus.2.items.1.text': 'תנאי שירות',
+                'footer.content.menus.2.items.2.text': 'מדיניות פרטיות',
+                'footer.content.copyright': '© זכויות יוצרים - <a href="index.html" class="footer-information-text-link">Zohacous</a> | עוצב על ידי <a href="https://zohaflow.webflow.io" target="_blank" class="footer-information-text-link">Zohaflow</a> - <a href="template-pages/license.html" class="footer-information-text-link">רישוי</a> מופעל על ידי <a href="https://webflow.com/" target="_blank" class="footer-information-text-link">Webflow</a>',
+                'navigation.content.items.5.text': 'צור קשר'
             }
         };
 

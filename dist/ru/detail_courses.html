@@ -131,7 +131,22 @@
 
     // Set initial active pill based on locale
     document.addEventListener('DOMContentLoaded', function() {
-      const locale = localStorage.getItem('preferred_locale') || 'en';
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlLocale = urlParams.get('locale');
+      const locale = urlLocale || localStorage.getItem('preferred_locale') || 'en';
+
+      // Update localStorage to match URL parameter
+      if (urlLocale) {
+        localStorage.setItem('preferred_locale', locale);
+      }
+
+      // Trigger language change immediately if URL has locale
+      if (urlLocale && window.languageManager) {
+        // Change language and mark initialization complete
+        window.languageManager.changeLanguage(locale);
+        window.languageManager.initialized = true;
+      }
+
       const text = locale === 'ru' ? 'RU' : (locale === 'he' ? 'HE' : 'EN');
 
       document.querySelectorAll('.lang-pill, .mobile-lang-pill').forEach(pill => {
@@ -281,10 +296,10 @@
               </nav>
             </div>
             <div class="primary-button-wrapper mobile">
-              <a href="#" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block">
+              <a href="#" data-w-id="ad8568d4-5ed1-5674-8ae7-1a7ad93cff72" class="primary-button w-inline-block" onclick="openContactPopup(); return false;">
                 <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">Sign Up Today</div>
-                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                  <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block" data-i18n="ui.content.buttons.sign_up_today">Sign Up Today</div>
+                  <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Sign Up Today</div>
                 </div>
               </a>
             </div>
@@ -339,10 +354,10 @@
               </div>
             </div>
             <div class="primary-button-wrapper desktop">
-              <a href="authentication-pages/sign-up.html" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block">
+              <a href="#" data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431b7" class="primary-button w-inline-block" onclick="openContactPopup(); return false;">
                 <div class="primary-button-text-wrap">
-                  <div class="primary-button-text-block">Sign Up Today</div>
-                  <div class="primary-button-text-block is-text-absolute">Sign Up Today</div>
+                  <div style="-webkit-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block" data-i18n="ui.content.buttons.sign_up_today">Sign Up Today</div>
+                  <div style="-webkit-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 250%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="primary-button-text-block is-text-absolute">Sign Up Today</div>
                 </div>
               </a>
             </div>
@@ -466,7 +481,7 @@
                     <a href="#" class="primary-button courses-single-enroll-button w-inline-block">
                       <div class="primary-button-text-wrap">
                         <div class="primary-button-text-block" data-i18n="ui_elements.buttons.enroll_now">Enroll Now</div>
-                        <div class="primary-button-text-block is-text-absolute" data-i18n="ui_elements.buttons.enroll_now">Enroll Now</div>
+                        <div class="primary-button-text-block is-text-absolute">Enroll Now</div>
                       </div>
                     </a>
 
@@ -502,13 +517,13 @@
             <a href="#" class="primary-button course-cta-primary w-inline-block">
               <div class="primary-button-text-wrap">
                 <div class="primary-button-text-block" data-i18n="cta.start_learning">Start Learning</div>
-                <div class="primary-button-text-block is-text-absolute" data-i18n="cta.start_learning">Start Learning</div>
+                <div class="primary-button-text-block is-text-absolute">Start Learning</div>
               </div>
             </a>
             <a href="courses.html" class="primary-button secondary course-cta-secondary w-inline-block">
               <div class="primary-button-text-wrap">
                 <div class="primary-button-text-block" data-i18n="cta.browse_courses">Browse Courses</div>
-                <div class="primary-button-text-block is-text-absolute" data-i18n="cta.browse_courses">Browse Courses</div>
+                <div class="primary-button-text-block is-text-absolute">Browse Courses</div>
               </div>
             </a>
           </div>
@@ -620,13 +635,13 @@
             <a href="contact-us.html" data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e98a" class="primary-button w-inline-block">
               <div class="primary-button-text-wrap">
                 <div class="primary-button-text-block" data-i18n="cta.get_in_touch">get in touch</div>
-                <div class="primary-button-text-block is-text-absolute" data-i18n="cta.get_in_touch">get in touch</div>
+                <div class="primary-button-text-block is-text-absolute">get in touch</div>
               </div>
             </a>
             <a href="courses.html" data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e990" class="primary-button secondary w-inline-block">
               <div class="primary-button-text-wrap">
                 <div class="primary-button-text-block" data-i18n="cta.check_out_courses">Check Out Courses</div>
-                <div class="primary-button-text-block is-text-absolute" data-i18n="cta.check_out_courses">Check Out Courses</div>
+                <div class="primary-button-text-block is-text-absolute">Check Out Courses</div>
               </div>
             </a>
           </div><img data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e996" loading="lazy" alt="" src="images/CTA-Man-Image1.png" class="cta-man-image one"><img data-w-id="9b71f0cf-8a87-e254-ebc8-ab59bab5e997" loading="lazy" alt="" src="images/CTA-Man-Image2.png" class="cta-man-image-two">
@@ -798,51 +813,8 @@
 
   <!-- Language Switching Script -->
   <script>
-    // Language switching functionality
-    function setActivePill(pill) {
-      const lang = pill.textContent.trim().toLowerCase();
-
-      // Remove active class from all pills
-      document.querySelectorAll('.lang-pill, .mobile-lang-pill').forEach(p => {
-        p.classList.remove('active');
-      });
-
-      // Add active class to clicked pill and corresponding mobile pill
-      pill.classList.add('active');
-      const correspondingPills = document.querySelectorAll(`.lang-pill:contains("${pill.textContent}"), .mobile-lang-pill:contains("${pill.textContent}")`);
-      correspondingPills.forEach(p => p.classList.add('active'));
-
-      // Save locale preference
-      localStorage.setItem('preferred_locale', lang);
-
-      // Get current course ID from URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const courseId = urlParams.get('id');
-      const preview = urlParams.get('preview');
-
-      // Reload page with new locale
-      let newUrl = `${window.location.pathname}?locale=${lang}`;
-      if (courseId) newUrl += `&id=${courseId}`;
-      if (preview) newUrl += `&preview=${preview}`;
-
-      window.location.href = newUrl;
-    }
-
-    // Set active pill based on current locale
+    // Additional onclick handlers for pills (since first script doesn't add them)
     document.addEventListener('DOMContentLoaded', function() {
-      const locale = localStorage.getItem('preferred_locale') || 'en';
-      const pillText = locale.toUpperCase();
-
-      // Set active state for pills
-      document.querySelectorAll('.lang-pill, .mobile-lang-pill').forEach(pill => {
-        if (pill.textContent.trim() === pillText) {
-          pill.classList.add('active');
-        } else {
-          pill.classList.remove('active');
-        }
-      });
-
-      // Add onclick handlers to pills
       document.querySelectorAll('.lang-pill, .mobile-lang-pill').forEach(pill => {
         pill.onclick = function() { setActivePill(this); };
       });

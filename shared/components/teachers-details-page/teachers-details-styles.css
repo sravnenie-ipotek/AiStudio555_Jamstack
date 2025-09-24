@@ -1,0 +1,362 @@
+/* ===================================================================
+   TEACHERS DETAILS - SHARED COMPONENT STYLES
+   Universal LinkedIn-Style Teacher Profile Styling
+   ================================================================== */
+
+/* ===================================================================
+   LOADING & ERROR STATES
+   ================================================================== */
+
+.entity-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-size: 18px;
+  color: #041d63;
+}
+
+.entity-error-message {
+  background: #fee;
+  color: #c53030;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #f56565;
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* ===================================================================
+   LINKEDIN-STYLE PROFILE ENHANCEMENTS
+   ================================================================== */
+
+.teacher-profile-photo,
+.entity-profile-image {
+  width: 150px !important;
+  height: 150px !important;
+  border-radius: 50% !important;
+  border: 4px solid #667eea !important;
+  object-fit: cover !important;
+}
+
+.teacher-stats-grid,
+.entity-stats-container {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 20px !important;
+  padding: 30px !important;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+  border-radius: 12px !important;
+  margin: 30px 0 !important;
+}
+
+.stat-item,
+.entity-stat-item {
+  text-align: center !important;
+}
+
+.stat-number,
+.entity-stat-number {
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  display: block !important;
+}
+
+.stat-label,
+.entity-stat-label {
+  font-size: 14px !important;
+  color: #64748b !important;
+  margin-top: 5px !important;
+}
+
+.skill-tag,
+.entity-skill-tag {
+  display: inline-block !important;
+  padding: 8px 16px !important;
+  background: #667eea !important;
+  color: white !important;
+  border-radius: 20px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  margin: 5px !important;
+}
+
+.experience-item,
+.entity-experience-item {
+  padding: 25px 0 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  position: relative !important;
+  padding-left: 30px !important;
+}
+
+.experience-item::before,
+.entity-experience-item::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 30px !important;
+  width: 12px !important;
+  height: 12px !important;
+  background: #667eea !important;
+  border-radius: 50% !important;
+}
+
+.experience-item:last-child,
+.entity-experience-item:last-child {
+  border-bottom: none !important;
+}
+
+.experience-title,
+.entity-experience-title {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  margin-bottom: 8px !important;
+}
+
+.experience-duration,
+.entity-experience-duration {
+  color: #64748b !important;
+  font-size: 14px !important;
+  margin-bottom: 12px !important;
+}
+
+.course-card,
+.entity-course-card {
+  background: white !important;
+  border-radius: 12px !important;
+  padding: 25px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+  margin-bottom: 20px !important;
+  border-left: 4px solid #667eea !important;
+}
+
+.course-title,
+.entity-course-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  margin-bottom: 10px !important;
+}
+
+.review-card,
+.entity-review-card {
+  background: white !important;
+  border-radius: 12px !important;
+  padding: 25px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+  margin-bottom: 20px !important;
+  position: relative !important;
+}
+
+.review-stars,
+.entity-review-stars {
+  color: #fbbf24 !important;
+  font-size: 18px !important;
+  margin-bottom: 15px !important;
+}
+
+.review-text,
+.entity-review-text {
+  font-style: italic !important;
+  color: #4b5563 !important;
+  margin-bottom: 15px !important;
+  line-height: 1.6 !important;
+}
+
+.review-author,
+.entity-review-author {
+  font-size: 14px !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+
+.profile-header-card {
+  background: white !important;
+  padding: 40px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+  margin-bottom: 40px !important;
+}
+
+.profile-photo-section {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  margin-bottom: 30px !important;
+}
+
+.profile-name,
+.entity-details-hero-title {
+  font-size: 36px !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  margin: 20px 0 8px 0 !important;
+}
+
+.profile-title,
+.entity-professional-title {
+  font-size: 20px !important;
+  color: #667eea !important;
+  font-weight: 500 !important;
+  margin-bottom: 15px !important;
+}
+
+.profile-subtitle,
+.entity-hero-subtitle {
+  color: #64748b !important;
+  font-size: 16px !important;
+}
+
+.action-buttons {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 15px !important;
+  margin-top: 30px !important;
+}
+
+.section-heading {
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  margin-bottom: 25px !important;
+  padding-bottom: 10px !important;
+  border-bottom: 3px solid #667eea !important;
+  display: inline-block !important;
+}
+
+/* ===================================================================
+   RESPONSIVE DESIGN
+   ================================================================== */
+
+@media screen and (max-width: 768px) {
+  .teacher-stats-grid,
+  .entity-stats-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 15px !important;
+    padding: 20px !important;
+  }
+
+  .profile-name,
+  .entity-details-hero-title {
+    font-size: 28px !important;
+  }
+
+  .action-buttons {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .primary-button {
+    width: 100% !important;
+    max-width: 300px !important;
+  }
+
+  .teacher-profile-photo,
+  .entity-profile-image {
+    width: 120px !important;
+    height: 120px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .teacher-stats-grid,
+  .entity-stats-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    padding: 15px !important;
+  }
+
+  .profile-header-card {
+    padding: 20px !important;
+  }
+
+  .section-heading {
+    font-size: 24px !important;
+  }
+}
+
+/* ===================================================================
+   CONTENT VISIBILITY TRANSITIONS
+   ================================================================== */
+
+.entity-details-content-section {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.entity-details-content-section.loaded {
+  opacity: 1;
+}
+
+.entity-cta-section {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.entity-cta-section.loaded {
+  opacity: 1;
+}
+
+/* ===================================================================
+   UNIVERSAL ENTITY STYLING COMPATIBILITY
+   ================================================================== */
+
+/* Ensure compatibility with universal entity classes */
+.entity-overview-section .entity-full-description {
+  line-height: 1.8;
+  color: #4b5563;
+}
+
+.entity-features-section .entity-skills-container {
+  margin-top: 20px;
+}
+
+.entity-experience-section .entity-experience-container {
+  border-left: 2px solid #e2e8f0;
+  padding-left: 20px;
+  margin-left: 10px;
+}
+
+.entity-courses-section .entity-courses-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.entity-reviews-section .entity-reviews-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* CTA Section Enhancements */
+.entity-cta-section .entity-cta-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 20px;
+}
+
+.entity-cta-section .entity-cta-description {
+  font-size: 18px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* Contact button customization */
+.entity-contact-button .primary-button-text-block {
+  font-weight: 600;
+}
+
+.entity-courses-button .primary-button-text-block {
+  font-weight: 600;
+}
