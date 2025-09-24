@@ -9229,6 +9229,72 @@ app.get('/api/nd/pricing-page', async (req, res) => {
   }
 });
 
+// Get contact page content for new design
+app.get('/api/nd/contact-page', async (req, res) => {
+  try {
+    const { locale = 'en', preview = false } = req.query;
+
+    // Build query based on locale columns existence
+    let query;
+    if (locale === 'ru' || locale === 'he') {
+      query = `
+        SELECT
+          id,
+          section_key,
+          COALESCE(content_${locale}, content_en) as content,
+          content_en,
+          content_ru,
+          content_he,
+          visible,
+          created_at,
+          updated_at
+        FROM nd_contact_page
+        ${!preview ? 'WHERE visible = true' : ''}
+        ORDER BY id ASC
+      `;
+    } else {
+      query = `
+        SELECT
+          id,
+          section_key,
+          content_en as content,
+          content_en,
+          content_ru,
+          content_he,
+          visible,
+          created_at,
+          updated_at
+        FROM nd_contact_page
+        ${!preview ? 'WHERE visible = true' : ''}
+        ORDER BY id ASC
+      `;
+    }
+
+    const rows = await queryDatabase(query);
+
+    // Organize data by section
+    const sections = {};
+    rows.forEach(row => {
+      sections[row.section_key] = {
+        visible: row.visible,
+        content: row.content || {}
+      };
+    });
+
+    res.json({
+      success: true,
+      data: sections
+    });
+  } catch (error) {
+    console.error('Error fetching ND contact page:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch contact page',
+      message: error.message
+    });
+  }
+});
+
 // Update pricing page section content
 app.put('/api/nd/pricing-page/:section_name', async (req, res) => {
   try {

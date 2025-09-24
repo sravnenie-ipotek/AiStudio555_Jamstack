@@ -46,23 +46,20 @@ class LanguageManager {
         // Attach language switcher handlers
         this.attachLanguageSwitchers();
 
+        // IMMEDIATE: Show navigation and UI elements (fix race condition)
+        document.body.classList.add('language-ready');
+        console.log('[LanguageManager] Navigation and UI elements revealed immediately');
+
         // Load content for current language if needed
         if (this.shouldLoadContent()) {
-            console.log('[LanguageManager] Loading content for locale:', this.currentLocale);
+            console.log('[LanguageManager] Loading dynamic content for locale:', this.currentLocale);
             this.loadPageContent(this.currentLocale).then(() => {
-                // Mark as ready after initial content load
-                document.body.classList.add('language-ready');
-                console.log('[LanguageManager] Initial language load complete, content revealed');
-            }).catch(() => {
-                // Even on error, show content
-                document.body.classList.add('language-ready');
+                console.log('[LanguageManager] Dynamic content load complete');
+            }).catch((error) => {
+                console.warn('[LanguageManager] Dynamic content load failed:', error);
             });
         } else {
             console.log('[LanguageManager] No dynamic content to load');
-            // If no content to load, mark ready immediately
-            setTimeout(() => {
-                document.body.classList.add('language-ready');
-            }, 100);
         }
 
         // Handle browser back/forward
@@ -201,13 +198,15 @@ class LanguageManager {
             }
         });
 
-        // Set RTL for Hebrew
+        // Set RTL for Hebrew or reset to LTR
         if (this.currentLocale === 'he') {
             document.documentElement.setAttribute('dir', 'rtl');
             document.documentElement.setAttribute('lang', 'he');
+            document.body.classList.add('rtl-mode');
         } else {
             document.documentElement.setAttribute('dir', 'ltr');
             document.documentElement.setAttribute('lang', this.currentLocale);
+            document.body.classList.remove('rtl-mode');
         }
     }
 
@@ -276,8 +275,15 @@ class LanguageManager {
                 history.pushState({locale}, '', url);
             }
 
-            // Update UI state
+            // Update UI state and force visual refresh
             this.setInitialLanguageState();
+
+            // Force DOM refresh for Hebrew/RTL changes
+            if (locale === 'he') {
+                document.body.style.display = 'none';
+                document.body.offsetHeight; // Trigger reflow
+                document.body.style.display = '';
+            }
 
             // Dispatch custom event
             window.dispatchEvent(new CustomEvent('languageChanged', {
@@ -850,6 +856,45 @@ class LanguageManager {
                 loading: 'Loading...',
                 error: 'Error loading content',
                 'navigation.blog': 'Blog',
+                // Navigation fallback translations
+                'navigation.content.items.2.text': 'Teachers',
+                'navigation.content.items.3.text': 'Blog',
+                'navigation.content.items.4.text': 'About Us',
+                'navigation.content.career.orientation': 'Career Orientation',
+                'navigation.content.career.center': 'Career Center',
+                // Contact page translations
+                'contact.content.title': 'Contact Us',
+                'contact.content.subtitle': 'Let\'s Talk',
+                'contact.content.heading': 'Contact Me For Inquiries',
+                'contact.content.description': 'If you have questions about my courses, need guidance on your learning path, or want to discuss collaboration opportunities, feel free to reach out.',
+                'contact.content.page_title': 'Contact Us - AI Studio E-Learning Platform',
+                'contact.content.details.email': 'info@aistudio555.com',
+                'contact.content.details.phone': '+972 50 123 4567',
+                'contact.content.details.linkedin': 'www.linkedin.com/aistudio555',
+                'contact.content.details.facebook': 'www.facebook.com/aistudio555',
+                'contact.content.form.name_label': 'Your Name *',
+                'contact.content.form.name_placeholder': 'Enter Your Name',
+                'contact.content.form.email_label': 'Email Address *',
+                'contact.content.form.email_placeholder': 'Ex. emailaddress@email.com',
+                'contact.content.form.subject_label': 'Subject *',
+                'contact.content.form.subject_placeholder': 'Ex. Want Consultation',
+                'contact.content.form.message_label': 'Your Message *',
+                'contact.content.form.message_placeholder': 'Write what you want to share with us.',
+                'contact.content.form.submit_button': 'Submit Now',
+                'contact.content.form.success_message': 'Thank you! Your submission has been received!',
+                'contact.content.form.error_message': 'Oops! Something went wrong while submitting the form.',
+                // Track and CTA sections
+                'track.content.start_learning': 'Start Learning',
+                'track.content.browse_courses': 'Browse Courses',
+                'cta.content.subtitle': 'Start Learning Today',
+                'cta.content.title': 'Discover A World Of Learning Opportunities',
+                'cta.content.description': 'Don\'t wait to transform your career and unlock your full potential. Join our community of passionate learners and gain access to a wide range of courses.',
+                'cta.content.button_contact': 'Get In Touch',
+                'cta.content.button_courses': 'Check Out Courses',
+                // UI Language labels
+                'ui.content.languages.en': 'EN',
+                'ui.content.languages.ru': 'RU',
+                'ui.content.languages.he': 'HE',
                 'testimonials.author1.name': 'David Kim',
                 'testimonials.author2.name': 'Tariq Ahmed',
                 'testimonials.author3.name': 'Nadia Khan',
@@ -863,6 +908,45 @@ class LanguageManager {
                 loading: 'Загрузка...',
                 error: 'Ошибка загрузки контента',
                 'navigation.blog': 'Блог',
+                // Navigation fallback translations
+                'navigation.content.items.2.text': 'Преподаватели',
+                'navigation.content.items.3.text': 'Блог',
+                'navigation.content.items.4.text': 'О нас',
+                'navigation.content.career.orientation': 'Профориентация',
+                'navigation.content.career.center': 'Карьерный центр',
+                // Contact page translations
+                'contact.content.title': 'Свяжитесь с нами',
+                'contact.content.subtitle': 'Давайте поговорим',
+                'contact.content.heading': 'Свяжитесь со мной по вопросам',
+                'contact.content.description': 'Если у вас есть вопросы о моих курсах, нужна помощь в выборе пути обучения или вы хотите обсудить возможности сотрудничества, не стесняйтесь обращаться.',
+                'contact.content.page_title': 'Свяжитесь с нами - Платформа онлайн-обучения AI Studio',
+                'contact.content.details.email': 'info@aistudio555.com',
+                'contact.content.details.phone': '+972 50 123 4567',
+                'contact.content.details.linkedin': 'www.linkedin.com/aistudio555',
+                'contact.content.details.facebook': 'www.facebook.com/aistudio555',
+                'contact.content.form.name_label': 'Ваше имя *',
+                'contact.content.form.name_placeholder': 'Введите ваше имя',
+                'contact.content.form.email_label': 'Адрес электронной почты *',
+                'contact.content.form.email_placeholder': 'Например: email@example.com',
+                'contact.content.form.subject_label': 'Тема *',
+                'contact.content.form.subject_placeholder': 'Например: Нужна консультация',
+                'contact.content.form.message_label': 'Ваше сообщение *',
+                'contact.content.form.message_placeholder': 'Напишите, что вы хотите нам сообщить.',
+                'contact.content.form.submit_button': 'Отправить',
+                'contact.content.form.success_message': 'Спасибо! Ваша заявка получена!',
+                'contact.content.form.error_message': 'Упс! Что-то пошло не так при отправке формы.',
+                // Track and CTA sections
+                'track.content.start_learning': 'Начать обучение',
+                'track.content.browse_courses': 'Просмотреть курсы',
+                'cta.content.subtitle': 'Начните учиться сегодня',
+                'cta.content.title': 'Откройте мир возможностей обучения',
+                'cta.content.description': 'Не ждите, чтобы трансформировать свою карьеру и раскрыть свой полный потенциал. Присоединяйтесь к нашему сообществу увлеченных учеников и получите доступ к широкому спектру курсов.',
+                'cta.content.button_contact': 'Связаться',
+                'cta.content.button_courses': 'Посмотреть курсы',
+                // UI Language labels
+                'ui.content.languages.en': 'EN',
+                'ui.content.languages.ru': 'RU',
+                'ui.content.languages.he': 'HE',
                 'testimonials.author1.name': 'Давид Ким',
                 'testimonials.author2.name': 'Тарик Ахмед',
                 'testimonials.author3.name': 'Надия Хан',
@@ -876,6 +960,45 @@ class LanguageManager {
                 loading: 'טוען...',
                 error: 'שגיאה בטעינת תוכן',
                 'navigation.blog': 'בלוג',
+                // Navigation fallback translations
+                'navigation.content.items.2.text': 'מרצים',
+                'navigation.content.items.3.text': 'בלוג',
+                'navigation.content.items.4.text': 'אודותינו',
+                'navigation.content.career.orientation': 'הכוונה מקצועית',
+                'navigation.content.career.center': 'מרכז הקריירה',
+                // Contact page translations
+                'contact.content.title': 'צור קשר',
+                'contact.content.subtitle': 'בואו נדבר',
+                'contact.content.heading': 'צור איתי קשר לבירורים',
+                'contact.content.description': 'אם יש לך שאלות על הקורסים שלי, צריך הכוונה במסלול הלמידה שלך או רוצה לדון בהזדמנויות לשיתוף פעולה, אל תהסס לפנות.',
+                'contact.content.page_title': 'צור קשר - פלטפורמת למידה מקוונת AI Studio',
+                'contact.content.details.email': 'info@aistudio555.com',
+                'contact.content.details.phone': '+972 50 123 4567',
+                'contact.content.details.linkedin': 'www.linkedin.com/aistudio555',
+                'contact.content.details.facebook': 'www.facebook.com/aistudio555',
+                'contact.content.form.name_label': 'השם שלך *',
+                'contact.content.form.name_placeholder': 'הכנס את שמך',
+                'contact.content.form.email_label': 'כתובת דוא״ל *',
+                'contact.content.form.email_placeholder': 'לדוגמה: email@example.com',
+                'contact.content.form.subject_label': 'נושא *',
+                'contact.content.form.subject_placeholder': 'לדוגמה: רוצה ייעוץ',
+                'contact.content.form.message_label': 'ההודעה שלך *',
+                'contact.content.form.message_placeholder': 'כתוב מה אתה רוצה לשתף איתנו.',
+                'contact.content.form.submit_button': 'שלח כעת',
+                'contact.content.form.success_message': 'תודה! הטופס נשלח בהצלחה!',
+                'contact.content.form.error_message': 'אופס! משהו השתבש בשליחת הטופס.',
+                // Track and CTA sections
+                'track.content.start_learning': 'התחל ללמוד',
+                'track.content.browse_courses': 'עיין בקורסים',
+                'cta.content.subtitle': 'התחל ללמוד היום',
+                'cta.content.title': 'גלה עולם של הזדמנויות למידה',
+                'cta.content.description': 'אל תחכה לשנות את הקריירה שלך ולפתוח את הפוטנציאל המלא שלך. הצטרף לקהילת הלומדים הנלהבת שלנו וקבל גישה למגוון רחב של קורסים.',
+                'cta.content.button_contact': 'צור קשר',
+                'cta.content.button_courses': 'בדוק קורסים',
+                // UI Language labels
+                'ui.content.languages.en': 'EN',
+                'ui.content.languages.ru': 'RU',
+                'ui.content.languages.he': 'HE',
                 'testimonials.author1.name': 'דיוויד קים',
                 'testimonials.author2.name': 'טאריק אחמד',
                 'testimonials.author3.name': 'נדיה חאן',

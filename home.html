@@ -13,6 +13,8 @@
   <link href="backups/newDesign/shared/components/why_choose_us/card-styles.css" rel="stylesheet" type="text/css">
   <link href="shared/shared-cards.css" rel="stylesheet" type="text/css">
   <link href="css/course-card-styles.css" rel="stylesheet" type="text/css">
+  <link href="css/uniform-card-styles.css" rel="stylesheet" type="text/css">
+  <link href="shared/components/course-card/course-card-styles.css" rel="stylesheet" type="text/css">
   <link href="css/mobile-responsive-fixes.css" rel="stylesheet" type="text/css">
   <link href="shared/components/sharedMenu/menu.css" rel="stylesheet" type="text/css">
   <!-- SharedPopUp Component -->
@@ -27,12 +29,21 @@
   <link href="images/webclip.svg" rel="apple-touch-icon">
   <style>
     /* Prevent translation flash - smart initial state */
-    body:not(.language-ready) [data-i18n] {
+    body:not(.language-ready) .section:not(.section.navbar) [data-i18n],
+    body:not(.language-ready) .main-content [data-i18n]:not(.navbar [data-i18n]):not(.nav-menu [data-i18n]) {
       opacity: 0 !important;
     }
 
-    [data-i18n] {
+    /* Navigation should always be visible - CRITICAL FIX */
+    .navbar [data-i18n],
+    .nav-menu [data-i18n],
+    .lang-pill,
+    .header-wrapper [data-i18n],
+    .mobile-nav [data-i18n] {
       opacity: 1 !important;
+    }
+
+    [data-i18n] {
       transition: opacity 0.2s ease;
     }
 
@@ -1101,7 +1112,7 @@
                       </div>
                     </div>
                     <div class="w-dyn-empty">
-                      <div data-i18n="ui.content.messages.no_items">No items found.</div>
+                      <div data-i18n="content.no_items">No items found.</div>
                     </div>
                   </div>
                 </div>
@@ -1143,7 +1154,7 @@
                       </div>
                     </div>
                     <div class="w-dyn-empty">
-                      <div data-i18n="ui.content.messages.no_items">No items found.</div>
+                      <div data-i18n="content.no_items">No items found.</div>
                     </div>
                   </div>
                 </div>
@@ -1185,7 +1196,7 @@
                       </div>
                     </div>
                     <div class="w-dyn-empty">
-                      <div data-i18n="ui.content.messages.no_items">No items found.</div>
+                      <div data-i18n="content.no_items">No items found.</div>
                     </div>
                   </div>
                 </div>
@@ -1227,7 +1238,7 @@
                       </div>
                     </div>
                     <div class="w-dyn-empty">
-                      <div data-i18n="ui.content.messages.no_items">No items found.</div>
+                      <div data-i18n="content.no_items">No items found.</div>
                     </div>
                   </div>
                 </div>
@@ -1269,7 +1280,7 @@
                       </div>
                     </div>
                     <div class="w-dyn-empty">
-                      <div data-i18n="ui.content.messages.no_items">No items found.</div>
+                      <div data-i18n="content.no_items">No items found.</div>
                     </div>
                   </div>
                 </div>
@@ -2527,6 +2538,8 @@
 
   <!-- Home Integration loads AFTER language manager to preserve dual-system approach -->
   <script src="js/nd-home-integration.js" type="text/javascript"></script>
+  <!-- ND Courses Integration for Featured Courses (same as courses.html) -->
+  <script src="js/nd-courses-integration.js" type="text/javascript"></script>
 
   <script>
     // Mobile menu toggle functionality
