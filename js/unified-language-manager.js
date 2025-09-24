@@ -498,13 +498,17 @@ class LanguageManager {
             const key = element.dataset.i18n;
             const value = this.getTranslation(processedData, key, locale);
 
-            // Debug critical elements
-            if (key === 'testimonials.content.content.title' || key.includes('faq.content')) {
+            // Debug critical elements - expanded for pricing page
+            if (key === 'testimonials.content.content.title' || key.includes('faq.content') ||
+                key.includes('pricing.content.hero') || key.includes('pricing.content.subtitle') ||
+                key.includes('pricing.content.title') || key.includes('pricing.content.plans')) {
                 console.log(`[DOM Update Debug] ${key}:`, {
                     hasValue: !!value,
                     value: value,
                     elementTag: element.tagName,
-                    currentText: element.textContent?.substring(0, 50)
+                    elementClass: element.className,
+                    currentText: element.textContent?.substring(0, 50),
+                    apiDataKeys: Object.keys(processedData || {})
                 });
             }
 
@@ -581,12 +585,27 @@ class LanguageManager {
      * Get translation with comprehensive fallback system
      */
     getTranslation(data, key, locale) {
+        // Debug pricing elements specifically
+        if (key.includes('pricing.content.hero') || key.includes('pricing.content.subtitle') || key.includes('pricing.content.title')) {
+            console.log(`[Pricing Debug] Getting translation for: ${key}`);
+            console.log(`[Pricing Debug] Available data structure:`, JSON.stringify(data, null, 2));
+        }
+
         // Try exact path first
         let value = this.getExactPath(data, key);
-        if (value) return value;
+        if (value) {
+            if (key.includes('pricing.content')) {
+                console.log(`[Pricing Debug] Found exact path for ${key}: "${value}"`);
+            }
+            return value;
+        }
 
         // Try mapped path
         const mappedPaths = this.getComprehensiveMappings(key);
+        if (key.includes('pricing.content')) {
+            console.log(`[Pricing Debug] Trying mapped paths for ${key}:`, mappedPaths);
+        }
+
         for (const path of mappedPaths) {
             value = this.getExactPath(data, path);
             if (value) {
@@ -741,24 +760,28 @@ class LanguageManager {
             'pricing.content.plans.subtitle': ['plans.subtitle', 'pricing.plans.subtitle', 'pricing.content.content.plans.subtitle'],
             'pricing.content.plans.description': ['plans.description', 'pricing.plans.description', 'pricing.content.content.plans.description'],
 
-            // CTA section
+            // Hero section additional mappings
+            'pricing.content.subtitle': ['hero.subtitle', 'pricing.hero.subtitle', 'pricing.content.content.hero.subtitle'],
+            'pricing.content.title': ['hero.description', 'pricing.hero.description', 'pricing.content.content.hero.description'],
+
+            // CTA section mappings for pricing page
             'pricing.content.cta.title': ['cta.title', 'pricing.cta.title', 'pricing.content.content.cta.title'],
             'pricing.content.cta.subtitle': ['cta.subtitle', 'pricing.cta.subtitle', 'pricing.content.content.cta.subtitle'],
             'pricing.content.cta.description': ['cta.description', 'pricing.cta.description', 'pricing.content.content.cta.description'],
-            'pricing.content.cta.button1': ['cta.button_text', 'pricing.cta.button_text', 'pricing.content.content.cta.button_text'],
-            'pricing.content.cta.button2': ['cta.button_secondary_text', 'pricing.cta.button_secondary_text', 'pricing.content.content.cta.button_secondary_text'],
+            'pricing.content.cta.button1': ['cta.button1', 'cta.button_text', 'pricing.cta.button_text', 'pricing.content.content.cta.button_text'],
+            'pricing.content.cta.button2': ['cta.button2', 'cta.button_secondary_text', 'pricing.cta.button_secondary_text', 'pricing.content.content.cta.button_secondary_text'],
 
             // Track section
             'pricing.content.track.start_learning': ['misc.content.start_learning', 'pricing.track.start_learning'],
             'pricing.content.track.browse_courses': ['misc.content.browse_courses', 'pricing.track.browse_courses'],
 
-            // Legacy mappings
-            'pricing.content.plans.annual.period': ['plans.content.plans.annual.period'],
-            'pricing.content.plans.monthly.period': ['plans.content.plans.monthly.period'],
-            'pricing.content.plans.annual.price': ['pricing.content.plans.1.price', 'pricing.content.plans[1].price'],
-            'pricing.content.plans.monthly.price': ['pricing.content.plans.0.price', 'pricing.content.plans[0].price'],
-            'pricing.content.plans.annual.name': ['pricing.content.plans.1.name', 'pricing.content.plans[1].name'],
-            'pricing.content.plans.monthly.name': ['pricing.content.plans.0.name', 'pricing.content.plans[0].name']
+            // Fixed API path mappings to match actual response structure (plans.plans.*)
+            'pricing.content.plans.annual.period': ['plans.plans.annual.period', 'plans.content.plans.annual.period'],
+            'pricing.content.plans.monthly.period': ['plans.plans.monthly.period', 'plans.content.plans.monthly.period'],
+            'pricing.content.plans.annual.price': ['plans.plans.annual.price', 'pricing.content.plans.1.price', 'pricing.content.plans[1].price'],
+            'pricing.content.plans.monthly.price': ['plans.plans.monthly.price', 'pricing.content.plans.0.price', 'pricing.content.plans[0].price'],
+            'pricing.content.plans.annual.name': ['plans.plans.annual.name', 'pricing.content.plans.1.name', 'pricing.content.plans[1].name'],
+            'pricing.content.plans.monthly.name': ['plans.plans.monthly.name', 'pricing.content.plans.0.name', 'pricing.content.plans[0].name']
         };
 
         // FAQ MAPPINGS - Handle quadruple nesting from API response
@@ -925,11 +948,17 @@ class LanguageManager {
                 error: 'Error loading content',
                 'navigation.blog': 'Blog',
                 // Navigation fallback translations
+                'navigation.content.items.0.text': 'Home',
+                'navigation.content.items.1.text': 'Courses',
                 'navigation.content.items.2.text': 'Teachers',
                 'navigation.content.items.3.text': 'Blog',
                 'navigation.content.items.4.text': 'About Us',
+                'navigation.content.items.6.text': 'Pricing',
                 'navigation.content.career.orientation': 'Career Orientation',
                 'navigation.content.career.center': 'Career Center',
+                // UI buttons
+                'ui.content.buttons.sign_up_today': 'Sign Up Today',
+                'ui.content.breadcrumb.home': 'Home',
                 // Contact page translations
                 'contact.content.title': 'Contact Us',
                 'contact.content.subtitle': 'Let\'s Talk',
@@ -1000,11 +1029,17 @@ class LanguageManager {
                 error: 'Ошибка загрузки контента',
                 'navigation.blog': 'Блог',
                 // Navigation fallback translations
+                'navigation.content.items.0.text': 'Главная',
+                'navigation.content.items.1.text': 'Курсы',
                 'navigation.content.items.2.text': 'Преподаватели',
                 'navigation.content.items.3.text': 'Блог',
                 'navigation.content.items.4.text': 'О нас',
+                'navigation.content.items.6.text': 'Цены',
                 'navigation.content.career.orientation': 'Профориентация',
                 'navigation.content.career.center': 'Карьерный центр',
+                // UI buttons
+                'ui.content.buttons.sign_up_today': 'Зарегистрироваться',
+                'ui.content.breadcrumb.home': 'Главная',
                 // Contact page translations
                 'contact.content.title': 'Свяжитесь с нами',
                 'contact.content.subtitle': 'Давайте поговорим',
@@ -1075,11 +1110,17 @@ class LanguageManager {
                 error: 'שגיאה בטעינת תוכן',
                 'navigation.blog': 'בלוג',
                 // Navigation fallback translations
+                'navigation.content.items.0.text': 'בית',
+                'navigation.content.items.1.text': 'קורסים',
                 'navigation.content.items.2.text': 'מרצים',
                 'navigation.content.items.3.text': 'בלוג',
                 'navigation.content.items.4.text': 'אודותינו',
+                'navigation.content.items.6.text': 'מחירים',
                 'navigation.content.career.orientation': 'הכוונה מקצועית',
                 'navigation.content.career.center': 'מרכז הקריירה',
+                // UI buttons
+                'ui.content.buttons.sign_up_today': 'הירשם היום',
+                'ui.content.breadcrumb.home': 'בית',
                 // Contact page translations
                 'contact.content.title': 'צור קשר',
                 'contact.content.subtitle': 'בואו נדבר',
@@ -1113,6 +1154,11 @@ class LanguageManager {
                 'ui.content.languages.en': 'EN',
                 'ui.content.languages.ru': 'RU',
                 'ui.content.languages.he': 'HE',
+
+                // Footer translations
+                'ui.content.footer.subscribe_newsletter': 'הירשם לניוזלטר',
+                'ui.content.footer.email_placeholder': 'הכנס אימייל להרשמה',
+                'ui.content.footer.subscribe_button': 'הירשם',
                 // Button translations
                 'misc.content.explore_plans': 'גלה תכונות התוכניות',
                 'testimonials.author1.name': 'דיוויד קים',
