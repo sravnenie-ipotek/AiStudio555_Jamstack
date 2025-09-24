@@ -53,6 +53,7 @@
       /* Keep tabs centered and properly displayed */
       direction: ltr;
       text-align: center;
+      margin-top: 30px !important; /* Add spacing for RTL */
     }
 
     html[dir="rtl"] .pricing-plan-tab-link {
@@ -61,6 +62,7 @@
 
     html[dir="rtl"] .pricing-plan-content {
       /* Don't apply direction: rtl to preserve layout */
+      margin-top: 40px !important; /* Add spacing between title and pills */
     }
 
     html[dir="rtl"] .pricing-pack-wrapper {
@@ -193,6 +195,52 @@
       border: 1px solid #ffffff1a;
       border-radius: 14px;
       padding: 2px;
+    }
+
+    /* RTL Responsive fixes for pricing pills */
+    html[dir="rtl"] .pricing-plan-tabs-menu {
+      margin-top: 20px !important;
+      margin-bottom: 40px !important;
+    }
+
+    /* Better spacing for RTL section titles */
+    html[dir="rtl"] .pricing-plan-title-wrapper {
+      margin-bottom: 40px !important;
+    }
+
+    html[dir="rtl"] .section-title {
+      margin-bottom: 30px !important;
+    }
+
+    /* Mobile RTL responsiveness */
+    @media screen and (max-width: 768px) {
+      html[dir="rtl"] .pricing-plan-tabs-menu {
+        margin-top: 30px !important;
+        margin-bottom: 30px !important;
+        width: 90% !important;
+        max-width: 300px !important;
+      }
+
+      html[dir="rtl"] .pricing-plan-title-wrapper {
+        margin-bottom: 20px !important;
+      }
+
+      html[dir="rtl"] .section-title {
+        font-size: 28px !important;
+        line-height: 1.2 !important;
+        margin-bottom: 20px !important;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      html[dir="rtl"] .pricing-plan-tabs-menu {
+        margin-top: 25px !important;
+        width: 95% !important;
+      }
+
+      html[dir="rtl"] .section-title {
+        font-size: 24px !important;
+      }
     }
 
     .pricing-plan-tabs {
