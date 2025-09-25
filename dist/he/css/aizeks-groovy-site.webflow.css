@@ -11424,23 +11424,3 @@ figure {
 .w-dropdown.menu-dropdown-wrapper:hover::before {
   pointer-events: all;
 }
-
-/* RTL DROPDOWN POSITIONING FIX FOR HEBREW */
-/* Fix dropdown positioning in RTL layout to appear below menu item */
-html[lang="he"] .dropdown-column-wrapper-3 {
-  left: 50% !important;
-  right: auto !important;
-  transform: translateX(-50%) !important;
-}
-
-/* Ensure dropdown content flows RTL */
-html[lang="he"] .dropdown-pd {
-  direction: rtl !important;
-  text-align: right !important;
-}
-
-/* RTL support for dropdown items */
-html[lang="he"] .dropdown-menu-text-link-block {
-  direction: rtl !important;
-  text-align: right !important;
-}

@@ -116,7 +116,9 @@ class TeachersDetailsComponent {
         this.setText('.entity-breadcrumb-title', teacher.full_name);
 
         // Hero section - ALL from database
-        this.setText('.entity-details-hero-title', teacher.full_name);
+        // Clean display name by removing "ד"ר" prefix for better UI
+        const displayName = teacher.full_name ? teacher.full_name.replace(/^ד"ר\s+/, '').trim() : '';
+        this.setText('.entity-details-hero-title', displayName);
         this.setText('.entity-professional-title', teacher.professional_title);
         this.setImage('.entity-profile-image', teacher.profile_image_url, teacher.full_name);
 
@@ -218,8 +220,6 @@ class TeachersDetailsComponent {
                     }
                 }
 
-                // Build the experience item HTML
-                const companyText = company ? ` • ${company}` : '';
                 // Translate experience content
                 const translatedTitle = this.translateDynamicContent(title, this.locale);
                 const translatedCompany = company ? this.translateDynamicContent(company, this.locale) : '';
@@ -604,5 +604,5 @@ function initTeachersDetailsComponent() {
 // Export to window for external access
 window.TeachersDetailsComponent = TeachersDetailsComponent;
 
-// Start the component
-initTeachersDetailsComponent();
+// Don't auto-initialize - let the page control initialization
+// initTeachersDetailsComponent();

@@ -156,31 +156,6 @@
   pointer-events: all;
 }
 
-/* HEBREW RTL DROPDOWN POSITIONING FIX - MAXIMUM SPECIFICITY */
-/* Use multiple selectors for maximum CSS specificity override */
-html[lang="he"] .w-dropdown-list.dropdown-column-wrapper-3,
-html[lang="he"] .dropdown-column-wrapper-3,
-html[lang="he"] .menu-dropdown-wrapper .dropdown-column-wrapper-3,
-html[lang="he"] .w-dropdown .dropdown-column-wrapper-3 {
-  left: 50% !important;
-  right: auto !important;
-  transform: translateX(-50%) !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-}
-
-/* Hebrew RTL text direction */
-html[lang="he"] .dropdown-pd {
-  direction: rtl !important;
-  text-align: right !important;
-}
-
-/* Hebrew RTL dropdown items */
-html[lang="he"] .dropdown-menu-text-link-block {
-  direction: rtl !important;
-  text-align: right !important;
-}
-
 .dropdown-pd {
   background-color: rgba(5, 5, 26, 0.95);
   backdrop-filter: blur(20px);

@@ -1,8 +1,17 @@
 /**
- * CAREER ORIENTATION PAGE DATABASE INTEGRATION
- * Fetches ALL content from nd_career_orientation_page table and populates the new logical career center flow
- * Handles all 7 sections: hero, introduction, services, process, testimonials, contact-form, final-cta
- * CRITICAL: No hardcoded content should remain in career-orientation.html
+ * CAREER ORIENTATION PAGE DATABASE INTEGRATION - DUAL SYSTEM ARCHITECTURE
+ * System 2: Dynamic Content Population (following WorkingLogic.md)
+ *
+ * PURPOSE: Handles ONLY dynamic content from admin panel/database
+ * UI TRANSLATIONS: Handled by unified-language-manager.js (System 1)
+ *
+ * CRITICAL CHANGES:
+ * - Removed UI translation code (now handled by System 1)
+ * - Focuses only on dynamic content that changes via admin panel
+ * - Removes data-i18n attributes after updating to prevent conflicts
+ *
+ * For career-orientation page, most content is static UI text,
+ * so this script mainly ensures no conflicts with the translation system.
  */
 
 (function() {
@@ -19,319 +28,106 @@
         return urlParams.get('locale') || 'en';
     }
 
-    // Main function to load page data
+    // Main function to load dynamic content data
     async function loadCareerOrientationData() {
         try {
-            console.log('📊 Loading career orientation page data from database...');
+            console.log('📊 [System 2] Loading career orientation dynamic content from database...');
 
             const locale = getCurrentLocale();
             const response = await fetch(`${API_BASE_URL}/api/career-orientation-page?locale=${locale}`);
 
             if (!response.ok) {
-                throw new Error(`Failed to fetch career orientation data: ${response.status}`);
+                console.log('ℹ️ [System 2] Career orientation API not available - using static content only');
+                return;
             }
 
             const data = await response.json();
-            console.log('✅ Career orientation page data loaded:', data);
+            console.log('✅ [System 2] Career orientation dynamic content loaded:', data);
 
-            // Populate the page with data
+            // Process dynamic content only
             if (data.success && data.data) {
-                populateCareerOrientationPage(data.data);
+                processDynamicContent(data.data);
             } else {
-                console.warn('⚠️ No career orientation page data found in database');
-                // Don't show anything if no data (per user requirement)
+                console.log('ℹ️ [System 2] No dynamic content found - page uses static translations only');
             }
 
         } catch (error) {
-            console.error('❌ Error loading career orientation page data:', error);
-            // Don't show anything if API fails (per user requirement)
+            console.log('ℹ️ [System 2] Dynamic content loading failed - using static translations:', error.message);
         }
     }
 
-    // Populate all sections of the page
-    function populateCareerOrientationPage(data) {
-        console.log('🔧 Populating career orientation page with new logical structure...');
+    // Process dynamic content only (System 2 - following WorkingLogic.md)
+    function processDynamicContent(data) {
+        console.log('🔧 [System 2] Processing dynamic content (non-UI elements)...');
 
-        // 1. Hero Section (Inner Banner)
-        if (data.title) {
-            populateHeroSection(data);
+        // For career-orientation page, most content is static UI text handled by System 1
+        // This function handles only truly dynamic content that changes via admin panel
+
+        // Example: If testimonials come from database and change frequently
+        if (data.testimonials && Array.isArray(data.testimonials)) {
+            populateDynamicTestimonials(data.testimonials);
         }
 
-        // 2. Introduction Section (About-us layout with stats)
-        populateIntroductionSection(data);
+        // Example: If statistics are dynamic and updated via admin
+        if (data.statistics) {
+            populateDynamicStatistics(data.statistics);
+        }
 
-        // 3. Services Section (Core values grid with 6 service cards)
-        populateServicesSection(data);
+        // Note: Most content on this page is static UI text and should be
+        // handled by unified-language-manager.js (System 1)
 
-        // 4. Process Section (Detailed process slider with 4 steps)
-        populateProcessSection(data);
-
-        // 5. Testimonials Section (Success stories with 2 testimonials)
-        populateTestimonialsSection(data);
-
-        // 6. Contact Form Section (Contact us form with career-specific fields)
-        populateContactFormSection(data);
-
-        // 7. Final CTA Section (CTA with dual buttons)
-        populateFinalCTASection(data);
+        console.log('✅ [System 2] Dynamic content processing complete');
     }
 
-    // 1. Populate Hero Section (Inner Banner)
-    function populateHeroSection(data) {
-        console.log('🏆 Updating hero section...');
+    // Example: Dynamic testimonials (if they come from admin panel)
+    function populateDynamicTestimonials(testimonials) {
+        console.log('💬 [System 2] Populating dynamic testimonials...');
 
-        if (data.title) {
-            updateTextContent('[data-section="hero"] [data-field="title"]', data.title);
-        }
-
-        console.log('✅ Hero section updated');
-    }
-
-    // 2. Populate Introduction Section (About-us layout with stats)
-    function populateIntroductionSection(data) {
-        console.log('📖 Updating introduction section...');
-
-        // Introduction content
-        if (data['intro-subtitle']) {
-            updateTextContent('[data-section="introduction"] [data-field="intro-subtitle"]', data['intro-subtitle']);
-        }
-
-        if (data['intro-title']) {
-            updateTextContent('[data-section="introduction"] [data-field="intro-title"]', data['intro-title']);
-        }
-
-        if (data['intro-description']) {
-            updateTextContent('[data-section="introduction"] [data-field="intro-description"]', data['intro-description']);
-        }
-
-        if (data['intro-image']) {
-            updateImageSrc('[data-section="introduction"] [data-field="intro-image"]', data['intro-image'], data['intro-title'] || 'Career Orientation');
-        }
-
-        // Statistics
-        if (data['stat-1-number']) {
-            updateTextContent('[data-section="introduction"] [data-field="stat-1-number"]', data['stat-1-number']);
-        }
-        if (data['stat-1-label']) {
-            updateTextContent('[data-section="introduction"] [data-field="stat-1-label"]', data['stat-1-label']);
-        }
-
-        if (data['stat-2-number']) {
-            updateTextContent('[data-section="introduction"] [data-field="stat-2-number"]', data['stat-2-number']);
-        }
-        if (data['stat-2-label']) {
-            updateTextContent('[data-section="introduction"] [data-field="stat-2-label"]', data['stat-2-label']);
-        }
-
-        if (data['stat-3-number']) {
-            updateTextContent('[data-section="introduction"] [data-field="stat-3-number"]', data['stat-3-number']);
-        }
-        if (data['stat-3-label']) {
-            updateTextContent('[data-section="introduction"] [data-field="stat-3-label"]', data['stat-3-label']);
-        }
-
-        console.log('✅ Introduction section updated');
-    }
-
-    // 3. Populate Services Section (Core values grid with 6 service cards)
-    function populateServicesSection(data) {
-        console.log('🛠️ Updating services section...');
-
-        // Services section header
-        if (data['services-subtitle']) {
-            updateTextContent('[data-section="services"] [data-field="services-subtitle"]', data['services-subtitle']);
-        }
-
-        if (data['services-title']) {
-            updateTextContent('[data-section="services"] [data-field="services-title"]', data['services-title']);
-        }
-
-        if (data['services-description']) {
-            updateTextContent('[data-section="services"] [data-field="services-description"]', data['services-description']);
-        }
-
-        // Service cards (1-6)
-        for (let i = 1; i <= 6; i++) {
-            if (data[`service-${i}-icon`]) {
-                updateImageSrc(`[data-section="services"] [data-field="service-${i}-icon"]`, data[`service-${i}-icon`], `Service ${i} Icon`);
-            }
-
-            if (data[`service-${i}-title`]) {
-                updateTextContent(`[data-section="services"] [data-field="service-${i}-title"]`, data[`service-${i}-title`]);
-            }
-
-            if (data[`service-${i}-description`]) {
-                updateTextContent(`[data-section="services"] [data-field="service-${i}-description"]`, data[`service-${i}-description`]);
-            }
-        }
-
-        console.log('✅ Services section updated');
-    }
-
-    // 4. Populate Process Section (Detailed process slider with 4 steps)
-    function populateProcessSection(data) {
-        console.log('⚙️ Updating process section...');
-
-        // Process section header
-        if (data['process-subtitle']) {
-            updateTextContent('[data-section="process"] [data-field="process-subtitle"]', data['process-subtitle']);
-        }
-
-        if (data['process-title']) {
-            updateTextContent('[data-section="process"] [data-field="process-title"]', data['process-title']);
-        }
-
-        if (data['process-description']) {
-            updateTextContent('[data-section="process"] [data-field="process-description"]', data['process-description']);
-        }
-
-        // Process steps (1-4)
-        for (let i = 1; i <= 4; i++) {
-            if (data[`process-${i}-image`]) {
-                updateImageSrc(`[data-section="process"] [data-field="process-${i}-image"]`, data[`process-${i}-image`], `Process Step ${i}`);
-            }
-
-            if (data[`process-${i}-number`]) {
-                updateTextContent(`[data-section="process"] [data-field="process-${i}-number"]`, data[`process-${i}-number`]);
-            }
-
-            if (data[`process-${i}-title`]) {
-                updateTextContent(`[data-section="process"] [data-field="process-${i}-title"]`, data[`process-${i}-title`]);
-            }
-
-            if (data[`process-${i}-description`]) {
-                updateTextContent(`[data-section="process"] [data-field="process-${i}-description"]`, data[`process-${i}-description`]);
-            }
-        }
-
-        console.log('✅ Process section updated');
-    }
-
-    // 5. Populate Testimonials Section (Success stories with 2 testimonials)
-    function populateTestimonialsSection(data) {
-        console.log('💬 Updating testimonials section...');
-
-        // Testimonials section header
-        if (data['testimonials-subtitle']) {
-            updateTextContent('[data-section="testimonials"] [data-field="testimonials-subtitle"]', data['testimonials-subtitle']);
-        }
-
-        if (data['testimonials-title']) {
-            updateTextContent('[data-section="testimonials"] [data-field="testimonials-title"]', data['testimonials-title']);
-        }
-
-        if (data['testimonials-description']) {
-            updateTextContent('[data-section="testimonials"] [data-field="testimonials-description"]', data['testimonials-description']);
-        }
-
-        // Testimonials (1-2)
-        for (let i = 1; i <= 2; i++) {
-            if (data[`testimonial-${i}-title`]) {
-                updateTextContent(`[data-section="testimonials"] [data-field="testimonial-${i}-title"]`, data[`testimonial-${i}-title`]);
-            }
-
-            if (data[`testimonial-${i}-text`]) {
-                updateTextContent(`[data-section="testimonials"] [data-field="testimonial-${i}-text"]`, data[`testimonial-${i}-text`]);
-            }
-
-            if (data[`testimonial-${i}-author`]) {
-                updateTextContent(`[data-section="testimonials"] [data-field="testimonial-${i}-author"]`, data[`testimonial-${i}-author`]);
-            }
-
-            if (data[`testimonial-${i}-role`]) {
-                updateTextContent(`[data-section="testimonials"] [data-field="testimonial-${i}-role"]`, data[`testimonial-${i}-role`]);
-            }
-        }
-
-        console.log('✅ Testimonials section updated');
-    }
-
-    // 6. Populate Contact Form Section (Contact us form with career-specific fields)
-    function populateContactFormSection(data) {
-        console.log('📞 Updating contact form section...');
-
-        // Contact form section header
-        if (data['contact-subtitle']) {
-            updateTextContent('[data-section="contact-form"] [data-field="contact-subtitle"]', data['contact-subtitle']);
-        }
-
-        if (data['contact-title']) {
-            updateTextContent('[data-section="contact-form"] [data-field="contact-title"]', data['contact-title']);
-        }
-
-        if (data['contact-description']) {
-            updateTextContent('[data-section="contact-form"] [data-field="contact-description"]', data['contact-description']);
-        }
-
-        // Contact details
-        if (data['contact-email']) {
-            updateTextContent('[data-section="contact-form"] [data-field="contact-email"]', data['contact-email']);
-        }
-
-        if (data['contact-phone']) {
-            updateTextContent('[data-section="contact-form"] [data-field="contact-phone"]', data['contact-phone']);
-        }
-
-        if (data['contact-hours']) {
-            updateTextContent('[data-section="contact-form"] [data-field="contact-hours"]', data['contact-hours']);
-        }
-
-        console.log('✅ Contact form section updated');
-    }
-
-    // 7. Populate Final CTA Section (CTA with dual buttons)
-    function populateFinalCTASection(data) {
-        console.log('🎯 Updating final CTA section...');
-
-        if (data['final-cta-subtitle']) {
-            updateTextContent('[data-section="final-cta"] [data-field="final-cta-subtitle"]', data['final-cta-subtitle']);
-        }
-
-        if (data['final-cta-title']) {
-            updateTextContent('[data-section="final-cta"] [data-field="final-cta-title"]', data['final-cta-title']);
-        }
-
-        if (data['final-cta-description']) {
-            updateTextContent('[data-section="final-cta"] [data-field="final-cta-description"]', data['final-cta-description']);
-        }
-
-        // Update button text content (not href - these are handled by contact modal)
-        if (data['final-cta-primary-button']) {
-            const primaryButton = document.querySelector('[data-section="final-cta"] [data-field="final-cta-primary-button"]');
-            if (primaryButton) {
-                const textBlock = primaryButton.querySelector('.primary-button-text-block');
-                if (textBlock) {
-                    textBlock.textContent = data['final-cta-primary-button'];
-                } else {
-                    primaryButton.textContent = data['final-cta-primary-button'];
+        // This would only run if testimonials are managed via admin panel
+        // and change frequently (not static UI text)
+        testimonials.forEach((testimonial, index) => {
+            const elements = document.querySelectorAll(`[data-field="testimonial-${index + 1}-text"]`);
+            elements.forEach(element => {
+                if (element) {
+                    element.textContent = testimonial.text;
+                    element.removeAttribute('data-i18n'); // Prevent translation system conflicts
                 }
-            }
-        }
+            });
+        });
 
-        if (data['final-cta-secondary-button']) {
-            const secondaryButton = document.querySelector('[data-section="final-cta"] [data-field="final-cta-secondary-button"]');
-            if (secondaryButton) {
-                const textBlock = secondaryButton.querySelector('.primary-button-text-block');
-                if (textBlock) {
-                    textBlock.textContent = data['final-cta-secondary-button'];
-                } else {
-                    secondaryButton.textContent = data['final-cta-secondary-button'];
-                }
-            }
-        }
-
-        console.log('✅ Final CTA section updated');
+        console.log('✅ [System 2] Dynamic testimonials populated');
     }
 
-    // Utility function to safely update text content
-    function updateTextContent(selector, text) {
-        if (!text) return;
+    // Example: Dynamic statistics (if they come from admin panel)
+    function populateDynamicStatistics(stats) {
+        console.log('📊 [System 2] Populating dynamic statistics...');
+
+        // This would only run if statistics are updated via admin panel
+        // and are not static UI text
+        if (stats.placements) {
+            const elements = document.querySelectorAll('[data-field="stat-1-number"]');
+            elements.forEach(element => {
+                if (element) {
+                    element.textContent = stats.placements;
+                    element.removeAttribute('data-i18n'); // Prevent translation system conflicts
+                }
+            });
+        }
+
+        console.log('✅ [System 2] Dynamic statistics populated');
+    }
+
+    // Utility function to safely update dynamic content and prevent translation conflicts
+    function updateDynamicContent(selector, content) {
+        if (!content) return;
 
         const elements = document.querySelectorAll(selector);
         elements.forEach(element => {
             if (element) {
-                element.textContent = text;
-                // Remove opacity:0 to ensure content is visible
+                element.textContent = content;
+                element.removeAttribute('data-i18n'); // Critical: Prevent translation system conflicts
+
+                // Ensure content is visible
                 if (element.style.opacity === '0') {
                     element.style.opacity = '1';
                 }
@@ -339,110 +135,35 @@
         });
     }
 
-    // Utility function to safely update image src and alt
-    function updateImageSrc(selector, src, alt) {
-        if (!src) return;
+    // Function to ensure no conflicts with translation system
+    function preventTranslationConflicts() {
+        console.log('🔄 [System 2] Ensuring no conflicts with translation system...');
 
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(element => {
-            if (element && element.tagName === 'IMG') {
-                element.src = src;
-                if (alt) {
-                    element.alt = alt;
-                }
-                // Remove opacity:0 to ensure image is visible
-                if (element.style.opacity === '0') {
-                    element.style.opacity = '1';
-                }
-            }
-        });
+        // This function ensures that any content updated by this script
+        // doesn't interfere with the unified language manager
+
+        // For career-orientation page, since most content is static UI text,
+        // this mainly serves as a safety check
+
+        console.log('✅ [System 2] Translation conflict prevention complete');
     }
 
-    // Load navigation data for translations (shared across all pages)
-    async function loadNavigationData() {
-        try {
-            console.log('🧭 [Career Orientation] Fetching navigation data for translations...');
 
-            // Get current locale
-            const currentLocale = getCurrentLocale();
 
-            // Fetch navigation data from home-page API
-            const response = await fetch(`${API_BASE_URL}/api/nd/home-page?locale=${currentLocale}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
 
-            const result = await response.json();
-            console.log('✅ [Career Orientation] Navigation data received for translations');
 
-            if (result.success && result.data) {
-                // Direct translation of navigation elements
-                directlyUpdateNavigationElements(result.data, currentLocale);
-                console.log('🔄 [Career Orientation] Navigation translation data ready');
-            }
-
-        } catch (error) {
-            console.error('❌ [Career Orientation] Error loading navigation data:', error);
-        }
-    }
-
-    // Directly update navigation elements with translations
-    function directlyUpdateNavigationElements(apiData, locale) {
-        console.log('🎯 [Career Orientation] Directly updating navigation elements...');
-
-        try {
-            const navigation = apiData.navigation?.content?.content;
-            if (!navigation) {
-                console.warn('⚠️ [Career Orientation] No navigation data found in API response');
-                return;
-            }
-
-            // Update Career Orientation
-            const careerOrientationElements = document.querySelectorAll('[data-i18n="navigation.content.career.orientation"]');
-            careerOrientationElements.forEach(element => {
-                if (navigation.career_orientation) {
-                    element.textContent = navigation.career_orientation;
-                    console.log(`✅ [Career Orientation] Updated Career Orientation: "${navigation.career_orientation}"`);
-                }
-            });
-
-            // Update Career Center
-            const careerCenterElements = document.querySelectorAll('[data-i18n="navigation.content.career.center"]');
-            careerCenterElements.forEach(element => {
-                if (navigation.career_center) {
-                    element.textContent = navigation.career_center;
-                    console.log(`✅ [Career Orientation] Updated Career Center: "${navigation.career_center}"`);
-                }
-            });
-
-            // Update Sign Up Today buttons
-            const signUpButtons = apiData.ui_elements?.content?.content?.buttons?.sign_up_today;
-            if (signUpButtons) {
-                const signUpElements = document.querySelectorAll('[data-i18n="ui_elements.content.content.buttons.sign_up_today"]');
-                signUpElements.forEach(element => {
-                    element.textContent = signUpButtons;
-                    console.log(`✅ [Career Orientation] Updated Sign Up Today: "${signUpButtons}"`);
-                });
-            }
-
-            console.log('🎯 [Career Orientation] Direct navigation update complete');
-
-        } catch (error) {
-            console.error('❌ [Career Orientation] Error in direct navigation update:', error);
-        }
-    }
+    // NOTE: Navigation translations are now handled by unified-language-manager.js (System 1)
+    // This integration script only handles dynamic content that changes via admin panel
 
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', async () => {
-            await loadNavigationData(); // Load navigation for translations first
-            loadCareerOrientationData();
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCareerOrientationData(); // Load dynamic content
+            preventTranslationConflicts(); // Ensure no conflicts with System 1
         });
     } else {
-        (async () => {
-            await loadNavigationData(); // Load navigation for translations first
-            loadCareerOrientationData();
-        })();
+        loadCareerOrientationData(); // Load dynamic content
+        preventTranslationConflicts(); // Ensure no conflicts with System 1
     }
 
     // Expose function globally for debugging

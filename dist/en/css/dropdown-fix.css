@@ -1,0 +1,75 @@
+/* Fix for dropdown alignment across all pages */
+
+/* Fix dropdown alignment */
+.menu-dropdown-wrapper {
+  position: relative !important;
+}
+
+.dropdown-column-wrapper-3 {
+  position: absolute !important;
+  top: 100% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin-top: 10px !important;
+  min-width: 200px !important;
+  background: rgba(5, 5, 26, 0.98) !important;
+  backdrop-filter: blur(20px) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Ensure dropdown is above other elements */
+.w-dropdown-list {
+  z-index: 9999 !important;
+}
+
+/* Fix dropdown arrow display */
+.dropdown-toggle-arrow-2::after {
+  content: '▼' !important;
+  font-family: Arial, sans-serif !important;
+  font-size: 10px !important;
+  display: inline-block !important;
+  margin-left: 5px !important;
+  transition: transform 0.3s ease !important;
+}
+
+.dropdown-toggle-arrow-2::before {
+  content: '' !important;
+  display: none !important;
+}
+
+/* Rotate arrow when dropdown is open */
+.w-dropdown-toggle.w--open .dropdown-toggle-arrow-2::after {
+  transform: rotate(180deg) !important;
+}
+
+/* Fix dropdown visibility on hover */
+.menu-dropdown-wrapper:hover .w-dropdown-list,
+.w-dropdown:hover .w-dropdown-list,
+.w-dropdown-list.w--open {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Dark theme for dropdown */
+.dropdown-list {
+  background: rgba(5, 5, 26, 0.98) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+/* Dropdown link styles */
+.dropdown-menu-text-link-block {
+  color: rgba(255, 255, 255, 0.8) !important;
+  padding: 10px 15px !important;
+  display: block !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.dropdown-menu-text-link-block:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}

@@ -1,0 +1,64 @@
+/* Remove any placeholder images or problematic elements from Pages dropdown */
+
+/* Hide any elements that might contain "[Image #1]" text */
+.dropdown-list *[class*="image"]:empty,
+.dropdown-list *:empty:before,
+.dropdown-list *:empty:after {
+    display: none !important;
+}
+
+/* Hide any elements with background images in dropdown */
+.dropdown-list *[style*="background-image"] {
+    background-image: none !important;
+}
+
+/* Remove any pseudo-elements that might show placeholder content */
+.dropdown-list .dropdown-grid *:before,
+.dropdown-list .dropdown-grid *:after {
+    content: none !important;
+    display: none !important;
+}
+
+/* Hide any empty divs or spans that might show placeholder text */
+.dropdown-list .dropdown-grid div:empty,
+.dropdown-list .dropdown-grid span:empty {
+    display: none !important;
+}
+
+/* Specific targeting for any image containers in dropdown */
+.dropdown-grid .dropdown-image,
+.dropdown-grid .image-placeholder,
+.dropdown-grid [class*="img"],
+.dropdown-grid [class*="Image"] {
+    display: none !important;
+}
+
+/* Remove any background images from dropdown columns */
+.dropdown-singel-wrapper {
+    background-image: none !important;
+}
+
+.dropdown-singel-wrapper:before,
+.dropdown-singel-wrapper:after {
+    display: none !important;
+}
+
+/* Hide any elements that might contain the placeholder text */
+.dropdown-list *:contains("[Image #1]"),
+.dropdown-list *[alt*="Image"],
+.dropdown-list *[title*="Image"] {
+    display: none !important;
+}
+
+/* Clean up any broken image elements */
+.dropdown-list img[src=""],
+.dropdown-list img[src*="placeholder"],
+.dropdown-list img:not([src]) {
+    display: none !important;
+}
+
+/* Remove any Webflow CMS placeholder elements */
+.dropdown-list .w-dyn-empty,
+.dropdown-list .w-condition-invisible {
+    display: none !important;
+}

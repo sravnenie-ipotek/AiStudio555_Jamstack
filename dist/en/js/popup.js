@@ -113,8 +113,8 @@ class ContactPopup {
               <div class="form-submit-wrapper">
                 <button type="submit" class="primary-button form-submit-button">
                   <div class="primary-button-text-wrap">
-                    <div class="primary-button-text-block">Send Message</div>
-                    <div class="primary-button-text-block is-text-absolute">Send Message</div>
+                    <div class="primary-button-text-block" data-i18n="contact.content.submit_button">Send Message</div>
+                    <div class="primary-button-text-block is-text-absolute" data-i18n="contact.content.submit_button">Send Message</div>
                   </div>
                 </button>
               </div>
@@ -122,7 +122,7 @@ class ContactPopup {
               <!-- Loading State -->
               <div id="formLoading" class="form-loading" style="display: none;">
                 <div class="loading-spinner"></div>
-                <span>Sending message...</span>
+                <span data-i18n="contact.content.sending_message">Sending message...</span>
               </div>
 
               <!-- Success Message -->

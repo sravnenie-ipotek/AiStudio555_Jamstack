@@ -922,7 +922,7 @@
             </div>
             
             <button type="submit" class="form-submit-btn">
-              <span class="btn-text">Send Message</span>
+              <span class="btn-text" data-i18n="contact.content.submit_button">Send Message</span>
               <span class="btn-loader" style="display: none;">
                 <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
                   <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50" stroke-dashoffset="10">
@@ -1022,7 +1022,7 @@
           </div>
           
           <button type="submit" class="form-submit-btn">
-            <span class="btn-text">Send Message</span>
+            <span class="btn-text" data-i18n="contact.content.submit_button">Send Message</span>
             <span class="btn-loader" style="display: none;">
               <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
                 <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50" stroke-dashoffset="10">

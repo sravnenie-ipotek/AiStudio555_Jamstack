@@ -31,8 +31,32 @@ class SharedTeacherCard {
         } else {
             this.init();
         }
+
+        // Listen for language changes to update teacher cards dynamically
+        this.setupLanguageListener();
     }
 
+    /**
+     * Setup language change listener for dynamic updates
+     */
+    setupLanguageListener() {
+        console.log(`🌍 [SharedTeacherCard-${this.instanceId}] Setting up language change listener...`);
+
+        window.addEventListener('languageChanged', (event) => {
+            const newLocale = event.detail?.locale;
+            console.log(`🔄 [SharedTeacherCard-${this.instanceId}] Language changed to: ${newLocale}`);
+
+            // Only refresh if we're initialized to avoid race conditions
+            if (this.initialized && !this.rendering) {
+                console.log(`📊 [SharedTeacherCard-${this.instanceId}] Refreshing teacher cards for new locale...`);
+                this.refresh();
+            } else {
+                console.log(`⏳ [SharedTeacherCard-${this.instanceId}] Skipping refresh - not ready (initialized: ${this.initialized}, rendering: ${this.rendering})`);
+            }
+        });
+
+        console.log(`✅ [SharedTeacherCard-${this.instanceId}] Language listener setup complete`);
+    }
 
     /**
      * Initialize the component
@@ -526,11 +550,20 @@ class SharedTeacherCard {
 
 
     /**
-     * Public method to refresh teachers
+     * Public method to refresh teachers (now handles language changes)
      */
     async refresh() {
+        console.log(`🔄 [SharedTeacherCard-${this.instanceId}] Refreshing teacher cards...`);
+
         await this.loadTeachers();
         this.renderTeachers();
+
+        // DUAL-SYSTEM: Remove data-i18n from dynamic content after refresh
+        setTimeout(() => {
+            this.removeDynamicDataI18n();
+        }, 200);
+
+        console.log(`✅ [SharedTeacherCard-${this.instanceId}] Teacher cards refreshed successfully`);
     }
 
     /**
