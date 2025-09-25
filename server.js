@@ -46,20 +46,20 @@ app.get('/en/', (req, res) => {
 
 // PERMANENT FIX: Always serve main home.html for /he, not dist version
 app.get('/he', (req, res) => {
-  res.sendFile(path.join(__dirname, 'home.html'));
+  res.sendFile(path.join(__dirname, 'dist/he/index.html'));
 });
 
 app.get('/he/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'home.html'));
+  res.sendFile(path.join(__dirname, 'dist/he/index.html'));
 });
 
-// PERMANENT FIX: Always serve main home.html for /ru, not dist version
+// FIXED: Serve properly built Russian file with lang="ru"
 app.get('/ru', (req, res) => {
-  res.sendFile(path.join(__dirname, 'home.html'));
+  res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
 });
 
 app.get('/ru/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'home.html'));
+  res.sendFile(path.join(__dirname, 'dist/ru/index.html'));
 });
 
 // Handle language-specific page routes (courses, pricing, etc.)
