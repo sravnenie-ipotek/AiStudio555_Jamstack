@@ -27,7 +27,7 @@
                 <div class="shared-course-card-meta-wrap">
                     <div class="shared-course-card-meta-item">
                         <img loading="lazy" src="images/Courses-Video-Session--Time-Icon.svg" alt="Lessons" class="shared-course-card-meta-icon">
-                        <div class="shared-course-card-meta-text">{{COURSE_LESSONS_COUNT}} Lessons</div>
+                        <div class="shared-course-card-meta-text">{{COURSE_LESSONS_COUNT}} {{LESSONS_TEXT}}</div>
                     </div>
                     <div class="shared-course-card-meta-item">
                         <img loading="lazy" src="images/Courses-Video-Session--Time-Icon2.svg" alt="Duration" class="shared-course-card-meta-icon">
@@ -84,6 +84,71 @@
                 'he': 'פרטי הקורס'
             };
 
+            const lessonsTexts = {
+                'en': 'Lessons',
+                'ru': 'Уроков',
+                'he': 'שיעורים'
+            };
+
+            const weeksTexts = {
+                'en': 'weeks',
+                'ru': 'недель',
+                'he': 'שבועות'
+            };
+
+            const categoryTexts = {
+                'en': {
+                    'App Development': 'App Development',
+                    'Web Development': 'Web Development',
+                    'Machine Learning': 'Machine Learning',
+                    'Data Science': 'Data Science',
+                    'Cloud Computing': 'Cloud Computing',
+                    'UI/UX Design': 'UI/UX Design',
+                    'General': 'General'
+                },
+                'ru': {
+                    'App Development': 'Разработка Приложений',
+                    'Web Development': 'Веб-разработка',
+                    'Machine Learning': 'Машинное Обучение',
+                    'Data Science': 'Наука о Данных',
+                    'Cloud Computing': 'Облачные Вычисления',
+                    'UI/UX Design': 'UI/UX Дизайн',
+                    'General': 'Общий'
+                },
+                'he': {
+                    'App Development': 'פיתוח אפליקציות',
+                    'Web Development': 'פיתוח אתרים',
+                    'Machine Learning': 'למידת מכונה',
+                    'Data Science': 'מדע הנתונים',
+                    'Cloud Computing': 'מחשוב ענן',
+                    'UI/UX Design': 'עיצוב UI/UX',
+                    'General': 'כללי'
+                }
+            };
+
+            // Translate duration if needed
+            const translateDuration = (duration, locale) => {
+                if (!duration || locale === 'en') return duration;
+
+                const durationStr = duration.toString();
+                let translatedDuration = durationStr;
+
+                // Replace "weeks" with localized version
+                if (durationStr.includes('weeks')) {
+                    const weeksText = weeksTexts[locale] || weeksTexts['en'];
+                    translatedDuration = durationStr.replace('weeks', weeksText);
+                }
+
+                return translatedDuration;
+            };
+
+            // Translate category
+            const translateCategory = (category, locale) => {
+                const originalCategory = category || 'General';
+                if (locale === 'en' || !categoryTexts[locale]) return originalCategory;
+                return categoryTexts[locale][originalCategory] || originalCategory;
+            };
+
             // Prepare course data with fallbacks
             const courseData = {
                 COURSE_ID: course.id || 0,
@@ -94,12 +159,13 @@
                 COURSE_RATING_STARS: generateStarRating(course.rating || 5),
                 COURSE_REVIEWS_COUNT: course.reviews_count || 0,
                 COURSE_LESSONS_COUNT: course.lessons_count || 0,
-                COURSE_DURATION: course.duration || '8 weeks',
-                COURSE_CATEGORY: course.category || 'General',
+                COURSE_DURATION: translateDuration(course.duration || '8 weeks', locale),
+                COURSE_CATEGORY: translateCategory(course.category, locale),
                 COURSE_CATEGORY_COLOR: getCourseColorByCategory(course.category),
                 COURSE_INSTRUCTOR: course.instructor || 'Expert Instructor',
                 COURSE_PRICE: course.price ? `$${course.price}` : 'Free',
                 COURSE_BUTTON_TEXT: buttonTexts[locale] || buttonTexts['en'],
+                LESSONS_TEXT: lessonsTexts[locale] || lessonsTexts['en'],
                 DATA_W_ID: dataWId
             };
 
@@ -139,6 +205,24 @@
         courseItem.className = 'featured-courses-collection-item w-dyn-item';
         courseItem.setAttribute('role', 'listitem');
 
+        // Get locale for fallback card
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlLocale = urlParams.get('locale') || urlParams.get('lang');
+        const savedLocale = localStorage.getItem('preferred_locale');
+        const locale = urlLocale || savedLocale || 'en';
+
+        const buttonTexts = {
+            'en': 'Course Details',
+            'ru': 'Детали Курса',
+            'he': 'פרטי הקורס'
+        };
+
+        const lessonsTexts = {
+            'en': 'Lessons',
+            'ru': 'Уроков',
+            'he': 'שיעורים'
+        };
+
         // Get category color based on course category
         const categoryColor = getCourseColorByCategory(course.category);
 
@@ -167,7 +251,7 @@
                             <div class="courses-video-session-time">
                                 <img loading="lazy" src="images/Courses-Video-Session--Time-Icon.svg" alt="" class="courses-video-session-time-icon">
                                 <div class="courses-video-session-time-text">
-                                    ${course.lessons_count || 0} Lessons
+                                    ${course.lessons_count || 0} ${lessonsTexts[locale] || lessonsTexts['en']}
                                 </div>
                             </div>
                             <div class="courses-video-session-time">
@@ -182,8 +266,8 @@
                                class="primary-button secondary w-inline-block"
                                style="background-color: rgba(255,255,255,0); color: rgb(255,255,255)">
                                 <div class="primary-button-text-wrap">
-                                    <div class="primary-button-text-block">Course Details</div>
-                                    <div class="primary-button-text-block is-text-absolute">Course Details</div>
+                                    <div class="primary-button-text-block">${buttonTexts[locale] || buttonTexts['en']}</div>
+                                    <div class="primary-button-text-block is-text-absolute">${buttonTexts[locale] || buttonTexts['en']}</div>
                                 </div>
                             </a>
                         </div>
@@ -191,7 +275,7 @@
                 </div>
                 <div class="featured-courses-categories-tag"
                      style="background-color: ${categoryColor}; color: rgb(255,255,255)">
-                    ${course.category}
+                    ${categoryTexts[locale] && categoryTexts[locale][course.category] ? categoryTexts[locale][course.category] : course.category}
                 </div>
             </div>
         `;

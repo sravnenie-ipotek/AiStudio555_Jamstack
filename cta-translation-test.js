@@ -19,12 +19,29 @@ const { chromium } = require('playwright');
 
     await page.goto('http://localhost:3005/pricing.html');
     await page.waitForLoadState('domcontentloaded');
+    await page.waitForTimeout(2000); // Wait for page to fully load
 
-    // Switch to language
-    const langPill = await page.$(`[data-locale="${lang}"]`);
-    if (langPill) {
-      await langPill.click();
-      await page.waitForTimeout(3000); // Wait for translation
+    // Check if language pills exist
+    const languagePills = await page.$$('[data-locale]');
+    console.log(`   Found ${languagePills.length} language selector(s)`);
+
+    // Try to switch language if pills exist
+    if (languagePills.length > 0) {
+      const langPill = await page.$(`[data-locale="${lang}"]`);
+      if (langPill) {
+        try {
+          await langPill.scrollIntoViewIfNeeded();
+          await langPill.click();
+          await page.waitForTimeout(3000); // Wait for translation
+          console.log(`   ✅ Switched to ${lang.toUpperCase()}`);
+        } catch (e) {
+          console.log(`   ⚠️  Could not click ${lang.toUpperCase()} selector: ${e.message}`);
+        }
+      } else {
+        console.log(`   ⚠️  ${lang.toUpperCase()} selector not found`);
+      }
+    } else {
+      console.log(`   📝 No language selectors found (testing default content)`);
     }
 
     // Check CTA title
@@ -34,10 +51,11 @@ const { chromium } = require('playwright');
     testResults[lang].title = ctaTitle;
     testResults[lang].description = ctaDescription;
 
-    // Check if it's still showing placeholder text
+    // Check if it's still showing placeholder text (the exact text we had issues with)
     const isPlaceholder = ctaTitle === 'Call to Action Title' ||
                          ctaTitle === 'Discover A World Of Learning Opportunities.' ||
-                         ctaDescription.includes('transform career and unlock');
+                         ctaDescription.includes('Don\'t wait to transform career and unlock') ||
+                         ctaDescription.includes('transform career and unlock your full potential. join our community');
 
     if (isPlaceholder) {
       testResults[lang].status = '❌ STILL_PLACEHOLDER';

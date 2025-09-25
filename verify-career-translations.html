@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Career Orientation Translation Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .language-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #5a67d8;
+        }
+        button.active {
+            background: #4c51bf;
+        }
+        .test-item {
+            padding: 10px;
+            margin: 10px 0;
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+        .test-item strong {
+            color: #333;
+            display: inline-block;
+            min-width: 200px;
+        }
+        .test-value {
+            color: #666;
+            font-style: italic;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e6fffa;
+            border-radius: 5px;
+            border: 1px solid #81e6d9;
+        }
+        .error {
+            background: #fed7d7;
+            border-color: #fc8181;
+            color: #c53030;
+        }
+        .success {
+            background: #c6f6d5;
+            border-color: #9ae6b4;
+            color: #22543d;
+        }
+    </style>
+</head>
+<body>
+    <h1>Career Orientation Translation System Test</h1>
+
+    <div class="test-section">
+        <h2>Language Selector</h2>
+        <div class="language-buttons">
+            <button onclick="testLanguage('en')" id="btn-en">English (EN)</button>
+            <button onclick="testLanguage('ru')" id="btn-ru">Russian (RU)</button>
+            <button onclick="testLanguage('he')" id="btn-he">Hebrew (HE)</button>
+        </div>
+
+        <div id="current-language" class="status">
+            Current Language: <strong>EN</strong>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Elements</h2>
+        <div id="test-results">
+            <!-- Hero Section -->
+            <div class="test-item">
+                <strong>Hero Title:</strong>
+                <span class="test-value" data-i18n="hero.content.title">Career Orientation Center</span>
+            </div>
+
+            <!-- Introduction Section -->
+            <div class="test-item">
+                <strong>Introduction Subtitle:</strong>
+                <span class="test-value" data-i18n="introduction.content.subtitle">Your Career Journey Partner</span>
+            </div>
+
+            <div class="test-item">
+                <strong>Introduction Title:</strong>
+                <span class="test-value" data-i18n="introduction.content.title">Navigate Your Professional Future With Expert Guidance</span>
+            </div>
+
+            <!-- Services Section -->
+            <div class="test-item">
+                <strong>Services Title:</strong>
+                <span class="test-value" data-i18n="services.content.title">Comprehensive Career Support Services</span>
+            </div>
+
+            <div class="test-item">
+                <strong>First Service:</strong>
+                <span class="test-value" data-i18n="services.content.items.0.title">Career Assessment</span>
+            </div>
+
+            <!-- Process Section -->
+            <div class="test-item">
+                <strong>Process Title:</strong>
+                <span class="test-value" data-i18n="process.content.title">Your Guided Career Journey In 4 Steps</span>
+            </div>
+
+            <div class="test-item">
+                <strong>Step 1 Title:</strong>
+                <span class="test-value" data-i18n="process.content.steps.0.title">Discovery & Assessment</span>
+            </div>
+
+            <!-- Testimonials Section -->
+            <div class="test-item">
+                <strong>Testimonials Title:</strong>
+                <span class="test-value" data-i18n="testimonials.content.title">What Our Clients Say About Career Transformation</span>
+            </div>
+
+            <!-- Final CTA Section -->
+            <div class="test-item">
+                <strong>CTA Title:</strong>
+                <span class="test-value" data-i18n="final_cta.content.title">Ready to Transform Your Career Path?</span>
+            </div>
+
+            <div class="test-item">
+                <strong>Primary Button:</strong>
+                <span class="test-value" data-i18n="final_cta.content.primary_button">Start Free Assessment</span>
+            </div>
+
+            <!-- Navigation -->
+            <div class="test-item">
+                <strong>Nav Home:</strong>
+                <span class="test-value" data-i18n="navigation.content.items.0.text">Home</span>
+            </div>
+
+            <div class="test-item">
+                <strong>Career Orientation:</strong>
+                <span class="test-value" data-i18n="navigation.content.career.orientation">Career Orientation</span>
+            </div>
+
+            <!-- Footer -->
+            <div class="test-item">
+                <strong>Footer Description:</strong>
+                <span class="test-value" data-i18n="footer.content.description">Supporting your career journey with expert guidance and innovative tools.</span>
+            </div>
+
+            <!-- UI Elements -->
+            <div class="test-item">
+                <strong>Sign Up Button:</strong>
+                <span class="test-value" data-i18n="ui_elements.content.content.buttons.sign_up_today">Sign Up Today</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Console Log</h2>
+        <div id="console-output" style="background: #1a1a1a; color: #0f0; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 12px; max-height: 300px; overflow-y: auto;">
+            <div>Loading translation system...</div>
+        </div>
+    </div>
+
+    <!-- Load the translation system -->
+    <script src="js/career-orientation-translations.js"></script>
+    <script src="js/unified-language-manager.js"></script>
+
+    <script>
+        // Override console.log to show in page
+        const consoleOutput = document.getElementById('console-output');
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog(...args);
+            const message = args.map(arg =>
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg
+            ).join(' ');
+            const entry = document.createElement('div');
+            entry.textContent = new Date().toLocaleTimeString() + ' - ' + message;
+            consoleOutput.appendChild(entry);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        };
+
+        // Test language switching
+        function testLanguage(locale) {
+            console.log(`\n=== Testing ${locale.toUpperCase()} Language ===`);
+
+            // Update active button
+            document.querySelectorAll('.language-buttons button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`btn-${locale}`).classList.add('active');
+
+            // Update status
+            document.getElementById('current-language').innerHTML =
+                `Current Language: <strong>${locale.toUpperCase()}</strong>`;
+
+            // Update URL to trigger language change
+            const url = new URL(window.location.href);
+            url.searchParams.set('locale', locale);
+            window.history.pushState({}, '', url);
+
+            // Apply translations directly for testing
+            applyTranslations(locale);
+
+            // Check translations after a short delay
+            setTimeout(() => {
+                checkTranslations(locale);
+            }, 100);
+        }
+
+        // Apply translations directly
+        function applyTranslations(locale) {
+            console.log(`Applying ${locale} translations...`);
+
+            // Get the translations
+            let translations = null;
+            if (locale === 'ru' && window.careerOrientationTranslations?.ru) {
+                translations = window.careerOrientationTranslations.ru;
+                console.log('Using Russian translations');
+            } else if (locale === 'he' && window.careerOrientationTranslations?.he) {
+                translations = window.careerOrientationTranslations.he;
+                console.log('Using Hebrew translations');
+            } else {
+                console.log('Using English (default)');
+                // Reset to English
+                const englishDefaults = {
+                    'hero.content.title': 'Career Orientation Center',
+                    'introduction.content.subtitle': 'Your Career Journey Partner',
+                    'introduction.content.title': 'Navigate Your Professional Future With Expert Guidance',
+                    'services.content.title': 'Comprehensive Career Support Services',
+                    'services.content.items.0.title': 'Career Assessment',
+                    'process.content.title': 'Your Guided Career Journey In 4 Steps',
+                    'process.content.steps.0.title': 'Discovery & Assessment',
+                    'testimonials.content.title': 'What Our Clients Say About Career Transformation',
+                    'final_cta.content.title': 'Ready to Transform Your Career Path?',
+                    'final_cta.content.primary_button': 'Start Free Assessment',
+                    'navigation.content.items.0.text': 'Home',
+                    'navigation.content.career.orientation': 'Career Orientation',
+                    'footer.content.description': 'Supporting your career journey with expert guidance and innovative tools.',
+                    'ui_elements.content.content.buttons.sign_up_today': 'Sign Up Today'
+                };
+
+                Object.keys(englishDefaults).forEach(key => {
+                    const element = document.querySelector(`[data-i18n="${key}"]`);
+                    if (element) {
+                        element.textContent = englishDefaults[key];
+                    }
+                });
+                return;
+            }
+
+            // Apply the translations
+            if (translations) {
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.dataset.i18n;
+                    const keys = key.split('.');
+                    let value = translations;
+
+                    // Navigate through the nested object
+                    for (const k of keys) {
+                        if (value && typeof value === 'object') {
+                            // Handle array index
+                            if (!isNaN(k)) {
+                                value = value[parseInt(k)];
+                            } else {
+                                value = value[k];
+                            }
+                        } else {
+                            value = null;
+                            break;
+                        }
+                    }
+
+                    if (value && typeof value === 'string') {
+                        element.textContent = value;
+                        console.log(`✓ Applied ${key}: "${value}"`);
+                    } else if (value && value.text) {
+                        element.textContent = value.text;
+                        console.log(`✓ Applied ${key}: "${value.text}"`);
+                    }
+                });
+            }
+        }
+
+        // Check if translations are applied
+        function checkTranslations(expectedLocale) {
+            console.log('\n=== Checking Applied Translations ===');
+
+            const elements = document.querySelectorAll('[data-i18n]');
+            let successCount = 0;
+            let failCount = 0;
+
+            const expectedTranslations = {
+                'en': {
+                    'hero.content.title': 'Career Orientation Center',
+                    'navigation.content.items.0.text': 'Home',
+                    'process.content.title': 'Your Guided Career Journey In 4 Steps'
+                },
+                'ru': {
+                    'hero.content.title': 'Центр профориентации',
+                    'navigation.content.items.0.text': 'Главная',
+                    'process.content.title': 'Ваш путь к карьере за 4 шага'
+                },
+                'he': {
+                    'hero.content.title': 'מרכז הכוונה קריירה',
+                    'navigation.content.items.0.text': 'בית',
+                    'process.content.title': 'המסע הקריירתי שלך ב-4 שלבים'
+                }
+            };
+
+            elements.forEach(el => {
+                const key = el.dataset.i18n;
+                const actualText = el.textContent.trim();
+                const expected = expectedTranslations[expectedLocale]?.[key];
+
+                if (expected && actualText === expected) {
+                    successCount++;
+                    console.log(`✓ ${key}: "${actualText}"`);
+                } else if (expected) {
+                    failCount++;
+                    console.log(`✗ ${key}: Expected "${expected}", got "${actualText}"`);
+                }
+            });
+
+            console.log(`\nResults: ${successCount} success, ${failCount} failures`);
+        }
+
+        // Initial test
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('\n=== Translation System Status ===');
+            console.log('Career translations loaded:', typeof window.careerOrientationTranslations !== 'undefined');
+            console.log('Language Manager loaded:', typeof window.languageManager !== 'undefined');
+
+            if (window.careerOrientationTranslations) {
+                console.log('Available languages:', Object.keys(window.careerOrientationTranslations));
+            }
+
+            // Get locale from URL or default to 'en'
+            const urlParams = new URLSearchParams(window.location.search);
+            const locale = urlParams.get('locale') || 'en';
+            console.log('Initial locale from URL:', locale);
+
+            // Test the current locale
+            setTimeout(() => testLanguage(locale), 1000);
+        });
+    </script>
+</body>
+</html>

@@ -11380,3 +11380,47 @@ figure {
   font-style: normal;
   font-display: swap;
 }
+
+/* WEBFLOW DROPDOWN FIX FOR TEACHERS PAGE - Added to ensure dropdown works */
+/* This overrides Webflow's built-in dropdown behavior that closes too quickly */
+
+/* Override Webflow's display:none with opacity/visibility for smoother transitions */
+.w-dropdown-list.dropdown-column-wrapper-3 {
+  display: block !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 0.2s ease, visibility 0.2s ease !important;
+  pointer-events: none !important;
+}
+
+/* Show dropdown on hover - works with Webflow classes */
+.w-dropdown.menu-dropdown-wrapper:hover .w-dropdown-list.dropdown-column-wrapper-3,
+.w-dropdown.menu-dropdown-wrapper:hover .dropdown-column-wrapper-3 {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: all !important;
+}
+
+/* Also support Webflow's w--open class when JavaScript adds it */
+.w-dropdown-list.dropdown-column-wrapper-3.w--open {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: all !important;
+}
+
+/* Add hover bridge - prevents dropdown from closing during mouse movement */
+.w-dropdown.menu-dropdown-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 15px;
+  background: transparent;
+  z-index: 998;
+}
+
+/* Extended hover area to include the invisible bridge */
+.w-dropdown.menu-dropdown-wrapper:hover::before {
+  pointer-events: all;
+}

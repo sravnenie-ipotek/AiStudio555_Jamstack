@@ -133,11 +133,21 @@
     }
 
     .stat-card {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03) !important;
+      border-radius: 12px !important;
+      padding: 20px !important;
+      text-align: center !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      backdrop-filter: blur(10px) !important;
+    }
+
+    /* Force dark theme for dynamically generated stats */
+    .teacher-stats-grid .stat-card,
+    .entity-stats-container .stat-card,
+    [class*="stat"] {
+      background: rgba(255, 255, 255, 0.03) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: rgba(255, 255, 255, 0.9) !important;
     }
 
     .stat-value {
@@ -218,6 +228,35 @@
       padding: 40px;
       max-width: 500px;
       margin: 0 auto;
+    }
+
+    /* Image fallback handling */
+    .blog-details-author-image {
+      transition: all 0.3s ease !important;
+    }
+
+    .blog-details-author-image:not([src]),
+    .blog-details-author-image[src=""] {
+      background: linear-gradient(135deg, #667eea, #764ba2) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      color: white !important;
+      font-size: 36px !important;
+      font-weight: 700 !important;
+    }
+
+    .image-fallback {
+      width: 100% !important;
+      height: 100% !important;
+      background: linear-gradient(135deg, #667eea, #764ba2) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      color: white !important;
+      font-size: 36px !important;
+      font-weight: 700 !important;
+      border-radius: 50% !important;
     }
 
     /* RTL Support for Hebrew */
@@ -498,6 +537,31 @@
           await window.UnifiedLanguageManager.init(locale);
         }
 
+        // Add image error handling
+        function setupImageFallback() {
+          const profileImage = document.querySelector('.blog-details-author-image');
+          if (profileImage) {
+            profileImage.addEventListener('error', function() {
+              console.log('🖼️ Profile image failed to load, using fallback');
+              const container = this.parentElement;
+              const teacherName = document.querySelector('.entity-details-hero-title').textContent || 'Teacher';
+
+              // Remove "ד"ר" prefix and get clean name
+              const cleanName = teacherName.replace(/^ד"ר\s+/, '').trim();
+              const initials = cleanName.split(' ').map(n => n[0]).join('').substring(0, 2);
+
+              // Create fallback div
+              const fallback = document.createElement('div');
+              fallback.className = 'image-fallback';
+              fallback.textContent = initials;
+
+              // Replace image with fallback
+              this.style.display = 'none';
+              container.appendChild(fallback);
+            });
+          }
+        }
+
         // Initialize teacher details component
         if (window.TeachersDetailsComponent) {
           const teacherDetails = new window.TeachersDetailsComponent();
@@ -509,6 +573,9 @@
           // Load and populate teacher data with locale
           await teacherDetails.loadTeacherData(teacherId, locale);
           await teacherDetails.populatePageContent();
+
+          // Setup image fallback handling
+          setupImageFallback();
 
           // Hide loading and show content
           document.getElementById('loading-state').style.display = 'none';

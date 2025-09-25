@@ -77,8 +77,15 @@
             return;
         }
 
-        const plans = pricingData.plans.plans || [];
+        const plans = pricingData.plans.plans || pricingData.plans || [];
         console.log('💳 Populating pricing plans:', plans.length, 'plans found');
+
+        // Ensure plans is an array
+        if (!Array.isArray(plans)) {
+            console.error('❌ Plans is not an array:', plans);
+            createDefaultPricingData();
+            return;
+        }
 
         // Find the featured plan (usually the first one)
         const featuredPlan = plans.find(plan => plan.featured) || plans[0];

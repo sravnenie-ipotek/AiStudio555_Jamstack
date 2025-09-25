@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Translation Debug</title>
+    <style>
+        .debug-container {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .button-test {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background: #ffd659;
+            color: #05051a;
+            text-decoration: none;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .debug-info {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .lang-switcher {
+            margin-bottom: 20px;
+        }
+        .lang-pill {
+            display: inline-block;
+            padding: 5px 15px;
+            margin: 0 5px;
+            background: #05051a;
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
+        }
+        .lang-pill.active {
+            background: #ffd659;
+            color: #05051a;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>Button Translation Debug</h1>
+        
+        <div class="lang-switcher">
+            <a href="?locale=en" class="lang-pill" onclick="setActivePill(this)" data-locale="en">EN</a>
+            <a href="?locale=ru" class="lang-pill" onclick="setActivePill(this)" data-locale="ru">RU</a>
+            <a href="?locale=he" class="lang-pill active" onclick="setActivePill(this)" data-locale="he">HE</a>
+        </div>
+
+        <div class="debug-info">
+            <h3>Current URL: <span id="current-url"></span></h3>
+            <h3>Current Locale: <span id="current-locale"></span></h3>
+            <h3>Translation System Status: <span id="translation-status"></span></h3>
+        </div>
+
+        <h2>Button Tests:</h2>
+        
+        <!-- This is the exact same button from career-orientation.html -->
+        <div class="primary-button-wrapper desktop">
+            <a href="#" class="button-test" onclick="alert('Button clicked'); return false;">
+                <div class="primary-button-text-wrap">
+                    <div class="primary-button-text-block" data-i18n="ui.content.buttons.sign_up_today">Sign Up Today</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Additional test buttons -->
+        <div style="margin: 20px 0;">
+            <div class="button-test" data-i18n="ui.content.buttons.sign_up_today">Sign Up Today (Direct)</div>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <div class="button-test" data-i18n="navigation.content.items.0.text">Home (Navigation Test)</div>
+        </div>
+
+        <div class="debug-info">
+            <h3>Console Debug Info:</h3>
+            <ul>
+                <li>Check browser console for translation debug logs</li>
+                <li>Look for "[LanguageManager]" messages</li>
+                <li>Check if translations are being found and applied</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Load the same scripts as career-orientation.html -->
+    <script src="js/unified-language-manager.js"></script>
+    <script src="js/career-orientation-translations.js"></script>
+    
+    <script>
+        // Debug script
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update debug info
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentLocale = urlParams.get('locale') || 'en';
+            
+            document.getElementById('current-url').textContent = window.location.href;
+            document.getElementById('current-locale').textContent = currentLocale;
+            
+            // Check if unified language manager loaded
+            if (window.LanguageManager) {
+                document.getElementById('translation-status').textContent = 'Loaded';
+            } else {
+                document.getElementById('translation-status').textContent = 'NOT LOADED';
+            }
+            
+            // Log all elements with data-i18n
+            console.log('=== DEBUG: Elements with data-i18n ===');
+            const i18nElements = document.querySelectorAll('[data-i18n]');
+            i18nElements.forEach((element, index) => {
+                console.log(`${index + 1}. Element:`, element.tagName, 
+                           `data-i18n: "${element.dataset.i18n}"`, 
+                           `Current text: "${element.textContent}"`);
+            });
+            
+            // Check if Hebrew translation exists in static fallback
+            setTimeout(() => {
+                if (window.LanguageManager && window.languageManager) {
+                    const hebrewTranslation = window.languageManager.getLocalizedText('ui.content.buttons.sign_up_today', 'he');
+                    console.log('Hebrew translation for sign_up_today:', hebrewTranslation);
+                }
+            }, 1000);
+        });
+        
+        function setActivePill(pill) {
+            // Remove active class from all pills
+            document.querySelectorAll('.lang-pill').forEach(p => p.classList.remove('active'));
+            // Add active class to clicked pill
+            pill.classList.add('active');
+        }
+    </script>
+</body>
+</html>

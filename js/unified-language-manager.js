@@ -11,7 +11,7 @@ class LanguageManager {
         this.contentCache = {};
         this.isLoading = false;
         this.apiBaseUrl = window.location.hostname === 'localhost'
-            ? 'http://localhost:3000'
+            ? 'http://localhost:1337'
             : 'https://aistudio555jamstack-production.up.railway.app';
 
         // Track translation success rate for debugging
@@ -50,11 +50,20 @@ class LanguageManager {
         document.body.classList.add('language-ready');
         console.log('[LanguageManager] Navigation and UI elements revealed immediately');
 
+        // CRITICAL FIX: Apply Hebrew UI button translations immediately
+        if (this.currentLocale === 'he') {
+            this.applyImmediateHebrewFix();
+        }
+
         // Load content for current language if needed
         if (this.shouldLoadContent()) {
             console.log('[LanguageManager] Loading dynamic content for locale:', this.currentLocale);
             this.loadPageContent(this.currentLocale).then(() => {
                 console.log('[LanguageManager] Dynamic content load complete');
+                // Apply Hebrew fix again after content load
+                if (this.currentLocale === 'he') {
+                    setTimeout(() => this.applyImmediateHebrewFix(), 100);
+                }
             }).catch((error) => {
                 console.warn('[LanguageManager] Dynamic content load failed:', error);
             });
@@ -128,6 +137,47 @@ class LanguageManager {
         // Also check after a delay in case it's added later
         setTimeout(removeSwitcher, 100);
         setTimeout(removeSwitcher, 500);
+    }
+
+    /**
+     * CRITICAL FIX: Apply Hebrew UI button translations immediately to prevent race conditions
+     */
+    applyImmediateHebrewFix() {
+        console.log('[CRITICAL FIX] Applying immediate Hebrew UI translations');
+        
+        // Fix the specific button issue
+        const signUpButtons = document.querySelectorAll('[data-i18n="ui.content.buttons.sign_up_today"]');
+        signUpButtons.forEach(button => {
+            if (!button.textContent || button.textContent.trim() === '' || button.textContent === 'Sign Up Today') {
+                button.textContent = 'הירשם היום';
+                console.log('[CRITICAL FIX] Applied Hebrew to Sign Up button:', button);
+            }
+        });
+
+        // Apply other common Hebrew UI translations immediately
+        const commonHebrewTranslations = {
+            'navigation.content.items.0.text': 'בית',
+            'navigation.content.items.1.text': 'קורסים', 
+            'navigation.content.items.2.text': 'מרצים',
+            'navigation.content.items.3.text': 'בלוג',
+            'navigation.content.items.4.text': 'אודותינו',
+            'navigation.content.items.6.text': 'מחירים',
+            'navigation.content.career.orientation': 'הכוונה מקצועית',
+            'navigation.content.career.center': 'מרכז הקריירה'
+        };
+
+        Object.entries(commonHebrewTranslations).forEach(([key, translation]) => {
+            const elements = document.querySelectorAll(`[data-i18n="${key}"]`);
+            elements.forEach(element => {
+                if (!element.textContent || element.textContent.trim() === '' || 
+                    !element.textContent.includes('ת') && !element.textContent.includes('ר')) {
+                    element.textContent = translation;
+                    console.log(`[CRITICAL FIX] Applied Hebrew to ${key}:`, element);
+                }
+            });
+        });
+
+        console.log('[CRITICAL FIX] Immediate Hebrew translations applied');
     }
 
     /**
@@ -1234,6 +1284,12 @@ class LanguageManager {
                 return value;
             }
         }
+
+        // CRITICAL FIX: Immediate UI button translation fallback
+        if (key === 'ui.content.buttons.sign_up_today' && locale === 'he') {
+            console.log('[CRITICAL FIX] Applying Hebrew sign_up_today translation immediately');
+            return 'הירשם היום';
+        }
         const translations = {
             en: {
                 learnMore: 'Learn More',
@@ -1807,6 +1863,7 @@ const languageManager = new LanguageManager();
 // Export for use in other scripts
 window.LanguageManager = LanguageManager;
 window.languageManager = languageManager;
+window.unifiedLanguageManager = languageManager; // Alias for compatibility
 
 // Add CSS for loading overlay and toast
 if (!document.getElementById('language-manager-styles')) {

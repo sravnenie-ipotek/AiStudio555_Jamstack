@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Career Orientation Translation Verification</title>
+</head>
+<body>
+    <h1>Career Orientation Translation Verification</h1>
+    <div style="margin: 20px; padding: 20px; border: 1px solid #ccc;">
+        <h2>Translation Test Elements:</h2>
+
+        <div style="margin: 10px;">
+            <strong>Hero Title:</strong>
+            <span data-i18n="hero.content.title">Career Orientation Center</span>
+        </div>
+
+        <div style="margin: 10px;">
+            <strong>Introduction Subtitle:</strong>
+            <span data-i18n="introduction.content.subtitle">Your Career Journey Partner</span>
+        </div>
+
+        <div style="margin: 10px;">
+            <strong>Services Title:</strong>
+            <span data-i18n="services.content.title">Comprehensive Career Support Services</span>
+        </div>
+
+        <div style="margin: 10px;">
+            <strong>Process Title:</strong>
+            <span data-i18n="process.content.title">Your Guided Career Journey In 4 Steps</span>
+        </div>
+
+        <div style="margin: 10px;">
+            <strong>Navigation Home:</strong>
+            <span data-i18n="navigation.content.items.0.text">Home</span>
+        </div>
+
+        <div style="margin: 10px; background: #f0f0f0; padding: 10px;">
+            <h3>Language Switcher:</h3>
+            <button onclick="switchLanguage('en')">EN</button>
+            <button onclick="switchLanguage('ru')">RU</button>
+            <button onclick="switchLanguage('he')">HE</button>
+        </div>
+    </div>
+
+    <!-- Load the same scripts as career-orientation.html -->
+    <script src="js/career-orientation-translations.js"></script>
+    <script src="js/unified-language-manager.js"></script>
+
+    <script>
+        function switchLanguage(locale) {
+            // Update URL and reload
+            const url = new URL(window.location.href);
+            url.searchParams.set('locale', locale);
+            window.location.href = url.toString();
+        }
+
+        // Log translation status
+        setTimeout(() => {
+            console.log('=== Translation Status ===');
+            console.log('Career translations loaded:', typeof window.careerOrientationTranslations !== 'undefined');
+            console.log('Language Manager loaded:', typeof window.languageManager !== 'undefined');
+
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                console.log(`${el.dataset.i18n}: "${el.textContent}"`);
+            });
+        }, 1000);
+    </script>
+</body>
+</html>

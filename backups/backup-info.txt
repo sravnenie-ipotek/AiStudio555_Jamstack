@@ -1,0 +1,4 @@
+-- Backup created on Thu Sep 25 08:46:07 IDT 2025
+-- All local databases backed up to:
+-- backups/20250925/ (individual files)
+-- backups/local-databases-backup-20250925-084608.tar.gz (compressed archive)

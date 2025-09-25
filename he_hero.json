@@ -1,0 +1,20 @@
+{
+  "title": "Career Center Platform",
+  "buttons": [
+    {
+      "url": "#opportunities",
+      "text": "Explore Opportunities",
+      "style": "primary"
+    },
+    {
+      "url": "#resources",
+      "text": "Career Resources",
+      "style": "secondary"
+    }
+  ],
+  "visible": true,
+  "subtitle": "Your Gateway to Professional Success",
+  "description": "Connect with industry-leading career opportunities and resources designed to accelerate your professional growth in the AI and technology sector.",
+  "background_image": "images/career-platform-hero.jpg",
+  "display_order": 1
+}

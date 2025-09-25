@@ -113,6 +113,74 @@
   visibility: visible;
 }
 
+/* WEBFLOW DROPDOWN OVERRIDE - Fix disappearing dropdown issue */
+
+/* Override Webflow's display:none with opacity/visibility for smoother transitions */
+.w-dropdown-list.dropdown-column-wrapper-3 {
+  display: block !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 0.2s ease, visibility 0.2s ease !important;
+  pointer-events: none !important;
+}
+
+/* Show dropdown on hover - works with Webflow classes */
+.w-dropdown.menu-dropdown-wrapper:hover .w-dropdown-list.dropdown-column-wrapper-3,
+.w-dropdown.menu-dropdown-wrapper:hover .dropdown-column-wrapper-3 {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: all !important;
+}
+
+/* Also support Webflow's w--open class when JavaScript adds it */
+.w-dropdown-list.dropdown-column-wrapper-3.w--open {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: all !important;
+}
+
+/* Add hover bridge - prevents dropdown from closing during mouse movement */
+.w-dropdown.menu-dropdown-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 15px;
+  background: transparent;
+  z-index: 998;
+}
+
+/* Extended hover area to include the invisible bridge */
+.w-dropdown.menu-dropdown-wrapper:hover::before {
+  pointer-events: all;
+}
+
+/* HEBREW RTL DROPDOWN POSITIONING FIX - MAXIMUM SPECIFICITY */
+/* Use multiple selectors for maximum CSS specificity override */
+html[lang="he"] .w-dropdown-list.dropdown-column-wrapper-3,
+html[lang="he"] .dropdown-column-wrapper-3,
+html[lang="he"] .menu-dropdown-wrapper .dropdown-column-wrapper-3,
+html[lang="he"] .w-dropdown .dropdown-column-wrapper-3 {
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Hebrew RTL text direction */
+html[lang="he"] .dropdown-pd {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Hebrew RTL dropdown items */
+html[lang="he"] .dropdown-menu-text-link-block {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
 .dropdown-pd {
   background-color: rgba(5, 5, 26, 0.95);
   backdrop-filter: blur(20px);
