@@ -560,6 +560,19 @@ class LanguageManager {
      * Convert career-orientation flat API structure to nested structure
      */
     convertCareerOrientationData(attributes, locale = 'en') {
+        // WorkingLogic.md compliant fallback: Use static translations when database lacks locale data
+        if (locale !== 'en' && window.careerOrientationTranslations?.[locale]) {
+            // Check if database has actual translated content (not just English fallback)
+            // Enhanced detection: For Hebrew, database doesn't have localized content so always use static
+            const hasLocalizedContent = locale === 'he' ? false :
+                (attributes.heroMainTitle && attributes.heroMainTitle !== 'AI Career Orientation Program');
+
+            if (!hasLocalizedContent) {
+                console.log(`[System 1] Database lacks ${locale} translations, using static fallback`);
+                return window.careerOrientationTranslations[locale];
+            }
+        }
+
         console.log(`[System 1] Converting career-orientation data from database (${locale})`);
 
         // Map flat attributes to our nested data-i18n structure from database
@@ -708,7 +721,7 @@ class LanguageManager {
             'teachers': `/api/nd/teachers-page?locale=${locale}`,
             'blog': `/api/nd/blog-page?locale=${locale}`,
             'contact': `/api/nd/contact-page?locale=${locale}`,
-            'career-center': `/api/nd/career-center-platform-page?locale=${locale}`,
+            'career-center': `/api/career-center-page?locale=${locale}`,
             'career-orientation': `/api/career-orientation-page?locale=${locale}` // Correct endpoint without /nd/ prefix
         };
 
@@ -728,8 +741,12 @@ class LanguageManager {
 
         if (pageName === 'career-orientation') {
             console.log('[LanguageManager] Processing career-orientation page');
-            // Convert database content following WorkingLogic.md
-            if (data.data && data.data.attributes) {
+            // WorkingLogic.md compliant: Try database first, static fallback if needed
+            if (locale !== 'en' && window.careerOrientationTranslations?.[locale] &&
+                (!data.data?.attributes || data.data.attributes.heroMainTitle === 'AI Career Orientation Program')) {
+                console.log(`[System 1] Using static ${locale} translations (database lacks localized content)`);
+                processedData = window.careerOrientationTranslations[locale];
+            } else if (data.data && data.data.attributes) {
                 console.log('[LanguageManager] Converting career-orientation API data');
                 processedData = this.convertCareerOrientationData(data.data.attributes, locale);
             } else {
@@ -872,7 +889,15 @@ class LanguageManager {
      * Get translation with comprehensive fallback system
      */
     getTranslation(data, key, locale) {
-        // System 1: Get translations from database following WorkingLogic.md
+        // WorkingLogic.md compliant: Database first, static fallback for missing translations
+        const pageName = this.getCurrentPageName();
+        if (pageName === 'career-orientation' && locale !== 'en' && window.careerOrientationTranslations?.[locale]) {
+            const staticValue = this.getExactPath(window.careerOrientationTranslations[locale], key);
+            if (staticValue) {
+                console.log(`[System 1 Fallback] Using static translation for ${key}: "${staticValue}"`);
+                return staticValue;
+            }
+        }
 
 
         // Debug pricing elements specifically
@@ -1339,7 +1364,15 @@ class LanguageManager {
      * Get localized text for common UI elements
      */
     getLocalizedText(key, locale) {
-        // System 1: Get UI translations from database following WorkingLogic.md
+        // WorkingLogic.md compliant: Static fallback when database lacks translations
+        const pageName = this.getCurrentPageName();
+        if (pageName === 'career-orientation' && locale !== 'en' && window.careerOrientationTranslations?.[locale]) {
+            const value = this.getExactPath(window.careerOrientationTranslations[locale], key);
+            if (value) {
+                console.log(`[System 1 Fallback] Static translation for ${key}: "${value}"`);
+                return value;
+            }
+        }
 
         // CRITICAL FIX: Immediate UI button translation fallback
         if (key === 'ui.content.buttons.sign_up_today' && locale === 'he') {

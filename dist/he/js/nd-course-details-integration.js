@@ -460,18 +460,61 @@
         }
     }
 
-    // Apply page translations
+    // Apply page translations with smart duplication prevention
     function applyPageTranslations(translations) {
         if (!translations) return;
 
-        console.log('📝 Applying page translations...');
+        console.log('📝 Applying page translations with duplication prevention...');
 
-        // Apply translations to elements with data-i18n attributes
+        // Get current locale for special handling
+        const params = getUrlParams();
+        const locale = params.locale;
+
+        // CRITICAL: Handle button translations individually to prevent duplication
+        const buttonTranslations = {
+            'ui.content.buttons.sign_up_today': locale === 'he' ? 'הירשם היום' : (locale === 'ru' ? 'Записаться сегодня' : 'Sign Up Today'),
+            'ui_elements.buttons.enroll_now': locale === 'he' ? 'הירשם עכשיו' : (locale === 'ru' ? 'Записаться сейчас' : 'Enroll Now'),
+            'cta.start_learning': locale === 'he' ? 'התחל ללמוד' : (locale === 'ru' ? 'Начать обучение' : 'Start Learning'),
+            'cta.browse_courses': locale === 'he' ? 'עיין בקורסים' : (locale === 'ru' ? 'Просмотреть курсы' : 'Browse Courses'),
+            'cta.get_in_touch': locale === 'he' ? 'צור קשר' : (locale === 'ru' ? 'Связаться' : 'Get in Touch'),
+            'cta.check_out_courses': locale === 'he' ? 'הצג קורסים' : (locale === 'ru' ? 'Посмотреть курсы' : 'Check Out Courses')
+        };
+
+        // Apply button translations carefully - only to normal text elements first
+        Object.entries(buttonTranslations).forEach(([key, translation]) => {
+            const elements = document.querySelectorAll(`[data-i18n="${key}"]:not(.is-text-absolute)`);
+            elements.forEach(element => {
+                const currentText = element.textContent.trim();
+
+                // Only translate if it's not already translated
+                if (!currentText.match(/[\u0590-\u05FF\u0400-\u04FF]/)) {
+                    element.textContent = translation;
+                    element.removeAttribute('data-i18n');
+                    console.log(`✅ Translated button: ${key} -> ${translation}`);
+                }
+            });
+        });
+
+        // Apply other page translations (non-button elements)
         document.querySelectorAll('[data-i18n]').forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            const keys = key.split('.');
+            // Skip button elements - already handled above
+            if (element.closest('.primary-button') || element.classList.contains('primary-button-text-block')) {
+                return;
+            }
 
+            const key = element.getAttribute('data-i18n');
+
+            // Skip if already translated
+            if (locale === 'he' && element.textContent && element.textContent.match(/[\u0590-\u05FF]/)) {
+                return;
+            }
+            if (locale === 'ru' && element.textContent && element.textContent.match(/[\u0400-\u04FF]/)) {
+                return;
+            }
+
+            const keys = key.split('.');
             let value = translations;
+
             for (const k of keys) {
                 if (value && value[k]) {
                     if (value[k].content && typeof value[k].content === 'object') {
@@ -486,43 +529,27 @@
 
             if (value && typeof value === 'string') {
                 element.textContent = value;
+                element.removeAttribute('data-i18n');
             } else if (value && value.content && typeof value.content === 'string') {
                 element.textContent = value.content;
+                element.removeAttribute('data-i18n');
             } else if (value && typeof value === 'object' && keys[keys.length - 1] in value) {
                 element.textContent = value[keys[keys.length - 1]];
+                element.removeAttribute('data-i18n');
             }
         });
 
-        // Update specific UI elements
-        if (translations.ui_elements && translations.ui_elements.content) {
-            const ui = translations.ui_elements.content;
-
-            // Update buttons
-            if (ui.buttons) {
-                const enrollButtons = document.querySelectorAll('.enroll-button, .primary-button');
-                enrollButtons.forEach(btn => {
-                    const textElements = btn.querySelectorAll('.primary-button-text-block');
-                    if (textElements.length > 0 && ui.buttons.enroll_now) {
-                        textElements.forEach(el => el.textContent = ui.buttons.enroll_now);
-                    }
-                });
-            }
-
-            // Update labels
-            if (ui.labels) {
-                const priceLabel = document.querySelector('.price-label');
-                if (priceLabel && ui.labels.price) priceLabel.textContent = ui.labels.price;
-
-                const levelLabel = document.querySelector('.level-label');
-                if (levelLabel && ui.labels.level) levelLabel.textContent = ui.labels.level;
-
-                const studentsLabel = document.querySelector('.students-label');
-                if (studentsLabel && ui.labels.students) studentsLabel.textContent = ui.labels.students;
-            }
+        // Set RTL for Hebrew
+        if (locale === 'he') {
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.documentElement.setAttribute('lang', 'he');
+        } else {
+            document.documentElement.setAttribute('dir', 'ltr');
+            document.documentElement.setAttribute('lang', locale);
         }
 
-        // Sync absolute text elements with translated text
-        syncAbsoluteTextElements();
+        // Sync absolute text elements with translated text (with duplication prevention)
+        setTimeout(() => syncAbsoluteTextElements(), 100);
     }
 
     // Function to sync absolute text elements (for animation effects)
@@ -534,13 +561,38 @@
             const normalText = button.querySelector('.primary-button-text-block:not(.is-text-absolute)');
             const absoluteText = button.querySelector('.primary-button-text-block.is-text-absolute');
 
-            if (normalText && absoluteText) {
-                absoluteText.textContent = normalText.textContent;
-                console.log('✅ Synced button text:', normalText.textContent);
+            if (normalText && absoluteText && normalText.textContent.trim()) {
+                // Only sync if the normal text has content and is different from absolute text
+                const normalContent = normalText.textContent.trim();
+                const absoluteContent = absoluteText.textContent.trim();
+
+                if (normalContent && normalContent !== absoluteContent) {
+                    // Preserve existing transform styles when updating text
+                    const existingTransform = absoluteText.style.transform;
+                    absoluteText.textContent = normalContent;
+
+                    // Restore the transform if it was changed
+                    if (existingTransform && !absoluteText.style.transform) {
+                        absoluteText.style.transform = existingTransform;
+                    }
+
+                    console.log('✅ Synced button text:', normalContent);
+                }
             }
         });
 
-        console.log('🔄 Synced absolute text elements for all buttons');
+        // Ensure proper positioning for Hebrew RTL buttons
+        const rtlButtons = document.querySelectorAll('[dir="rtl"] .primary-button, body[dir="rtl"] .primary-button');
+        rtlButtons.forEach(button => {
+            const textWrap = button.querySelector('.primary-button-text-wrap');
+            if (textWrap) {
+                textWrap.style.overflow = 'hidden';
+                textWrap.style.height = '1.2em';
+                textWrap.style.position = 'relative';
+            }
+        });
+
+        console.log('🔄 Synced absolute text elements for all buttons with transform preservation');
     }
 
     // Initialize on page load
