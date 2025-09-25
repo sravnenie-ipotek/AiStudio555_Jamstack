@@ -60,8 +60,11 @@
     function processDynamicContent(data) {
         console.log('🔧 [System 2] Processing dynamic content (non-UI elements)...');
 
-        // For career-orientation page, most content is static UI text handled by System 1
-        // This function handles only truly dynamic content that changes via admin panel
+        // CRITICAL: Process steps are dynamic content that comes from database
+        // and should be populated by System 2 (not static translations)
+        if (data && data.attributes) {
+            populateProcessStepsFromDatabase(data.attributes);
+        }
 
         // Example: If testimonials come from database and change frequently
         if (data.testimonials && Array.isArray(data.testimonials)) {
@@ -73,10 +76,81 @@
             populateDynamicStatistics(data.statistics);
         }
 
-        // Note: Most content on this page is static UI text and should be
-        // handled by unified-language-manager.js (System 1)
-
         console.log('✅ [System 2] Dynamic content processing complete');
+    }
+
+    // CORE SYSTEM 2 FUNCTION: Populate 5-step process from database
+    function populateProcessStepsFromDatabase(attributes) {
+        console.log('🔄 [System 2] Populating 5-step process from database...');
+
+        // Process all 5 steps from database (not static translations)
+        for (let i = 1; i <= 5; i++) {
+            const stepData = {
+                number: attributes[`processStep${i}Number`] || `0${i}`,
+                title: attributes[`processStep${i}Title`] || `Step ${i}`,
+                description: attributes[`processStep${i}Description`] || '',
+                icon: attributes[`processStep${i}Icon`] || 'default-icon',
+                duration: attributes[`processStep${i}Duration`] || '',
+                details: attributes[`processStep${i}Details`] || ''
+            };
+
+            console.log(`📋 [System 2] Processing step ${i}:`, stepData);
+
+            // Update step number
+            updateDynamicContent(`[data-field="process-${i}-number"]`, `Step #${stepData.number}`);
+
+            // Update step title
+            updateDynamicContent(`[data-field="process-${i}-title"]`, stepData.title);
+
+            // Update step description
+            updateDynamicContent(`[data-field="process-${i}-description"]`, stepData.description);
+
+            // Update step icon if available
+            const iconElements = document.querySelectorAll(`[data-field="process-${i}-icon"]`);
+            iconElements.forEach(element => {
+                if (element && stepData.icon && stepData.icon !== 'default-icon') {
+                    // Update icon src to use database icon
+                    element.src = `images/${stepData.icon}.svg`;
+                    element.alt = stepData.title;
+                    element.removeAttribute('data-i18n');
+                }
+            });
+
+            // Update step image if different images should be used
+            const imageElements = document.querySelectorAll(`[data-field="process-${i}-image"]`);
+            imageElements.forEach(element => {
+                if (element) {
+                    // Use different images for different steps
+                    element.src = `images/Process-Step-${i}-Image.jpg`;
+                    element.alt = stepData.title;
+                    element.removeAttribute('data-i18n');
+                }
+            });
+        }
+
+        // Update main process section title from database
+        if (attributes.processMainTitle) {
+            updateDynamicContent('[data-field="process-title"]', attributes.processMainTitle);
+        }
+
+        if (attributes.processSubtitle) {
+            updateDynamicContent('[data-field="process-subtitle"]', attributes.processSubtitle);
+        }
+
+        if (attributes.processDescription) {
+            updateDynamicContent('[data-field="process-description"]', attributes.processDescription);
+        }
+
+        console.log('✅ [System 2] 5-step process populated from database');
+
+        // Notify RTL slider to update with new content
+        if (window.RTLSlider && window.RTLSlider.instance()) {
+            console.log('🔄 [System 2] Notifying RTL slider of content update...');
+            setTimeout(() => {
+                // Update slider with new dynamic content (handles image loading)
+                window.RTLSlider.updateDynamicContent();
+            }, 500);
+        }
     }
 
     // Example: Dynamic testimonials (if they come from admin panel)

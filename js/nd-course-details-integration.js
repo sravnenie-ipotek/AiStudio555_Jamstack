@@ -466,12 +466,25 @@
 
         console.log('📝 Applying page translations...');
 
+        // Get current locale for special handling
+        const params = getUrlParams();
+        const locale = params.locale;
+
         // Apply translations to elements with data-i18n attributes
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.getAttribute('data-i18n');
-            const keys = key.split('.');
 
+            // Skip if this element already has translated content (avoid double text)
+            if (locale === 'he' && element.textContent && element.textContent.match(/[\u0590-\u05FF]/)) {
+                return; // Already has Hebrew text
+            }
+            if (locale === 'ru' && element.textContent && element.textContent.match(/[\u0400-\u04FF]/)) {
+                return; // Already has Russian text
+            }
+
+            const keys = key.split('.');
             let value = translations;
+
             for (const k of keys) {
                 if (value && value[k]) {
                     if (value[k].content && typeof value[k].content === 'object') {
@@ -486,24 +499,35 @@
 
             if (value && typeof value === 'string') {
                 element.textContent = value;
+                element.removeAttribute('data-i18n'); // Prevent further changes
             } else if (value && value.content && typeof value.content === 'string') {
                 element.textContent = value.content;
+                element.removeAttribute('data-i18n'); // Prevent further changes
             } else if (value && typeof value === 'object' && keys[keys.length - 1] in value) {
                 element.textContent = value[keys[keys.length - 1]];
+                element.removeAttribute('data-i18n'); // Prevent further changes
             }
         });
 
-        // Update specific UI elements
+        // Update specific UI elements with protection against double text
         if (translations.ui_elements && translations.ui_elements.content) {
             const ui = translations.ui_elements.content;
 
-            // Update buttons
+            // Update buttons with careful text checking
             if (ui.buttons) {
                 const enrollButtons = document.querySelectorAll('.enroll-button, .primary-button');
                 enrollButtons.forEach(btn => {
                     const textElements = btn.querySelectorAll('.primary-button-text-block');
                     if (textElements.length > 0 && ui.buttons.enroll_now) {
-                        textElements.forEach(el => el.textContent = ui.buttons.enroll_now);
+                        textElements.forEach(el => {
+                            // Only update if current text is English or empty
+                            const currentText = el.textContent.trim();
+                            if (!currentText || currentText === 'Enroll Now' || currentText === 'Sign Up Today' ||
+                                (!currentText.match(/[\u0590-\u05FF\u0400-\u04FF]/))) {
+                                el.textContent = ui.buttons.enroll_now;
+                                el.removeAttribute('data-i18n');
+                            }
+                        });
                     }
                 });
             }
@@ -521,8 +545,17 @@
             }
         }
 
+        // Set RTL for Hebrew
+        if (locale === 'he') {
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.documentElement.setAttribute('lang', 'he');
+        } else {
+            document.documentElement.setAttribute('dir', 'ltr');
+            document.documentElement.setAttribute('lang', locale);
+        }
+
         // Sync absolute text elements with translated text
-        syncAbsoluteTextElements();
+        setTimeout(() => syncAbsoluteTextElements(), 100);
     }
 
     // Function to sync absolute text elements (for animation effects)
@@ -534,9 +567,15 @@
             const normalText = button.querySelector('.primary-button-text-block:not(.is-text-absolute)');
             const absoluteText = button.querySelector('.primary-button-text-block.is-text-absolute');
 
-            if (normalText && absoluteText) {
-                absoluteText.textContent = normalText.textContent;
-                console.log('✅ Synced button text:', normalText.textContent);
+            if (normalText && absoluteText && normalText.textContent.trim()) {
+                // Only sync if the normal text has content and is different from absolute text
+                const normalContent = normalText.textContent.trim();
+                const absoluteContent = absoluteText.textContent.trim();
+
+                if (normalContent && normalContent !== absoluteContent) {
+                    absoluteText.textContent = normalContent;
+                    console.log('✅ Synced button text:', normalContent);
+                }
             }
         });
 

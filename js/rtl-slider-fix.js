@@ -425,6 +425,67 @@
         }
 
         /**
+         * Reinitialize slider (useful after dynamic content updates)
+         */
+        reinitialize() {
+            console.log('[RTL-Slider] Reinitializing slider after content update...');
+
+            // Re-detect slides
+            this.slides = this.container.querySelectorAll(this.config.slideSelector);
+            this.totalSlides = this.slides.length;
+
+            console.log(`[RTL-Slider] Redetected ${this.totalSlides} slides`);
+
+            // Recreate navigation dots for new slide count
+            if (this.navDots) {
+                this.setupNavigationDots();
+            }
+
+            // Reset to first slide
+            this.currentIndex = 0;
+            this.goToSlide(0, false);
+
+            // Update UI
+            this.updateUIElements();
+
+            console.log('[RTL-Slider] Reinitializa​tion complete');
+        }
+
+        /**
+         * Update slides after dynamic content loading
+         */
+        updateDynamicContent() {
+            console.log('[RTL-Slider] Updating slider for dynamic content...');
+
+            // Wait for images to load
+            const images = this.container.querySelectorAll('img');
+            let loadedImages = 0;
+
+            if (images.length === 0) {
+                this.reinitialize();
+                return;
+            }
+
+            images.forEach(img => {
+                if (img.complete) {
+                    loadedImages++;
+                } else {
+                    img.onload = img.onerror = () => {
+                        loadedImages++;
+                        if (loadedImages === images.length) {
+                            this.reinitialize();
+                        }
+                    };
+                }
+            });
+
+            // Fallback if all images are already loaded
+            if (loadedImages === images.length) {
+                this.reinitialize();
+            }
+        }
+
+        /**
          * Destroy slider instance
          */
         destroy() {
@@ -472,10 +533,12 @@
     // Also initialize after a short delay to ensure all scripts are loaded
     setTimeout(initRTLSlider, 1000);
 
-    // Export for debugging
+    // Export for debugging and dynamic content integration
     window.RTLSlider = {
         instance: () => sliderInstance,
         reinit: initRTLSlider,
+        reinitialize: () => sliderInstance ? sliderInstance.reinitialize() : null,
+        updateDynamicContent: () => sliderInstance ? sliderInstance.updateDynamicContent() : null,
         config: SLIDER_CONFIG
     };
 
