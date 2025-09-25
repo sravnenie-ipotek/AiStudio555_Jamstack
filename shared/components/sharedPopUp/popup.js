@@ -59,51 +59,55 @@ class ContactPopup {
             <form id="contactForm" class="contact-form">
               <!-- Name Field -->
               <div class="form-field">
-                <label for="contactName" class="form-label">Your Name *</label>
+                <label for="contactName" class="form-label" data-i18n="contact.content.form.name_label">Your Name *</label>
                 <input
                   type="text"
                   id="contactName"
                   name="name"
                   class="form-input"
                   placeholder="Enter Your Name"
+                  data-i18n-placeholder="contact.content.form.name_placeholder"
                   required
                 >
               </div>
 
               <!-- Email Field -->
               <div class="form-field">
-                <label for="contactEmail" class="form-label">Email Address *</label>
+                <label for="contactEmail" class="form-label" data-i18n="contact.content.form.email_label">Email Address *</label>
                 <input
                   type="email"
                   id="contactEmail"
                   name="email"
                   class="form-input"
                   placeholder="Ex. emailaddress@email.com"
+                  data-i18n-placeholder="contact.content.form.email_placeholder"
                   required
                 >
               </div>
 
               <!-- Subject Field -->
               <div class="form-field">
-                <label for="contactSubject" class="form-label">Subject *</label>
+                <label for="contactSubject" class="form-label" data-i18n="contact.content.form.subject_label">Subject *</label>
                 <input
                   type="text"
                   id="contactSubject"
                   name="subject"
                   class="form-input"
                   placeholder="Ex. Want Consultation"
+                  data-i18n-placeholder="contact.content.form.subject_placeholder"
                   required
                 >
               </div>
 
               <!-- Message Field -->
               <div class="form-field">
-                <label for="contactMessage" class="form-label">Your Message *</label>
+                <label for="contactMessage" class="form-label" data-i18n="contact.content.form.message_label">Your Message *</label>
                 <textarea
                   id="contactMessage"
                   name="message"
                   class="form-textarea"
                   placeholder="Write what you want to share with us..."
+                  data-i18n-placeholder="contact.content.form.message_placeholder"
                   rows="5"
                   required
                 ></textarea>
@@ -113,8 +117,8 @@ class ContactPopup {
               <div class="form-submit-wrapper">
                 <button type="submit" class="primary-button form-submit-button">
                   <div class="primary-button-text-wrap">
-                    <div class="primary-button-text-block">Send Message</div>
-                    <div class="primary-button-text-block is-text-absolute">Send Message</div>
+                    <div class="primary-button-text-block" data-i18n="contact.content.submit_button">Send Message</div>
+                    <div class="primary-button-text-block is-text-absolute" data-i18n="contact.content.submit_button">Send Message</div>
                   </div>
                 </button>
               </div>
@@ -122,7 +126,7 @@ class ContactPopup {
               <!-- Loading State -->
               <div id="formLoading" class="form-loading" style="display: none;">
                 <div class="loading-spinner"></div>
-                <span>Sending message...</span>
+                <span data-i18n="contact.content.sending_message">Sending message...</span>
               </div>
 
               <!-- Success Message -->
@@ -190,7 +194,29 @@ class ContactPopup {
       document.body.style.overflow = 'hidden';
 
       // Trigger language manager to translate popup content
-      if (window.languageManager && window.languageManager.translatePage) {
+      // Try unified language manager first (newer system)
+      if (window.unifiedLanguageManager) {
+        setTimeout(() => {
+          const currentLocale = localStorage.getItem('preferred_locale') || 'en';
+
+          // Translate all elements with data-i18n in the popup
+          if (window.unifiedLanguageManager.translateCurrentElements) {
+            window.unifiedLanguageManager.translateCurrentElements(currentLocale);
+          }
+
+          // Also manually handle placeholders in the popup
+          this.popup.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-i18n-placeholder');
+            const value = window.unifiedLanguageManager.getLocalizedText(key, currentLocale);
+            if (value) {
+              element.placeholder = value;
+              console.log(`[Popup Placeholder Translation] ${key}: "${value}"`);
+            }
+          });
+        }, 100);
+      }
+      // Fallback to older language manager
+      else if (window.languageManager && window.languageManager.translatePage) {
         setTimeout(() => {
           window.languageManager.translatePage();
         }, 100);

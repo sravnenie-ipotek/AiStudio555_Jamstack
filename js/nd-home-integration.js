@@ -144,21 +144,17 @@
             updateAboutStatistics(data.about.content.statistics);
         }
 
-        // 4. Testimonials Section
-        if (data.testimonials && data.testimonials.content) {
-            populateTestimonialsSection(data.testimonials.content);
-        }
-        // Also check for testimonials_data (the actual API field)
-        if (data.testimonials_data) {
-            populateTestimonialsSection(data.testimonials_data);
-        }
-        // NEW: Handle direct testimonials array from API attributes
-        if (data.attributes && data.attributes.testimonials) {
-            console.log('📍 Found testimonials in attributes, processing...');
-            populateTestimonialsSection({ items: data.attributes.testimonials });
-        }
+        // 4. Testimonials Section - DISABLED for static translation support
+        // Following dual-system architecture - testimonials handled by System 1 (data-i18n)
+        // Dynamic testimonials loading disabled to preserve data-i18n attributes
+        console.log('📍 Testimonials: Using static HTML with data-i18n attributes (System 1)');
 
-        // 5. FAQ Section
+        // 5. FAQ Section - DISABLED for static translation support
+        // Following dual-system architecture - FAQ handled by System 1 (data-i18n)
+        // Dynamic FAQ loading disabled to preserve data-i18n attributes
+        console.log('📍 FAQ: Using static HTML with data-i18n attributes (System 1)');
+
+        /* RACE CONDITION FIX: FAQ dynamic loading disabled
         if (data.faq && data.faq.content) {
             console.log('📍 Found FAQ data in new structure');
             populateFAQSection(data.faq.content);
@@ -171,6 +167,7 @@
                 populateFAQSection(faqData);
             }
         }
+        */
 
         // 6. Process Section - SKIP (handled by unified-language-manager)
         // Process content is static UI
@@ -520,47 +517,11 @@
 
         console.log('✅ Testimonials section updated');
 
-        // Add delayed cleanup to ensure data-i18n attributes are removed
-        // This runs after both integration and language manager are done
-        setTimeout(() => {
-            console.log('🧹 Final Testimonials cleanup - removing any lingering data-i18n attributes...');
-
-            // Clean up all testimonials elements that might have been retranslated
-            const allTestimonialTitles = document.querySelectorAll('.testimonials-title');
-            const allTestimonialTexts = document.querySelectorAll('.testimonials-card-description-text');
-            const allTestimonialNames = document.querySelectorAll('.testimonials-card-author-name');
-            const allTestimonialRoles = document.querySelectorAll('.testimonials-card-author-bio-text');
-
-            allTestimonialTitles.forEach((el, index) => {
-                if (el.hasAttribute('data-i18n')) {
-                    console.log(`🔧 Removing data-i18n from testimonial title ${index + 1}:`, el.getAttribute('data-i18n'));
-                    el.removeAttribute('data-i18n');
-                }
-            });
-
-            allTestimonialTexts.forEach((el, index) => {
-                if (el.hasAttribute('data-i18n')) {
-                    console.log(`🔧 Removing data-i18n from testimonial text ${index + 1}:`, el.getAttribute('data-i18n'));
-                    el.removeAttribute('data-i18n');
-                }
-            });
-
-            allTestimonialNames.forEach((el, index) => {
-                if (el.hasAttribute('data-i18n')) {
-                    console.log(`🔧 Removing data-i18n from testimonial name ${index + 1}:`, el.getAttribute('data-i18n'));
-                    el.removeAttribute('data-i18n');
-                }
-            });
-
-            allTestimonialRoles.forEach((el, index) => {
-                if (el.hasAttribute('data-i18n')) {
-                    console.log(`🔧 Removing data-i18n from testimonial role ${index + 1}:`, el.getAttribute('data-i18n'));
-                    el.removeAttribute('data-i18n');
-                }
-            });
-
-            console.log('✅ Testimonials cleanup completed');
-        }, 2000); // Wait 2 seconds after testimonials population
+        // DUAL-SYSTEM ARCHITECTURE: System 2 (Dynamic Content)
+        // Following WorkingLogic.md - testimonials are dynamic content from database
+        // Keep data-i18n attributes for elements that should be translated by System 1
+        // Only remove data-i18n from elements that have been updated with dynamic content
+        console.log('✅ Testimonials populated following dual-system architecture')
     }
 
     // Populate FAQ Section

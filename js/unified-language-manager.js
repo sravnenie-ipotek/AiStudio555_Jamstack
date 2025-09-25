@@ -441,6 +441,152 @@ class LanguageManager {
     }
 
     /**
+     * Convert career-orientation flat API structure to nested structure
+     */
+    convertCareerOrientationData(attributes, locale = 'en') {
+        // If static translations are available for this locale, use them
+        if (window.careerOrientationTranslations &&
+            window.careerOrientationTranslations[locale] &&
+            locale !== 'en') {
+            console.log(`[LanguageManager] Using static translations for career-orientation page (${locale})`);
+            return window.careerOrientationTranslations[locale];
+        }
+
+        // Map flat attributes to our nested data-i18n structure (English fallback)
+        return {
+            hero: {
+                content: {
+                    title: attributes.heroMainTitle || 'Career Orientation Center',
+                    breadcrumb_home: 'Home',
+                    breadcrumb_current: 'Career Orientation'
+                }
+            },
+            introduction: {
+                content: {
+                    subtitle: attributes.heroSubtitle || 'Your Career Journey Partner',
+                    title: attributes.heroMainTitle || 'Navigate Your Professional Future With Expert Guidance',
+                    description: attributes.heroDescription || 'Our comprehensive career orientation program helps you discover your strengths',
+                    stats: [
+                        { number: attributes.heroStat1Value || '500+', label: attributes.heroStat1Label || 'Successful Placements' },
+                        { number: attributes.heroStat2Value || '95%', label: attributes.heroStat2Label || 'Satisfaction Rate' },
+                        { number: attributes.heroStat3Value || '10+', label: attributes.heroStat3Label || 'Years Experience' }
+                    ]
+                }
+            },
+            services: {
+                content: {
+                    subtitle: attributes.solutionsSubtitle || 'Our Services',
+                    title: attributes.solutionsMainTitle || 'Comprehensive Career Support Services',
+                    description: attributes.solutionsDescription || 'From self-discovery to job placement',
+                    items: [
+                        {
+                            title: attributes.solution1Title || 'Career Assessment',
+                            description: attributes.solution1Description || 'Comprehensive evaluation of your skills'
+                        },
+                        {
+                            title: attributes.solution2Title || 'Resume & Portfolio',
+                            description: attributes.solution2Description || 'Professional resume writing'
+                        },
+                        {
+                            title: attributes.solution3Title || 'Interview Preparation',
+                            description: attributes.solution3Description || 'Mock interviews and coaching'
+                        },
+                        {
+                            title: 'Job Search Strategy',
+                            description: 'Strategic job search planning'
+                        },
+                        {
+                            title: 'Skill Development',
+                            description: 'Personalized skill gap analysis'
+                        },
+                        {
+                            title: 'Ongoing Support',
+                            description: 'Continuous mentoring and support'
+                        }
+                    ]
+                }
+            },
+            process: {
+                content: {
+                    subtitle: attributes.processSubtitle || 'Our Process',
+                    title: attributes.processMainTitle || 'Your Guided Career Journey In 4 Steps',
+                    description: attributes.processDescription || 'Our proven methodology',
+                    steps: [
+                        {
+                            number: attributes.processStep1Number || 'Step #01',
+                            title: attributes.processStep1Title || 'Discovery & Assessment',
+                            description: attributes.processStep1Description || 'We start with comprehensive assessments'
+                        },
+                        {
+                            number: attributes.processStep2Number || 'Step #02',
+                            title: attributes.processStep2Title || 'Career Exploration',
+                            description: attributes.processStep2Description || 'Explore various career options'
+                        },
+                        {
+                            number: attributes.processStep3Number || 'Step #03',
+                            title: attributes.processStep3Title || 'Skill Development',
+                            description: attributes.processStep3Description || 'Create a personalized development plan'
+                        },
+                        {
+                            number: attributes.processStep4Number || 'Step #04',
+                            title: attributes.processStep4Title || 'Job Search & Placement',
+                            description: attributes.processStep4Description || 'Launch your job search with confidence'
+                        }
+                    ]
+                }
+            },
+            testimonials: {
+                content: {
+                    subtitle: 'Success Stories',
+                    title: 'What Our Clients Say About Their Career Transformation',
+                    description: 'Hear from professionals who successfully navigated',
+                    items: [
+                        {
+                            title: '"Found My Dream Career in Tech"',
+                            text: 'The career orientation program helped me transition',
+                            author: 'Sarah Johnson',
+                            role: 'Software Developer'
+                        },
+                        {
+                            title: '"Accelerated My Management Career"',
+                            text: 'The strategic career planning gave me confidence',
+                            author: 'Michael Chen',
+                            role: 'Senior Project Manager'
+                        }
+                    ]
+                }
+            },
+            contact: {
+                content: {
+                    subtitle: attributes.assessmentSubtitle || 'Get Started',
+                    title: attributes.assessmentMainTitle || 'Request Your Career Consultation',
+                    description: attributes.assessmentDescription || 'Ready to take the next step',
+                    email: attributes.footerSupportEmail || 'career@zohacous.com',
+                    phone: '+1 (555) 123-4567',
+                    hours: 'Mon-Fri 9AM-6PM',
+                    form: {
+                        name_label: 'Your Name *',
+                        email_label: 'Email Address *',
+                        phone_label: 'Phone Number',
+                        career_stage_label: 'Current Career Stage *',
+                        message_label: 'Tell us about your career goals *',
+                        submit_button: attributes.assessmentCtaText || 'Request Consultation'
+                    }
+                }
+            },
+            final_cta: {
+                content: {
+                    subtitle: 'Take Action Today',
+                    title: attributes.footerTitle || 'Ready to Transform Your Career Journey?',
+                    description: attributes.footerSubtitle || "Don't wait for the perfect moment",
+                    primary_button: attributes.footerCtaText || 'Start Free Assessment',
+                    secondary_button: 'Download Career Guide'
+                }
+            }
+        };
+    }
+
+    /**
      * Get API endpoint for page and locale
      */
     getAPIEndpoint(pageName, locale) {
@@ -453,7 +599,7 @@ class LanguageManager {
             'blog': `/api/nd/blog-page?locale=${locale}`,
             'contact': `/api/nd/contact-page?locale=${locale}`,
             'career-center': `/api/nd/career-center-platform-page?locale=${locale}`,
-            'career-orientation': `/api/career-orientation-page?locale=${locale}` // Fixed endpoint
+            'career-orientation': `/api/career-orientation-page?locale=${locale}` // Correct endpoint without /nd/ prefix
         };
 
         return endpoints[pageName] || null;
@@ -466,9 +612,27 @@ class LanguageManager {
         console.log('[LanguageManager] Updating page content for locale:', locale);
         console.log('[LanguageManager] Available data sections:', Object.keys(data.data || {}));
 
-        // Handle pricing page structure (data.data.attributes.sections)
+        // Handle career-orientation page flat structure (data.data.attributes)
         let processedData = data.data;
-        if (data.data && data.data.attributes && data.data.attributes.sections) {
+        const pageName = this.getCurrentPageName();
+
+        if (pageName === 'career-orientation') {
+            console.log('[LanguageManager] Processing career-orientation page');
+            // For non-English locales, use static translations exclusively
+            if (locale !== 'en' && window.careerOrientationTranslations?.[locale]) {
+                console.log(`[LanguageManager] Using static ${locale} translations for career-orientation`);
+                processedData = window.careerOrientationTranslations[locale];
+            } else if (data.data && data.data.attributes) {
+                console.log('[LanguageManager] Converting career-orientation API data');
+                processedData = this.convertCareerOrientationData(data.data.attributes, locale);
+            } else {
+                console.log('[LanguageManager] No data available for career-orientation');
+                processedData = {};
+            }
+            console.log('[LanguageManager] Career-orientation data ready:', Object.keys(processedData));
+        }
+        // Handle pricing page structure (data.data.attributes.sections)
+        else if (data.data && data.data.attributes && data.data.attributes.sections) {
             console.log('[LanguageManager] Processing pricing page structure');
             processedData = data.data.attributes.sections;
             console.log('[LanguageManager] Pricing sections:', Object.keys(processedData));
@@ -585,6 +749,17 @@ class LanguageManager {
      * Get translation with comprehensive fallback system
      */
     getTranslation(data, key, locale) {
+        // Check career-orientation static translations first
+        const pageName = this.getCurrentPageName();
+        if (pageName === 'career-orientation' && window.careerOrientationTranslations?.[locale]) {
+            const staticValue = this.getExactPath(window.careerOrientationTranslations[locale], key);
+            if (staticValue) {
+                console.log(`[Career Static Translation] ${key}: "${staticValue}"`);
+                return staticValue;
+            }
+        }
+
+
         // Debug pricing elements specifically
         if (key.includes('pricing.content.hero') || key.includes('pricing.content.subtitle') || key.includes('pricing.content.title')) {
             console.log(`[Pricing Debug] Getting translation for: ${key}`);
@@ -825,6 +1000,114 @@ class LanguageManager {
             'awards.content.content.items.3.description': ['awards.content.content.items.3.description', 'awards.content.items.3.description']
         };
 
+        // CAREER-ORIENTATION MAPPINGS
+        const careerOrientationMappings = {
+            // Navigation mappings specific to career page
+            'navigation.content.items.0.text': ['navigation.content.items.0.text'],
+            'navigation.content.items.1.text': ['navigation.content.items.1.text'],
+            'navigation.content.items.2.text': ['navigation.content.items.2.text'],
+            'navigation.content.items.3.text': ['navigation.content.items.3.text'],
+            'navigation.content.items.4.text': ['navigation.content.items.4.text'],
+            'navigation.content.items.6.text': ['navigation.content.items.6.text'],
+            'navigation.content.career.orientation': ['navigation.content.career.orientation'],
+            'navigation.content.career.center': ['navigation.content.career.center'],
+            // UI elements
+            'ui.content.buttons.sign_up_today': ['ui.content.buttons.sign_up_today', 'ui_elements.content.content.buttons.sign_up_today'],
+            'ui_elements.content.content.buttons.sign_up_today': ['ui.content.buttons.sign_up_today', 'ui_elements.content.content.buttons.sign_up_today'],
+            // Career page specific paths
+            'hero.content.title': ['hero.content.title'],
+            'hero.content.breadcrumb_home': ['hero.content.breadcrumb_home'],
+            'hero.content.breadcrumb_current': ['hero.content.breadcrumb_current'],
+            'introduction.content.subtitle': ['introduction.content.subtitle'],
+            'introduction.content.title': ['introduction.content.title'],
+            'introduction.content.description': ['introduction.content.description'],
+            'introduction.content.stats.0.number': ['introduction.content.stats.0.number'],
+            'introduction.content.stats.0.label': ['introduction.content.stats.0.label'],
+            'introduction.content.stats.1.number': ['introduction.content.stats.1.number'],
+            'introduction.content.stats.1.label': ['introduction.content.stats.1.label'],
+            'introduction.content.stats.2.number': ['introduction.content.stats.2.number'],
+            'introduction.content.stats.2.label': ['introduction.content.stats.2.label'],
+            // Services mappings
+            'services.content.subtitle': ['services.content.subtitle'],
+            'services.content.title': ['services.content.title'],
+            'services.content.description': ['services.content.description'],
+            'services.content.items.0.title': ['services.content.items.0.title'],
+            'services.content.items.0.description': ['services.content.items.0.description'],
+            'services.content.items.1.title': ['services.content.items.1.title'],
+            'services.content.items.1.description': ['services.content.items.1.description'],
+            'services.content.items.2.title': ['services.content.items.2.title'],
+            'services.content.items.2.description': ['services.content.items.2.description'],
+            'services.content.items.3.title': ['services.content.items.3.title'],
+            'services.content.items.3.description': ['services.content.items.3.description'],
+            'services.content.items.4.title': ['services.content.items.4.title'],
+            'services.content.items.4.description': ['services.content.items.4.description'],
+            'services.content.items.5.title': ['services.content.items.5.title'],
+            'services.content.items.5.description': ['services.content.items.5.description'],
+            // Process mappings
+            'process.content.subtitle': ['process.content.subtitle'],
+            'process.content.title': ['process.content.title'],
+            'process.content.description': ['process.content.description'],
+            'process.content.steps.0.number': ['process.content.steps.0.number'],
+            'process.content.steps.0.title': ['process.content.steps.0.title'],
+            'process.content.steps.0.description': ['process.content.steps.0.description'],
+            'process.content.steps.1.number': ['process.content.steps.1.number'],
+            'process.content.steps.1.title': ['process.content.steps.1.title'],
+            'process.content.steps.1.description': ['process.content.steps.1.description'],
+            'process.content.steps.2.number': ['process.content.steps.2.number'],
+            'process.content.steps.2.title': ['process.content.steps.2.title'],
+            'process.content.steps.2.description': ['process.content.steps.2.description'],
+            'process.content.steps.3.number': ['process.content.steps.3.number'],
+            'process.content.steps.3.title': ['process.content.steps.3.title'],
+            'process.content.steps.3.description': ['process.content.steps.3.description'],
+            // Testimonials mappings
+            'testimonials.content.subtitle': ['testimonials.content.subtitle'],
+            'testimonials.content.title': ['testimonials.content.title'],
+            'testimonials.content.description': ['testimonials.content.description'],
+            'testimonials.content.items.0.title': ['testimonials.content.items.0.title'],
+            'testimonials.content.items.0.text': ['testimonials.content.items.0.text'],
+            'testimonials.content.items.0.author': ['testimonials.content.items.0.author'],
+            'testimonials.content.items.0.role': ['testimonials.content.items.0.role'],
+            'testimonials.content.items.1.title': ['testimonials.content.items.1.title'],
+            'testimonials.content.items.1.text': ['testimonials.content.items.1.text'],
+            'testimonials.content.items.1.author': ['testimonials.content.items.1.author'],
+            'testimonials.content.items.1.role': ['testimonials.content.items.1.role'],
+            // Final CTA mappings
+            'final_cta.content.subtitle': ['final_cta.content.subtitle'],
+            'final_cta.content.title': ['final_cta.content.title'],
+            'final_cta.content.description': ['final_cta.content.description'],
+            'final_cta.content.primary_button': ['final_cta.content.primary_button'],
+            'final_cta.content.secondary_button': ['final_cta.content.secondary_button'],
+            // Footer mappings
+            'footer.content.description': ['footer.content.description'],
+            'footer.content.quick_links_title': ['footer.content.quick_links_title'],
+            'footer.content.about_title': ['footer.content.about_title'],
+            'footer.content.support_title': ['footer.content.support_title'],
+            'footer.content.links.home': ['footer.content.links.home'],
+            'footer.content.links.courses': ['footer.content.links.courses'],
+            'footer.content.links.pricing': ['footer.content.links.pricing'],
+            'footer.content.links.blog': ['footer.content.links.blog'],
+            'footer.content.links.about_us': ['footer.content.links.about_us'],
+            'footer.content.links.teachers': ['footer.content.links.teachers'],
+            'footer.content.links.career_orientation': ['footer.content.links.career_orientation'],
+            'footer.content.links.career_center': ['footer.content.links.career_center'],
+            'footer.content.links.contact_us': ['footer.content.links.contact_us'],
+            'footer.content.links.help_center': ['footer.content.links.help_center'],
+            'footer.content.links.privacy_policy': ['footer.content.links.privacy_policy'],
+            'footer.content.links.terms_of_service': ['footer.content.links.terms_of_service'],
+            'footer.content.copyright': ['footer.content.copyright'],
+            'footer.content.social.facebook': ['footer.content.social.facebook'],
+            'footer.content.social.twitter': ['footer.content.social.twitter'],
+            'footer.content.social.linkedin': ['footer.content.social.linkedin'],
+            'footer.content.social.instagram': ['footer.content.social.instagram'],
+            // Cart mappings
+            'cart.content.quantity_display': ['cart.content.quantity_display'],
+            'cart.content.content.title': ['cart.content.content.title'],
+            'cart.content.content.subtotal': ['cart.content.content.subtotal'],
+            'cart.content.content.continue_to_checkout': ['cart.content.content.continue_to_checkout'],
+            'cart.content.content.no_items_found': ['cart.content.content.no_items_found'],
+            'cart.content.errors.quantity_not_available': ['cart.content.errors.quantity_not_available']
+        };
+
         // TESTIMONIALS MAPPINGS
         const testimonialsMappings = {
             'testimonials.content.title': ['testimonials.content.title', 'testimonials.title'],
@@ -907,6 +1190,7 @@ class LanguageManager {
             faqMappings,
             processMappings,
             awardsMappings,
+            careerOrientationMappings,
             testimonialsMappings,
             contactMappings,
             footerMappings,
@@ -940,6 +1224,16 @@ class LanguageManager {
      * Get localized text for common UI elements
      */
     getLocalizedText(key, locale) {
+        // Check career-orientation translations first if on that page
+        const pageName = this.getCurrentPageName();
+        if (pageName === 'career-orientation' && window.careerOrientationTranslations?.[locale]) {
+            // Try to get translation from career-orientation static translations
+            const value = this.getExactPath(window.careerOrientationTranslations[locale], key);
+            if (value) {
+                console.log(`[Career-Orientation Translation] ${key}: "${value}"`);
+                return value;
+            }
+        }
         const translations = {
             en: {
                 learnMore: 'Learn More',
@@ -1042,6 +1336,10 @@ class LanguageManager {
                 'footer.content.description': 'Elevate tech career with expert-led courses. if you\'re just aiming to advance skills, practical training is designed.',
                 'footer.content.contact_prefix': 'Contact:',
                 'footer.content.contact_email': 'zohacous@email.com',
+                'footer.content.description': 'Elevate tech career with expert-led courses. if you\'re just aiming to advance skills, practical training is designed.',
+                'footer.content.contact_label': 'Contact:',
+                'footer.content.menu_title': 'Menu',
+                'footer.content.utility_pages_title': 'Utility Pages',
                 'footer.content.newsletter.label': 'Subscribe to Newsletter',
                 'footer.content.newsletter.placeholder': 'Enter email to subscribe',
                 'footer.content.newsletter.submit': 'Subscribe',
@@ -1158,6 +1456,10 @@ class LanguageManager {
                 'footer.content.description': 'Повысьте свою техническую карьеру с курсами от экспертов. Если вы просто стремитесь развивать навыки, практическое обучение разработано.',
                 'footer.content.contact_prefix': 'Контакт:',
                 'footer.content.contact_email': 'zohacous@email.com',
+                'footer.content.description': 'Поднимите техническую карьеру с курсами от экспертов. Если вы просто хотите развить навыки, практическое обучение создано специально.',
+                'footer.content.contact_label': 'Контакт:',
+                'footer.content.menu_title': 'Меню',
+                'footer.content.utility_pages_title': 'Служебные страницы',
                 'footer.content.newsletter.label': 'Подписаться на рассылку',
                 'footer.content.newsletter.placeholder': 'Введите email для подписки',
                 'footer.content.newsletter.submit': 'Подписаться',
@@ -1279,6 +1581,10 @@ class LanguageManager {
                 'footer.content.description': 'העלה את הקריירה הטכנולוגית שלך עם קורסים בהדרכת מומחים. אם אתה פשוט מתכוון לקדם כישורים, ההכשרה המעשית מיועדת.',
                 'footer.content.contact_prefix': 'צור קשר:',
                 'footer.content.contact_email': 'zohacous@email.com',
+                'footer.content.description': 'העלה את הקריירה הטכנולוגית שלך עם קורסים מומחים. אם אתה רק מתכוון לקדם כישורים, ההכשרה המעשית מיועדת.',
+                'footer.content.contact_label': 'צור קשר:',
+                'footer.content.menu_title': 'תפריט',
+                'footer.content.utility_pages_title': 'דפי שירות',
                 'footer.content.newsletter.label': 'הירשם לניוזלטר',
                 'footer.content.newsletter.placeholder': 'הזן אימייל להרשמה',
                 'footer.content.newsletter.submit': 'הירשם',
