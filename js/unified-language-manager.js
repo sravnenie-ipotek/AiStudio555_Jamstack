@@ -1623,6 +1623,12 @@ class LanguageManager {
                 // UI
                 'ui.content.no_items': 'לא נמצאו פריטים.',
 
+                // Stats section - Mentor translations
+                'stats.content.mentor.name': 'גב׳ שרה ג׳ונסון',
+                'stats.content.mentor.bio': 'מספקת הכשרה מעשית וחניכה בעולם האמיתי, אני שואפת לגשר על הפער בין ידע תיאורטי ליישום מעשי',
+                'stats.content.mentor.title': 'מנטורית מומחית בטכנולוגיה',
+                'stats.content.mentor.description': 'עם יותר מעשור של ניסיון בתעשיית הטכנולוגיה, המנטור שלנו הקדיש את הקריירה שלו להעצמת סטודנטים',
+
                 // Pricing plans translations
                 'pricing.content.plans.monthly.name': 'חודשי',
                 'pricing.content.plans.annual.name': 'שנתי',
