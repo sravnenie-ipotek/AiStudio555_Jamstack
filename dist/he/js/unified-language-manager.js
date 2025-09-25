@@ -50,9 +50,12 @@ class LanguageManager {
         document.body.classList.add('language-ready');
         console.log('[LanguageManager] Navigation and UI elements revealed immediately');
 
-        // CRITICAL FIX: Apply Hebrew UI button translations immediately
+        // CRITICAL FIX: Apply immediate UI button translations for non-English locales
         if (this.currentLocale === 'he') {
             this.applyImmediateHebrewFix();
+        }
+        if (this.currentLocale === 'ru') {
+            this.applyImmediateRussianFix();
         }
 
         // Load content for current language if needed
@@ -60,9 +63,12 @@ class LanguageManager {
             console.log('[LanguageManager] Loading dynamic content for locale:', this.currentLocale);
             this.loadPageContent(this.currentLocale).then(() => {
                 console.log('[LanguageManager] Dynamic content load complete');
-                // Apply Hebrew fix again after content load
+                // Apply fix again after content load
                 if (this.currentLocale === 'he') {
                     setTimeout(() => this.applyImmediateHebrewFix(), 100);
+                }
+                if (this.currentLocale === 'ru') {
+                    setTimeout(() => this.applyImmediateRussianFix(), 100);
                 }
             }).catch((error) => {
                 console.warn('[LanguageManager] Dynamic content load failed:', error);
@@ -181,6 +187,47 @@ class LanguageManager {
     }
 
     /**
+     * CRITICAL FIX: Apply Russian UI button translations immediately to prevent race conditions
+     */
+    applyImmediateRussianFix() {
+        console.log('[CRITICAL FIX] Applying immediate Russian UI translations');
+
+        // Fix the specific button issue
+        const signUpButtons = document.querySelectorAll('[data-i18n="ui.content.buttons.sign_up_today"]');
+        signUpButtons.forEach(button => {
+            if (!button.textContent || button.textContent.trim() === '' || button.textContent === 'Sign Up Today') {
+                button.textContent = 'Записаться сегодня';
+                console.log('[CRITICAL FIX] Applied Russian to Sign Up button:', button);
+            }
+        });
+
+        // Apply other common Russian UI translations immediately
+        const commonRussianTranslations = {
+            'navigation.content.items.0.text': 'Главная',
+            'navigation.content.items.1.text': 'Курсы',
+            'navigation.content.items.2.text': 'Преподаватели',
+            'navigation.content.items.3.text': 'Блог',
+            'navigation.content.items.4.text': 'О нас',
+            'navigation.content.items.6.text': 'Цены',
+            'navigation.content.career.orientation': 'Профориентация',
+            'navigation.content.career.center': 'Карьерный центр'
+        };
+
+        Object.entries(commonRussianTranslations).forEach(([key, translation]) => {
+            const elements = document.querySelectorAll(`[data-i18n="${key}"]`);
+            elements.forEach(element => {
+                if (!element.textContent || element.textContent.trim() === '' ||
+                    !/[а-яё]/i.test(element.textContent)) {
+                    element.textContent = translation;
+                    console.log(`[CRITICAL FIX] Applied Russian to ${key}:`, element);
+                }
+            });
+        });
+
+        console.log('[CRITICAL FIX] Immediate Russian translations applied');
+    }
+
+    /**
      * Get initial locale from URL, localStorage, or browser
      */
     getInitialLocale() {
@@ -228,9 +275,28 @@ class LanguageManager {
      * Get locale from URL parameters
      */
     getLocaleFromURL() {
+        // First check URL parameter (?locale=ru)
         const params = new URLSearchParams(window.location.search);
-        const locale = params.get('locale');
-        return locale && this.supportedLocales.includes(locale) ? locale : null;
+        const paramLocale = params.get('locale');
+        if (paramLocale && this.supportedLocales.includes(paramLocale)) {
+            console.log('[LanguageManager] Locale detected from URL parameter:', paramLocale);
+            return paramLocale;
+        }
+
+        // Then check path-based locale (/ru/, /he/, /en/)
+        const path = window.location.pathname;
+        const pathParts = path.split('/').filter(part => part);
+
+        if (pathParts.length > 0) {
+            const pathLocale = pathParts[0];
+            if (this.supportedLocales.includes(pathLocale)) {
+                console.log('[LanguageManager] Locale detected from URL path:', pathLocale);
+                return pathLocale;
+            }
+        }
+
+        console.log('[LanguageManager] No locale detected from URL');
+        return null;
     }
 
     /**
@@ -1529,7 +1595,13 @@ class LanguageManager {
                 'footer.content.menus.2.items.1.text': 'Условия обслуживания',
                 'footer.content.menus.2.items.2.text': 'Политика конфиденциальности',
                 'footer.content.copyright': '© Авторские права - <a href="index.html" class="footer-information-text-link">Zohacous</a> | Дизайн <a href="https://zohaflow.webflow.io" target="_blank" class="footer-information-text-link">Zohaflow</a> - <a href="template-pages/license.html" class="footer-information-text-link">Лицензирование</a> На платформе <a href="https://webflow.com/" target="_blank" class="footer-information-text-link">Webflow</a>',
-                'navigation.content.items.5.text': 'Свяжитесь с нами'
+                'navigation.content.items.5.text': 'Свяжитесь с нами',
+
+                // Stats section - Mentor translations
+                'stats.content.mentor.name': 'Миссис Сара Джонсон',
+                'stats.content.mentor.bio': 'Предоставляя практическое обучение и наставничество в реальном мире, я стремлюсь преодолеть разрыв между теоретическими знаниями и практическим применением',
+                'stats.content.mentor.title': 'Эксперт-наставник по технологиям',
+                'stats.content.mentor.description': 'Имея более чем десятилетний опыт работы в технологической индустрии, наш наставник посвятил свою карьеру расширению возможностей студентов'
             },
             he: {
                 learnMore: 'למד עוד',
@@ -1622,6 +1694,12 @@ class LanguageManager {
                 'pricing.features.access_webinars': 'גישה לוובינרים',
                 // UI
                 'ui.content.no_items': 'לא נמצאו פריטים.',
+
+                // Stats section - Mentor translations
+                'stats.content.mentor.name': 'גב׳ שרה ג׳ונסון',
+                'stats.content.mentor.bio': 'מספקת הכשרה מעשית וחניכה בעולם האמיתי, אני שואפת לגשר על הפער בין ידע תיאורטי ליישום מעשי',
+                'stats.content.mentor.title': 'מנטורית מומחית בטכנולוגיה',
+                'stats.content.mentor.description': 'עם יותר מעשור של ניסיון בתעשיית הטכנולוגיה, המנטור שלנו הקדיש את הקריירה שלו להעצמת סטודנטים',
 
                 // Pricing plans translations
                 'pricing.content.plans.monthly.name': 'חודשי',

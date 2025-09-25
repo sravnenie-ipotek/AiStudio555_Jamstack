@@ -2,91 +2,170 @@
 (function() {
   'use strict';
 
-  // Create modal HTML structure with Hebrew support
-  const modalHTML = `
-    <div id="contactModal" class="contact-modal">
-      <div class="contact-modal-overlay"></div>
-      <div class="contact-modal-container">
-        <div class="contact-modal-content">
-          <button class="contact-modal-close" aria-label="Close modal">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
+  // Language-aware modal translations
+  const modalTranslations = {
+    en: {
+      title: 'Master AI and Technology',
+      subtitle: 'Fill out the form and we\'ll get back to you via WhatsApp soon',
+      fullName: 'Full Name',
+      fullNamePlaceholder: 'Enter your name',
+      phoneNumber: 'Phone Number',
+      phoneNumberPlaceholder: 'Enter phone number',
+      message: 'Message',
+      messagePlaceholder: 'Enter your message',
+      submit: 'Send',
+      successMessage: 'Message sent successfully!',
+      nameRequired: 'Full name is required',
+      phoneRequired: 'Phone number is required',
+      phoneInvalid: 'Please enter a valid phone number',
+      messageRequired: 'Message is required',
+      messageMinLength: 'Message must be at least 10 characters'
+    },
+    ru: {
+      title: 'Овладейте ИИ и технологиями',
+      subtitle: 'Заполните форму, и мы свяжемся с вами через WhatsApp в ближайшее время',
+      fullName: 'Полное имя',
+      fullNamePlaceholder: 'Введите ваше имя',
+      phoneNumber: 'Номер телефона',
+      phoneNumberPlaceholder: 'Введите номер телефона',
+      message: 'Сообщение',
+      messagePlaceholder: 'Введите ваше сообщение',
+      submit: 'Отправить',
+      successMessage: 'Сообщение отправлено успешно!',
+      nameRequired: 'Полное имя обязательно',
+      phoneRequired: 'Номер телефона обязателен',
+      phoneInvalid: 'Пожалуйста, введите действительный номер телефона',
+      messageRequired: 'Сообщение обязательно',
+      messageMinLength: 'Сообщение должно содержать минимум 10 символов'
+    },
+    he: {
+      title: 'שלטו ב-AI וטכנולוגיה',
+      subtitle: 'מלאו את הטופס ונחזור אליכם בהקדם דרך וואטסאפ',
+      fullName: 'שם מלא',
+      fullNamePlaceholder: 'הכניסו את שמכם',
+      phoneNumber: 'מספר טלפון',
+      phoneNumberPlaceholder: 'הכניסו מספר טלפון',
+      message: 'הודעה',
+      messagePlaceholder: 'הכניסו את הודעתכם',
+      submit: 'שלח',
+      successMessage: 'ההודעה נשלחה בהצלחה!',
+      nameRequired: 'שם מלא הוא שדה חובה',
+      phoneRequired: 'מספר טלפון הוא שדה חובה',
+      phoneInvalid: 'אנא הכניסו מספר טלפון חוקי',
+      messageRequired: 'הודעה היא שדה חובה',
+      messageMinLength: 'ההודעה חייבת לכלול לפחות 10 תווים'
+    }
+  };
 
-          <div class="contact-modal-header">
-            <h2 class="contact-modal-title">שלטו ב-AI וטכנולוגיה</h2>
-            <p class="contact-modal-subtitle">מלאו את הטופס ונחזור אליכם בהקדם דרך וואטסאפ</p>
-          </div>
+  // Get current page language
+  function getCurrentLanguage() {
+    // Check URL parameter first
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlLocale = urlParams.get('locale');
+    if (urlLocale && ['en', 'ru', 'he'].includes(urlLocale)) {
+      return urlLocale;
+    }
 
-          <form id="contactForm" class="contact-form">
-            <div class="form-group">
-              <label for="fullName" class="form-label">שם מלא</label>
-              <input
-                type="text"
-                id="fullName"
-                name="fullName"
-                class="form-input"
-                placeholder="הכניסו את שמכם"
-                required
-              />
-              <span class="form-error" id="nameError"></span>
-            </div>
+    // Check localStorage
+    const savedLocale = localStorage.getItem('preferred_locale');
+    if (savedLocale && ['en', 'ru', 'he'].includes(savedLocale)) {
+      return savedLocale;
+    }
 
-            <div class="form-group">
-              <label for="phoneNumber" class="form-label">מספר טלפון</label>
-              <input
-                type="tel"
-                id="phoneNumber"
-                name="phoneNumber"
-                class="form-input"
-                placeholder="הכניסו מספר טלפון"
-                required
-              />
-              <span class="form-error" id="phoneError"></span>
-            </div>
+    // Default to English
+    return 'en';
+  }
 
-            <div class="form-group">
-              <label for="message" class="form-label">הודעה</label>
-              <textarea
-                id="message"
-                name="message"
-                class="form-textarea"
-                rows="4"
-                placeholder="הכניסו את הודעתכם"
-                required
-              ></textarea>
-              <span class="form-error" id="messageError"></span>
-            </div>
+  // Create modal HTML structure with dynamic language support
+  function createModalHTML(lang = 'en') {
+    const t = modalTranslations[lang];
+    const isRTL = lang === 'he';
 
-            <button type="submit" class="form-submit-btn">
-              <span class="btn-text">שלח</span>
-              <span class="btn-loader" style="display: none;">
-                <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
-                  <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50" stroke-dashoffset="10">
-                    <animateTransform attributeName="transform" type="rotate" from="0 10 10" to="360 10 10" dur="1s" repeatCount="indefinite"/>
-                  </circle>
-                </svg>
-              </span>
+    return `
+      <div id="contactModal" class="contact-modal" ${isRTL ? 'dir="rtl"' : 'dir="ltr"'}>
+        <div class="contact-modal-overlay"></div>
+        <div class="contact-modal-container">
+          <div class="contact-modal-content">
+            <button class="contact-modal-close" aria-label="Close modal">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
             </button>
-          </form>
+
+            <div class="contact-modal-header">
+              <h2 class="contact-modal-title">${t.title}</h2>
+              <p class="contact-modal-subtitle">${t.subtitle}</p>
+            </div>
+
+            <form id="contactForm" class="contact-form">
+              <div class="form-group">
+                <label for="fullName" class="form-label">${t.fullName}</label>
+                <input
+                  type="text"
+                  id="fullName"
+                  name="fullName"
+                  class="form-input"
+                  placeholder="${t.fullNamePlaceholder}"
+                  required
+                />
+                <span class="form-error" id="nameError"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="phoneNumber" class="form-label">${t.phoneNumber}</label>
+                <input
+                  type="tel"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  class="form-input"
+                  placeholder="${t.phoneNumberPlaceholder}"
+                  required
+                />
+                <span class="form-error" id="phoneError"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="message" class="form-label">${t.message}</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  class="form-textarea"
+                  rows="4"
+                  placeholder="${t.messagePlaceholder}"
+                  required
+                ></textarea>
+                <span class="form-error" id="messageError"></span>
+              </div>
+
+              <button type="submit" class="form-submit-btn">
+                <span class="btn-text">${t.submit}</span>
+                <span class="btn-loader" style="display: none;">
+                  <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
+                    <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50" stroke-dashoffset="10">
+                      <animateTransform attributeName="transform" type="rotate" from="0 10 10" to="360 10 10" dur="1s" repeatCount="indefinite"/>
+                    </circle>
+                  </svg>
+                </span>
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div id="toast" class="toast">
-      <div class="toast-content">
-        <svg class="toast-icon error-icon" style="display:none;" width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm5 13.59L13.59 15 10 11.41 6.41 15 5 13.59 8.59 10 5 6.41 6.41 5 10 8.59 13.59 5 15 6.41 11.41 10 15 13.59z" fill="currentColor"/>
-        </svg>
-        <svg class="toast-icon success-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm-1 15l-5-5 1.5-1.5L9 12l7-7 1.5 1.5L9 15z" fill="currentColor"/>
-        </svg>
-        <span class="toast-message">ההודעה נשלחה בהצלחה!</span>
+      <div id="toast" class="toast">
+        <div class="toast-content">
+          <svg class="toast-icon error-icon" style="display:none;" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm5 13.59L13.59 15 10 11.41 6.41 15 5 13.59 8.59 10 5 6.41 6.41 5 10 8.59 13.59 5 15 6.41 11.41 10 15 13.59z" fill="currentColor"/>
+          </svg>
+          <svg class="toast-icon success-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm-1 15l-5-5 1.5-1.5L9 12l7-7 1.5 1.5L9 15z" fill="currentColor"/>
+          </svg>
+          <span class="toast-message">${t.successMessage}</span>
+        </div>
       </div>
-    </div>
-  `;
+    `;
+  }
 
   // Create styles
   const styles = `
@@ -572,6 +651,8 @@
     // Add HTML and styles to page
     if (!document.getElementById('contactModal')) {
       document.head.insertAdjacentHTML('beforeend', styles);
+      const currentLang = getCurrentLanguage();
+      const modalHTML = createModalHTML(currentLang);
       document.body.insertAdjacentHTML('beforeend', modalHTML);
     }
 
@@ -583,22 +664,28 @@
     
     modalInitialized = true;
 
-    // Form validation patterns
+    // Get current language for validation messages
+    const currentLang = getCurrentLanguage();
+    const t = modalTranslations[currentLang];
+
+    // Form validation patterns with dynamic language support
     const validators = {
       fullName: (value) => {
-        if (!value.trim()) return 'שם מלא הוא שדה חובה';
-        if (value.trim().length < 2) return 'השם חייב לכלול לפחות 2 אותיות';
+        if (!value.trim()) return t.nameRequired;
+        if (value.trim().length < 2) return currentLang === 'he' ? 'השם חייב לכלול לפחות 2 אותיות' :
+                                            currentLang === 'ru' ? 'Имя должно содержать минимум 2 буквы' :
+                                                                    'Name must be at least 2 characters';
         return '';
       },
       phoneNumber: (value) => {
-        if (!value.trim()) return 'מספר טלפון הוא שדה חובה';
+        if (!value.trim()) return t.phoneRequired;
         const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/;
-        if (!phoneRegex.test(value)) return 'אנא הכניסו מספר טלפון חוקי';
+        if (!phoneRegex.test(value)) return t.phoneInvalid;
         return '';
       },
       message: (value) => {
-        if (!value.trim()) return 'הודעה היא שדה חובה';
-        if (value.trim().length < 10) return 'ההודעה חייבת לכלול לפחות 10 תווים';
+        if (!value.trim()) return t.messageRequired;
+        if (value.trim().length < 10) return t.messageMinLength;
         return '';
       }
     };
