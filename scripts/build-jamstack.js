@@ -9,11 +9,10 @@ const path = require('path');
 const cheerio = require('cheerio');
 const axios = require('axios');
 
-// Production Strapi Cloud URLs (from .strapi-cloud.json)
-// Note: Using HTTP temporarily until SSL certificate propagates
-const STRAPI_URL = 'https://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com';
-const STRAPI_URL_FALLBACK = 'http://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com';
-const API_BASE = `${STRAPI_URL}/api`;
+// Production Custom API URLs (Railway deployment)
+const CUSTOM_API_URL = 'https://aistudio555jamstack-production.up.railway.app';
+const CUSTOM_API_LOCAL = 'http://localhost:1337';
+const API_BASE = `${CUSTOM_API_URL}/api`;
 
 // Languages configuration
 const LANGUAGES = {
@@ -47,7 +46,7 @@ async function main() {
     console.log('   1. Test locally: python3 -m http.server 8000 --directory dist');
     console.log('   2. Visit: http://localhost:8000');
     console.log('   3. Push to GitHub for Pages deployment');
-    console.log('\n🌐 Strapi Admin: https://aistudio555-7dd54e37f0-sublime-basket-82bd4586b5.strapiapp.com/admin');
+    console.log('\n🌐 Custom API Admin: https://aistudio555jamstack-production.up.railway.app/content-admin-comprehensive.html');
     
   } catch (error) {
     console.error('❌ Build failed:', error.message);
@@ -107,9 +106,9 @@ async function processHtmlFile(filename, langCode, langConfig, outputDir, target
       $('meta[name="description"]').attr('content')?.replace(/AI Studio/g, 'סטודיו AI') || '');
   }
   
-  // Update form action URLs to point to Strapi Cloud
+  // Update form action URLs to point to Custom API
   $('form[data-name="lead-form"], form[id*="lead"], form[action*="submit"]').each((i, form) => {
-    $(form).attr('action', `${API_BASE}/leads`);
+    $(form).attr('action', `${API_BASE}/nd/leads`);
     $(form).attr('method', 'POST');
   });
   
@@ -189,7 +188,7 @@ function addFormHandler($) {
             
             try {
               // Try HTTPS first, fallback to HTTP if SSL issues
-              let response = await fetch('${API_BASE}/leads', {
+              let response = await fetch('${API_BASE}/nd/leads', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'
@@ -197,10 +196,10 @@ function addFormHandler($) {
                 body: JSON.stringify(data)
               });
               
-              // If HTTPS fails, try HTTP fallback
+              // If HTTPS fails, try local fallback
               if (!response.ok && response.status === 0) {
-                console.log('HTTPS failed, trying HTTP fallback...');
-                response = await fetch('${STRAPI_URL_FALLBACK}/api/leads', {
+                console.log('HTTPS failed, trying local fallback...');
+                response = await fetch('${CUSTOM_API_LOCAL}/api/nd/leads', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json'
@@ -255,7 +254,7 @@ function addHebrewIntegration($, filename) {
           const API_BASE = '${API_BASE}';
           
           try {
-            const response = await fetch(\`\${API_BASE}/career-orientation-page?locale=he\`);
+            const response = await fetch(\`\${API_BASE}/nd/career-orientation-page?locale=he\`);
             console.log('Hebrew API response status:', response.status);
             
             if (!response.ok) {
@@ -331,7 +330,7 @@ function addHebrewIntegration($, filename) {
           const API_BASE = '${API_BASE}';
           
           try {
-            const response = await fetch(\`\${API_BASE}/career-center-page?locale=he\`);
+            const response = await fetch(\`\${API_BASE}/nd/career-center-page?locale=he\`);
             console.log('Hebrew API response status:', response.status);
             
             if (!response.ok) {

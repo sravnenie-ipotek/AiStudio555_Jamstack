@@ -1892,16 +1892,16 @@
                     <p data-w-id="6efdef32-e191-bb51-895d-4253c7b37d7c" style="opacity:0" class="awards-card-description-text" data-i18n="awards.content.content.items.1.description">The Class Mentorship Program is designed to provide students with personalized guidance, academic support, and career development to enhance their learning .</p>
                   </div>
                   <div class="awards-single-card three">
-                    <div class="awards-icon-wrapper"><img src="images/Awards-Icon3.svg" loading="lazy" style="opacity:0" data-w-id="3a45f621-5b72-8c91-23d4-e8b5cf2a9163" alt="" class="awards-icon"></div>
-                    <h3 data-w-id="3a45f621-5b72-8c91-23d4-e8b5cf2a9164" style="opacity:0" class="awards-title" data-i18n="awards.content.content.items.2.title">Excellent Remote Learning.</h3>
-                    <div data-w-id="3a45f621-5b72-8c91-23d4-e8b5cf2a9165" style="opacity:0" class="awards-line"></div>
-                    <p data-w-id="3a45f621-5b72-8c91-23d4-e8b5cf2a9166" style="opacity:0" class="awards-card-description-text" data-i18n="awards.content.content.items.2.description">In today's digital age, remote learning has become an essential component of the educational experience. Whether for K-12, higher education.</p>
+                    <div class="awards-icon-wrapper"><img src="images/Awards-Icon3.svg" loading="lazy" alt="" class="awards-icon"></div>
+                    <h3 class="awards-title" data-i18n="awards.content.content.items.2.title">Excellent Remote Learning.</h3>
+                    <div class="awards-line"></div>
+                    <p class="awards-card-description-text" data-i18n="awards.content.content.items.2.description">In today's digital age, remote learning has become an essential component of the educational experience. Whether for K-12, higher education.</p>
                   </div>
                   <div class="awards-single-card four">
-                    <div class="awards-icon-wrapper"><img src="images/Awards-Icon4.svg" loading="lazy" style="opacity:0" data-w-id="7c89d154-9e25-3f47-a6b1-2c8e5d4f7a92" alt="" class="awards-icon"></div>
-                    <h3 data-w-id="7c89d154-9e25-3f47-a6b1-2c8e5d4f7a93" style="opacity:0" class="awards-title" data-i18n="awards.content.content.items.3.title">Leader Technology Training.</h3>
-                    <div data-w-id="7c89d154-9e25-3f47-a6b1-2c8e5d4f7a94" style="opacity:0" class="awards-line"></div>
-                    <p data-w-id="7c89d154-9e25-3f47-a6b1-2c8e5d4f7a95" style="opacity:0" class="awards-card-description-text" data-i18n="awards.content.content.items.3.description">Leader Technology Training is designed to empower professionals with the skills and knowledge required to become proficient leaders.</p>
+                    <div class="awards-icon-wrapper"><img src="images/Awards-Icon4.svg" loading="lazy" alt="" class="awards-icon"></div>
+                    <h3 class="awards-title" data-i18n="awards.content.content.items.3.title">Leader Technology Training.</h3>
+                    <div class="awards-line"></div>
+                    <p class="awards-card-description-text" data-i18n="awards.content.content.items.3.description">Leader Technology Training is designed to empower professionals with the skills and knowledge required to become proficient leaders.</p>
                   </div>
                 </div>
               </div>
@@ -2932,48 +2932,61 @@
     }
   </script>
 
-  <!-- Awards Section Visibility Fix -->
-  <style>
-    /* Ensure awards section content is always visible */
-    .section.awards [data-w-id] {
-      opacity: 1 !important;
-      animation: fadeInUp 0.8s ease-out;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
-
-  <!-- Awards Section Intersection Observer -->
+  <!-- Awards Section Scroll Animation Fix -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Ensure awards section is always visible with smooth animations
-      const awardsElements = document.querySelectorAll('.section.awards [data-w-id]');
+      // Wait for Webflow to load first
+      setTimeout(() => {
+        initializeAwardsAnimations();
+      }, 1000);
+    });
+
+    function initializeAwardsAnimations() {
+      console.log('🎯 Initializing awards scroll animations...');
+
+      const awardsSection = document.querySelector('.section.awards');
+      if (!awardsSection) {
+        console.warn('❌ Awards section not found');
+        return;
+      }
+
+      // Get elements that should animate (only those with data-w-id and opacity:0)
+      const animatedElements = awardsSection.querySelectorAll('[data-w-id][style*="opacity:0"], [data-w-id][style*="opacity: 0"]');
+      console.log(`🎬 Found ${animatedElements.length} elements to animate`);
+
+      if (animatedElements.length === 0) {
+        console.warn('⚠️ No animated elements found, using fallback');
+        return;
+      }
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+            const element = entry.target;
+            // Animate in with staggered timing
+            const index = Array.from(animatedElements).indexOf(element);
+            setTimeout(() => {
+              element.style.opacity = '1';
+              element.style.transform = 'translateY(0px)';
+              element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+              console.log(`✨ Animated element ${index + 1}:`, element.className);
+            }, index * 100); // 100ms stagger
           }
         });
-      }, { threshold: 0.1 });
-
-      awardsElements.forEach((el, index) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = `opacity 0.8s ease-out ${index * 0.1}s, transform 0.8s ease-out ${index * 0.1}s`;
-        observer.observe(el);
+      }, {
+        threshold: 0.3,
+        rootMargin: '-50px 0px'
       });
-    });
+
+      // Observe each animated element
+      animatedElements.forEach(element => {
+        // Ensure element starts hidden with slight transform
+        element.style.transform = 'translateY(20px)';
+        observer.observe(element);
+      });
+
+      console.log('✅ Awards scroll animations initialized');
+    }
   </script>
 
   <!-- jQuery (required for Webflow) -->
