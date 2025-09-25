@@ -14,13 +14,13 @@
                 ? 'http://localhost:1337'
                 : 'https://aistudio555jamstack-production.up.railway.app',
             postsToShow: 5,
-            defaultImage: '/images/Blog-Image.jpg',
+            defaultImage: '/images/About-Me-Image.jpg',
             fallbackImages: [
-                '/images/CTA-Section-Bg.jpg',
-                '/images/Course-Categories-Content-Bg.jpg',
+                '/images/CTA-Man-Image1.png',
+                '/images/About-Us-Image.png',
                 '/images/About-Me-Image.jpg',
-                '/images/Process-Image.jpg',
-                '/images/Inner-Banner-Bg.jpg'
+                '/images/Authentication-Image.jpg',
+                '/images/Process-Image.jpg'
             ]
         },
 
@@ -159,12 +159,12 @@
 
             card.innerHTML = `
                 <div class="blog-card" style="${isRTL ? 'direction: rtl;' : ''} height: 100%; display: flex; flex-direction: column; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden; transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 24px rgba(0, 0, 0, 0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0, 0, 0, 0.1)';">
-                    <a href="blog-detail.html?id=${post.id}&locale=${locale}" class="blog-image-link w-inline-block" style="display: block; width: 100%; height: 200px; overflow: hidden;">
+                    <a href="blog-detail.html?id=${post.id}&locale=${locale}" class="blog-image-link w-inline-block" style="display: block; width: 100%; height: 200px; overflow: hidden; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative;">
                         <img src="${imageUrl}"
                              loading="lazy"
                              alt="${this.escapeHtml(post.title)}"
                              class="blog-post-image"
-                             onerror="this.src='${this.config.defaultImage}'"
+                             onerror="if (!this.dataset.fallback) { this.dataset.fallback = 'true'; this.src='${this.config.defaultImage}'; } else { this.style.opacity='0'; }"
                              style="width: 100%; height: 100%; object-fit: cover;">
                     </a>
                     <div class="blog-card-typography" style="padding: 20px;">
