@@ -23,7 +23,7 @@ const SECTION_TYPES = {
 
 // Main section renderer
 class SectionRenderer {
-  constructor(strapiUrl = 'http://localhost:1337') {
+  constructor(strapiUrl = 'http://localhost:3000') {
     this.strapiUrl = strapiUrl;
     this.apiToken = '6ba76f584778637fd308f48aac27461c08af957ef205a3281c444c32859f229d923a1984ec93b9564b26db3c10e68f2ccca8983e27ec9b42483e3b8f6faca7a2a52f9b586357c4f94ad37792a7b0f271c164f661e03e4af725cf24708fd5967db6d2431c7afb9be47082538f62ab7b49cad7c68cd290f0c429b3706fbb8df2dc';
   }

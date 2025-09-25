@@ -13,7 +13,7 @@ exports.default = (0, test_1.defineConfig)({
         ['list']
     ],
     use: {
-        baseURL: 'http://localhost:1337',
+        baseURL: 'http://localhost:3000',
         trace: 'on-first-retry',
         screenshot: 'only-on-failure',
         video: 'retain-on-failure'

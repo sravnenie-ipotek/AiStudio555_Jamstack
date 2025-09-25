@@ -4,7 +4,7 @@
 
 async function updatePricingContent() {
   try {
-    const API_URL = 'http://localhost:1337/api/nd/pricing-page';
+    const API_URL = 'http://localhost:3000/api/nd/pricing-page';
 
     // Define pricing content
     const pricingData = {

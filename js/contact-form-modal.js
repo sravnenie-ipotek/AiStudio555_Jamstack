@@ -808,7 +808,7 @@
       try {
         // Send to consultation API first (same as consultation form)
         const apiUrl = window.location.hostname === 'localhost'
-          ? 'http://localhost:1337/api/consultations'
+          ? 'http://localhost:3000/api/consultations'
           : 'https://aistudio555jamstack-production.up.railway.app/api/consultations';
 
         const response = await fetch(apiUrl, {

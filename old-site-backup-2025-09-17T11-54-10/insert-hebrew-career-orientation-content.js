@@ -2,7 +2,7 @@
 // This script moves all hardcoded Hebrew content from he/career-orientation.html to the database
 
 const isLocal = process.env.NODE_ENV !== 'production';
-const API_BASE = isLocal ? 'http://localhost:1337' : 'https://aistudio555jamstack-production.up.railway.app';
+const API_BASE = isLocal ? 'http://localhost:3000' : 'https://aistudio555jamstack-production.up.railway.app';
 
 console.log('🇮🇱 Starting Hebrew Career Orientation Content Migration...');
 console.log(`📍 API Base: ${API_BASE}`);

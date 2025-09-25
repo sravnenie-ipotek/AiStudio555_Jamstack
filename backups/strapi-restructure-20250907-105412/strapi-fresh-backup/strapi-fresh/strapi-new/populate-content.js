@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 async function populateHomePage() {
-  const baseURL = 'http://localhost:1337/api';
+  const baseURL = 'http://localhost:3000/api';
   
   // Home page data from home.html
   const homePageData = {
@@ -78,7 +78,7 @@ async function populateHomePage() {
     }
     
     console.log('📄 Home Page ID:', response.data.data?.id);
-    console.log('🚀 View at: http://localhost:1337/api/home-page?populate=*');
+    console.log('🚀 View at: http://localhost:3000/api/home-page?populate=*');
     
   } catch (error) {
     if (error.response) {

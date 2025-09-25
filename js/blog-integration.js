@@ -5,7 +5,7 @@ const BlogIntegration = {
     // Configuration
     config: {
         apiBaseUrl: window.location.hostname === 'localhost'
-            ? 'http://localhost:1337'
+            ? 'http://localhost:3000'
             : 'https://aistudio555jamstack-production.up.railway.app',
         postsPerPage: 9,
         currentPage: 1,

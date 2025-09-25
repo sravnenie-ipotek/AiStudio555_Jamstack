@@ -1,7 +1,7 @@
 // Simplified Hebrew Career Orientation Content Insertion
 // Using only fields that definitely exist in the API
 
-const API_BASE = 'http://localhost:1337';
+const API_BASE = 'http://localhost:3000';
 
 console.log('🇮🇱 Starting SIMPLE Hebrew Career Orientation Content Migration...');
 

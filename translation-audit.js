@@ -19,7 +19,7 @@ const { chromium } = require('@playwright/test');
         // 1. Check API data availability
         const apiData = await page.evaluate(async () => {
             try {
-                const response = await fetch('http://localhost:1337/api/nd/home-page?locale=ru');
+                const response = await fetch('http://localhost:3000/api/nd/home-page?locale=ru');
                 const data = await response.json();
                 return {
                     available: true,

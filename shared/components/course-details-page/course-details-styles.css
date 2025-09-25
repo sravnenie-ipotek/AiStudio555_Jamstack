@@ -1,9 +1,72 @@
 /* Course Details Page - Webflow 1:1 Design */
 
+/* Back Button */
+.back-button-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: translateX(-2px);
+}
+
+.back-button-icon {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffd659;
+  transition: transform 0.3s ease;
+}
+
+.back-button:hover .back-button-icon {
+  transform: translateX(-2px);
+}
+
+.back-button-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Mobile back button adjustments */
+@media (max-width: 767px) {
+  .back-button-wrapper {
+    margin-bottom: 30px;
+  }
+
+  .back-button {
+    padding: 10px 16px;
+    font-size: 13px;
+    gap: 8px;
+  }
+
+  .back-button-icon {
+    font-size: 14px;
+  }
+}
+
 /* Main Section */
 .section.courses-single {
   background: #05051a;
-  padding: 60px 0 120px;
+  padding: 120px 0 120px; /* Increased top padding from 60px to 120px to prevent header overlap */
   min-height: 100vh;
 }
 
@@ -485,7 +548,7 @@
 
 @media (max-width: 767px) {
   .section.courses-single {
-    padding: 40px 0 80px;
+    padding: 100px 0 80px; /* Increased top padding for mobile to prevent header overlap */
   }
 
   .course-details-name {

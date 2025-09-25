@@ -3,7 +3,7 @@
 const fetch = require('node-fetch');
 
 async function updateTranslations() {
-    const baseUrl = 'http://localhost:1337/api/nd/home-page';
+    const baseUrl = 'http://localhost:3000/api/nd/home-page';
 
     const updates = [
         {

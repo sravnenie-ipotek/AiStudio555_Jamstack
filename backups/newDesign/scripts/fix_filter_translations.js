@@ -44,7 +44,7 @@ const translations = {
 };
 
 async function updateTranslations() {
-  const baseUrl = 'http://localhost:1337/api/nd/home-page';
+  const baseUrl = 'http://localhost:3000/api/nd/home-page';
 
   for (const [section, data] of Object.entries(translations)) {
     console.log(`Updating ${section} section...`);

@@ -1,6 +1,10 @@
 /**
- * Fix Testimonials Translation
+ * Fix Testimonials Translation - DUAL SYSTEM ARCHITECTURE (System 2)
  * Maps testimonial data properly from API to HTML
+ *
+ * DUAL SYSTEM ARCHITECTURE - System 2: Dynamic Content Population
+ * UI TRANSLATIONS: Handled by unified-language-manager.js (System 1)
+ * CRITICAL: Removes data-i18n attributes after updating to prevent conflicts
  */
 
 (function() {
@@ -84,7 +88,7 @@
                     if (translation && translation[locale]) {
                         console.log(`🔄 Translating "${currentTitle}" to "${translation[locale]}"`);
                         titleElement.textContent = translation[locale];
-                        titleElement.removeAttribute('data-i18n'); // Remove to prevent overwrite
+                        titleElement.removeAttribute('data-i18n'); // DUAL SYSTEM: Prevent language manager conflicts
                         console.log(`✅ Card ${index + 1}: Translation completed`);
                     } else {
                         console.log(`⚠️ Card ${index + 1}: No translation available for "${currentTitle}" in locale "${locale}"`);
@@ -127,12 +131,21 @@
 
     function aggressiveFix() {
         const path = window.location.pathname;
-        if (!path.includes('/he/')) {
-            return; // Only run on Hebrew pages
+        // Run on ALL language pages, not just Hebrew
+        if (!path.includes('/he/') && !path.includes('/ru/') && !path.includes('/en/')) {
+            return; // Only run on language-specific pages
         }
 
         const testimonialCards = document.querySelectorAll('.testimonials-single-card');
         let needsFix = false;
+
+        // Get current locale from URL path
+        let currentLocale = 'en';
+        if (path.includes('/he/')) {
+            currentLocale = 'he';
+        } else if (path.includes('/ru/')) {
+            currentLocale = 'ru';
+        }
 
         testimonialCards.forEach((card, index) => {
             const titleElement = card.querySelector('.testimonials-title');
@@ -150,9 +163,19 @@
                     '"An Exceptional Mentorship Journey"'
                 ];
 
-                if (englishTitles.includes(currentTitle)) {
+                // Check if we're on a non-English page and title is still in English
+                if (currentLocale !== 'en' && englishTitles.includes(currentTitle)) {
                     needsFix = true;
-                    console.log(`🚨 Found English title that needs translation: "${currentTitle}"`);
+                    console.log(`🚨 Found English title on ${currentLocale} page: "${currentTitle}"`);
+                }
+
+                // Also check if we're showing wrong language content
+                const isHebrewText = /[\u0590-\u05FF]/.test(currentTitle);
+                const isRussianText = /[А-я]/.test(currentTitle);
+
+                if ((currentLocale === 'he' && isRussianText) || (currentLocale === 'ru' && isHebrewText)) {
+                    needsFix = true;
+                    console.log(`🚨 Wrong language detected on ${currentLocale} page: "${currentTitle}"`);
                 }
             }
         });

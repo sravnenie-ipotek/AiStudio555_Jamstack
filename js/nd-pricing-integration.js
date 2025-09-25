@@ -6,7 +6,7 @@
 
     // API Configuration
     const API_BASE = window.location.hostname === 'localhost'
-        ? 'http://localhost:1337/api/nd'
+        ? 'http://localhost:3000/api/nd'
         : 'https://aistudio555jamstack-production.up.railway.app/api/nd';
 
     // Load pricing data from database

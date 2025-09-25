@@ -136,7 +136,7 @@ const { chromium } = require('playwright');
 
         const apiResponse = await page.evaluate(async () => {
             try {
-                const response = await fetch('http://localhost:1337/api/nd/courses');
+                const response = await fetch('http://localhost:3000/api/nd/courses');
                 const data = await response.json();
                 return {
                     success: data.success,

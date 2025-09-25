@@ -1,0 +1,124 @@
+/**
+ * Awards Section Spacing Fix
+ *
+ * Problem: Webflow CSS creates excessive empty space with:
+ * - .awards-content { height: 400vh; } - Creates 4x viewport height
+ * - .section.awards { padding-top: 160px; padding-bottom: 160px; }
+ *
+ * Solution: Override with minimal, responsive spacing
+ */
+
+/* Fix the main container height issue */
+.section.awards .awards-content {
+    height: auto !important; /* Remove the 400vh that creates massive space */
+    min-height: auto !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Fix section-level padding for better spacing */
+.section.awards {
+    padding-top: 40px !important; /* Reduced from 160px to 40px */
+    padding-bottom: 60px !important; /* Reduced from 160px to 60px */
+}
+
+/* Ensure flex container doesn't create extra space */
+.section.awards .awards-content-flex {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Fix typography wrapper spacing */
+.section.awards .awards-typography-wrapper {
+    margin-bottom: 40px !important;
+}
+
+/* Fix button wrapper spacing */
+.section.awards .awards-section-button-wrapper {
+    margin-bottom: 0 !important;
+}
+
+/* Responsive spacing adjustments */
+@media screen and (max-width: 991px) {
+    .section.awards {
+        padding-top: 35px !important;
+        padding-bottom: 50px !important;
+    }
+
+    .section.awards .awards-typography-wrapper {
+        margin-bottom: 25px !important;
+    }
+
+    .section.awards .awards-content-flex {
+        gap: 30px !important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .section.awards {
+        padding-top: 30px !important;
+        padding-bottom: 40px !important;
+    }
+
+    .section.awards .awards-content-flex {
+        gap: 25px !important;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    .section.awards {
+        padding-top: 25px !important;
+        padding-bottom: 35px !important;
+    }
+
+    .section.awards .awards-content-flex {
+        gap: 20px !important;
+        flex-direction: column !important;
+    }
+}
+
+/* Additional fixes for sticky positioning conflicts */
+.section.awards .awards-content-flex {
+    position: static !important; /* Remove sticky positioning that may cause spacing issues */
+}
+
+/* Ensure no overflow issues create phantom space */
+.section.awards {
+    overflow-x: hidden;
+}
+
+/* Final safeguard - ensure no phantom margins/padding */
+.section.awards * {
+    box-sizing: border-box;
+}
+
+.section.awards .awards-content,
+.section.awards .awards-content-flex,
+.section.awards .awards-content-card {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* AGGRESSIVE SPACING FIX - Remove all unnecessary space */
+.section.awards .awards-content-flex {
+    gap: 40px !important;
+    align-items: flex-start !important;
+}
+
+.section.awards .awards-content-card {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Awards section typography wrapper spacing fix */
+.section.awards .awards-typography-wrapper {
+    padding: 0 !important;
+}
+
+/* Remove any Webflow sticky/fixed positioning that creates space */
+.section.awards,
+.section.awards .awards-content,
+.section.awards .awards-content-flex {
+    position: static !important;
+    transform: none !important;
+}

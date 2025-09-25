@@ -12,7 +12,7 @@
 const STRAPI_CONFIG = {
     // Change this to your production Strapi URL when deploying
     url: window.location.hostname === 'localhost' 
-        ? 'http://localhost:1337' 
+        ? 'http://localhost:3000' 
         : 'https://your-strapi-app.herokuapp.com',
     
     // Get this from Strapi Admin → Settings → API Tokens

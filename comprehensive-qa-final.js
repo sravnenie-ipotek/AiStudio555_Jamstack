@@ -29,7 +29,7 @@ async function comprehensiveHebrewQA() {
         try {
             console.log(`Testing: /api/nd/${endpoint}?locale=he`);
             
-            const response = await fetch(`http://localhost:1337/api/nd/${endpoint}?locale=he`);
+            const response = await fetch(`http://localhost:3000/api/nd/${endpoint}?locale=he`);
             const data = await response.json();
             
             const hasHebrewContent = JSON.stringify(data).includes('שלטו') || 

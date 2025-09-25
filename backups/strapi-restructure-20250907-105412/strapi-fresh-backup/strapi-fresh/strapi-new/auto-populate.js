@@ -68,7 +68,7 @@ async function autoPopulateHomePage() {
     const page = await browser.newPage();
     
     // Navigate to Strapi admin
-    await page.goto('http://localhost:1337/admin/content-manager/single-types/api::home-page.home-page');
+    await page.goto('http://localhost:3000/admin/content-manager/single-types/api::home-page.home-page');
     
     console.log('📄 Navigated to Home Page editor');
     
@@ -100,7 +100,7 @@ async function autoPopulateHomePage() {
     await page.click('button[data-testid="publish"]');
     
     console.log('🎉 Home Page populated and published successfully!');
-    console.log('🔗 Check: http://localhost:1337/api/home-page?populate=*');
+    console.log('🔗 Check: http://localhost:3000/api/home-page?populate=*');
     
   } catch (error) {
     console.error('❌ Error during automation:', error.message);

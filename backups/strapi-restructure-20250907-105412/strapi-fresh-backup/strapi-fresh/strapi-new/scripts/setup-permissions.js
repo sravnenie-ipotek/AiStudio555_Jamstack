@@ -48,7 +48,7 @@ async function setupPermissions() {
 
     console.log('\n✅ API permissions configured successfully!');
     console.log('The Home Page API is now publicly accessible at:');
-    console.log('http://localhost:1337/api/home-page?populate=*');
+    console.log('http://localhost:3000/api/home-page?populate=*');
     
   } catch (error) {
     console.error('Error setting up permissions:', error);

@@ -2,7 +2,7 @@
  * Fix nd_courses translations in PostgreSQL database via API
  */
 
-const API_BASE = 'http://localhost:1337';
+const API_BASE = 'http://localhost:3000';
 
 async function fixCourseTranslations() {
     console.log('🔧 Fixing course translations in PostgreSQL...\n');

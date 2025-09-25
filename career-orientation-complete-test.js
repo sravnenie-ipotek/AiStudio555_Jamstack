@@ -20,9 +20,9 @@ const path = require('path');
 
 class CareerOrientationTester {
   constructor() {
-    this.apiUrl = 'http://localhost:1337/api';
+    this.apiUrl = 'http://localhost:3000/api';
     this.frontendUrl = 'http://localhost:3005';
-    this.adminUrl = 'http://localhost:1337/admin';
+    this.adminUrl = 'http://localhost:3000/admin';
     
     this.testResults = {
       total: 0,

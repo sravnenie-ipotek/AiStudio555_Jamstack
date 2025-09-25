@@ -13,13 +13,13 @@ class EnhancedIntegration {
         const currentPort = window.location.port;
         if (currentPort === '3005') {
             // Frontend on Python server (3005), API on Express (1337)
-            this.API_BASE = 'http://localhost:1337/api';
+            this.API_BASE = 'http://localhost:3000/api';
         } else if (currentPort === '4005') {
             // Legacy port - still use 1337
-            this.API_BASE = 'http://localhost:1337/api';
+            this.API_BASE = 'http://localhost:3000/api';
         } else if (this.isLocal) {
             // Default local setup
-            this.API_BASE = 'http://localhost:1337/api';
+            this.API_BASE = 'http://localhost:3000/api';
         } else {
             // Production
             this.API_BASE = 'https://aistudio555jamstack-production.up.railway.app/api';

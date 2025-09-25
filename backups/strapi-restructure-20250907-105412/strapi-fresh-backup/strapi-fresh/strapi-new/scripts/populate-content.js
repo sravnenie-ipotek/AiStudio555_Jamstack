@@ -3,7 +3,7 @@
 const fetch = require('node-fetch');
 
 async function populateContent() {
-  const strapiUrl = 'http://localhost:1337';
+  const strapiUrl = 'http://localhost:3000';
   
   // First, let's check if we can access Strapi
   try {

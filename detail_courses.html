@@ -354,6 +354,14 @@
     <!-- Course Details Main Section - Webflow Design -->
     <section class="section courses-single">
       <div class="container">
+        <!-- Back to Courses Button -->
+        <div class="back-button-wrapper" style="margin-bottom: 40px;">
+          <a href="courses.html" class="back-button w-inline-block">
+            <div class="back-button-icon">←</div>
+            <div class="back-button-text" data-i18n="cta.content.browse_courses">Back to Courses</div>
+          </a>
+        </div>
+
         <div class="courses-single-content" data-w-id="course-details-main">
           <!-- Course Details Content with Opacity Animation -->
           <div class="course-details-content" style="opacity: 0; transition: opacity 0.5s ease;">
@@ -461,7 +469,7 @@
                     </div>
 
                     <!-- Enroll Button -->
-                    <a href="#" class="primary-button courses-single-enroll-button w-inline-block">
+                    <a href="#" class="primary-button courses-single-enroll-button w-inline-block" onclick="openContactPopup(); return false;">
                       <div class="primary-button-text-wrap">
                         <div class="primary-button-text-block" data-i18n="ui_elements.buttons.enroll_now">Enroll Now</div>
                         <div class="primary-button-text-block is-text-absolute">Enroll Now</div>
@@ -659,19 +667,6 @@
                 </a>
               </div>
               <div class="footer-details-gmail"><span data-i18n="footer.contact_label">Contact</span>: <span class="footer-details-gmail-text" data-i18n="footer.contact_email">zohacous@email.com</span></div>
-              <div class="footer-details-form-wrapper">
-                <div class="footer-details-form-block w-form">
-                  <form id="email-form" name="email-form" data-name="Email Form" method="get" class="footer-details-form" data-wf-page-id="68b76410a2f59957bca214c2" data-wf-element-id="6ab616f4-e8bf-402d-a96f-e34ee9f6b1a1"><label for="email-2" class="footer-details-form-text" data-i18n="footer.subscribe_newsletter">Subscribe to Newsletter</label>
-                    <div class="footer-details-form-single"><input class="footer-details-form-input-field w-input" maxlength="256" name="email-2" data-name="Email 2" placeholder="Enter email to subscribe" type="email" id="email-2" required="" data-i18n-placeholder="footer.enter_email_placeholder"><input type="submit" data-wait="" class="footer-details-form-submit-button w-button" value=""></div>
-                  </form>
-                  <div class="w-form-done">
-                    <div>Thank you! Your submission has been received!</div>
-                  </div>
-                  <div class="w-form-fail">
-                    <div>Oops! Something went wrong while submitting the form.</div>
-                  </div>
-                </div>
-              </div>
             </div>
             <div class="footer-menu-wrapper">
               <div class="w-layout-grid footer-menu-grid">
@@ -793,6 +788,22 @@
   <script src="shared/components/course-details-page/course-details-component.js" type="text/javascript"></script>
   <!-- Course Details Integration -->
   <script src="js/nd-course-details-integration.js" type="text/javascript"></script>
+
+  <!-- EmailJS for Contact Form -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+  <!-- Contact Form Modal System -->
+  <script src="js/contact-form-modal.js" type="text/javascript"></script>
+
+  <!-- Contact Popup Bridge Function -->
+  <script>
+    // Bridge function for existing onclick handlers
+    function openContactPopup() {
+      if (window.showModal) {
+        window.showModal();
+      }
+    }
+  </script>
 
   <!-- Language Switching Script -->
   <script>

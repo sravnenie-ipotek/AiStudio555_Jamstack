@@ -11,7 +11,7 @@ const axios = require('axios');
 
 // Production Custom API URLs (Railway deployment)
 const CUSTOM_API_URL = 'https://aistudio555jamstack-production.up.railway.app';
-const CUSTOM_API_LOCAL = 'http://localhost:1337';
+const CUSTOM_API_LOCAL = 'http://localhost:3000';
 const API_BASE = `${CUSTOM_API_URL}/api`;
 
 // Languages configuration

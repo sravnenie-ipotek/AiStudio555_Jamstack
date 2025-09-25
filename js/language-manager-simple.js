@@ -100,7 +100,7 @@ async function loadLanguageContent(lang) {
 
     try {
         const apiUrl = window.location.hostname === 'localhost'
-            ? 'http://localhost:1337'
+            ? 'http://localhost:3000'
             : 'https://aistudio555jamstack-production.up.railway.app';
 
         const endpoint = `${apiUrl}/api/nd/home-page?locale=${lang}`;

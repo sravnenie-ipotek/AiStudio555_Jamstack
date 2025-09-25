@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 async function seedHomePageContent() {
-  const strapiUrl = 'http://localhost:1337';
+  const strapiUrl = 'http://localhost:3000';
   
   try {
     // Complete home page data with all text content
@@ -262,7 +262,7 @@ async function seedHomePageContent() {
   } catch (error) {
     console.error('❌ Error seeding home page:', error.response?.data || error.message);
     console.log('\n💡 Make sure:');
-    console.log('   1. Strapi is running on http://localhost:1337');
+    console.log('   1. Strapi is running on http://localhost:3000');
     console.log('   2. You have enabled public permissions for home-page');
     console.log('   3. All component schemas are properly configured');
   }

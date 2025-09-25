@@ -11,7 +11,7 @@ class LanguageManager {
         this.contentCache = {};
         this.isLoading = false;
         this.apiBaseUrl = window.location.hostname === 'localhost'
-            ? 'http://localhost:1337'
+            ? 'http://localhost:3000'
             : 'https://aistudio555jamstack-production.up.railway.app';
 
         // Track translation success rate for debugging
@@ -45,6 +45,9 @@ class LanguageManager {
 
         // Attach language switcher handlers
         this.attachLanguageSwitchers();
+
+        // CRITICAL FIX: Intercept navigation links to preserve locale
+        this.interceptNavigationLinks();
 
         // IMMEDIATE: Show navigation and UI elements (fix race condition)
         document.body.classList.add('language-ready');
@@ -231,10 +234,13 @@ class LanguageManager {
      * Get initial locale from URL, localStorage, or browser
      */
     getInitialLocale() {
+        console.log('[LanguageManager] Determining initial locale...');
+
         // Priority: URL > localStorage > browser (first visit only) > default
         const urlLocale = this.getLocaleFromURL();
         if (urlLocale) {
             // URL parameter takes highest priority
+            console.log(`[LanguageManager] Using URL locale: ${urlLocale}`);
             localStorage.setItem('preferred_locale', urlLocale);
             localStorage.setItem('locale_detection_complete', 'true');
             return urlLocale;
@@ -244,7 +250,20 @@ class LanguageManager {
         const detectionComplete = localStorage.getItem('locale_detection_complete');
 
         if (savedLocale && this.supportedLocales.includes(savedLocale)) {
-            // User has a saved preference
+            // User has a saved preference - CRITICAL FIX: Apply it to URL immediately
+            console.log(`[LanguageManager] Using saved locale: ${savedLocale}`);
+
+            // If we have a saved non-English locale but no URL parameter, add it
+            if (savedLocale !== 'en' && !window.location.search.includes('locale=')) {
+                // Use setTimeout to avoid blocking the constructor
+                setTimeout(() => {
+                    const newURL = new URL(window.location);
+                    newURL.searchParams.set('locale', savedLocale);
+                    window.history.replaceState(null, '', newURL.toString());
+                    console.log(`[LanguageManager] Restored locale to URL: ${newURL.toString()}`);
+                }, 0);
+            }
+
             return savedLocale;
         }
 
@@ -259,6 +278,15 @@ class LanguageManager {
                 // Apply browser locale immediately but controlled
                 if (browserLocale !== 'en') {
                     console.log(`[LanguageManager] Browser locale detected: ${browserLocale}, applying immediately`);
+
+                    // Add to URL for consistency (with timeout to avoid blocking)
+                    setTimeout(() => {
+                        const newURL = new URL(window.location);
+                        newURL.searchParams.set('locale', browserLocale);
+                        window.history.replaceState(null, '', newURL.toString());
+                        console.log(`[LanguageManager] Added browser locale to URL: ${newURL.toString()}`);
+                    }, 0);
+
                     // Set a flag to indicate we're doing initial browser-based switch
                     this.isInitialBrowserSwitch = true;
                 }
@@ -268,6 +296,7 @@ class LanguageManager {
             localStorage.setItem('locale_detection_complete', 'true');
         }
 
+        console.log('[LanguageManager] Defaulting to English');
         return 'en';
     }
 
@@ -351,6 +380,105 @@ class LanguageManager {
     }
 
     /**
+     * CRITICAL FIX: Intercept internal navigation links to preserve locale parameters
+     */
+    interceptNavigationLinks() {
+        console.log('[LanguageManager] Setting up navigation link interception');
+
+        // Get current locale parameter if it exists
+        const getCurrentLocaleParam = () => {
+            if (this.currentLocale && this.currentLocale !== 'en') {
+                return `?locale=${this.currentLocale}`;
+            }
+            return '';
+        };
+
+        // Intercept all internal HTML links
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a[href]');
+            if (!link) return;
+
+            const href = link.getAttribute('href');
+
+            // Check if it's an internal HTML link (not external, not #hash, not already with locale)
+            if (href &&
+                href.endsWith('.html') &&
+                !href.startsWith('http') &&
+                !href.includes('?locale=')) {
+
+                const localeParam = getCurrentLocaleParam();
+                if (localeParam) {
+                    // Modify the href to include current locale
+                    const newHref = href + localeParam;
+                    console.log(`[Navigation Fix] ${href} → ${newHref}`);
+
+                    // Prevent default and navigate with locale
+                    e.preventDefault();
+                    window.location.href = newHref;
+                }
+            }
+        }, true); // Use capture phase to catch all links
+
+        // Handle programmatic navigation via override (safer approach)
+        const self = this;
+
+        // Store original methods
+        if (!window._originalLocationMethods) {
+            window._originalLocationMethods = {
+                assign: window.location.assign.bind(window.location),
+                replace: window.location.replace.bind(window.location)
+            };
+        }
+
+        // Create wrapper functions that handle locale
+        function enhanceUrlWithLocale(url) {
+            if (typeof url === 'string' && url.endsWith('.html') && !url.includes('?locale=')) {
+                const localeParam = getCurrentLocaleParam();
+                if (localeParam) {
+                    url += localeParam;
+                    console.log(`[Programmatic Navigation Fix] Adding locale: ${url}`);
+                }
+            }
+            return url;
+        }
+
+        // Override methods with try-catch for compatibility
+        try {
+            const locationDescriptor = Object.getOwnPropertyDescriptor(window.location, 'assign');
+            if (!locationDescriptor || locationDescriptor.configurable) {
+                Object.defineProperty(window.location, 'assign', {
+                    value: function(url) {
+                        url = enhanceUrlWithLocale(url);
+                        return window._originalLocationMethods.assign(url);
+                    },
+                    writable: true,
+                    configurable: true
+                });
+            }
+        } catch (e) {
+            console.warn('[LanguageManager] Could not override location.assign:', e.message);
+        }
+
+        try {
+            const replaceDescriptor = Object.getOwnPropertyDescriptor(window.location, 'replace');
+            if (!replaceDescriptor || replaceDescriptor.configurable) {
+                Object.defineProperty(window.location, 'replace', {
+                    value: function(url) {
+                        url = enhanceUrlWithLocale(url);
+                        return window._originalLocationMethods.replace(url);
+                    },
+                    writable: true,
+                    configurable: true
+                });
+            }
+        } catch (e) {
+            console.warn('[LanguageManager] Could not override location.replace:', e.message);
+        }
+
+        console.log('[LanguageManager] Navigation link interception active');
+    }
+
+    /**
      * Check if we should load content (for dynamic pages)
      */
     shouldLoadContent() {
@@ -374,14 +502,19 @@ class LanguageManager {
      * Switch to a different language
      */
     async switchLanguage(locale, updateHistory = true) {
+        console.log(`[LanguageManager] switchLanguage called: ${this.currentLocale} → ${locale}`);
+
         if (!this.supportedLocales.includes(locale)) {
             console.warn(`Unsupported locale: ${locale}`);
             return;
         }
 
         if (locale === this.currentLocale && this.contentCache[locale]) {
+            console.log(`[LanguageManager] Already using ${locale} with cached content, skipping`);
             return; // Already in this language with content loaded
         }
+
+        console.log(`[LanguageManager] Switching language to: ${locale}`);
 
         // Show loading state
         this.showLoadingState();

@@ -153,7 +153,7 @@ async function runProductionScript() {
         console.log('\n🎉 nd_courses_page table successfully created and populated!');
         console.log('\n📝 Next steps:');
         console.log('1. Restart the server to pick up the new endpoints');
-        console.log('2. Test at http://localhost:1337/api/nd/courses-page?locale=ru');
+        console.log('2. Test at http://localhost:3000/api/nd/courses-page?locale=ru');
         console.log('3. Refresh courses.html and switch languages to test');
 
     } catch (error) {

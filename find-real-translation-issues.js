@@ -9,7 +9,7 @@ const { chromium } = require('playwright');
     try {
         // First, get the actual content from the API
         console.log('📊 Checking API for Russian content...');
-        const apiResponse = await fetch('http://localhost:1337/api/nd/home-page?locale=ru');
+        const apiResponse = await fetch('http://localhost:3000/api/nd/home-page?locale=ru');
         const apiData = await apiResponse.json();
 
         // Find any English text in Russian API response

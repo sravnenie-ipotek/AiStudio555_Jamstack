@@ -207,9 +207,9 @@ async function updateCareerOrientationData() {
         await pool.end();
 
         console.log('\n🔗 Next steps:');
-        console.log('1. ✅ Test API: curl http://localhost:1337/api/career-orientation-page?locale=he');
-        console.log('2. ✅ Test API: curl http://localhost:1337/api/career-orientation-page?locale=en');
-        console.log('3. ✅ Test API: curl http://localhost:1337/api/career-orientation-page?locale=ru');
+        console.log('1. ✅ Test API: curl http://localhost:3000/api/career-orientation-page?locale=he');
+        console.log('2. ✅ Test API: curl http://localhost:3000/api/career-orientation-page?locale=en');
+        console.log('3. ✅ Test API: curl http://localhost:3000/api/career-orientation-page?locale=ru');
         console.log('4. 🔄 Update frontend to load from API');
         console.log('5. 🗑️ Remove hardcoded HTML content');
 

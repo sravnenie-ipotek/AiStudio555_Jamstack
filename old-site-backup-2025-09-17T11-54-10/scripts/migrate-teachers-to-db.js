@@ -6,7 +6,7 @@ const axios = require('axios');
 // Configuration
 const API_URL = process.env.NODE_ENV === 'production' 
   ? 'https://aistudio555jamstack-production.up.railway.app'
-  : 'http://localhost:1337';
+  : 'http://localhost:3000';
 
 const TEACHERS_HTML_PATH = path.join(__dirname, '..', 'teachers.html');
 

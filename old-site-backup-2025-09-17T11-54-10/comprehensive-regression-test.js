@@ -60,9 +60,9 @@ async function runComprehensiveRegressionTest() {
             
             const apiResponses = await page.evaluate(async () => {
                 const testUrls = [
-                    'http://localhost:1337/api/courses',
-                    'http://localhost:1337/api/teachers', 
-                    'http://localhost:1337/api/home-page'
+                    'http://localhost:3000/api/courses',
+                    'http://localhost:3000/api/teachers', 
+                    'http://localhost:3000/api/home-page'
                 ];
                 
                 const results = {};

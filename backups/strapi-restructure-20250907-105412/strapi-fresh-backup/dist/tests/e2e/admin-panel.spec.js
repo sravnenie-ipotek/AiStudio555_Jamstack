@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("@playwright/test");
 test_1.test.describe('Strapi Admin Panel', () => {
     test_1.test.beforeEach(async ({ page }) => {
-        await page.goto('http://localhost:1337/admin');
+        await page.goto('http://localhost:3000/admin');
     });
     (0, test_1.test)('should load admin panel without Vite errors', async ({ page }) => {
         const consoleErrors = [];

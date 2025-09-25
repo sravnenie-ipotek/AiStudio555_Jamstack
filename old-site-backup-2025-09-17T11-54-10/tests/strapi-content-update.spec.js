@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test');
 const axios = require('axios');
 
 test.describe('Strapi Content Integration', () => {
-  const strapiUrl = 'http://localhost:1337';
+  const strapiUrl = 'http://localhost:3000';
   const frontendUrl = 'http://localhost:8000';
   
   test.beforeEach(async ({ page }) => {
@@ -10,7 +10,7 @@ test.describe('Strapi Content Integration', () => {
     try {
       await axios.get(strapiUrl);
     } catch (error) {
-      throw new Error('Strapi is not running on localhost:1337. Please start Strapi first.');
+      throw new Error('Strapi is not running on localhost:3000. Please start Strapi first.');
     }
   });
 
@@ -65,7 +65,7 @@ test.describe('Strapi Content Integration', () => {
 
   test('should test content update from Strapi (manual)', async ({ page }) => {
     console.log('📝 Manual test instructions:');
-    console.log('1. Go to Strapi admin: http://localhost:1337/admin');
+    console.log('1. Go to Strapi admin: http://localhost:3000/admin');
     console.log('2. Navigate to Content Manager → Home Page');
     console.log('3. Update the Hero Section title to: "Test Updated Title"');
     console.log('4. Save and Publish the changes');

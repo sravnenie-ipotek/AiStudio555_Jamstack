@@ -6,7 +6,7 @@ async function createTableViaAPI() {
     try {
         // First, test if the table already exists
         console.log('🧪 Testing current API status...');
-        const testResponse = await fetch('http://localhost:1337/api/nd/courses-page?locale=en');
+        const testResponse = await fetch('http://localhost:3000/api/nd/courses-page?locale=en');
 
         if (testResponse.ok) {
             const data = await testResponse.json();
@@ -79,7 +79,7 @@ app.get('/api/create-courses-page-table', async (req, res) => {
 });
         `);
 
-        console.log('\nThen visit: http://localhost:1337/api/create-courses-page-table');
+        console.log('\nThen visit: http://localhost:3000/api/create-courses-page-table');
         console.log('After success, remove the temporary endpoint.\n');
 
         // Test translations that will be available

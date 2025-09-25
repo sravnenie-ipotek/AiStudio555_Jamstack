@@ -45,7 +45,7 @@ async function runHebrewQATest() {
         console.log('3. Testing API endpoint...');
         const apiResponse = await page.evaluate(async () => {
             try {
-                const response = await fetch('http://localhost:1337/api/nd/career-center-platform-page?locale=he');
+                const response = await fetch('http://localhost:3000/api/nd/career-center-platform-page?locale=he');
                 const data = await response.json();
                 return {
                     status: response.status,

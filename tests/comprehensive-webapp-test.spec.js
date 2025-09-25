@@ -8,7 +8,7 @@ const path = require('path');
 
 // Test configuration
 const BASE_URL = 'http://localhost:3005/backups/newDesign';
-const API_URL = 'http://localhost:1337';
+const API_URL = 'http://localhost:3000';
 const LANGUAGES = ['en', 'ru', 'he'];
 const PAGES = ['home.html', 'courses.html', 'teachers.html', 'blog.html', 'career-center.html', 'career-orientation.html'];
 
@@ -199,7 +199,7 @@ test.describe('AI Studio Comprehensive Test Suite', () => {
 
             // Check for dynamic content markers
             const response = await page.evaluate(async () => {
-                const res = await fetch('http://localhost:1337/api/nd/home-page');
+                const res = await fetch('http://localhost:3000/api/nd/home-page');
                 return res.ok;
             });
 
@@ -210,7 +210,7 @@ test.describe('AI Studio Comprehensive Test Suite', () => {
             await page.goto(`${BASE_URL}/courses.html`);
 
             const response = await page.evaluate(async () => {
-                const res = await fetch('http://localhost:1337/api/nd/courses');
+                const res = await fetch('http://localhost:3000/api/nd/courses');
                 const data = await res.json();
                 return data;
             });
@@ -227,7 +227,7 @@ test.describe('AI Studio Comprehensive Test Suite', () => {
             await page.goto(`${BASE_URL}/teachers.html`);
 
             const response = await page.evaluate(async () => {
-                const res = await fetch('http://localhost:1337/api/teachers');
+                const res = await fetch('http://localhost:3000/api/teachers');
                 return res.ok;
             });
 
@@ -238,7 +238,7 @@ test.describe('AI Studio Comprehensive Test Suite', () => {
             await page.goto(`${BASE_URL}/blog.html`);
 
             const response = await page.evaluate(async () => {
-                const res = await fetch('http://localhost:1337/api/blog-posts');
+                const res = await fetch('http://localhost:3000/api/blog-posts');
                 return res.ok;
             });
 
@@ -500,7 +500,7 @@ test.describe('AI Studio Comprehensive Test Suite', () => {
 
         test('CORS headers are properly configured', async ({ page }) => {
             const response = await page.evaluate(async () => {
-                const res = await fetch('http://localhost:1337/api/nd/home-page');
+                const res = await fetch('http://localhost:3000/api/nd/home-page');
                 return {
                     ok: res.ok,
                     headers: {

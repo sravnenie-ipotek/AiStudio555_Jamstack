@@ -57,7 +57,7 @@ async function setPublicPermissions() {
 
     console.log('✅ Public permissions set successfully!');
     console.log('\n🎯 Test the API:');
-    console.log('curl http://localhost:1337/api/home-page?populate=deep');
+    console.log('curl http://localhost:3000/api/home-page?populate=deep');
     
   } catch (error) {
     console.error('❌ Error setting permissions:', error);

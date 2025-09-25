@@ -101,7 +101,7 @@ element.removeAttribute('data-i18n'); // Prevents overwrite
 
 ```bash
 # 1. Start Custom API Server
-npm start  # Runs server.js on port 1337
+npm start  # Runs server.js on port 3000 (default)
 
 # 2. Start Frontend Server (choose one)
 python3 -m http.server 3005  # Development server
@@ -146,7 +146,7 @@ The custom API runs at: `https://aistudio555jamstack-production.up.railway.app`
 ### Environment Configuration
 The system automatically detects Railway environment variables:
 - `DATABASE_URL`: Provided by Railway PostgreSQL
-- `PORT`: Set by Railway (defaults to 1337)
+- `PORT`: Set by Railway (defaults to 3000 locally)
 - Auto-migration from SQLite to PostgreSQL on Railway
 
 ## Content Structure
@@ -467,6 +467,41 @@ Remote: `git@github.com:sravnenie-ipotek/AiStudio555_Jamstack.git`
   - **Solution**: Ensure content is visible by default, enhance with animations
   - **Pattern**: Progressive enhancement, not animation-dependent visibility
 
+## 🔒 PROTECTED FILES - DO NOT MODIFY
+
+### ⛔ Files That Are Complete and Must Not Be Changed
+The following files are production-ready and MUST NOT be modified to prevent regression:
+
+#### Protected HTML Pages
+- **home.html** - ✅ COMPLETE - DO NOT MODIFY
+- **dist/he/home.html** - ✅ COMPLETE - DO NOT MODIFY
+- **dist/ru/home.html** - ✅ COMPLETE - DO NOT MODIFY
+- **dist/en/home.html** - ✅ COMPLETE - DO NOT MODIFY
+
+#### Protected JavaScript Files
+- **js/fix-testimonials-translation.js** - ✅ COMPLETE - DO NOT MODIFY
+- **js/nd-course-details-integration.js** - ✅ COMPLETE - DO NOT MODIFY
+
+### Protection Rules
+1. **NEVER edit protected files** - These are marked as complete and tested
+2. **NEVER refactor protected code** - Even if you think it could be "improved"
+3. **NEVER add features to protected pages** - Create new pages instead
+4. **NEVER update dependencies in protected files** - They work as-is
+5. **If changes are absolutely necessary**, ask user for explicit permission first
+
+### How to Request Changes to Protected Files
+If you believe a protected file needs modification:
+1. **STOP** - Do not proceed with the edit
+2. **ASK** - "The file [filename] is marked as protected. Are you sure you want to modify it?"
+3. **EXPLAIN** - Describe what regression risks exist
+4. **WAIT** - Only proceed if user explicitly confirms
+
+### Adding New Protected Files
+To protect a new file from modifications, add it to the appropriate section above with:
+```
+- **filename** - ✅ COMPLETE - DO NOT MODIFY
+```
+
 ## Key Differences from Standard JAMstack
 
 1. **No Third-Party CMS**: Completely custom Express.js API
@@ -479,3 +514,4 @@ Remote: `git@github.com:sravnenie-ipotek/AiStudio555_Jamstack.git`
 ---
 
 **Remember**: This is a 100% custom system. All references to "Strapi" in file names are historical/misleading - the system uses a completely custom Express.js API.
+- do not change home.html code or its related tables without my permissions Or only if i ask to

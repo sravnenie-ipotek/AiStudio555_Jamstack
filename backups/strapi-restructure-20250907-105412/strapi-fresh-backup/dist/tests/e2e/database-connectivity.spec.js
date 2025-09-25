@@ -38,9 +38,9 @@ test_1.test.describe('Database Connectivity', () => {
         }
     });
     (0, test_1.test)('API should report database connection', async ({ request }) => {
-        const response = await request.get('http://localhost:1337/_health');
+        const response = await request.get('http://localhost:3000/_health');
         (0, test_1.expect)(response.ok()).toBeTruthy();
-        const adminResponse = await request.get('http://localhost:1337/admin');
+        const adminResponse = await request.get('http://localhost:3000/admin');
         (0, test_1.expect)(adminResponse.status()).toBeLessThan(500);
     });
 });

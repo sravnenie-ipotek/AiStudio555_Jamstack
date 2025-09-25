@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 async function createHomePageContent() {
-  const strapiUrl = 'http://localhost:1337';
+  const strapiUrl = 'http://localhost:3000';
   
   try {
     // Create the home page with visibility settings matching what you set in the admin

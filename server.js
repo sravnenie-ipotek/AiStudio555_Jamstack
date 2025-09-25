@@ -6146,6 +6146,40 @@ app.put('/api/job-postings', async (req, res) => {
   }
 });
 
+// Add instructor_bio column migration endpoint
+app.get('/api/add-instructor-bio-column', async (req, res) => {
+  try {
+    console.log('🔧 Adding instructor_bio column to nd_courses...');
+
+    // Add the column
+    await queryDatabase(`
+      ALTER TABLE nd_courses
+      ADD COLUMN IF NOT EXISTS instructor_bio TEXT
+    `);
+
+    console.log('✅ instructor_bio column added successfully');
+
+    // Test the column exists
+    const testResult = await queryDatabase(`
+      SELECT column_name
+      FROM information_schema.columns
+      WHERE table_name = 'nd_courses' AND column_name = 'instructor_bio'
+    `);
+
+    res.json({
+      success: true,
+      message: 'instructor_bio column added successfully',
+      columnExists: testResult.length > 0
+    });
+  } catch (error) {
+    console.error('Error adding instructor_bio column:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 // ============================================
 // ND COURSES API ENDPOINTS
 // ============================================
@@ -6180,7 +6214,7 @@ app.get('/api/nd/courses', async (req, res) => {
           short_description
         ) as short_description,
         price, old_price, currency,
-        duration, level, category, instructor, language,
+        duration, level, category, instructor, instructor_bio, language,
         image, video_url, thumbnail, url,
         rating, reviews_count, students_count, lessons_count,
         features, syllabus, requirements, what_you_learn,
@@ -6260,7 +6294,7 @@ app.get('/api/nd/courses/:id', async (req, res) => {
           short_description
         ) as short_description,
         price, old_price, currency,
-        duration, level, category, instructor, language,
+        duration, level, category, instructor, instructor_bio, language,
         image, video_url, thumbnail, url,
         rating, reviews_count, students_count, lessons_count,
         features, syllabus, requirements, what_you_learn,
@@ -6362,7 +6396,7 @@ app.put('/api/nd/courses/:id', async (req, res) => {
       'title_ru', 'description_ru', 'short_description_ru',
       'title_he', 'description_he', 'short_description_he',
       'price', 'old_price', 'currency',
-      'duration', 'level', 'category', 'instructor',
+      'duration', 'level', 'category', 'instructor', 'instructor_bio',
       'image', 'video_url', 'url',
       'rating', 'reviews_count', 'students_count', 'lessons_count',
       'features', 'syllabus', 'requirements', 'what_you_learn',
@@ -10143,6 +10177,17 @@ app.get('/api/migrate-nd-tables', async (req, res) => {
       console.log('✅ Populated section_type from section_name');
     } catch (error) {
       console.log('Schema update info:', error.message);
+    }
+
+    // Add instructor_bio column to nd_courses if missing
+    try {
+      await queryDatabase(`
+        ALTER TABLE nd_courses
+        ADD COLUMN IF NOT EXISTS instructor_bio TEXT
+      `);
+      console.log('✅ Added instructor_bio column to nd_courses');
+    } catch (error) {
+      console.log('instructor_bio column might already exist:', error.message);
     }
 
     // 4. Add essential sample data for immediate functionality
