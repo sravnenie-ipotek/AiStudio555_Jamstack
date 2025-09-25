@@ -110,6 +110,13 @@
             // Clear existing content
             container.innerHTML = '';
 
+            // Apply flexbox row styling to container
+            container.style.display = 'flex';
+            container.style.flexDirection = 'row';
+            container.style.gap = '20px';
+            container.style.overflowX = 'auto';
+            container.style.padding = '10px 0';
+
             // Limit to 5 posts
             const postsToRender = posts.slice(0, this.config.postsToShow);
 
@@ -146,16 +153,19 @@
             const card = document.createElement('div');
             card.className = 'blog-collection-item';
             card.setAttribute('role', 'listitem');
+            card.style.flex = '0 0 320px'; // Fixed width for each card
+            card.style.maxWidth = '320px';
+            card.style.minWidth = '320px';
 
             card.innerHTML = `
-                <div class="blog-card" style="${isRTL ? 'direction: rtl;' : ''}">
-                    <a href="blog-detail.html?id=${post.id}&locale=${locale}" class="blog-image-link w-inline-block">
+                <div class="blog-card" style="${isRTL ? 'direction: rtl;' : ''} height: 100%; display: flex; flex-direction: column; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden; transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 24px rgba(0, 0, 0, 0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0, 0, 0, 0.1)';">
+                    <a href="blog-detail.html?id=${post.id}&locale=${locale}" class="blog-image-link w-inline-block" style="display: block; width: 100%; height: 200px; overflow: hidden;">
                         <img src="${imageUrl}"
                              loading="lazy"
                              alt="${this.escapeHtml(post.title)}"
                              class="blog-post-image"
                              onerror="this.src='${this.config.defaultImage}'"
-                             style="width: 100%; height: 250px; object-fit: cover; border-radius: 12px;">
+                             style="width: 100%; height: 100%; object-fit: cover;">
                     </a>
                     <div class="blog-card-typography" style="padding: 20px;">
                         <div class="blog-card-categories-author" style="margin-bottom: 12px;">
@@ -175,16 +185,16 @@
                                 </div>
                             </div>
                         </div>
-                        <h3 class="blog-card-title" style="margin-bottom: 12px; font-size: 20px; line-height: 1.3;">
+                        <h3 class="blog-card-title" style="margin-bottom: 12px; font-size: 18px; line-height: 1.3; min-height: 48px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                             <a href="blog-detail.html?id=${post.id}&locale=${locale}"
-                               style="color: inherit; text-decoration: none; transition: color 0.3s;"
+                               style="color: #1a1a1a; text-decoration: none; transition: color 0.3s;"
                                onmouseover="this.style.color='#667eea'"
-                               onmouseout="this.style.color='inherit'">
+                               onmouseout="this.style.color='#1a1a1a'">
                                 ${this.escapeHtml(post.title)}
                             </a>
                         </h3>
-                        <p class="blog-card-description" style="color: #666; line-height: 1.6; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
-                            ${this.escapeHtml(post.excerpt || post.content?.substring(0, 150) || '')}...
+                        <p class="blog-card-description" style="color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 42px;">
+                            ${this.escapeHtml(post.excerpt || post.content?.substring(0, 100) || '')}...
                         </p>
                         <div class="blog-card-footer" style="display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid #eee;">
                             <div class="blog-date" style="font-size: 12px; color: #999;">
