@@ -355,7 +355,19 @@ class LanguageManager {
      */
     shouldLoadContent() {
         // Check if page has dynamic content areas
-        return document.querySelector("[data-dynamic-content]") !== null || document.body.dataset.dynamicContent === "true";
+        const hasDynamicContent = document.querySelector("[data-dynamic-content]") !== null || document.body.dataset.dynamicContent === "true";
+
+        // CRITICAL FIX: Also load content for translation-dependent pages when locale is non-English
+        if (this.currentLocale !== 'en') {
+            const pageName = this.getCurrentPageName();
+            const translationPages = ['career-orientation', 'career-center', 'pricing', 'teachers', 'courses', 'course-details', 'contact', 'about'];
+            if (translationPages.includes(pageName)) {
+                console.log(`[LanguageManager] Loading content for translation-dependent page: ${pageName} (${this.currentLocale})`);
+                return true;
+            }
+        }
+
+        return hasDynamicContent;
     }
 
     /**
@@ -742,8 +754,10 @@ class LanguageManager {
         if (pageName === 'career-orientation') {
             console.log('[LanguageManager] Processing career-orientation page');
             // WorkingLogic.md compliant: Try database first, static fallback if needed
-            if (locale !== 'en' && window.careerOrientationTranslations?.[locale] &&
-                (!data.data?.attributes || data.data.attributes.heroMainTitle === 'AI Career Orientation Program')) {
+            // Enhanced detection: For Hebrew, database doesn't have localized content
+            const needsStaticFallback = locale === 'he' ||
+                (!data.data?.attributes || data.data.attributes.heroMainTitle === 'AI Career Orientation Program');
+            if (locale !== 'en' && window.careerOrientationTranslations?.[locale] && needsStaticFallback) {
                 console.log(`[System 1] Using static ${locale} translations (database lacks localized content)`);
                 processedData = window.careerOrientationTranslations[locale];
             } else if (data.data && data.data.attributes) {
