@@ -1,0 +1,41 @@
+--- a/server.js
++++ b/server.js
+@@ -658,11 +658,12 @@
+   try {
+     const locale = getLocale(req);
+     console.log(`🌍 Fetching courses for locale: ${locale}`);
+     
++    // FIXED: Remove locale filter since courses table has no locale column
+     const data = await queryWithFallback(
+-      'SELECT * FROM courses WHERE locale = $1 AND published_at IS NOT NULL AND visible = true ORDER BY id DESC',
+-      [locale]
++      'SELECT * FROM courses WHERE published_at IS NOT NULL AND visible = true ORDER BY id DESC',
++      []
+     );
+     
++    // FIXED: Match format expected by ND integration - direct properties in data array
+     res.json({
+-      data: data.map(course => ({
++      data: data.map(course => ({
+         id: course.id,
+-        attributes: {
+-          title: course.title,
+-          description: course.description,
+-          price: course.price,
+-          duration: course.duration,
+-          lessons: course.lessons,
+-          category: course.category,
+-          rating: course.rating,
+-          visible: Boolean(course.visible)
+-        }
++        title: course.title,
++        description: course.description,
++        price: course.price,
++        duration: course.duration,
++        lessons_count: course.lessons,
++        category: course.category,
++        rating: course.rating,
++        visible: Boolean(course.visible)
+       }))
+     });
+   } catch (error) {

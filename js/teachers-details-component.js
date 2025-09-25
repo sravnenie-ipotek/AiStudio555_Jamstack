@@ -12,7 +12,7 @@ class TeachersDetailsComponent {
         this.entityId = null;
         this.previewMode = false;
         this.API_BASE = window.location.hostname === 'localhost'
-            ? 'http://localhost:3000'
+            ? 'http://localhost:1337'
             : 'https://aistudio555jamstack-production.up.railway.app';
     }
 

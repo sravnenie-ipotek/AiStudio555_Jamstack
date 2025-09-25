@@ -17,7 +17,7 @@
 class SharedFooter {
     constructor() {
         this.API_BASE_URL = window.location.hostname === 'localhost'
-            ? 'http://localhost:3000'
+            ? 'http://localhost:1337'
             : 'https://aistudio555jamstack-production.up.railway.app';
 
         this.footerData = null;

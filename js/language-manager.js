@@ -10,7 +10,7 @@ class LanguageManager {
         this.isLoading = false;
         this.supportedLocales = ['en', 'ru', 'he'];
         this.apiBaseUrl = window.location.hostname === 'localhost'
-            ? 'http://localhost:3000'
+            ? 'http://localhost:1337'
             : 'https://aistudio555jamstack-production.up.railway.app';
 
         // Initialize on DOM ready
