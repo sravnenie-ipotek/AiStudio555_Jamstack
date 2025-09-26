@@ -11082,6 +11082,108 @@ app.post('/admin/restore-backup', async (req, res) => {
   }
 });
 
+// Railway Database Sync Endpoint
+app.post('/admin/sync-railway', async (req, res) => {
+  try {
+    console.log('🔄 Admin: Starting Railway database sync...');
+
+    const { operation = 'full' } = req.body;
+    let results = { schema: null, data: null };
+
+    if (operation === 'schema' || operation === 'full') {
+      console.log('📋 Executing schema sync...');
+
+      if (!fs.existsSync('railway-sync.sql')) {
+        return res.status(404).json({
+          success: false,
+          error: 'Schema sync file not found. Run sync script first.'
+        });
+      }
+
+      const schemaSQL = fs.readFileSync('railway-sync.sql', 'utf8');
+      const schemaStatements = schemaSQL
+        .split('-- ========================================')
+        .filter(section => section.trim())
+        .slice(1); // Skip header
+
+      let schemaSuccess = 0;
+      let schemaErrors = 0;
+
+      for (let i = 0; i < schemaStatements.length; i++) {
+        const statement = schemaStatements[i].trim();
+        if (!statement) continue;
+
+        try {
+          await queryDatabase(statement);
+          schemaSuccess++;
+        } catch (error) {
+          schemaErrors++;
+          console.log(`  ⚠️ Schema error in section ${i + 1}: ${error.message}`);
+        }
+      }
+
+      results.schema = { success: schemaSuccess, errors: schemaErrors };
+    }
+
+    if (operation === 'data' || operation === 'full') {
+      console.log('📦 Executing data sync...');
+
+      if (!fs.existsSync('railway-data-sync.sql')) {
+        return res.status(404).json({
+          success: false,
+          error: 'Data sync file not found. Run sync script first.'
+        });
+      }
+
+      const dataSQL = fs.readFileSync('railway-data-sync.sql', 'utf8');
+      const dataStatements = dataSQL
+        .split('\n')
+        .filter(line => line.trim() && line.startsWith('INSERT'))
+        .slice(0, 1000); // Limit first batch
+
+      let dataSuccess = 0;
+      let dataErrors = 0;
+
+      for (const statement of dataStatements) {
+        try {
+          await queryDatabase(statement);
+          dataSuccess++;
+        } catch (error) {
+          dataErrors++;
+          if (dataErrors <= 5) {
+            console.log(`  ⚠️ Data error: ${error.message.substring(0, 100)}...`);
+          }
+        }
+      }
+
+      results.data = {
+        success: dataSuccess,
+        errors: dataErrors,
+        processed: dataStatements.length
+      };
+    }
+
+    // Verify sync results
+    const finalTableCount = await queryDatabase(`
+      SELECT COUNT(*) as count
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+    `);
+
+    res.json({
+      success: true,
+      operation: operation,
+      results: results,
+      finalTableCount: parseInt(finalTableCount[0].count),
+      message: 'Railway database sync completed'
+    });
+
+  } catch (error) {
+    console.error('❌ Railway sync error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════════╗
