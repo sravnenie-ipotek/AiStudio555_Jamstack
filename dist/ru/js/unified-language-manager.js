@@ -1753,7 +1753,7 @@ class LanguageManager {
                 'footer.content.menus.2.items.0.text': 'מרכז עזרה',
                 'footer.content.menus.2.items.1.text': 'תנאי שירות',
                 'footer.content.menus.2.items.2.text': 'מדיניות פרטיות',
-                'footer.content.copyright': '© זכויות יוצרים - <a href="index.html" class="footer-information-text-link">Zohacous</a> | עוצב על ידי <a href="https://zohaflow.webflow.io" target="_blank" class="footer-information-text-link">Zohaflow</a> - <a href="template-pages/license.html" class="footer-information-text-link">רישוי</a> מופעל על ידי <a href="https://webflow.com/" target="_blank" class="footer-information-text-link">Webflow</a>',
+                'footer.content.copyright': '© 2025 AI Studio. כל הזכויות שמורות.',
                 'navigation.content.items.5.text': 'צור קשר'
             }
         };
