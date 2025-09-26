@@ -515,3 +515,5 @@ To protect a new file from modifications, add it to the appropriate section abov
 
 **Remember**: This is a 100% custom system. All references to "Strapi" in file names are historical/misleading - the system uses a completely custom Express.js API.
 - do not change home.html code or its related tables without my permissions Or only if i ask to
+- do not update courses.html only if i ask so
+- lock blog.html , dont touch it, only igf i ask for
