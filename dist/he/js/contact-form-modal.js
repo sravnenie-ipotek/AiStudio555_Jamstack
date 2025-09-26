@@ -1035,12 +1035,17 @@
     if (!modalInitialized) {
       initContactModal();
     }
-    
+
     const modal = document.getElementById('contactModal');
     if (modal) {
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
+  };
+
+  // Alias for openContactPopup (for compatibility with existing buttons)
+  window.openContactPopup = function() {
+    window.showModal();
   };
   
   window.hideModal = function() {

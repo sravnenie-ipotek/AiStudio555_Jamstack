@@ -1,0 +1,16 @@
+=== RAILWAY API DATA COMPARISON ===
+Timestamp: Fri Sep 26 10:55:31 IDT 2025
+
+1. Courses API:
+   Total courses: 4
+
+2. Home Page Content:
+   Title: AI Studio - Expert-Led Online Learning Platform
+
+3. Teachers API:
+   Data lines:        0
+
+4. Blog Posts API:
+   Total posts: 2
+
+5. Career Center API:

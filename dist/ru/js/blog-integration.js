@@ -37,7 +37,24 @@ const BlogIntegration = {
     // Initialize the blog
     init: async function() {
         console.log('Initializing blog integration...');
-        await this.loadNavigationData(); // Load navigation for translations first
+
+        // Wait for language manager to be ready
+        if (!window.languageManager) {
+            console.log('Waiting for language manager to initialize...');
+            await new Promise(resolve => {
+                const checkInterval = setInterval(() => {
+                    if (window.languageManager) {
+                        clearInterval(checkInterval);
+                        resolve();
+                    }
+                }, 100);
+            });
+        }
+
+        console.log('Language manager ready, current locale:', window.languageManager.currentLocale);
+
+        // Skip navigation data loading - let unified language manager handle it
+        // await this.loadNavigationData(); // Commented out to prevent conflicts with unified-language-manager
         this.loadBlogPosts();
         this.setupEventListeners();
         this.setupLanguageChangeListener();

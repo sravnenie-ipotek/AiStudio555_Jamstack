@@ -1,0 +1,138 @@
+/**
+ * Awards Section Card Width Fix
+ * Makes cards narrower to match the proper design width
+ */
+
+/* Container and wrapper adjustments */
+.section.awards {
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.awards-inner-ticker-wrapper {
+    max-width: 650px !important; /* Constrain overall width */
+    margin: 0 auto !important; /* Center the container */
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+.awards-inner-ticker-single {
+    display: flex !important;
+    width: 400% !important; /* For 4 cards */
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Individual card width adjustments - narrower design */
+.awards-single-card {
+    width: 100% !important;
+    max-width: 650px !important; /* Reduced from 510px */
+    min-width: unset !important;
+    flex: 0 0 25% !important; /* Each card takes 25% of container (1/4) */
+    padding: 35px 30px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    background-color: #04193f !important;
+    border-radius: 20px !important;
+    min-height: 380px !important; /* Reduced height */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+/* Icon adjustments for narrower cards */
+.awards-icon {
+    width: 80px !important;
+    height: 80px !important;
+    margin-bottom: 24px !important;
+}
+
+/* Text adjustments for narrower cards */
+.awards-single-card h3 {
+    font-size: 22px !important;
+    line-height: 1.3 !important;
+    margin-bottom: 16px !important;
+    padding: 0 10px !important;
+}
+
+.awards-single-card p {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    padding: 0 10px !important;
+}
+
+/* RTL Support */
+[dir="rtl"] .awards-inner-ticker-single,
+html[lang="he"] .awards-inner-ticker-single {
+    direction: rtl !important;
+}
+
+/* Tablet adjustments */
+@media screen and (max-width: 991px) {
+    .awards-inner-ticker-wrapper {
+        max-width: 500px !important;
+    }
+
+    .awards-single-card {
+        min-height: 350px !important;
+        padding: 30px 25px !important;
+    }
+
+    .awards-icon {
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    .awards-single-card h3 {
+        font-size: 20px !important;
+    }
+}
+
+/* Mobile adjustments */
+@media screen and (max-width: 767px) {
+    .section.awards {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .awards-inner-ticker-wrapper {
+        max-width: 100% !important;
+    }
+
+    .awards-inner-ticker-single {
+        width: 100% !important;
+        flex-direction: column !important;
+    }
+
+    .awards-single-card {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        max-width: 400px !important;
+        margin: 0 auto 20px !important;
+        min-height: 320px !important;
+    }
+}
+
+/* Mobile small adjustments */
+@media screen and (max-width: 479px) {
+    .awards-single-card {
+        min-height: 280px !important;
+        padding: 25px 20px !important;
+    }
+
+    .awards-icon {
+        width: 60px !important;
+        height: 60px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .awards-single-card h3 {
+        font-size: 18px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .awards-single-card p {
+        font-size: 13px !important;
+    }
+}

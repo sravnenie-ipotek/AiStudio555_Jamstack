@@ -47,24 +47,12 @@
             /* Enhanced container for smooth carousel */
             .section.awards {
                 position: relative;
-                padding: 40px 5% 60px 5% !important;
                 overflow: hidden;
-            }
-
-            .section.awards .awards-content {
-                margin-bottom: 0 !important;
-                padding-bottom: 0 !important;
             }
 
             .section.awards .awards-content-flex {
                 gap: 40px !important;
                 align-items: flex-start !important;
-                margin-bottom: 0 !important;
-            }
-
-            .section.awards .awards-content-card {
-                margin-top: 0 !important;
-                padding-top: 0 !important;
             }
 
             .section.awards .awards-inner-ticker-wrapper {

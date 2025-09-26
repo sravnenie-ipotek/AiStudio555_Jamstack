@@ -323,14 +323,17 @@ class SharedTeacherCard {
      * Get current locale from unified language manager or URL
      */
     getCurrentLocale() {
-        if (window.UnifiedLanguageManager && window.UnifiedLanguageManager.currentLocale) {
-            return window.UnifiedLanguageManager.currentLocale;
+        // Check for the correct language manager instance
+        if (window.languageManager && window.languageManager.currentLocale) {
+            return window.languageManager.currentLocale;
         }
 
+        // Fallback to checking URL params and localStorage
         const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('locale') ||
-               localStorage.getItem('preferred_locale') ||
-               'en';
+        const urlLocale = urlParams.get('locale');
+        const savedLocale = localStorage.getItem('selectedLanguage') || localStorage.getItem('preferred_locale');
+
+        return urlLocale || savedLocale || 'en';
     }
 
     /**

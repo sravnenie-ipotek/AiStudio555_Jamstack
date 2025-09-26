@@ -8,6 +8,7 @@
   <link href="css/normalize.css" rel="stylesheet" type="text/css">
   <link href="css/webflow.css" rel="stylesheet" type="text/css">
   <link href="css/aizeks-groovy-site.webflow.css" rel="stylesheet" type="text/css">
+  <link href="css/awards-spacing-fix.css" rel="stylesheet" type="text/css">
   <link href="css/shared-cards.css" rel="stylesheet" type="text/css">
   <link href="css/course-card-styles.css" rel="stylesheet" type="text/css">
   <link href="css/uniform-card-styles.css" rel="stylesheet" type="text/css">
@@ -2574,10 +2575,13 @@
                         <a href="blog.html" class="footer-menu-text-link" data-i18n="navigation.content.items.3.text">Blog</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="https://zohacous.webflow.io/blog/future-of-web-app-develop-trends-to-watch-in-2024" class="footer-menu-text-link" data-i18n="footer.content.menus.0.items.7.text">Blog Single</a>
+                        <a href="teachers.html" class="footer-menu-text-link" data-i18n="navigation.content.items.2.text">Teachers</a>
                       </li>
                       <li class="footer-menu-list-item">
-                        <a href="contact-us.html" class="footer-menu-text-link" data-i18n="navigation.content.items.5.text">Contact Us</a>
+                        <a href="career-orientation.html" class="footer-menu-text-link" data-i18n="navigation.content.career.orientation">Career Orientation</a>
+                      </li>
+                      <li class="footer-menu-list-item">
+                        <a href="career-center.html" class="footer-menu-text-link" data-i18n="navigation.content.career.center">Career Center</a>
                       </li>
                     </ul>
                   </div>
@@ -3014,6 +3018,12 @@
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/webflow.793c0caa9.js" type="text/javascript"></script>
   <!-- Awards Section Card Overlay Animation -->
   <script src="js/enhanced-awards-carousel.js"></script>
+  <!-- Fix Testimonials Translation -->
+  <script src="js/fix-testimonials-translation.js"></script>
+  <!-- Home Blog Override Styles -->
+  <link rel="stylesheet" href="css/home-blog-override.css">
+  <!-- Home Blog Integration - Display last 5 blog posts -->
+  <script src="js/home-blog-integration.js"></script>
 
 
 
@@ -3051,7 +3061,7 @@
               // If HTTPS fails, try local fallback
               if (!response.ok && response.status === 0) {
                 console.log('HTTPS failed, trying local fallback...');
-                response = await fetch('http://localhost:1337/api/nd/leads', {
+                response = await fetch('http://localhost:3000/api/nd/leads', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json'

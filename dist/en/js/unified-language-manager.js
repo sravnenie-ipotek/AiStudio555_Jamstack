@@ -46,6 +46,9 @@ class LanguageManager {
         // Attach language switcher handlers
         this.attachLanguageSwitchers();
 
+        // CRITICAL FIX: Intercept navigation links to preserve locale
+        this.interceptNavigationLinks();
+
         // IMMEDIATE: Show navigation and UI elements (fix race condition)
         document.body.classList.add('language-ready');
         console.log('[LanguageManager] Navigation and UI elements revealed immediately');
@@ -231,10 +234,13 @@ class LanguageManager {
      * Get initial locale from URL, localStorage, or browser
      */
     getInitialLocale() {
+        console.log('[LanguageManager] Determining initial locale...');
+
         // Priority: URL > localStorage > browser (first visit only) > default
         const urlLocale = this.getLocaleFromURL();
         if (urlLocale) {
             // URL parameter takes highest priority
+            console.log(`[LanguageManager] Using URL locale: ${urlLocale}`);
             localStorage.setItem('preferred_locale', urlLocale);
             localStorage.setItem('locale_detection_complete', 'true');
             return urlLocale;
@@ -244,7 +250,20 @@ class LanguageManager {
         const detectionComplete = localStorage.getItem('locale_detection_complete');
 
         if (savedLocale && this.supportedLocales.includes(savedLocale)) {
-            // User has a saved preference
+            // User has a saved preference - CRITICAL FIX: Apply it to URL immediately
+            console.log(`[LanguageManager] Using saved locale: ${savedLocale}`);
+
+            // If we have a saved non-English locale but no URL parameter, add it
+            if (savedLocale !== 'en' && !window.location.search.includes('locale=')) {
+                // Use setTimeout to avoid blocking the constructor
+                setTimeout(() => {
+                    const newURL = new URL(window.location);
+                    newURL.searchParams.set('locale', savedLocale);
+                    window.history.replaceState(null, '', newURL.toString());
+                    console.log(`[LanguageManager] Restored locale to URL: ${newURL.toString()}`);
+                }, 0);
+            }
+
             return savedLocale;
         }
 
@@ -259,6 +278,15 @@ class LanguageManager {
                 // Apply browser locale immediately but controlled
                 if (browserLocale !== 'en') {
                     console.log(`[LanguageManager] Browser locale detected: ${browserLocale}, applying immediately`);
+
+                    // Add to URL for consistency (with timeout to avoid blocking)
+                    setTimeout(() => {
+                        const newURL = new URL(window.location);
+                        newURL.searchParams.set('locale', browserLocale);
+                        window.history.replaceState(null, '', newURL.toString());
+                        console.log(`[LanguageManager] Added browser locale to URL: ${newURL.toString()}`);
+                    }, 0);
+
                     // Set a flag to indicate we're doing initial browser-based switch
                     this.isInitialBrowserSwitch = true;
                 }
@@ -268,6 +296,7 @@ class LanguageManager {
             localStorage.setItem('locale_detection_complete', 'true');
         }
 
+        console.log('[LanguageManager] Defaulting to English');
         return 'en';
     }
 
@@ -351,25 +380,141 @@ class LanguageManager {
     }
 
     /**
+     * CRITICAL FIX: Intercept internal navigation links to preserve locale parameters
+     */
+    interceptNavigationLinks() {
+        console.log('[LanguageManager] Setting up navigation link interception');
+
+        // Get current locale parameter if it exists
+        const getCurrentLocaleParam = () => {
+            if (this.currentLocale && this.currentLocale !== 'en') {
+                return `?locale=${this.currentLocale}`;
+            }
+            return '';
+        };
+
+        // Intercept all internal HTML links
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a[href]');
+            if (!link) return;
+
+            const href = link.getAttribute('href');
+
+            // Check if it's an internal HTML link (not external, not #hash, not already with locale)
+            if (href &&
+                href.endsWith('.html') &&
+                !href.startsWith('http') &&
+                !href.includes('?locale=')) {
+
+                const localeParam = getCurrentLocaleParam();
+                if (localeParam) {
+                    // Modify the href to include current locale
+                    const newHref = href + localeParam;
+                    console.log(`[Navigation Fix] ${href} → ${newHref}`);
+
+                    // Prevent default and navigate with locale
+                    e.preventDefault();
+                    window.location.href = newHref;
+                }
+            }
+        }, true); // Use capture phase to catch all links
+
+        // Handle programmatic navigation via override (safer approach)
+        const self = this;
+
+        // Store original methods
+        if (!window._originalLocationMethods) {
+            window._originalLocationMethods = {
+                assign: window.location.assign.bind(window.location),
+                replace: window.location.replace.bind(window.location)
+            };
+        }
+
+        // Create wrapper functions that handle locale
+        function enhanceUrlWithLocale(url) {
+            if (typeof url === 'string' && url.endsWith('.html') && !url.includes('?locale=')) {
+                const localeParam = getCurrentLocaleParam();
+                if (localeParam) {
+                    url += localeParam;
+                    console.log(`[Programmatic Navigation Fix] Adding locale: ${url}`);
+                }
+            }
+            return url;
+        }
+
+        // Override methods with try-catch for compatibility
+        try {
+            const locationDescriptor = Object.getOwnPropertyDescriptor(window.location, 'assign');
+            if (!locationDescriptor || locationDescriptor.configurable) {
+                Object.defineProperty(window.location, 'assign', {
+                    value: function(url) {
+                        url = enhanceUrlWithLocale(url);
+                        return window._originalLocationMethods.assign(url);
+                    },
+                    writable: true,
+                    configurable: true
+                });
+            }
+        } catch (e) {
+            console.warn('[LanguageManager] Could not override location.assign:', e.message);
+        }
+
+        try {
+            const replaceDescriptor = Object.getOwnPropertyDescriptor(window.location, 'replace');
+            if (!replaceDescriptor || replaceDescriptor.configurable) {
+                Object.defineProperty(window.location, 'replace', {
+                    value: function(url) {
+                        url = enhanceUrlWithLocale(url);
+                        return window._originalLocationMethods.replace(url);
+                    },
+                    writable: true,
+                    configurable: true
+                });
+            }
+        } catch (e) {
+            console.warn('[LanguageManager] Could not override location.replace:', e.message);
+        }
+
+        console.log('[LanguageManager] Navigation link interception active');
+    }
+
+    /**
      * Check if we should load content (for dynamic pages)
      */
     shouldLoadContent() {
         // Check if page has dynamic content areas
-        return document.querySelector("[data-dynamic-content]") !== null || document.body.dataset.dynamicContent === "true";
+        const hasDynamicContent = document.querySelector("[data-dynamic-content]") !== null || document.body.dataset.dynamicContent === "true";
+
+        // CRITICAL FIX: Also load content for translation-dependent pages when locale is non-English
+        if (this.currentLocale !== 'en') {
+            const pageName = this.getCurrentPageName();
+            const translationPages = ['career-orientation', 'career-center', 'pricing', 'teachers', 'courses', 'course-details', 'contact', 'about'];
+            if (translationPages.includes(pageName)) {
+                console.log(`[LanguageManager] Loading content for translation-dependent page: ${pageName} (${this.currentLocale})`);
+                return true;
+            }
+        }
+
+        return hasDynamicContent;
     }
 
     /**
      * Switch to a different language
      */
     async switchLanguage(locale, updateHistory = true) {
+        console.log(`[LanguageManager] switchLanguage called: ${this.currentLocale} → ${locale}`);
+
         if (!this.supportedLocales.includes(locale)) {
             console.warn(`Unsupported locale: ${locale}`);
             return;
         }
 
         if (locale === this.currentLocale && this.contentCache[locale]) {
+            console.log(`[LanguageManager] Already using ${locale} with cached content, skipping`);
             return; // Already in this language with content loaded
         }
+
+        console.log(`[LanguageManager] Switching language to: ${locale}`);
 
         // Show loading state
         this.showLoadingState();
@@ -563,8 +708,9 @@ class LanguageManager {
         // WorkingLogic.md compliant fallback: Use static translations when database lacks locale data
         if (locale !== 'en' && window.careerOrientationTranslations?.[locale]) {
             // Check if database has actual translated content (not just English fallback)
-            const hasLocalizedContent = attributes.heroMainTitle &&
-                attributes.heroMainTitle !== 'AI Career Orientation Program';
+            // Enhanced detection: For Hebrew, database doesn't have localized content so always use static
+            const hasLocalizedContent = locale === 'he' ? false :
+                (attributes.heroMainTitle && attributes.heroMainTitle !== 'AI Career Orientation Program');
 
             if (!hasLocalizedContent) {
                 console.log(`[System 1] Database lacks ${locale} translations, using static fallback`);
@@ -741,8 +887,10 @@ class LanguageManager {
         if (pageName === 'career-orientation') {
             console.log('[LanguageManager] Processing career-orientation page');
             // WorkingLogic.md compliant: Try database first, static fallback if needed
-            if (locale !== 'en' && window.careerOrientationTranslations?.[locale] &&
-                (!data.data?.attributes || data.data.attributes.heroMainTitle === 'AI Career Orientation Program')) {
+            // Enhanced detection: For Hebrew, database doesn't have localized content
+            const needsStaticFallback = locale === 'he' ||
+                (!data.data?.attributes || data.data.attributes.heroMainTitle === 'AI Career Orientation Program');
+            if (locale !== 'en' && window.careerOrientationTranslations?.[locale] && needsStaticFallback) {
                 console.log(`[System 1] Using static ${locale} translations (database lacks localized content)`);
                 processedData = window.careerOrientationTranslations[locale];
             } else if (data.data && data.data.attributes) {
@@ -972,6 +1120,7 @@ class LanguageManager {
         // UI ELEMENTS MAPPINGS - Handle quadruple nested content structure
         const uiMappings = {
             'ui.content.buttons.sign_up_today': ['ui_elements.content.content.content.buttons.sign_up_today', 'ui.content.content.content.buttons.sign_up_today', 'ui_elements.content.content.buttons.sign_up_today', 'ui_elements.content.buttons.sign_up_today', 'ui.buttons.sign_up_today', 'misc.content.sign_up_today'],
+            'ui_elements.content.content.buttons.sign_up_today': ['ui.content.buttons.sign_up_today', 'ui_elements.content.buttons.sign_up_today', 'ui.buttons.sign_up_today', 'misc.content.sign_up_today'],
             'ui.content.buttons.course_details': ['ui_elements.content.content.content.buttons.course_details', 'ui.content.content.content.buttons.course_details', 'ui_elements.content.content.buttons.course_details', 'ui_elements.content.buttons.course_details', 'ui.buttons.course_details'],
             'ui.content.buttons.explore_courses': ['ui_elements.content.content.content.buttons.explore_courses', 'ui.content.content.content.buttons.explore_courses', 'ui_elements.content.content.buttons.browse_courses', 'ui_elements.content.buttons.browse_courses', 'ui_elements.content.content.buttons.check_out_courses', 'ui.buttons.explore_courses'],
             'ui.content.buttons.uncover_all_courses': ['ui_elements.content.content.content.buttons.uncover_all_courses', 'ui.content.content.content.buttons.uncover_all_courses', 'ui_elements.content.buttons.view_courses', 'ui.buttons.uncover_all_courses', 'misc.content.view_courses'],
@@ -1682,6 +1831,70 @@ class LanguageManager {
                 'ui.content.languages.ru': 'RU',
                 'ui.content.languages.he': 'HE',
 
+                // Cart translations
+                'cart.content.content.title': 'העגלה שלכם',
+                'cart.content.content.subtotal': 'סך הכל',
+                'cart.content.content.continue_to_checkout': 'המשך לתשלום',
+                'cart.content.content.no_items_found': 'לא נמצאו פריטים',
+                'cart.content.errors.quantity_not_available': 'המוצר אינו זמין בכמות זו',
+
+                // Breadcrumb navigation
+                'breadcrumb.content.home': 'בית',
+                'breadcrumb.content.career_center': 'מרכז קריירה',
+
+                // Footer section translations
+                'footer.content.quick_links.title': 'קישורים מהירים',
+                'footer.content.quick_links.home': 'בית',
+                'footer.content.quick_links.courses': 'קורסים',
+                'footer.content.quick_links.pricing': 'מחירים',
+                'footer.content.quick_links.blog': 'בלוג',
+                'footer.content.about.title': 'אודות',
+                'footer.content.about.about_us': 'אודותינו',
+                'footer.content.about.teachers': 'מרצים',
+                'footer.content.about.career_orientation': 'הכוונה מקצועית',
+                'footer.content.about.career_center': 'מרכז קריירה',
+                'footer.content.support.title': 'תמיכה',
+                'footer.content.support.contact_us': 'צור קשר',
+                'footer.content.support.help_center': 'מרכז עזרה',
+                'footer.content.support.privacy_policy': 'מדיניות פרטיות',
+                'footer.content.support.terms_of_service': 'תנאי שירות',
+
+                // CTA button translations
+                'cta.content.buttons.get_started_free': 'התחל בחינם',
+                'cta.content.buttons.book_demo': 'הזמן הדגמה',
+
+                // Social media translations
+                'footer.content.social.facebook': 'פייסבוק',
+                'footer.content.social.twitter': 'טוויטר',
+                'footer.content.social.linkedin': 'לינקדאין',
+                'footer.content.social.instagram': 'אינסטגרם',
+
+                // Footer links translations
+                'footer.content.links.home': 'בית',
+                'footer.content.links.courses': 'קורסים',
+                'footer.content.links.teachers': 'מרצים',
+                'footer.content.links.blog': 'בלוג',
+                'footer.content.links.pricing': 'מחירים',
+                'footer.content.links.about_us': 'אודותינו',
+                'footer.content.links.contact_us': 'צור קשר',
+                'footer.content.links.career_orientation': 'הכוונה מקצועית',
+                'footer.content.links.career_center': 'מרכז קריירה',
+                'footer.content.links.help_center': 'מרכז עזרה',
+                'footer.content.links.privacy_policy': 'מדיניות פרטיות',
+                'footer.content.links.terms_of_service': 'תנאי שירות',
+                'footer.content.links.course_single': 'קורס יחיד',
+                'footer.content.links.pricing_single': 'מחירים יחיד',
+                'footer.content.links.blog_single': 'בלוג יחיד',
+                'footer.content.links.404_not_found': '404 לא נמצא',
+                'footer.content.links.password_protected': 'מוגן בסיסמה',
+                'footer.content.links.changelog': 'יומן שינויים',
+                'footer.content.links.license': 'רישיון',
+                'footer.content.links.style_guide': 'מדריך סגנון',
+                'footer.content.links.sign_up': 'הרשמה',
+                'footer.content.links.sign_in': 'התחברות',
+                'footer.content.links.forgot_password': 'שכחתי סיסמה',
+                'footer.content.links.reset_password': 'איפוס סיסמה',
+
                 // Footer translations
                 'ui.content.footer.subscribe_newsletter': 'הירשם לניוזלטר',
                 'ui.content.footer.email_placeholder': 'הכנס אימייל להרשמה',
@@ -1693,6 +1906,89 @@ class LanguageManager {
                 'testimonials.author3.name': 'נדיה חאן',
                 'footer.company.zohacous': 'זוהקוס',
                 'testimonials.content.content.subtitle': 'המלצות',
+
+                // CAREER CENTER PAGE - Complete Hebrew Translations
+                'hero.content.title': 'פלטפורמת מרכז קריירה',
+                'hero.content.subtitle': 'פלטפורמת הקריירה שלכם',
+                'hero.content.main_title': 'האיצו את הקריירה שלכם עם הפלטפורמה המקיפה שלנו',
+                'hero.content.description': 'קבלו גישה לכלים מתקדמים, הנחייה מקצועית ומשאבים מותאמים אישית כדי לשנות את המסע המקצועי שלכם. הפלטפורמה שלנו מחברת אתכם להזדמנויות ולכישורים שחשובים.',
+                'hero.content.stats.0.number': '92%',
+                'hero.content.stats.0.label': 'שיעור השמה בעבודה',
+                'hero.content.stats.1.number': '150+',
+                'hero.content.stats.1.label': 'סיפורי הצלחה',
+                'hero.content.stats.2.number': '85K₪',
+                'hero.content.stats.2.label': 'שכר התחלתי ממוצע',
+
+                // Features section
+                'features.content.title': 'פתחו את הפוטנציאל המקצועי שלכם',
+                'features.content.subtitle': 'תכונות הפלטפורמה',
+                'features.content.description': 'הפלטפורמה שלנו מציעה מערכת מקיפה של כלים ומשאבים שנועדו להאיץ את הקריירה שלכם',
+                'features.content.items.0.title': 'ליווי קריירה אישי',
+                'features.content.items.0.description': 'קבלו הדרכה מותאמת אישית ממומחי קריירה מנוסים שיעזרו לכם לנווט במסלול המקצועי שלכם',
+                'features.content.items.1.title': 'הזדמנויות עבודה בלעדיות',
+                'features.content.items.1.description': 'גישה למאגר משרות בלעדי עם חברות מובילות בתעשייה',
+                'features.content.items.2.title': 'פיתוח כישורים',
+                'features.content.items.2.description': 'קורסים וסדנאות לפיתוח כישורים טכניים ורכים החיוניים להצלחה בשוק העבודה',
+                'features.content.items.3.title': 'רישות מקצועי',
+                'features.content.items.3.description': 'חיבור לקהילה של אנשי מקצוע ומעסיקים פוטנציאליים',
+                'features.content.items.4.title': 'אנליטיקת קריירה',
+                'features.content.items.4.description': 'עקבו אחר התקדמות הקריירה שלכם עם אנליטיקה מפורטת וראו את הצמיחה שלכם בזמן אמת.',
+                'features.content.items.5.title': 'פורטל דרושים אקסקלוסיבי',
+                'features.content.items.5.description': 'גישה להזדמנויות עבודה אקסקלוסיביות משותפינו העסקיים המובילים.',
+
+                // Opportunities section
+                'opportunities.content.title': 'הזדמנויות קריירה',
+                'opportunities.content.subtitle': 'גלו את האפשרויות שלכם',
+                'opportunities.content.description': 'חקרו מגוון רחב של הזדמנויות קריירה המותאמות לכישורים ולשאיפות שלכם',
+                'opportunities.content.items.0.number': 'הזדמנות #01',
+                'opportunities.content.items.0.title': 'הייטק ופיתוח תוכנה',
+                'opportunities.content.items.0.description': 'משרות בפיתוח, DevOps, ואבטחת מידע',
+                'opportunities.content.items.1.number': 'הזדמנות #02',
+                'opportunities.content.items.1.title': 'עיצוב וחוויית משתמש',
+                'opportunities.content.items.1.description': 'תפקידי UX/UI, עיצוב גרפי ועיצוב מוצר',
+                'opportunities.content.items.2.number': 'הזדמנות #03',
+                'opportunities.content.items.2.title': 'שיווק דיגיטלי',
+                'opportunities.content.items.2.description': 'ניהול קמפיינים, SEO, ותוכן שיווקי',
+                'opportunities.content.items.3.number': 'הזדמנות #04',
+                'opportunities.content.items.3.title': 'ניתוח נתונים',
+                'opportunities.content.items.3.description': 'Data Science, Business Intelligence ואנליטיקה',
+
+                // Resources section
+                'resources.content.title': 'משאבים לקריירה',
+                'resources.content.subtitle': 'כלים לבניית קריירה מצליחה',
+                'resources.content.description': 'מגוון משאבים שיעזרו לכם לבנות ולפתח את הקריירה שלכם',
+                'resources.content.items.0.title': 'בונה קורות חיים',
+                'resources.content.items.0.description': 'צרו קורות חיים מקצועיים שיבלטו',
+                'resources.content.items.1.title': 'הכנה לראיונות',
+                'resources.content.items.1.description': 'טיפים וסימולציות לראיונות עבודה',
+                'resources.content.items.2.title': 'מדריכי קריירה',
+                'resources.content.items.2.description': 'מאמרים ומדריכים לפיתוח קריירה',
+                'resources.content.items.3.title': 'הערכת שכר',
+                'resources.content.items.3.description': 'כלים להערכת שכר ומשא ומתן',
+
+                // Testimonials section
+                'testimonials.content.title': 'סיפורי הצלחה',
+                'testimonials.content.subtitle': 'מה אומרים הבוגרים שלנו',
+                'testimonials.content.description': 'שמעו מאנשים שהשתמשו בפלטפורמה שלנו כדי לשנות את הקריירה שלהם',
+                'testimonials.content.items.0.title': 'הצלחה מרשימה',
+                'testimonials.content.items.0.text': 'בזכות מרכז הקריירה מצאתי את העבודה החלומות שלי בהייטק. הליווי האישי והכלים המקצועיים עשו את כל ההבדל.',
+                'testimonials.content.items.0.author': 'שרה כהן',
+                'testimonials.content.items.0.role': 'מפתחת Full Stack',
+                'testimonials.content.items.1.title': 'קידום משמעותי',
+                'testimonials.content.items.1.text': 'הקורסים והסדנאות עזרו לי לפתח כישורים חדשים ולהתקדם בקריירה. תוך שנה קיבלתי קידום משמעותי.',
+                'testimonials.content.items.1.author': 'דוד לוי',
+                'testimonials.content.items.1.role': 'מנהל מוצר',
+                'testimonials.content.items.2.title': 'הזדמנויות חדשות',
+                'testimonials.content.items.2.text': 'המנטורינג והרישות המקצועי פתחו לי דלתות שלא ידעתי שקיימות. אני ממליצה בחום לכל מי שרוצה להתקדם.',
+                'testimonials.content.items.2.author': 'מיכל ברק',
+                'testimonials.content.items.2.role': 'מעצבת UX/UI',
+
+                // CTA section override
+                'cta.content.title': 'מוכנים להאיץ את הקריירה שלכם?',
+                'cta.content.description': 'הצטרפו לאלפי מקצוענים שמקדמים את הקריירה שלהם עם הפלטפורמה המקיפה שלנו. התחילו את המסע שלכם היום ופתחו את המלוא הפוטנציאל שלכם.',
+
+                // UI Elements specific to career center
+                'ui_elements.content.content.buttons.sign_up_today': 'הירשם היום',
                 'testimonials.content.content.title': 'מסע הלמידה שלך עם המומחים שלנו',
                 // Awards section translations
                 'awards.content.content.title': 'פרסים המגדירים את המצוינות שלנו.',
@@ -1734,6 +2030,7 @@ class LanguageManager {
                 'process.content.help.link': 'שלח לנו קו כאן מה אתה מחפש.',
 
                 // Footer translations
+                'footer.content.logo_text': 'העצמת המסע הקריירה שלכם עם הדרכת מומחים ופתרונות חדשניים.',
                 'footer.content.description': 'העלה את הקריירה הטכנולוגית שלך עם קורסים בהדרכת מומחים. אם אתה פשוט מתכוון לקדם כישורים, ההכשרה המעשית מיועדת.',
                 'footer.content.contact_prefix': 'צור קשר:',
                 'footer.content.contact_email': 'zohacous@email.com',
@@ -1747,12 +2044,30 @@ class LanguageManager {
                 'footer.content.newsletter.success': 'תודה! ההרשמה שלך התקבלה!',
                 'footer.content.newsletter.error': 'אופס! משהו השתבש בשליחת הטופס.',
                 'footer.content.menus.0.title': 'תפריט',
+                'footer.content.menus.0.items.0.text': 'בית',
+                'footer.content.menus.0.items.1.text': 'קורסים',
+                'footer.content.menus.0.items.2.text': 'מרצים',
                 'footer.content.menus.0.items.3.text': 'קורס יחיד',
+                'footer.content.menus.0.items.4.text': 'בלוג',
+                'footer.content.menus.0.items.5.text': 'מחירים יחיד',
+                'footer.content.menus.0.items.6.text': 'אודותינו',
+                'footer.content.menus.0.items.7.text': 'בלוג יחיד',
                 'footer.content.menus.1.title': 'חברה',
+                'footer.content.menus.1.items.0.text': 'אודותינו',
+                'footer.content.menus.1.items.1.text': 'צור קשר',
+                'footer.content.menus.1.items.2.text': 'הכוונה מקצועית',
+                'footer.content.menus.1.items.3.text': 'מרכז קריירה',
                 'footer.content.menus.2.title': 'תמיכה',
                 'footer.content.menus.2.items.0.text': 'מרכז עזרה',
                 'footer.content.menus.2.items.1.text': 'תנאי שירות',
                 'footer.content.menus.2.items.2.text': 'מדיניות פרטיות',
+                'footer.content.menus.2.items.3.text': 'רישיון',
+                'footer.content.menus.2.items.4.text': 'מדריך סגנון',
+                'footer.content.menus.3.title': 'חשבון',
+                'footer.content.menus.3.items.0.text': 'הרשמה',
+                'footer.content.menus.3.items.1.text': 'התחברות',
+                'footer.content.menus.3.items.2.text': 'שכחתי סיסמה',
+                'footer.content.menus.3.items.3.text': 'איפוס סיסמה',
                 'footer.content.copyright': '© 2025 AI Studio. כל הזכויות שמורות.',
                 'navigation.content.items.5.text': 'צור קשר'
             }

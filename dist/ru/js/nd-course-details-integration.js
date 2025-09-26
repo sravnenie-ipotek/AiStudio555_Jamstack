@@ -122,7 +122,17 @@
 
         const authorBio = document.querySelector('.course-details-author-bio');
         if (authorBio) {
-            authorBio.textContent = course.instructor_bio || 'Experienced professional with years of industry expertise and a passion for teaching.';
+            // Get locale for translation
+            const locale = new URLSearchParams(window.location.search).get('locale') || 'en';
+
+            // Instructor bio translations (same as above)
+            const defaultBioTranslations = {
+                en: 'Experienced professional with years of industry expertise and a passion for teaching.',
+                he: 'מומחה מנוסה עם שנים של מומחיות בתעשייה ותשוקה להוראה.',
+                ru: 'Опытный профессионал с многолетним опытом работы в отрасли и страстью к преподаванию.'
+            };
+
+            authorBio.textContent = course.instructor_bio || defaultBioTranslations[locale] || defaultBioTranslations.en;
             authorBio.removeAttribute('data-i18n');
         }
 
@@ -183,12 +193,20 @@
         if (durationElement) durationElement.textContent = course.duration || '8 weeks';
 
         // Sidebar price - Webflow Structure
-        const currentPriceElement = document.querySelector('.courses-single-current-price');
-        if (currentPriceElement) currentPriceElement.textContent = `$${course.price || '99.99'}`;
+        // Note: Using both class names for compatibility
+        const currentPriceElement = document.querySelector('.course-current-price, .courses-single-current-price');
+        if (currentPriceElement) {
+            // Check locale to determine currency symbol
+            const locale = new URLSearchParams(window.location.search).get('locale') || 'en';
+            const currencySymbol = locale === 'he' ? '₪' : '$';
+            currentPriceElement.textContent = `${currencySymbol}${course.price || '99.99'}`;
+        }
 
-        const oldPriceElement = document.querySelector('.courses-single-old-price');
+        const oldPriceElement = document.querySelector('.course-old-price, .courses-single-old-price');
         if (oldPriceElement && course.old_price) {
-            oldPriceElement.textContent = `$${course.old_price}`;
+            const locale = new URLSearchParams(window.location.search).get('locale') || 'en';
+            const currencySymbol = locale === 'he' ? '₪' : '$';
+            oldPriceElement.textContent = `${currencySymbol}${course.old_price}`;
             oldPriceElement.style.textDecoration = 'line-through';
         }
 
@@ -217,7 +235,17 @@
 
         const instructorBioElement = document.querySelector('.instructor-bio');
         if (instructorBioElement) {
-            instructorBioElement.textContent = course.instructor_bio || 'Experienced professional with years of industry expertise and a passion for teaching.';
+            // Get locale for translation
+            const locale = new URLSearchParams(window.location.search).get('locale') || 'en';
+
+            // Instructor bio translations
+            const defaultBioTranslations = {
+                en: 'Experienced professional with years of industry expertise and a passion for teaching.',
+                he: 'מומחה מנוסה עם שנים של מומחיות בתעשייה ותשוקה להוראה.',
+                ru: 'Опытный профессионал с многолетним опытом работы в отрасли и страстью к преподаванию.'
+            };
+
+            instructorBioElement.textContent = course.instructor_bio || defaultBioTranslations[locale] || defaultBioTranslations.en;
         }
 
         // Course video/image thumbnail - Webflow Structure
@@ -306,12 +334,33 @@
             // Default features if none provided
             const featuresContainer = document.querySelector('.courses-single-features');
             if (featuresContainer) {
-                const defaultFeatures = [
-                    'Lifetime access',
-                    'Certificate of completion',
-                    'Expert instructor support',
-                    'Mobile learning'
-                ];
+                // Get locale for translations
+                const locale = new URLSearchParams(window.location.search).get('locale') || 'en';
+
+                // Feature translations
+                const featureTranslations = {
+                    en: [
+                        'Lifetime access',
+                        'Certificate of completion',
+                        'Expert instructor support',
+                        'Mobile learning'
+                    ],
+                    he: [
+                        'גישה לכל החיים',
+                        'תעודת סיום',
+                        'תמיכת מדריך מומחה',
+                        'למידה ניידת'
+                    ],
+                    ru: [
+                        'Пожизненный доступ',
+                        'Сертификат об окончании',
+                        'Поддержка эксперта',
+                        'Мобильное обучение'
+                    ]
+                };
+
+                const defaultFeatures = featureTranslations[locale] || featureTranslations.en;
+
                 featuresContainer.innerHTML = defaultFeatures.map(feature =>
                     `<div class="courses-single-feature-item">
                         <div class="courses-single-feature-icon"></div>

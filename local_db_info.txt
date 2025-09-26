@@ -1,0 +1,51 @@
+🔧 Setting up Railway database connection...
+📊 Database Configuration:
+  - URL Pattern: postgresql://postgres:postgres@localhost...
+  - Is Local: true
+  - SSL: false
+🚀 RAILWAY DATABASE DIRECT OPERATIONS
+=====================================
+⏰ Started at: 2025-09-26T07:55:10.877Z
+
+📊 LISTING RAILWAY DATABASE TABLES
+=====================================
+Found 36 tables in Railway database:
+  ✅ about_pages: 3 rows, 11 columns
+  ✅ blog_posts: 17 rows, 37 columns
+  ✅ button_texts: 1 rows, 8 columns
+  ✅ career_center_pages: 1 rows, 14 columns
+  ✅ career_orientation_pages: 3 rows, 158 columns
+  ✅ career_resources: 12 rows, 11 columns
+  ✅ company_logos: 1 rows, 12 columns
+  ✅ consultation_services: 3 rows, 9 columns
+  ✅ consultations: 10 rows, 9 columns
+  ✅ contact_pages: 3 rows, 10 columns
+  ✅ courses: 6 rows, 29 columns
+  ✅ entity_teachers: 22 rows, 27 columns
+  ✅ faqs: 12 rows, 9 columns
+  ✅ footer_content: 0 rows, 9 columns
+  ✅ home_pages: 3 rows, 94 columns
+  ✅ job_postings: 0 rows, 10 columns
+  ✅ navigation_menus: 1 rows, 9 columns
+  ✅ nd_about_page: 8 rows, 9 columns
+  ✅ nd_blog_page: 9 rows, 9 columns
+  ✅ nd_blog_posts: 0 rows, 12 columns
+  ✅ nd_career_center_platform_page: 6 rows, 9 columns
+  ✅ nd_contact_page: 7 rows, 9 columns
+  ✅ nd_course_details_page: 11 rows, 10 columns
+  ✅ nd_courses: 3 rows, 52 columns
+  ✅ nd_courses_page: 7 rows, 10 columns
+  ✅ nd_footer: 20 rows, 19 columns
+  ✅ nd_home: 26 rows, 23 columns
+  ✅ nd_home_page: 13 rows, 9 columns
+  ✅ nd_menu: 6 rows, 13 columns
+  ✅ nd_pricing_page: 7 rows, 9 columns
+  ✅ nd_teachers_page: 6 rows, 8 columns
+  ✅ nd_ui_translations: 29 rows, 7 columns
+  ✅ pricing_plans: 0 rows, 11 columns
+  ✅ site_settings: 1 rows, 14 columns
+  ✅ statistics: 1 rows, 9 columns
+  ✅ teachers: 26 rows, 27 columns
+
+✅ Operation 'list' completed successfully!
+⏰ Finished at: 2025-09-26T07:55:11.093Z

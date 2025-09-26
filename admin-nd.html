@@ -1437,48 +1437,6 @@
                         </div>
                     </div>
 
-                    <!-- Blog Management Section in Teachers Tab -->
-                    <div style="border-top: 2px solid #e0e0e0; padding-top: 20px; margin-top: 30px;">
-                        <div class="section-header">
-                            <div class="section-title">📝 Blog Posts Management</div>
-                            <div style="display: flex; gap: 10px;">
-                                <button class="btn btn-small btn-success" onclick="openBlogCreateModal()">➕ Add New Blog Post</button>
-                                <button class="btn btn-small" onclick="loadBlogPostsInTeachers()">🔄 Refresh</button>
-                            </div>
-                        </div>
-
-                        <!-- Blog Search -->
-                        <div style="margin-bottom: 20px;">
-                            <div class="form-group">
-                                <label>🔍 Search Blog Posts</label>
-                                <input type="text" id="teachers-blog-search-input" placeholder="Search by title, author, category..." style="width: 100%;" oninput="filterTeachersBlogTable()">
-                            </div>
-                        </div>
-
-                        <!-- Blog Table -->
-                        <div class="table-container" style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; margin-bottom: 20px;">
-                            <table class="admin-table" style="width: 100%; border-collapse: collapse;">
-                                <thead>
-                                    <tr style="background: #f8f9fa;">
-                                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Blog Post</th>
-                                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Author</th>
-                                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Category</th>
-                                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Status</th>
-                                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Published</th>
-                                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #2d3748; border-bottom: 2px solid #e2e8f0;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="teachers-blog-table-body">
-                                    <tr>
-                                        <td colspan="6" style="padding: 40px; text-align: center; color: #718096;">
-                                            <div class="loading-spinner" style="display: inline-block; width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 10px;"></div>
-                                            <div>Loading blog posts...</div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div> <!-- Missing closing div 1 -->
                 </div> <!-- Missing closing div 2 -->                </div> <!-- End teachersContent -->
             </div> <!-- End teachers section -->
