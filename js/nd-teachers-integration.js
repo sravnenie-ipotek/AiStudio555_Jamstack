@@ -434,6 +434,8 @@
         elements.forEach(element => {
             if (element) {
                 element.textContent = text;
+                // Remove data-i18n to prevent translation override
+                element.removeAttribute('data-i18n');
                 // Remove opacity:0 to ensure content is visible
                 if (element.style.opacity === '0') {
                     element.style.opacity = '1';
@@ -444,9 +446,13 @@
 
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadTeachersPageData);
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 DOM ready, waiting for language manager then loading teachers data...');
+            setTimeout(loadTeachersPageData, 500);
+        });
     } else {
-        loadTeachersPageData();
+        console.log('📄 DOM already loaded, waiting for language manager then loading teachers data...');
+        setTimeout(loadTeachersPageData, 500);
     }
 
     // Expose function globally for debugging

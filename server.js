@@ -222,6 +222,50 @@ async function queryWithFallback(query, params) {
 
 // ==================== LIVE API ENDPOINTS ====================
 
+// Migration endpoint for adding CTA columns
+app.post('/api/migrate/add-cta-columns', async (req, res) => {
+  console.log('🔧 Running CTA columns migration...');
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL || process.env.RAILWAY_DATABASE_URL,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  });
+
+  try {
+    await client.connect();
+
+    // Add CTA columns if they don't exist
+    await client.query(`ALTER TABLE home_pages ADD COLUMN IF NOT EXISTS cta_visible BOOLEAN DEFAULT true`);
+    await client.query(`ALTER TABLE home_pages ADD COLUMN IF NOT EXISTS cta_title VARCHAR(255)`);
+    await client.query(`ALTER TABLE home_pages ADD COLUMN IF NOT EXISTS cta_description TEXT`);
+    await client.query(`ALTER TABLE home_pages ADD COLUMN IF NOT EXISTS cta_button_text VARCHAR(255)`);
+    await client.query(`ALTER TABLE home_pages ADD COLUMN IF NOT EXISTS cta_button_url VARCHAR(500)`);
+
+    // Get all columns to verify
+    const result = await client.query(`
+      SELECT column_name, data_type
+      FROM information_schema.columns
+      WHERE table_name = 'home_pages'
+      ORDER BY ordinal_position
+    `);
+
+    console.log('✅ Migration complete. Current columns:', result.rows);
+
+    res.json({
+      success: true,
+      message: 'CTA columns added successfully',
+      columns: result.rows
+    });
+  } catch (error) {
+    console.error('❌ Migration error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  } finally {
+    await client.end();
+  }
+});
+
 // HOME PAGE - ALL 123 fields (with locale support)
 app.get('/api/home-page', async (req, res) => {
   try {
@@ -2652,17 +2696,54 @@ app.get('/api/contact-page', async (req, res) => {
 
 // ==================== CRUD OPERATIONS ====================
 
+// GET HOME PAGE BY ID
+app.get('/api/home-page/:id', async (req, res) => {
+  const { id } = req.params;
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL || process.env.RAILWAY_DATABASE_URL,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  });
+
+  try {
+    await client.connect();
+
+    const result = await client.query(
+      'SELECT * FROM home_pages WHERE id = $1',
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Home page not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error fetching home page:', error);
+    res.status(500).json({ error: 'Failed to fetch home page' });
+  } finally {
+    await client.end();
+  }
+});
+
 // UPDATE HOME PAGE
 app.put('/api/home-page/:id', async (req, res) => {
   const updates = req.body;
   const updateFields = [];
   const values = [];
-  
-  // Build UPDATE query dynamically with proper escaping
+  let valueIndex = 1;
+
+  // Build UPDATE query dynamically with parameterized queries
   Object.keys(updates).forEach(key => {
     const dbField = key.replace(/([A-Z])/g, '_$1').toLowerCase();
+
+    // Skip fields that don't exist in the database
+    if (dbField === 'focus_practice_title' || dbField === 'core_skills_title') {
+      console.log(`⚠️ Skipping non-existent column: ${dbField}`);
+      return;
+    }
+
     let value = updates[key];
-    
+
     // Handle different data types properly
     if (value === null || value === undefined) {
       value = '';
@@ -2670,21 +2751,23 @@ app.put('/api/home-page/:id', async (req, res) => {
       value = value ? 1 : 0;
     } else if (typeof value === 'object') {
       value = JSON.stringify(value);
-    } else {
-      // Escape single quotes to prevent SQL injection
-      value = String(value).replace(/'/g, "''");
     }
-    
-    updateFields.push(`${dbField} = '${value}'`);
+
+    updateFields.push(`${dbField} = $${valueIndex}`);
+    values.push(value);
+    valueIndex++;
   });
-  
+
   if (updateFields.length === 0) {
     return res.status(400).json({ error: 'No fields to update' });
   }
-  
+
+  // Add the ID parameter at the end
+  values.push(req.params.id);
+
   try {
-    const query = `UPDATE home_pages SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = ${req.params.id}`;
-    await queryDatabase(query);
+    const query = `UPDATE home_pages SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = $${valueIndex}`;
+    await queryDatabase(query, values);
     
     res.json({
       success: true,

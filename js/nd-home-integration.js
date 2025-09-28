@@ -90,7 +90,7 @@
 
             // Populate the page with data - handle the actual API structure
             if (data.data) {
-                populateHomePage(data.data);
+                await populateHomePage(data.data);
             } else {
                 console.warn('⚠️ No home page data found in database');
                 // Don't show anything if no data (per user requirement)
@@ -107,12 +107,181 @@
         }
     }
 
+    // Load ALL admin panel data and override translations
+    async function loadAdminPanelData() {
+        try {
+            console.log('🔄 Loading ALL data from admin panel...');
+            const response = await fetch(`${API_BASE_URL}/api/home-page`);
+            const result = await response.json();
+
+            if (result.data && result.data.attributes) {
+                const attrs = result.data.attributes;
+                console.log('✅ Admin panel data loaded, applying to page...');
+
+                // 1. HERO SECTION
+                const heroTitle = document.querySelector('.banner-heading');
+                const heroSubtitle = document.querySelector('.banner-subtitle');
+                const heroDescription = document.querySelector('.banner-description-text');
+
+                if (heroTitle && attrs.heroTitle) {
+                    heroTitle.textContent = attrs.heroTitle;
+                    heroTitle.removeAttribute('data-i18n');
+                    console.log('✅ Hero title:', attrs.heroTitle);
+                }
+
+                if (heroSubtitle && attrs.heroSubtitle) {
+                    heroSubtitle.textContent = attrs.heroSubtitle;
+                    heroSubtitle.removeAttribute('data-i18n');
+                    console.log('✅ Hero subtitle:', attrs.heroSubtitle);
+                }
+
+                if (heroDescription && attrs.heroDescription) {
+                    heroDescription.textContent = attrs.heroDescription;
+                    heroDescription.removeAttribute('data-i18n');
+                    console.log('✅ Hero description:', attrs.heroDescription);
+                }
+
+                // 2. FEATURED COURSES SECTION
+                const coursesTitle = document.querySelector('[data-i18n="featured_courses.content.title"]');
+                const coursesSubtitle = document.querySelector('[data-i18n="featured_courses.content.subtitle"]');
+
+                if (coursesTitle && attrs.featuredCoursesTitle) {
+                    coursesTitle.textContent = attrs.featuredCoursesTitle;
+                    coursesTitle.removeAttribute('data-i18n');
+                    console.log('✅ Courses title:', attrs.featuredCoursesTitle);
+                }
+
+                if (coursesSubtitle && attrs.featuredCoursesDescription) {
+                    coursesSubtitle.textContent = attrs.featuredCoursesDescription;
+                    coursesSubtitle.removeAttribute('data-i18n');
+                    console.log('✅ Courses subtitle:', attrs.featuredCoursesDescription);
+                }
+
+                // 3. TESTIMONIALS SECTION
+                const testimonialsTitle = document.querySelector('[data-i18n="testimonials.content.title"]');
+                const testimonialsSubtitle = document.querySelector('[data-i18n="testimonials.content.subtitle"]');
+
+                if (testimonialsTitle && attrs.testimonialsTitle) {
+                    testimonialsTitle.textContent = attrs.testimonialsTitle;
+                    testimonialsTitle.removeAttribute('data-i18n');
+                    console.log('✅ Testimonials title:', attrs.testimonialsTitle);
+                }
+
+                if (testimonialsSubtitle && attrs.testimonialsSubtitle) {
+                    testimonialsSubtitle.textContent = attrs.testimonialsSubtitle;
+                    testimonialsSubtitle.removeAttribute('data-i18n');
+                    console.log('✅ Testimonials subtitle:', attrs.testimonialsSubtitle);
+                }
+
+                // 4. CTA SECTION
+                const ctaTitle = document.querySelector('[data-i18n="cta.content.title"]');
+                const ctaDescription = document.querySelector('[data-i18n="cta.content.description"]');
+                const ctaButton = document.querySelector('[data-i18n="cta.content.button_text"]');
+
+                if (ctaTitle && attrs.ctaTitle) {
+                    ctaTitle.textContent = attrs.ctaTitle;
+                    ctaTitle.removeAttribute('data-i18n');
+                    console.log('✅ CTA title:', attrs.ctaTitle);
+                }
+
+                if (ctaDescription && attrs.ctaDescription) {
+                    ctaDescription.textContent = attrs.ctaDescription;
+                    ctaDescription.removeAttribute('data-i18n');
+                    console.log('✅ CTA description:', attrs.ctaDescription);
+                }
+
+                if (ctaButton && attrs.ctaButtonText) {
+                    ctaButton.textContent = attrs.ctaButtonText;
+                    ctaButton.removeAttribute('data-i18n');
+                    console.log('✅ CTA button:', attrs.ctaButtonText);
+                }
+
+                // 5. FEATURES SECTION (if exists in admin data)
+                if (attrs.focusPracticeTitle) {
+                    const featuresTitle = document.querySelector('[data-i18n="features.content.title"]');
+                    if (featuresTitle) {
+                        featuresTitle.textContent = attrs.focusPracticeTitle;
+                        featuresTitle.removeAttribute('data-i18n');
+                        console.log('✅ Features title:', attrs.focusPracticeTitle);
+                    }
+                }
+
+                // 6. SECTION VISIBILITY CONTROLS
+                // Hero Section Visibility
+                if (attrs.heroSectionVisible !== undefined) {
+                    if (attrs.heroSectionVisible) {
+                        showHeroSection();
+                    } else {
+                        hideHeroSection();
+                    }
+                }
+
+                // Featured Courses Section Visibility
+                if (attrs.featuredCoursesVisible !== undefined) {
+                    if (attrs.featuredCoursesVisible) {
+                        showFeaturedCoursesSection();
+                    } else {
+                        hideFeaturedCoursesSection();
+                    }
+                }
+
+                // Testimonials Section Visibility
+                if (attrs.testimonialsVisible !== undefined) {
+                    const testimonialsSection = document.querySelector('.testimonials-section') ||
+                                               document.querySelector('.section.testimonials');
+                    if (testimonialsSection) {
+                        testimonialsSection.style.display = attrs.testimonialsVisible ? 'block' : 'none';
+                        console.log(`${attrs.testimonialsVisible ? '👁️' : '🙈'} Testimonials section ${attrs.testimonialsVisible ? 'shown' : 'hidden'} via admin toggle`);
+                    }
+                }
+
+                // CTA Section Visibility
+                if (attrs.ctaVisible !== undefined) {
+                    const ctaSection = document.querySelector('.cta-section') ||
+                                      document.querySelector('.section.cta');
+                    if (ctaSection) {
+                        ctaSection.style.display = attrs.ctaVisible ? 'block' : 'none';
+                        console.log(`${attrs.ctaVisible ? '👁️' : '🙈'} CTA section ${attrs.ctaVisible ? 'shown' : 'hidden'} via admin toggle`);
+                    }
+                }
+
+                // 7. BUTTON TEXTS (Global UI elements)
+                const signUpButtons = document.querySelectorAll('[data-i18n="ui.content.buttons.sign_up_today"]');
+                signUpButtons.forEach(button => {
+                    if (attrs.btnSignUpToday) {
+                        button.textContent = attrs.btnSignUpToday;
+                        button.removeAttribute('data-i18n');
+                    }
+                });
+
+                console.log('✅ All admin panel data applied successfully!');
+            }
+        } catch (error) {
+            console.error('❌ Error loading admin panel data:', error);
+        }
+    }
+
     // Populate all sections of the home page
-    function populateHomePage(data) {
+    async function populateHomePage(data) {
         console.log('📝 Populating home page sections:', Object.keys(data));
 
-        // 1. Hero Section - SKIP UI translation (handled by unified-language-manager)
-        // Only handle dynamic URLs if needed
+        // DUAL SYSTEM ARCHITECTURE - WorkingLogic.md Compliance
+        // System 1 (unified-language-manager.js): Handles ALL UI elements including hero section
+        // System 2 (nd-home-integration.js): Handles ONLY dynamic content from admin panel
+
+        // Don't load admin panel data for non-English locales - let System 1 handle UI translation
+        const currentLocale = getCurrentLocale(); // Use our local function that checks URL params
+        console.log('🌍 Current locale detected:', currentLocale);
+
+        if (currentLocale === 'en') {
+            // Only load admin panel data for English to avoid conflicts with System 1
+            console.log('✅ English locale - loading admin panel data');
+            await loadAdminPanelData();
+        } else {
+            console.log('🎯 Non-English locale detected (' + currentLocale + '), skipping admin panel data to allow translations');
+        }
+
+        // Handle dynamic URLs if needed (legitimate System 2 responsibility)
         if (data.hero && data.hero.content && data.hero.content.buttons) {
             updateHeroButtonURLs(data.hero.content.buttons);
         }
@@ -865,6 +1034,28 @@
         }
     }
 
+    // Hide Hero Section when toggle is off
+    function hideHeroSection() {
+        const heroSection = document.querySelector('.banner-section') ||
+                           document.querySelector('.section.banner') ||
+                           document.querySelector('section:first-child');
+        if (heroSection) {
+            heroSection.style.display = 'none';
+            console.log('🙈 Hero section hidden via admin toggle');
+        }
+    }
+
+    // Show Hero Section when toggle is on
+    function showHeroSection() {
+        const heroSection = document.querySelector('.banner-section') ||
+                           document.querySelector('.section.banner') ||
+                           document.querySelector('section:first-child');
+        if (heroSection) {
+            heroSection.style.display = 'block';
+            console.log('👁️ Hero section shown via admin toggle');
+        }
+    }
+
     // Create Featured Course Card using Shared Component
     async function createFeaturedCourseCard(course) {
         // Always try to use shared course card component first
@@ -1060,5 +1251,24 @@
     // Expose function globally for debugging
     window.reloadHomePageData = loadHomePageData;
     window.loadFeaturedCourses = loadFeaturedCourses;
+
+    // Initialize on DOM ready with delay to ensure language manager runs first
+    console.log('🚀 nd-home-integration.js loaded, waiting for DOM...');
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 DOM ready, waiting for language manager then loading data...');
+            // Small delay to ensure language manager loads first
+            setTimeout(() => {
+                loadHomePageData();
+            }, 500);
+        });
+    } else {
+        // DOM is already loaded
+        console.log('📄 DOM already loaded, waiting for language manager then loading data...');
+        // Small delay to ensure language manager loads first
+        setTimeout(() => {
+            loadHomePageData();
+        }, 500);
+    }
 
 })();

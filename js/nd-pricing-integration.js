@@ -44,9 +44,22 @@
             if (result.success && result.data) {
                 const sections = result.data.attributes?.sections || {};
 
-                // Update Hero Section - REMOVED per dual-system architecture
-                // UI translations are handled by unified-language-manager.js
+                // Update Hero Section WITH admin data
                 if (sections.hero) {
+                    // Update hero title
+                    const heroTitle = document.querySelector('.banner-heading, [data-i18n="pricing.hero.title"]');
+                    if (heroTitle && sections.hero.title) {
+                        heroTitle.textContent = sections.hero.title;
+                        heroTitle.removeAttribute('data-i18n'); // Prevent translation override
+                    }
+
+                    // Update hero subtitle
+                    const heroSubtitle = document.querySelector('.banner-subtitle, [data-i18n="pricing.hero.subtitle"]');
+                    if (heroSubtitle && sections.hero.subtitle) {
+                        heroSubtitle.textContent = sections.hero.subtitle;
+                        heroSubtitle.removeAttribute('data-i18n'); // Prevent translation override
+                    }
+
                     if (sections.hero.visible === false) {
                         // Hide hero section if visibility is off
                         const heroSection = document.querySelector('.section.inner-banner');
@@ -85,9 +98,29 @@
                     }
                 }
 
-                // Update CTA Section - REMOVED per dual-system architecture
-                // UI translations are handled by unified-language-manager.js
+                // Update CTA Section WITH admin data
                 if (sections.cta) {
+                    // Update CTA title
+                    const ctaTitle = document.querySelector('[data-i18n="pricing.cta.title"]');
+                    if (ctaTitle && sections.cta.title) {
+                        ctaTitle.textContent = sections.cta.title;
+                        ctaTitle.removeAttribute('data-i18n');
+                    }
+
+                    // Update CTA description
+                    const ctaDescription = document.querySelector('[data-i18n="pricing.cta.description"]');
+                    if (ctaDescription && sections.cta.description) {
+                        ctaDescription.textContent = sections.cta.description;
+                        ctaDescription.removeAttribute('data-i18n');
+                    }
+
+                    // Update CTA button text
+                    const ctaButton = document.querySelector('[data-i18n="pricing.cta.button_text"]');
+                    if (ctaButton && sections.cta.button_text) {
+                        ctaButton.textContent = sections.cta.button_text;
+                        ctaButton.removeAttribute('data-i18n');
+                    }
+
                     if (sections.cta.visible === false) {
                         // Hide CTA section if visibility is off
                         const ctaSection = document.querySelector('.section.cta');

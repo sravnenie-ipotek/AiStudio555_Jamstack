@@ -488,7 +488,7 @@ class LanguageManager {
         // CRITICAL FIX: Also load content for translation-dependent pages when locale is non-English
         if (this.currentLocale !== 'en') {
             const pageName = this.getCurrentPageName();
-            const translationPages = ['career-orientation', 'career-center', 'pricing', 'teachers', 'courses', 'course-details', 'contact', 'about'];
+            const translationPages = ['home', 'career-orientation', 'career-center', 'pricing', 'teachers', 'courses', 'course-details', 'contact', 'about'];
             if (translationPages.includes(pageName)) {
                 console.log(`[LanguageManager] Loading content for translation-dependent page: ${pageName} (${this.currentLocale})`);
                 return true;

@@ -258,12 +258,20 @@ class AdminHintsSystem {
 
         const hintIcon = this.createHintIcon(hintText, 'toggle');
 
+        // Get the label BEFORE moving the element
+        const label = element.nextElementSibling;
+
+        // Check if label would create a circular reference
+        if (label && (label === wrapper || label.contains(wrapper))) {
+            console.warn('Skipping hint for element to avoid circular reference', element);
+            return;
+        }
+
         element.parentNode.insertBefore(wrapper, element);
         wrapper.appendChild(element);
         wrapper.appendChild(labelWrapper);
 
-        const label = element.nextElementSibling;
-        if (label) {
+        if (label && label.tagName === 'SPAN') {
             labelWrapper.appendChild(label);
             labelWrapper.appendChild(hintIcon);
         }
