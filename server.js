@@ -222,6 +222,79 @@ async function queryWithFallback(query, params) {
 
 // ==================== LIVE API ENDPOINTS ====================
 
+// Migration endpoint for multi-language admin support
+app.post('/api/migrate/add-multilang-admin', async (req, res) => {
+  console.log('🌐 Running multi-language admin migration...');
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL || process.env.RAILWAY_DATABASE_URL,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  });
+
+  try {
+    await client.connect();
+
+    // Create Russian record if not exists
+    await client.query(`
+      INSERT INTO home_pages (
+        id, locale, title, hero_title, hero_subtitle, hero_description,
+        hero_section_visible, featured_courses_visible, about_visible,
+        companies_visible, testimonials_visible, created_at, updated_at
+      )
+      SELECT
+        2, 'ru', 'AI Studio - Платформа онлайн-обучения',
+        'Добро пожаловать в AI Studio', 'Платформа онлайн-обучения',
+        'Изучайте новейшие технологии с экспертами индустрии',
+        true, true, true, true, true, NOW(), NOW()
+      WHERE NOT EXISTS (SELECT 1 FROM home_pages WHERE id = 2)
+    `);
+
+    // Create Hebrew record if not exists
+    await client.query(`
+      INSERT INTO home_pages (
+        id, locale, title, hero_title, hero_subtitle, hero_description,
+        hero_section_visible, featured_courses_visible, about_visible,
+        companies_visible, testimonials_visible, created_at, updated_at
+      )
+      SELECT
+        3, 'he', 'AI Studio - פלטפורמת למידה מקוונת',
+        'ברוכים הבאים ל-AI Studio', 'פלטפורמת למידה מקוונת',
+        'למדו את הטכנולוגיות החדשות ביותר עם מומחי התעשייה',
+        true, true, true, true, true, NOW(), NOW()
+      WHERE NOT EXISTS (SELECT 1 FROM home_pages WHERE id = 3)
+    `);
+
+    // Ensure English record has locale set
+    await client.query(`
+      UPDATE home_pages SET locale = 'en'
+      WHERE id = 1 AND (locale IS NULL OR locale = '')
+    `);
+
+    // Get all records to verify
+    const result = await client.query(`
+      SELECT id, locale, title, hero_title
+      FROM home_pages
+      WHERE id IN (1, 2, 3)
+      ORDER BY id
+    `);
+
+    console.log('✅ Migration complete. Language records:', result.rows);
+
+    res.json({
+      success: true,
+      message: 'Multi-language admin support added successfully',
+      records: result.rows
+    });
+  } catch (error) {
+    console.error('❌ Migration error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  } finally {
+    await client.end();
+  }
+});
+
 // Migration endpoint for adding CTA columns
 app.post('/api/migrate/add-cta-columns', async (req, res) => {
   console.log('🔧 Running CTA columns migration...');
@@ -2696,7 +2769,128 @@ app.get('/api/contact-page', async (req, res) => {
 
 // ==================== CRUD OPERATIONS ====================
 
-// GET HOME PAGE BY ID
+// Helper function to map locale to home_pages record ID
+function getHomePageIdByLocale(locale) {
+  const localeMap = {
+    'en': 1,  // English - backward compatible
+    'ru': 2,  // Russian
+    'he': 3   // Hebrew
+  };
+  return localeMap[locale] || 1; // Default to English
+}
+
+// GET HOME PAGE BY LOCALE (new endpoint for multi-language admin)
+app.get('/api/admin/home-page', async (req, res) => {
+  const locale = req.query.locale || 'en';
+  const id = getHomePageIdByLocale(locale);
+
+  console.log(`📊 Admin panel loading content for locale: ${locale} (id: ${id})`);
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL || process.env.RAILWAY_DATABASE_URL,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  });
+
+  try {
+    await client.connect();
+
+    const result = await client.query(
+      'SELECT * FROM home_pages WHERE id = $1',
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      // Create default record if missing
+      console.log(`⚠️ No record found for locale ${locale}, creating default...`);
+      const insertResult = await client.query(
+        `INSERT INTO home_pages (id, locale, title, hero_title, hero_subtitle, hero_description, hero_section_visible, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
+         RETURNING *`,
+        [
+          id,
+          locale,
+          `AI Studio - ${locale === 'ru' ? 'Платформа онлайн-обучения' : locale === 'he' ? 'פלטפורמת למידה מקוונת' : 'Online Learning Platform'}`,
+          `Welcome to AI Studio`,
+          `Online Learning Platform`,
+          `Learn the latest technologies`,
+          true
+        ]
+      );
+      return res.json(insertResult.rows[0]);
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error fetching home page:', error);
+    res.status(500).json({ error: 'Failed to fetch home page' });
+  } finally {
+    await client.end();
+  }
+});
+
+// UPDATE HOME PAGE BY LOCALE (new endpoint for multi-language admin)
+app.put('/api/admin/home-page', async (req, res) => {
+  const locale = req.query.locale || 'en';
+  const id = getHomePageIdByLocale(locale);
+  const updates = req.body;
+
+  console.log(`📝 Admin panel saving content for locale: ${locale} (id: ${id})`);
+
+  const updateFields = [];
+  const values = [];
+  let valueIndex = 1;
+
+  // Build UPDATE query dynamically
+  Object.keys(updates).forEach(key => {
+    const dbField = key.replace(/([A-Z])/g, '_$1').toLowerCase();
+
+    // Skip non-existent columns
+    if (dbField === 'focus_practice_title' || dbField === 'core_skills_title') {
+      console.log(`⚠️ Skipping non-existent column: ${dbField}`);
+      return;
+    }
+
+    const valueIndexStr = `$${valueIndex++}`;
+    updateFields.push(`${dbField} = ${valueIndexStr}`);
+    values.push(updates[key]);
+  });
+
+  // Always update the updated_at timestamp
+  updateFields.push(`updated_at = NOW()`);
+
+  // Always set the locale
+  updateFields.push(`locale = $${valueIndex++}`);
+  values.push(locale);
+
+  values.push(id); // Add ID for WHERE clause
+
+  const query = `UPDATE home_pages SET ${updateFields.join(', ')} WHERE id = $${valueIndex}`;
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL || process.env.RAILWAY_DATABASE_URL,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  });
+
+  try {
+    await client.connect();
+    await client.query(query, values);
+
+    console.log(`✅ Successfully updated home page for locale: ${locale}`);
+    res.json({
+      success: true,
+      message: `Home page updated successfully for ${locale}`,
+      locale: locale,
+      updatedFields: Object.keys(updates)
+    });
+  } catch (error) {
+    console.error('Error updating home page:', error);
+    res.status(500).json({ error: 'Failed to update home page', details: error.message });
+  } finally {
+    await client.end();
+  }
+});
+
+// GET HOME PAGE BY ID (keep for backward compatibility)
 app.get('/api/home-page/:id', async (req, res) => {
   const { id } = req.params;
   const client = new Client({

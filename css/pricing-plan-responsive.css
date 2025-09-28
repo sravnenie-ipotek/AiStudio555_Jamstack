@@ -1,0 +1,689 @@
+/* Pricing Plan Section - Modern Responsive Design */
+/* Following mobile-first approach with container queries and modern CSS Grid */
+
+/* Base styles for pricing plan section */
+.section.affordable-plan {
+  container-type: inline-size;
+  container-name: pricing-section;
+}
+
+.pricing-plan-content {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Modern Grid Layout with auto-fit */
+.pricing-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0;
+  width: 100%;
+}
+
+/* Ensure wrapper is flexible */
+.pricing-plan-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+  background-color: #04193f;
+}
+
+/* Fix the main container to be scrollable on mobile */
+.pricing-plan-main {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Make tabs responsive */
+.pricing-plan-tabs-menu {
+  position: static;
+  right: auto;
+  display: flex;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 60px;
+  padding: 2px;
+  background-color: #fff;
+  border-radius: 12px;
+}
+
+.pricing-plan-tab-link {
+  flex: 1;
+  min-width: 100px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Container Queries for better responsive control */
+@container pricing-section (max-width: 1200px) {
+  .pricing-plan-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .pricing-plan-wrapper {
+    border-radius: 16px;
+  }
+}
+
+@container pricing-section (max-width: 768px) {
+  .pricing-plan-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pricing-plan-tabs-menu {
+    width: 90%;
+    max-width: 400px;
+  }
+}
+
+@container pricing-section (max-width: 480px) {
+  .pricing-plan-grid {
+    grid-template-columns: 1fr;
+    gap: 1px;
+  }
+
+  .pricing-plan-featured-card-wrap {
+    border-left: none !important;
+    border-bottom: 1px solid #ffffff1a;
+  }
+
+  .pricing-plan-featured-card-wrap:last-child {
+    border-bottom: none;
+  }
+}
+
+/* Large Desktop (1920px and up) */
+@media screen and (min-width: 1920px) {
+  .pricing-plan-content {
+    max-width: 1600px;
+  }
+
+  .pricing-plan-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Desktop (1200px to 1919px) */
+@media screen and (max-width: 1919px) and (min-width: 1200px) {
+  .pricing-plan-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .pricing-plan-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* Tablet Landscape (992px to 1199px) */
+@media screen and (max-width: 1199px) and (min-width: 992px) {
+  .pricing-plan-content {
+    padding: 0 30px;
+  }
+
+  .pricing-plan-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .pricing-plan-wrapper {
+    width: 100%;
+  }
+
+  .pricing-plan-tabs-menu {
+    margin-bottom: 50px;
+  }
+
+  .pricing-plan-price {
+    font-size: 40px;
+    line-height: 50px;
+  }
+}
+
+/* Tablet Portrait (768px to 991px) */
+@media screen and (max-width: 991px) and (min-width: 768px) {
+  .pricing-plan-content {
+    margin-top: 0;
+    padding: 0 24px;
+  }
+
+  .pricing-plan-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pricing-plan-tabs-menu {
+    width: 100%;
+    max-width: 320px;
+    margin-bottom: 40px;
+  }
+
+  .pricing-plan-tab-link {
+    padding: 16px 24px;
+    font-size: 15px;
+  }
+
+  .pricing-plan-top-content {
+    min-height: 250px;
+  }
+
+  .pricing-plan-price {
+    font-size: 36px;
+    line-height: 46px;
+  }
+
+  .pricing-plan-featured-single {
+    min-height: 60px;
+  }
+
+  .pricing-plan-featured-single.featured-name {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+}
+
+/* Mobile Landscape (481px to 767px) */
+@media screen and (max-width: 767px) and (min-width: 481px) {
+  .pricing-plan-content {
+    margin-top: 0;
+    padding: 0 20px;
+  }
+
+  .pricing-plan-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pricing-plan-wrapper {
+    border-radius: 12px;
+  }
+
+  .pricing-plan-tabs-menu {
+    width: 100%;
+    max-width: 280px;
+    margin-bottom: 30px;
+  }
+
+  .pricing-plan-tab-link {
+    padding: 14px 20px;
+    font-size: 14px;
+  }
+
+  .pricing-plan-top-content {
+    min-height: 200px;
+  }
+
+  .pricing-plan-logo-image {
+    max-width: 120px;
+  }
+
+  .pricing-plan-man-image {
+    max-width: 80px;
+  }
+
+  .pricing-plan-price {
+    font-size: 32px;
+    line-height: 42px;
+  }
+
+  .pricing-plan-name {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .pricing-plan-featured-single {
+    min-height: 50px;
+    font-size: 14px;
+  }
+
+  .pricing-plan-featured-single.featured-name {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* Mobile Portrait (320px to 480px) */
+@media screen and (max-width: 480px) {
+  .pricing-plan-content {
+    margin-top: 0;
+    padding: 0 16px;
+  }
+
+  /* CRITICAL: Hide the features column on mobile for clarity */
+  .pricing-plan-featured-name-wrapper {
+    display: none;
+  }
+
+  /* Stack pricing cards vertically on mobile */
+  .pricing-plan-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Each pricing card becomes a self-contained unit */
+  .pricing-plan-featured-card-wrap {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: none !important;
+  }
+
+  /* Highlight the recommended plan */
+  .pricing-plan-featured-card-wrap.bg {
+    background-image: linear-gradient(180deg, #0080ff 0%, rgba(4, 25, 63, 0.9) 100%);
+    border: 2px solid #0080ff;
+    position: relative;
+  }
+
+  /* Add "Recommended" badge to highlighted plan */
+  .pricing-plan-featured-card-wrap.bg::before {
+    content: attr(data-recommended-text);
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #fff;
+    color: #0080ff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    z-index: 10;
+  }
+
+  /* Default text if attribute not set */
+  .pricing-plan-featured-card-wrap.bg:not([data-recommended-text])::before {
+    content: "Recommended";
+  }
+
+  /* RTL adjustment for Hebrew */
+  html[dir="rtl"] .pricing-plan-featured-card-wrap.bg::before {
+    right: auto;
+    left: 10px;
+  }
+
+  .pricing-plan-wrapper {
+    border-radius: 10px;
+    background-color: transparent;
+    padding: 0;
+  }
+
+  .pricing-plan-tabs-menu {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    flex-direction: row;
+    gap: 4px;
+    padding: 4px;
+  }
+
+  .pricing-plan-tab-link {
+    padding: 12px 16px;
+    font-size: 13px;
+    border-radius: 6px;
+    flex: 1;
+  }
+
+  /* Adjust content within each card */
+  .pricing-plan-top-content {
+    min-height: auto;
+    padding: 24px 20px;
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+
+  /* Hide logo and man image on mobile */
+  .pricing-plan-logo-wrapper,
+  .pricing-plan-man-image-wrap {
+    display: none;
+  }
+
+  .pricing-plan-name-price-wrap {
+    padding: 0;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  /* Make pricing more prominent */
+  .pricing-plan-price {
+    font-size: 36px;
+    line-height: 42px;
+    margin-bottom: 4px;
+    font-weight: 800;
+  }
+
+  .pricing-plan-name {
+    font-size: 18px;
+    line-height: 24px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    opacity: 0.95;
+  }
+
+  .pricing-pack-text {
+    font-size: 14px;
+    line-height: 20px;
+    opacity: 0.8;
+  }
+
+  /* Style the features within each card */
+  .pricing-plan-featured-collection-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .pricing-plan-featured-single {
+    min-height: 48px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+
+  .pricing-plan-featured-single.featured-icon-wrapper {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+
+  .pricing-plan-featured-single.featured-name {
+    padding: 12px 20px;
+    grid-column-gap: 12px;
+  }
+
+  /* Button styling */
+  .pricing-plan-button-wrapper {
+    padding: 20px;
+  }
+
+  .pricing-plan-button {
+    width: 100%;
+    padding: 14px 24px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .featured-icon {
+    max-width: 20px;
+  }
+
+  /* Remove unnecessary borders */
+  .pricing-plan-featured-card-wrap.border-left {
+    border-left: none;
+  }
+
+  .pricing-plan-featured-card-wrap:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Mobile Feature List Styles */
+.mobile-feature-list {
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 20px;
+}
+
+.mobile-feature-list-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+.mobile-feature-ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-feature-item {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.mobile-feature-item:last-child {
+  border-bottom: none;
+}
+
+.feature-available {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.feature-unavailable {
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.feature-check {
+  color: #00ff88;
+  font-weight: bold;
+  margin-right: 12px;
+  margin-left: 0;
+  font-size: 16px;
+  display: inline-block;
+  min-width: 20px;
+}
+
+.feature-cross {
+  color: #ff4444;
+  margin-right: 12px;
+  margin-left: 0;
+  font-size: 16px;
+  opacity: 0.7;
+  display: inline-block;
+  min-width: 20px;
+}
+
+/* RTL support for Hebrew */
+html[dir="rtl"] .feature-check,
+html[dir="rtl"] .feature-cross {
+  margin-right: 0;
+  margin-left: 12px;
+}
+
+html[dir="rtl"] .mobile-feature-item {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="rtl"] .mobile-feature-list-title {
+  text-align: center;
+  direction: rtl;
+}
+
+/* Alternative mobile layout: Show features inline with each plan */
+@media screen and (max-width: 480px) {
+  /* Add visual separation between plan cards */
+  .pricing-plan-featured-card-wrap {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 20px;
+  }
+
+  .pricing-plan-featured-card-wrap:active {
+    transform: scale(0.98);
+  }
+
+  /* Show mobile feature list on mobile only */
+  .mobile-feature-list {
+    display: block !important;
+  }
+
+  /* Ensure pricing plans are properly spaced */
+  .pricing-plan-featured-collection-item {
+    padding-bottom: 0;
+  }
+
+  /* Style the plan names */
+  .pricing-plan-name {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  /* Highlight recommended plan */
+  .pricing-plan-featured-card-wrap.bg .mobile-feature-list {
+    background: linear-gradient(180deg, rgba(0, 128, 255, 0.1) 0%, rgba(0, 128, 255, 0.05) 100%);
+    border: 1px solid rgba(0, 128, 255, 0.3);
+  }
+
+  .pricing-plan-featured-card-wrap.bg .mobile-feature-list-title {
+    color: #0080ff;
+  }
+
+  .pricing-plan-featured-card-wrap.bg .feature-check {
+    color: #0080ff;
+  }
+}
+
+/* Hide mobile features on desktop */
+@media screen and (min-width: 481px) {
+  .mobile-feature-list {
+    display: none !important;
+  }
+}
+
+/* Enhanced tablet view for better clarity */
+@media screen and (min-width: 481px) and (max-width: 767px) {
+  /* Show features column but make it narrower */
+  .pricing-plan-featured-name-wrapper {
+    grid-column: 1 / -1;
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .pricing-plan-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* Stack features horizontally */
+  .pricing-plan-featured-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .pricing-plan-featured-single.featured-name {
+    flex: 1 1 calc(50% - 10px);
+    min-width: 200px;
+  }
+}
+
+/* Small Mobile (below 320px) */
+@media screen and (max-width: 319px) {
+  .pricing-plan-content {
+    padding: 0 12px;
+  }
+
+  .pricing-plan-tabs-menu {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .pricing-plan-tab-link {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .pricing-plan-price {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .pricing-plan-name {
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .pricing-pack-text {
+    font-size: 12px;
+    line-height: 18px;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .pricing-plan-content,
+  .pricing-plan-tab-link,
+  .pricing-plan-featured-card-wrap {
+    transition: none !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .pricing-plan-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .pricing-plan-wrapper {
+    border: 1px solid #ccc;
+    background-color: white !important;
+  }
+
+  .pricing-plan-featured-single,
+  .pricing-plan-name,
+  .pricing-plan-price,
+  .pricing-pack-text {
+    color: black !important;
+  }
+}
+
+/* Ensure smooth scrolling on mobile */
+@supports (-webkit-overflow-scrolling: touch) {
+  .pricing-plan-main {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Fix for iOS Safari */
+@supports (-webkit-touch-callout: none) {
+  .pricing-plan-wrapper {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .pricing-plan-wrapper {
+    border: 0.5px solid #ffffff1a;
+  }
+}
+
+/* RTL Support */
+html[dir="rtl"] .pricing-plan-grid {
+  direction: rtl;
+}
+
+html[dir="rtl"] .pricing-plan-tabs-menu {
+  text-align: right;
+}
+
+html[dir="rtl"] .pricing-plan-featured-single.featured-name {
+  padding-left: 35px;
+  padding-right: 35px;
+}

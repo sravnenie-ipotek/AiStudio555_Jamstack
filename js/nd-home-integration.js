@@ -110,13 +110,15 @@
     // Load ALL admin panel data and override translations
     async function loadAdminPanelData() {
         try {
-            console.log('🔄 Loading ALL data from admin panel...');
-            const response = await fetch(`${API_BASE_URL}/api/home-page`);
-            const result = await response.json();
+            const currentLocale = getCurrentLocale();
+            console.log(`🔄 Loading admin panel data for locale: ${currentLocale}...`);
 
-            if (result.data && result.data.attributes) {
-                const attrs = result.data.attributes;
-                console.log('✅ Admin panel data loaded, applying to page...');
+            // Use the new multi-language admin endpoint
+            const response = await fetch(`${API_BASE_URL}/api/admin/home-page?locale=${currentLocale}`);
+            const attrs = await response.json(); // Direct data, not nested
+
+            if (attrs) {
+                console.log(`✅ Admin panel data loaded for ${currentLocale}, applying to page...`);
 
                 // 1. HERO SECTION
                 const heroTitle = document.querySelector('.banner-heading');
@@ -267,19 +269,15 @@
 
         // DUAL SYSTEM ARCHITECTURE - WorkingLogic.md Compliance
         // System 1 (unified-language-manager.js): Handles ALL UI elements including hero section
-        // System 2 (nd-home-integration.js): Handles ONLY dynamic content from admin panel
+        // System 2 (nd-home-integration.js): Handles dynamic content from admin panel
+        // Now with multi-language support, we ALWAYS load admin panel data
 
-        // Don't load admin panel data for non-English locales - let System 1 handle UI translation
         const currentLocale = getCurrentLocale(); // Use our local function that checks URL params
         console.log('🌍 Current locale detected:', currentLocale);
 
-        if (currentLocale === 'en') {
-            // Only load admin panel data for English to avoid conflicts with System 1
-            console.log('✅ English locale - loading admin panel data');
-            await loadAdminPanelData();
-        } else {
-            console.log('🎯 Non-English locale detected (' + currentLocale + '), skipping admin panel data to allow translations');
-        }
+        // Load admin panel data for ALL locales (now supports multi-language)
+        console.log(`✅ Loading admin panel data for ${currentLocale} locale`);
+        await loadAdminPanelData();
 
         // Handle dynamic URLs if needed (legitimate System 2 responsibility)
         if (data.hero && data.hero.content && data.hero.content.buttons) {
