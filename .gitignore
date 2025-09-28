@@ -165,3 +165,6 @@ temp-*.sql
 
 # Shell scripts
 *.sh
+
+# Claude Code local configuration
+CLAUDE.md
