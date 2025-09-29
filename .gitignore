@@ -168,3 +168,23 @@ temp-*.sql
 
 # Claude Code local configuration
 CLAUDE.md
+.claude/
+.jwt-secret
+.mcp*.json
+
+# Backup directories and files
+old-site-backup-*
+production-deploy-*
+*.backup
+*.tar.gz
+*.zip
+
+# Duplicate files
+Dockerfile.*
+.gitignore*
+
+# Temporary test and fix files
+FINAL-*.js
+URGENT-*.sql
+*-test-fix.js
+test-admin-*.js

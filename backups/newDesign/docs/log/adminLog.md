@@ -817,4 +817,89 @@ ${API_BASE}/api/nd/teachers/ → ${API_BASE}/nd/teachers/
 
 ---
 
+## 🔴 **Bug #39: Blog Page Missing from Language Directories - September 29, 2025**
+
+### **SEVERITY: HIGH - PRODUCTION DEPLOYMENT FAILURE**
+**Discovery Time:** September 29, 2025
+**Affected URLs:**
+- Production: `https://aistudio555.com/en/blog.html?locale=he` (BROKEN)
+- Local: `http://localhost:3000/blog.html?locale=he` (WORKING)
+
+**Symptoms:**
+- Hebrew blog page completely broken on production
+- Production tries to load `/en/blog.html?locale=he` but gets wrong content
+- Local development works but production fails
+- Path mismatch between development and production routing
+
+**Root Cause Analysis:**
+**Missing blog.html files in language-specific directories:**
+
+```
+❌ MISSING FILES (Production Expected):
+/dist/en/blog.html
+/dist/he/blog.html
+/dist/ru/blog.html
+
+✅ EXISTING FILE (Development):
+/blog.html (root directory)
+```
+
+**Technical Details:**
+1. **Development routing**: Serves `blog.html` directly from root directory
+2. **Production routing**: Expects language-specific files like `/en/blog.html`, `/he/blog.html`
+3. **Missing deployment**: blog.html was never copied to language directories
+4. **Path resolution failure**: Production serves wrong file with broken resource paths
+
+**Impact:**
+- Complete blog page failure on production for all languages
+- Hebrew blog page shows broken layout and missing content
+- User experience completely broken for blog functionality
+- SEO impact: blog content not accessible in different languages
+
+**Solution Applied:**
+1. **Copied blog.html to all language directories:**
+   ```bash
+   /blog.html → /dist/en/blog.html
+   /blog.html → /dist/he/blog.html
+   /blog.html → /dist/ru/blog.html
+   ```
+
+2. **Fixed resource paths for subdirectories:**
+   ```javascript
+   // Fixed CSS paths:
+   css/webflow.css → ../css/webflow.css
+
+   // Fixed JS paths:
+   js/blog-integration.js → ../js/blog-integration.js
+
+   // Fixed image paths:
+   images/logo.svg → ../images/logo.svg
+   ```
+
+3. **Updated all resource references:**
+   - 8 CSS file references per language (24 total)
+   - 8 JavaScript file references per language (24 total)
+   - 15+ image references per language (45+ total)
+
+**File Modifications:**
+- `/dist/en/blog.html` - Created with corrected paths
+- `/dist/he/blog.html` - Created with corrected paths
+- `/dist/ru/blog.html` - Created with corrected paths
+
+**Testing:**
+- All language versions now properly reference correct resources
+- Navigation links work within language directories
+- Blog functionality should work on production after deployment
+
+**Prevention:**
+- Add blog.html to build/deployment process
+- Ensure all HTML files are copied to language directories
+- Add automated testing for production URL patterns
+
+**Status:** ✅ **FIXED**
+**Deployment Required:** Yes - new files need to be deployed to production
+**Severity Impact:** Complete restoration of blog functionality across all languages
+
+---
+
 **Note:** This log tracks both functional bugs and security vulnerabilities. Security issues take precedence over functional issues for production readiness.

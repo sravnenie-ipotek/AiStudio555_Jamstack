@@ -51,6 +51,8 @@
     "test:qa:debug": "node run-qa-tests.js smoke --debug",
     "test:qa:parallel": "node run-qa-tests.js all --parallel",
     "test:playwright:full": "npx playwright test --reporter=html",
+    "compare:local-prod": "node automation/compare-local-prod.js",
+    "compare": "npm run compare:local-prod",
     "test:newdesign": "npx playwright test backups/newDesign/tests/responsive-newdesign.spec.js --reporter=list",
     "test:newdesign:full": "npx playwright test backups/newDesign/tests/responsive-newdesign.spec.js --reporter=html",
     "test:newdesign:quick": "npx playwright test backups/newDesign/tests/responsive-newdesign.spec.js --grep 'iPhone678|Desktop-1920x1080|iPad-768x1024' --reporter=list",
