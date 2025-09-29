@@ -37,7 +37,7 @@ class AdminHintsSystem {
 
     async loadHints() {
         try {
-            const response = await fetch('/backups/newDesign/admin-hints.json');
+            const response = await fetch('/admin-hints.json');
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}`);
             }

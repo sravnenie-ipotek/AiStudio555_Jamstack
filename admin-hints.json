@@ -1,0 +1,143 @@
+{
+  "en": {
+    "sections": {
+      "home": "Manage your homepage content including hero sections, featured courses, and testimonials",
+      "courses": "Create, edit, and manage all your courses. Use Quick Actions for fast edits or Edit Details for comprehensive changes",
+      "teachers": "Manage instructor profiles and information displayed on your site",
+      "blog": "Create, edit, and manage blog posts for your website. Add new articles, edit existing content, and organize your blog",
+      "blogNew": "Advanced blog management with enhanced features for creating, editing, and organizing blog posts",
+      "footer": "Update footer content, links, and contact information across your website"
+    },
+    "buttons": {
+      "add_new_course": "Create a new course with title, description, pricing, and curriculum",
+      "edit_details": "Open comprehensive course editor with tabbed interface for detailed editing",
+      "preview": "Open course details page in new tab to see how it looks to students",
+      "delete": "Permanently remove this course from your site and database",
+      "save": "Save all changes made to the current item",
+      "cancel": "Discard changes and close the current editor",
+      "add_lesson": "Add a new lesson to the course curriculum",
+      "quick_save": "Save changes immediately without opening full editor"
+    },
+    "toggles": {
+      "visible": "Show/hide this course on your public website. Hidden courses won't appear in course listings",
+      "featured": "Display this course in the Featured Courses section on your homepage for maximum visibility",
+      "published": "Make this course available for enrollment. Unpublished courses are in draft mode"
+    },
+    "fields": {
+      "title": "The course name that appears in listings and on the course detail page",
+      "description": "Full course description explaining what students will learn and achieve",
+      "short_description": "Brief summary shown in course cards and previews",
+      "price": "Course price in USD. Leave empty or set to 0 for free courses",
+      "old_price": "Original price to show discount. Must be higher than current price",
+      "category": "Course topic category for filtering and organization",
+      "instructor": "Name of the course instructor or teacher",
+      "duration": "How long the course takes (e.g., '8 weeks', '20 hours')",
+      "level": "Difficulty level: Beginner, Intermediate, Advanced, or All Levels",
+      "image": "URL to course thumbnail image displayed in course cards",
+      "video_url": "URL to course preview video (YouTube, Vimeo, etc.)",
+      "objectives": "What students will learn - separate multiple items with commas",
+      "requirements": "Prerequisites or what students need before starting",
+      "features": "Course features and benefits - separate multiple items with commas"
+    },
+    "tips": {
+      "auto_save": "Changes are automatically saved every 30 seconds while editing",
+      "url_generation": "Course URLs are automatically generated when you save",
+      "preview_mode": "Add ?preview=true to any course URL to see unpublished changes",
+      "best_practices": "Use descriptive titles, detailed descriptions, and attractive images for better enrollment"
+    }
+  },
+  "ru": {
+    "sections": {
+      "home": "Управляйте контентом главной страницы, включая герой-секции, рекомендуемые курсы и отзывы",
+      "courses": "Создавайте, редактируйте и управляйте всеми курсами. Используйте Быстрые действия для оперативного редактирования",
+      "teachers": "Управляйте профилями преподавателей и информацией, отображаемой на сайте",
+      "blog": "Создавайте, редактируйте и управляйте записями в блоге для вашего веб-сайта. Добавляйте новые статьи, редактируйте существующий контент и организуйте ваш блог",
+      "blogNew": "Продвинутое управление блогом с расширенными функциями для создания, редактирования и организации записей в блоге",
+      "footer": "Обновляйте контент подвала, ссылки и контактную информацию по всему сайту"
+    },
+    "buttons": {
+      "add_new_course": "Создать новый курс с названием, описанием, ценой и учебным планом",
+      "edit_details": "Открыть полный редактор курса с вкладками для детального редактирования",
+      "preview": "Открыть страницу курса в новой вкладке, чтобы увидеть, как она выглядит для студентов",
+      "delete": "Окончательно удалить этот курс с сайта и из базы данных",
+      "save": "Сохранить все изменения, внесенные в текущий элемент",
+      "cancel": "Отменить изменения и закрыть текущий редактор",
+      "add_lesson": "Добавить новый урок в учебный план курса",
+      "quick_save": "Сохранить изменения немедленно без открытия полного редактора"
+    },
+    "toggles": {
+      "visible": "Показать/скрыть курс на публичном сайте. Скрытые курсы не будут отображаться в списке",
+      "featured": "Отобразить курс в разделе Рекомендуемые курсы на главной странице для максимальной видимости",
+      "published": "Сделать курс доступным для записи. Неопубликованные курсы находятся в режиме черновика"
+    },
+    "fields": {
+      "title": "Название курса, которое появляется в списках и на странице курса",
+      "description": "Полное описание курса, объясняющее, что студенты изучат и достигнут",
+      "short_description": "Краткое описание, показываемое в карточках курсов и превью",
+      "price": "Цена курса в долларах США. Оставьте пустым или установите 0 для бесплатных курсов",
+      "old_price": "Первоначальная цена для показа скидки. Должна быть выше текущей цены",
+      "category": "Категория темы курса для фильтрации и организации",
+      "instructor": "Имя преподавателя или учителя курса",
+      "duration": "Продолжительность курса (например, '8 недель', '20 часов')",
+      "level": "Уровень сложности: Начинающий, Средний, Продвинутый или Все уровни",
+      "image": "URL изображения миниатюры курса, отображаемой в карточках",
+      "video_url": "URL превью-видео курса (YouTube, Vimeo и т.д.)",
+      "objectives": "Что изучат студенты - разделяйте несколько пунктов запятыми",
+      "requirements": "Предварительные требования или что нужно студентам перед началом",
+      "features": "Особенности и преимущества курса - разделяйте несколько пунктов запятыми"
+    },
+    "tips": {
+      "auto_save": "Изменения автоматически сохраняются каждые 30 секунд во время редактирования",
+      "url_generation": "URL курсов автоматически генерируются при сохранении",
+      "preview_mode": "Добавьте ?preview=true к любому URL курса, чтобы увидеть неопубликованные изменения",
+      "best_practices": "Используйте описательные названия, подробные описания и привлекательные изображения для лучшей записи"
+    }
+  },
+  "he": {
+    "sections": {
+      "home": "נהל את תוכן עמוד הבית כולל סקציות גיבור, קורסים מומלצים ועדויות",
+      "courses": "צור, ערוך ונהל את כל הקורסים שלך. השתמש בפעולות מהירות לעריכה מהירה או פרטי עריכה לשינויים מקיפים",
+      "teachers": "נהל פרופילי מדריכים ומידע המוצג באתר שלך",
+      "blog": "צור, ערוך ונהל פוסטים בבלוג עבור האתר שלך. הוסף מאמרים חדשים, ערוך תוכן קיים וארגן את הבלוג שלך",
+      "blogNew": "ניהול בלוג מתקדם עם תכונות משופרות ליצירה, עריכה וארגון של פוסטים בבלוג",
+      "footer": "עדכן תוכן כותרת תחתונה, קישורים ומידע ליצירת קשר ברחבי האתר"
+    },
+    "buttons": {
+      "add_new_course": "צור קורס חדש עם כותרת, תיאור, תמחור ותכנית לימודים",
+      "edit_details": "פתח עורך קורסים מקיף עם ממשק לשוניות לעריכה מפורטת",
+      "preview": "פתח דף פרטי קורס בלשונית חדשה כדי לראות איך זה נראה לסטודנטים",
+      "delete": "הסר לצמיתות את הקורס הזה מהאתר ומבסיס הנתונים",
+      "save": "שמור את כל השינויים שנעשו לפריט הנוכחי",
+      "cancel": "ביטל שינויים וסגור את העורך הנוכחי",
+      "add_lesson": "הוסף שיעור חדש לתכנית הלימודים של הקורס",
+      "quick_save": "שמור שינויים מיידית בלי לפתוח עורך מלא"
+    },
+    "toggles": {
+      "visible": "הצג/הסתר קורס זה באתר הציבורי שלך. קורסים נסתרים לא יופיעו ברשימות הקורסים",
+      "featured": "הצג קורס זה בסקציית הקורסים המומלצים בעמוד הבית לחשיפה מקסימלית",
+      "published": "הפוך קורס זה לזמין להרשמה. קורסים לא מפורסמים נמצאים במצב טיוטה"
+    },
+    "fields": {
+      "title": "שם הקורס שמופיע ברשימות ובדף פרטי הקורס",
+      "description": "תיאור מלא של הקורס המסביר מה סטודנטים ילמדו וישיגו",
+      "short_description": "סיכום קצר המוצג בכרטיסי קורסים ותצוגות מקדימות",
+      "price": "מחיר הקורס בדולר אמריקאי. השאר ריק או הגדר ל-0 לקורסים חינמיים",
+      "old_price": "מחיר מקורי להצגת הנחה. חייב להיות גבוה מהמחיר הנוכחי",
+      "category": "קטגוריית נושא הקורס לסינון וארגון",
+      "instructor": "שם מדריך או מורה הקורס",
+      "duration": "כמה זמן לוקח הקורס (למשל, '8 שבועות', '20 שעות')",
+      "level": "רמת קושי: מתחיל, בינוני, מתקדם, או כל הרמות",
+      "image": "URL לתמונה ממוזערת של קורס המוצגת בכרטיסי קורסים",
+      "video_url": "URL לסרטון תצוגה מקדימה של קורס (YouTube, Vimeo וכו')",
+      "objectives": "מה סטודנטים ילמדו - הפרד מספר פריטים בפסיקים",
+      "requirements": "דרישות מוקדמות או מה שסטודנטים צריכים לפני התחלה",
+      "features": "תכונות ויתרונות הקורס - הפרד מספר פריטים בפסיקים"
+    },
+    "tips": {
+      "auto_save": "שינויים נשמרים אוטומטית כל 30 שניות במהלך עריכה",
+      "url_generation": "URLs של קורסים נוצרים אוטומטית כשאתה שומר",
+      "preview_mode": "הוסף ?preview=true לכל URL של קורס כדי לראות שינויים לא מפורסמים",
+      "best_practices": "השתמש בכותרות תיאוריות, תיאורים מפורטים ותמונות מושכות לרישום טוב יותר"
+    }
+  }
+}
