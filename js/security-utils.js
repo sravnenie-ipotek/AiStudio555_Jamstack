@@ -53,7 +53,9 @@
                     ],
                     ALLOW_DATA_ATTR: true,
                     SANITIZE_DOM: true,
-                    KEEP_CONTENT: false
+                    KEEP_CONTENT: true,
+                    FORBID_TAGS: [],
+                    FORBID_ATTR: []
                 };
 
                 // Merge provided options with defaults

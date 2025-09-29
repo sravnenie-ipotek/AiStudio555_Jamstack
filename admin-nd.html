@@ -3295,23 +3295,83 @@
                     ctaButtonUrl: document.getElementById('cta_button_url')?.value || ''
                 };
 
-                // Log visibility toggle changes
-                console.log('📊 [Admin] Saving Home Content with visibility settings:', {
-                    heroVisible: payload.heroSectionVisible,
-                    coursesVisible: payload.featuredCoursesVisible,
-                    testimonialsVisible: payload.testimonialsVisible,
-                    ctaVisible: payload.ctaVisible,
-                    locale: currentLang
+                console.log('📊 [Admin] Saving Home Content with visibility settings');
+
+                // Save each section using the correct API endpoints
+                let successCount = 0;
+                let failCount = 0;
+
+                // Save Hero Section
+                const heroResponse = await fetch(`/api/nd/home-page/hero`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        [`content_${currentLang}`]: {
+                            content: {
+                                title: payload.heroTitle,
+                                subtitle: payload.heroSubtitle,
+                                description: payload.heroDescription
+                            },
+                            visible: payload.heroSectionVisible
+                        }
+                    })
                 });
+                if (heroResponse.ok) successCount++; else failCount++;
 
-                // ⚠️ LEGACY ENDPOINT REMOVED - admin/home-page no longer exists
-                // TODO: Replace with NewDesign section-based admin interface
-                throw new Error('Legacy admin save endpoint has been removed');
+                // Save Features Section
+                const featuresResponse = await fetch(`/api/nd/home-page/features`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        [`content_${currentLang}`]: {
+                            content: {
+                                content: {
+                                    title: document.getElementById('features_title')?.value || '',
+                                    subtitle: document.getElementById('features_subtitle')?.value || ''
+                                }
+                            },
+                            visible: document.getElementById('features_visible')?.checked ?? true
+                        }
+                    })
+                });
+                if (featuresResponse.ok) successCount++; else failCount++;
 
-                if (response.ok) {
-                    showToast(`Content saved for ${currentLang.toUpperCase()}`, 'success');
+                // Save Testimonials Section
+                const testimonialsResponse = await fetch(`/api/nd/home-page/testimonials`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        [`content_${currentLang}`]: {
+                            content: {
+                                title: payload.testimonialsTitle,
+                                description: payload.testimonialsSubtitle
+                            },
+                            visible: payload.testimonialsVisible
+                        }
+                    })
+                });
+                if (testimonialsResponse.ok) successCount++; else failCount++;
+
+                // Save CTA Section
+                const ctaResponse = await fetch(`/api/nd/home-page/cta_bottom`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        [`content_${currentLang}`]: {
+                            content: {
+                                title: payload.ctaTitle,
+                                description: payload.ctaDescription
+                            },
+                            visible: payload.ctaVisible
+                        }
+                    })
+                });
+                if (ctaResponse.ok) successCount++; else failCount++;
+
+                if (failCount === 0) {
+                    showToast(`✅ All sections saved for ${currentLang.toUpperCase()}`, 'success');
                 } else {
-                    throw new Error(`HTTP ${response.status}`);
+                    showToast(`⚠️ Saved ${successCount} sections, ${failCount} failed`, 'warning');
                 }
             } catch (error) {
                 showToast('Failed to save content', 'error');
@@ -3848,7 +3908,7 @@
                                 <button class="btn btn-small" onclick="openCourseDetailsModal(${course.id})" style="background: #667eea; color: white;">
                                     📝 Edit Details
                                 </button>
-                                <button class="btn btn-small preview-btn" onclick="window.open('/backups/newDesign/detail_courses.html?id=${course.id}&preview=true', '_blank')" style="background: #28a745; color: white;">
+                                <button class="btn btn-small preview-btn" onclick="window.open('/detail_courses.html?id=${course.id}&preview=true', '_blank')" style="background: #28a745; color: white;">
                                     👁️ Preview
                                 </button>
                                 <button class="btn btn-small btn-danger delete-btn" onclick="deleteCourse(${course.id})">
@@ -4116,7 +4176,7 @@
                         await fetch(`${API_BASE}/nd/courses/${result.data.id}`, {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ url: `/backups/newDesign/detail_courses.html?id=${result.data.id}` })
+                            body: JSON.stringify({ url: `/detail_courses.html?id=${result.data.id}` })
                         });
                     }
 
@@ -4267,7 +4327,7 @@
                 banner_image: document.getElementById('modal_course_banner').value,
                 lessons: JSON.stringify(courseLessons),
                 // Auto-generate URL for detail_courses.html
-                url: `/backups/newDesign/detail_courses.html?id=${currentEditingCourse.id}`
+                url: `/detail_courses.html?id=${currentEditingCourse.id}`
             };
 
             showLoading();
@@ -4992,7 +5052,7 @@
 
         // Preview teacher profile
         function previewTeacherProfile(teacherId) {
-            const previewUrl = `/backups/newDesign/detail_teacher.html?id=${teacherId}&preview=true`;
+            const previewUrl = `/detail_teacher.html?id=${teacherId}&preview=true`;
             window.open(previewUrl, '_blank');
             showToast('🔍 Opened teacher preview in new tab', 'info');
         }
@@ -5303,7 +5363,7 @@
         // Preview teacher from modal (matching courses pattern)
         function previewTeacherFromModal() {
             if (currentEditingTeacherId) {
-                const previewUrl = `/backups/newDesign/detail_teacher.html?id=${currentEditingTeacherId}&preview=true`;
+                const previewUrl = `/detail_teacher.html?id=${currentEditingTeacherId}&preview=true`;
                 window.open(previewUrl, '_blank');
                 showToast('🔍 Opened teacher preview in new tab', 'info');
             }
@@ -5559,7 +5619,7 @@
         // Preview teacher detail page
         function previewTeacherDetailPage() {
             if (currentEditingDetailTeacherId) {
-                const previewUrl = `/backups/newDesign/detail_teacher.html?id=${currentEditingDetailTeacherId}&preview=true`;
+                const previewUrl = `/detail_teacher.html?id=${currentEditingDetailTeacherId}&preview=true`;
                 window.open(previewUrl, '_blank');
                 showToast('🔍 Opened teacher detail preview in new tab', 'info');
             }
@@ -6433,7 +6493,7 @@
             <!-- Modal Footer -->
             <div style="padding: 20px; border-top: 1px solid #e1e1e1; display: flex; justify-content: space-between; background: #f8f9fa;">
                 <div>
-                    <button class="btn btn-success" onclick="window.open('/backups/newDesign/detail_courses.html?id=' + document.getElementById('modal_course_id').value + '&preview=true', '_blank')">👁️ Preview Course Page</button>
+                    <button class="btn btn-success" onclick="window.open('/detail_courses.html?id=' + document.getElementById('modal_course_id').value + '&preview=true', '_blank')">👁️ Preview Course Page</button>
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button class="btn btn-secondary" onclick="closeCourseDetailsModal()">Cancel</button>
@@ -6779,7 +6839,7 @@
 
         // View blog post
         function viewBlogPost(blogId) {
-            window.open(`http://localhost:3000/backups/newDesign/detail_blog.html?id=${blogId}`, '_blank');
+            window.open(`/detail_blog.html?id=${blogId}`, '_blank');
         }
 
         // Delete blog post

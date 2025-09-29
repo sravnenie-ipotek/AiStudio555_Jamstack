@@ -556,4 +556,112 @@ http://localhost:3000/admin-newdesign.html
 
 ---
 
+## 🚨 **Bug #35: Admin Panel Save Function Completely Broken - September 29, 2025**
+
+### **SEVERITY: CRITICAL**
+**Discovery Time:** September 29, 2025
+**Affected Files:** `admin-nd.html:3309`
+**URL:** `http://localhost:3000/admin-nd.html`
+
+**Symptoms:**
+- Admin panel changes NEVER save to database
+- Changes only visible at `/backups/newDesign/` but not in main app at `localhost:3005`
+- Save button appears to work but actually throws error internally
+- Users think content is saved but it's not
+
+**Root Cause Analysis:**
+The `saveHomeContent()` function was literally just throwing an error instead of saving:
+```javascript
+// Line 3309 - THE CRITICAL BUG
+throw new Error('Legacy admin save endpoint has been removed');
+```
+The function was disabled with a hardcoded error, making the entire admin panel non-functional for saving changes.
+
+**Technical Details:**
+- Function built payload but never sent it anywhere
+- Threw error before any API calls were made
+- Error was caught silently so users didn't see failure
+- No data ever reached the database
+
+**Impact:**
+- **100% DATA LOSS** - All admin panel edits lost
+- Admin panel completely non-functional for its primary purpose
+- Users waste time making changes that never persist
+- Production sites cannot be updated through admin interface
+
+**Solution Applied:**
+Rewrote the entire `saveHomeContent()` function to properly call section-based API endpoints:
+- `/api/nd/home-page/hero` - For hero section
+- `/api/nd/home-page/features` - For features section
+- `/api/nd/home-page/testimonials` - For testimonials
+- `/api/nd/home-page/cta_bottom` - For CTA section
+
+Each section now saves independently with proper error handling and success feedback.
+
+**Status:** ✅ **FIXED**
+**Testing:** Admin changes now properly save to database and appear in all versions of the site
+**Severity Impact:** This was a COMPLETE FAILURE of the admin system's core functionality
+
+---
+
+## 🔴 **Bug #36: All Admin Preview URLs Hardcoded to Wrong Path - September 29, 2025**
+
+### **SEVERITY: CRITICAL - SYSTEMATIC FAILURE**
+**Discovery Time:** September 29, 2025
+**Affected Files:** `admin-nd.html` (8 instances)
+**URL:** `http://localhost:3000/admin-nd.html`
+
+**Symptoms:**
+- ALL preview buttons navigate to `/backups/newDesign/` instead of root app
+- Teachers preview: `/backups/newDesign/detail_teacher.html`
+- Courses preview: `/backups/newDesign/detail_courses.html`
+- Blog preview: `/backups/newDesign/detail_blog.html`
+- Users preview wrong version of the site
+
+**Root Cause Analysis:**
+SYSTEMATIC hardcoding of wrong paths throughout the admin panel:
+```javascript
+// WRONG - All 8 instances pointed to backup directory
+const previewUrl = `/backups/newDesign/detail_teacher.html?id=${teacherId}`;
+// CORRECT - Should point to root
+const previewUrl = `/detail_teacher.html?id=${teacherId}`;
+```
+
+**Technical Details:**
+Found 8 hardcoded instances:
+1. Line 3911 - Course preview button in list
+2. Line 4179 - Course URL auto-generation
+3. Line 4330 - Course edit modal preview
+4. Line 5055 - Teacher profile preview
+5. Line 5366 - Teacher modal preview
+6. Line 5622 - Teacher detail page preview
+7. Line 6496 - Course modal preview button
+8. Line 6842 - Blog preview button
+
+**Impact:**
+- Admin users preview WRONG version of site
+- Confusion about which files are actually being edited
+- Split-brain scenario: backups vs production
+- User sees one thing, visitors see another
+- COMPLETE DISCONNECT between admin and live site
+
+**Solution Applied:**
+Removed `/backups/newDesign/` from all 8 preview URLs:
+- `/backups/newDesign/detail_teacher.html` → `/detail_teacher.html`
+- `/backups/newDesign/detail_courses.html` → `/detail_courses.html`
+- `/backups/newDesign/detail_blog.html` → `/detail_blog.html`
+
+**Status:** ✅ **FIXED**
+**Testing:** All preview buttons now correctly open files from root directory
+**Severity Impact:** This was a SYSTEMATIC FAILURE causing complete confusion about file locations
+
+**How This Was Missed:**
+This bug persisted because:
+1. Developers were testing in `/backups/newDesign/` directory
+2. Preview "worked" but showed wrong files
+3. No validation that preview matches production
+4. Copy-paste propagated the error to 8 locations
+
+---
+
 **Note:** This log tracks both functional bugs and security vulnerabilities. Security issues take precedence over functional issues for production readiness.
