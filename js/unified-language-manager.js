@@ -21,6 +21,21 @@ class LanguageManager {
             fallback: 0
         };
 
+        // Cache invalidation settings
+        this.cacheConfig = {
+            defaultTTL: 5 * 60 * 1000, // 5 minutes default cache TTL
+            devModeTTL: 30 * 1000,     // 30 seconds in development mode
+            adminModeTTL: 0,           // No caching when admin activity detected
+            maxCacheSize: 50,          // Maximum number of cached entries
+            enableBroadcast: true      // Enable BroadcastChannel for cross-tab invalidation
+        };
+
+        // Cache metadata for invalidation tracking
+        this.cacheMetadata = {};
+
+        // Set up cache invalidation system
+        this.setupCacheInvalidation();
+
         // Initialize on DOM ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.init());
@@ -359,23 +374,100 @@ class LanguageManager {
      * Attach click handlers to language switchers
      */
     attachLanguageSwitchers() {
-        // Override the existing setActivePill function
+        // Override the existing setActivePill function with improved consistency
         window.setActivePill = (element) => {
-            // Use data-locale attribute if available, otherwise fall back to text content
-            const locale = element.dataset.locale || element.textContent.toLowerCase();
+            console.log('[LanguageManager] Language switcher clicked:', element);
+
+            // Standardized locale detection with proper fallbacks
+            let locale = element.dataset.locale || element.getAttribute('data-lang');
+
+            // Fallback to text content mapping for legacy support
+            if (!locale) {
+                const textMap = {
+                    'english': 'en',
+                    'en': 'en',
+                    'עברית': 'he',
+                    'hebrew': 'he',
+                    'he': 'he',
+                    'русский': 'ru',
+                    'russian': 'ru',
+                    'ru': 'ru'
+                };
+
+                const text = element.textContent.toLowerCase().trim();
+                locale = textMap[text] || text;
+            }
+
+            // Validate locale before switching
+            if (!this.supportedLocales.includes(locale)) {
+                console.error('[LanguageManager] Invalid locale detected:', locale, 'from element:', element);
+                return;
+            }
+
+            console.log('[LanguageManager] Switching to locale:', locale);
             this.switchLanguage(locale);
+        };
 
-            // Update visual state (original functionality)
-            const allPills = document.querySelectorAll('.lang-pill, .mobile-lang-pill');
-            allPills.forEach(pill => pill.classList.remove('active'));
+        // Add helper method for consistent language switcher state updates
+        this.updateLanguageSwitcherState = (locale) => {
+            console.log('[LanguageManager] Updating language switcher state for:', locale);
 
-            // Set active on both desktop and mobile versions
-            const pillText = element.textContent;
-            document.querySelectorAll('.lang-pill, .mobile-lang-pill').forEach(pill => {
-                if (pill.textContent === pillText) {
-                    pill.classList.add('active');
-                }
+            // Remove active class from all language switchers
+            const allSwitchers = document.querySelectorAll(
+                '.lang-pill, .mobile-lang-pill, .language-btn, [data-locale], [data-lang]'
+            );
+
+            allSwitchers.forEach(switcher => {
+                switcher.classList.remove('active');
             });
+
+            // Add active class to switchers matching current locale
+            const targetSwitchers = document.querySelectorAll(
+                `[data-locale="${locale}"], [data-lang="${locale}"]`
+            );
+
+            targetSwitchers.forEach(switcher => {
+                switcher.classList.add('active');
+                console.log('[LanguageManager] Activated switcher:', switcher);
+            });
+
+            // Legacy text-based fallback for older implementations
+            const textMappings = {
+                'en': ['English', 'en', 'EN'],
+                'he': ['עברית', 'Hebrew', 'he', 'HE'],
+                'ru': ['Русский', 'Russian', 'ru', 'RU']
+            };
+
+            if (textMappings[locale]) {
+                textMappings[locale].forEach(text => {
+                    document.querySelectorAll('.lang-pill, .mobile-lang-pill').forEach(pill => {
+                        if (pill.textContent.trim() === text) {
+                            pill.classList.add('active');
+                        }
+                    });
+                });
+            }
+        };
+
+        // Add helper method for language change notifications
+        this.notifyLanguageChange = (locale) => {
+            console.log('[LanguageManager] Notifying components of language change:', locale);
+
+            // Dispatch multiple events for compatibility
+            const events = [
+                new CustomEvent('languageChanged', { detail: { locale, source: 'unified-language-manager' } }),
+                new CustomEvent('localeChanged', { detail: { locale, source: 'unified-language-manager' } }),
+                new CustomEvent('languageSwitch', { detail: { locale, source: 'unified-language-manager' } })
+            ];
+
+            events.forEach(event => {
+                window.dispatchEvent(event);
+                document.dispatchEvent(event);
+            });
+
+            // Update global state for legacy compatibility
+            window.currentLocale = locale;
+            window.currentLanguage = locale;
         };
     }
 
@@ -529,6 +621,9 @@ class LanguageManager {
             // Save preference
             localStorage.setItem('preferred_locale', locale);
 
+            // Notify other components of language change
+            this.notifyLanguageChange(locale);
+
             // Update URL
             if (updateHistory) {
                 const url = new URL(window.location);
@@ -536,8 +631,8 @@ class LanguageManager {
                 history.pushState({locale}, '', url);
             }
 
-            // Update UI state and force visual refresh
-            this.setInitialLanguageState();
+            // Update UI state consistently using new helper method
+            this.updateLanguageSwitcherState(locale);
 
             // Force DOM refresh for Hebrew/RTL changes
             if (locale === 'he') {
@@ -571,11 +666,16 @@ class LanguageManager {
         // Reset translation stats
         this.translationStats = { success: 0, failed: 0, fallback: 0 };
 
-        // Check cache first
-        if (this.contentCache[locale]) {
+        // Check cache first, but respect cache invalidation settings
+        if (this.contentCache[locale] && !this.shouldInvalidateCache(locale)) {
             console.log('[LanguageManager] Using cached content for:', locale);
             this.updatePageContent(this.contentCache[locale], locale);
             return;
+        }
+
+        // Cache invalidated or doesn't exist, fetch fresh content
+        if (this.contentCache[locale]) {
+            console.log('[LanguageManager] Cache invalidated for:', locale, 'fetching fresh content');
         }
 
         // Determine which API endpoint to call based on current page
@@ -599,8 +699,14 @@ class LanguageManager {
 
             const data = await response.json();
 
-            // Cache the content
+            // Cache the content with metadata
             this.contentCache[locale] = data;
+            this.cacheMetadata[locale] = {
+                timestamp: Date.now(),
+                source: 'api',
+                endpoint: endpoint,
+                forceInvalidate: false
+            };
 
             // Update page content
             this.updatePageContent(data, locale);
@@ -2270,6 +2376,283 @@ class LanguageManager {
             }, 5000 + Math.random() * 5000); // Stagger between 5-10 seconds
         }
     }
+
+    /**
+     * Set up cache invalidation system
+     */
+    setupCacheInvalidation() {
+        console.log('[LanguageManager] Setting up cache invalidation system');
+
+        // Set up BroadcastChannel for cross-tab cache invalidation
+        if (this.cacheConfig.enableBroadcast && window.BroadcastChannel) {
+            this.cacheChannel = new BroadcastChannel('language-manager-cache');
+
+            this.cacheChannel.addEventListener('message', (event) => {
+                const { type, locale, reason } = event.data;
+
+                if (type === 'invalidate-cache') {
+                    console.log(`[LanguageManager] Cache invalidation received via broadcast:`, { locale, reason });
+
+                    if (locale) {
+                        this.invalidateCache(locale, reason);
+                    } else {
+                        this.invalidateAllCache(reason);
+                    }
+                }
+            });
+        }
+
+        // Set up admin activity detection
+        this.setupAdminActivityDetection();
+
+        // Set up automatic cache cleanup
+        this.setupCacheCleanup();
+
+        // Listen for visibility change to refresh stale cache
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                this.checkStaleCache();
+            }
+        });
+    }
+
+    /**
+     * Check if cache should be invalidated
+     */
+    shouldInvalidateCache(locale) {
+        const metadata = this.cacheMetadata[locale];
+
+        if (!metadata) {
+            return true; // No metadata means cache should be refreshed
+        }
+
+        const now = Date.now();
+        const age = now - metadata.timestamp;
+
+        // Check for admin mode (no caching)
+        if (this.isAdminMode()) {
+            console.log('[LanguageManager] Admin mode detected, invalidating cache');
+            return true;
+        }
+
+        // Check for development mode (short TTL)
+        if (this.isDevelopmentMode()) {
+            if (age > this.cacheConfig.devModeTTL) {
+                console.log('[LanguageManager] Development mode cache expired');
+                return true;
+            }
+        } else {
+            // Production mode (normal TTL)
+            if (age > this.cacheConfig.defaultTTL) {
+                console.log('[LanguageManager] Production cache expired');
+                return true;
+            }
+        }
+
+        // Check for forced invalidation
+        if (metadata.forceInvalidate) {
+            console.log('[LanguageManager] Forced cache invalidation flag set');
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Invalidate cache for specific locale
+     */
+    invalidateCache(locale, reason = 'manual') {
+        console.log(`[LanguageManager] Invalidating cache for ${locale}, reason: ${reason}`);
+
+        if (this.contentCache[locale]) {
+            delete this.contentCache[locale];
+        }
+
+        if (this.cacheMetadata[locale]) {
+            delete this.cacheMetadata[locale];
+        }
+
+        // Broadcast invalidation to other tabs
+        this.broadcastCacheInvalidation(locale, reason);
+    }
+
+    /**
+     * Invalidate all cached content
+     */
+    invalidateAllCache(reason = 'manual') {
+        console.log(`[LanguageManager] Invalidating all cache, reason: ${reason}`);
+
+        this.contentCache = {};
+        this.cacheMetadata = {};
+
+        // Broadcast invalidation to other tabs
+        this.broadcastCacheInvalidation(null, reason);
+    }
+
+    /**
+     * Broadcast cache invalidation to other tabs
+     */
+    broadcastCacheInvalidation(locale, reason) {
+        if (this.cacheChannel) {
+            this.cacheChannel.postMessage({
+                type: 'invalidate-cache',
+                locale,
+                reason,
+                timestamp: Date.now()
+            });
+        }
+    }
+
+    /**
+     * Detect admin activity to disable caching
+     */
+    setupAdminActivityDetection() {
+        // Check for admin panel indicators
+        this.adminIndicators = [
+            'admin-newdesign.html',
+            'admin-nd.html',
+            'content-admin',
+            'admin-panel'
+        ];
+
+        // Check current URL
+        const isAdminPage = this.adminIndicators.some(indicator =>
+            window.location.href.includes(indicator)
+        );
+
+        if (isAdminPage) {
+            localStorage.setItem('language-manager-admin-mode', Date.now().toString());
+        }
+
+        // Listen for admin panel navigation
+        window.addEventListener('beforeunload', () => {
+            const isAdminNavigation = this.adminIndicators.some(indicator =>
+                document.referrer.includes(indicator) || window.location.href.includes(indicator)
+            );
+
+            if (isAdminNavigation) {
+                localStorage.setItem('language-manager-admin-activity', Date.now().toString());
+            }
+        });
+    }
+
+    /**
+     * Check if currently in admin mode
+     */
+    isAdminMode() {
+        const adminMode = localStorage.getItem('language-manager-admin-mode');
+        const adminActivity = localStorage.getItem('language-manager-admin-activity');
+
+        if (adminMode || adminActivity) {
+            const timestamp = parseInt(adminMode || adminActivity);
+            const age = Date.now() - timestamp;
+
+            // Admin mode lasts for 10 minutes after last admin activity
+            return age < (10 * 60 * 1000);
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if in development mode
+     */
+    isDevelopmentMode() {
+        return window.location.hostname === 'localhost' ||
+               window.location.hostname === '127.0.0.1' ||
+               window.location.protocol === 'file:';
+    }
+
+    /**
+     * Set up automatic cache cleanup
+     */
+    setupCacheCleanup() {
+        // Clean up old cache entries every 5 minutes
+        setInterval(() => {
+            this.cleanupCache();
+        }, 5 * 60 * 1000);
+    }
+
+    /**
+     * Clean up expired cache entries
+     */
+    cleanupCache() {
+        const now = Date.now();
+        let cleanedCount = 0;
+
+        Object.keys(this.cacheMetadata).forEach(locale => {
+            const metadata = this.cacheMetadata[locale];
+            const age = now - metadata.timestamp;
+            const ttl = this.isDevelopmentMode() ? this.cacheConfig.devModeTTL : this.cacheConfig.defaultTTL;
+
+            if (age > ttl) {
+                delete this.contentCache[locale];
+                delete this.cacheMetadata[locale];
+                cleanedCount++;
+            }
+        });
+
+        // Enforce max cache size
+        const cacheKeys = Object.keys(this.contentCache);
+        if (cacheKeys.length > this.cacheConfig.maxCacheSize) {
+            const sortedKeys = cacheKeys.sort((a, b) => {
+                return this.cacheMetadata[a].timestamp - this.cacheMetadata[b].timestamp;
+            });
+
+            const keysToRemove = sortedKeys.slice(0, cacheKeys.length - this.cacheConfig.maxCacheSize);
+            keysToRemove.forEach(key => {
+                delete this.contentCache[key];
+                delete this.cacheMetadata[key];
+                cleanedCount++;
+            });
+        }
+
+        if (cleanedCount > 0) {
+            console.log(`[LanguageManager] Cleaned up ${cleanedCount} cache entries`);
+        }
+    }
+
+    /**
+     * Check for stale cache when page becomes visible
+     */
+    checkStaleCache() {
+        const currentLocale = this.currentLocale;
+
+        if (this.shouldInvalidateCache(currentLocale)) {
+            console.log('[LanguageManager] Detected stale cache on page focus, refreshing...');
+            this.invalidateCache(currentLocale, 'stale-on-focus');
+            this.loadPageContent(currentLocale);
+        }
+    }
+
+    /**
+     * Force immediate cache refresh (public API)
+     */
+    refreshCache(locale = null) {
+        if (locale) {
+            this.invalidateCache(locale, 'manual-refresh');
+            return this.loadPageContent(locale);
+        } else {
+            this.invalidateAllCache('manual-refresh-all');
+            return this.loadPageContent(this.currentLocale);
+        }
+    }
+
+    /**
+     * Get cache status for debugging
+     */
+    getCacheStatus() {
+        const status = {
+            cacheSize: Object.keys(this.contentCache).length,
+            metadata: this.cacheMetadata,
+            isAdminMode: this.isAdminMode(),
+            isDevelopmentMode: this.isDevelopmentMode(),
+            config: this.cacheConfig
+        };
+
+        console.log('[LanguageManager] Cache status:', status);
+        return status;
+    }
 }
 
 // Initialize language manager
@@ -2279,6 +2662,26 @@ const languageManager = new LanguageManager();
 window.LanguageManager = LanguageManager;
 window.languageManager = languageManager;
 window.unifiedLanguageManager = languageManager; // Alias for compatibility
+
+// Register with script dependency manager if available
+if (window.ScriptDependencyManager) {
+    window.ScriptDependencyManager.markReady('unified-language-manager', languageManager);
+    console.log('✅ [Unified Language Manager] Registered with dependency manager');
+} else {
+    console.warn('⚠️ [Unified Language Manager] Script dependency manager not found');
+}
+
+// Expose cache control methods globally for admin panel integration
+window.LanguageManagerCache = {
+    invalidate: (locale) => languageManager.invalidateCache(locale, 'admin-panel'),
+    invalidateAll: () => languageManager.invalidateAllCache('admin-panel'),
+    refresh: (locale) => languageManager.refreshCache(locale),
+    getStatus: () => languageManager.getCacheStatus(),
+    setAdminMode: () => {
+        localStorage.setItem('language-manager-admin-mode', Date.now().toString());
+        console.log('[LanguageManager] Admin mode activated manually');
+    }
+};
 
 // Add CSS for loading overlay and toast
 if (!document.getElementById('language-manager-styles')) {

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Debug</title>
+</head>
+<body>
+    <h1>Admin Panel Debug Test</h1>
+    <div id="results"></div>
+
+    <script>
+        console.log('🔧 Admin Debug Test Starting...');
+
+        async function testAdminAPIs() {
+            const results = document.getElementById('results');
+
+            try {
+                // Test the same API calls that admin panel makes
+                console.log('Testing home-page API...');
+                const homeResponse = await fetch('/api/nd/home-page?locale=en');
+                const homeData = await homeResponse.json();
+
+                console.log('Home API Response:', homeData);
+                results.innerHTML += `<h2>Home Page API</h2><pre>${JSON.stringify(homeData, null, 2).substring(0, 500)}...</pre>`;
+
+                if (homeData.success && homeData.data) {
+                    console.log('✅ Home page data loaded successfully');
+                    results.innerHTML += `<p>✅ API Success: ${Object.keys(homeData.data).length} sections found</p>`;
+
+                    // Check specific sections
+                    if (homeData.data.hero) {
+                        console.log('✅ Hero section found:', homeData.data.hero);
+                        results.innerHTML += `<p>✅ Hero section: ${homeData.data.hero.content?.title || 'No title'}</p>`;
+                    }
+                } else {
+                    console.error('❌ API returned success:false or no data');
+                    results.innerHTML += `<p>❌ API Error: ${homeData.error || 'Unknown error'}</p>`;
+                }
+
+                // Test courses-page API
+                console.log('Testing courses-page API...');
+                const coursesResponse = await fetch('/api/nd/courses-page?locale=en');
+                const coursesData = await coursesResponse.json();
+
+                console.log('Courses API Response:', coursesData);
+                results.innerHTML += `<h2>Courses Page API</h2><pre>${JSON.stringify(coursesData, null, 2).substring(0, 300)}...</pre>`;
+
+            } catch (error) {
+                console.error('❌ API Test Error:', error);
+                results.innerHTML += `<p>❌ JavaScript Error: ${error.message}</p>`;
+            }
+        }
+
+        // Start test
+        testAdminAPIs();
+    </script>
+</body>
+</html>

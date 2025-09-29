@@ -3127,27 +3127,21 @@
         async function loadHomeContent() {
             showLoading();
             try {
-                // ✅ FIXED: Use new endpoint /api/nd/home-page
-                const response = await fetch(`/api/nd/home-page?locale=${currentLang}`);
+                // ⚠️ LEGACY ENDPOINT REMOVED - admin/home-page no longer exists
+                // TODO: Replace with NewDesign section-based admin interface
+                throw new Error('Legacy admin endpoint has been removed');
+                const data = await response.json();
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-
-                if (result.success && result.data) {
-                    // NewDesign API returns nested data structure
-                    populateHomeForm(result.data);
+                if (data) {
+                    // Direct data from admin endpoint, no nested structure
+                    populateHomeForm(data);
                     showToast(`Content loaded for ${currentLang.toUpperCase()}`, 'success');
                     // Rebuild search index after loading data
                     setTimeout(buildSearchIndex, 500);
-                } else {
-                    throw new Error(result.error || 'No data received');
                 }
             } catch (error) {
                 showToast('Failed to load content', 'error');
-                console.error('Error loading home content:', error);
+                console.error(error);
             } finally {
                 hideLoading();
             }
@@ -3155,54 +3149,53 @@
 
         // Populate Form
         function populateHomeForm(data) {
-            // Handle nested JSON structure from nd_home table
+            // Handle database snake_case field names
+            // The database returns snake_case (hero_title) not camelCase (heroTitle)
             console.log('📊 Populating form with data:', data);
 
-            // Hero Section - handle nested structure from API
+            // Hero Section - using snake_case field names from database
             const heroVisible = document.getElementById('hero_visible');
             const heroTitle = document.getElementById('hero_title');
             const heroSubtitle = document.getElementById('hero_subtitle');
             const heroDescription = document.getElementById('hero_description');
-
-            // Extract hero data from nested structure
-            const heroData = data.hero?.content || data.hero || {};
-            if (heroVisible) heroVisible.checked = data.hero?.visible !== false;
-            if (heroTitle) heroTitle.value = heroData.title || '';
-            if (heroSubtitle) heroSubtitle.value = heroData.subtitle || '';
-            if (heroDescription) heroDescription.value = heroData.description || '';
+            if (heroVisible) heroVisible.checked = data.hero_section_visible !== false;
+            if (heroTitle) heroTitle.value = data.hero_title || '';
+            if (heroSubtitle) heroSubtitle.value = data.hero_subtitle || '';
+            if (heroDescription) heroDescription.value = data.hero_description || '';
 
             // Hero Buttons - skip for now as they're not in the flat structure
             document.getElementById('heroButtons').innerHTML = '';
 
-            // Features Section - handle nested structure
+            // Features Section - map from snake_case fields
             const featuresVisible = document.getElementById('features_visible');
             const featuresTitle = document.getElementById('features_title');
             const featuresSubtitle = document.getElementById('features_subtitle');
+            if (featuresVisible) featuresVisible.checked = true; // Default visible
+            if (featuresTitle) featuresTitle.value = data.practice_description || 'Focus on Practice';
+            if (featuresSubtitle) featuresSubtitle.value = data.practice_description || 'Core Skills Development';
 
-            const featuresData = data.features?.content?.content || data.features?.content || data.features || {};
-            if (featuresVisible) featuresVisible.checked = data.features?.visible !== false;
-            if (featuresTitle) featuresTitle.value = featuresData.title || '';
-            if (featuresSubtitle) featuresSubtitle.value = featuresData.subtitle || '';
-
-            // Feature Items - populate from nested structure
+            // Feature Items - populate from flat fields
             const featureItems = document.getElementById('featureItems');
             featureItems.innerHTML = '';
-
-            // Add features from nested items array
-            if (featuresData.items && Array.isArray(featuresData.items)) {
-                featuresData.items.forEach(item => {
-                    addFeatureItem({
-                        icon: '🎯',
-                        title: item.title || '',
-                        description: item.description || ''
-                    });
-                });
-            }
-            // Fallback to old structure if needed
-            else if (data.feature_1_title) {
+            // Add features from snake_case fields
+            if (data.feature_1_title) {
                 addFeatureItem({
                     icon: '🎯',
                     title: data.feature_1_title,
+                    description: data.feature_1_description
+                });
+            }
+            if (data.feature_2_title) {
+                addFeatureItem({
+                    icon: '✨',
+                    title: data.feature_2_title,
+                    description: data.feature_2_description
+                });
+            }
+            if (data.feature_3_title) {
+                addFeatureItem({
+                    icon: '🔄',
+                    title: data.feature_3_title,
                     description: data.feature_3_description
                 });
             }
@@ -3215,15 +3208,13 @@
             if (coursesTitle) coursesTitle.value = data.featured_courses_title || '';
             if (coursesSubtitle) coursesSubtitle.value = data.featured_courses_description || '';
 
-            // Testimonials Section - handle nested structure
+            // Testimonials Section - using snake_case
             const testimonialsVisible = document.getElementById('testimonials_visible');
             const testimonialsTitle = document.getElementById('testimonials_title');
             const testimonialsSubtitle = document.getElementById('testimonials_subtitle');
-
-            const testimonialsData = data.testimonials?.content || data.testimonials || {};
-            if (testimonialsVisible) testimonialsVisible.checked = data.testimonials?.visible !== false;
-            if (testimonialsTitle) testimonialsTitle.value = testimonialsData.title || '';
-            if (testimonialsSubtitle) testimonialsSubtitle.value = testimonialsData.description || '';
+            if (testimonialsVisible) testimonialsVisible.checked = data.testimonials_visible !== false;
+            if (testimonialsTitle) testimonialsTitle.value = data.testimonials_title || '';
+            if (testimonialsSubtitle) testimonialsSubtitle.value = data.testimonials_subtitle || '';
 
             // Awards Section - may not exist in flat structure
             const awardsVisible = document.getElementById('awards_visible');

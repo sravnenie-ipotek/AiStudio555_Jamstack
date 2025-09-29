@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewDesign Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .language-btn {
+            padding: 8px 16px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 24px;
+        }
+
+        .section-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            text-transform: capitalize;
+        }
+
+        .section-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #667eea;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(24px);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-input.error {
+            border-color: #e74c3c;
+            background-color: #fdf2f2;
+        }
+
+        .form-input.success {
+            border-color: #27ae60;
+            background-color: #f0fdf4;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            min-height: 80px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-textarea.error {
+            border-color: #e74c3c;
+            background-color: #fdf2f2;
+        }
+
+        .form-textarea.success {
+            border-color: #27ae60;
+            background-color: #f0fdf4;
+        }
+
+        .validation-message {
+            font-size: 12px;
+            margin-top: 4px;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .validation-message.error {
+            color: #e74c3c;
+            background: #fdf2f2;
+            border: 1px solid #fadbd8;
+        }
+
+        .validation-message.success {
+            color: #27ae60;
+            background: #f0fdf4;
+            border: 1px solid #d5f4e6;
+        }
+
+        .save-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .save-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .save-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.success {
+            background: #4caf50;
+        }
+
+        .toast.error {
+            background: #f44336;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .collapsible-content {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .json-editor {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>🎨 NewDesign Admin Panel</h1>
+                    <p>Section-based content management for modern architecture</p>
+                </div>
+                <button onclick="previewFullPage()" style="background: linear-gradient(135deg, #28a745, #20c997); color: white; border: none; padding: 16px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 16px; box-shadow: 0 4px 16px rgba(40, 167, 69, 0.3);">
+                    🚀 Preview Full Page
+                </button>
+            </div>
+        </div>
+
+        <div class="controls-row" style="display: flex; gap: 20px; margin-bottom: 20px; align-items: center;">
+            <div class="table-selector">
+                <label style="margin-right: 10px; font-weight: 600;">📊 Table:</label>
+                <select id="table-selector" style="padding: 8px 16px; border: 2px solid #667eea; border-radius: 8px; background: white;">
+                    <option value="home-page">🏠 Home Page</option>
+                    <option value="courses-page">📚 Courses Page UI</option>
+                    <option value="courses-data">📖 Courses Data ← Edit Individual Courses</option>
+                    <option value="teachers-data">👨‍🏫 Teachers Data ← Edit Individual Teachers</option>
+                    <option value="pricing-page">💰 Pricing Page</option>
+                    <option value="teachers-page">👨‍🏫 Teachers Page</option>
+                </select>
+            </div>
+
+            <div class="language-selector">
+                <button class="language-btn active" data-lang="en">🇺🇸 English</button>
+                <button class="language-btn" data-lang="ru">🇷🇺 Русский</button>
+                <button class="language-btn" data-lang="he">🇮🇱 עברית</button>
+            </div>
+        </div>
+
+        <!-- Content Manager Helper Notice -->
+        <div id="content-manager-notice" style="display: none; grid-column: 1 / -1; background: linear-gradient(135deg, #ff9500, #ff6b35); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(255,149,0,0.3);">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div style="font-size: 2rem;">💡</div>
+                <div>
+                    <h3 style="margin: 0 0 8px 0; font-size: 1.2rem;">For Content Managers: Switch to Course Data!</h3>
+                    <p style="margin: 0; opacity: 0.9;">You're currently viewing page UI settings (buttons, labels). To edit actual courses, select <strong>"📖 Courses Data"</strong> from the dropdown above.</p>
+                </div>
+                <button onclick="switchToCoursesData()" style="background: rgba(255,255,255,0.2); border: 2px solid white; color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    Switch Now
+                </button>
+            </div>
+        </div>
+
+        <div id="sections-container" class="sections-grid">
+            <div class="loading-container">
+                <div class="loading"></div>
+                <p>Loading sections...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔒 SECURITY DEPENDENCIES FOR XSS PROTECTION -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.9/dist/purify.min.js"></script>
+    <script src="js/security-utils.js"></script>
+
+    <script>
+        // Global error handling boundary for admin panel
+        window.addEventListener('error', function(event) {
+            console.error('🚨 [Admin Panel] Global Error:', event.error);
+            const errorMessage = `Admin Panel Error: ${event.error.message}\nFile: ${event.filename}:${event.lineno}`;
+
+            // Show user-friendly error message
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'global-error-alert';
+            SecurityUtils.safeSetHTML(errorDiv, `
+                <div style="position: fixed; top: 20px; right: 20px; background: #ff4757; color: white;
+                           padding: 15px 20px; border-radius: 8px; z-index: 10000; max-width: 400px;
+                           box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                    <strong>⚠️ Admin Panel Error</strong><br>
+                    <small>${event.error.message}</small><br>
+                    <button onclick="this.parentElement.parentElement.remove()"
+                            style="background: rgba(255,255,255,0.2); border: none; color: white;
+                                   padding: 5px 10px; border-radius: 4px; margin-top: 8px; cursor: pointer;">
+                        Dismiss
+                    </button>
+                </div>
+            `);
+            document.body.appendChild(errorDiv);
+
+            // Auto-remove after 10 seconds
+            setTimeout(() => {
+                if (errorDiv.parentElement) {
+                    errorDiv.remove();
+                }
+            }, 10000);
+
+            return false; // Don't prevent default error handling
+        });
+
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('🚨 [Admin Panel] Unhandled Promise Rejection:', event.reason);
+
+            // Show user-friendly error for promise rejections
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'global-error-alert';
+            SecurityUtils.safeSetHTML(errorDiv, `
+                <div style="position: fixed; top: 20px; right: 20px; background: #ff6b6b; color: white;
+                           padding: 15px 20px; border-radius: 8px; z-index: 10000; max-width: 400px;
+                           box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                    <strong>⚠️ Network/API Error</strong><br>
+                    <small>Failed to connect to server or process request</small><br>
+                    <button onclick="this.parentElement.parentElement.remove()"
+                            style="background: rgba(255,255,255,0.2); border: none; color: white;
+                                   padding: 5px 10px; border-radius: 4px; margin-top: 8px; cursor: pointer;">
+                        Dismiss
+                    </button>
+                </div>
+            `);
+            document.body.appendChild(errorDiv);
+
+            setTimeout(() => {
+                if (errorDiv.parentElement) {
+                    errorDiv.remove();
+                }
+            }, 10000);
+        });
+
+        // API Base URL configuration - auto-detects environment
+        const API_BASE = window.location.hostname === 'localhost'
+            ? 'http://localhost:3000'
+            : 'https://aistudio555jamstack-production.up.railway.app';
+
+        console.log(`🔧 [Admin Panel] API Base: ${API_BASE}`);
+        let currentLocale = 'en';
+        let currentTable = 'home-page';
+        let sectionsData = {};
+
+        // Initialize the admin panel
+        document.addEventListener('DOMContentLoaded', function() {
+            setupTableSelector();
+            setupLanguageSelector();
+            checkIfShowNotice(); // Check on page load
+            loadSections();
+        });
+
+        function setupTableSelector() {
+            const tableSelector = document.getElementById('table-selector');
+            tableSelector.addEventListener('change', function() {
+                currentTable = this.value;
+                checkIfShowNotice();
+                loadSections();
+            });
+        }
+
+        function checkIfShowNotice() {
+            const notice = document.getElementById('content-manager-notice');
+
+            // Show notice only when on courses-page (UI) to guide users to courses-data
+            if (currentTable === 'courses-page') {
+                notice.style.display = 'block';
+            } else {
+                notice.style.display = 'none';
+            }
+        }
+
+        function switchToCoursesData() {
+            document.getElementById('table-selector').value = 'courses-data';
+            currentTable = 'courses-data';
+            checkIfShowNotice();
+            loadSections();
+        }
+
+        function setupLanguageSelector() {
+            const languageButtons = document.querySelectorAll('.language-btn');
+            if (languageButtons.length === 0) {
+                console.warn('⚠️ [Admin Panel] No language buttons found');
+                return;
+            }
+
+            languageButtons.forEach(btn => {
+                if (!btn) {
+                    console.warn('⚠️ [Admin Panel] Found null language button');
+                    return;
+                }
+
+                btn.addEventListener('click', function() {
+                    // Update active button with null checks
+                    languageButtons.forEach(b => {
+                        if (b) b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+
+                    // Update current locale with validation
+                    const newLocale = this.dataset.lang;
+                    if (!newLocale) {
+                        console.error('🚨 [Admin Panel] Language button missing data-lang attribute');
+                        return;
+                    }
+
+                    currentLocale = newLocale;
+                    console.log('🌍 [Admin Panel] Language switched to:', currentLocale);
+
+                    // Reload sections for new locale
+                    loadSections();
+                });
+            });
+        }
+
+        async function loadSections() {
+            try {
+                showLoading();
+
+                // Special handling for courses data
+                if (currentTable === 'courses-data') {
+                    await loadCoursesData();
+                    return;
+                }
+
+                // Special handling for teachers data
+                if (currentTable === 'teachers-data') {
+                    await loadTeachersData();
+                    return;
+                }
+
+                // Admin panel should always get ALL sections, including those with visibility OFF
+                // Using preview=true ensures we get all sections regardless of visibility
+                console.log(`📡 [Admin Panel] Fetching sections: ${API_BASE}/api/nd/${currentTable}?locale=${currentLocale}&preview=true`);
+                const response = await fetch(`${API_BASE}/api/nd/${currentTable}?locale=${currentLocale}&preview=true`);
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch sections: ${response.status} ${response.statusText}`);
+                }
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Handle different response structures
+                    if (result.data && result.data.attributes && result.data.attributes.sections) {
+                        // Pricing-page style structure
+                        sectionsData = result.data.attributes.sections;
+                    } else if (result.data) {
+                        // Home-page and courses-page style structure
+                        sectionsData = result.data;
+                    } else {
+                        sectionsData = {};
+                    }
+
+                    renderSections();
+                    showToast(`${currentTable} sections loaded successfully`, 'success');
+                } else {
+                    const errorMsg = result.error || 'Unknown error occurred';
+                    showToast(`Failed to load ${currentTable} sections: ${errorMsg}`, 'error');
+                    SecurityUtils.safeSetHTML(document.getElementById('sections-container'), `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                            <h3>❌ Error Loading Sections</h3>
+                            <p>${errorMsg}</p>
+                            <button onclick="loadSections()" style="margin-top: 16px; padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                🔄 Retry
+                            </button>
+                        </div>
+                    `);
+                }
+            } catch (error) {
+                console.error('Error loading sections:', error);
+
+                let errorMessage = 'Network error occurred';
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Unable to connect to server. Please check if the server is running.';
+                } else if (error.message.includes('HTTP 404')) {
+                    errorMessage = `API endpoint for ${currentTable} not found`;
+                } else if (error.message.includes('HTTP 500')) {
+                    errorMessage = 'Server error occurred. Please try again later.';
+                } else {
+                    errorMessage = error.message;
+                }
+
+                showToast(errorMessage, 'error');
+                SecurityUtils.safeSetHTML(document.getElementById('sections-container'), `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                        <h3>🌐 Connection Error</h3>
+                        <p>${errorMessage}</p>
+                        <button onclick="loadSections()" style="margin-top: 16px; padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            🔄 Retry
+                        </button>
+                    </div>
+                `);
+            }
+        }
+
+        function showLoading() {
+            SecurityUtils.safeSetHTML(document.getElementById('sections-container'), `
+                <div class="loading-container" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                    <div class="loading"></div>
+                    <p>Loading sections...</p>
+                </div>
+            `);
+        }
+
+        function hideLoading() {
+            // Loading is hidden when content is rendered
+            // This function exists for compatibility and can be expanded if needed
+        }
+
+        function renderSections() {
+            const container = document.getElementById('sections-container');
+            SecurityUtils.safeSetHTML(container, '');
+
+            // Define page-specific section configurations
+            const pageConfigs = {
+                'home-page': {
+                    hero: { name: 'Hero Section', icon: '🚀' },
+                    courses: { name: 'Courses Section', icon: '📚' },
+                    about: { name: 'About Section', icon: 'ℹ️' },
+                    stats: { name: 'Statistics', icon: '📊' },
+                    testimonials: { name: 'Testimonials', icon: '💬' },
+                    features: { name: 'Features', icon: '⭐' },
+                    faq: { name: 'FAQ', icon: '❓' },
+                    contact: { name: 'Contact', icon: '📞' },
+                    misc: { name: 'Miscellaneous', icon: '🔧' },
+                    footer: { name: 'Footer', icon: '🦶' },
+                    navigation: { name: 'Navigation', icon: '🧭' }
+                },
+                'courses-page': {
+                    hero: { name: 'Hero Section', icon: '🎓' },
+                    courses: { name: 'Courses Grid', icon: '📚' },
+                    filters: { name: 'Course Filters', icon: '🔍' },
+                    categories: { name: 'Categories', icon: '📂' },
+                    cta: { name: 'Call to Action', icon: '📣' },
+                    misc: { name: 'Miscellaneous', icon: '🔧' }
+                },
+                'pricing-page': {
+                    hero: { name: 'Hero Section', icon: '💎' },
+                    pricing: { name: 'Pricing Plans', icon: '💰' },
+                    features: { name: 'Features Comparison', icon: '⚡' },
+                    faq: { name: 'FAQ', icon: '❓' },
+                    cta: { name: 'Call to Action', icon: '📣' },
+                    misc: { name: 'Miscellaneous', icon: '🔧' }
+                },
+                'teachers-page': {
+                    hero: { name: 'Hero Section', icon: '👨‍🏫' },
+                    teachers: { name: 'Teachers Grid', icon: '👥' },
+                    filters: { name: 'Teacher Filters', icon: '🔍' },
+                    testimonials: { name: 'Testimonials', icon: '💬' },
+                    misc: { name: 'Miscellaneous', icon: '🔧' }
+                }
+            };
+
+            // Get the appropriate section config for the current page
+            let sectionConfig = pageConfigs[currentTable] || {};
+
+            // For data pages (courses-data, teachers-data), return early as they have special handlers
+            if (currentTable === 'courses-data' || currentTable === 'teachers-data') {
+                // These are handled by loadCoursesData() and loadTeachersData()
+                return;
+            }
+
+            // Render configured sections for the current page
+            Object.keys(sectionConfig).forEach(sectionKey => {
+                if (sectionsData[sectionKey]) {
+                    container.appendChild(createSectionCard(sectionKey, sectionsData[sectionKey], sectionConfig[sectionKey]));
+                }
+            });
+
+            // Only render unconfigured sections if they're not in any other page config
+            const allConfiguredSections = new Set();
+            Object.values(pageConfigs).forEach(config => {
+                Object.keys(config).forEach(key => allConfiguredSections.add(key));
+            });
+
+            // Render remaining sections that aren't configured for any page
+            Object.keys(sectionsData).forEach(sectionKey => {
+                if (!sectionConfig[sectionKey] && !allConfiguredSections.has(sectionKey)) {
+                    container.appendChild(createSectionCard(sectionKey, sectionsData[sectionKey], {
+                        name: sectionKey.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                        icon: '📄'
+                    }));
+                }
+            });
+        }
+
+        function createSectionCard(sectionKey, sectionData, config) {
+            const card = document.createElement('div');
+            card.className = 'section-card';
+            SecurityUtils.safeSetHTML(card, `
+                <div class="section-header">
+                    <h3 class="section-title">${config.icon} ${config.name}</h3>
+                    <div class="section-toggle">
+                        <span>Visible</span>
+                        <div class="toggle-switch ${sectionData.visible ? 'active' : ''}" data-section="${sectionKey}">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapsible-content">
+                    ${renderSectionContent(sectionKey, sectionData)}
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 16px;">
+                    <button class="save-button" onclick="saveSection('${sectionKey}')" style="flex: 2;">
+                        💾 Save ${config.name}
+                    </button>
+                    <button class="preview-button" onclick="previewChanges('${sectionKey}')" style="flex: 1; background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                        👁️ Preview
+                    </button>
+                </div>
+            `);
+
+            // Setup toggle functionality
+            const toggle = card.querySelector('.toggle-switch');
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                sectionsData[sectionKey].visible = this.classList.contains('active');
+            });
+
+            return card;
+        }
+
+        function renderSectionContent(sectionKey, sectionData) {
+            const content = sectionData.content;
+            let html = '';
+
+            // Handle different content structures
+            if (content && content.content) {
+                // Nested content structure
+                const innerContent = content.content;
+
+                if (typeof innerContent === 'object') {
+                    Object.keys(innerContent).forEach(key => {
+                        if (typeof innerContent[key] === 'string') {
+                            html += createFormField(key, innerContent[key], sectionKey);
+                        } else if (typeof innerContent[key] === 'object' && innerContent[key] !== null) {
+                            html += `<div class="form-group">
+                                <label class="form-label">${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} (JSON)</label>
+                                <textarea class="json-editor" data-section="${sectionKey}" data-field="${key}" rows="4">${JSON.stringify(innerContent[key], null, 2)}</textarea>
+                            </div>`;
+                        }
+                    });
+                } else {
+                    html += createFormField('content', innerContent, sectionKey);
+                }
+            } else if (content && typeof content === 'object') {
+                // Direct content structure
+                Object.keys(content).forEach(key => {
+                    if (typeof content[key] === 'string') {
+                        html += createFormField(key, content[key], sectionKey);
+                    } else if (typeof content[key] === 'object' && content[key] !== null) {
+                        html += `<div class="form-group">
+                            <label class="form-label">${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} (JSON)</label>
+                            <textarea class="json-editor" data-section="${sectionKey}" data-field="${key}" rows="4">${JSON.stringify(content[key], null, 2)}</textarea>
+                        </div>`;
+                    }
+                });
+            }
+
+            return html || '<p>No editable content found</p>';
+        }
+
+        function createFormField(key, value, sectionKey) {
+            const isLongText = value && value.length > 100;
+            const inputType = isLongText ? 'textarea' : 'input';
+            const isRequired = ['title', 'name', 'subtitle'].includes(key);
+            const isUrl = key.toLowerCase().includes('url') || key.toLowerCase().includes('link');
+
+            return `
+                <div class="form-group">
+                    <label class="form-label">
+                        ${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        ${isRequired ? '<span style="color: #e74c3c;">*</span>' : ''}
+                    </label>
+                    ${inputType === 'textarea'
+                        ? `<textarea class="form-textarea" data-section="${sectionKey}" data-field="${key}" data-required="${isRequired}" data-type="text" rows="3" onblur="validateField(this)">${value || ''}</textarea>`
+                        : `<input type="${isUrl ? 'url' : 'text'}" class="form-input" data-section="${sectionKey}" data-field="${key}" data-required="${isRequired}" data-type="${isUrl ? 'url' : 'text'}" value="${value || ''}" onblur="validateField(this)">`
+                    }
+                    <div class="validation-message" style="display: none;"></div>
+                </div>
+            `;
+        }
+
+        function validateField(field) {
+            // Skip validation for non-input elements
+            if (!field || field.value === undefined) {
+                return true; // Skip elements that don't have value property
+            }
+
+            // Skip if it's not an input/textarea/select element
+            const inputTypes = ['INPUT', 'TEXTAREA', 'SELECT'];
+            if (!inputTypes.includes(field.tagName)) {
+                return true;
+            }
+
+            const value = field.value ? field.value.trim() : '';
+            const isRequired = field.dataset.required === 'true';
+            const fieldType = field.dataset.type;
+            const validationMessage = field.parentNode.querySelector('.validation-message');
+
+            // Clear previous validation
+            field.classList.remove('error', 'success');
+            if (validationMessage) {
+                validationMessage.style.display = 'none';
+            }
+
+            let isValid = true;
+            let message = '';
+
+            // Required field validation
+            if (isRequired && !value) {
+                isValid = false;
+                message = 'This field is required';
+            }
+            // URL validation
+            else if (fieldType === 'url' && value) {
+                try {
+                    new URL(value);
+                } catch (e) {
+                    isValid = false;
+                    message = 'Please enter a valid URL';
+                }
+            }
+            // JSON validation for JSON editors
+            else if (field.classList.contains('json-editor') && value) {
+                try {
+                    // Safe JSON parsing with detailed error reporting
+                    const trimmedValue = value.trim();
+                    if (!trimmedValue) {
+                        // Empty JSON field is valid
+                        return true;
+                    }
+
+                    const parsed = JSON.parse(trimmedValue);
+
+                    // Additional validation for common JSON issues
+                    if (typeof parsed === 'string' && parsed.includes('undefined')) {
+                        throw new Error('JSON contains undefined values');
+                    }
+
+                } catch (e) {
+                    isValid = false;
+                    message = `Invalid JSON: ${e.message}`;
+                    console.error('🚨 [Admin Panel] JSON Validation Error:', e, 'Value:', value);
+                }
+            }
+
+            // Apply validation styles
+            if (!isValid) {
+                field.classList.add('error');
+                if (validationMessage) {
+                    validationMessage.textContent = message;
+                    validationMessage.className = 'validation-message error';
+                    validationMessage.style.display = 'block';
+                }
+            } else if (value) {
+                field.classList.add('success');
+            }
+
+            return isValid;
+        }
+
+        function validateSection(sectionKey) {
+            const sectionFields = document.querySelectorAll(`input[data-section="${sectionKey}"], textarea[data-section="${sectionKey}"], select[data-section="${sectionKey}"]`);
+            let allValid = true;
+
+            sectionFields.forEach(field => {
+                if (!validateField(field)) {
+                    allValid = false;
+                }
+            });
+
+            return allValid;
+        }
+
+        async function saveSection(sectionKey) {
+            const saveButton = event.target;
+            const originalText = saveButton.textContent;
+
+            try {
+                // Validate section before saving
+                if (!validateSection(sectionKey)) {
+                    showToast('Please fix validation errors before saving', 'error');
+                    return;
+                }
+
+                saveButton.disabled = true;
+                SecurityUtils.safeSetHTML(saveButton, '<span class="loading"></span> Saving...');
+
+                // Collect form data for this section
+                const inputs = document.querySelectorAll(`[data-section="${sectionKey}"]`);
+
+                // Safely handle content that might be undefined
+                const sectionContent = sectionsData[sectionKey]?.content;
+                let updatedContent;
+
+                try {
+                    // Safe deep clone with null checks
+                    if (sectionContent && typeof sectionContent === 'object') {
+                        updatedContent = JSON.parse(JSON.stringify(sectionContent));
+                    } else {
+                        updatedContent = {};
+                    }
+                } catch (error) {
+                    console.error('🚨 [Admin Panel] Failed to clone section content:', error);
+                    updatedContent = {};
+                }
+
+                inputs.forEach(input => {
+                    const field = input.dataset.field;
+                    const value = input.value;
+
+                    // Handle JSON fields with safe parsing
+                    if (input.classList.contains('json-editor')) {
+                        try {
+                            // Safe JSON parsing with validation
+                            const trimmedValue = value.trim();
+                            if (!trimmedValue) {
+                                // Skip empty JSON fields
+                                return;
+                            }
+
+                            const parsedValue = JSON.parse(trimmedValue);
+
+                            // Validate parsed value
+                            if (parsedValue === undefined || parsedValue === null) {
+                                console.warn('⚠️ [Admin Panel] Parsed JSON value is null/undefined for field:', field);
+                            }
+
+                            if (updatedContent.content) {
+                                updatedContent.content[field] = parsedValue;
+                            } else {
+                                updatedContent[field] = parsedValue;
+                            }
+                        } catch (e) {
+                            showToast(`Invalid JSON in ${field}`, 'error');
+                            return;
+                        }
+                    } else {
+                        // Handle regular text fields
+                        if (updatedContent.content && updatedContent.content.content) {
+                            updatedContent.content.content[field] = value;
+                        } else if (updatedContent.content) {
+                            updatedContent.content[field] = value;
+                        } else {
+                            updatedContent[field] = value;
+                        }
+                    }
+                });
+
+                // Prepare the section data for API with locale-specific content field
+                const sectionUpdate = {
+                    type: sectionsData[sectionKey].type,
+                    visible: sectionsData[sectionKey].visible,
+                    animations_enabled: sectionsData[sectionKey].animations_enabled
+                };
+
+                // Add content with the correct locale-specific field name
+                const contentField = `content_${currentLocale}`;
+                sectionUpdate[contentField] = updatedContent;
+
+                // Save to API
+                console.log(`💾 [Admin Panel] Saving section: ${API_BASE}/api/nd/${currentTable}/${sectionKey}`);
+                const response = await fetch(`${API_BASE}/api/nd/${currentTable}/${sectionKey}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(sectionUpdate, (key, value) => {
+                        // Filter out undefined values during serialization
+                        return value === undefined ? null : value;
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    showToast(`${sectionKey} section saved successfully`, 'success');
+                    console.log(`✅ [Admin Panel] Section saved:`, result);
+
+                    // Update local data
+                    sectionsData[sectionKey] = sectionUpdate;
+                } else {
+                    let errorMessage;
+                    try {
+                        const errorData = await response.json();
+                        errorMessage = errorData.message || errorData.error || 'Unknown server error';
+                    } catch {
+                        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+                    }
+
+                    console.error(`❌ [Admin Panel] Save failed for ${sectionKey}:`, errorMessage);
+                    showToast(`Failed to save ${sectionKey}: ${errorMessage}`, 'error');
+                }
+            } catch (error) {
+                console.error(`🚨 [Admin Panel] Save error for ${sectionKey}:`, error);
+
+                // Provide detailed error context
+                const errorContext = {
+                    section: sectionKey,
+                    table: currentTable,
+                    locale: currentLocale,
+                    timestamp: new Date().toISOString(),
+                    errorType: error.name,
+                    errorMessage: error.message
+                };
+
+                console.error('🔍 [Admin Panel] Error Context:', errorContext);
+
+                let userMessage = `Error saving ${sectionKey}: ${error.message}`;
+                if (error.message.includes('Failed to fetch')) {
+                    userMessage = `Network error: Unable to save ${sectionKey}. Please check your connection.`;
+                } else if (error.message.includes('JSON')) {
+                    userMessage = `Data format error: Please check your input for ${sectionKey}.`;
+                }
+
+                showToast(userMessage, 'error');
+            } finally {
+                saveButton.disabled = false;
+                saveButton.textContent = originalText;
+            }
+        }
+
+        function previewChanges(sectionKey) {
+            // Map table types to frontend URLs
+            const tableToUrlMap = {
+                'home-page': 'home.html',
+                'courses-page': 'courses.html',
+                'pricing-page': 'pricing.html',
+                'teachers-page': 'teachers.html'
+            };
+
+            const baseUrl = currentLocale === 'en'
+                ? 'http://localhost:3005/'
+                : `http://localhost:3005/dist/${currentLocale}/`;
+
+            const pageUrl = tableToUrlMap[currentTable] || 'home.html';
+            const fullUrl = `${baseUrl}${pageUrl}?preview=true&locale=${currentLocale}&section=${sectionKey}`;
+
+            // Open in new tab
+            window.open(fullUrl, '_blank');
+
+            showToast(`Opening preview for ${sectionKey} section`, 'success');
+        }
+
+        function previewFullPage() {
+            // Map table types to frontend URLs
+            const tableToUrlMap = {
+                'home-page': 'home.html',
+                'courses-page': 'courses.html',
+                'pricing-page': 'pricing.html',
+                'teachers-page': 'teachers.html'
+            };
+
+            const baseUrl = currentLocale === 'en'
+                ? 'http://localhost:3005/'
+                : `http://localhost:3005/dist/${currentLocale}/`;
+
+            const pageUrl = tableToUrlMap[currentTable] || 'home.html';
+            const fullUrl = `${baseUrl}${pageUrl}?preview=true&locale=${currentLocale}`;
+
+            // Open in new tab
+            window.open(fullUrl, '_blank');
+
+            showToast(`Opening full page preview for ${currentTable}`, 'success');
+        }
+
+        async function loadCoursesData() {
+            try {
+                console.log(`📚 [Admin Panel] Loading courses: ${API_BASE}/api/nd/courses?locale=${currentLocale}`);
+                const response = await fetch(`${API_BASE}/api/nd/courses?locale=${currentLocale}`);
+
+                if (!response.ok) {
+                    throw new Error(`Failed to load courses: ${response.status} ${response.statusText}`);
+                }
+                const result = await response.json();
+
+                if (result.data) {
+                    renderCoursesList(result.data);
+                    showToast('Courses loaded successfully', 'success');
+                } else {
+                    showToast('Failed to load courses', 'error');
+                }
+            } catch (error) {
+                console.error('🚨 [Admin Panel] Error loading courses:', error);
+
+                const errorContext = {
+                    operation: 'loadCoursesData',
+                    locale: currentLocale,
+                    apiBase: API_BASE,
+                    timestamp: new Date().toISOString(),
+                    error: error.message
+                };
+
+                console.error('🔍 [Admin Panel] Courses Load Error Context:', errorContext);
+
+                let userMessage = 'Error loading courses: ' + error.message;
+                if (error.message.includes('Failed to fetch')) {
+                    userMessage = 'Unable to connect to server. Please check if the API server is running.';
+                } else if (error.message.includes('404')) {
+                    userMessage = 'Courses API endpoint not found. Please check server configuration.';
+                }
+
+                showToast(userMessage, 'error');
+
+                // Show error in container
+                const container = safeGetElementById('sections-container');
+                if (container) {
+                    SecurityUtils.safeSetHTML(container, `
+                        <div class="error-message" style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                            <h3 style="color: #856404;">❌ Failed to Load Courses</h3>
+                            <p style="color: #856404;">${userMessage}</p>
+                            <button onclick="loadCoursesData()" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-top: 10px;">🔄 Retry</button>
+                        </div>
+                    `);
+                }
+            }
+        }
+
+        function renderCoursesList(courses) {
+            const container = document.getElementById('sections-container');
+
+            let html = `
+                <div style="grid-column: 1 / -1; margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+                        <div>
+                            <h2 style="margin: 0; font-size: 1.8rem; color: #333;">📖 Courses Management</h2>
+                            <p style="margin: 8px 0 0 0; color: #666;">Manage individual course records and content</p>
+                        </div>
+                        <button onclick="addNewCourse()" style="background: linear-gradient(135deg, #28a745, #20c997); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            ➕ Add New Course
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            courses.forEach(course => {
+                const attrs = course.attributes;
+                html += `
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">📚 ${attrs.title || 'Untitled Course'}</h3>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <span style="padding: 4px 8px; background: ${attrs.visible ? '#e7f5e7' : '#f5e7e7'}; color: ${attrs.visible ? '#2d7738' : '#7a2e2e'}; border-radius: 4px; font-size: 12px;">
+                                    ${attrs.visible ? '👁️ Visible' : '🙈 Hidden'}
+                                </span>
+                                <button onclick="editCourse(${course.id})" style="background: #667eea; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer;">
+                                    ✏️ Edit
+                                </button>
+                                <button onclick="deleteCourse(${course.id})" style="background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer;">
+                                    🗑️ Delete
+                                </button>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+                            <div>
+                                <p><strong>Category:</strong> ${attrs.category || 'N/A'}</p>
+                                <p><strong>Duration:</strong> ${attrs.duration || 'N/A'}</p>
+                                <p><strong>Lessons:</strong> ${attrs.lessons || 'N/A'}</p>
+                            </div>
+                            <div>
+                                <p><strong>Price:</strong> $${attrs.price || 'N/A'}</p>
+                                <p><strong>Rating:</strong> ⭐ ${attrs.rating || 'N/A'}</p>
+                                <p><strong>Level:</strong> ${attrs.level || 'N/A'}</p>
+                            </div>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <p style="color: #666; font-size: 14px; line-height: 1.4;">
+                                ${attrs.description ? attrs.description.substring(0, 150) + (attrs.description.length > 150 ? '...' : '') : 'No description'}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            SecurityUtils.safeSetHTML(container, html);
+        }
+
+        function addNewCourse() {
+            openCourseModal();
+        }
+
+        function editCourse(courseId) {
+            openCourseModal(courseId);
+        }
+
+        async function deleteCourse(courseId) {
+            if (!confirm('Are you sure you want to delete this course? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/nd/courses/${courseId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showToast('Course deleted successfully', 'success');
+                    loadCoursesData(); // Refresh the list
+                } else {
+                    showToast('Failed to delete course', 'error');
+                }
+            } catch (error) {
+                console.error('🚨 [Admin Panel] Error deleting course:', error);
+
+                const errorContext = {
+                    operation: 'deleteCourse',
+                    courseId: courseId,
+                    timestamp: new Date().toISOString(),
+                    error: error.message
+                };
+
+                console.error('🔍 [Admin Panel] Delete Course Error Context:', errorContext);
+
+                let userMessage = 'Error deleting course: ' + error.message;
+                if (error.message.includes('Failed to fetch')) {
+                    userMessage = 'Network error: Unable to delete course. Please check your connection.';
+                } else if (error.message.includes('404')) {
+                    userMessage = 'Course not found. It may have already been deleted.';
+                } else if (error.message.includes('403')) {
+                    userMessage = 'Permission denied. You may not have access to delete this course.';
+                }
+
+                showToast(userMessage, 'error');
+            }
+        }
+
+        function openCourseModal(courseId = null) {
+            // Create modal overlay
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); z-index: 1000; display: flex;
+                align-items: center; justify-content: center; backdrop-filter: blur(5px);
+            `;
+
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: white; border-radius: 16px; padding: 32px;
+                max-width: 600px; width: 90%; max-height: 90%; overflow-y: auto;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            `;
+
+            SecurityUtils.safeSetHTML(modalContent, `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h2 style="margin: 0; color: #333;">${courseId ? '✏️ Edit Course' : '➕ Add New Course'}</h2>
+                    <button onclick="modal.remove()" style="background: #e0e0e0; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                        ✕
+                    </button>
+                </div>
+                <form id="courseModalForm" onsubmit="return saveCourseFromModal(event)">
+                    <input type="hidden" id="modal_course_id" value="${courseId || ''}">
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div class="form-group">
+                            <label class="form-label">Title *</label>
+                            <input type="text" id="modal_title" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select id="modal_category" class="form-input">
+                                <option value="">Select Category</option>
+                                <option value="Web Development">Web Development</option>
+                                <option value="Mobile Development">Mobile Development</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Machine Learning">Machine Learning</option>
+                                <option value="Cloud Computing">Cloud Computing</option>
+                                <option value="DevOps">DevOps</option>
+                                <option value="Cybersecurity">Cybersecurity</option>
+                                <option value="UI/UX Design">UI/UX Design</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea id="modal_description" class="form-textarea" rows="4"></textarea>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div class="form-group">
+                            <label class="form-label">Price ($)</label>
+                            <input type="number" id="modal_price" class="form-input" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Duration</label>
+                            <input type="text" id="modal_duration" class="form-input" placeholder="e.g., 8 weeks">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Lessons</label>
+                            <input type="number" id="modal_lessons" class="form-input">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div class="form-group">
+                            <label class="form-label">Level</label>
+                            <select id="modal_level" class="form-input">
+                                <option value="">Select Level</option>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Rating (1-5)</label>
+                            <input type="number" id="modal_rating" class="form-input" min="1" max="5" step="0.1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Image URL</label>
+                        <input type="url" id="modal_image" class="form-input">
+                    </div>
+
+                    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 24px;">
+                        <input type="checkbox" id="modal_visible" style="width: auto;">
+                        <label for="modal_visible" style="margin: 0;">Course is visible</label>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                        <button type="button" onclick="this.parentElement.parentElement.remove().remove()" style="background: #e0e0e0; color: #666; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">
+                            Cancel
+                        </button>
+                        <button type="submit" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            💾 Save Course
+                        </button>
+                    </div>
+                </form>
+            `;
+
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+
+            // Load course data if editing
+            if (courseId) {
+                loadCourseIntoModal(courseId);
+            } else {
+                // Set defaults for new course
+                document.getElementById('modal_visible').checked = true;
+            }
+        }
+
+        async function loadCourseIntoModal(courseId) {
+            try {
+                const response = await fetch(`${API_BASE}/api/nd/courses/${courseId}?locale=${currentLocale}`);
+                const result = await response.json();
+
+                if (result.data) {
+                    const attrs = result.data.attributes;
+                    document.getElementById('modal_title').value = attrs.title || '';
+                    document.getElementById('modal_category').value = attrs.category || '';
+                    document.getElementById('modal_description').value = attrs.description || '';
+                    document.getElementById('modal_price').value = attrs.price || '';
+                    document.getElementById('modal_duration').value = attrs.duration || '';
+                    document.getElementById('modal_lessons').value = attrs.lessons || '';
+                    document.getElementById('modal_level').value = attrs.level || '';
+                    document.getElementById('modal_rating').value = attrs.rating || '';
+                    document.getElementById('modal_image').value = attrs.image || '';
+                    document.getElementById('modal_visible').checked = attrs.visible !== false;
+                }
+            } catch (error) {
+                console.error('Error loading course data:', error);
+                showToast('Error loading course data', 'error');
+            }
+        }
+
+        async function saveCourseFromModal(event) {
+            event.preventDefault();
+
+            const courseId = document.getElementById('modal_course_id').value;
+            const courseData = {
+                title: document.getElementById('modal_title').value,
+                category: document.getElementById('modal_category').value,
+                description: document.getElementById('modal_description').value,
+                price: document.getElementById('modal_price').value,
+                duration: document.getElementById('modal_duration').value,
+                lessons: document.getElementById('modal_lessons').value,
+                level: document.getElementById('modal_level').value,
+                rating: document.getElementById('modal_rating').value,
+                image: document.getElementById('modal_image').value,
+                visible: document.getElementById('modal_visible').checked
+            };
+
+            try {
+                const url = courseId
+                    ? `${API_BASE}/api/nd/courses/${courseId}`
+                    : `${API_BASE}/api/nd/courses`;
+
+                const method = courseId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(courseData, (key, value) => {
+                        // Filter out undefined values during serialization
+                        return value === undefined ? null : value;
+                    })
+                });
+
+                if (response.ok) {
+                    showToast(`Course ${courseId ? 'updated' : 'created'} successfully`, 'success');
+                    document.querySelector('div[style*="position: fixed"]').remove(); // Close modal
+                    loadCoursesData(); // Refresh the list
+                } else {
+                    const error = await response.text();
+                    showToast(`Failed to save course: ${error}`, 'error');
+                }
+            } catch (error) {
+                console.error('🚨 [Admin Panel] Error saving course:', error);
+
+                const errorContext = {
+                    operation: 'saveCourse',
+                    courseId: document.getElementById('modal_course_id')?.value || 'new',
+                    timestamp: new Date().toISOString(),
+                    error: error.message
+                };
+
+                console.error('🔍 [Admin Panel] Save Course Error Context:', errorContext);
+
+                let userMessage = 'Error saving course: ' + error.message;
+                if (error.message.includes('Failed to fetch')) {
+                    userMessage = 'Network error: Unable to save course. Please check your connection.';
+                } else if (error.message.includes('JSON')) {
+                    userMessage = 'Data format error: Please check your input fields.';
+                } else if (error.message.includes('400')) {
+                    userMessage = 'Invalid data: Please check all required fields are filled correctly.';
+                } else if (error.message.includes('500')) {
+                    userMessage = 'Server error: Please try again later.';
+                }
+
+                showToast(userMessage, 'error');
+            }
+                    return false;
+        }
+
+        // ============================================
+        // TEACHERS MANAGEMENT FUNCTIONS
+        // ============================================
+
+        async function loadTeachersData() {
+            try {
+                console.log(`👥 [Admin Panel] Loading teachers: ${API_BASE}/api/nd/teachers?locale=${currentLocale}`);
+                const response = await fetch(`${API_BASE}/api/nd/teachers?locale=${currentLocale}`);
+
+                if (!response.ok) {
+                    throw new Error(`Failed to load teachers: ${response.status} ${response.statusText}`);
+                }
+                const result = await response.json();
+
+                if (result.data) {
+                    renderTeachersList(result.data);
+                } else {
+                    throw new Error('No teachers data received');
+                }
+            } catch (error) {
+                console.error('🚨 [Admin Panel] Error loading teachers:', error);
+
+                const errorContext = {
+                    operation: 'loadTeachersData',
+                    locale: currentLocale,
+                    apiBase: API_BASE,
+                    timestamp: new Date().toISOString(),
+                    error: error.message
+                };
+
+                console.error('🔍 [Admin Panel] Teachers Load Error Context:', errorContext);
+
+                let userMessage = 'Error loading teachers data: ' + error.message;
+                if (error.message.includes('Failed to fetch')) {
+                    userMessage = 'Unable to connect to server. Please check if the API server is running.';
+                } else if (error.message.includes('404')) {
+                    userMessage = 'Teachers API endpoint not found. Please check server configuration.';
+                }
+
+                showToast(userMessage, 'error');
+
+                // Show error in container
+                const container = safeGetElementById('sections-container');
+                if (container) {
+                    SecurityUtils.safeSetHTML(container, `
+                        <div class="error-message" style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                            <h3 style="color: #856404;">❌ Failed to Load Teachers</h3>
+                            <p style="color: #856404;">${userMessage}</p>
+                            <button onclick="loadTeachersData()" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-top: 10px;">🔄 Retry</button>
+                        </div>
+                    `);
+                }
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function renderTeachersList(teachers) {
+            const container = document.getElementById('sections-container');
+
+            SecurityUtils.safeSetHTML(container, `
+                <div class="teachers-management-container">
+                    <div class="teachers-header">
+                        <h2>👨‍🏫 Teachers Management</h2>
+                        <button onclick="openTeacherModal()" class="add-teacher-btn" style="background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            ➕ Add New Teacher
+                        </button>
+                    </div>
+
+                    <div class="teachers-notice" style="background: #e8f4f8; border: 2px solid #17a2b8; border-radius: 8px; padding: 16px; margin: 16px 0;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 20px;">👨‍🎓</span>
+                            <div>
+                                <strong>Teachers Content Management</strong>
+                                <p style="margin: 4px 0 0 0; color: #666;">Edit teacher profiles, qualifications, and information here. These changes will appear on the teachers page.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="teachers-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; margin-top: 24px;">
+                        ${teachers.map(teacher => `
+                            <div class="teacher-card" style="background: white; border: 2px solid #e9ecef; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s ease, border-color 0.2s ease;">
+                                <div class="teacher-image" style="width: 80px; height: 80px; border-radius: 50%; background-image: url('${teacher.profile_image_url || 'images/default-avatar.png'}'); background-size: cover; background-position: center; margin: 0 auto 16px; border: 3px solid #f8f9fa;"></div>
+
+                                <div class="teacher-info" style="text-align: center;">
+                                    <h3 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 18px;">${teacher.full_name}</h3>
+                                    <p style="margin: 0 0 8px 0; color: #6c757d; font-weight: 600;">${teacher.professional_title}</p>
+                                    <p style="margin: 0 0 12px 0; color: #007bff; font-weight: 500;">${teacher.company}</p>
+                                    <p style="margin: 0 0 16px 0; color: #6c757d; font-size: 14px; line-height: 1.4; max-height: 60px; overflow: hidden;">${teacher.bio ? teacher.bio.substring(0, 120) + '...' : 'No bio available'}</p>
+                                </div>
+
+                                <div class="teacher-stats" style="display: flex; justify-content: space-around; margin: 16px 0; padding: 12px 0; border-top: 1px solid #e9ecef; border-bottom: 1px solid #e9ecef;">
+                                    <div style="text-align: center;">
+                                        <div style="font-weight: 600; color: #28a745;">${teacher.statistics?.rating || 'N/A'}</div>
+                                        <div style="font-size: 12px; color: #6c757d;">Rating</div>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <div style="font-weight: 600; color: #007bff;">${teacher.statistics?.students_taught || 0}</div>
+                                        <div style="font-size: 12px; color: #6c757d;">Students</div>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <div style="font-weight: 600; color: #ffc107;">${teacher.statistics?.courses_count || 0}</div>
+                                        <div style="font-size: 12px; color: #6c757d;">Courses</div>
+                                    </div>
+                                </div>
+
+                                <div class="teacher-actions" style="display: flex; gap: 8px; margin-top: 16px;">
+                                    <button onclick="openTeacherModal(${teacher.id})" style="flex: 1; background: #007bff; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                                        ✏️ Edit
+                                    </button>
+                                    <button onclick="deleteTeacher(${teacher.id})" style="flex: 1; background: #dc3545; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                                        🗑️ Delete
+                                    </button>
+                                </div>
+
+                                <div style="margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    <span style="font-size: 12px; color: ${teacher.is_featured ? '#28a745' : '#6c757d'};">
+                                        ${teacher.is_featured ? '⭐ Featured' : '📝 Regular'}
+                                    </span>
+                                    <span style="font-size: 12px; color: ${teacher.is_active ? '#28a745' : '#dc3545'};">
+                                        ${teacher.is_active ? '✅ Active' : '❌ Inactive'}
+                                    </span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        async function deleteTeacher(teacherId) {
+            if (!confirm('Are you sure you want to delete this teacher? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/nd/teachers/${teacherId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showToast('Teacher deleted successfully!', 'success');
+                    await loadTeachersData(); // Reload the list
+                } else {
+                    throw new Error('Failed to delete teacher');
+                }
+            } catch (error) {
+                console.error('Error deleting teacher:', error);
+                showToast('Error deleting teacher', 'error');
+            }
+        }
+
+        function openTeacherModal(teacherId = null) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.7); z-index: 1000; display: flex;
+                align-items: center; justify-content: center; overflow-y: auto; padding: 20px;
+            `;
+
+            SecurityUtils.safeSetHTML(modal, `
+                <div style="background: white; border-radius: 12px; padding: 24px; width: 100%; max-width: 900px; max-height: 90vh; overflow-y: auto; position: relative;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid #e9ecef; padding-bottom: 16px;">
+                        <h2 style="margin: 0; color: #2c3e50;">${teacherId ? '✏️ Edit Teacher' : '➕ Add New Teacher'}</h2>
+                        <button onclick="this.closest('.modal-overlay').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6c757d;">&times;</button>
+                    </div>
+
+                    <form id="teacher-form" onsubmit="saveTeacherFromModal(event)">
+                        <input type="hidden" id="modal_teacher_id" value="${teacherId || ''}">
+
+                        <!-- Language Tabs -->
+                        <div style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid #e9ecef;">
+                            <button type="button" onclick="switchTeacherLang('en')" data-lang="en" class="teacher-lang-tab" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 6px 6px 0 0; cursor: pointer; font-weight: 600;">English</button>
+                            <button type="button" onclick="switchTeacherLang('ru')" data-lang="ru" class="teacher-lang-tab" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 6px 6px 0 0; cursor: pointer; font-weight: 600;">Русский</button>
+                            <button type="button" onclick="switchTeacherLang('he')" data-lang="he" class="teacher-lang-tab" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 6px 6px 0 0; cursor: pointer; font-weight: 600;">עברית</button>
+                        </div>
+
+                        <!-- Basic Information -->
+                        <fieldset style="border: 2px solid #e9ecef; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+                            <legend style="padding: 0 8px; font-weight: 600; color: #495057;">📝 Basic Information</legend>
+
+                            <div data-lang-content="en">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                                    <div>
+                                        <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Full Name (English) *</label>
+                                        <input type="text" id="modal_full_name" required style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="e.g., Dr. Sarah Chen">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Professional Title (English) *</label>
+                                        <input type="text" id="modal_professional_title" required style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="e.g., Senior ML Engineer">
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Company (English) *</label>
+                                    <input type="text" id="modal_company" required style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="e.g., Google, Microsoft, OpenAI">
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Biography (English) *</label>
+                                    <textarea id="modal_bio" required style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px; min-height: 100px; resize: vertical;" placeholder="Brief professional biography and expertise..."></textarea>
+                                </div>
+                            </div>
+
+                            <div data-lang-content="ru" style="display: none;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                                    <div>
+                                        <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Полное имя (Русский)</label>
+                                        <input type="text" id="modal_full_name_ru" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="например, Д-р Сара Чен">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Профессиональный титул (Русский)</label>
+                                        <input type="text" id="modal_professional_title_ru" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="например, Старший инженер ML">
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Компания (Русский)</label>
+                                    <input type="text" id="modal_company_ru" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="например, Google, Microsoft, OpenAI">
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Биография (Русский)</label>
+                                    <textarea id="modal_bio_ru" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px; min-height: 100px; resize: vertical;" placeholder="Краткая профессиональная биография..."></textarea>
+                                </div>
+                            </div>
+
+                            <div data-lang-content="he" style="display: none;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                                    <div>
+                                        <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">שם מלא (עברית)</label>
+                                        <input type="text" id="modal_full_name_he" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder='לדוגמה, ד"ר שרה צ׳ן' dir="rtl">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">תואר מקצועי (עברית)</label>
+                                        <input type="text" id="modal_professional_title_he" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="לדוגמה, מהנדס ML בכיר" dir="rtl">
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">חברה (עברית)</label>
+                                    <input type="text" id="modal_company_he" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="לדוגמה, Google, Microsoft, OpenAI" dir="rtl">
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">ביוגרפיה (עברית)</label>
+                                    <textarea id="modal_bio_he" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px; min-height: 100px; resize: vertical;" placeholder="ביוגרפיה מקצועית קצרה..." dir="rtl"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- Skills & Expertise -->
+                        <fieldset style="border: 2px solid #e9ecef; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+                            <legend style="padding: 0 8px; font-weight: 600; color: #495057;">🎯 Skills & Expertise</legend>
+
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Skills (comma-separated)</label>
+                                <textarea id="modal_skills" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px; min-height: 60px;" placeholder="e.g., Machine Learning, Deep Learning, Python, TensorFlow, Computer Vision"></textarea>
+                            </div>
+
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Profile Image URL</label>
+                                <input type="url" id="modal_profile_image_url" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="https://example.com/teacher-photo.jpg">
+                            </div>
+                        </fieldset>
+
+                        <!-- Statistics -->
+                        <fieldset style="border: 2px solid #e9ecef; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+                            <legend style="padding: 0 8px; font-weight: 600; color: #495057;">📊 Statistics</legend>
+
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Rating</label>
+                                    <input type="number" id="modal_rating" min="0" max="5" step="0.1" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="4.8">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Students Taught</label>
+                                    <input type="number" id="modal_students_taught" min="0" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="500">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Courses Count</label>
+                                    <input type="number" id="modal_courses_count" min="0" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="3">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Years Experience</label>
+                                    <input type="number" id="modal_years_experience" min="0" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="8">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Completion Rate (%)</label>
+                                    <input type="number" id="modal_completion_rate" min="0" max="100" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="95">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Response Time</label>
+                                    <input type="text" id="modal_response_time" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="< 24 hours">
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- Courses Taught -->
+                        <fieldset style="border: 2px solid #e9ecef; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+                            <legend style="padding: 0 8px; font-weight: 600; color: #495057;">📚 Courses Taught</legend>
+
+                            <div id="courses_taught_container">
+                                <div class="course-taught-item" style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                                    <input type="text" placeholder="Course Name" style="width: 48%; margin-right: 2%; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                                    <input type="number" placeholder="Rating" min="0" max="5" step="0.1" style="width: 15%; margin-right: 2%; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                                    <input type="number" placeholder="Students" min="0" style="width: 15%; margin-right: 2%; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                                    <input type="number" placeholder="Completion %" min="0" max="100" style="width: 15%; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                                </div>
+                            </div>
+                            <button type="button" onclick="addCourseField()" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">+ Add Course</button>
+                        </fieldset>
+
+                        <!-- Contact & Social -->
+                        <fieldset style="border: 2px solid #e9ecef; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+                            <legend style="padding: 0 8px; font-weight: 600; color: #495057;">📞 Contact & Social</legend>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Email</label>
+                                    <input type="email" id="modal_email" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="teacher@example.com">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Phone</label>
+                                    <input type="tel" id="modal_phone" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="+1 (555) 123-4567">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">LinkedIn URL</label>
+                                    <input type="url" id="modal_linkedin" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="https://linkedin.com/in/username">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">GitHub URL</label>
+                                    <input type="url" id="modal_github" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="https://github.com/username">
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- Settings -->
+                        <fieldset style="border: 2px solid #e9ecef; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+                            <legend style="padding: 0 8px; font-weight: 600; color: #495057;">⚙️ Settings</legend>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Display Order</label>
+                                    <input type="number" id="modal_display_order" min="1" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="1" value="999">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-weight: 600; color: #495057;">Teacher Key (URL-friendly)</label>
+                                    <input type="text" id="modal_teacher_key" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px; font-size: 14px;" placeholder="e.g., sarah-chen">
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 16px;">
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="modal_is_featured" style="width: 18px; height: 18px;">
+                                    <span style="font-weight: 600; color: #495057;">⭐ Featured Teacher</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="modal_is_active" checked style="width: 18px; height: 18px;">
+                                    <span style="font-weight: 600; color: #495057;">✅ Active</span>
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                            <button type="button" onclick="this.closest('.modal-overlay').remove()" style="padding: 12px 24px; border: 2px solid #6c757d; background: white; color: #6c757d; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                                Cancel
+                            </button>
+                            <button type="submit" style="padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                                ${teacherId ? 'Update Teacher' : 'Create Teacher'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            modal.className = 'modal-overlay';
+            document.body.appendChild(modal);
+
+            // Load existing data if editing
+            if (teacherId) {
+                loadTeacherIntoModal(teacherId);
+            }
+        }
+
+        async function loadTeacherIntoModal(teacherId) {
+            try {
+                const response = await fetch(`${API_BASE}/api/nd/teachers/${teacherId}?locale=en`);
+                const result = await response.json();
+
+                if (result.data) {
+                    const teacher = result.data;
+
+                    // Basic Information - English
+                    document.getElementById('modal_full_name').value = teacher.full_name || teacher.full_name_en || '';
+                    document.getElementById('modal_professional_title').value = teacher.professional_title || teacher.professional_title_en || '';
+                    document.getElementById('modal_company').value = teacher.company || teacher.company_en || '';
+                    document.getElementById('modal_bio').value = teacher.bio || teacher.bio_en || '';
+
+                    // Basic Information - Russian
+                    const nameRu = document.getElementById('modal_full_name_ru');
+                    if (nameRu) nameRu.value = teacher.full_name_ru || '';
+                    const titleRu = document.getElementById('modal_professional_title_ru');
+                    if (titleRu) titleRu.value = teacher.professional_title_ru || '';
+                    const companyRu = document.getElementById('modal_company_ru');
+                    if (companyRu) companyRu.value = teacher.company_ru || '';
+                    const bioRu = document.getElementById('modal_bio_ru');
+                    if (bioRu) bioRu.value = teacher.bio_ru || '';
+
+                    // Basic Information - Hebrew
+                    const nameHe = document.getElementById('modal_full_name_he');
+                    if (nameHe) nameHe.value = teacher.full_name_he || '';
+                    const titleHe = document.getElementById('modal_professional_title_he');
+                    if (titleHe) titleHe.value = teacher.professional_title_he || '';
+                    const companyHe = document.getElementById('modal_company_he');
+                    if (companyHe) companyHe.value = teacher.company_he || '';
+                    const bioHe = document.getElementById('modal_bio_he');
+                    if (bioHe) bioHe.value = teacher.bio_he || '';
+
+                    // Skills & Expertise
+                    document.getElementById('modal_skills').value = teacher.skills ? teacher.skills.join(', ') : '';
+                    document.getElementById('modal_profile_image_url').value = teacher.profile_image_url || '';
+
+                    // Statistics
+                    document.getElementById('modal_rating').value = teacher.statistics?.rating || '';
+                    document.getElementById('modal_students_taught').value = teacher.statistics?.students_taught || '';
+                    document.getElementById('modal_courses_count').value = teacher.statistics?.courses_count || '';
+                    document.getElementById('modal_years_experience').value = teacher.statistics?.years_experience || '';
+                    document.getElementById('modal_completion_rate').value = teacher.statistics?.completion_rate || '';
+                    document.getElementById('modal_response_time').value = teacher.statistics?.response_time || '';
+
+                    // Courses Taught
+                    const coursesContainer = document.getElementById('courses_taught_container');
+                    if (coursesContainer && teacher.courses_taught && teacher.courses_taught.length > 0) {
+                        SecurityUtils.safeSetHTML(coursesContainer, '');
+                        teacher.courses_taught.forEach(course => {
+                            const courseDiv = document.createElement('div');
+                            courseDiv.className = 'course-taught-item';
+                            courseDiv.style.cssText = 'background: #f8f9fa; padding: 12px; border-radius: 6px; margin-bottom: 12px;';
+                            SecurityUtils.safeSetHTML(courseDiv, `
+                                <input type="text" placeholder="Course Name" value="${course.name || ''}" style="width: 48%; margin-right: 2%; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                                <input type="number" placeholder="Rating" min="0" max="5" step="0.1" value="${course.rating || ''}" style="width: 15%; margin-right: 2%; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                                <input type="number" placeholder="Students" min="0" value="${course.students || ''}" style="width: 15%; margin-right: 2%; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                                <input type="number" placeholder="Completion %" min="0" max="100" value="${course.completion_rate || ''}" style="width: 15%; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                            `);
+                            coursesContainer.appendChild(courseDiv);
+                        });
+                    }
+
+                    // Contact & Social
+                    document.getElementById('modal_email').value = teacher.contact_info?.email || '';
+                    document.getElementById('modal_phone').value = teacher.contact_info?.phone || '';
+                    document.getElementById('modal_linkedin').value = teacher.social_links?.linkedin || '';
+                    document.getElementById('modal_github').value = teacher.social_links?.github || '';
+
+                    // Settings
+                    document.getElementById('modal_display_order').value = teacher.display_order || 999;
+                    document.getElementById('modal_teacher_key').value = teacher.teacher_key || '';
+                    document.getElementById('modal_is_featured').checked = teacher.is_featured || false;
+                    document.getElementById('modal_is_active').checked = teacher.is_active !== false;
+                }
+            } catch (error) {
+                console.error('Error loading teacher data:', error);
+                showToast('Error loading teacher data', 'error');
+            }
+        }
+
+        // Helper functions for teacher modal
+        function switchTeacherLang(lang) {
+            // Update tab styles
+            document.querySelectorAll('.teacher-lang-tab').forEach(tab => {
+                if (tab.dataset.lang === lang) {
+                    tab.style.background = '#007bff';
+                } else {
+                    tab.style.background = '#6c757d';
+                }
+            });
+
+            // Show/hide content
+            document.querySelectorAll('[data-lang-content]').forEach(content => {
+                content.style.display = content.dataset.langContent === lang ? 'block' : 'none';
+            });
+        }
+
+        function addCourseField() {
+            const container = document.getElementById('courses_taught_container');
+            const courseDiv = document.createElement('div');
+            courseDiv.className = 'course-taught-item';
+            courseDiv.style.cssText = 'background: #f8f9fa; padding: 12px; border-radius: 6px; margin-bottom: 12px;';
+            SecurityUtils.safeSetHTML(courseDiv, `
+                <input type="text" placeholder="Course Name" style="width: 48%; margin-right: 2%; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                <input type="number" placeholder="Rating" min="0" max="5" step="0.1" style="width: 15%; margin-right: 2%; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                <input type="number" placeholder="Students" min="0" style="width: 15%; margin-right: 2%; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                <input type="number" placeholder="Completion %" min="0" max="100" style="width: 15%; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+            `);
+            container.appendChild(courseDiv);
+        }
+
+        async function saveTeacherFromModal(event) {
+            event.preventDefault();
+
+            const teacherId = document.getElementById('modal_teacher_id').value;
+
+            // Collect courses taught
+            const coursesTaught = [];
+            document.querySelectorAll('.course-taught-item').forEach(item => {
+                const inputs = item.querySelectorAll('input');
+                if (inputs[0].value) { // If course name exists
+                    coursesTaught.push({
+                        name: inputs[0].value,
+                        rating: parseFloat(inputs[1].value) || 0,
+                        students: parseInt(inputs[2].value) || 0,
+                        completion_rate: parseInt(inputs[3].value) || 0
+                    });
+                }
+            });
+
+            const teacherData = {
+                // Basic Information - English
+                full_name: document.getElementById('modal_full_name').value,
+                professional_title: document.getElementById('modal_professional_title').value,
+                company: document.getElementById('modal_company').value,
+                bio: document.getElementById('modal_bio').value,
+
+                // Multi-language support
+                full_name_ru: document.getElementById('modal_full_name_ru')?.value || '',
+                professional_title_ru: document.getElementById('modal_professional_title_ru')?.value || '',
+                company_ru: document.getElementById('modal_company_ru')?.value || '',
+                bio_ru: document.getElementById('modal_bio_ru')?.value || '',
+
+                full_name_he: document.getElementById('modal_full_name_he')?.value || '',
+                professional_title_he: document.getElementById('modal_professional_title_he')?.value || '',
+                company_he: document.getElementById('modal_company_he')?.value || '',
+                bio_he: document.getElementById('modal_bio_he')?.value || '',
+
+                // Skills & Expertise
+                skills: document.getElementById('modal_skills').value.split(',').map(s => s.trim()).filter(s => s),
+                profile_image_url: document.getElementById('modal_profile_image_url').value,
+
+                // Statistics
+                statistics: {
+                    rating: parseFloat(document.getElementById('modal_rating').value) || 4.8,
+                    students_taught: parseInt(document.getElementById('modal_students_taught').value) || 0,
+                    courses_count: parseInt(document.getElementById('modal_courses_count').value) || 0,
+                    years_experience: parseInt(document.getElementById('modal_years_experience').value) || 0,
+                    completion_rate: parseInt(document.getElementById('modal_completion_rate').value) || 95,
+                    response_time: document.getElementById('modal_response_time').value || '< 24 hours'
+                },
+
+                // Courses Taught
+                courses_taught: coursesTaught,
+
+                // Contact & Social
+                contact_info: {
+                    email: document.getElementById('modal_email').value,
+                    phone: document.getElementById('modal_phone').value
+                },
+                social_links: {
+                    linkedin: document.getElementById('modal_linkedin').value,
+                    github: document.getElementById('modal_github').value,
+                    twitter: null
+                },
+
+                // Settings
+                display_order: parseInt(document.getElementById('modal_display_order').value) || 999,
+                teacher_key: document.getElementById('modal_teacher_key').value || '',
+                is_featured: document.getElementById('modal_is_featured').checked,
+                is_active: document.getElementById('modal_is_active').checked
+            };
+
+            // Auto-generate teacher_key from name if not provided
+            if (!teacherData.teacher_key) {
+                teacherData.teacher_key = teacherData.full_name.toLowerCase()
+                    .replace(/[^a-z0-9]/g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/^-|-$/g, '');
+            }
+
+            try {
+                const url = teacherId
+                    ? `${API_BASE}/api/nd/teachers/${teacherId}`
+                    : `${API_BASE}/api/nd/teachers`;
+
+                const method = teacherId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(teacherData, (key, value) => {
+                        // Filter out undefined values during serialization
+                        return value === undefined ? null : value;
+                    })
+                });
+
+                if (response.ok) {
+                    showToast(`Teacher ${teacherId ? 'updated' : 'created'} successfully!`, 'success');
+                    document.querySelector('.modal-overlay').remove();
+                    await loadTeachersData(); // Reload the list
+                } else {
+                    throw new Error(`Failed to ${teacherId ? 'update' : 'create'} teacher`);
+                }
+            } catch (error) {
+                console.error('Error saving teacher:', error);
+                showToast(`Error ${teacherId ? 'updating' : 'creating'} teacher`, 'error');
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            // Remove existing toasts
+            const existingToasts = document.querySelectorAll('.toast');
+            existingToasts.forEach(toast => toast.remove());
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            // Trigger animation
+            setTimeout(() => toast.classList.add('show'), 100);
+
+            // Auto remove
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

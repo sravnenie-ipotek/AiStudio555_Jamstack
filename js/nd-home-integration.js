@@ -113,9 +113,10 @@
             const currentLocale = getCurrentLocale();
             console.log(`🔄 Loading admin panel data for locale: ${currentLocale}...`);
 
-            // Use the new multi-language admin endpoint
-            const response = await fetch(`${API_BASE_URL}/api/admin/home-page?locale=${currentLocale}`);
-            const attrs = await response.json(); // Direct data, not nested
+            // Use the working nd endpoint that contains visibility data
+            const response = await fetch(`${API_BASE_URL}/api/nd/home-page?locale=${currentLocale}`);
+            const responseData = await response.json();
+            const attrs = responseData.data || responseData; // Handle nested structure
 
             if (attrs) {
                 console.log(`✅ Admin panel data loaded for ${currentLocale}, applying to page...`);
@@ -210,7 +211,16 @@
 
                 // 6. SECTION VISIBILITY CONTROLS
                 // Hero Section Visibility
-                if (attrs.heroSectionVisible !== undefined) {
+                if (attrs.hero && attrs.hero.visible !== undefined) {
+                    if (attrs.hero.visible) {
+                        showHeroSection();
+                        console.log('👁️ Hero section shown via admin toggle');
+                    } else {
+                        hideHeroSection();
+                        console.log('🔒 Hero section hidden via admin toggle');
+                    }
+                } else if (attrs.heroSectionVisible !== undefined) {
+                    // Fallback for old structure
                     if (attrs.heroSectionVisible) {
                         showHeroSection();
                     } else {
@@ -219,7 +229,16 @@
                 }
 
                 // Featured Courses Section Visibility
-                if (attrs.featuredCoursesVisible !== undefined) {
+                if (attrs.courses && attrs.courses.visible !== undefined) {
+                    if (attrs.courses.visible) {
+                        showFeaturedCoursesSection();
+                        console.log('👁️ Featured courses section shown via admin toggle');
+                    } else {
+                        hideFeaturedCoursesSection();
+                        console.log('🔒 Featured courses section hidden via admin toggle');
+                    }
+                } else if (attrs.featuredCoursesVisible !== undefined) {
+                    // Fallback for old structure
                     if (attrs.featuredCoursesVisible) {
                         showFeaturedCoursesSection();
                     } else {
@@ -228,7 +247,15 @@
                 }
 
                 // Testimonials Section Visibility
-                if (attrs.testimonialsVisible !== undefined) {
+                if (attrs.testimonials && attrs.testimonials.visible !== undefined) {
+                    const testimonialsSection = document.querySelector('.testimonials-section') ||
+                                               document.querySelector('.section.testimonials');
+                    if (testimonialsSection) {
+                        testimonialsSection.style.display = attrs.testimonials.visible ? 'block' : 'none';
+                        console.log(`${attrs.testimonials.visible ? '👁️' : '🔒'} Testimonials section ${attrs.testimonials.visible ? 'shown' : 'hidden'} via admin toggle`);
+                    }
+                } else if (attrs.testimonialsVisible !== undefined) {
+                    // Fallback for old structure
                     const testimonialsSection = document.querySelector('.testimonials-section') ||
                                                document.querySelector('.section.testimonials');
                     if (testimonialsSection) {
@@ -238,7 +265,15 @@
                 }
 
                 // CTA Section Visibility
-                if (attrs.ctaVisible !== undefined) {
+                if (attrs.cta && attrs.cta.visible !== undefined) {
+                    const ctaSection = document.querySelector('.cta-section') ||
+                                      document.querySelector('.section.cta');
+                    if (ctaSection) {
+                        ctaSection.style.display = attrs.cta.visible ? 'block' : 'none';
+                        console.log(`${attrs.cta.visible ? '👁️' : '🔒'} CTA section ${attrs.cta.visible ? 'shown' : 'hidden'} via admin toggle`);
+                    }
+                } else if (attrs.ctaVisible !== undefined) {
+                    // Fallback for old structure
                     const ctaSection = document.querySelector('.cta-section') ||
                                       document.querySelector('.section.cta');
                     if (ctaSection) {
@@ -263,9 +298,56 @@
         }
     }
 
+    // Helper function to handle section visibility
+    function handleSectionVisibility(sectionKey, sectionData) {
+        console.log(`🔍 Checking visibility for section: ${sectionKey}`, sectionData?.visible);
+
+        // Map section keys to DOM selectors
+        const sectionSelectors = {
+            'hero': '.banner-section, .section.inner-banner',
+            'featured_courses': '.featured-courses-section, .section.featured-courses',
+            'course_categories': '.course-categories-section',
+            'testimonials': '.testimonials-section, .section.testimonial',
+            'contact': '.contact-section, .section.contact',
+            'faq': '.faq-section, .section.faq',
+            'cta': '.cta-section, .section.cta',
+            'about': '.about-section, .section.about',
+            'stats': '.stats-section, .section.stats'
+        };
+
+        const selector = sectionSelectors[sectionKey];
+        if (!selector) {
+            console.log(`⚠️ No selector found for section: ${sectionKey}`);
+            return;
+        }
+
+        const elements = document.querySelectorAll(selector);
+        if (elements.length === 0) {
+            console.log(`⚠️ No elements found for selector: ${selector}`);
+            return;
+        }
+
+        // Apply visibility based on the visible flag
+        elements.forEach(element => {
+            if (sectionData && sectionData.visible === false) {
+                console.log(`👻 Hiding section: ${sectionKey}`);
+                element.style.display = 'none';
+            } else {
+                console.log(`👁️ Showing section: ${sectionKey}`);
+                element.style.display = ''; // Reset to default
+            }
+        });
+    }
+
     // Populate all sections of the home page
     async function populateHomePage(data) {
         console.log('📝 Populating home page sections:', Object.keys(data));
+
+        // IMPORTANT: Handle visibility for ALL sections from the API
+        // This ensures sections with visible=false are hidden, not deleted
+        for (const [sectionKey, sectionData] of Object.entries(data)) {
+            handleSectionVisibility(sectionKey, sectionData);
+        }
 
         // DUAL SYSTEM ARCHITECTURE - WorkingLogic.md Compliance
         // System 1 (unified-language-manager.js): Handles ALL UI elements including hero section

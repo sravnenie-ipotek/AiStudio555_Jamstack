@@ -110,14 +110,20 @@ class SharedTeacherCard {
             // Get current locale for dynamic content loading (System 2)
             const currentLocale = this.getCurrentLocale();
             console.log(`🌍 [SharedTeacherCard] Loading teachers with locale: ${currentLocale} (Dual-System Architecture)`);
+            console.log(`🔍 [SharedTeacherCard] URL: ${window.location.href}`);
+            console.log(`🔍 [SharedTeacherCard] API URL: ${this.API_BASE_URL}/api/nd/teachers?locale=${currentLocale}`);
 
             // Load localized data - dynamic content (System 2)
             const response = await fetch(`${this.API_BASE_URL}/api/nd/teachers?locale=${currentLocale}`);
+            console.log(`📡 [SharedTeacherCard] API Response status: ${response.status}`);
+
             const data = await response.json();
+            console.log(`📊 [SharedTeacherCard] API Response data:`, data);
 
             if (data.success && Array.isArray(data.data)) {
                 this.teachers = data.data;
-                console.log(`✅ [SharedTeacherCard] Loaded ${this.teachers.length} teachers (English-only)`);
+                console.log(`✅ [SharedTeacherCard] Loaded ${this.teachers.length} teachers for locale: ${currentLocale}`);
+                console.log(`📋 [SharedTeacherCard] Teacher names:`, this.teachers.map(t => t.full_name || t.name));
             } else {
                 console.warn('⚠️ [SharedTeacherCard] API returned error or invalid data:', data);
                 this.teachers = [];
@@ -323,15 +329,29 @@ class SharedTeacherCard {
      * Get current locale from unified language manager or URL
      */
     getCurrentLocale() {
+        console.log(`🔍 [SharedTeacherCard] Getting current locale...`);
+
         // Check for the correct language manager instance
         if (window.languageManager && window.languageManager.currentLocale) {
+            console.log(`✅ [SharedTeacherCard] Found language manager locale: ${window.languageManager.currentLocale}`);
             return window.languageManager.currentLocale;
+        } else {
+            console.log(`⚠️ [SharedTeacherCard] Language manager not available:`, {
+                hasLanguageManager: !!window.languageManager,
+                currentLocale: window.languageManager?.currentLocale
+            });
         }
 
         // Fallback to checking URL params and localStorage
         const urlParams = new URLSearchParams(window.location.search);
         const urlLocale = urlParams.get('locale');
         const savedLocale = localStorage.getItem('selectedLanguage') || localStorage.getItem('preferred_locale');
+
+        console.log(`🔍 [SharedTeacherCard] Fallback locale detection:`, {
+            urlLocale,
+            savedLocale,
+            finalLocale: urlLocale || savedLocale || 'en'
+        });
 
         return urlLocale || savedLocale || 'en';
     }
@@ -588,6 +608,14 @@ if (!window.sharedTeacherCard) {
     window.sharedTeacherCard = sharedTeacherCard;
 
     console.log(`✅ [SharedTeacherCard] Component loaded and ready - Instance ID: ${sharedTeacherCard.instanceId}`);
+
+    // Register with script dependency manager if available
+    if (window.ScriptDependencyManager) {
+        window.ScriptDependencyManager.markReady('teacher-card', sharedTeacherCard);
+        console.log('✅ [SharedTeacherCard] Registered with dependency manager');
+    } else {
+        console.warn('⚠️ [SharedTeacherCard] Script dependency manager not found');
+    }
 } else {
     console.log(`ℹ️ [SharedTeacherCard] Component already exists - Existing Instance ID: ${window.sharedTeacherCard.instanceId}`);
     console.log('⚠️ [SharedTeacherCard] SCRIPT LOADED MULTIPLE TIMES - This could cause issues!');

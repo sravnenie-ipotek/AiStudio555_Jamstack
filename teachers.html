@@ -1118,8 +1118,14 @@
     }
   </style>
 
+  <!-- Script Dependency Manager (must load first) -->
+  <script src="js/script-dependency-manager.js" type="text/javascript"></script>
+
   <!-- Cleanup legacy teacher implementations -->
   <script src="js/teacher-cleanup.js"></script>
+
+  <!-- Unified Language Manager for All Pages (loaded after dependency manager) -->
+  <script src="js/unified-language-manager.js?v=3000"></script>
 
   <!-- Dynamic Content Integration (updated to work with new component) -->
   <script src="js/teachers-integration.js?v=2"></script>
@@ -1129,9 +1135,6 @@
 
   <!-- Contact Form Modal Script -->
   <script src="js/contact-form-modal.js"></script>
-
-  <!-- Unified Language Manager for All Pages -->
-  <script src="js/unified-language-manager.js?v=3000"></script>
 
   <!-- Language Switching Script -->
   <script>

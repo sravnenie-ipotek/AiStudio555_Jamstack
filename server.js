@@ -19,9 +19,469 @@ const { migrate } = require('./migrate-to-railway');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
+// 🔒 SECURITY CONFIGURATION - Replace hardcoded secrets
+const SECURITY_CONFIG = {
+    // Admin API secret key - MUST be set via environment variable
+    ADMIN_SECRET_KEY: process.env.ADMIN_SECRET_KEY || (() => {
+        console.error('🚨 CRITICAL SECURITY WARNING: ADMIN_SECRET_KEY environment variable not set!');
+        console.error('🚨 Using fallback secret - THIS IS NOT SECURE FOR PRODUCTION!');
+        console.error('🚨 Set ADMIN_SECRET_KEY environment variable immediately!');
+        return 'INSECURE_FALLBACK_' + Math.random().toString(36).substring(7);
+    })(),
+
+    // Validate admin secret key
+    validateAdminKey: function(providedKey) {
+        if (!providedKey) {
+            console.warn('⚠️ Admin API access attempted without secret key');
+            return false;
+        }
+
+        const isValid = providedKey === this.ADMIN_SECRET_KEY;
+        if (!isValid) {
+            console.warn('⚠️ Admin API access attempted with invalid secret key');
+        }
+
+        return isValid;
+    }
+};
+
+// 🔒 SECURE CORS CONFIGURATION
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        const allowedOrigins = [
+            'https://aistudio555.com',
+            'https://www.aistudio555.com',
+            'https://aistudio555jamstack-production.up.railway.app',
+            'http://localhost:3005',    // Local development frontend
+            'http://localhost:8000',    // Local preview server
+            'http://localhost:3000',    // Local API server
+            process.env.CORS_ORIGINS    // Additional origins from environment
+        ].filter(Boolean).join(',').split(',').map(o => o.trim()).filter(Boolean);
+
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.warn(`🚨 [CORS] Blocked request from unauthorized origin: ${origin}`);
+            callback(new Error('Not allowed by CORS policy'));
+        }
+    },
+    credentials: true, // Allow cookies and credentials
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
+    allowedHeaders: [
+        'Origin',
+        'X-Requested-With',
+        'Content-Type',
+        'Accept',
+        'Authorization',
+        'X-Admin-Key'
+    ], // Allowed headers
+    exposedHeaders: ['X-Total-Count'], // Headers exposed to the client
+    maxAge: 86400 // Cache preflight for 24 hours
+};
+
+// Apply CORS with secure configuration
+app.use(cors(corsOptions));
 app.use(express.json());
+
+// 🔒 COMPREHENSIVE INPUT VALIDATION MIDDLEWARE
+const inputValidator = {
+    // Sanitize string input
+    sanitizeString: (input, maxLength = 1000) => {
+        if (typeof input !== 'string') return '';
+        return input
+            .trim()
+            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
+            .replace(/javascript:/gi, '') // Remove javascript: URLs
+            .replace(/on\w+\s*=/gi, '') // Remove event handlers
+            .slice(0, maxLength);
+    },
+
+    // Validate email format
+    isValidEmail: (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email) && email.length <= 254;
+    },
+
+    // Validate section key format (alphanumeric, underscore, hyphen only)
+    isValidSectionKey: (key) => {
+        return typeof key === 'string' && /^[a-zA-Z0-9_-]+$/.test(key) && key.length <= 50;
+    },
+
+    // Validate language code
+    isValidLanguage: (lang) => {
+        return ['en', 'ru', 'he'].includes(lang);
+    },
+
+    // Validate JSON structure (prevents JSON injection)
+    isValidJSON: (input) => {
+        try {
+            const parsed = JSON.parse(JSON.stringify(input));
+            return typeof parsed === 'object' && parsed !== null;
+        } catch {
+            return false;
+        }
+    },
+
+    // Validate boolean values
+    isValidBoolean: (input) => {
+        return typeof input === 'boolean';
+    },
+
+    // Validate numeric input
+    isValidNumber: (input, min = 0, max = Number.MAX_SAFE_INTEGER) => {
+        const num = Number(input);
+        return !isNaN(num) && num >= min && num <= max;
+    },
+
+    // Content validation for admin panel updates
+    validateHomePageContent: (req, res, next) => {
+        const { section_key } = req.params;
+        const { content_en, content_ru, content_he, visible, animations_enabled } = req.body;
+
+        // Validate section key
+        if (!inputValidator.isValidSectionKey(section_key)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid section key format',
+                details: 'Section key must contain only alphanumeric characters, underscores, and hyphens'
+            });
+        }
+
+        // Validate content objects
+        if (content_en !== undefined && !inputValidator.isValidJSON(content_en)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid English content format'
+            });
+        }
+
+        if (content_ru !== undefined && !inputValidator.isValidJSON(content_ru)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid Russian content format'
+            });
+        }
+
+        if (content_he !== undefined && !inputValidator.isValidJSON(content_he)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid Hebrew content format'
+            });
+        }
+
+        // Validate boolean flags
+        if (visible !== undefined && !inputValidator.isValidBoolean(visible)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Visible flag must be a boolean'
+            });
+        }
+
+        if (animations_enabled !== undefined && !inputValidator.isValidBoolean(animations_enabled)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Animations enabled flag must be a boolean'
+            });
+        }
+
+        next();
+    },
+
+    // Generic content validation
+    validateContent: (req, res, next) => {
+        const contentFields = ['title', 'subtitle', 'description', 'content', 'text'];
+
+        for (const field of contentFields) {
+            if (req.body[field] !== undefined) {
+                if (typeof req.body[field] === 'string') {
+                    req.body[field] = inputValidator.sanitizeString(req.body[field], 5000);
+                } else if (typeof req.body[field] === 'object') {
+                    // Sanitize nested object properties
+                    for (const key in req.body[field]) {
+                        if (typeof req.body[field][key] === 'string') {
+                            req.body[field][key] = inputValidator.sanitizeString(req.body[field][key], 5000);
+                        }
+                    }
+                }
+            }
+        }
+
+        next();
+    },
+
+    // Authentication validation
+    validateAuth: (req, res, next) => {
+        const { email, password } = req.body;
+
+        if (!email || !inputValidator.isValidEmail(email)) {
+            return res.status(400).json({
+                error: 'Valid email address is required',
+                details: 'Email must be a valid format and under 254 characters'
+            });
+        }
+
+        if (!password || typeof password !== 'string' || password.length < 8 || password.length > 128) {
+            return res.status(400).json({
+                error: 'Password must be between 8 and 128 characters'
+            });
+        }
+
+        // Sanitize inputs
+        req.body.email = inputValidator.sanitizeString(email, 254);
+        req.body.password = password; // Don't sanitize password (preserve special chars)
+
+        next();
+    }
+};
+
+// 🚦 COMPREHENSIVE API RATE LIMITING
+class APIRateLimiter {
+    constructor() {
+        this.requests = new Map(); // Track requests per IP
+        this.windowMs = 15 * 60 * 1000; // 15 minutes
+        this.maxRequests = {
+            default: 100,      // 100 requests per 15 minutes for general API
+            admin: 50,         // 50 requests per 15 minutes for admin endpoints
+            auth: 10,          // 10 requests per 15 minutes for auth endpoints
+            upload: 20,        // 20 requests per 15 minutes for upload endpoints
+            heavy: 30          // 30 requests per 15 minutes for heavy operations
+        };
+
+        // Clean up old entries every 5 minutes
+        setInterval(() => this.cleanup(), 5 * 60 * 1000);
+    }
+
+    isAllowed(clientIP, endpoint = 'default') {
+        const now = Date.now();
+        const clientKey = `${clientIP}:${endpoint}`;
+
+        if (!this.requests.has(clientKey)) {
+            this.requests.set(clientKey, { count: 1, resetTime: now + this.windowMs });
+            return true;
+        }
+
+        const clientData = this.requests.get(clientKey);
+
+        // Reset if window expired
+        if (now >= clientData.resetTime) {
+            clientData.count = 1;
+            clientData.resetTime = now + this.windowMs;
+            return true;
+        }
+
+        // Check if limit exceeded
+        const limit = this.maxRequests[endpoint] || this.maxRequests.default;
+        if (clientData.count >= limit) {
+            console.warn(`🚨 [RateLimit] ${endpoint} limit exceeded for IP: ${clientIP} (${clientData.count}/${limit})`);
+            return false;
+        }
+
+        clientData.count++;
+        return true;
+    }
+
+    getClientStats(clientIP, endpoint = 'default') {
+        const clientKey = `${clientIP}:${endpoint}`;
+        const clientData = this.requests.get(clientKey);
+
+        if (!clientData) {
+            return { count: 0, resetTime: Date.now() + this.windowMs };
+        }
+
+        return {
+            count: clientData.count,
+            resetTime: clientData.resetTime,
+            limit: this.maxRequests[endpoint] || this.maxRequests.default
+        };
+    }
+
+    cleanup() {
+        const now = Date.now();
+        for (const [key, data] of this.requests.entries()) {
+            if (now >= data.resetTime) {
+                this.requests.delete(key);
+            }
+        }
+        console.log(`🧹 [RateLimit] Cleaned up expired entries. Active: ${this.requests.size}`);
+    }
+
+    getStats() {
+        return {
+            trackedClients: this.requests.size,
+            memoryUsageMB: (JSON.stringify([...this.requests]).length / 1024 / 1024).toFixed(2)
+        };
+    }
+}
+
+// Initialize API rate limiter
+const apiRateLimiter = new APIRateLimiter();
+
+// Rate limiting middleware factory
+const createRateLimitMiddleware = (endpointType = 'default') => {
+    return (req, res, next) => {
+        const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
+
+        if (!apiRateLimiter.isAllowed(clientIP, endpointType)) {
+            const stats = apiRateLimiter.getClientStats(clientIP, endpointType);
+            return res.status(429).json({
+                error: 'Rate limit exceeded',
+                message: `Too many ${endpointType} requests. Try again later.`,
+                limit: stats.limit,
+                resetTime: stats.resetTime,
+                retryAfter: Math.ceil((stats.resetTime - Date.now()) / 1000)
+            });
+        }
+
+        next();
+    };
+};
+
+// Apply rate limiting to all API routes
+app.use('/api', createRateLimitMiddleware('default'));
+app.use('/api/auth', createRateLimitMiddleware('auth'));
+app.use('/api/nd', createRateLimitMiddleware('admin'));
+app.use('/api/*upload*', createRateLimitMiddleware('upload'));
+
+// 🛡️ COMPREHENSIVE ERROR BOUNDARIES AND HANDLING
+class ErrorBoundary {
+    static async handleAsyncError(asyncFn, req, res, context = 'API') {
+        try {
+            return await asyncFn();
+        } catch (error) {
+            console.error(`🚨 [${context}] Async error:`, {
+                message: error.message,
+                stack: error.stack,
+                url: req.url,
+                method: req.method,
+                ip: req.ip,
+                userAgent: req.get('User-Agent'),
+                timestamp: new Date().toISOString()
+            });
+
+            // Don't expose internal errors to clients
+            const publicError = this.sanitizeError(error);
+
+            res.status(error.statusCode || 500).json({
+                success: false,
+                error: publicError.message,
+                code: publicError.code,
+                timestamp: new Date().toISOString()
+            });
+        }
+    }
+
+    static sanitizeError(error) {
+        // Map of internal errors to safe public messages
+        const errorMappings = {
+            'ECONNREFUSED': 'Database connection failed',
+            'ENOTFOUND': 'Service unavailable',
+            'ETIMEDOUT': 'Request timeout',
+            'ValidationError': 'Invalid input data',
+            'CastError': 'Invalid data format',
+            'MongoError': 'Database error',
+            'JsonWebTokenError': 'Authentication failed',
+            'TokenExpiredError': 'Session expired'
+        };
+
+        const safeMessage = errorMappings[error.name] || errorMappings[error.code] || 'Internal server error';
+
+        return {
+            message: safeMessage,
+            code: error.statusCode || 500
+        };
+    }
+
+    static createErrorHandler(context) {
+        return (error, req, res, next) => {
+            console.error(`🚨 [${context}] Error middleware triggered:`, {
+                message: error.message,
+                stack: error.stack,
+                url: req.url,
+                method: req.method,
+                ip: req.ip,
+                timestamp: new Date().toISOString()
+            });
+
+            if (res.headersSent) {
+                return next(error);
+            }
+
+            const publicError = this.sanitizeError(error);
+            res.status(error.statusCode || 500).json({
+                success: false,
+                error: publicError.message,
+                code: publicError.code,
+                timestamp: new Date().toISOString()
+            });
+        };
+    }
+}
+
+// Global error handlers
+process.on('uncaughtException', (error) => {
+    console.error('🚨 [FATAL] Uncaught Exception:', {
+        message: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString()
+    });
+
+    // Give the process time to log before exiting
+    setTimeout(() => {
+        process.exit(1);
+    }, 1000);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('🚨 [FATAL] Unhandled Promise Rejection:', {
+        reason: reason,
+        promise: promise,
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Apply error boundary to all API routes
+app.use('/api', ErrorBoundary.createErrorHandler('API'));
+
+// Database error handling wrapper
+const withDBErrorHandling = (asyncFn) => {
+    return async (req, res, next) => {
+        try {
+            await asyncFn(req, res, next);
+        } catch (error) {
+            // Database-specific error handling
+            if (error.code === 'ECONNREFUSED') {
+                console.error('🚨 [DB] Database connection failed');
+                return res.status(503).json({
+                    success: false,
+                    error: 'Service temporarily unavailable',
+                    code: 503
+                });
+            }
+
+            if (error.code === '23505') { // Unique constraint violation
+                return res.status(409).json({
+                    success: false,
+                    error: 'Duplicate entry',
+                    code: 409
+                });
+            }
+
+            if (error.code === '23503') { // Foreign key constraint violation
+                return res.status(400).json({
+                    success: false,
+                    error: 'Invalid reference',
+                    code: 400
+                });
+            }
+
+            // Pass to general error handler
+            next(error);
+        }
+    };
+};
 
 // Serve NewDesign static files
 app.use('/css', express.static(path.join(__dirname, 'css')));
@@ -222,553 +682,13 @@ async function queryWithFallback(query, params) {
 
 // ==================== LIVE API ENDPOINTS ====================
 
-// Migration endpoint for multi-language admin support
-app.post('/api/migrate/add-multilang-admin', async (req, res) => {
-  console.log('🌐 Running multi-language admin migration...');
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL || process.env.RAILWAY_DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-  });
+// ==================== LEGACY MIGRATION ENDPOINTS REMOVED ====================
+// All legacy migration endpoints for home_pages table have been removed
+// as part of admin rebuild - using NewDesign architecture only
 
-  try {
-    await client.connect();
-
-    // Create Russian record if not exists
-    await client.query(`
-      INSERT INTO home_pages (
-        id, locale, title, hero_title, hero_subtitle, hero_description,
-        hero_section_visible, featured_courses_visible, about_visible,
-        companies_visible, testimonials_visible, created_at, updated_at
-      )
-      SELECT
-        2, 'ru', 'AI Studio - Платформа онлайн-обучения',
-        'Добро пожаловать в AI Studio', 'Платформа онлайн-обучения',
-        'Изучайте новейшие технологии с экспертами индустрии',
-        true, true, true, true, true, NOW(), NOW()
-      WHERE NOT EXISTS (SELECT 1 FROM home_pages WHERE id = 2)
-    `);
-
-    // Create Hebrew record if not exists
-    await client.query(`
-      INSERT INTO home_pages (
-        id, locale, title, hero_title, hero_subtitle, hero_description,
-        hero_section_visible, featured_courses_visible, about_visible,
-        companies_visible, testimonials_visible, created_at, updated_at
-      )
-      SELECT
-        3, 'he', 'AI Studio - פלטפורמת למידה מקוונת',
-        'ברוכים הבאים ל-AI Studio', 'פלטפורמת למידה מקוונת',
-        'למדו את הטכנולוגיות החדשות ביותר עם מומחי התעשייה',
-        true, true, true, true, true, NOW(), NOW()
-      WHERE NOT EXISTS (SELECT 1 FROM home_pages WHERE id = 3)
-    `);
-
-    // Ensure English record has locale set
-    await client.query(`
-      UPDATE home_pages SET locale = 'en'
-      WHERE id = 1 AND (locale IS NULL OR locale = '')
-    `);
-
-    // Get all records to verify
-    const result = await client.query(`
-      SELECT id, locale, title, hero_title
-      FROM home_pages
-      WHERE id IN (1, 2, 3)
-      ORDER BY id
-    `);
-
-    console.log('✅ Migration complete. Language records:', result.rows);
-
-    res.json({
-      success: true,
-      message: 'Multi-language admin support added successfully',
-      records: result.rows
-    });
-  } catch (error) {
-    console.error('❌ Migration error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  } finally {
-    await client.end();
-  }
-});
-
-// Migration endpoint for adding CTA columns
-app.post('/api/migrate/add-cta-columns', async (req, res) => {
-  console.log('🔧 Running CTA columns migration...');
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL || process.env.RAILWAY_DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-  });
-
-  try {
-    await client.connect();
-
-    // Add CTA columns if they don't exist
-    await client.query(`ALTER TABLE home_pages ADD COLUMN IF NOT EXISTS cta_visible BOOLEAN DEFAULT true`);
-    await client.query(`ALTER TABLE home_pages ADD COLUMN IF NOT EXISTS cta_title VARCHAR(255)`);
-    await client.query(`ALTER TABLE home_pages ADD COLUMN IF NOT EXISTS cta_description TEXT`);
-    await client.query(`ALTER TABLE home_pages ADD COLUMN IF NOT EXISTS cta_button_text VARCHAR(255)`);
-    await client.query(`ALTER TABLE home_pages ADD COLUMN IF NOT EXISTS cta_button_url VARCHAR(500)`);
-
-    // Get all columns to verify
-    const result = await client.query(`
-      SELECT column_name, data_type
-      FROM information_schema.columns
-      WHERE table_name = 'home_pages'
-      ORDER BY ordinal_position
-    `);
-
-    console.log('✅ Migration complete. Current columns:', result.rows);
-
-    res.json({
-      success: true,
-      message: 'CTA columns added successfully',
-      columns: result.rows
-    });
-  } catch (error) {
-    console.error('❌ Migration error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  } finally {
-    await client.end();
-  }
-});
-
-// HOME PAGE - ALL 123 fields (with locale support)
-app.get('/api/home-page', async (req, res) => {
-  try {
-    const locale = getLocale(req);
-    console.log(`🌍 Fetching home page for locale: ${locale}`);
-
-    let data;
-    try {
-      // Try the locale-aware query first
-      data = await queryWithFallback(
-        'SELECT * FROM home_pages WHERE locale = $1 AND published_at IS NOT NULL LIMIT 1',
-        [locale]
-      );
-    } catch (localeError) {
-      // If locale column doesn't exist, try adding it and use fallback query
-      if (localeError.message.includes('column "locale" does not exist')) {
-        console.log('⚠️  Locale column missing, adding it...');
-
-        try {
-          // Add locale column
-          await queryDatabase('ALTER TABLE home_pages ADD COLUMN IF NOT EXISTS locale VARCHAR(10) DEFAULT \'en\'');
-
-          // Update existing records to have locale 'en'
-          await queryDatabase('UPDATE home_pages SET locale = \'en\' WHERE locale IS NULL OR locale = \'\'');
-
-          // Create Hebrew record if needed
-          if (locale === 'he') {
-            const existing = await queryDatabase('SELECT COUNT(*) as count FROM home_pages WHERE locale = \'he\'');
-            if (existing[0].count === 0 || existing[0].count === '0') {
-              await queryDatabase(`
-                INSERT INTO home_pages (locale, title, hero_title, hero_subtitle, hero_description, published_at)
-                SELECT 'he', title, hero_title, hero_subtitle, hero_description, published_at
-                FROM home_pages WHERE locale = 'en' LIMIT 1
-              `);
-              console.log('✅ Created Hebrew home page record');
-            }
-          }
-
-          // Try the query again
-          data = await queryWithFallback(
-            'SELECT * FROM home_pages WHERE locale = $1 AND published_at IS NOT NULL LIMIT 1',
-            [locale]
-          );
-        } catch (migrationError) {
-          console.log('⚠️  Migration failed, using fallback query:', migrationError.message);
-          // Use fallback query without locale
-          data = await queryDatabase('SELECT * FROM home_pages WHERE published_at IS NOT NULL LIMIT 1');
-        }
-      } else {
-        throw localeError;
-      }
-    }
-
-    if (data.length === 0) {
-      return res.json({ error: 'No home page data found' });
-    }
-
-    const homeData = data[0];
-
-    // DEBUG: Log FAQ titles being retrieved
-    console.log('🔍 FAQ DEBUG - homeData.faq_1_title:', homeData.faq_1_title);
-    console.log('🔍 FAQ DEBUG - homeData.faq_2_title:', homeData.faq_2_title);
-    console.log('🔍 FAQ DEBUG - homeData keys:', Object.keys(homeData).filter(k => k.includes('faq')));
-    console.log('🔍 FAQ DEBUG - homeData.id:', homeData.id);
-    console.log('🔍 FAQ DEBUG - homeData.locale:', homeData.locale);
-    console.log('🔍 FAQ DEBUG - homeData.title:', homeData.title);
-
-    // DEBUG: Check the values right before JSON response
-    const faq1Value = homeData.faq_1_title;
-    const faq2Value = homeData.faq_2_title;
-    console.log('🔍 RESPONSE DEBUG - About to send faq1Title:', faq1Value);
-    console.log('🔍 RESPONSE DEBUG - About to send faq2Title:', faq2Value);
-
-    res.json({
-      data: {
-        id: homeData.id,
-        attributes: {
-          // Hero Section
-          title: homeData.title,
-          heroTitle: homeData.hero_title,
-          heroSubtitle: homeData.hero_subtitle,
-          heroDescription: homeData.hero_description,
-          heroExpertLed: homeData.hero_expert_led || 'Expert-Led Learning',
-          heroSectionVisible: Boolean(homeData.hero_section_visible),
-          
-          // Featured Courses Section
-          featuredCoursesTitle: homeData.featured_courses_title,
-          featuredCoursesSubtitle: homeData.featured_courses_subtitle,
-          featuredCoursesDescription: homeData.featured_courses_description,
-          featuredCoursesVisible: Boolean(homeData.featured_courses_visible),
-          
-          // About Section
-          aboutTitle: homeData.about_title,
-          aboutSubtitle: homeData.about_subtitle,
-          aboutDescription: homeData.about_description,
-          aboutVisible: Boolean(homeData.about_visible),
-          
-          // Companies Section
-          companiesTitle: homeData.companies_title,
-          companiesDescription: homeData.companies_description,
-          companiesVisible: Boolean(homeData.companies_visible),
-          
-          // Testimonials Section
-          testimonialsTitle: homeData.testimonials_title,
-          testimonialsSubtitle: homeData.testimonials_subtitle,
-          testimonialsVisible: Boolean(homeData.testimonials_visible),
-          
-          // Navigation Labels
-          navHome: homeData.nav_home || 'Home',
-          navCourses: homeData.nav_courses || 'Courses',
-          navTeachers: homeData.nav_teachers || 'Teachers',
-          navBlog: homeData.nav_blog || 'Blog',
-          navCareerCenter: homeData.nav_career_center || 'Career Center',
-          navAbout: homeData.nav_about || 'About Us',
-          navContact: homeData.nav_contact || 'Contact',
-          navPricing: homeData.nav_pricing || 'Pricing Plans',
-          
-          // Button Texts/CTAs
-          btnSignUpToday: homeData.btn_sign_up_today || 'Sign Up Today',
-          btnLearnMore: homeData.btn_learn_more || 'Learn More',
-          btnViewAllCourses: homeData.btn_view_all_courses || 'View All Courses',
-          btnGetStarted: homeData.btn_get_started || 'Get Started',
-          btnContactUs: homeData.btn_contact_us || 'Contact Us',
-          btnEnrollNow: homeData.btn_enroll_now || 'Enroll Now',
-          btnStartLearning: homeData.btn_start_learning || 'Start Learning',
-          btnExploreCourses: homeData.btn_explore_courses || 'Explore Courses',
-          btnViewDetails: homeData.btn_view_details || 'View Details',
-          btnBookConsultation: homeData.btn_book_consultation || 'Book Consultation',
-          btnDownloadBrochure: homeData.btn_download_brochure || 'Download Brochure',
-          btnWatchDemo: homeData.btn_watch_demo || 'Watch Demo',
-          btnFreeTrial: homeData.btn_free_trial || 'Start Free Trial',
-          
-          // Form Labels
-          formLabelEmail: homeData.form_label_email || 'Email',
-          formLabelName: homeData.form_label_name || 'Name',
-          formLabelPhone: homeData.form_label_phone || 'Phone',
-          formLabelMessage: homeData.form_label_message || 'Message',
-          formLabelSubject: homeData.form_label_subject || 'Subject',
-          formPlaceholderEmail: homeData.form_placeholder_email || 'Enter your email',
-          formPlaceholderName: homeData.form_placeholder_name || 'Enter your name',
-          formPlaceholderPhone: homeData.form_placeholder_phone || 'Enter your phone',
-          formPlaceholderMessage: homeData.form_placeholder_message || 'Enter your message',
-          formBtnSubmit: homeData.form_btn_submit || 'Submit',
-          formBtnSubscribe: homeData.form_btn_subscribe || 'Subscribe',
-          formBtnSend: homeData.form_btn_send || 'Send Message',
-          
-          // Statistics Labels and Numbers
-          statsCoursesLabel: homeData.stats_courses_label || 'Courses',
-          statsLearnersLabel: homeData.stats_learners_label || 'Learners',
-          statsYearsLabel: homeData.stats_years_label || 'Years',
-          statsSuccessRateLabel: homeData.stats_success_rate_label || 'Success Rate',
-          statsCountriesLabel: homeData.stats_countries_label || 'Countries',
-          statsInstructorsLabel: homeData.stats_instructors_label || 'Expert Instructors',
-          statsCoursesNumber: homeData.stats_courses_number || '125+',
-          statsLearnersNumber: homeData.stats_learners_number || '14,000+',
-          statsYearsNumber: homeData.stats_years_number || '10+',
-          statsSuccessRateNumber: homeData.stats_success_rate_number || '95%',
-          statsCountriesNumber: homeData.stats_countries_number || '45+',
-          statsInstructorsNumber: homeData.stats_instructors_number || '200+',
-          
-          // System Messages
-          msgLoading: homeData.msg_loading || 'Loading...',
-          msgError: homeData.msg_error || 'An error occurred. Please try again.',
-          msgSuccess: homeData.msg_success || 'Success!',
-          msgFormSuccess: homeData.msg_form_success || 'Thank you! We will contact you soon.',
-          msgSubscribeSuccess: homeData.msg_subscribe_success || 'Successfully subscribed to newsletter!',
-          msgNoCourses: homeData.msg_no_courses || 'No courses available at the moment',
-          msgComingSoon: homeData.msg_coming_soon || 'Coming Soon',
-          msgEnrollmentClosed: homeData.msg_enrollment_closed || 'Enrollment Closed',
-          msgLimitedSeats: homeData.msg_limited_seats || 'Limited Seats Available',
-          
-          // UI Elements
-          uiSearchPlaceholder: homeData.ui_search_placeholder || 'Search courses...',
-          uiFilterAll: homeData.ui_filter_all || 'All',
-          uiSortBy: homeData.ui_sort_by || 'Sort By',
-          uiViewMode: homeData.ui_view_mode || 'View',
-          uiGridView: homeData.ui_grid_view || 'Grid',
-          uiListView: homeData.ui_list_view || 'List',
-          uiReadMore: homeData.ui_read_more || 'Read More',
-          uiShowLess: homeData.ui_show_less || 'Show Less',
-          uiBackToTop: homeData.ui_back_to_top || 'Back to Top',
-          uiShare: homeData.ui_share || 'Share',
-          uiPrint: homeData.ui_print || 'Print',
-          
-          // Additional Section Titles
-          focusPracticeTitle: homeData.focus_practice_title || 'Focus on Practice',
-          focusPracticeSubtitle: homeData.focus_practice_subtitle,
-          focusPracticeDescription: homeData.focus_practice_description,
-          coreSkillsTitle: homeData.core_skills_title || 'Core Skills',
-          coreSkillsSubtitle: homeData.core_skills_subtitle,
-          onlineLearningTitle: homeData.online_learning_title || 'Online Learning',
-          onlineLearningSubtitle: homeData.online_learning_subtitle,
-          onlineLearningDescription: homeData.online_learning_description,
-          expertMentorTitle: homeData.expert_mentor_title || 'Expert Mentor In Technology',
-          expertMentorSubtitle: homeData.expert_mentor_subtitle,
-          expertMentorDescription: homeData.expert_mentor_description,
-          faqTitle: homeData.faq_title || 'FAQ & Answer',
-          faqSubtitle: homeData.faq_subtitle,
-          faqHeading: homeData.faq_heading || 'Your Questions Answered Here',
-
-          // Individual FAQ Questions & Titles with Hebrew fallback
-          faq1Title: homeData.faq_1_title || (locale === 'he' ? 'אילו סוגי קורסי AI ו-IT זמינים?' : 'What types of AI and IT courses are available?'),
-          faq1Question: homeData.faq_1_question,
-          faq1Answer: homeData.faq_1_answer || (locale === 'he' ? 'אנו מציעים קורסי AI מגוונים כולל למידת מכונה, עיבוד שפה טבעית, ראיית מחשב, ופיתוח אלגוריתמים. כמו כן, קורסי IT בתחומי פיתוח אתרים, ניהול מסדי נתונים, אבטחת מידע ותשתיות ענן.' : 'We offer diverse AI courses including machine learning, natural language processing, computer vision, and algorithm development. Also, IT courses in web development, database management, cybersecurity, and cloud infrastructure.'),
-          faq2Title: homeData.faq_2_title || (locale === 'he' ? 'כמה זמן לוקח להשלים קורס?' : 'How long does it take to complete a course?'),
-          faq2Question: homeData.faq_2_question,
-          faq2Answer: homeData.faq_2_answer || (locale === 'he' ? 'משך הקורסים נע בין 6-12 שבועות לקורסים יסודיים ו-3-6 חודשים לתוכניות מתקדמות. כל קורס כולל שיעורים עקביים, תרגילים מעשיים ופרויקט סיום. הלימוד בקצב שלכם עם תמיכה אישית.' : 'Course duration ranges from 6-12 weeks for basic courses and 3-6 months for advanced programs. Each course includes consistent lessons, practical exercises, and a final project. Learn at your own pace with personal support.'),
-          faq3Title: homeData.faq_3_title || (locale === 'he' ? 'איזו תמיכה ניתנת במהלך הלמידה?' : 'What kind of support is provided during learning?'),
-          faq3Question: homeData.faq_3_question,
-          faq3Answer: homeData.faq_3_answer || (locale === 'he' ? 'כל סטודנט מקבל ליווי אישי של מנטור מקצועי, גישה לקהילת התלמידים 24/7, משוב מיידי על תרגילים, סדנאות עזר קבוצתיות והכוונה קריירה. אנו כאן בשבילכם!' : 'Every student receives personal mentoring from a professional mentor, 24/7 access to the student community, immediate feedback on exercises, group help workshops, and career guidance. We are here for you!'),
-          faq4Title: homeData.faq_4_title || (locale === 'he' ? 'האם אני צריך ניסיון תכנות קודם?' : 'Do I need prior programming experience?'),
-          faq4Question: homeData.faq_4_question,
-          faq4Answer: homeData.faq_4_answer || (locale === 'he' ? 'רוב הקורסים שלנו מתחילים מהיסודות ומתאימים לכל רמה. לקורסים מתקדמים יותר נדרש ידע בסיסי בתכנות או מתמטיקה. כל קורס מפרט את הדרישות המוקדמות בבירור.' : 'Most of our courses start from the basics and are suitable for all levels. More advanced courses require basic knowledge of programming or mathematics. Each course clearly specifies the prerequisites.'),
-          faq5Title: homeData.faq_5_title || (locale === 'he' ? 'האם אקבל תעודה לאחר השלמה?' : 'Will I receive a certificate after completion?'),
-          faq5Question: homeData.faq_5_question,
-          faq5Answer: homeData.faq_5_answer || (locale === 'he' ? 'בסיום מוצלח של הקורס תקבלו תעודת השלמה מוכרת המאושרת על ידי מומחי התעשייה. התעודה כוללת פירוט הכישורים שנרכשו ומוכרת על ידי מעסיקים רבים.' : 'Upon successful completion of the course, you will receive a recognized completion certificate approved by industry experts. The certificate details the skills acquired and is recognized by many employers.'),
-          faq6Title: homeData.faq_6_title || (locale === 'he' ? 'מה כולל התמיכה בקריירה?' : 'What career support is included?'),
-          faq6Question: homeData.faq_6_question,
-          faq6Answer: homeData.faq_6_answer || (locale === 'he' ? 'התמיכה כוללת הכנת קורות חיים טכני, תרגול ראיונות עבודה, הצגה למעסיקים פוטנציאליים, ייעוץ בחירת קריירה ורשת קשרים עם בוגרי התוכנית ואנשי תעשייה.' : 'Support includes technical CV preparation, job interview practice, introduction to potential employers, career choice consultation, and networking with program graduates and industry professionals.'),
-          careerSuccessTitle: homeData.career_success_title || 'Career Success',
-          careerSuccessSubtitle: homeData.career_success_subtitle,
-          careerSuccessDescription: homeData.career_success_description,
-          
-          // Course Metadata
-          lessonsLabel: homeData.lessons_label || 'Lessons',
-          weeksLabel: homeData.weeks_label || 'Weeks',
-          btnReadMore: homeData.btn_read_more || 'Read more',
-          
-          // Practice Section Fields
-          practicalWork: homeData.practical_work || 'Practical Work',
-          theoryOnly: homeData.theory_only || 'Theory Only',
-          jobSupport: homeData.job_support || 'Job Support',
-          practiceDescription: homeData.practice_description,
-
-          // Learning Features
-          feature1Title: homeData.feature_1_title,
-          feature1Description: homeData.feature_1_description,
-          feature2Title: homeData.feature_2_title,
-          feature2Description: homeData.feature_2_description,
-          feature3Title: homeData.feature_3_title,
-          feature3Description: homeData.feature_3_description,
-          feature4Title: homeData.feature_4_title,
-          feature4Description: homeData.feature_4_description,
-          feature5Title: homeData.feature_5_title,
-          feature5Description: homeData.feature_5_description,
-          feature6Title: homeData.feature_6_title,
-          feature6Description: homeData.feature_6_description,
-          
-          // Skills List
-          skill1: homeData.skill_1,
-          skill2: homeData.skill_2,
-          skill3: homeData.skill_3,
-          skill4: homeData.skill_4,
-          skill5: homeData.skill_5,
-          skill6: homeData.skill_6,
-          
-          // Stats Text
-          statsCoursesText: homeData.stats_courses_text || 'Total Courses Taught',
-          statsLearnersText: homeData.stats_learners_text || 'Total Happy Learners',
-          statsYearsText: homeData.stats_years_text || 'Years Of Experience',
-          
-          // Individual Courses (6 courses)
-          
-          courses: [
-            {
-              title: homeData.course_1_title,
-              rating: homeData.course_1_rating,
-              lessons: homeData.course_1_lessons,
-              duration: homeData.course_1_duration,
-              category: homeData.course_1_category,
-              description: homeData.course_1_description,
-              visible: Boolean(homeData.course_1_visible)
-            },
-            {
-              title: homeData.course_2_title,
-              rating: homeData.course_2_rating,
-              lessons: homeData.course_2_lessons,
-              duration: homeData.course_2_duration,
-              category: homeData.course_2_category,
-              visible: Boolean(homeData.course_2_visible)
-            },
-            {
-              title: homeData.course_3_title,
-              rating: homeData.course_3_rating,
-              lessons: homeData.course_3_lessons,
-              duration: homeData.course_3_duration,
-              category: homeData.course_3_category,
-              visible: Boolean(homeData.course_3_visible)
-            },
-            {
-              title: homeData.course_4_title,
-              rating: homeData.course_4_rating,
-              lessons: homeData.course_4_lessons,
-              duration: homeData.course_4_duration,
-              category: homeData.course_4_category,
-              visible: Boolean(homeData.course_4_visible)
-            },
-            {
-              title: homeData.course_5_title,
-              rating: homeData.course_5_rating,
-              lessons: homeData.course_5_lessons,
-              duration: homeData.course_5_duration,
-              category: homeData.course_5_category,
-              visible: Boolean(homeData.course_5_visible)
-            },
-            {
-              title: homeData.course_6_title,
-              rating: homeData.course_6_rating,
-              lessons: homeData.course_6_lessons,
-              duration: homeData.course_6_duration,
-              category: homeData.course_6_category,
-              visible: Boolean(homeData.course_6_visible)
-            }
-          ],
-          
-          // Individual Testimonials (4 testimonials with enhanced metadata)
-          testimonials: [
-            {
-              text: homeData.testimonial_1_text,
-              author: homeData.testimonial_1_author,
-              rating: homeData.testimonial_1_rating,
-              visible: Boolean(homeData.testimonial_1_visible),
-              date: homeData.testimonial_1_date || "September 15",
-              platform: homeData.testimonial_1_platform || "Google",
-              avatar_initial: homeData.testimonial_1_avatar_initial || (homeData.testimonial_1_author ? homeData.testimonial_1_author.charAt(0).toUpperCase() : "A"),
-              course_taken: homeData.testimonial_1_course_taken || "AI & Machine Learning Fundamentals"
-            },
-            {
-              text: homeData.testimonial_2_text,
-              author: homeData.testimonial_2_author,
-              rating: homeData.testimonial_2_rating,
-              visible: Boolean(homeData.testimonial_2_visible),
-              date: homeData.testimonial_2_date || "August 28",
-              platform: homeData.testimonial_2_platform || "Yandex",
-              avatar_initial: homeData.testimonial_2_avatar_initial || (homeData.testimonial_2_author ? homeData.testimonial_2_author.charAt(0).toUpperCase() : "B"),
-              course_taken: homeData.testimonial_2_course_taken || "Full-Stack Web Development"
-            },
-            {
-              text: homeData.testimonial_3_text,
-              author: homeData.testimonial_3_author,
-              rating: homeData.testimonial_3_rating,
-              visible: Boolean(homeData.testimonial_3_visible),
-              date: homeData.testimonial_3_date || "September 5",
-              platform: homeData.testimonial_3_platform || "Trustpilot",
-              avatar_initial: homeData.testimonial_3_avatar_initial || (homeData.testimonial_3_author ? homeData.testimonial_3_author.charAt(0).toUpperCase() : "C"),
-              course_taken: homeData.testimonial_3_course_taken || "Data Science & Analytics"
-            },
-            {
-              text: homeData.testimonial_4_text,
-              author: homeData.testimonial_4_author,
-              rating: homeData.testimonial_4_rating,
-              visible: Boolean(homeData.testimonial_4_visible),
-              date: homeData.testimonial_4_date || "August 20",
-              platform: homeData.testimonial_4_platform || "Google",
-              avatar_initial: homeData.testimonial_4_avatar_initial || (homeData.testimonial_4_author ? homeData.testimonial_4_author.charAt(0).toUpperCase() : "D"),
-              course_taken: homeData.testimonial_4_course_taken || "Cybersecurity Essentials"
-            }
-          ],
-
-          // Companies Section Array (10 major tech companies)
-          companies: [
-            {
-              name: 'Google',
-              color: '#4285F4',
-              logo_url: '/images/companies/google-logo.svg',
-              visible: true
-            },
-            {
-              name: 'Microsoft',
-              color: '#00A4EF',
-              logo_url: '/images/companies/microsoft-logo.svg',
-              visible: true
-            },
-            {
-              name: 'Meta',
-              color: '#1877F2',
-              logo_url: '/images/companies/meta-logo.svg',
-              visible: true
-            },
-            {
-              name: 'Amazon',
-              color: '#FF9900',
-              logo_url: '/images/companies/amazon-logo.svg',
-              visible: true
-            },
-            {
-              name: 'Apple',
-              color: '#007AFF',
-              logo_url: '/images/companies/apple-logo.svg',
-              visible: true
-            },
-            {
-              name: 'OpenAI',
-              color: '#412991',
-              logo_url: '/images/companies/openai-logo.svg',
-              visible: true
-            },
-            {
-              name: 'Tesla',
-              color: '#CC0000',
-              logo_url: '/images/companies/tesla-logo.svg',
-              visible: true
-            },
-            {
-              name: 'Stripe',
-              color: '#635BFF',
-              logo_url: '/images/companies/stripe-logo.svg',
-              visible: true
-            },
-            {
-              name: 'X (Twitter)',
-              color: '#000000',
-              logo_url: '/images/companies/x-logo.svg',
-              visible: true
-            },
-            {
-              name: 'Slack',
-              color: '#4A154B',
-              logo_url: '/images/companies/slack-logo.svg',
-              visible: true
-            }
-          ]
-        }
-      }
-    });
-  } catch (error) {
-    console.error('Database error:', error);
-    res.status(500).json({ error: 'Database error', details: error.message });
-  }
-});
+// ==================== LEGACY HOME PAGE ENDPOINT REMOVED ====================
+// Removed legacy /api/home-page endpoint that used home_pages table
+// Frontend now uses /api/nd/home-page (NewDesign architecture) only
 
 // COURSES (with locale support)
 app.get('/api/courses', async (req, res) => {
@@ -2769,213 +2689,15 @@ app.get('/api/contact-page', async (req, res) => {
 
 // ==================== CRUD OPERATIONS ====================
 
-// Helper function to map locale to home_pages record ID
-function getHomePageIdByLocale(locale) {
-  const localeMap = {
-    'en': 1,  // English - backward compatible
-    'ru': 2,  // Russian
-    'he': 3   // Hebrew
-  };
-  return localeMap[locale] || 1; // Default to English
-}
-
-// GET HOME PAGE BY LOCALE (new endpoint for multi-language admin)
-app.get('/api/admin/home-page', async (req, res) => {
-  const locale = req.query.locale || 'en';
-  const id = getHomePageIdByLocale(locale);
-
-  console.log(`📊 Admin panel loading content for locale: ${locale} (id: ${id})`);
-
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL || process.env.RAILWAY_DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-  });
-
-  try {
-    await client.connect();
-
-    const result = await client.query(
-      'SELECT * FROM home_pages WHERE id = $1',
-      [id]
-    );
-
-    if (result.rows.length === 0) {
-      // Create default record if missing
-      console.log(`⚠️ No record found for locale ${locale}, creating default...`);
-      const insertResult = await client.query(
-        `INSERT INTO home_pages (id, locale, title, hero_title, hero_subtitle, hero_description, hero_section_visible, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
-         RETURNING *`,
-        [
-          id,
-          locale,
-          `AI Studio - ${locale === 'ru' ? 'Платформа онлайн-обучения' : locale === 'he' ? 'פלטפורמת למידה מקוונת' : 'Online Learning Platform'}`,
-          `Welcome to AI Studio`,
-          `Online Learning Platform`,
-          `Learn the latest technologies`,
-          true
-        ]
-      );
-      return res.json(insertResult.rows[0]);
-    }
-
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error('Error fetching home page:', error);
-    res.status(500).json({ error: 'Failed to fetch home page' });
-  } finally {
-    await client.end();
-  }
-});
-
-// UPDATE HOME PAGE BY LOCALE (new endpoint for multi-language admin)
-app.put('/api/admin/home-page', async (req, res) => {
-  const locale = req.query.locale || 'en';
-  const id = getHomePageIdByLocale(locale);
-  const updates = req.body;
-
-  console.log(`📝 Admin panel saving content for locale: ${locale} (id: ${id})`);
-
-  const updateFields = [];
-  const values = [];
-  let valueIndex = 1;
-
-  // Build UPDATE query dynamically
-  Object.keys(updates).forEach(key => {
-    const dbField = key.replace(/([A-Z])/g, '_$1').toLowerCase();
-
-    // Skip non-existent columns
-    if (dbField === 'focus_practice_title' || dbField === 'core_skills_title') {
-      console.log(`⚠️ Skipping non-existent column: ${dbField}`);
-      return;
-    }
-
-    const valueIndexStr = `$${valueIndex++}`;
-    updateFields.push(`${dbField} = ${valueIndexStr}`);
-    values.push(updates[key]);
-  });
-
-  // Always update the updated_at timestamp
-  updateFields.push(`updated_at = NOW()`);
-
-  // Always set the locale
-  updateFields.push(`locale = $${valueIndex++}`);
-  values.push(locale);
-
-  values.push(id); // Add ID for WHERE clause
-
-  const query = `UPDATE home_pages SET ${updateFields.join(', ')} WHERE id = $${valueIndex}`;
-
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL || process.env.RAILWAY_DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-  });
-
-  try {
-    await client.connect();
-    await client.query(query, values);
-
-    console.log(`✅ Successfully updated home page for locale: ${locale}`);
-    res.json({
-      success: true,
-      message: `Home page updated successfully for ${locale}`,
-      locale: locale,
-      updatedFields: Object.keys(updates)
-    });
-  } catch (error) {
-    console.error('Error updating home page:', error);
-    res.status(500).json({ error: 'Failed to update home page', details: error.message });
-  } finally {
-    await client.end();
-  }
-});
-
-// GET HOME PAGE BY ID (keep for backward compatibility)
-app.get('/api/home-page/:id', async (req, res) => {
-  const { id } = req.params;
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL || process.env.RAILWAY_DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-  });
-
-  try {
-    await client.connect();
-
-    const result = await client.query(
-      'SELECT * FROM home_pages WHERE id = $1',
-      [id]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Home page not found' });
-    }
-
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error('Error fetching home page:', error);
-    res.status(500).json({ error: 'Failed to fetch home page' });
-  } finally {
-    await client.end();
-  }
-});
-
-// UPDATE HOME PAGE
-app.put('/api/home-page/:id', async (req, res) => {
-  const updates = req.body;
-  const updateFields = [];
-  const values = [];
-  let valueIndex = 1;
-
-  // Build UPDATE query dynamically with parameterized queries
-  Object.keys(updates).forEach(key => {
-    const dbField = key.replace(/([A-Z])/g, '_$1').toLowerCase();
-
-    // Skip fields that don't exist in the database
-    if (dbField === 'focus_practice_title' || dbField === 'core_skills_title') {
-      console.log(`⚠️ Skipping non-existent column: ${dbField}`);
-      return;
-    }
-
-    let value = updates[key];
-
-    // Handle different data types properly
-    if (value === null || value === undefined) {
-      value = '';
-    } else if (typeof value === 'boolean') {
-      value = value ? 1 : 0;
-    } else if (typeof value === 'object') {
-      value = JSON.stringify(value);
-    }
-
-    updateFields.push(`${dbField} = $${valueIndex}`);
-    values.push(value);
-    valueIndex++;
-  });
-
-  if (updateFields.length === 0) {
-    return res.status(400).json({ error: 'No fields to update' });
-  }
-
-  // Add the ID parameter at the end
-  values.push(req.params.id);
-
-  try {
-    const query = `UPDATE home_pages SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = $${valueIndex}`;
-    await queryDatabase(query, values);
-    
-    res.json({
-      success: true,
-      message: 'Home page updated successfully',
-      updatedFields: Object.keys(updates)
-    });
-  } catch (error) {
-    console.error('Update error:', error);
-    res.status(500).json({ error: 'Update failed', details: error.message });
-  }
-});
+// ==================== LEGACY CODE REMOVAL STATUS ====================
+// ✅ REMOVED: Legacy admin endpoints (/api/admin/home-page, /api/home-page/:id)
+// ✅ REMOVED: Legacy migration endpoints (/api/migrate/add-multilang-admin)
+// ✅ REMOVED: Legacy home page endpoint (/api/home-page)
+// ⚠️  REMAINING: Scattered home_pages references in unused migration code
+// 📋 TODO: Complete cleanup in future phases - focusing on functional rebuild first
 
 // CREATE COURSE
-app.post('/api/courses', async (req, res) => {
+app.post('/api/courses', inputValidator.validateContent, async (req, res) => {
   const { title, description, price, duration, lessons, category, rating, visible } = req.body;
   
   try {
@@ -2992,7 +2714,7 @@ app.post('/api/courses', async (req, res) => {
 });
 
 // UPDATE COURSE
-app.put('/api/courses/:id', async (req, res) => {
+app.put('/api/courses/:id', inputValidator.validateContent, async (req, res) => {
   const updates = req.body;
   const updateFields = [];
   
@@ -3301,7 +3023,7 @@ app.get('/api/featured-courses', async (req, res) => {
 app.get('/api/sync-missing-data', async (req, res) => {
   // Security: Only allow with secret key
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -3490,7 +3212,7 @@ app.get('/api/check-data-status', async (req, res) => {
 // Step 1: Create tables only
 app.get('/api/sync-create-tables', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -3586,7 +3308,7 @@ app.get('/api/sync-create-tables', async (req, res) => {
 // Step 2: Insert FAQs batch 1
 app.get('/api/sync-faqs-batch1', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -3622,7 +3344,7 @@ app.get('/api/sync-faqs-batch1', async (req, res) => {
 // Step 3: Insert FAQs batch 2
 app.get('/api/sync-faqs-batch2', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -3658,7 +3380,7 @@ app.get('/api/sync-faqs-batch2', async (req, res) => {
 // Step 4: Insert consultations
 app.get('/api/sync-consultations-batch', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -3711,7 +3433,7 @@ app.get('/api/sync-consultations-batch', async (req, res) => {
 // Step 5: Insert career resources batch 1
 app.get('/api/sync-resources-batch1', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -3746,7 +3468,7 @@ app.get('/api/sync-resources-batch1', async (req, res) => {
 // Step 6: Insert career resources batch 2
 app.get('/api/sync-resources-batch2', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -3781,7 +3503,7 @@ app.get('/api/sync-resources-batch2', async (req, res) => {
 // Step 7: Insert company logo
 app.get('/api/sync-logo-batch', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -3804,7 +3526,7 @@ app.get('/api/sync-logo-batch', async (req, res) => {
 // Batch 1: Fix consultations table structure
 app.get('/api/sync-fix-consultations', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -3841,7 +3563,7 @@ app.get('/api/sync-fix-consultations', async (req, res) => {
 // Batch 2: Add consultation services table
 app.get('/api/sync-add-consultation-services', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -3886,7 +3608,7 @@ app.get('/api/sync-add-consultation-services', async (req, res) => {
 // Batch 3: Add multilingual FAQs (Russian batch)
 app.get('/api/sync-add-russian-faqs', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -3916,7 +3638,7 @@ app.get('/api/sync-add-russian-faqs', async (req, res) => {
 // Batch 4: Add multilingual FAQs (Hebrew batch)
 app.get('/api/sync-add-hebrew-faqs', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -3946,7 +3668,7 @@ app.get('/api/sync-add-hebrew-faqs', async (req, res) => {
 // Batch 5: Add multilingual career resources (Russian batch)
 app.get('/api/sync-add-russian-resources', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -3976,7 +3698,7 @@ app.get('/api/sync-add-russian-resources', async (req, res) => {
 // Batch 6: Add multilingual career resources (Hebrew batch)
 app.get('/api/sync-add-hebrew-resources', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -4008,7 +3730,9 @@ app.get('/api/sync-add-hebrew-resources', async (req, res) => {
 // Fixed: Add Russian FAQs
 app.get('/api/sync-russian-faqs-fixed', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') return res.status(403).json({ error: 'Unauthorized' });
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
 
   try {
     const faqs = [
@@ -4033,7 +3757,9 @@ app.get('/api/sync-russian-faqs-fixed', async (req, res) => {
 // Fixed: Add Hebrew FAQs
 app.get('/api/sync-hebrew-faqs-fixed', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') return res.status(403).json({ error: 'Unauthorized' });
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
 
   try {
     const faqs = [
@@ -4058,7 +3784,9 @@ app.get('/api/sync-hebrew-faqs-fixed', async (req, res) => {
 // Fixed: Add Russian resources
 app.get('/api/sync-russian-resources-fixed', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') return res.status(403).json({ error: 'Unauthorized' });
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
 
   try {
     const resources = [
@@ -4083,7 +3811,9 @@ app.get('/api/sync-russian-resources-fixed', async (req, res) => {
 // Fixed: Add Hebrew resources
 app.get('/api/sync-hebrew-resources-fixed', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') return res.status(403).json({ error: 'Unauthorized' });
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
 
   try {
     const resources = [
@@ -4115,6 +3845,15 @@ app.get('/admin', (req, res) => {
 // Also serve at the legacy URL for backward compatibility
 app.get('/content-admin-comprehensive.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin-nd.html'));
+});
+
+// Serve NewDesign section-based admin panel
+app.get('/admin-newdesign', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin-newdesign.html'));
+});
+
+app.get('/admin-newdesign.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin-newdesign.html'));
 });
 
 // Serve main website
@@ -5509,7 +5248,7 @@ app.put('/api/courses-page', async (req, res) => {
 });
 
 // Create new blog post
-app.post('/api/blog-posts', async (req, res) => {
+app.post('/api/blog-posts', inputValidator.validateContent, async (req, res) => {
   try {
     const data = req.body;
 
@@ -5706,7 +5445,7 @@ app.put('/api/blog-posts', async (req, res) => {
 });
 
 // Update teachers
-app.put('/api/teachers', async (req, res) => {
+app.put('/api/teachers', inputValidator.validateContent, async (req, res) => {
   try {
     const locale = getLocale(req);
     const data = req.body;
@@ -7278,66 +7017,230 @@ app.post('/api/fix-russian-ui', async (req, res) => {
 
 // Authentication security system initialization - footer-migration removed
 
-let authSecurityModule = null;
-const authPossiblePaths = [];
+// 🔒 SECURE AUTHENTICATION SYSTEM
+// Replace insecure fallback with proper authentication
 
-for (const authPath of authPossiblePaths) {
-  try {
-    console.log(`🔐 Trying to load authentication from: ${authPath}`);
-    authSecurityModule = require(authPath);
-    console.log(`✅ Successfully loaded authentication security from: ${authPath}`);
-    break;
-  } catch (authError) {
-    console.log(`❌ Failed to load authentication from ${authPath}: ${authError.message}`);
-  }
-}
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
-if (!authSecurityModule) {
-  console.error('❌ CRITICAL: Failed to initialize authentication security module');
-  console.log('⚠️  Creating fallback authentication stub...');
-  authSecurityModule = {
-    SecureJWTManager: class { constructor() {} },
-    AdvancedRateLimiter: class { constructor() {} },
-    SecureSessionManager: class { constructor() {} },
-    PasswordSecurity: class {},
-    createSecureAuthMiddleware: () => ({
+// 🛡️ SECURE AUTHENTICATION MODULE
+const authSecurityModule = {
+  // JWT Manager for secure token handling
+  SecureJWTManager: class {
+    constructor() {
+      this.secret = process.env.JWT_SECRET || SECURITY_CONFIG.ADMIN_SECRET_KEY;
+      this.expiresIn = process.env.JWT_EXPIRES_IN || '24h';
+    }
+
+    generateToken(payload) {
+      return jwt.sign(payload, this.secret, { expiresIn: this.expiresIn });
+    }
+
+    verifyToken(token) {
+      try {
+        return jwt.verify(token, this.secret);
+      } catch (error) {
+        console.warn('🚨 Invalid JWT token:', error.message);
+        return null;
+      }
+    }
+
+    getStats() {
+      return { activeTokens: 0, tokensIssued: 0 }; // Placeholder for monitoring
+    }
+  },
+
+  // Rate Limiter for API protection
+  AdvancedRateLimiter: class {
+    constructor() {
+      this.requests = new Map();
+      this.windowMs = parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 900000; // 15 minutes
+      this.maxRequests = parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100;
+    }
+
+    isAllowed(clientId) {
+      const now = Date.now();
+      const windowStart = now - this.windowMs;
+
+      if (!this.requests.has(clientId)) {
+        this.requests.set(clientId, []);
+      }
+
+      const clientRequests = this.requests.get(clientId);
+
+      // Remove old requests outside the window
+      const validRequests = clientRequests.filter(time => time > windowStart);
+      this.requests.set(clientId, validRequests);
+
+      if (validRequests.length >= this.maxRequests) {
+        console.warn(`🚨 Rate limit exceeded for client: ${clientId}`);
+        return false;
+      }
+
+      validRequests.push(now);
+      this.requests.set(clientId, validRequests);
+      return true;
+    }
+
+    getClientStats(clientId) {
+      const requests = this.requests.get(clientId) || [];
+      return { requests: requests.length, blocked: 0 };
+    }
+
+    getStats() {
+      return { totalRequests: 0, blocked: 0 }; // Placeholder
+    }
+  },
+
+  // Session Manager
+  SecureSessionManager: class {
+    constructor() {
+      this.sessions = new Map();
+    }
+
+    async destroySession(sessionId) {
+      this.sessions.delete(sessionId);
+      return Promise.resolve();
+    }
+
+    getStats() {
+      return { activeSessions: this.sessions.size };
+    }
+  },
+
+  // Password Security utilities
+  PasswordSecurity: class {
+    static async hash(password) {
+      return await bcrypt.hash(password, 12);
+    }
+
+    static async verify(password, hash) {
+      return await bcrypt.compare(password, hash);
+    }
+  },
+
+  // 🔐 SECURE AUTHENTICATION MIDDLEWARE
+  createSecureAuthMiddleware: () => {
+    const jwtManager = new authSecurityModule.SecureJWTManager();
+    const rateLimiter = new authSecurityModule.AdvancedRateLimiter();
+    const sessionManager = new authSecurityModule.SecureSessionManager();
+
+    return {
+      // 🚨 SECURE: Require valid authentication
       requireAuth: (req, res, next) => {
-        console.log('⚠️  Using fallback auth middleware (no authentication required)');
+        const token = req.headers.authorization?.replace('Bearer ', '') ||
+                     req.cookies?.auth_token ||
+                     req.query?.token;
+
+        if (!token) {
+          console.warn('🚨 Authentication required - no token provided');
+          return res.status(401).json({
+            error: 'Authentication required',
+            message: 'Access token must be provided'
+          });
+        }
+
+        const decoded = jwtManager.verifyToken(token);
+        if (!decoded) {
+          console.warn('🚨 Authentication failed - invalid token');
+          return res.status(401).json({
+            error: 'Invalid token',
+            message: 'Authentication token is invalid or expired'
+          });
+        }
+
+        req.user = decoded;
+        console.log(`✅ Authenticated user: ${decoded.userId || 'admin'}`);
         next();
       },
+
+      // 🛡️ SECURE: Require admin privileges
       requireAdmin: (req, res, next) => {
-        console.log('⚠️  Using fallback admin middleware (no admin check required)');
+        // First check authentication
+        const token = req.headers.authorization?.replace('Bearer ', '') ||
+                     req.cookies?.auth_token ||
+                     req.query?.token;
+
+        if (!token) {
+          console.warn('🚨 Admin access denied - no token');
+          return res.status(401).json({
+            error: 'Admin authentication required'
+          });
+        }
+
+        const decoded = jwtManager.verifyToken(token);
+        if (!decoded || !decoded.isAdmin) {
+          console.warn('🚨 Admin access denied - insufficient privileges');
+          return res.status(403).json({
+            error: 'Admin privileges required'
+          });
+        }
+
+        req.user = decoded;
+        console.log(`✅ Admin authenticated: ${decoded.userId || 'admin'}`);
         next();
       },
+      // 🛡️ Security headers middleware
       securityHeaders: (req, res, next) => {
-        // Basic security headers
         res.set({
           'X-Content-Type-Options': 'nosniff',
           'X-Frame-Options': 'DENY',
           'X-XSS-Protection': '1; mode=block',
-          'Referrer-Policy': 'strict-origin-when-cross-origin'
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
         });
         next();
       },
-      rateLimiter: (req, res, next) => next(),
-      validateSession: (req, res, next) => next(),
-      getInstances: () => ({
-        rateLimiter: { 
-          isAllowed: () => true, 
-          getClientStats: () => ({ requests: 0, blocked: 0 }),
-          getStats: () => ({ totalRequests: 0, blocked: 0 })
-        },
-        jwtManager: { 
-          getStats: () => ({ activeTokens: 0, tokensIssued: 0 }) 
-        },
-        sessionManager: { 
-          destroySession: () => Promise.resolve(),
-          getStats: () => ({ activeSessions: 0 })
+
+      // 🚦 Rate limiting middleware
+      rateLimiter: (req, res, next) => {
+        const clientId = req.ip || 'unknown';
+
+        if (!rateLimiter.isAllowed(clientId)) {
+          console.warn(`🚨 Rate limit exceeded for IP: ${clientId}`);
+          return res.status(429).json({
+            error: 'Too Many Requests',
+            message: 'Rate limit exceeded. Please try again later.',
+            retryAfter: Math.ceil(rateLimiter.windowMs / 1000)
+          });
         }
+
+        next();
+      },
+
+      // 🔐 Session validation middleware
+      validateSession: (req, res, next) => {
+        const token = req.headers.authorization?.replace('Bearer ', '') ||
+                     req.cookies?.auth_token;
+
+        if (token) {
+          const decoded = jwtManager.verifyToken(token);
+          if (decoded) {
+            req.user = decoded;
+          }
+        }
+
+        next();
+      },
+
+      // 📊 Get authentication system instances
+      getInstances: () => ({
+        rateLimiter: rateLimiter,
+        jwtManager: jwtManager,
+        sessionManager: sessionManager
       }),
-      cleanup: async () => {}
-    })
-  };
+
+      // 🧹 Cleanup function
+      cleanup: async () => {
+        console.log('🧹 Cleaning up authentication resources...');
+        // Clear rate limiter cache
+        rateLimiter.requests.clear();
+        // Clear sessions
+        sessionManager.sessions.clear();
+      }
+    }
+  }
 }
 
 const {
@@ -7373,7 +7276,7 @@ const authMiddleware = createSecureAuthMiddleware({
 app.use(authMiddleware.securityHeaders);
 
 // Add authentication endpoints
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', inputValidator.validateAuth, async (req, res) => {
   try {
     const { email, password } = req.body;
     const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
@@ -8340,7 +8243,7 @@ app.post('/api/force-all-translations', async (req, res) => {
 // Fixed: Add Russian FAQs (matching production structure)
 app.get('/api/sync-add-russian-faqs-fixed', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -8370,7 +8273,7 @@ app.get('/api/sync-add-russian-faqs-fixed', async (req, res) => {
 // Fixed: Add Hebrew FAQs (matching production structure)
 app.get('/api/sync-add-hebrew-faqs-fixed', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -8400,7 +8303,7 @@ app.get('/api/sync-add-hebrew-faqs-fixed', async (req, res) => {
 // Fixed: Add Russian career resources (matching production structure)
 app.get('/api/sync-add-russian-resources-fixed', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -8430,7 +8333,7 @@ app.get('/api/sync-add-russian-resources-fixed', async (req, res) => {
 // Fixed: Add Hebrew career resources (matching production structure)
 app.get('/api/sync-add-hebrew-resources-fixed', async (req, res) => {
   const secretKey = req.query.key;
-  if (secretKey !== 'sync-2025-secure-key') {
+  if (!SECURITY_CONFIG.validateAdminKey(secretKey)) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -8467,6 +8370,8 @@ app.get('/api/nd/home-page', async (req, res) => {
     const { locale = 'en', preview = false } = req.query;
 
     // Build query based on locale columns existence
+    // IMPORTANT: Always return ALL sections including visible=false
+    // Frontend will handle hiding based on visible flag
     let query;
     if (locale === 'ru' || locale === 'he') {
       query = `
@@ -8478,7 +8383,6 @@ app.get('/api/nd/home-page', async (req, res) => {
           animations_enabled,
           order_index
         FROM nd_home
-        ${!preview ? 'WHERE visible = true' : ''}
         ORDER BY order_index
       `;
     } else {
@@ -8491,7 +8395,6 @@ app.get('/api/nd/home-page', async (req, res) => {
           animations_enabled,
           order_index
         FROM nd_home
-        ${!preview ? 'WHERE visible = true' : ''}
         ORDER BY order_index
       `;
     }
@@ -9935,7 +9838,7 @@ app.patch('/api/nd/settings/animations', async (req, res) => {
 });
 
 // Update home page section content
-app.put('/api/nd/home-page/:section_key', async (req, res) => {
+app.put('/api/nd/home-page/:section_key', inputValidator.validateHomePageContent, async (req, res) => {
   try {
     const { section_key } = req.params;
     const { content_en, content_ru, content_he, visible, animations_enabled } = req.body;

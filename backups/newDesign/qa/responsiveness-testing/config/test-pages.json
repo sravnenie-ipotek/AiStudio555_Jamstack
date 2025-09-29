@@ -1,0 +1,204 @@
+{
+  "pages": [
+    {
+      "name": "Home",
+      "path": "/home.html",
+      "priority": "critical",
+      "elements": [
+        ".hero-section",
+        ".navbar",
+        ".nav-menu",
+        ".menu-button",
+        ".lang-pill",
+        ".pricing-plan-content",
+        ".pricing-plan-grid",
+        ".course-card",
+        ".testimonial-card",
+        ".faq-item",
+        ".footer",
+        ".why-choose-us-section",
+        ".awards-section",
+        ".process-section",
+        ".section.affordable-plan"
+      ],
+      "criticalBreakpoints": [480, 768, 991, 1200],
+      "interactions": [
+        { "type": "click", "selector": ".menu-button", "mobile": true },
+        { "type": "click", "selector": ".lang-pill:has-text('RU')" },
+        { "type": "click", "selector": ".pricing-plan-tab-link" }
+      ]
+    },
+    {
+      "name": "Courses",
+      "path": "/courses.html",
+      "priority": "critical",
+      "elements": [
+        ".course-grid",
+        ".course-card",
+        ".course-filters",
+        ".filter-button",
+        ".course-image",
+        ".course-title",
+        ".course-description",
+        ".course-price",
+        ".navbar",
+        ".footer"
+      ],
+      "criticalBreakpoints": [480, 768, 991, 1200],
+      "interactions": [
+        { "type": "click", "selector": ".filter-button:first-child" }
+      ]
+    },
+    {
+      "name": "Course Details",
+      "path": "/detail_courses.html?id=1",
+      "priority": "high",
+      "elements": [
+        ".course-detail-hero",
+        ".course-content",
+        ".course-sidebar",
+        ".instructor-info",
+        ".course-modules",
+        ".enrollment-card",
+        ".related-courses"
+      ],
+      "criticalBreakpoints": [480, 768, 991, 1200]
+    },
+    {
+      "name": "Pricing",
+      "path": "/pricing.html",
+      "priority": "critical",
+      "elements": [
+        ".pricing-table",
+        ".pricing-card",
+        ".pricing-toggle",
+        ".feature-list",
+        ".cta-button",
+        ".comparison-table"
+      ],
+      "criticalBreakpoints": [480, 768, 991, 1200],
+      "interactions": [
+        { "type": "click", "selector": ".pricing-toggle" }
+      ]
+    },
+    {
+      "name": "Teachers",
+      "path": "/teachers.html",
+      "priority": "high",
+      "elements": [
+        ".teachers-grid",
+        ".teacher-card",
+        ".teacher-image",
+        ".teacher-info",
+        ".teacher-bio",
+        ".social-links"
+      ],
+      "criticalBreakpoints": [480, 768, 991, 1200]
+    },
+    {
+      "name": "About Us",
+      "path": "/about-us.html",
+      "priority": "medium",
+      "elements": [
+        ".about-hero",
+        ".mission-section",
+        ".values-section",
+        ".team-section",
+        ".stats-section"
+      ],
+      "criticalBreakpoints": [480, 768, 991, 1200]
+    },
+    {
+      "name": "Contact",
+      "path": "/contact-us.html",
+      "priority": "high",
+      "elements": [
+        ".contact-form",
+        ".form-field",
+        ".contact-info",
+        ".map-section",
+        ".submit-button"
+      ],
+      "criticalBreakpoints": [480, 768, 991, 1200],
+      "interactions": [
+        { "type": "fill", "selector": "input[name='name']", "value": "Test User" },
+        { "type": "fill", "selector": "input[name='email']", "value": "test@example.com" }
+      ]
+    },
+    {
+      "name": "Career Center",
+      "path": "/career-center.html",
+      "priority": "medium",
+      "elements": [
+        ".career-hero",
+        ".career-paths",
+        ".career-card",
+        ".resources-section",
+        ".job-board"
+      ],
+      "criticalBreakpoints": [480, 768, 991, 1200]
+    },
+    {
+      "name": "Career Orientation",
+      "path": "/career-orientation.html",
+      "priority": "medium",
+      "elements": [
+        ".orientation-hero",
+        ".assessment-section",
+        ".career-quiz",
+        ".results-section",
+        ".next-steps"
+      ],
+      "criticalBreakpoints": [480, 768, 991, 1200]
+    },
+    {
+      "name": "Blog",
+      "path": "/blog.html",
+      "priority": "low",
+      "elements": [
+        ".blog-grid",
+        ".blog-card",
+        ".blog-image",
+        ".blog-title",
+        ".blog-excerpt",
+        ".pagination"
+      ],
+      "criticalBreakpoints": [480, 768, 991, 1200]
+    }
+  ],
+  "globalElements": {
+    "navigation": [
+      ".navbar",
+      ".nav-menu",
+      ".nav-link",
+      ".dropdown-menu",
+      ".menu-button",
+      ".lang-pill"
+    ],
+    "footer": [
+      ".footer",
+      ".footer-links",
+      ".social-icons",
+      ".copyright"
+    ],
+    "interactive": [
+      "button",
+      "a",
+      "input",
+      "select",
+      "textarea",
+      ".modal",
+      ".dropdown"
+    ]
+  },
+  "testViewports": [
+    { "name": "Mobile-Small", "width": 320, "height": 568 },
+    { "name": "Mobile", "width": 375, "height": 667 },
+    { "name": "Mobile-Large", "width": 430, "height": 932 },
+    { "name": "Tablet", "width": 768, "height": 1024 },
+    { "name": "Tablet-Large", "width": 1024, "height": 1366 },
+    { "name": "Desktop", "width": 1366, "height": 768 },
+    { "name": "Desktop-HD", "width": 1920, "height": 1080 },
+    { "name": "Desktop-4K", "width": 3840, "height": 2160 }
+  ]
+}

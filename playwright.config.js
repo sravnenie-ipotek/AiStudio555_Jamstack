@@ -72,7 +72,8 @@ module.exports = defineConfig({
         '**/comprehensive-system.spec.js',
         '**/responsive-quick.spec.js',
         '**/responsive-newdesign.spec.js',
-        '**/teachers-page.spec.js'
+        '**/teachers-page.spec.js',
+        '**/visibility-toggles.spec.js'
       ]
     },
     

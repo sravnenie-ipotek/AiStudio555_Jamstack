@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-09-28T10:38:35.063Z",
+  "summary": {
+    "pagesTestedTestedViewports": 0,
+    "totalIssues": 0,
+    "criticalPages": 0
+  },
+  "details": {
+    "issuesByPage": {},
+    "issuesByViewport": {},
+    "commonIssues": {},
+    "recommendations": []
+  }
+}

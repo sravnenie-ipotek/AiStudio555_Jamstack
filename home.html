@@ -18,6 +18,7 @@
   <link href="css/mobile-responsive-fixes.css" rel="stylesheet" type="text/css">
   <link href="css/pricing-plan-responsive.css" rel="stylesheet" type="text/css">
   <link href="shared/components/sharedMenu/menu.css" rel="stylesheet" type="text/css">
+  <link href="css/dropdown-fix.css" rel="stylesheet" type="text/css">
   <!-- SharedPopUp Component -->
   <link href="shared/components/sharedPopUp/popup.css" rel="stylesheet" type="text/css">
   <link href="backups/newDesign/shared/components/card_home/card-styles.css" rel="stylesheet" type="text/css">
@@ -2642,13 +2643,16 @@
         </div>
       </div>
     </section>
+  <!-- CRITICAL: Script Dependency Manager MUST load FIRST to resolve race conditions -->
+  <script src="js/script-dependency-manager.js" type="text/javascript"></script>
+
   <!-- Shared Menu Component -->
   <!-- Disabled SharedMenu injection - using hardcoded menu instead -->
   <!-- <script src="shared/components/sharedMenu/menu.js" type="text/javascript"></script> -->
   <script src="shared/components/sharedPopUp/popup.js" type="text/javascript"></script>
   <script src="js/course-card-component.js" type="text/javascript"></script>
 
-  <!-- CRITICAL: Unified Language Manager MUST load FIRST for dual-system to work -->
+  <!-- CRITICAL: Unified Language Manager MUST load AFTER dependency manager -->
   <script src="js/unified-language-manager.js?v=3001"></script>
 
   <!-- Home Integration loads AFTER language manager to preserve dual-system approach -->

@@ -5,9 +5,9 @@
   <title>- Zohacous - Webflow Ecommerce Website Template</title>
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
-  <link href="css/normalize.css" rel="stylesheet" type="text/css">
-  <link href="css/webflow.css" rel="stylesheet" type="text/css">
-  <link href="css/aizeks-groovy-site.webflow.css" rel="stylesheet" type="text/css">
+  <link href="/css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="/css/webflow.css" rel="stylesheet" type="text/css">
+  <link href="/css/aizeks-groovy-site.webflow.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
@@ -16,20 +16,61 @@
   <link href="images/favicon.svg" rel="shortcut icon" type="image/x-icon">
   <link href="images/webclip.svg" rel="apple-touch-icon">
   <!-- Shared Course Details Component -->
-  <link href="shared/components/course-details-page/course-details-styles.css" rel="stylesheet" type="text/css">
+  <link href="/shared/components/course-details-page/course-details-styles.css" rel="stylesheet" type="text/css">
+
+  <!-- Language Switcher Styles -->
+  <style>
+    .lang-switcher {
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 10px;
+      border-radius: 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    .lang-pill {
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: #f0f0f0;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+    }
+    .lang-pill:hover {
+      background: #e0e0e0;
+      transform: translateY(-2px);
+    }
+    .lang-pill.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+  </style>
 </head>
 <body>
+  <!-- Language Switcher -->
+  <div class="lang-switcher">
+    <div class="lang-pill active" data-lang="en">EN</div>
+    <div class="lang-pill" data-lang="ru">RU</div>
+    <div class="lang-pill" data-lang="he">HE</div>
+  </div>
+
   <div class="page-wrapper">
     <div data-w-id="102c5b61-ca91-3c28-1e26-0f7381b431a4" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
       <div class="container">
         <div class="navbar-content">
           <a href="index.html" class="zohacous-logo-link w-nav-brand"><img loading="lazy" src="images/Logo.svg" alt="" class="zohacous-logo-image"></a>
           <nav role="navigation" class="nav-menu w-nav-menu">
-            <a href="home.html" class="nav-link w-nav-link">Home</a>
-            <a href="courses.html" class="nav-link w-nav-link">Courses</a>
-            <a href="pricing.html" class="nav-link w-nav-link">Pricing</a>
-            <a href="blog.html" class="nav-link w-nav-link">Blog</a>
-            <a href="teachers.html" class="nav-link w-nav-link">Teachers</a>
+            <a href="home.html" class="nav-link w-nav-link" data-i18n="navigation.content.content.home">Home</a>
+            <a href="courses.html" class="nav-link w-nav-link" data-i18n="navigation.content.content.courses">Courses</a>
+            <a href="pricing.html" class="nav-link w-nav-link" data-i18n="navigation.content.content.pricing">Pricing</a>
+            <a href="blog.html" class="nav-link w-nav-link" data-i18n="navigation.content.content.blog">Blog</a>
+            <a href="teachers.html" class="nav-link w-nav-link" data-i18n="navigation.content.content.teachers">Teachers</a>
             <div data-delay="0" data-hover="true" data-w-id="9a224b60-f557-150b-8062-e4bbef078cfa" class="menu-dropdown-wrapper w-dropdown">
               <div class="dropdown-toggle w-dropdown-toggle">
                 <div class="dropdown-toggle-text-block">Pages</div>
@@ -242,13 +283,13 @@
 
           <!-- Course Overview -->
           <div class="course-overview-section">
-            <h2>Course Overview</h2>
+            <h2 data-i18n="course_overview.content.title">Course Overview</h2>
             <p class="course-full-description"></p>
           </div>
 
           <!-- What You'll Learn -->
           <div class="course-objectives-section">
-            <h2>What You'll Learn</h2>
+            <h2 data-i18n="what_you_learn.content.title">What You'll Learn</h2>
             <div class="course-objectives-list">
               <!-- Populated from database -->
             </div>
@@ -256,7 +297,7 @@
 
           <!-- Course Curriculum / Lessons -->
           <div class="course-curriculum-section">
-            <h2>Course Curriculum</h2>
+            <h2 data-i18n="course_curriculum.content.title">Course Curriculum</h2>
             <p class="course-curriculum-description"></p>
             <div class="course-lessons-container">
               <!-- Populated from database -->
@@ -292,13 +333,13 @@
 
             <div class="course-stats">
               <div class="course-stat-item">
-                <span class="course-lessons-count"></span> Lessons
+                <span class="course-lessons-count"></span> <span data-i18n="course_info.content.lessons">Lessons</span>
               </div>
               <div class="course-stat-item">
-                <span class="course-students-count"></span> Students
+                <span class="course-students-count"></span> <span data-i18n="course_info.content.students">Students</span>
               </div>
               <div class="course-stat-item">
-                Level: <span class="course-level"></span>
+                <span data-i18n="course_info.content.level">Level</span>: <span class="course-level"></span>
               </div>
             </div>
 
@@ -308,8 +349,8 @@
 
             <a href="#" class="primary-button course-enroll-button w-inline-block">
               <div class="primary-button-text-wrap">
-                <div class="primary-button-text-block">Enroll Now</div>
-                <div class="primary-button-text-block is-text-absolute">Enroll Now</div>
+                <div class="primary-button-text-block" data-i18n="ui_elements.content.buttons.enroll_now">Enroll Now</div>
+                <div class="primary-button-text-block is-text-absolute" data-i18n="ui_elements.content.buttons.enroll_now">Enroll Now</div>
               </div>
             </a>
 
@@ -639,8 +680,13 @@
     </section>
   </div>
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=68b7640fa2f59957bca21451" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-  <script src="js/webflow.js" type="text/javascript"></script>
+  <script src="/js/webflow.js" type="text/javascript"></script>
+
+  <!-- Translation System -->
+  <script src="/js/unified-language-manager.js?v=3000" type="text/javascript"></script>
+  <script src="/js/nd-course-details-integration.js?v=3000" type="text/javascript"></script>
+
   <!-- Shared Course Details Component -->
-  <script src="shared/components/course-details-page/course-details-component.js" type="text/javascript"></script>
+  <script src="/shared/components/course-details-page/course-details-component.js" type="text/javascript"></script>
 </body>
 </html>

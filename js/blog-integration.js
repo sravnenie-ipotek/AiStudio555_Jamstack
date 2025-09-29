@@ -38,20 +38,28 @@ const BlogIntegration = {
     init: async function() {
         console.log('Initializing blog integration...');
 
-        // Wait for language manager to be ready
-        if (!window.languageManager) {
-            console.log('Waiting for language manager to initialize...');
-            await new Promise(resolve => {
-                const checkInterval = setInterval(() => {
-                    if (window.languageManager) {
-                        clearInterval(checkInterval);
-                        resolve();
-                    }
-                }, 100);
+        // Wait for language manager using dependency manager
+        if (window.ScriptDependencyManager) {
+            console.log('🔄 [Blog Integration] Waiting for language manager via dependency manager...');
+            await window.ScriptDependencyManager.waitForLanguageManager((languageManager) => {
+                console.log('✅ [Blog Integration] Language manager ready via dependency manager:', languageManager.currentLocale);
             });
+        } else {
+            // Fallback to manual polling if dependency manager not available
+            console.warn('⚠️ [Blog Integration] Dependency manager not found, using fallback polling');
+            if (!window.languageManager) {
+                console.log('Waiting for language manager to initialize...');
+                await new Promise(resolve => {
+                    const checkInterval = setInterval(() => {
+                        if (window.languageManager) {
+                            clearInterval(checkInterval);
+                            resolve();
+                        }
+                    }, 100);
+                });
+            }
+            console.log('Language manager ready, current locale:', window.languageManager.currentLocale);
         }
-
-        console.log('Language manager ready, current locale:', window.languageManager.currentLocale);
 
         // Skip navigation data loading - let unified language manager handle it
         // await this.loadNavigationData(); // Commented out to prevent conflicts with unified-language-manager

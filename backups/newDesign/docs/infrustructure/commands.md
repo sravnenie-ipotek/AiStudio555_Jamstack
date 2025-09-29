@@ -3,6 +3,19 @@
 ## Quick Start Commands
 
 ### 1. Start Development Environment
+
+#### Option A: All-in-One Local Setup (Recommended)
+```bash
+# Start complete local environment with Docker DB
+npm run start:local
+# This will:
+# - Start Docker PostgreSQL + pgAdmin
+# - Start API server on port 3000
+# - Start frontend server on port 3005
+# - Display all access URLs
+```
+
+#### Option B: Manual Setup
 ```bash
 # Install dependencies
 npm install
@@ -14,7 +27,7 @@ npm start
 python3 -m http.server 3005
 
 # Or run both concurrently
-npm run dev
+npm run dev:local
 ```
 
 ### 2. Production Preview
@@ -24,6 +37,57 @@ npm run build
 
 # Preview production build
 python3 -m http.server 8000 --directory dist
+```
+
+### 3. Running Client Application
+```bash
+# Simple frontend server
+python3 -m http.server 3005
+
+# Access pages at:
+# http://localhost:3005/home.html (Main page)
+# http://localhost:3005/courses.html
+# http://localhost:3005/teachers.html
+# http://localhost:3005/pricing.html
+# http://localhost:3005/blog.html
+```
+
+### 4. Running Admin Panel
+
+#### Current/Main Admin Panel
+```bash
+# Start API server first
+npm start
+
+# Access admin panels at:
+http://localhost:3005/admin-newdesign.html    # Primary admin panel
+http://localhost:3005/admin-nd.html            # Alternative admin
+http://localhost:3005/admin-nd 2.html          # Admin v2
+http://localhost:3005/admin-nd 3.html          # Admin v3
+```
+
+#### Admin Panel Versions
+- **admin-newdesign.html** - Latest production admin interface
+- **admin-newdesign.html.final2** - Final version 2 (stable)
+- **admin-newdesign.html.final** - Final version 1
+- **admin-nd.html** - New Design admin (active)
+- **admin-nd 2.html** - Alternative ND admin
+- **admin-nd 3.html** - Latest ND iteration
+
+### 5. Running New Admin Panel
+```bash
+# The "new" admin panels are the newdesign variants
+# Access the latest versions:
+http://localhost:3005/admin-newdesign.html        # Primary new admin
+http://localhost:3005/admin-newdesign.html.final2 # Latest stable
+http://localhost:3005/admin-newdesign.html.final  # Previous stable
+
+# Features:
+# - Multi-language content editing (EN/RU/HE)
+# - 215+ editable content fields
+# - Live preview functionality
+# - Section visibility toggles
+# - Direct database management
 ```
 
 ## Server Commands
@@ -95,12 +159,19 @@ node test-production-navigation.js
 ```
 Frontend:          http://localhost:3005
 API Server:        http://localhost:3000
-Admin Panel:       http://localhost:3005/admin-nd.html
 Home Page:         http://localhost:3005/home.html
 Courses:           http://localhost:3005/courses.html
 Teachers:          http://localhost:3005/teachers.html
 Career Center:     http://localhost:3005/career-center.html
 Blog:              http://localhost:3005/blog.html
+Pricing:           http://localhost:3005/pricing.html
+
+# Admin Panels
+Primary Admin:     http://localhost:3005/admin-newdesign.html
+Admin ND:          http://localhost:3005/admin-nd.html
+Admin ND v2:       http://localhost:3005/admin-nd 2.html
+Admin ND v3:       http://localhost:3005/admin-nd 3.html
+Admin Final:       http://localhost:3005/admin-newdesign.html.final2
 
 # Language versions
 English:           http://localhost:3005/dist/en/home.html
@@ -110,13 +181,15 @@ Hebrew:            http://localhost:3005/dist/he/home.html
 # Test pages
 Translations Test: http://localhost:3005/test-translations.html
 Live Translations: http://localhost:3005/test-live-translations.html
+Admin Test:        http://localhost:3005/comprehensive-admin-test.js
 ```
 
 ### Production URLs
 ```
 Website:           https://www.aistudio555.com/home.html
 API Server:        https://aistudio555jamstack-production.up.railway.app
-Admin Panel:       https://aistudio555jamstack-production.up.railway.app/admin-nd.html
+Admin Panel:       https://aistudio555jamstack-production.up.railway.app/admin-newdesign.html
+Health Check:      https://aistudio555jamstack-production.up.railway.app/health
 ```
 
 ## Git Commands

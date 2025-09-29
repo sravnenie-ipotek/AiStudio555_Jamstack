@@ -152,9 +152,58 @@
         return urlLocale || savedLocale || 'en';
     }
 
+    // Function to check if courses section should be visible
+    async function checkCoursesVisibility() {
+        try {
+            const locale = getCurrentLocale();
+            console.log(`🔍 [Courses Visibility] Checking visibility for locale: ${locale}`);
+            const response = await fetch(`${API_BASE_URL}/api/nd/home-page?locale=${locale}`);
+
+            if (!response.ok) {
+                console.warn('⚠️ Could not fetch visibility settings, defaulting to visible');
+                return true; // Default to showing courses if we can't check
+            }
+
+            const data = await response.json();
+            console.log('📦 [Courses Visibility] API Response:', {
+                hasData: !!data.data,
+                hasCourses: !!(data.data && data.data.courses),
+                coursesVisible: data.data?.courses?.visible,
+                fullCoursesData: data.data?.courses
+            });
+
+            // Check both data.courses and data.data.courses for compatibility
+            const coursesData = data.courses || data.data?.courses;
+
+            if (coursesData && coursesData.visible === false) {
+                console.log('🔒 [Courses Visibility] Section is HIDDEN by admin settings');
+                // Also hide the section if it exists
+                const coursesSection = document.querySelector('.featured-courses-section');
+                if (coursesSection) {
+                    coursesSection.style.display = 'none';
+                    console.log('🔒 [Courses Visibility] Applied display:none to section');
+                }
+                return false;
+            }
+
+            console.log(`✅ [Courses Visibility] Section is VISIBLE (visible=${coursesData?.visible})`);
+            return true;
+        } catch (error) {
+            console.error('❌ [Courses Visibility] Error checking visibility:', error);
+            return true; // Default to showing courses if there's an error
+        }
+    }
+
     // Main function to load courses data
     async function loadCoursesData() {
         try {
+            // First check if courses section should be visible
+            const shouldLoadCourses = await checkCoursesVisibility();
+            if (!shouldLoadCourses) {
+                console.log('🚫 Courses section is hidden by admin settings, skipping load');
+                return;
+            }
+
             console.log('📡 Loading courses data from featured courses API...');
 
             const locale = getCurrentLocale();
@@ -630,11 +679,18 @@
     }
 
     // Listen for language changes
-    window.addEventListener('languageChanged', (event) => {
+    window.addEventListener('languageChanged', async (event) => {
         console.log('🌍 [Courses] Language changed to:', event.detail.locale);
 
         // Update localStorage to ensure consistency
         localStorage.setItem('preferred_locale', event.detail.locale);
+
+        // Check if courses should be visible before clearing/loading
+        const shouldLoadCourses = await checkCoursesVisibility();
+        if (!shouldLoadCourses) {
+            console.log('🚫 Courses section is hidden, not loading after language change');
+            return;
+        }
 
         // Clear any existing courses first
         const allContainers = document.querySelectorAll('.featured-courses-collection-list');
@@ -650,9 +706,17 @@
     });
 
     // Also listen for storage changes (when language is changed in another tab)
-    window.addEventListener('storage', (event) => {
+    window.addEventListener('storage', async (event) => {
         if (event.key === 'preferred_locale' && event.newValue !== event.oldValue) {
             console.log('🌍 [Courses] Language changed in storage to:', event.newValue);
+
+            // Check if courses should be visible
+            const shouldLoadCourses = await checkCoursesVisibility();
+            if (!shouldLoadCourses) {
+                console.log('🚫 Courses section is hidden, not loading after storage change');
+                return;
+            }
+
             setTimeout(() => {
                 loadCoursesData();
             }, 500);
