@@ -1,0 +1,243 @@
+{
+  "summary": {
+    "timestamp": "2025-09-29T10:20:59.490Z",
+    "duration": "0.79 seconds",
+    "totalPages": 16,
+    "pagesWithDifferences": 0,
+    "status": "PASS"
+  },
+  "configuration": {
+    "localUrl": "http://localhost:3005",
+    "prodUrl": "https://www.aistudio555.com",
+    "pagesChecked": [
+      "/home.html",
+      "/courses.html",
+      "/detail_courses.html",
+      "/teachers.html",
+      "/pricing.html",
+      "/about.html",
+      "/contact.html",
+      "/career-center.html",
+      "/career-orientation.html",
+      "/blog.html",
+      "/dist/en/home.html",
+      "/dist/ru/home.html",
+      "/dist/he/home.html",
+      "/dist/en/courses.html",
+      "/dist/ru/courses.html",
+      "/dist/he/courses.html"
+    ],
+    "viewports": [
+      {
+        "name": "Desktop",
+        "width": 1920,
+        "height": 1080
+      },
+      {
+        "name": "Tablet",
+        "width": 768,
+        "height": 1024
+      },
+      {
+        "name": "Mobile",
+        "width": 375,
+        "height": 812
+      }
+    ]
+  },
+  "differences": [],
+  "allResults": [
+    {
+      "page": "/home.html",
+      "timestamp": "2025-09-29T10:20:58.940Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/home.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/home.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/courses.html",
+      "timestamp": "2025-09-29T10:20:59.059Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/courses.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/courses.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/detail_courses.html",
+      "timestamp": "2025-09-29T10:20:59.086Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/detail_courses.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/detail_courses.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/teachers.html",
+      "timestamp": "2025-09-29T10:20:59.116Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/teachers.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/teachers.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/pricing.html",
+      "timestamp": "2025-09-29T10:20:59.145Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/pricing.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/pricing.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/about.html",
+      "timestamp": "2025-09-29T10:20:59.173Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/about.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/about.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/contact.html",
+      "timestamp": "2025-09-29T10:20:59.202Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/contact.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/contact.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/career-center.html",
+      "timestamp": "2025-09-29T10:20:59.231Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/career-center.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/career-center.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/career-orientation.html",
+      "timestamp": "2025-09-29T10:20:59.261Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/career-orientation.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/career-orientation.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/blog.html",
+      "timestamp": "2025-09-29T10:20:59.289Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/blog.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/blog.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/dist/en/home.html",
+      "timestamp": "2025-09-29T10:20:59.318Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/dist/en/home.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/dist/en/home.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/dist/ru/home.html",
+      "timestamp": "2025-09-29T10:20:59.346Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/dist/ru/home.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/dist/ru/home.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/dist/he/home.html",
+      "timestamp": "2025-09-29T10:20:59.375Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/dist/he/home.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/dist/he/home.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/dist/en/courses.html",
+      "timestamp": "2025-09-29T10:20:59.404Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/dist/en/courses.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/dist/en/courses.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/dist/ru/courses.html",
+      "timestamp": "2025-09-29T10:20:59.433Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/dist/ru/courses.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/dist/ru/courses.html\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    {
+      "page": "/dist/he/courses.html",
+      "timestamp": "2025-09-29T10:20:59.461Z",
+      "comparisons": {
+        "content": null,
+        "visual": null,
+        "api": null,
+        "performance": null
+      },
+      "differences": [],
+      "error": "page.goto: net::ERR_EMPTY_RESPONSE at http://localhost:3005/dist/he/courses.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/dist/he/courses.html\", waiting until \"networkidle\"\u001b[22m\n"
+    }
+  ]
+}
