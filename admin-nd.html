@@ -4965,7 +4965,7 @@
                 }
 
                 const url = editingTeacherId !== null
-                    ? `${API_BASE}/api/nd/teachers/${editingTeacherId}`
+                    ? `${API_BASE}/nd/teachers/${editingTeacherId}`
                     : `${API_BASE}/nd/teachers`;
 
                 const response = await fetch(url, {
@@ -5004,7 +5004,7 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/nd/teachers/${teacherId}`, {
+                const response = await fetch(`${API_BASE}/nd/teachers/${teacherId}`, {
                     method: 'DELETE'
                 });
 
@@ -5026,7 +5026,7 @@
         // Update teacher property (Quick Action)
         async function updateTeacherProperty(teacherId, property, value) {
             try {
-                const response = await fetch(`${API_BASE}/api/nd/teachers/${teacherId}`, {
+                const response = await fetch(`${API_BASE}/nd/teachers/${teacherId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ [property]: value })
@@ -5287,7 +5287,7 @@
                 };
 
                 // API call
-                const url = `${API_BASE}/api/nd/teachers/${currentEditingTeacherId}`;
+                const url = `${API_BASE}/nd/teachers/${currentEditingTeacherId}`;
                 const response = await fetch(url, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -5577,7 +5577,7 @@
                     twitter: document.getElementById('teacher-detail-twitter').value
                 };
 
-                const response = await fetch(`${API_BASE}/api/nd/teachers/${currentEditingDetailTeacherId}`, {
+                const response = await fetch(`${API_BASE}/nd/teachers/${currentEditingDetailTeacherId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(teacherDetailData)
