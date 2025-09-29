@@ -1004,5 +1004,59 @@
 
   <!-- Webflow script -->
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/webflow.793c0caa9.js" type="text/javascript"></script>
+
+  <script>
+    // Mobile menu toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuButton = document.querySelector('.menu-button, .w-nav-button');
+      const navMenu = document.querySelector('.nav-menu, .w-nav-menu');
+      const navbar = document.querySelector('.navbar, .w-nav');
+
+      console.log('Mobile menu init:', { menuButton, navMenu, navbar });
+
+      if (menuButton && navMenu) {
+        menuButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          // Toggle open classes
+          const isOpen = navMenu.classList.contains('nav-open');
+          console.log('Menu toggle, current state:', isOpen);
+
+          if (!isOpen) {
+            navMenu.classList.add('nav-open');
+            menuButton.classList.add('w--open');
+            navbar.classList.add('nav--open');
+            console.log('Menu opened');
+          } else {
+            navMenu.classList.remove('nav-open');
+            menuButton.classList.remove('w--open');
+            navbar.classList.remove('nav--open');
+            console.log('Menu closed');
+          }
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!navbar.contains(e.target) && navMenu.classList.contains('nav-open')) {
+            navMenu.classList.remove('nav-open');
+            menuButton.classList.remove('w--open');
+            navbar.classList.remove('nav--open');
+            console.log('Menu closed by outside click');
+          }
+        });
+
+        // Close menu on window resize to desktop
+        window.addEventListener('resize', function() {
+          if (window.innerWidth > 991 && navMenu.classList.contains('nav-open')) {
+            navMenu.classList.remove('nav-open');
+            menuButton.classList.remove('w--open');
+            navbar.classList.remove('nav--open');
+            console.log('Menu closed by resize');
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
