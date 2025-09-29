@@ -1002,14 +1002,68 @@
   <!-- Include the database integration script for dynamic content (System 2) -->
   <script src="js/nd-career-orientation-integration.js" type="text/javascript"></script>
 
-  <!-- RTL Slider Fix - Override Webflow's broken RTL slider behavior -->
-  <script src="js/rtl-slider-fix.js" type="text/javascript"></script>
+  <!-- RTL Slider Fix - Disabled due to Webflow conflicts -->
+  <!-- <script src="js/rtl-slider-fix.js" type="text/javascript"></script> -->
 
   <!-- Webflow script -->
   <!-- jQuery (required for Webflow) -->
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=68b7640fa2f59957bca21451" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <!-- Webflow.js for animations and interactions -->
   <script src="js/webflow.js" type="text/javascript"></script>
+
+  <!-- Mobile menu toggle functionality - Match home.html approach -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuButton = document.querySelector('.menu-button, .w-nav-button');
+      const navMenu = document.querySelector('.nav-menu, .w-nav-menu');
+      const navbar = document.querySelector('.navbar, .w-nav');
+
+      console.log('Mobile menu init:', { menuButton, navMenu, navbar });
+
+      if (menuButton && navMenu) {
+        menuButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          // Toggle open classes
+          const isOpen = navMenu.classList.contains('nav-open');
+          console.log('Menu toggle, current state:', isOpen);
+
+          if (!isOpen) {
+            navMenu.classList.add('nav-open');
+            menuButton.classList.add('w--open');
+            navbar.classList.add('nav--open');
+            console.log('Menu opened');
+          } else {
+            navMenu.classList.remove('nav-open');
+            menuButton.classList.remove('w--open');
+            navbar.classList.remove('nav--open');
+            console.log('Menu closed');
+          }
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!navbar.contains(e.target) && navMenu.classList.contains('nav-open')) {
+            navMenu.classList.remove('nav-open');
+            menuButton.classList.remove('w--open');
+            navbar.classList.remove('nav--open');
+            console.log('Menu closed by outside click');
+          }
+        });
+
+        // Close menu on window resize to desktop
+        window.addEventListener('resize', function() {
+          if (window.innerWidth > 991 && navMenu.classList.contains('nav-open')) {
+            navMenu.classList.remove('nav-open');
+            menuButton.classList.remove('w--open');
+            navbar.classList.remove('nav--open');
+            console.log('Menu closed by resize');
+          }
+        });
+      }
+    });
+  </script>
 
 
     <script>
