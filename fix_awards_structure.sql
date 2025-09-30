@@ -1,9 +1,0 @@
-
--- Fix awards structure
-UPDATE nd_home
-SET
-  content_en = '{"visible":true,"type":"awards","content":{"items":[{"title":"Online Mentorship Award","description":"Recognized for excellence in online mentorship and student support"},{"title":"Class Mentorship Program","description":"Best-in-class mentorship program for technology professionals"},{"title":"Remote Learning Excellence","description":"Leading the way in remote learning methodologies"},{"title":"Technology Training Leader","description":"Award-winning technology training programs"}]},"animations_enabled":true}',
-  content_ru = '{"visible":true,"type":"awards","content":{"content":{"items":[{"title":"Награда за Онлайн Наставничество","description":"Признание за превосходство в онлайн наставничестве"},{"title":"Программа Классного Наставничества","description":"Лучшая в своем классе программа наставничества для технического обучения"},{"title":"Превосходство в Дистанционном Обучении","description":"Лидер в методологиях дистанционного обучения"},{"title":"Лидер Технического Обучения","description":"Награжденные программы технического обучения"}],"title":"Награды, Определяющие Наше Превосходство","subtitle":"Престижные Награды","description":"Погрузитесь в мир обучения с нашими наградами и достижениями"}},"animations_enabled":true}',
-  content_he = '{"visible":true,"type":"awards","content":{"items":[{"title":"פרס חונכות מקוונת","description":"הוכרה למצוינות בחונכות מקוונת ותמיכת סטודנטים"},{"title":"תוכנית חונכות כיתתית","description":"תוכנית החונכות הטובה ביותר לאנשי מקצוע בתחום הטכנולוגיה"},{"title":"מצוינות בלמידה מרחוק","description":"מובילים את הדרך במתודולוגיות למידה מרחוק"},{"title":"מנהיג הכשרה טכנולוגית","description":"תוכניות הכשרה טכנולוגיות עטורות פרסים"}]},"animations_enabled":true}',
-  updated_at = CURRENT_TIMESTAMP
-WHERE section_key = 'awards';
