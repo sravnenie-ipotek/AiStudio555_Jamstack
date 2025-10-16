@@ -4,7 +4,7 @@
   "description": "AI Studio E-Learning Platform with Strapi CMS",
   "main": "server.js",
   "scripts": {
-    "start": "echo 'Starting Custom Live API Server (NOT Strapi)' && node server.js",
+    "start": "echo 'Starting Custom Live API Server (NOT Strapi)' && node migrate-to-railway.js && node server.js",
     "start:dev": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/aistudio_db NODE_ENV=development PORT=4005 node server.js",
     "start:local": "bash scripts/start-local.sh",
     "dev:local": "concurrently \"node server.local.js\" \"python3 -m http.server 3005\"",
@@ -17,7 +17,7 @@
     "db:psql": "docker exec -it aistudio_postgres_local psql -U aistudio_user -d aistudio_db",
     "stop:local": "pkill -f 'node server.local.js' || true && pkill -f 'python3 -m http.server 3005' || true",
     "migrate": "node migrate-to-railway.js",
-    "postinstall": "echo 'Running database migration...' && node migrate-to-railway.js || echo 'Migration skipped (may already exist)'",
+    "postinstall": "echo 'Build phase - skipping migration' || true",
     "dev": "concurrently \"npm run watch-html\" \"npm run strapi:dev\" \"npm run frontend:dev\" \"npm run preview:server\"",
     "strapi:dev": "cd strapi-fresh && npm run develop",
     "frontend:dev": "python3 -m http.server 3005",
