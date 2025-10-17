@@ -2,7 +2,9 @@
 nixPkgs = ["nodejs_20", "postgresql"]
 
 [phases.install]
-cmds = ["npm install --production"]
+cmds = [
+  "npm install --production --no-optional --prefer-offline"
+]
 
 [phases.build]
 # Skip the build phase - we're only deploying the API server
