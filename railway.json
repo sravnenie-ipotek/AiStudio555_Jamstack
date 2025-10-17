@@ -18,7 +18,7 @@
       "env": {
         "NODE_ENV": "production",
         "PORT": "${{PORT}}",
-        "STRAPI_DB_URL": "${{STRAPI_DB_URL}}",
+        "DATABASE_URL": "${{DATABASE_URL}}",
         "API_MODE": "live",
         "CORS_ORIGIN": "*"
       }
