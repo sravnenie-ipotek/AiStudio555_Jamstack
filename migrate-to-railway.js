@@ -4,10 +4,17 @@
  * Handles all content types and preserves data integrity
  */
 
-const sqlite3 = require('sqlite3').verbose();
 const { Client } = require('pg');
 const path = require('path');
 const fs = require('fs');
+
+// Conditionally require sqlite3 only if it's available (local development only)
+let sqlite3;
+try {
+  sqlite3 = require('sqlite3').verbose();
+} catch (e) {
+  console.log('⚠️  sqlite3 not available (production mode - PostgreSQL only)');
+}
 
 // Configuration
 const SQLITE_PATH = path.join(__dirname, 'strapi-fresh/.tmp/data.db');
@@ -396,6 +403,13 @@ async function createTables(pgClient) {
 
 async function migrateData(pgClient) {
   console.log('📦 Migrating data from SQLite to PostgreSQL...');
+
+  // Check if sqlite3 module is available
+  if (!sqlite3) {
+    console.log('⚠️  sqlite3 module not available - skipping data migration');
+    console.log('   This is normal for Railway deployments (PostgreSQL-only)');
+    return;
+  }
 
   // Check if SQLite database exists
   if (!fs.existsSync(SQLITE_PATH)) {
