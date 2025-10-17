@@ -1,0 +1,13 @@
+[phases.setup]
+nixPkgs = ["nodejs_20", "postgresql"]
+
+[phases.install]
+cmds = ["npm install --production"]
+
+[phases.build]
+# Skip the build phase - we're only deploying the API server
+# The frontend is deployed to GitHub Pages separately
+cmds = ["echo 'Skipping build - API server only'"]
+
+[start]
+cmd = "npm start"
