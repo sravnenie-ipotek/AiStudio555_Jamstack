@@ -396,7 +396,14 @@ async function createTables(pgClient) {
 
 async function migrateData(pgClient) {
   console.log('📦 Migrating data from SQLite to PostgreSQL...');
-  
+
+  // Check if SQLite database exists
+  if (!fs.existsSync(SQLITE_PATH)) {
+    console.log('⚠️  SQLite database not found - skipping data migration');
+    console.log('   Tables created but no data migrated (fresh installation)');
+    return;
+  }
+
   const db = new sqlite3.Database(SQLITE_PATH);
   
   // Migrate home_pages
