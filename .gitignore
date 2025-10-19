@@ -18,7 +18,6 @@ Desktop.ini
 
 # Dependencies
 node_modules/
-package-lock.json
 
 # Strapi
 strapi-v4/.tmp/
