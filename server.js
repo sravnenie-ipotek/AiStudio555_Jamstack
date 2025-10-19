@@ -610,12 +610,17 @@ async function initializeDatabase() {
       await migrate();
       console.log('✅ Database ready');
       
-      // Run display_order migration for teachers table
+      // Run display_order migration for teachers table (if file exists)
       try {
-        console.log('🔧 Running display_order column migration...');
-        const { addDisplayOrderColumn } = require('./add-display-order-migration.js');
-        await addDisplayOrderColumn();
-        console.log('✅ display_order migration completed');
+        const displayOrderMigrationPath = path.join(__dirname, 'add-display-order-migration.js');
+        if (fs.existsSync(displayOrderMigrationPath)) {
+          console.log('🔧 Running display_order column migration...');
+          const { addDisplayOrderColumn } = require('./add-display-order-migration.js');
+          await addDisplayOrderColumn();
+          console.log('✅ display_order migration completed');
+        } else {
+          console.log('⚠️  Skipping display_order migration (file not found)');
+        }
       } catch (migrationError) {
         console.error('⚠️  display_order migration failed:', migrationError.message);
         // Don't fail startup for this migration
