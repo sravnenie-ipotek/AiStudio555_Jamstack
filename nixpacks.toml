@@ -3,7 +3,7 @@ nixPkgs = ["nodejs_20", "postgresql"]
 
 [phases.install]
 cmds = [
-  "npm install --production --no-optional --prefer-offline"
+  "npm ci --omit=dev --omit=optional --prefer-offline"
 ]
 
 [phases.build]
