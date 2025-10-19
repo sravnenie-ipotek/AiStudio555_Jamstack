@@ -565,10 +565,13 @@ if (process.env.DATABASE_URL) {
   dbConfig = {
     connectionString: process.env.DATABASE_URL,
     ssl: isLocal ? false : { rejectUnauthorized: false },
-    // Connection pool settings for Railway
-    max: 20, // Maximum number of clients in pool
-    idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-    connectionTimeoutMillis: 10000, // Timeout after 10 seconds if no connection available
+    // Connection pool settings optimized for Railway's limits
+    max: 5, // Railway free tier limit is ~5-10 connections
+    min: 1, // Keep at least 1 connection alive
+    idleTimeoutMillis: 10000, // Close idle clients after 10 seconds
+    connectionTimeoutMillis: 5000, // Timeout after 5 seconds
+    keepAlive: true, // Keep connections alive
+    keepAliveInitialDelayMillis: 10000,
   };
 
   // Create connection pool
@@ -587,7 +590,7 @@ if (process.env.DATABASE_URL) {
     console.log('🐘 Using Railway PostgreSQL database (Production)');
   }
   console.log('🔗 Database URL pattern:', process.env.DATABASE_URL.substring(0, 30) + '...');
-  console.log('💧 Connection pool created (max: 20 connections)');
+  console.log('💧 Connection pool created (max: 5 connections - Railway optimized)');
 } else {
   // No fallback - PostgreSQL required
   console.error('❌ DATABASE_URL is required!');
