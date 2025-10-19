@@ -13,7 +13,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const path = require('path');
-const { Client } = require('pg');
+const { Pool } = require('pg');
 const { migrate } = require('./migrate-to-railway');
 
 const app = express();
@@ -551,6 +551,7 @@ app.use('/ru/images', express.static(path.join(__dirname, 'images')));
 
 // Database configuration
 let dbConfig;
+let pool; // Connection pool for efficient database access
 
 // Log environment for debugging
 console.log('Environment Variables Check:');
@@ -563,8 +564,20 @@ if (process.env.DATABASE_URL) {
   const isLocal = process.env.DATABASE_URL.includes('localhost') || process.env.NODE_ENV === 'development';
   dbConfig = {
     connectionString: process.env.DATABASE_URL,
-    ssl: isLocal ? false : { rejectUnauthorized: false }
+    ssl: isLocal ? false : { rejectUnauthorized: false },
+    // Connection pool settings for Railway
+    max: 20, // Maximum number of clients in pool
+    idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
+    connectionTimeoutMillis: 10000, // Timeout after 10 seconds if no connection available
   };
+
+  // Create connection pool
+  pool = new Pool(dbConfig);
+
+  // Pool error handling
+  pool.on('error', (err) => {
+    console.error('❌ Unexpected pool error:', err);
+  });
 
   // Detect if it's local or Railway
   if (process.env.DATABASE_URL.includes('localhost') || process.env.DATABASE_URL.includes('127.0.0.1')) {
@@ -574,6 +587,7 @@ if (process.env.DATABASE_URL) {
     console.log('🐘 Using Railway PostgreSQL database (Production)');
   }
   console.log('🔗 Database URL pattern:', process.env.DATABASE_URL.substring(0, 30) + '...');
+  console.log('💧 Connection pool created (max: 20 connections)');
 } else {
   // No fallback - PostgreSQL required
   console.error('❌ DATABASE_URL is required!');
@@ -582,23 +596,19 @@ if (process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-// PostgreSQL query helper (PostgreSQL ONLY - no SQLite fallback)
+// PostgreSQL query helper with connection pooling (EFFICIENT!)
 async function queryDatabase(query, params = []) {
   if (!process.env.DATABASE_URL) {
     throw new Error('❌ DATABASE_URL not configured. PostgreSQL is required.');
   }
 
-  // PostgreSQL connection
-  const client = new Client(dbConfig);
+  // Use connection pool - reuses connections efficiently
   try {
-    await client.connect();
-    const result = await client.query(query, params);
+    const result = await pool.query(query, params);
     return result.rows;
   } catch (error) {
     console.error('PostgreSQL error:', error);
     throw error;
-  } finally {
-    await client.end();
   }
 }
 
