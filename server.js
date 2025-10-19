@@ -7036,7 +7036,7 @@ app.post('/api/fix-russian-ui', async (req, res) => {
 // Replace insecure fallback with proper authentication
 
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 // 🛡️ SECURE AUTHENTICATION MODULE
 const authSecurityModule = {
