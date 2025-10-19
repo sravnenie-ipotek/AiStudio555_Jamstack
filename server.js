@@ -8460,6 +8460,12 @@ app.get('/api/nd/home-page', async (req, res) => {
   }
 });
 
+// Alias: /api/home-page → /api/nd/home-page (for backward compatibility with admin panel)
+app.get('/api/home-page', (req, res) => {
+  req.url = '/api/nd/home-page' + (req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '');
+  app._router.handle(req, res, () => {});
+});
+
 // ==================== ND COURSES PAGE API ====================
 app.get('/api/nd/courses-page', async (req, res) => {
   const locale = req.query.locale || 'en';
