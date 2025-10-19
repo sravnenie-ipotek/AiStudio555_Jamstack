@@ -3,8 +3,10 @@ nixPkgs = ["nodejs_20", "postgresql"]
 
 [phases.install]
 cmds = [
-  "npm install --production --omit=optional --no-audit --no-fund --loglevel=error"
+  "npm install --production --omit=optional --no-audit --no-fund --loglevel=error --prefer-offline"
 ]
+# Cache node_modules directory
+cacheDirectories = ["node_modules"]
 
 [phases.build]
 # Skip the build phase - we're only deploying the API server
